@@ -5,6 +5,9 @@ import {
   LOGISTICS_CATEGORIES,
   PROPERTY_TYPES,
 } from './data/master-data.js'
+import { route } from './app/router.js'
+import { getItem } from './data/catalog.js'
+window.__BLD_GET_ITEM = getItem
 
 const state = {
   cartCount: 0,
@@ -1250,125 +1253,23 @@ function homePage() {
   `
 }
 
-function render() {
-  document.querySelector('#app').innerHTML = homePage()
-  bindEvents()
-}
 
-function bindEvents() {
-  const searchForms = [
-    document.querySelector('#header-search'),
-    document.querySelector('#hero-search'),
-  ]
-
-  searchForms.forEach((form) => {
-    if (!form) return
-
-    form.addEventListener('submit', (event) => {
-      event.preventDefault()
-
-      const input = form.querySelector('input')
-      const query = input?.value?.trim()
-
-      if (!query) return
-
-      window.location.hash = `/search?q=${encodeURIComponent(query)}`
+function bindHomeEvents() {
+  ;[document.querySelector('#header-search'),document.querySelector('#hero-search')].forEach(form=>{
+    if(!form)return
+    form.addEventListener('submit',e=>{
+      e.preventDefault()
+      const q=form.querySelector('input')?.value?.trim()
+      if(q) location.hash=`/search?q=${encodeURIComponent(q)}`
     })
   })
-
-  const locationButtons = [
-    document.querySelector('#location-trigger'),
-    document.querySelector('#location-button'),
-  ]
-
-  locationButtons.forEach((button) => {
-    if (!button) return
-
-    button.addEventListener('click', () => {
-      showLocationModal()
-    })
-  })
+  document.querySelector('#location-trigger')?.addEventListener('click',showLocationModal)
 }
-
-function showLocationModal() {
-  const existing = document.querySelector('.location-modal-backdrop')
-
-  if (existing) {
-    existing.remove()
-    return
-  }
-
-  const modal = document.createElement('div')
-
-  modal.className = 'location-modal-backdrop'
-
-  modal.innerHTML = `
-    <div class="location-modal">
-      <button class="modal-close" aria-label="Tutup">×</button>
-
-      <span class="section-kicker">LOKASI PROYEK</span>
-
-      <h2>Pilih lokasi Anda</h2>
-
-      <p>
-        Lokasi membantu kami menampilkan penyedia,
-        material dan jasa yang lebih relevan.
-      </p>
-
-      <label>
-        Provinsi
-        <select>
-          <option>Indonesia</option>
-          <option>Bali</option>
-          <option>Jawa Tengah</option>
-          <option>Jawa Timur</option>
-          <option>DKI Jakarta</option>
-          <option>Lampung</option>
-        </select>
-      </label>
-
-      <label>
-        Kota / Kabupaten
-        <select>
-          <option>Pilih kota</option>
-          <option>Denpasar</option>
-          <option>Badung</option>
-          <option>Gianyar</option>
-          <option>Semarang</option>
-          <option>Surabaya</option>
-          <option>Bandar Lampung</option>
-        </select>
-      </label>
-
-      <button class="primary-button modal-save">
-        Simpan lokasi
-      </button>
-    </div>
-  `
-
-  document.body.appendChild(modal)
-
-  modal.querySelector('.modal-close').addEventListener('click', () => {
-    modal.remove()
-  })
-
-  modal.querySelector('.modal-save').addEventListener('click', () => {
-    modal.remove()
-
-    const locationText = document.querySelector(
-      '#location-trigger strong',
-    )
-
-    if (locationText) {
-      locationText.textContent = 'Lokasi dipilih'
-    }
-  })
-
-  modal.addEventListener('click', (event) => {
-    if (event.target === modal) {
-      modal.remove()
-    }
-  })
+function showLocationModal(){
+ const old=document.querySelector('.location-modal-backdrop');if(old){old.remove();return}
+ const modal=document.createElement('div');modal.className='location-modal-backdrop';modal.innerHTML=`<div class="location-modal"><button class="modal-close">×</button><span class="section-kicker">LOKASI PROYEK</span><h2>Pilih lokasi Anda</h2><p>Lokasi membantu menampilkan hasil yang lebih relevan.</p><label>Provinsi<select id="loc-province"><option value="">Pilih provinsi</option><option>Bali</option><option>Lampung</option><option>DKI Jakarta</option><option>Jawa Timur</option></select></label><label>Kota / Kabupaten<select id="loc-city"><option value="">Pilih kota</option><option>Denpasar</option><option>Badung</option><option>Gianyar</option><option>Tabanan</option></select></label><button class="primary-button modal-save">Simpan lokasi</button></div>`;
+ document.body.appendChild(modal);modal.querySelector('.modal-close').onclick=()=>modal.remove();modal.querySelector('.modal-save').onclick=()=>{const c=modal.querySelector('#loc-city').value;localStorage.setItem('bld_location_v1',JSON.stringify({province:modal.querySelector('#loc-province').value,city:c}));document.querySelector('#location-trigger strong')?.replaceChildren(document.createTextNode(c||'Lokasi dipilih'));modal.remove()};modal.onclick=e=>{if(e.target===modal)modal.remove()}
 }
-
-render()
+function renderApp(){route(homePage);if(!location.hash||location.hash==='#/'||location.hash==='#')bindHomeEvents()}
+window.addEventListener('hashchange',renderApp)
+renderApp()
