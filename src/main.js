@@ -5,144 +5,138 @@ import "./style.css";
    FRONTEND DEMO
 ========================================================= */
 
+/* =========================================================
+   STORAGE
+========================================================= */
+
 const STORAGE_CART = "bagusCart";
 const STORAGE_ORDERS = "bagusOrders";
+const STORAGE_WISHLIST = "bagusWishlist";
+const STORAGE_USER = "bagusUser";
+const STORAGE_PENDING_ROUTE = "bagusPendingRoute";
 
 /* =========================================================
-   DEMO SUPPLIERS
+   DEMO DATA
 ========================================================= */
 
-const suppliers = {
-  besi: {
-    id: "SUP-001",
+const suppliers = [
+  {
+    id: 1,
     name: "Supplier Besi Bali",
     location: "Denpasar",
-    initials: "SB"
+    initials: "SB",
   },
-
-  bangunan: {
-    id: "SUP-002",
+  {
+    id: 2,
     name: "Toko Bangunan Bali",
     location: "Badung",
-    initials: "TB"
+    initials: "TB",
   },
-
-  kayu: {
-    id: "SUP-003",
+  {
+    id: 3,
     name: "Kayu & Material Bali",
     location: "Denpasar",
-    initials: "KM"
-  }
-};
-
-/* =========================================================
-   DEMO PRODUCTS
-========================================================= */
+    initials: "KM",
+  },
+];
 
 const products = [
   {
     id: 1,
     name: "Besi Ulir 10 mm",
-    category: "Besi",
     price: 89000,
     unit: "batang",
     stock: 120,
-    icon: "Ø10",
-    supplierId: "besi",
+    supplierId: 1,
+    category: "Besi",
+    icon: "🔩",
     description:
-      "Besi ulir 10 mm untuk kebutuhan struktur dan pekerjaan konstruksi umum."
+      "Besi ulir 10 mm untuk kebutuhan struktur dan pekerjaan konstruksi.",
   },
-
   {
     id: 2,
     name: "Besi Ulir 12 mm",
-    category: "Besi",
     price: 126000,
     unit: "batang",
     stock: 85,
-    icon: "Ø12",
-    supplierId: "besi",
+    supplierId: 1,
+    category: "Besi",
+    icon: "🔩",
     description:
-      "Besi ulir 12 mm untuk pekerjaan struktur beton dan kebutuhan proyek."
+      "Besi ulir 12 mm untuk berbagai kebutuhan struktur bangunan.",
   },
-
   {
     id: 3,
     name: "Besi Ulir 16 mm",
-    category: "Besi",
     price: 218000,
     unit: "batang",
     stock: 60,
-    icon: "Ø16",
-    supplierId: "besi",
+    supplierId: 1,
+    category: "Besi",
+    icon: "🔩",
     description:
-      "Besi ulir 16 mm untuk pekerjaan struktur dengan kebutuhan diameter lebih besar."
+      "Besi ulir 16 mm untuk pekerjaan konstruksi dengan kebutuhan diameter lebih besar.",
   },
-
   {
     id: 4,
     name: "Besi Polos 8 mm",
-    category: "Besi",
     price: 58000,
     unit: "batang",
     stock: 150,
-    icon: "Ø8",
-    supplierId: "besi",
+    supplierId: 1,
+    category: "Besi",
+    icon: "🔧",
     description:
-      "Besi polos 8 mm untuk kebutuhan konstruksi, begel, dan pekerjaan pendukung."
+      "Besi polos 8 mm untuk kebutuhan konstruksi dan pekerjaan bangunan.",
   },
-
   {
     id: 5,
     name: "Semen 50 kg",
-    category: "Semen",
     price: 68000,
     unit: "zak",
     stock: 250,
-    icon: "50K",
-    supplierId: "bangunan",
+    supplierId: 2,
+    category: "Semen",
+    icon: "🧱",
     description:
-      "Semen kemasan 50 kg untuk kebutuhan pembangunan dan pekerjaan beton."
+      "Semen 50 kg untuk kebutuhan pekerjaan struktur, pasangan dan finishing.",
   },
-
   {
     id: 6,
     name: "Kawat Bendrat",
-    category: "Pendukung",
     price: 28000,
     unit: "kg",
     stock: 180,
-    icon: "KB",
-    supplierId: "bangunan",
+    supplierId: 2,
+    category: "Lainnya",
+    icon: "〰️",
     description:
-      "Kawat bendrat untuk kebutuhan pengikatan tulangan dan pekerjaan konstruksi."
+      "Kawat bendrat untuk mengikat tulangan dan kebutuhan konstruksi.",
   },
-
   {
     id: 7,
     name: "Triplek 12 mm",
-    category: "Kayu",
     price: 185000,
     unit: "lembar",
     stock: 48,
-    icon: "12",
-    supplierId: "kayu",
+    supplierId: 3,
+    category: "Kayu",
+    icon: "📐",
     description:
-      "Triplek 12 mm untuk bekisting, pekerjaan interior, dan kebutuhan proyek."
+      "Triplek 12 mm untuk bekisting, interior dan berbagai kebutuhan proyek.",
   },
-
   {
     id: 8,
     name: "Triplek 9 mm",
-    category: "Kayu",
     price: 145000,
     unit: "lembar",
     stock: 55,
-    icon: "9",
-    supplierId: "kayu",
+    supplierId: 3,
+    category: "Kayu",
+    icon: "📐",
     description:
-      "Triplek 9 mm untuk pekerjaan proyek yang membutuhkan material lembaran."
-  }
+      "Triplek 9 mm untuk kebutuhan proyek, interior dan pekerjaan umum.",
+  },
 ];
 
 /* =========================================================
@@ -153,7 +147,7 @@ function rupiah(value) {
   return new Intl.NumberFormat("id-ID", {
     style: "currency",
     currency: "IDR",
-    maximumFractionDigits: 0
+    maximumFractionDigits: 0,
   }).format(value);
 }
 
@@ -181,12 +175,57 @@ function saveOrders(orders) {
   localStorage.setItem(STORAGE_ORDERS, JSON.stringify(orders));
 }
 
+function getWishlist() {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_WISHLIST)) || [];
+  } catch {
+    return [];
+  }
+}
+
+function saveWishlist(list) {
+  localStorage.setItem(STORAGE_WISHLIST, JSON.stringify(list));
+}
+
+function isWishlisted(id) {
+  return getWishlist().includes(Number(id));
+}
+
+function toggleWishlist(id) {
+  const productId = Number(id);
+  const list = getWishlist();
+
+  const index = list.indexOf(productId);
+
+  if (index >= 0) {
+    list.splice(index, 1);
+    saveWishlist(list);
+    return false;
+  }
+
+  list.push(productId);
+  saveWishlist(list);
+  return true;
+}
+
+function getUser() {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_USER)) || null;
+  } catch {
+    return null;
+  }
+}
+
+function isLoggedIn() {
+  return Boolean(getUser());
+}
+
 function findProduct(id) {
   return products.find((product) => product.id === Number(id));
 }
 
 function findSupplier(id) {
-  return suppliers[id];
+  return suppliers.find((supplier) => supplier.id === Number(id));
 }
 
 function cartCount() {
@@ -203,42 +242,15 @@ function cartSubtotal() {
   }, 0);
 }
 
-function formatDate(dateString) {
-  if (!dateString) return "-";
-
+function formatDate(date) {
   return new Intl.DateTimeFormat("id-ID", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric"
-  }).format(new Date(dateString));
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(new Date(date));
 }
 
 function orderStatus(order) {
-  if (!order) return "Belum diproses";
-
-  const supplierStatuses = order.suppliers || [];
-
-  if (
-    supplierStatuses.some(
-      (supplier) => supplier.status !== "received"
-    )
-  ) {
-    return "Supplier memproses";
-  }
-
-  if (order.hubStatus !== "ready") {
-    return "Menuju Hub";
-  }
-
-  if (order.deliveryStatus === "delivered") {
-    return "Selesai";
-  }
-
-  if (order.deliveryStatus === "out") {
-    return "Dalam pengiriman";
-  }
-
-  return "Siap dikirim";
+  return order.status || "Pesanan dibuat";
 }
 
 /* =========================================================
@@ -271,53 +283,34 @@ function toast(message) {
 ========================================================= */
 
 function header() {
-  const count = cartCount();
-
   return `
     <header class="site-header">
-
-      <div class="container nav">
+      <div class="nav">
 
         <a href="#home" class="brand">
+          <span class="brand-mark">BLD</span>
 
-          <div class="brand-mark">
-            BL
-          </div>
-
-          <div>
+          <span>
             <strong>Bagus Load</strong>
             <small>& Delivery</small>
-          </div>
-
+          </span>
         </a>
 
-        <nav class="desktop-nav">
-
+        <nav class="nav-links" aria-label="Navigasi utama">
           <a href="#home">Beranda</a>
-
           <a href="#products">Material</a>
-
-          <a href="#orders">
-            Pesanan
-            ${
-              getOrders().length
-                ? `<span class="nav-order-badge">${getOrders().length}</span>`
-                : ""
-            }
-          </a>
-
+          <a href="#orders">Pesanan</a>
         </nav>
 
         <a href="#cart" class="cart-button">
-
-          <span>${count}</span>
-
-          Keranjang
-
+          🛒
+          <span>Keranjang</span>
+          <span class="cart-count" id="headerCartCount">
+            ${cartCount()}
+          </span>
         </a>
 
       </div>
-
     </header>
   `;
 }
@@ -328,26 +321,176 @@ function header() {
 
 function footer() {
   return `
-    <footer>
-
-      <div class="container footer-inner">
-
-        <div>
-          <strong>Bagus Load & Delivery</strong>
-
-          <p>
-            Pengadaan material proyek dan delivery yang terkoordinasi.
-          </p>
-        </div>
-
-        <div class="footer-note">
-          Demo frontend — data supplier dan harga masih simulasi.
-        </div>
-
+    <footer class="site-footer">
+      <div class="container">
+        <p>
+          Bagus Load & Delivery — Demo marketplace material
+          dan layanan pengiriman untuk kebutuhan proyek.
+        </p>
       </div>
-
     </footer>
   `;
+}
+
+/* =========================================================
+   MOBILE BOTTOM NAV
+========================================================= */
+
+function mobileBottomNav() {
+  return `
+    <nav
+      class="mobile-bottom-nav"
+      id="mobileBottomNav"
+      aria-label="Navigasi utama"
+    >
+
+      <button
+        type="button"
+        data-mobile-action="chat"
+        aria-label="Chat supplier"
+      >
+        <span class="nav-icon">💬</span>
+        <span class="nav-label">Chat</span>
+      </button>
+
+      <a
+        href="#wishlist"
+        aria-label="Wishlist"
+      >
+        <span class="nav-icon">♡</span>
+        <span class="nav-label">Wishlist</span>
+        <span
+          class="nav-badge"
+          data-wishlist-badge
+          hidden
+        >0</span>
+      </a>
+
+      <a
+        href="#cart"
+        aria-label="Keranjang"
+      >
+        <span class="nav-icon">🛒</span>
+        <span class="nav-label">Keranjang</span>
+        <span
+          class="nav-badge"
+          data-cart-badge
+          hidden
+        >0</span>
+      </a>
+
+      <button
+        type="button"
+        data-mobile-action="booking"
+        aria-label="Booking"
+      >
+        <span class="nav-icon">▣</span>
+        <span class="nav-label">Booking</span>
+      </button>
+
+    </nav>
+  `;
+}
+
+function ensureMobileBottomNav() {
+  let nav = document.querySelector("#mobileBottomNav");
+
+  if (!nav) {
+    document.body.insertAdjacentHTML(
+      "beforeend",
+      mobileBottomNav()
+    );
+
+    nav = document.querySelector("#mobileBottomNav");
+
+    nav
+      .querySelectorAll("[data-mobile-action]")
+      .forEach((button) => {
+        button.addEventListener("click", () => {
+          const action = button.dataset.mobileAction;
+
+          const route =
+            action === "chat"
+              ? "#chat"
+              : "#booking";
+
+          localStorage.setItem(
+            STORAGE_PENDING_ROUTE,
+            route
+          );
+
+          location.hash = route;
+        });
+      });
+  }
+
+  updateMobileBottomNav();
+}
+
+function updateMobileBottomNav() {
+  const nav = document.querySelector(
+    "#mobileBottomNav"
+  );
+
+  if (!nav) return;
+
+  const cartBadge =
+    nav.querySelector("[data-cart-badge]");
+
+  const wishlistBadge =
+    nav.querySelector("[data-wishlist-badge]");
+
+  const cart = cartCount();
+  const wishlist = getWishlist().length;
+
+  if (cartBadge) {
+    cartBadge.textContent = cart;
+    cartBadge.hidden = !cart;
+  }
+
+  if (wishlistBadge) {
+    wishlistBadge.textContent = wishlist;
+    wishlistBadge.hidden = !wishlist;
+  }
+
+  const hash = location.hash || "#home";
+
+  nav
+    .querySelectorAll("a,button")
+    .forEach((element) => {
+      element.classList.remove("active");
+    });
+
+  if (hash === "#wishlist") {
+    nav
+      .querySelector('a[href="#wishlist"]')
+      ?.classList.add("active");
+  }
+
+  if (
+    hash === "#cart" ||
+    hash === "#checkout"
+  ) {
+    nav
+      .querySelector('a[href="#cart"]')
+      ?.classList.add("active");
+  }
+
+  if (hash === "#chat") {
+    nav
+      .querySelector(
+        '[data-mobile-action="chat"]'
+      )
+      ?.classList.add("active");
+  }
+
+  if (hash === "#booking") {
+    nav
+      .querySelector(
+        '[data-mobile-action="booking"]'
+      )
+      ?.classList.add("active");
+  }
 }
 
 /* =========================================================
@@ -356,57 +499,59 @@ function footer() {
 
 function productCard(product) {
   const supplier = findSupplier(product.supplierId);
+  const liked = isWishlisted(product.id);
 
   return `
     <article class="product-card">
 
-      <a href="#product/${product.id}" class="product-image">
+      <a href="#product/${product.id}">
 
-        <span>${product.category}</span>
-
-        <div class="material-icon">
-          ${product.icon}
+        <div class="product-image">
+          <div class="material-icon">
+            ${product.icon}
+          </div>
         </div>
 
       </a>
 
+      <button
+        type="button"
+        class="wishlist-btn ${liked ? "active" : ""}"
+        data-wishlist="${product.id}"
+        aria-label="Simpan ke wishlist"
+      >
+        ${liked ? "♥" : "♡"}
+      </button>
+
       <div class="product-body">
 
         <div class="supplier-mini">
-
           <span class="supplier-dot"></span>
-
-          ${supplier.name}
-
+          <span>${supplier?.name || "Penyedia"}</span>
         </div>
 
-        <h3>
-          <a href="#product/${product.id}">
-            ${product.name}
-          </a>
-        </h3>
+        <a href="#product/${product.id}">
+          <h3>${product.name}</h3>
+        </a>
 
         <div class="product-meta">
-
           <span>${rupiah(product.price)}</span>
-
-          <small>/${product.unit}</small>
-
+          <small>/ ${product.unit}</small>
         </div>
 
         <div class="stock">
-          Stok tersedia ${product.stock} ${product.unit}
+          Stok ${product.stock} ${product.unit}
         </div>
 
         <button
-          class="primary-btn add-btn"
-          data-add="${product.id}"
+          type="button"
+          class="primary-btn full-btn"
+          data-add-cart="${product.id}"
         >
-          Tambah ke keranjang
+          + Keranjang
         </button>
 
       </div>
-
     </article>
   `;
 }
@@ -417,299 +562,173 @@ function productCard(product) {
 
 function homePage() {
   return `
-    ${header()}
-
     <main>
 
-      <!-- HERO -->
-
       <section class="hero">
-
-        <div class="container hero-grid">
-
+        <div class="container">
           <div class="hero-copy">
 
-            <div class="eyebrow">
-              MATERIAL • PROCUREMENT • DELIVERY
-            </div>
+            <span class="eyebrow">
+              Material & Delivery Bali
+            </span>
 
             <h1>
-              Apa yang Anda butuhkan untuk proyek?
+              Cari material.
+              Bandingkan.
+              Kirim.
             </h1>
 
             <p>
-              Cari material dari berbagai supplier, gabungkan kebutuhan
-              dalam satu pesanan, lalu atur pengiriman menuju proyek.
+              Temukan kebutuhan proyek dari berbagai
+              penyedia material, lalu atur pengiriman
+              sesuai kebutuhan.
             </p>
 
-            <form class="hero-search" id="heroSearch">
-
+            <form
+              class="hero-search"
+              id="searchForm"
+            >
               <input
-                id="heroSearchInput"
+                id="searchInput"
                 type="search"
                 placeholder="Cari besi, semen, triplek..."
                 autocomplete="off"
               />
 
               <button type="submit">
-                Cari Material
+                Cari
               </button>
-
             </form>
 
             <div class="quick-search">
+              <span>Sering dicari:</span>
 
-              <span>Cepat:</span>
+              <button
+                type="button"
+                data-quick-search="Besi"
+              >
+                Besi
+              </button>
 
-              <button data-search="Besi">Besi</button>
+              <button
+                type="button"
+                data-quick-search="Semen"
+              >
+                Semen
+              </button>
 
-              <button data-search="Semen">Semen</button>
-
-              <button data-search="Triplek">Triplek</button>
-
-              <button data-search="Kawat">Kawat</button>
-
-            </div>
-
-          </div>
-
-          <div class="hero-panel">
-
-            <div class="panel-label">
-              CONTOH ALUR PESANAN
-            </div>
-
-            <div class="order-preview">
-
-              <div class="preview-top">
-
-                <span>Order #BLD-240921</span>
-
-                <b>PROSES</b>
-
-              </div>
-
-              <h3>
-                Material proyek
-              </h3>
-
-              <div class="preview-items">
-
-                <div>
-                  <span>Besi Ulir 12 mm × 20</span>
-                  <strong>Rp2,52 jt</strong>
-                </div>
-
-                <div>
-                  <span>Semen 50 kg × 20</span>
-                  <strong>Rp1,36 jt</strong>
-                </div>
-
-                <div>
-                  <span>Triplek 12 mm × 5</span>
-                  <strong>Rp925 rb</strong>
-                </div>
-
-              </div>
-
-              <div class="preview-route">
-
-                <div>
-                  <small>SUPPLIER A</small>
-                  <strong>Besi</strong>
-                </div>
-
-                <span>→</span>
-
-                <div>
-                  <small>SUPPLIER B</small>
-                  <strong>Bangunan</strong>
-                </div>
-
-                <span>→</span>
-
-                <div>
-                  <small>HUB</small>
-                  <strong>Konsolidasi</strong>
-                </div>
-
-              </div>
+              <button
+                type="button"
+                data-quick-search="Triplek"
+              >
+                Triplek
+              </button>
 
             </div>
 
           </div>
-
         </div>
-
       </section>
 
-
-      <!-- TRUST -->
-
-      <section class="trust-section">
-
-        <div class="container trust-grid">
-
-          <div>
-            <strong>Multi-Supplier</strong>
-            <span>Belanja dari beberapa supplier.</span>
-          </div>
-
-          <div>
-            <strong>Hub Konsolidasi</strong>
-            <span>Barang dapat dikumpulkan sebelum dikirim.</span>
-          </div>
-
-          <div>
-            <strong>Tracking Pesanan</strong>
-            <span>Pantau proses supplier hingga proyek.</span>
-          </div>
-
-        </div>
-
-      </section>
-
-
-      <!-- PRODUCTS -->
-
-      <section class="section" id="products">
-
+      <section class="section">
         <div class="container">
 
           <div class="section-heading">
-
             <div>
-              <div class="eyebrow">
-                MATERIAL PROYEK
-              </div>
-
-              <h2>
-                Cari material
-              </h2>
+              <h2>Material proyek</h2>
+              <p>
+                Pilih material yang sedang Anda butuhkan.
+              </p>
             </div>
 
-            <div
-              class="result-count"
-              id="resultCount"
-            >
-              ${products.length} material
-            </div>
-
+            <span class="result-count">
+              ${products.length} produk
+            </span>
           </div>
 
           <div class="category-bar">
-
-            <button
-              class="category-btn active"
-              data-category="Semua"
-            >
-              Semua
-            </button>
-
-            <button
-              class="category-btn"
-              data-category="Besi"
-            >
-              Besi
-            </button>
-
-            <button
-              class="category-btn"
-              data-category="Semen"
-            >
-              Semen
-            </button>
-
-            <button
-              class="category-btn"
-              data-category="Kayu"
-            >
-              Kayu
-            </button>
-
-            <button
-              class="category-btn"
-              data-category="Pendukung"
-            >
-              Pendukung
-            </button>
-
+            ${categoryButtons()}
           </div>
 
           <div
             class="product-grid"
             id="productGrid"
           >
-            ${products.map(productCard).join("")}
+            ${products
+              .map(productCard)
+              .join("")}
           </div>
 
         </div>
-
       </section>
 
+    </main>
 
-      <!-- PROCESS -->
+    ${footer()}
+  `;
+}
 
-      <section class="section process-section">
+/* =========================================================
+   CATEGORY
+========================================================= */
 
-        <div class="container">
+function categoryButtons(active = "Semua") {
+  const categories = [
+    "Semua",
+    "Besi",
+    "Semen",
+    "Kayu",
+    "Lainnya",
+  ];
 
-          <div class="section-heading">
+  return categories
+    .map(
+      (category) => `
+        <button
+          type="button"
+          class="category-btn ${
+            active === category ? "active" : ""
+          }"
+          data-category="${category}"
+        >
+          ${category}
+        </button>
+      `
+    )
+    .join("");
+}
 
-            <div>
+/* =========================================================
+   PRODUCTS PAGE
+========================================================= */
 
-              <div class="eyebrow">
-                CARA KERJA
-              </div>
+function productsPage() {
+  return `
+    <main class="section">
+      <div class="container">
 
-              <h2>
-                Dari material sampai proyek
-              </h2>
-
-            </div>
-
-          </div>
-
-          <div class="process-grid">
-
-            <div class="process-card">
-              <span>01</span>
-              <h3>Cari</h3>
-              <p>
-                Cari material berdasarkan kebutuhan proyek.
-              </p>
-            </div>
-
-            <div class="process-card">
-              <span>02</span>
-              <h3>Pilih</h3>
-              <p>
-                Pilih material dari supplier yang tersedia.
-              </p>
-            </div>
-
-            <div class="process-card">
-              <span>03</span>
-              <h3>Konsolidasi</h3>
-              <p>
-                Barang dari beberapa supplier dapat diarahkan ke Hub.
-              </p>
-            </div>
-
-            <div class="process-card">
-              <span>04</span>
-              <h3>Kirim</h3>
-              <p>
-                Material diteruskan bersama menuju lokasi proyek.
-              </p>
-            </div>
-
-          </div>
-
+        <div class="page-heading">
+          <h1>Material</h1>
+          <p>
+            Cari dan pilih kebutuhan material
+            untuk proyek Anda.
+          </p>
         </div>
 
-      </section>
+        <div class="category-bar">
+          ${categoryButtons()}
+        </div>
 
+        <div
+          class="product-grid"
+          id="productGrid"
+        >
+          ${products
+            .map(productCard)
+            .join("")}
+        </div>
+
+      </div>
     </main>
 
     ${footer()}
@@ -720,82 +739,39 @@ function homePage() {
    PRODUCT DETAIL
 ========================================================= */
 
-function productPage(id) {
-  const product = findProduct(id);
-
-  if (!product) {
-    return `
-      ${header()}
-
-      <main class="empty-page">
-
-        <div class="empty-box">
-
-          <div class="empty-icon">!</div>
-
-          <h1>Material tidak ditemukan</h1>
-
-          <p>Produk yang Anda cari tidak tersedia.</p>
-
-          <a class="primary-btn" href="#home">
-            Kembali
-          </a>
-
-        </div>
-
-      </main>
-
-      ${footer()}
-    `;
-  }
-
+function productPage(product) {
   const supplier = findSupplier(product.supplierId);
+  const liked = isWishlisted(product.id);
 
   return `
-    ${header()}
-
     <main class="detail-page">
-
       <div class="container">
 
-        <a href="#home" class="back-link">
+        <a
+          href="#products"
+          class="back-link"
+        >
           ← Kembali ke material
         </a>
 
-        <div class="detail-grid">
+        <div class="detail-layout">
 
           <div class="detail-image">
-
-            <span>${product.category}</span>
-
-            <div>
-              ${product.icon}
-            </div>
-
+            <div>${product.icon}</div>
           </div>
 
           <div class="detail-content">
 
             <div class="supplier-mini">
-
               <span class="supplier-dot"></span>
-
-              ${supplier.name} · ${supplier.location}
-
+              ${supplier?.name || "Penyedia"}
             </div>
 
-            <h1>
-              ${product.name}
-            </h1>
+            <h1>${product.name}</h1>
 
             <div class="detail-price">
-
               ${rupiah(product.price)}
-
-              <small>
-                /${product.unit}
-              </small>
-
+              <small>/ ${product.unit}</small>
             </div>
 
             <p>
@@ -803,41 +779,40 @@ function productPage(id) {
             </p>
 
             <div class="detail-stock">
-              Stok tersedia:
-              <strong>
-                ${product.stock} ${product.unit}
-              </strong>
+              Tersedia ${product.stock} ${product.unit}
             </div>
 
             <div class="detail-actions">
 
               <button
+                type="button"
                 class="primary-btn"
-                id="detailAdd"
-                data-id="${product.id}"
+                data-detail-add="${product.id}"
               >
-                Tambah ke keranjang
+                + Tambah ke keranjang
+              </button>
+
+              <button
+                type="button"
+                class="secondary-btn"
+                data-detail-wishlist="${product.id}"
+              >
+                ${liked ? "♥ Tersimpan" : "♡ Simpan"}
               </button>
 
               <a
-                class="secondary-btn"
                 href="#cart"
+                class="secondary-btn"
               >
                 Lihat keranjang
               </a>
 
-            </div>
-
-            <div class="info-box">
-
-              <strong>
-                Pengiriman proyek
-              </strong>
-
-              <span>
-                Material dapat digabung dengan pembelian dari supplier lain
-                dalam satu pesanan.
-              </span>
+              <a
+                href="#chat"
+                class="secondary-btn"
+              >
+                Chat penyedia
+              </a>
 
             </div>
 
@@ -846,7 +821,297 @@ function productPage(id) {
         </div>
 
       </div>
+    </main>
 
+    ${footer()}
+  `;
+}
+
+/* =========================================================
+   WISHLIST
+========================================================= */
+
+function wishlistPage() {
+  const ids = getWishlist();
+
+  const savedProducts = ids
+    .map((id) => findProduct(id))
+    .filter(Boolean);
+
+  return `
+    <main class="section">
+      <div class="container">
+
+        <div class="page-heading">
+          <h1>Wishlist</h1>
+          <p>
+            Material yang Anda simpan untuk
+            dilihat kembali nanti.
+          </p>
+        </div>
+
+        ${
+          savedProducts.length
+            ? `
+              <div class="product-grid">
+                ${savedProducts
+                  .map(productCard)
+                  .join("")}
+              </div>
+            `
+            : `
+              <div class="empty-state">
+
+                <h2>
+                  Belum ada material tersimpan
+                </h2>
+
+                <p>
+                  Saat menemukan material yang menarik,
+                  tekan ikon ♡ untuk menyimpannya.
+                </p>
+
+                <a
+                  href="#products"
+                  class="primary-btn"
+                >
+                  Jelajahi material
+                </a>
+
+              </div>
+            `
+        }
+
+      </div>
+    </main>
+
+    ${footer()}
+  `;
+}
+
+/* =========================================================
+   ACCESS PAGE
+========================================================= */
+
+function accessRequiredPage(
+  title,
+  description,
+  pendingRoute
+) {
+  localStorage.setItem(
+    STORAGE_PENDING_ROUTE,
+    pendingRoute
+  );
+
+  return `
+    <main class="access-page">
+      <div class="container">
+
+        <div class="access-card">
+
+          <div class="access-icon">
+            🔐
+          </div>
+
+          <h1>${title}</h1>
+
+          <p>
+            ${description}
+          </p>
+
+          <div class="access-actions">
+
+            <a
+              href="#login"
+              class="primary-btn"
+            >
+              Login / Lanjut di Web
+            </a>
+
+            <button
+              type="button"
+              class="secondary-btn"
+              data-app-download
+            >
+              Download App
+            </button>
+
+          </div>
+
+          <p>
+            Anda tetap bisa menjelajah material
+            dan menambahkannya ke keranjang
+            tanpa login.
+          </p>
+
+        </div>
+
+      </div>
+    </main>
+
+    ${footer()}
+  `;
+}
+
+/* =========================================================
+   LOGIN
+========================================================= */
+
+function loginPage() {
+  return `
+    <main class="access-page">
+      <div class="container">
+
+        <div class="access-card login-card">
+
+          <div class="access-icon">
+            👤
+          </div>
+
+          <h1>
+            Masuk ke Bagus Load
+          </h1>
+
+          <p>
+            Login demo untuk menyimpan pesanan,
+            membuka keranjang, chat supplier
+            dan booking pengiriman.
+          </p>
+
+          <form id="loginForm">
+
+            <div class="form-section">
+
+              <label for="loginName">
+                Nama
+              </label>
+
+              <input
+                id="loginName"
+                name="name"
+                type="text"
+                placeholder="Nama Anda"
+                required
+              />
+
+              <label for="loginPhone">
+                Nomor WhatsApp
+              </label>
+
+              <input
+                id="loginPhone"
+                name="phone"
+                type="tel"
+                placeholder="08xxxxxxxxxx"
+                required
+              />
+
+            </div>
+
+            <button
+              type="submit"
+              class="primary-btn full-btn"
+            >
+              Masuk
+            </button>
+
+          </form>
+
+          <p>
+            Ini masih mode demo.
+            Belum ada autentikasi produksi.
+          </p>
+
+        </div>
+
+      </div>
+    </main>
+
+    ${footer()}
+  `;
+}
+
+/* =========================================================
+   CHAT
+========================================================= */
+
+function chatPage() {
+  const user = getUser();
+
+  return `
+    <main class="access-page">
+      <div class="container">
+
+        <div class="access-card">
+
+          <div class="access-icon">
+            💬
+          </div>
+
+          <h1>
+            Chat Supplier
+          </h1>
+
+          <p>
+            Halo ${user?.name || ""},
+            fitur chat supplier sedang
+            disiapkan dalam demo.
+          </p>
+
+          <a
+            href="#products"
+            class="primary-btn"
+          >
+            Cari Material
+          </a>
+
+        </div>
+
+      </div>
+    </main>
+
+    ${footer()}
+  `;
+}
+
+/* =========================================================
+   BOOKING
+========================================================= */
+
+function bookingPage() {
+  const user = getUser();
+
+  return `
+    <main class="access-page">
+      <div class="container">
+
+        <div class="access-card">
+
+          <div class="access-icon">
+            🚚
+          </div>
+
+          <h1>
+            Booking Pengiriman
+          </h1>
+
+          <p>
+            Halo ${user?.name || ""},
+            fitur booking pengiriman akan
+            digunakan untuk mengatur jadwal
+            pengiriman material proyek.
+          </p>
+
+          <a
+            href="#products"
+            class="primary-btn"
+          >
+            Pilih Material
+          </a>
+
+        </div>
+
+      </div>
     </main>
 
     ${footer()}
@@ -857,257 +1122,230 @@ function productPage(id) {
    CART
 ========================================================= */
 
-function groupCartBySupplier() {
+function groupedCart() {
   const cart = getCart();
 
   const groups = {};
 
   cart.forEach((item) => {
-
     const product = findProduct(item.productId);
 
     if (!product) return;
 
-    const supplier = findSupplier(product.supplierId);
+    const supplier = findSupplier(
+      product.supplierId
+    );
 
-    if (!groups[product.supplierId]) {
-      groups[product.supplierId] = {
+    const key = product.supplierId;
+
+    if (!groups[key]) {
+      groups[key] = {
         supplier,
-        items: []
+        items: [],
       };
     }
 
-    groups[product.supplierId].items.push({
+    groups[key].items.push({
       ...item,
-      product
+      product,
     });
-
   });
 
   return Object.values(groups);
 }
 
 function cartPage() {
-  const cart = getCart();
+  const groups = groupedCart();
 
-  if (!cart.length) {
-
+  if (!groups.length) {
     return `
-      ${header()}
+      <main class="cart-page">
+        <div class="container">
 
-      <main class="empty-page">
-
-        <div class="empty-box">
-
-          <div class="empty-icon">
-            +
+          <div class="page-heading">
+            <h1>Keranjang</h1>
+            <p>
+              Belum ada material di keranjang Anda.
+            </p>
           </div>
 
-          <h1>
-            Keranjang masih kosong
-          </h1>
+          <div class="empty-state">
 
-          <p>
-            Tambahkan material yang Anda butuhkan untuk proyek.
-          </p>
+            <h2>
+              Keranjang masih kosong
+            </h2>
 
-          <a
-            href="#home"
-            class="primary-btn"
-          >
-            Cari Material
-          </a>
+            <p>
+              Cari material yang Anda butuhkan
+              untuk mulai membuat pesanan.
+            </p>
+
+            <a
+              href="#products"
+              class="primary-btn"
+            >
+              Cari Material
+            </a>
+
+          </div>
 
         </div>
-
       </main>
 
       ${footer()}
     `;
   }
 
-  const groups = groupCartBySupplier();
   const subtotal = cartSubtotal();
-  const delivery = 25000;
-  const total = subtotal + delivery;
 
   return `
-    ${header()}
-
     <main class="cart-page">
-
       <div class="container">
 
-        <a href="#home" class="back-link">
-          ← Lanjut belanja
-        </a>
-
         <div class="page-heading">
-
-          <h1>
-            Keranjang
-          </h1>
-
+          <h1>Keranjang</h1>
           <p>
-            Material dari ${groups.length} supplier.
+            Periksa material dari beberapa penyedia
+            sebelum melanjutkan pesanan.
           </p>
-
-        </div>
-
-        <div class="supplier-summary">
-
-          ${groups.map((group) => `
-            <div class="supplier-summary-item">
-
-              <div class="supplier-avatar">
-                ${group.supplier.initials}
-              </div>
-
-              <div>
-
-                <strong>
-                  ${group.supplier.name}
-                </strong>
-
-                <small>
-                  ${group.items.length} material
-                </small>
-
-              </div>
-
-            </div>
-          `).join("")}
-
         </div>
 
         <div class="cart-layout">
 
-          <div>
+          <div class="cart-items">
 
-            ${groups.map((group) => `
+            ${groups
+              .map(
+                (group) => `
+                  <section>
 
-              <div class="cart-supplier">
-
-                <div class="cart-supplier-head">
-
-                  <div>
-                    <strong>
-                      ${group.supplier.name}
-                    </strong>
-
-                    <small>
-                      ${group.supplier.location}
-                    </small>
-                  </div>
-
-                  <span>
-                    ${group.items.length} item
-                  </span>
-
-                </div>
-
-                ${group.items.map((item) => `
-
-                  <div class="cart-item">
-
-                    <div>
-
-                      <strong>
-                        ${item.product.name}
-                      </strong>
-
-                      <small>
-                        ${rupiah(item.product.price)}
-                        /${item.product.unit}
-                      </small>
-
+                    <div
+                      class="section-title"
+                      style="margin-top:0"
+                    >
+                      <h2>
+                        ${group.supplier?.name || "Penyedia"}
+                      </h2>
                     </div>
 
-                    <div class="qty-control">
+                    ${group.items
+                      .map(
+                        (item) => `
+                          <div class="cart-item">
 
-                      <button
-                        data-minus="${item.product.id}"
-                      >
-                        −
-                      </button>
+                            <div
+                              style="
+                                width:44px;
+                                height:44px;
+                                flex:0 0 44px;
+                                display:grid;
+                                place-items:center;
+                                border-radius:10px;
+                                background:#f1f1ef;
+                                font-size:22px;
+                              "
+                            >
+                              ${item.product.icon}
+                            </div>
 
-                      <span>
-                        ${item.qty}
-                      </span>
+                            <div style="min-width:0;flex:1">
+                              <strong>
+                                ${item.product.name}
+                              </strong>
 
-                      <button
-                        data-plus="${item.product.id}"
-                      >
-                        +
-                      </button>
+                              <small>
+                                ${rupiah(item.product.price)}
+                                / ${item.product.unit}
+                              </small>
+                            </div>
 
-                    </div>
+                            <div class="qty-control">
 
-                    <strong>
-                      ${rupiah(
-                        item.product.price * item.qty
-                      )}
-                    </strong>
+                              <button
+                                type="button"
+                                data-qty-minus="${item.product.id}"
+                              >
+                                −
+                              </button>
 
-                  </div>
+                              <span>
+                                ${item.qty}
+                              </span>
 
-                `).join("")}
+                              <button
+                                type="button"
+                                data-qty-plus="${item.product.id}"
+                              >
+                                +
+                              </button>
 
-              </div>
+                            </div>
 
-            `).join("")}
+                          </div>
+                        `
+                      )
+                      .join("")}
+
+                  </section>
+                `
+              )
+              .join("")}
 
           </div>
 
           <aside class="summary-card">
 
-            <div class="summary-line">
-
-              <span>
-                Subtotal
-              </span>
-
-              <span>
-                ${rupiah(subtotal)}
-              </span>
-
-            </div>
+            <h3>
+              Ringkasan
+            </h3>
 
             <div class="summary-line">
-
               <span>
-                Delivery
-              </span>
-
-              <span>
-                ${rupiah(delivery)}
-              </span>
-
-            </div>
-
-            <div class="summary-total">
-
-              <span>
-                Total
+                Jumlah item
               </span>
 
               <strong>
-                ${rupiah(total)}
+                ${cartCount()}
               </strong>
-
             </div>
 
-            <p class="summary-note">
-              Biaya delivery demo. Perhitungan realtime akan
-              menggunakan lokasi, berat, volume, kendaraan,
-              dan rute aktual.
-            </p>
+            <div class="summary-line">
+              <span>
+                Material
+              </span>
+
+              <strong>
+                ${rupiah(subtotal)}
+              </strong>
+            </div>
+
+            <div class="summary-line">
+              <span>
+                Pengiriman
+              </span>
+
+              <span>
+                Dihitung kemudian
+              </span>
+            </div>
+
+            <div class="summary-total">
+              <span>
+                Total material
+              </span>
+
+              <strong>
+                ${rupiah(subtotal)}
+              </strong>
+            </div>
+
+            <div style="height:12px"></div>
 
             <a
               href="#checkout"
               class="primary-btn full-btn"
             >
-              Lanjut Checkout
+              Lanjut Pesanan
             </a>
 
           </aside>
@@ -1115,7 +1353,6 @@ function cartPage() {
         </div>
 
       </div>
-
     </main>
 
     ${footer()}
@@ -1130,39 +1367,60 @@ function checkoutPage() {
   const cart = getCart();
 
   if (!cart.length) {
-    location.hash = "#cart";
-    return "";
+    return `
+      <main class="checkout-page">
+        <div class="container">
+
+          <div class="empty-state">
+            <h2>
+              Keranjang masih kosong
+            </h2>
+
+            <p>
+              Tambahkan material terlebih dahulu
+              sebelum membuat pesanan.
+            </p>
+
+            <a
+              href="#products"
+              class="primary-btn"
+            >
+              Cari Material
+            </a>
+          </div>
+
+        </div>
+      </main>
+
+      ${footer()}
+    `;
   }
 
   const subtotal = cartSubtotal();
-  const delivery = 25000;
-  const total = subtotal + delivery;
-  const groups = groupCartBySupplier();
 
   return `
-    ${header()}
-
     <main class="checkout-page">
-
       <div class="container">
 
-        <a href="#cart" class="back-link">
+        <a
+          href="#cart"
+          class="back-link"
+        >
           ← Kembali ke keranjang
         </a>
 
         <div class="page-heading">
-
           <h1>
-            Checkout
+            Buat Pesanan
           </h1>
 
           <p>
-            Tentukan lokasi dan waktu pengiriman material.
+            Masukkan informasi pengiriman
+            untuk melanjutkan.
           </p>
-
         </div>
 
-        <div class="checkout-layout">
+        <div class="cart-layout">
 
           <form
             class="form-card"
@@ -1172,75 +1430,33 @@ function checkoutPage() {
             <div class="form-section">
 
               <h2>
-                Informasi penerima
+                Lokasi pengiriman
               </h2>
 
-              <label>
-                Nama penerima
-
-                <input
-                  name="name"
-                  required
-                  placeholder="Nama tukang / mandor / penerima"
-                />
-
+              <label for="checkoutAddress">
+                Alamat
               </label>
 
-              <label>
-                WhatsApp
+              <textarea
+                id="checkoutAddress"
+                name="address"
+                placeholder="Alamat proyek / lokasi pengiriman"
+                required
+              ></textarea>
 
-                <input
-                  name="phone"
-                  required
-                  type="tel"
-                  placeholder="08xxxxxxxxxx"
-                />
-
+              <label for="checkoutPhone">
+                Nomor WhatsApp
               </label>
+
+              <input
+                id="checkoutPhone"
+                name="phone"
+                type="tel"
+                placeholder="08xxxxxxxxxx"
+                required
+              />
 
             </div>
-
-
-            <div class="form-section">
-
-              <h2>
-                Lokasi proyek
-              </h2>
-
-              <label>
-                Alamat proyek
-
-                <textarea
-                  name="address"
-                  required
-                  placeholder="Alamat lengkap lokasi proyek"
-                ></textarea>
-
-              </label>
-
-              <label>
-                Kecamatan
-
-                <input
-                  name="district"
-                  required
-                  placeholder="Contoh: Denpasar Selatan"
-                />
-
-              </label>
-
-              <label>
-                Patokan lokasi
-
-                <input
-                  name="landmark"
-                  placeholder="Contoh: dekat minimarket..."
-                />
-
-              </label>
-
-            </div>
-
 
             <div class="form-section">
 
@@ -1248,181 +1464,82 @@ function checkoutPage() {
                 Waktu pengiriman
               </h2>
 
-              <div class="delivery-choice">
-
-                <label class="choice">
-
-                  <input
-                    type="radio"
-                    name="deliveryType"
-                    value="now"
-                    checked
-                  />
-
-                  <span>
-                    <strong>
-                      Secepatnya
-                    </strong>
-
-                    <small>
-                      Diproses setelah supplier dikonfirmasi.
-                    </small>
-                  </span>
-
-                </label>
-
-                <label class="choice">
-
-                  <input
-                    type="radio"
-                    name="deliveryType"
-                    value="schedule"
-                  />
-
-                  <span>
-                    <strong>
-                      Jadwalkan
-                    </strong>
-
-                    <small>
-                      Tentukan tanggal dan waktu.
-                    </small>
-                  </span>
-
-                </label>
-
-              </div>
-
-              <div
-                class="schedule-fields"
-                id="scheduleFields"
-              >
+              <label class="choice">
 
                 <input
-                  type="date"
-                  name="date"
+                  type="radio"
+                  name="delivery"
+                  value="Secepatnya"
+                  checked
                 />
+
+                <span>
+                  <strong>
+                    Secepatnya
+                  </strong>
+
+                  <small>
+                    Setelah material dikonfirmasi.
+                  </small>
+                </span>
+
+              </label>
+
+              <label class="choice">
 
                 <input
-                  type="time"
-                  name="time"
+                  type="radio"
+                  name="delivery"
+                  value="Terjadwal"
                 />
 
-              </div>
+                <span>
+                  <strong>
+                    Terjadwal
+                  </strong>
 
-            </div>
-
-
-            <div class="form-section">
-
-              <h2>
-                Catatan
-              </h2>
-
-              <label>
-
-                Catatan untuk pengiriman
-
-                <textarea
-                  name="note"
-                  placeholder="Contoh: material diturunkan di sisi timur bangunan."
-                ></textarea>
+                  <small>
+                    Jadwal dapat diatur kemudian.
+                  </small>
+                </span>
 
               </label>
 
             </div>
 
-
             <button
-              class="primary-btn full-btn"
               type="submit"
+              class="primary-btn full-btn"
             >
               Buat Pesanan
             </button>
 
           </form>
 
+          <aside class="summary-card">
 
-          <aside>
+            <h3>
+              Ringkasan
+            </h3>
 
-            <div class="summary-card">
+            <div class="summary-line">
+              <span>
+                Item
+              </span>
 
-              <h3>
-                Ringkasan
-              </h3>
+              <strong>
+                ${cartCount()}
+              </strong>
+            </div>
 
-              ${cart.map((item) => {
+            <div class="summary-total">
+              <span>
+                Total material
+              </span>
 
-                const product = findProduct(item.productId);
-
-                return `
-                  <div class="checkout-item">
-
-                    <span>
-                      ${product.name} × ${item.qty}
-                    </span>
-
-                    <strong>
-                      ${rupiah(product.price * item.qty)}
-                    </strong>
-
-                  </div>
-                `;
-
-              }).join("")}
-
-              <div class="summary-line">
-
-                <span>
-                  Material
-                </span>
-
-                <span>
-                  ${rupiah(subtotal)}
-                </span>
-
-              </div>
-
-              <div class="summary-line">
-
-                <span>
-                  Delivery
-                </span>
-
-                <span>
-                  ${rupiah(delivery)}
-                </span>
-
-              </div>
-
-              <div class="summary-total">
-
-                <span>
-                  Total
-                </span>
-
-                <strong>
-                  ${rupiah(total)}
-                </strong>
-
-              </div>
-
-              <div class="hub-message">
-
-                <strong>
-                  Multi-Supplier + Hub
-                </strong>
-
-                <span>
-                  ${
-                    groups.length > 1
-                      ? `Pesanan berasal dari ${groups.length} supplier dan dapat dikonsolidasikan di Hub.`
-                      : "Pesanan dari satu supplier dapat langsung diproses."
-                  }
-                </span>
-
-              </div>
-
+              <strong>
+                ${rupiah(subtotal)}
+              </strong>
             </div>
 
           </aside>
@@ -1430,7 +1547,6 @@ function checkoutPage() {
         </div>
 
       </div>
-
     </main>
 
     ${footer()}
@@ -1441,96 +1557,50 @@ function checkoutPage() {
    CREATE ORDER
 ========================================================= */
 
-function createOrder(form) {
-  const formData = new FormData(form);
+function createOrder(formData) {
   const cart = getCart();
 
-  const groups = groupCartBySupplier();
+  if (!cart.length) return;
 
-  const orderNumber =
+  const orders = getOrders();
+
+  const number =
     "BLD-" +
     Date.now()
       .toString()
       .slice(-8);
 
-  const items = cart.map((item) => {
-    const product = findProduct(item.productId);
-
-    return {
-      productId: product.id,
-      name: product.name,
-      price: product.price,
-      unit: product.unit,
-      qty: item.qty,
-      supplierId: product.supplierId,
-      total: product.price * item.qty
-    };
-  });
-
-  const suppliersData = groups.map((group) => {
-
-    return {
-      id: group.supplier.id,
-      supplierId: group.items[0].product.supplierId,
-      name: group.supplier.name,
-      location: group.supplier.location,
-
-      items: group.items.map((item) => ({
-        productId: item.product.id,
-        name: item.product.name,
-        qty: item.qty,
-        unit: item.product.unit,
-        total: item.product.price * item.qty
-      })),
-
-      status: "confirmed"
-    };
-
-  });
-
-  const subtotal = cartSubtotal();
-  const delivery = 25000;
-
   const order = {
-
-    number: orderNumber,
-
+    id: Date.now(),
+    number,
     createdAt: new Date().toISOString(),
 
     customer: {
-      name: formData.get("name"),
+      name: getUser()?.name || "",
       phone: formData.get("phone"),
       address: formData.get("address"),
-      district: formData.get("district"),
-      landmark: formData.get("landmark"),
-      note: formData.get("note")
     },
 
-    delivery: {
-      type: formData.get("deliveryType"),
-      date: formData.get("date") || null,
-      time: formData.get("time") || null
-    },
+    delivery: formData.get("delivery"),
 
-    items,
+    status: "Supplier Confirmed",
 
-    suppliers: suppliersData,
+    items: cart.map((item) => {
+      const product = findProduct(
+        item.productId
+      );
 
-    hubStatus:
-      suppliersData.length > 1
-        ? "waiting"
-        : "not-required",
+      return {
+        productId: item.productId,
+        name: product?.name,
+        qty: item.qty,
+        price: product?.price || 0,
+        supplierId: product?.supplierId,
+      };
+    }),
 
-    deliveryStatus: "waiting",
-
-    subtotal,
-
-    deliveryFee: delivery,
-
-    total: subtotal + delivery
+    subtotal: cartSubtotal(),
   };
-
-  const orders = getOrders();
 
   orders.unshift(order);
 
@@ -1538,105 +1608,104 @@ function createOrder(form) {
 
   saveCart([]);
 
-  location.hash = `#order/${order.number}`;
+  toast("Pesanan berhasil dibuat");
+
+  setTimeout(() => {
+    location.hash = `#order/${order.number}`;
+  }, 400);
 }
 
 /* =========================================================
-   ORDERS DASHBOARD
+   ORDERS
 ========================================================= */
 
 function ordersPage() {
   const orders = getOrders();
 
-  return `
-    ${header()}
+  if (!orders.length) {
+    return `
+      <main class="orders-page">
+        <div class="container">
 
-    <main class="orders-page">
+          <div class="page-heading">
+            <h1>Pesanan</h1>
+            <p>
+              Riwayat pesanan Anda akan muncul di sini.
+            </p>
+          </div>
 
-      <div class="container narrow-container">
+          <div class="empty-state">
 
-        <a href="#home" class="back-link">
-          ← Kembali ke beranda
-        </a>
+            <h2>
+              Belum ada pesanan
+            </h2>
 
-        <div class="page-heading">
+            <p>
+              Pesanan yang sudah dibuat akan
+              dapat dipantau dari halaman ini.
+            </p>
 
-          <h1>
-            Pesanan
-          </h1>
+            <a
+              href="#products"
+              class="primary-btn"
+            >
+              Mulai Belanja
+            </a>
 
-          <p>
-            Semua pesanan material Anda.
-          </p>
+          </div>
 
         </div>
+      </main>
 
-        ${
-          !orders.length
-            ? `
-              <div class="empty-box">
+      ${footer()}
+    `;
+  }
 
-                <div class="empty-icon">
-                  —
-                </div>
+  return `
+    <main class="orders-page">
+      <div class="container">
 
-                <h2>
-                  Belum ada pesanan
-                </h2>
+        <div class="page-heading">
+          <h1>Pesanan</h1>
+          <p>
+            Pantau material dan proses pengiriman.
+          </p>
+        </div>
 
-                <p>
-                  Pesanan yang Anda buat akan muncul di sini.
-                </p>
-
-                <a
-                  href="#home"
-                  class="primary-btn"
-                >
-                  Cari Material
-                </a>
-
-              </div>
-            `
-            : `
-              <div class="orders-list">
-
-                ${orders.map((order) => orderCard(order)).join("")}
-
-              </div>
-            `
-        }
+        <div class="order-list">
+          ${orders.map(orderCard).join("")}
+        </div>
 
       </div>
-
     </main>
 
     ${footer()}
   `;
 }
 
-/* =========================================================
-   ORDER CARD
-========================================================= */
-
 function orderCard(order) {
-
-  const current = getProgressIndex(order);
+  const itemCount = order.items.reduce(
+    (total, item) => total + item.qty,
+    0
+  );
 
   return `
-    <article class="order-card">
+    <a
+      href="#order/${order.number}"
+      class="order-card"
+      style="display:block"
+    >
 
       <div class="order-card-top">
 
         <div>
-
-          <span class="order-number">
+          <div class="order-number">
             ${order.number}
-          </span>
+          </div>
 
           <small>
             ${formatDate(order.createdAt)}
           </small>
-
         </div>
 
         <span class="status-pill">
@@ -1647,734 +1716,267 @@ function orderCard(order) {
 
       <div class="order-card-main">
 
-        <div>
+        <strong>
+          ${itemCount} item
+        </strong>
 
-          <strong>
-            ${order.items.length} material
-          </strong>
-
-          <span>
-            ${order.suppliers.length} supplier
-          </span>
-
-        </div>
-
-        <div>
-
-          <strong>
-            ${rupiah(order.total)}
-          </strong>
-
-          <span>
-            Total pesanan
-          </span>
-
-        </div>
+        <span>
+          ${rupiah(order.subtotal)}
+        </span>
 
       </div>
 
-      <div class="mini-progress">
-
-        ${progressSteps()
-          .map((step, index) => `
-            <div class="${index <= current ? "done" : ""}">
-
-              <span></span>
-
-              <small>
-                ${step.short}
-              </small>
-
-            </div>
-          `)
-          .join("")}
-
-      </div>
-
-      <a
-        href="#order/${order.number}"
-        class="secondary-btn"
-      >
-        Lihat detail pesanan
-      </a>
-
-    </article>
+    </a>
   `;
-}
-
-/* =========================================================
-   PROGRESS
-========================================================= */
-
-function progressSteps() {
-
-  return [
-    {
-      short: "Pesanan"
-    },
-    {
-      short: "Supplier"
-    },
-    {
-      short: "Hub"
-    },
-    {
-      short: "Kirim"
-    },
-    {
-      short: "Selesai"
-    }
-  ];
-
-}
-
-function getProgressIndex(order) {
-
-  if (!order) return 0;
-
-  if (order.deliveryStatus === "delivered") {
-    return 4;
-  }
-
-  if (order.deliveryStatus === "out") {
-    return 3;
-  }
-
-  if (
-    order.hubStatus === "ready" ||
-    order.hubStatus === "consolidated"
-  ) {
-    return 3;
-  }
-
-  if (
-    order.suppliers.every(
-      (supplier) => supplier.status === "received"
-    )
-  ) {
-    return 2;
-  }
-
-  if (
-    order.suppliers.some(
-      (supplier) => supplier.status !== "confirmed"
-    )
-  ) {
-    return 1;
-  }
-
-  return 0;
 }
 
 /* =========================================================
    ORDER DETAIL
 ========================================================= */
 
-function orderDetailPage(number) {
+function progressSteps(order) {
+  const steps = [
+    "Supplier Confirmed",
+    "In Transit",
+    "Received at Hub",
+    "Ready for Delivery",
+    "Out for Delivery",
+    "Delivered",
+  ];
 
-  const orders = getOrders();
+  const current =
+    steps.indexOf(order.status);
 
-  const order = orders.find(
-    (item) => item.number === number
-  );
+  return `
+    <div
+      style="
+        display:grid;
+        gap:8px;
+        margin-top:20px;
+      "
+    >
 
-  if (!order) {
+      ${steps
+        .map(
+          (step, index) => `
+            <div
+              style="
+                display:flex;
+                align-items:center;
+                gap:10px;
+                padding:10px 0;
+                border-bottom:1px solid #f0f0ee;
+                color:${
+                  index <= current
+                    ? "#171717"
+                    : "#aaa"
+                };
+              "
+            >
 
-    return `
-      ${header()}
+              <span
+                style="
+                  width:25px;
+                  height:25px;
+                  flex:0 0 25px;
+                  display:grid;
+                  place-items:center;
+                  border-radius:50%;
+                  background:${
+                    index <= current
+                      ? "#171717"
+                      : "#eeeeec"
+                  };
+                  color:${
+                    index <= current
+                      ? "#fff"
+                      : "#888"
+                  };
+                  font-size:10px;
+                  font-weight:800;
+                "
+              >
+                ${
+                  index <= current
+                    ? "✓"
+                    : index + 1
+                }
+              </span>
 
-      <main class="empty-page">
+              <span
+                style="
+                  font-size:12px;
+                  font-weight:${
+                    index === current
+                      ? "800"
+                      : "600"
+                  };
+                "
+              >
+                ${step}
+              </span>
 
-        <div class="empty-box">
+            </div>
+          `
+        )
+        .join("")}
+
+    </div>
+  `;
+}
+
+function orderDetailPage(order) {
+  return `
+    <main class="order-detail-page">
+      <div class="container">
+
+        <a
+          href="#orders"
+          class="back-link"
+        >
+          ← Kembali ke pesanan
+        </a>
+
+        <div class="page-heading">
 
           <h1>
-            Pesanan tidak ditemukan
+            ${order.number}
           </h1>
 
           <p>
-            Nomor pesanan tidak tersedia.
+            Dibuat ${formatDate(order.createdAt)}
           </p>
 
-          <a
-            href="#orders"
-            class="primary-btn"
-          >
-            Lihat Pesanan
-          </a>
-
         </div>
 
-      </main>
-
-      ${footer()}
-    `;
-  }
-
-  const progress = getProgressIndex(order);
-
-  return `
-    ${header()}
-
-    <main class="order-detail-page">
-
-      <div class="container narrow-container">
-
-        <a href="#orders" class="back-link">
-          ← Semua pesanan
-        </a>
-
-        <div class="order-detail-head">
-
-          <div>
-
-            <h1>
-              ${order.number}
-            </h1>
-
-            <p>
-              Dibuat ${formatDate(order.createdAt)}
-            </p>
-
-          </div>
-
-          <span class="status-pill large">
-            ${orderStatus(order)}
-          </span>
-
-        </div>
-
-
-        <!-- MAIN TRACKING -->
-
-        <section class="tracking-card">
+        <div class="tracking-card">
 
           <div class="tracking-card-head">
 
-            <div>
-
-              <h2>
-                Perjalanan pesanan
-              </h2>
-
-            </div>
-
-            <div class="demo-label">
-              DEMO SIMULASI
-            </div>
-
-          </div>
-
-          <div class="main-progress">
-
-            ${progressSteps()
-              .map((step, index) => `
-                <div class="${index <= progress ? "done" : ""}">
-
-                  <span></span>
-
-                  <small>
-                    ${step.short}
-                  </small>
-
-                </div>
-              `)
-              .join("")}
-
-          </div>
-
-        </section>
-
-
-        <!-- SUPPLIER -->
-
-        <section class="detail-section">
-
-          <div class="section-title">
-
-            <div class="eyebrow">
-              SUPPLIER
-            </div>
-
             <h2>
-              Proses dari supplier
+              Status pengiriman
             </h2>
 
-          </div>
-
-          <div class="supplier-status-list">
-
-            ${order.suppliers
-              .map((supplier, index) =>
-                supplierStatusCard(
-                  order,
-                  supplier,
-                  index
-                )
-              )
-              .join("")}
+            <span class="status-pill">
+              ${order.status}
+            </span>
 
           </div>
 
-        </section>
+          ${progressSteps(order)}
 
+        </div>
 
-        <!-- HUB -->
+        <div class="section-title">
+          <h2>
+            Material
+          </h2>
+        </div>
 
-        ${
-          order.suppliers.length > 1
-            ? `
-              <section class="detail-section">
+        <div class="order-list">
 
-                <div class="section-title">
+          ${order.items
+            .map(
+              (item) => `
+                <div class="order-card">
 
-                  <div class="eyebrow">
-                    KONSOLIDASI
-                  </div>
-
-                  <h2>
-                    Hub
-                  </h2>
-
-                </div>
-
-                ${hubCard(order)}
-
-              </section>
-            `
-            : ""
-        }
-
-
-        <!-- DELIVERY -->
-
-        <section class="detail-section">
-
-          <div class="section-title">
-
-            <div class="eyebrow">
-              LAST MILE
-            </div>
-
-            <h2>
-              Pengiriman ke proyek
-            </h2>
-
-          </div>
-
-          ${deliveryCard(order)}
-
-        </section>
-
-
-        <!-- ITEMS -->
-
-        <section class="detail-section">
-
-          <div class="section-title">
-
-            <div class="eyebrow">
-              RINCIAN
-            </div>
-
-            <h2>
-              Material pesanan
-            </h2>
-
-          </div>
-
-          <div class="detail-two-col">
-
-            <div class="items-detail-card">
-
-              <h2>
-                Item
-              </h2>
-
-              ${order.items.map((item) => `
-
-                <div class="detail-item">
-
-                  <div>
+                  <div class="order-card-main">
 
                     <strong>
                       ${item.name}
                     </strong>
 
                     <span>
-                      ${item.qty} ${item.unit} · ${rupiah(item.price)}
+                      ${item.qty} ×
+                      ${rupiah(item.price)}
                     </span>
 
                   </div>
 
-                  <strong>
-                    ${rupiah(item.total)}
-                  </strong>
-
                 </div>
-
-              `).join("")}
-
-              ${
-                order.customer.note
-                  ? `
-                    <div class="note-box">
-
-                      <strong>
-                        Catatan pengiriman
-                      </strong>
-
-                      <span>
-                        ${order.customer.note}
-                      </span>
-
-                    </div>
-                  `
-                  : ""
-              }
-
-            </div>
-
-
-            <div class="summary-card">
-
-              <div class="summary-line">
-
-                <span>
-                  Material
-                </span>
-
-                <span>
-                  ${rupiah(order.subtotal)}
-                </span>
-
-              </div>
-
-              <div class="summary-line">
-
-                <span>
-                  Delivery
-                </span>
-
-                <span>
-                  ${rupiah(order.deliveryFee)}
-                </span>
-
-              </div>
-
-              <div class="summary-total">
-
-                <span>
-                  Total
-                </span>
-
-                <strong>
-                  ${rupiah(order.total)}
-                </strong>
-
-              </div>
-
-            </div>
-
-          </div>
-
-        </section>
-
-      </div>
-
-    </main>
-
-    ${footer()}
-  `;
-}
-
-/* =========================================================
-   SUPPLIER STATUS CARD
-========================================================= */
-
-function supplierStatusCard(order, supplier, index) {
-
-  const statusText = {
-    confirmed: "Pesanan dikonfirmasi",
-    pickup: "Menunggu / dalam pickup",
-    transit: "Dalam perjalanan ke Hub",
-    received: "Sudah diterima di Hub"
-  };
-
-  const nextAction = {
-    confirmed: "Simulasikan Pickup",
-    pickup: "Simulasikan Tiba di Hub",
-    transit: "Simulasikan Diterima di Hub",
-    received: "Sudah diterima"
-  };
-
-  return `
-    <article class="supplier-status-card">
-
-      <div class="supplier-status-head">
-
-        <div class="supplier-avatar">
-          ${supplier.name
-            .split(" ")
-            .map((word) => word[0])
-            .slice(0, 2)
+              `
+            )
             .join("")}
-        </div>
-
-        <div>
-
-          <strong>
-            ${supplier.name}
-          </strong>
-
-          <span>
-            ${supplier.location}
-          </span>
 
         </div>
 
-        <span class="status-pill">
-          ${statusText[supplier.status]}
-        </span>
+        <div class="section-title">
+          <h2>
+            Pengiriman
+          </h2>
+        </div>
 
-      </div>
+        <div class="tracking-card">
 
-      <div class="supplier-materials">
-
-        ${supplier.items.map((item) => `
-
-          <div>
-
+          <div class="summary-line">
             <span>
-              ${item.name}
+              Penerima
             </span>
 
             <strong>
-              ${item.qty} ${item.unit}
+              ${order.customer.name}
             </strong>
-
           </div>
 
-        `).join("")}
+          <div class="summary-line">
+            <span>
+              WhatsApp
+            </span>
 
-      </div>
+            <strong>
+              ${order.customer.phone}
+            </strong>
+          </div>
 
-      <div class="supplier-route">
+          <div class="summary-line">
+            <span>
+              Jadwal
+            </span>
 
-        <span>
-          Supplier
-        </span>
+            <strong>
+              ${order.delivery}
+            </strong>
+          </div>
 
-        <b>→</b>
-
-        <span>
-          Hub
-        </span>
-
-      </div>
-
-      ${
-        supplier.status !== "received"
-          ? `
-            <button
-              class="primary-btn simulate-btn"
-              data-supplier-next="${index}"
-              data-order="${order.number}"
-            >
-              ${nextAction[supplier.status]}
-            </button>
-          `
-          : `
-            <div class="received-message">
-              ✓ Material sudah diterima di Hub
-            </div>
-          `
-      }
-
-    </article>
-  `;
-}
-
-/* =========================================================
-   HUB CARD
-========================================================= */
-
-function hubCard(order) {
-
-  const allReceived = order.suppliers.every(
-    (supplier) => supplier.status === "received"
-  );
-
-  if (allReceived && order.hubStatus === "waiting") {
-    order.hubStatus = "ready";
-
-    saveOrders(
-      getOrders().map((item) =>
-        item.number === order.number
-          ? order
-          : item
-      )
-    );
-  }
-
-  const status =
-    order.hubStatus === "ready"
-      ? "Semua material sudah terkumpul"
-      : "Menunggu material dari supplier";
-
-  return `
-    <div class="hub-card">
-
-      <div class="hub-icon">
-        HUB
-      </div>
-
-      <div class="hub-content">
-
-        <h2>
-          Hub Konsolidasi
-        </h2>
-
-        <p>
-          Material dari beberapa supplier dikumpulkan
-          terlebih dahulu sebelum diteruskan menuju proyek.
-        </p>
-
-        <div class="hub-status">
-
-          <strong>
-            ${status}
-          </strong>
+          <div
+            style="
+              margin-top:15px;
+              padding-top:15px;
+              border-top:1px solid #e7e7e5;
+              color:#727272;
+              font-size:12px;
+              line-height:1.6;
+            "
+          >
+            ${order.customer.address}
+          </div>
 
         </div>
 
-        ${
-          order.hubStatus === "ready"
-            ? `
-              <button
-                class="primary-btn"
-                data-hub-ready="${order.number}"
-              >
-                Siapkan untuk pengiriman
-              </button>
-            `
-            : `
-              <div class="received-message">
-                Menunggu semua supplier menyelesaikan pengiriman.
-              </div>
-            `
-        }
+        <div class="section-title">
+          <h2>
+            Total
+          </h2>
+        </div>
+
+        <div class="summary-card">
+
+          <div class="summary-total">
+            <span>
+              Total material
+            </span>
+
+            <strong>
+              ${rupiah(order.subtotal)}
+            </strong>
+          </div>
+
+        </div>
 
       </div>
+    </main>
 
-    </div>
-  `;
-}
-
-/* =========================================================
-   DELIVERY CARD
-========================================================= */
-
-function deliveryCard(order) {
-
-  let status = "Menunggu material dari Hub";
-
-  if (order.deliveryStatus === "ready") {
-    status = "Siap dikirim ke proyek";
-  }
-
-  if (order.deliveryStatus === "out") {
-    status = "Dalam pengiriman ke proyek";
-  }
-
-  if (order.deliveryStatus === "delivered") {
-    status = "Pesanan telah diterima";
-  }
-
-  return `
-    <div class="delivery-card">
-
-      <h2>
-        Pengiriman Proyek
-      </h2>
-
-      <div class="delivery-status">
-
-        <span class="status-dot"></span>
-
-        <strong>
-          ${status}
-        </strong>
-
-      </div>
-
-      <div class="address-box">
-
-        <strong>
-          ${order.customer.name}
-        </strong>
-
-        <span>
-          ${order.customer.phone}
-        </span>
-
-        <p>
-          ${order.customer.address}
-        </p>
-
-        <small>
-          ${order.customer.district}
-          ${
-            order.customer.landmark
-              ? ` · ${order.customer.landmark}`
-              : ""
-          }
-        </small>
-
-        ${
-          order.delivery.type === "schedule"
-            ? `
-              <small>
-                Jadwal:
-                ${order.delivery.date || "-"}
-                ${order.delivery.time || ""}
-              </small>
-            `
-            : `
-              <small>
-                Pengiriman secepatnya
-              </small>
-            `
-        }
-
-      </div>
-
-      ${
-        order.deliveryStatus === "ready"
-          ? `
-            <button
-              class="primary-btn full-btn"
-              data-delivery-start="${order.number}"
-            >
-              Mulai Pengiriman
-            </button>
-          `
-          : ""
-      }
-
-      ${
-        order.deliveryStatus === "out"
-          ? `
-            <button
-              class="primary-btn full-btn"
-              data-delivery-done="${order.number}"
-            >
-              Tandai Sudah Diterima
-            </button>
-          `
-          : ""
-      }
-
-    </div>
+    ${footer()}
   `;
 }
 
@@ -2383,252 +1985,288 @@ function deliveryCard(order) {
 ========================================================= */
 
 function trackingPage() {
-
   const orders = getOrders();
 
   if (!orders.length) {
-    location.hash = "#orders";
-    return "";
+    return `
+      <main class="orders-page">
+        <div class="container">
+
+          <div class="empty-state">
+            <h2>
+              Belum ada pengiriman
+            </h2>
+
+            <p>
+              Buat pesanan terlebih dahulu
+              untuk melihat tracking.
+            </p>
+
+            <a
+              href="#products"
+              class="primary-btn"
+            >
+              Cari Material
+            </a>
+          </div>
+
+        </div>
+      </main>
+
+      ${footer()}
+    `;
   }
 
-  location.hash = `#order/${orders[0].number}`;
-
-  return "";
+  return orderDetailPage(orders[0]);
 }
 
 /* =========================================================
-   HOME BINDINGS
+   BIND HOME
 ========================================================= */
 
 function bindHome() {
+  const searchForm =
+    document.querySelector("#searchForm");
 
-  const form = document.querySelector("#heroSearch");
+  if (searchForm) {
+    searchForm.addEventListener(
+      "submit",
+      (event) => {
+        event.preventDefault();
 
-  if (form) {
+        const input =
+          document.querySelector("#searchInput");
 
-    form.addEventListener("submit", (event) => {
+        const keyword =
+          input?.value.trim() || "";
 
-      event.preventDefault();
-
-      const input =
-        document.querySelector("#heroSearchInput");
-
-      const query =
-        input.value.trim().toLowerCase();
-
-      const filtered =
-        products.filter((product) =>
-          `${product.name} ${product.category}`
-            .toLowerCase()
-            .includes(query)
-        );
-
-      renderProducts(filtered);
-
-      document
-        .querySelector("#products")
-        ?.scrollIntoView({
-          behavior: "smooth"
-        });
-
-    });
-
+        location.hash =
+          keyword
+            ? `#products?search=${encodeURIComponent(
+                keyword
+              )}`
+            : "#products";
+      }
+    );
   }
 
   document
-    .querySelectorAll("[data-search]")
+    .querySelectorAll("[data-quick-search]")
     .forEach((button) => {
-
       button.addEventListener("click", () => {
+        const keyword =
+          button.dataset.quickSearch;
 
-        const query =
-          button.dataset.search.toLowerCase();
-
-        const filtered =
-          products.filter((product) =>
-            `${product.name} ${product.category}`
-              .toLowerCase()
-              .includes(query)
-          );
-
-        renderProducts(filtered);
-
-        document
-          .querySelector("#products")
-          ?.scrollIntoView({
-            behavior: "smooth"
-          });
-
+        location.hash =
+          `#products?search=${encodeURIComponent(
+            keyword
+          )}`;
       });
-
     });
 
+  bindCategoryButtons();
+  bindAddCartButtons();
+}
 
+/* =========================================================
+   CATEGORY FILTER
+========================================================= */
+
+function bindCategoryButtons() {
   document
     .querySelectorAll("[data-category]")
     .forEach((button) => {
-
       button.addEventListener("click", () => {
+        const category =
+          button.dataset.category;
+
+        const grid =
+          document.querySelector("#productGrid");
+
+        if (!grid) return;
 
         document
           .querySelectorAll("[data-category]")
-          .forEach((item) =>
-            item.classList.remove("active")
-          );
+          .forEach((item) => {
+            item.classList.remove("active");
+          });
 
         button.classList.add("active");
-
-        const category =
-          button.dataset.category;
 
         const filtered =
           category === "Semua"
             ? products
             : products.filter(
                 (product) =>
-                  product.category === category
+                  product.category ===
+                  category
               );
 
-        renderProducts(filtered);
+        grid.innerHTML = filtered
+          .map(productCard)
+          .join("");
 
+        bindAddCartButtons();
+        bindWishlistButtons();
       });
-
     });
-
-
-  document
-    .querySelectorAll("[data-add]")
-    .forEach((button) => {
-
-      button.addEventListener("click", () => {
-
-        addToCart(
-          Number(button.dataset.add)
-        );
-
-      });
-
-    });
-
-}
-
-function renderProducts(list) {
-
-  const grid =
-    document.querySelector("#productGrid");
-
-  const count =
-    document.querySelector("#resultCount");
-
-  if (!grid) return;
-
-  grid.innerHTML =
-    list.length
-      ? list.map(productCard).join("")
-      : `
-        <div class="empty-inline">
-          Material tidak ditemukan.
-        </div>
-      `;
-
-  if (count) {
-    count.textContent =
-      `${list.length} material`;
-  }
-
-  grid
-    .querySelectorAll("[data-add]")
-    .forEach((button) => {
-
-      button.addEventListener("click", () => {
-
-        addToCart(
-          Number(button.dataset.add)
-        );
-
-      });
-
-    });
-
 }
 
 /* =========================================================
    ADD TO CART
 ========================================================= */
 
-function addToCart(productId) {
-
-  const product =
-    findProduct(productId);
+function addToCart(productId, qty = 1) {
+  const product = findProduct(productId);
 
   if (!product) return;
 
-  const cart =
-    getCart();
+  const cart = getCart();
 
   const existing =
     cart.find(
       (item) =>
-        item.productId === productId
+        item.productId === product.id
     );
 
   if (existing) {
-    existing.qty += 1;
+    existing.qty += qty;
   } else {
     cart.push({
-      productId,
-      qty: 1
+      productId: product.id,
+      qty,
     });
   }
 
   saveCart(cart);
 
+  updateHeader();
+  updateMobileBottomNav();
+
   toast(
     `${product.name} ditambahkan ke keranjang`
   );
-
-  updateHeader();
 }
 
-function updateHeader() {
+function bindAddCartButtons() {
+  document
+    .querySelectorAll("[data-add-cart]")
+    .forEach((button) => {
+      button.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
 
-  const oldHeader =
-    document.querySelector(".site-header");
-
-  if (!oldHeader) return;
-
-  const wrapper =
-    oldHeader.parentElement;
-
-  const newHeader =
-    document.createRange().createContextualFragment(
-      header()
-    );
-
-  oldHeader.replaceWith(
-    newHeader.firstElementChild
-  );
+        addToCart(
+          Number(button.dataset.addCart)
+        );
+      });
+    });
 }
 
 /* =========================================================
-   PRODUCT BINDING
+   PRODUCT DETAIL BINDING
 ========================================================= */
 
 function bindProduct() {
+  document
+    .querySelectorAll("[data-detail-add]")
+    .forEach((button) => {
+      button.addEventListener("click", () => {
+        addToCart(
+          Number(button.dataset.detailAdd)
+        );
+      });
+    });
 
-  const button =
-    document.querySelector("#detailAdd");
+  document
+    .querySelectorAll(
+      "[data-detail-wishlist]"
+    )
+    .forEach((button) => {
+      button.addEventListener("click", () => {
+        const id =
+          Number(
+            button.dataset.detailWishlist
+          );
 
-  if (!button) return;
+        const active =
+          toggleWishlist(id);
 
-  button.addEventListener("click", () => {
+        button.textContent =
+          active
+            ? "♥ Tersimpan"
+            : "♡ Simpan";
 
-    addToCart(
-      Number(button.dataset.id)
+        updateMobileBottomNav();
+
+        toast(
+          active
+            ? "Material disimpan"
+            : "Material dihapus dari wishlist"
+        );
+      });
+    });
+}
+
+/* =========================================================
+   WISHLIST BINDING
+========================================================= */
+
+function bindWishlistButtons() {
+  document
+    .querySelectorAll("[data-wishlist]")
+    .forEach((button) => {
+      button.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+
+        const active =
+          toggleWishlist(
+            Number(
+              button.dataset.wishlist
+            )
+          );
+
+        button.classList.toggle(
+          "active",
+          active
+        );
+
+        button.textContent =
+          active ? "♥" : "♡";
+
+        updateMobileBottomNav();
+
+        toast(
+          active
+            ? "Material disimpan ke wishlist"
+            : "Material dihapus dari wishlist"
+        );
+
+        if (
+          location.hash === "#wishlist"
+        ) {
+          render();
+        }
+      });
+    });
+}
+
+/* =========================================================
+   HEADER UPDATE
+========================================================= */
+
+function updateHeader() {
+  const count =
+    document.querySelector(
+      "#headerCartCount"
     );
 
-  });
+  if (count) {
+    count.textContent = cartCount();
+  }
 
+  updateMobileBottomNav();
 }
 
 /* =========================================================
@@ -2636,57 +2274,47 @@ function bindProduct() {
 ========================================================= */
 
 function bindCart() {
-
   document
-    .querySelectorAll("[data-minus]")
+    .querySelectorAll("[data-qty-minus]")
     .forEach((button) => {
-
       button.addEventListener("click", () => {
-
         changeQty(
-          Number(button.dataset.minus),
+          Number(
+            button.dataset.qtyMinus
+          ),
           -1
         );
-
       });
-
     });
-
 
   document
-    .querySelectorAll("[data-plus]")
+    .querySelectorAll("[data-qty-plus]")
     .forEach((button) => {
-
       button.addEventListener("click", () => {
-
         changeQty(
-          Number(button.dataset.plus),
+          Number(
+            button.dataset.qtyPlus
+          ),
           1
         );
-
       });
-
     });
-
 }
 
-function changeQty(productId, change) {
-
-  const cart =
-    getCart();
+function changeQty(productId, amount) {
+  const cart = getCart();
 
   const item =
     cart.find(
-      (item) =>
-        item.productId === productId
+      (entry) =>
+        entry.productId === productId
     );
 
   if (!item) return;
 
-  item.qty += change;
+  item.qty += amount;
 
   if (item.qty <= 0) {
-
     const index =
       cart.indexOf(item);
 
@@ -2696,8 +2324,6 @@ function changeQty(productId, change) {
   saveCart(cart);
 
   render();
-
-  toast("Keranjang diperbarui");
 }
 
 /* =========================================================
@@ -2705,51 +2331,244 @@ function changeQty(productId, change) {
 ========================================================= */
 
 function bindCheckout() {
-
   const form =
-    document.querySelector("#checkoutForm");
+    document.querySelector(
+      "#checkoutForm"
+    );
 
   if (!form) return;
 
+  const user = getUser();
 
-  const scheduleFields =
-    document.querySelector("#scheduleFields");
+  const phone =
+    form.querySelector(
+      '[name="phone"]'
+    );
 
+  if (
+    phone &&
+    user?.phone
+  ) {
+    phone.value =
+      user.phone;
+  }
+
+  form.addEventListener(
+    "submit",
+    (event) => {
+      event.preventDefault();
+
+      createOrder(
+        new FormData(form)
+      );
+    }
+  );
+}
+
+/* =========================================================
+   LOGIN BINDING
+========================================================= */
+
+function bindLogin() {
+  const form =
+    document.querySelector(
+      "#loginForm"
+    );
+
+  if (!form) return;
+
+  form.addEventListener(
+    "submit",
+    (event) => {
+      event.preventDefault();
+
+      const formData =
+        new FormData(form);
+
+      const name =
+        formData
+          .get("name")
+          .trim();
+
+      const phone =
+        formData
+          .get("phone")
+          .trim();
+
+      if (!name || !phone) {
+        toast(
+          "Nama dan nomor WhatsApp wajib diisi"
+        );
+
+        return;
+      }
+
+      const user = {
+        name,
+        phone,
+        loggedInAt:
+          new Date().toISOString(),
+      };
+
+      localStorage.setItem(
+        STORAGE_USER,
+        JSON.stringify(user)
+      );
+
+      const next =
+        localStorage.getItem(
+          STORAGE_PENDING_ROUTE
+        ) || "#home";
+
+      localStorage.removeItem(
+        STORAGE_PENDING_ROUTE
+      );
+
+      toast(
+        `Selamat datang, ${user.name}`
+      );
+
+      setTimeout(() => {
+        location.hash = next;
+      }, 400);
+    }
+  );
+}
+
+/* =========================================================
+   ACCESS ACTIONS
+========================================================= */
+
+function bindAccessActions() {
   document
     .querySelectorAll(
-      'input[name="deliveryType"]'
+      "[data-app-download]"
     )
-    .forEach((radio) => {
-
-      radio.addEventListener("change", () => {
-
-        if (
-          radio.value === "schedule" &&
-          radio.checked
-        ) {
-          scheduleFields?.classList.add("show");
+    .forEach((button) => {
+      button.addEventListener(
+        "click",
+        () => {
+          toast(
+            "Aplikasi mobile belum tersedia pada demo ini."
+          );
         }
-
-        if (
-          radio.value === "now" &&
-          radio.checked
-        ) {
-          scheduleFields?.classList.remove("show");
-        }
-
-      });
-
+      );
     });
+}
 
+/* =========================================================
+   SEARCH / FILTER FROM URL
+========================================================= */
 
-  form.addEventListener("submit", (event) => {
+function getSearchFromHash() {
+  const hash =
+    location.hash || "";
 
-    event.preventDefault();
+  const questionIndex =
+    hash.indexOf("?");
 
-    createOrder(form);
+  if (questionIndex === -1) {
+    return "";
+  }
 
-  });
+  const query =
+    hash.slice(
+      questionIndex + 1
+    );
 
+  const params =
+    new URLSearchParams(query);
+
+  return (
+    params.get("search") || ""
+  ).trim();
+}
+
+function renderProducts() {
+  const grid =
+    document.querySelector(
+      "#productGrid"
+    );
+
+  if (!grid) return;
+
+  const keyword =
+    getSearchFromHash()
+      .toLowerCase();
+
+  const category =
+    document.querySelector(
+      ".category-btn.active"
+    )?.dataset.category ||
+    "Semua";
+
+  let filtered =
+    products.slice();
+
+  if (keyword) {
+    filtered =
+      filtered.filter(
+        (product) => {
+          const supplier =
+            findSupplier(
+              product.supplierId
+            );
+
+          const text = [
+            product.name,
+            product.category,
+            supplier?.name,
+            supplier?.location,
+          ]
+            .join(" ")
+            .toLowerCase();
+
+          return text.includes(
+            keyword
+          );
+        }
+      );
+  }
+
+  if (category !== "Semua") {
+    filtered =
+      filtered.filter(
+        (product) =>
+          product.category ===
+          category
+      );
+  }
+
+  grid.innerHTML =
+    filtered.length
+      ? filtered
+          .map(productCard)
+          .join("")
+      : `
+          <div
+            class="empty-state"
+            style="grid-column:1/-1"
+          >
+            <h2>
+              Material tidak ditemukan
+            </h2>
+
+            <p>
+              Coba gunakan kata pencarian
+              yang berbeda.
+            </p>
+
+            <a
+              href="#products"
+              class="secondary-btn"
+            >
+              Lihat semua material
+            </a>
+          </div>
+        `;
+
+  bindAddCartButtons();
+  bindWishlistButtons();
 }
 
 /* =========================================================
@@ -2757,211 +2576,77 @@ function bindCheckout() {
 ========================================================= */
 
 function bindOrderDetail() {
-
   document
-    .querySelectorAll("[data-supplier-next]")
+    .querySelectorAll(
+      "[data-simulate-status]"
+    )
     .forEach((button) => {
+      button.addEventListener(
+        "click",
+        () => {
+          const number =
+            button.dataset
+              .simulateStatus;
 
-      button.addEventListener("click", () => {
-
-        advanceSupplier(
-          button.dataset.order,
-          Number(button.dataset.supplierNext)
-        );
-
-      });
-
+          simulateNextStatus(
+            number
+          );
+        }
+      );
     });
-
-
-  document
-    .querySelectorAll("[data-hub-ready]")
-    .forEach((button) => {
-
-      button.addEventListener("click", () => {
-
-        prepareDelivery(
-          button.dataset.hubReady
-        );
-
-      });
-
-    });
-
-
-  document
-    .querySelectorAll("[data-delivery-start]")
-    .forEach((button) => {
-
-      button.addEventListener("click", () => {
-
-        startDelivery(
-          button.dataset.deliveryStart
-        );
-
-      });
-
-    });
-
-
-  document
-    .querySelectorAll("[data-delivery-done]")
-    .forEach((button) => {
-
-      button.addEventListener("click", () => {
-
-        completeDelivery(
-          button.dataset.deliveryDone
-        );
-
-      });
-
-    });
-
 }
 
 /* =========================================================
-   SUPPLIER STATUS SIMULATION
+   SIMULATION
 ========================================================= */
 
-function advanceSupplier(orderNumber, supplierIndex) {
-
+function simulateNextStatus(number) {
   const orders =
     getOrders();
 
   const order =
     orders.find(
       (item) =>
-        item.number === orderNumber
+        item.number === number
     );
 
   if (!order) return;
 
-  const supplier =
-    order.suppliers[supplierIndex];
+  const statuses = [
+    "Supplier Confirmed",
+    "In Transit",
+    "Received at Hub",
+    "Ready for Delivery",
+    "Out for Delivery",
+    "Delivered",
+  ];
 
-  if (!supplier) return;
-
-  const nextStatus = {
-    confirmed: "pickup",
-    pickup: "transit",
-    transit: "received"
-  };
-
-  supplier.status =
-    nextStatus[supplier.status] ||
-    supplier.status;
-
-  if (
-    order.suppliers.every(
-      (item) =>
-        item.status === "received"
-    )
-  ) {
-    order.hubStatus = "ready";
-  }
-
-  saveOrders(orders);
-
-  render();
-
-  toast(
-    `${supplier.name}: ${supplier.status}`
-  );
-}
-
-/* =========================================================
-   HUB
-========================================================= */
-
-function prepareDelivery(orderNumber) {
-
-  const orders =
-    getOrders();
-
-  const order =
-    orders.find(
-      (item) =>
-        item.number === orderNumber
+  const index =
+    statuses.indexOf(
+      order.status
     );
 
-  if (!order) return;
-
   if (
-    !order.suppliers.every(
-      (supplier) =>
-        supplier.status === "received"
-    )
+    index >=
+    statuses.length - 1
   ) {
     toast(
-      "Masih ada supplier yang belum tiba di Hub."
+      "Pesanan sudah delivered"
     );
 
     return;
   }
 
-  order.hubStatus = "consolidated";
-  order.deliveryStatus = "ready";
+  order.status =
+    statuses[index + 1];
 
   saveOrders(orders);
 
-  render();
-
   toast(
-    "Material sudah dikonsolidasikan di Hub."
+    `Status: ${order.status}`
   );
-}
-
-/* =========================================================
-   DELIVERY
-========================================================= */
-
-function startDelivery(orderNumber) {
-
-  const orders =
-    getOrders();
-
-  const order =
-    orders.find(
-      (item) =>
-        item.number === orderNumber
-    );
-
-  if (!order) return;
-
-  order.deliveryStatus = "out";
-
-  saveOrders(orders);
 
   render();
-
-  toast(
-    "Material sedang dikirim ke proyek."
-  );
-}
-
-function completeDelivery(orderNumber) {
-
-  const orders =
-    getOrders();
-
-  const order =
-    orders.find(
-      (item) =>
-        item.number === orderNumber
-    );
-
-  if (!order) return;
-
-  order.deliveryStatus = "delivered";
-
-  saveOrders(orders);
-
-  render();
-
-  toast(
-    "Pesanan selesai."
-  );
 }
 
 /* =========================================================
@@ -2969,78 +2654,345 @@ function completeDelivery(orderNumber) {
 ========================================================= */
 
 function render() {
-
   const app =
-    document.querySelector("#app");
+    document.querySelector(
+      "#app"
+    );
 
-  const hash =
+  if (!app) return;
+
+  let hash =
     location.hash || "#home";
+
+  /*
+    Pisahkan route dari query.
+    Contoh:
+    #products?search=besi
+  */
+  const route =
+    hash.split("?")[0];
 
   let content = "";
 
-  if (hash === "#home" || hash === "#") {
+  /* -------------------------------------------------------
+     HOME
+  ------------------------------------------------------- */
 
-    content = homePage();
-
-  } else if (hash === "#products") {
-
-    content = homePage();
-
-  } else if (hash === "#cart") {
-
-    content = cartPage();
-
-  } else if (hash === "#checkout") {
-
-    content = checkoutPage();
-
-  } else if (hash === "#orders") {
-
-    content = ordersPage();
-
-  } else if (hash === "#tracking") {
-
-    content = trackingPage();
-
-  } else if (hash.startsWith("#product/")) {
-
-    const id =
-      hash.split("/")[1];
-
-    content = productPage(id);
-
-  } else if (hash.startsWith("#order/")) {
-
-    const number =
-      decodeURIComponent(
-        hash.split("/").slice(1).join("/")
-      );
-
+  if (
+    route === "#home" ||
+    route === ""
+  ) {
     content =
-      orderDetailPage(number);
-
-  } else {
-
-    content = homePage();
-
+      header() +
+      homePage();
   }
 
-  app.innerHTML = content;
+  /* -------------------------------------------------------
+     PRODUCTS
+  ------------------------------------------------------- */
+
+  else if (
+    route === "#products"
+  ) {
+    content =
+      header() +
+      productsPage();
+  }
+
+  /* -------------------------------------------------------
+     PRODUCT DETAIL
+  ------------------------------------------------------- */
+
+  else if (
+    route.startsWith(
+      "#product/"
+    )
+  ) {
+    const id =
+      route.split("/")[1];
+
+    const product =
+      findProduct(id);
+
+    content =
+      header() +
+      (
+        product
+          ? productPage(product)
+          : `
+              <main class="section">
+                <div class="container">
+                  <div class="empty-state">
+                    <h2>
+                      Material tidak ditemukan
+                    </h2>
+
+                    <a
+                      href="#products"
+                      class="primary-btn"
+                    >
+                      Kembali
+                    </a>
+                  </div>
+                </div>
+              </main>
+
+              ${footer()}
+            `
+      );
+  }
+
+  /* -------------------------------------------------------
+     WISHLIST
+  ------------------------------------------------------- */
+
+  else if (
+    route === "#wishlist"
+  ) {
+    content =
+      header() +
+      wishlistPage();
+  }
+
+  /* -------------------------------------------------------
+     CART
+  ------------------------------------------------------- */
+
+  else if (
+    route === "#cart"
+  ) {
+    content =
+      header() +
+      (
+        isLoggedIn()
+          ? cartPage()
+          : accessRequiredPage(
+              "Login untuk membuka keranjang",
+              "Anda bebas menjelajah dan menambahkan material. Untuk membuka keranjang dan melanjutkan pesanan, login terlebih dahulu.",
+              "#cart"
+            )
+      );
+  }
+
+  /* -------------------------------------------------------
+     CHECKOUT
+  ------------------------------------------------------- */
+
+  else if (
+    route === "#checkout"
+  ) {
+    content =
+      header() +
+      (
+        isLoggedIn()
+          ? checkoutPage()
+          : accessRequiredPage(
+              "Login untuk melanjutkan pesanan",
+              "Checkout membutuhkan akun agar alamat, pesanan, dan status pengiriman dapat tersimpan.",
+              "#checkout"
+            )
+      );
+  }
+
+  /* -------------------------------------------------------
+     LOGIN
+  ------------------------------------------------------- */
+
+  else if (
+    route === "#login"
+  ) {
+    content =
+      header() +
+      loginPage();
+  }
+
+  /* -------------------------------------------------------
+     CHAT
+  ------------------------------------------------------- */
+
+  else if (
+    route === "#chat"
+  ) {
+    content =
+      header() +
+      (
+        isLoggedIn()
+          ? chatPage()
+          : accessRequiredPage(
+              "Login untuk chat supplier",
+              "Chat dengan penyedia material tersedia setelah login.",
+              "#chat"
+            )
+      );
+  }
+
+  /* -------------------------------------------------------
+     BOOKING
+  ------------------------------------------------------- */
+
+  else if (
+    route === "#booking"
+  ) {
+    content =
+      header() +
+      (
+        isLoggedIn()
+          ? bookingPage()
+          : accessRequiredPage(
+              "Login untuk booking",
+              "Booking pengiriman dan jadwal proyek tersedia setelah login.",
+              "#booking"
+            )
+      );
+  }
+
+  /* -------------------------------------------------------
+     ORDERS
+  ------------------------------------------------------- */
+
+  else if (
+    route === "#orders"
+  ) {
+    content =
+      header() +
+      (
+        isLoggedIn()
+          ? ordersPage()
+          : accessRequiredPage(
+              "Login untuk melihat pesanan",
+              "Riwayat dan status pesanan tersimpan pada akun Anda.",
+              "#orders"
+            )
+      );
+  }
+
+  /* -------------------------------------------------------
+     ORDER DETAIL
+  ------------------------------------------------------- */
+
+  else if (
+    route.startsWith(
+      "#order/"
+    )
+  ) {
+    if (!isLoggedIn()) {
+      content =
+        header() +
+        accessRequiredPage(
+          "Login untuk melihat pesanan",
+          "Detail pesanan hanya dapat dibuka setelah login.",
+          hash
+        );
+    } else {
+      const number =
+        decodeURIComponent(
+          route.slice(7)
+        );
+
+      const order =
+        getOrders().find(
+          (item) =>
+            item.number === number
+        );
+
+      content =
+        header() +
+        (
+          order
+            ? orderDetailPage(order)
+            : `
+                <main class="section">
+                  <div class="container">
+                    <div class="empty-state">
+                      <h2>
+                        Pesanan tidak ditemukan
+                      </h2>
+
+                      <a
+                        href="#orders"
+                        class="primary-btn"
+                      >
+                        Kembali ke pesanan
+                      </a>
+                    </div>
+                  </div>
+                </main>
+
+                ${footer()}
+              `
+        );
+    }
+  }
+
+  /* -------------------------------------------------------
+     TRACKING
+  ------------------------------------------------------- */
+
+  else if (
+    route === "#tracking"
+  ) {
+    content =
+      header() +
+      (
+        isLoggedIn()
+          ? trackingPage()
+          : accessRequiredPage(
+              "Login untuk melihat tracking",
+              "Status pengiriman tersimpan pada akun Anda.",
+              "#tracking"
+            )
+      );
+  }
+
+  /* -------------------------------------------------------
+     FALLBACK
+  ------------------------------------------------------- */
+
+  else {
+    content =
+      header() +
+      homePage();
+  }
+
+  app.innerHTML =
+    `<div class="app-shell">${content}</div>`;
+
+  ensureMobileBottomNav();
 
   bindHome();
   bindProduct();
   bindCart();
   bindCheckout();
+  bindLogin();
+  bindAccessActions();
   bindOrderDetail();
+  bindWishlistButtons();
+
+  /*
+    Setelah halaman products dirender,
+    terapkan query pencarian.
+  */
+  if (
+    route === "#products"
+  ) {
+    renderProducts();
+  }
+
+  updateHeader();
+  updateMobileBottomNav();
 }
 
 /* =========================================================
-   ROUTER LISTENER
+   HASH CHANGE
 ========================================================= */
 
 window.addEventListener(
   "hashchange",
   render
 );
+
+/* =========================================================
+   INITIAL RENDER
+========================================================= */
 
 render();
