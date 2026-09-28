@@ -4131,3 +4131,9 @@ body{font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.45;-web
     padding-right:0!important;
   }
 }
+
+
+/* MOBILE HEADER — account icon only; registration remains desktop/tablet. */
+@media(max-width:900px){
+  .app-market-header .header-register,.app-market-header .header-login,.app-market-header .header-account,.app-market-header .header-logout{display:none!important}
+}
