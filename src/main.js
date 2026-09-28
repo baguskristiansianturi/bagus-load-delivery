@@ -1223,27 +1223,17 @@ function homePage() {
 
       ${categorySection()}
 
-      ${promoSection()}
-
       ${productSection()}
 
-      ${serviceSection()}
+      ${promoSection()}
 
       ${logisticsSection()}
-
-      ${locationSection()}
-
-      ${providerSection()}
-
-      ${propertySection()}
 
       ${projectSection()}
 
       ${articleSection()}
 
       ${benefitSection()}
-
-      ${appSection()}
 
     </main>
 
