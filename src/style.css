@@ -3299,3 +3299,77 @@ body{font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.45;-web
  .final-cta h2{font-size:25px}
  .final-cta>div:last-child{margin-top:20px}
 }
+
+
+/* HEADER + HERO TARGETED FIX — preserve existing marketplace visual */
+.app-market-header .topbar{overflow:visible}
+.app-market-header .header-inner{width:min(1280px,calc(100% - 40px));min-height:68px;gap:22px}
+.app-market-header .primary-links{margin-left:auto;display:flex;align-items:center;justify-content:flex-end;gap:14px;flex:1;min-width:0}
+.app-market-header .header-locale{display:flex;align-items:center;gap:7px;white-space:nowrap;margin-right:4px;padding-right:14px;border-right:1px solid #e5e5e5}
+.app-market-header .header-locale a{font-size:12px;font-weight:800;color:#111;text-decoration:none}
+.app-market-header .header-locale span{color:#aaa;font-size:11px}
+.app-market-header .primary-links>a{font-size:12px;font-weight:750;white-space:nowrap}
+.app-market-header .primary-links .header-account{display:inline-flex;align-items:center;gap:5px}
+.app-market-header .primary-links .header-logout{color:#777}
+.app-market-header .category-nav{z-index:1050}
+.app-market-header .category-nav .nav-inner{width:min(1280px,calc(100% - 40px));justify-content:center;gap:0;overflow:visible}
+.app-market-header .category-item{position:relative;height:48px;display:flex;align-items:center;flex:0 0 auto}
+.app-market-header .category-link{height:48px;padding:0 13px;display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:750}
+.app-market-header .category-all{font-weight:850}
+.app-market-header .mega-chevron{font-size:10px;color:#999;line-height:1;transition:transform .16s ease}
+.app-market-header .category-item:hover .mega-chevron,.app-market-header .category-item:focus-within .mega-chevron{transform:rotate(180deg);color:var(--bb-red)}
+.app-market-header .category-mega{top:48px!important}
+.app-market-header .category-mega-inner{width:min(1180px,calc(100% - 48px));box-sizing:border-box}
+
+/* Hero content stays comfortably inside the image on every viewport. */
+.hero-slide .klook-hero-inner{width:min(1100px,calc(100% - 128px))!important;min-height:560px!important;padding:92px 0 84px!important;box-sizing:border-box}
+.hero-slide .hero-label,.hero-slide .hero-location,.hero-slide h1,.hero-slide p,.hero-slide .hero-search{margin-left:0!important}
+.hero-slide h1{max-width:720px!important}
+.hero-slide p{max-width:620px!important}
+.hero-slide .hero-search{width:min(650px,100%)!important}
+.hero-arrow.hero-prev{left:24px}.hero-arrow.hero-next{right:24px}
+
+@media(max-width:1180px){
+ .app-market-header .header-inner{width:calc(100% - 28px);gap:14px}
+ .app-market-header .primary-links{gap:9px}
+ .app-market-header .primary-links>a,.app-market-header .header-locale a{font-size:11px}
+ .app-market-header .header-locale{gap:5px;padding-right:9px}
+ .app-market-header .category-nav .nav-inner{width:calc(100% - 24px);justify-content:flex-start}
+ .app-market-header .category-link{padding:0 10px;font-size:11px}
+ .hero-slide .klook-hero-inner{width:min(980px,calc(100% - 88px))!important}
+}
+@media(max-width:900px){
+ .app-market-header .primary-links{gap:7px}
+ .app-market-header .primary-links>a{font-size:10px}
+ .app-market-header .header-locale{margin-right:0;padding-right:7px}
+ .app-market-header .header-locale a{font-size:10px}
+ .hero-slide .klook-hero-inner{width:calc(100% - 64px)!important;min-height:520px!important;padding:72px 0 76px!important}
+ .hero-slide h1{font-size:clamp(36px,6vw,52px)!important}
+ .hero-slide p{font-size:15px!important;max-width:560px!important}
+}
+@media(max-width:720px){
+ .app-market-header .header-inner{width:calc(100% - 18px);min-height:60px;gap:9px}
+ .app-market-header .brand{min-width:0}
+ .app-market-header .brand-copy strong{font-size:11px}
+ .app-market-header .brand-copy small{font-size:7px}
+ .app-market-header .primary-links{gap:7px;overflow-x:auto;scrollbar-width:none;justify-content:flex-end}
+ .app-market-header .primary-links::-webkit-scrollbar{display:none}
+ .app-market-header .header-locale{display:none}
+ .app-market-header .primary-links>a:nth-child(3){display:none}
+ .app-market-header .category-nav .nav-inner{overflow-x:auto;scrollbar-width:none}
+ .app-market-header .category-nav .nav-inner::-webkit-scrollbar{display:none}
+ .app-market-header .category-item{height:46px}
+ .app-market-header .category-link{height:46px;padding:0 10px;font-size:11px}
+ .app-market-header .category-mega{display:none!important}
+ .hero-slide{min-height:540px!important}
+ .hero-slide .klook-hero-inner{width:calc(100% - 40px)!important;min-height:540px!important;padding:64px 0 82px!important}
+ .hero-slide h1{font-size:clamp(31px,9vw,43px)!important;max-width:100%!important;margin:10px 0 15px!important}
+ .hero-slide p{font-size:14px!important;max-width:100%!important;line-height:1.55!important}
+ .hero-slide .hero-search{width:100%!important;min-height:54px!important}
+ .hero-arrow{width:36px;height:36px;font-size:25px}
+ .hero-arrow.hero-prev{left:10px}.hero-arrow.hero-next{right:10px}
+}
+@media(max-width:380px){
+ .hero-slide .klook-hero-inner{width:calc(100% - 32px)!important}
+ .hero-slide h1{font-size:30px!important}
+}
