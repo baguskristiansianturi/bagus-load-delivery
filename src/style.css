@@ -3900,3 +3900,44 @@ body{font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.45;-web
     margin-right:auto!important;
   }
 }
+
+
+/* FINAL CONSISTENT CONTENT RAIL — generous, identical desktop gutters from logo through footer. */
+@media(min-width:901px){
+  :root{--bb-content-max:1280px;--bb-content-gutter:56px}
+
+  .app-market-header .header-inner,
+  .app-market-header .category-nav-inner,
+  .hero-slide .klook-hero-inner,
+  .market-wrap,
+  .footer-main .footer-container,
+  .footer-bottom .footer-container{
+    width:calc(100% - (var(--bb-content-gutter) * 2))!important;
+    max-width:var(--bb-content-max)!important;
+    margin-left:auto!important;
+    margin-right:auto!important;
+    padding-left:0!important;
+    padding-right:0!important;
+    box-sizing:border-box!important;
+  }
+
+  .hero-slide .hero-label,
+  .hero-slide .hero-location,
+  .hero-slide h1,
+  .hero-slide p,
+  .hero-slide .hero-search,
+  .hero-slide form{
+    margin-left:0!important;
+    margin-right:auto!important;
+  }
+
+  .footer-main .footer-grid,
+  .footer-main .footer-bottom-inner{
+    width:100%!important;
+    max-width:none!important;
+    margin-left:0!important;
+    margin-right:0!important;
+    padding-left:0!important;
+    padding-right:0!important;
+  }
+}
