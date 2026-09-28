@@ -1247,3 +1247,23 @@ window.addEventListener('hashchange',renderApp)
 renderApp()
 
 // Klook marketplace homepage system
+
+/* Progressive Klook-style hero carousel enhancement */
+function upgradeHomeHero(){
+  const hero=document.querySelector('.klook-hero');
+  if(!hero || hero.dataset.carouselReady)return;
+  hero.dataset.carouselReady='1';hero.classList.add('hero-carousel');
+  const slides=[
+    ['https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=2200&q=88','BALI BAGUS LOAD & DELIVERY','Everything your project needs.','In one place.','Find materials, compare suppliers, arrange delivery, and manage your project from one marketplace.','What do you need for your project?'],
+    ['https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=2200&q=88','COMPARE BEFORE YOU BUY','More choices.','Better project decisions.','Compare price, supplier, stock and delivery availability before ordering your materials.','Search steel, cement, paint, plumbing...'],
+    ['https://images.unsplash.com/photo-1601584115197-04ecc0da31d8?auto=format&fit=crop&w=2200&q=88','ONE MARKETPLACE · ONE WORKFLOW','From supplier','to project site.','Combine materials from multiple suppliers and let Bali Bagus coordinate pickup, loading and delivery.','Search delivery or project materials...']
+  ];
+  hero.innerHTML='<div class="hero-slides">'+slides.map((s,i)=>'<article class="hero-slide '+(i===0?'is-active':'')+'" style="--hero-image:url(\\''+s[0]+'\\')"><div class="klook-hero-overlay"></div><div class="klook-hero-inner"><span class="hero-label">'+s[1]+'</span><h1>'+s[2]+'<br><em>'+s[3]+'</em></h1><p>'+s[4]+'</p><form class="hero-search klook-search hero-slide-search"><span>'+icon.search+'</span><input placeholder="'+s[5]+'" aria-label="Search"><button>Search</button></form><div class="popular-search"><b>Popular:</b><a href="#/search?q=besi+beton">Besi beton</a><a href="#/search?q=semen">Semen</a><a href="#/search?q=cat">Cat</a><a href="#/search?q=truck">Truck</a></div></div></article>').join('')+'</div><button class="hero-arrow hero-prev" aria-label="Previous">‹</button><button class="hero-arrow hero-next" aria-label="Next">›</button><div class="hero-dots"><button class="is-active"></button><button></button><button></button></div>';
+  const ss=[...hero.querySelectorAll('.hero-slide')],dd=[...hero.querySelectorAll('.hero-dots button')];let n=0,t;
+  const show=i=>{n=(i+ss.length)%ss.length;ss.forEach((x,j)=>x.classList.toggle('is-active',j===n));dd.forEach((x,j)=>x.classList.toggle('is-active',j===n))};
+  const restart=()=>{clearInterval(t);t=setInterval(()=>show(n+1),5500)};
+  hero.querySelector('.hero-prev').onclick=()=>{show(n-1);restart()};hero.querySelector('.hero-next').onclick=()=>{show(n+1);restart()};dd.forEach((x,j)=>x.onclick=()=>{show(j);restart()});restart();
+}
+setTimeout(upgradeHomeHero,0);
+window.addEventListener('hashchange',()=>setTimeout(upgradeHomeHero,0));
+document.addEventListener('submit',e=>{if(e.target.matches('.hero-slide-search')){e.preventDefault();const q=e.target.querySelector('input')?.value?.trim();if(q)location.hash='/search?q='+encodeURIComponent(q)}});
