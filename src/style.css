@@ -3456,3 +3456,6 @@ body{font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.45;-web
 @media(min-width:901px){.hero-slide .klook-hero-inner{width:min(1280px,calc(100% - 32px))!important}.app-market-header .header-inner{width:min(1280px,calc(100% - 32px))!important}}
 .footer-main .footer-logo{color:#171717!important}.footer-main .footer-logo .brand-copy strong{color:#171717!important}.footer-main .footer-logo .brand-copy small{color:#6f7b76!important}.footer-main .footer-column h3{color:#171717!important;font-weight:850!important}.footer-main .footer-column a{color:#66716c!important}.footer-main .footer-column a:hover{color:var(--primary)!important}.footer-main .footer-brand p{color:#6f7b76!important}.footer-main{background:#fafafa!important}
 @media(max-width:720px){.app-market-header .category-nav-inner{width:100%;min-height:42px}.app-market-header .category-nav-inner>a{height:42px;padding:0 11px;font-size:11px}.hero-slide .klook-hero-inner{justify-content:flex-start!important}}
+
+/* FINAL HERO ALIGNMENT — desktop logo/header follows hero content edge */
+@media(min-width:901px){.app-market-header .header-inner{padding-left:clamp(28px,calc((100vw - 1280px)/2),120px);padding-right:clamp(28px,calc((100vw - 1280px)/2),120px)}}
