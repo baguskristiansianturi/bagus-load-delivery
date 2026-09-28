@@ -3941,3 +3941,39 @@ body{font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.45;-web
     padding-right:0!important;
   }
 }
+
+
+/* LOCKED SITE RAIL — same inset on every desktop content layer. */
+@media(min-width:901px){
+  :root{
+    --bb-rail-max:1280px;
+    --bb-rail-inset:64px;
+  }
+  .app-market-header .header-inner,
+  .app-market-header .category-nav-inner,
+  .hero-slide .klook-hero-inner,
+  .market-wrap,
+  .footer-main .footer-container,
+  .footer-bottom .footer-container{
+    width:min(var(--bb-rail-max),calc(100% - (var(--bb-rail-inset) * 2)))!important;
+    max-width:var(--bb-rail-max)!important;
+    margin-inline:auto!important;
+    padding-inline:0!important;
+    box-sizing:border-box!important;
+  }
+  .hero-slide .klook-hero-inner > *{
+    margin-left:0!important;
+  }
+  .hero-slide .hero-search,
+  .hero-slide form{
+    margin-left:0!important;
+    margin-right:auto!important;
+  }
+  .footer-main .footer-grid,
+  .footer-main .footer-bottom-inner{
+    width:100%!important;
+    margin-inline:0!important;
+    padding-inline:0!important;
+    box-sizing:border-box!important;
+  }
+}
