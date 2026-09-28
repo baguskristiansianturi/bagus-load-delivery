@@ -3765,3 +3765,69 @@ body{font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.45;-web
     font-size:12px!important;
   }
 }
+
+
+/* HOMEPAGE SPACING + HERO RAIL + NAV WEIGHT */
+@media(min-width:901px){
+  /* One exact content rail for hero label/title/description/search. */
+  .hero-slide .klook-hero-inner{
+    width:min(1280px,calc(100% - 32px))!important;
+    max-width:1280px!important;
+    margin-left:auto!important;
+    margin-right:auto!important;
+    padding-left:0!important;
+    padding-right:0!important;
+    box-sizing:border-box!important;
+    align-items:center!important;
+  }
+  .hero-slide .hero-label,
+  .hero-slide .hero-location,
+  .hero-slide h1,
+  .hero-slide p,
+  .hero-slide .hero-search,
+  .hero-slide form{
+    margin-left:0!important;
+    margin-right:auto!important;
+  }
+  .hero-slide h1,
+  .hero-slide p{
+    width:80%!important;
+  }
+  .hero-slide .hero-search,
+  .hero-slide form{
+    width:min(820px,80%)!important;
+  }
+
+  /* Balanced section rhythm: Explore cards and Why Bali Bagus never touch. */
+  .category-section{
+    padding-bottom:56px!important;
+  }
+  .trust-strip{
+    margin-top:0!important;
+    padding-top:56px!important;
+  }
+  .trust-strip + .home-section{
+    margin-top:0!important;
+  }
+  .market-wrap > .home-section{
+    margin-bottom:0!important;
+  }
+
+  /* Slightly lighter marketplace navigation typography. */
+  .app-market-header .category-nav-inner>a{
+    font-weight:650!important;
+  }
+  .app-market-header .primary-links>a{
+    font-weight:600!important;
+  }
+}
+
+@media(max-width:900px){
+  .category-section{
+    padding-bottom:34px!important;
+  }
+  .trust-strip{
+    margin-top:0!important;
+    padding-top:34px!important;
+  }
+}
