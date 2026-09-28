@@ -32,7 +32,7 @@ export function route(homeFn=home){
  else if(r==='blog'||r==='article')h=blog(r==='article'?v:'');
  else if(r==='provider'||r==='suppliers')h=supplierPage(v||'');
  else if(r==='proyek'||r==='projects')h=projectsPage(v||'');
- else if(['promo','help','faq','contact','reviews','terms','privacy','recent'].includes(r))h=misc(r);
+ else if(['promo','help','faq','about','contact','reviews','terms','privacy','recent'].includes(r))h=misc(r);
  else h='<div class="empty-state large"><h1>Halaman tidak ditemukan</h1><a class="primary-button" href="#/">Kembali ke beranda</a></div>';
  document.querySelector('#app').innerHTML=h;
  window.scrollTo(0,0);
