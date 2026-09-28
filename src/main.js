@@ -449,7 +449,7 @@ function header() {
           <span>${icon.search}</span>
           <input
             type="search"
-            placeholder="Cari material, jasa, logistik, properti..."
+            placeholder="Search materials, products or brands"
             aria-label="Cari"
           >
         </form>
@@ -504,7 +504,7 @@ function hero() {
           <span class="hero-label">PLATFORM KEBUTUHAN PROYEK</span>
 
           <h1>
-            Cari kebutuhan proyek,
+            Find construction materials,
             <em>lebih mudah.</em>
           </h1>
 
@@ -517,7 +517,7 @@ function hero() {
             <span>${icon.search}</span>
             <input
               type="search"
-              placeholder="Cari besi, semen, tukang, truck..."
+              placeholder="Search materials, products or brands"
               aria-label="Cari kebutuhan proyek"
             >
             <button type="submit">Cari</button>
