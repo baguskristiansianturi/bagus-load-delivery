@@ -4077,3 +4077,57 @@ body{font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.45;-web
     padding:34px 16px 32px!important;
   }
 }
+
+
+/* GLOBAL CONTENT RAIL — every non-home page matches the homepage desktop gutters. */
+@media(min-width:901px){
+  :root{
+    --bb-home-rail-max:1280px;
+    --bb-home-rail-gutter:64px;
+  }
+
+  .page-main,
+  .page-main > .market-wrap,
+  .page-main > .detail-market,
+  .page-main > .checkout-page,
+  .page-main > .blog-page,
+  .page-main > .article-page,
+  .page-main > .info-page,
+  .page-main > .search-market,
+  .page-main > .ops-wrap,
+  .page-main > .account-wrap{
+    box-sizing:border-box!important;
+  }
+
+  .page-main > .market-wrap,
+  .page-main > .detail-market,
+  .page-main > .checkout-page,
+  .page-main > .blog-page,
+  .page-main > .article-page,
+  .page-main > .search-market,
+  .page-main > .info-page,
+  .page-main > .ops-wrap,
+  .page-main > .account-wrap{
+    width:min(var(--bb-home-rail-max),calc(100% - (var(--bb-home-rail-gutter) * 2)))!important;
+    max-width:var(--bb-home-rail-max)!important;
+    margin-left:auto!important;
+    margin-right:auto!important;
+    padding-left:0!important;
+    padding-right:0!important;
+  }
+
+  .page-main .page-hero{
+    padding-left:0!important;
+    padding-right:0!important;
+  }
+
+  .page-main .page-hero > *{
+    margin-left:0!important;
+    margin-right:auto!important;
+  }
+
+  .page-main > .ops-wrap{
+    padding-left:0!important;
+    padding-right:0!important;
+  }
+}
