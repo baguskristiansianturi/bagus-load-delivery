@@ -3441,3 +3441,18 @@ body{font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.45;-web
 .app-market-header .header-category-link:hover{color:var(--bb-red)}
 @media(max-width:1180px){.app-market-header .primary-links{gap:9px!important}.app-market-header .header-category-link{font-size:11px}}
 @media(max-width:720px){.app-market-header .primary-links{justify-content:flex-start;overflow-x:auto}.app-market-header .header-category-link{font-size:10px}}
+
+/* FINAL POLISH — restore two-row navbar, sticky glass effect, hero alignment, footer contrast */
+.app-market-header.sticky-header{position:sticky!important;top:0!important;z-index:1000!important;background:rgba(255,255,255,.90)!important;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(20,35,29,.10);box-shadow:0 4px 18px rgba(18,35,29,.06)}
+.app-market-header .topbar{background:rgba(255,255,255,.76)}
+.app-market-header .category-nav{display:block!important;background:rgba(255,255,255,.84);border-top:1px solid rgba(20,35,29,.07);border-bottom:1px solid rgba(20,35,29,.08);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.app-market-header .category-nav-inner{width:min(1280px,calc(100% - 32px));min-height:44px;margin:auto;display:flex;align-items:center;justify-content:flex-start;gap:0;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;white-space:nowrap}
+.app-market-header .category-nav-inner::-webkit-scrollbar{display:none}
+.app-market-header .category-nav-inner>a{height:44px;display:inline-flex;align-items:center;padding:0 13px;color:#3f4b46;font-size:12px;font-weight:700;white-space:nowrap;transition:color .18s ease,background .18s ease;position:relative}
+.app-market-header .category-nav-inner>a:hover{color:var(--primary);background:rgba(11,107,85,.055)}
+.app-market-header .category-nav-inner>a:first-child{font-weight:850;color:var(--primary)}
+.app-market-header .category-nav-inner>a:first-child:after{content:"";height:2px;position:absolute;left:13px;right:13px;bottom:0;background:var(--primary)}
+.hero-slide .klook-hero-inner{justify-content:flex-start!important}
+@media(min-width:901px){.hero-slide .klook-hero-inner{width:min(1280px,calc(100% - 32px))!important}.app-market-header .header-inner{width:min(1280px,calc(100% - 32px))!important}}
+.footer-main .footer-logo{color:#171717!important}.footer-main .footer-logo .brand-copy strong{color:#171717!important}.footer-main .footer-logo .brand-copy small{color:#6f7b76!important}.footer-main .footer-column h3{color:#171717!important;font-weight:850!important}.footer-main .footer-column a{color:#66716c!important}.footer-main .footer-column a:hover{color:var(--primary)!important}.footer-main .footer-brand p{color:#6f7b76!important}.footer-main{background:#fafafa!important}
+@media(max-width:720px){.app-market-header .category-nav-inner{width:100%;min-height:42px}.app-market-header .category-nav-inner>a{height:42px;padding:0 11px;font-size:11px}.hero-slide .klook-hero-inner{justify-content:flex-start!important}}
