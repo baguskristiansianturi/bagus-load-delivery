@@ -2872,3 +2872,60 @@ svg {
 .deal-image>span{position:absolute;left:9px;top:9px;background:#d95149;color:#fff;padding:5px 7px;border-radius:5px;font-size:9px;font-weight:900}
 .deal-image button{position:absolute;right:9px;top:9px;width:31px;height:31px;border:0;border-radius:50%;background:rgba(255,255,255,.95);display:grid;place-items:center}
 .deal-body{padding:12px}.deal-body small{color:#7b8580;font-size:9px}.deal-body h3{font-size:13px;line-height:1.4;margin:5px 0}.deal-rating{color:#e09b19;font-size:10px;margin:7px 0}.deal-rating svg{width:13px;fill:currentColor;stroke:currentColor}.deal-rating span{color:#89928e}.deal-body strong{font-size:16px}.deal-body p{font-size:9px;color:var(--primary);font-weight:750;margin:6px 0 0}
+.destination-grid{display:grid;grid-template-columns:2fr 1fr 1fr;grid-template-rows:190px 190px;gap:12px}
+.destination-card{position:relative;overflow:hidden;border-radius:13px;background:#1d332c;color:#fff}
+.destination-card:first-child{grid-row:span 2}
+.destination-card img{width:100%;height:100%;object-fit:cover;transition:transform .35s}
+.destination-card:hover img{transform:scale(1.04)}
+.destination-card:after{content:"";position:absolute;inset:35% 0 0;background:linear-gradient(transparent,rgba(0,0,0,.75))}
+.destination-card>div{position:absolute;z-index:2;left:16px;right:12px;bottom:14px}
+.destination-card strong,.destination-card span,.destination-card small{display:block}
+.destination-card strong{font-size:18px}.destination-card span{font-size:10px;color:#e1e9e5;margin-top:3px}.destination-card small{font-size:10px;margin-top:9px}
+.how-grid{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid #e7ebe9;border-bottom:1px solid #e7ebe9}
+.how-grid>div{padding:28px 24px;border-right:1px solid #e7ebe9}
+.how-grid>div:last-child{border-right:0}
+.how-grid b{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--primary-soft);color:var(--primary);font-size:11px}
+.how-grid h3{font-size:15px;margin:15px 0 7px}.how-grid p{font-size:11px;line-height:1.65;color:#76817c;margin:0}
+.guide-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.guide-card{background:#fff;border:1px solid #e3e7e5;border-radius:12px;overflow:hidden}
+.guide-card img{height:170px;width:100%;object-fit:cover}.guide-card>div{padding:13px}
+.guide-card small{color:var(--primary);font-size:9px;font-weight:800;text-transform:uppercase}
+.guide-card h3{font-size:13px;line-height:1.45;margin:7px 0 12px}.guide-card span{font-size:10px;color:var(--primary);font-weight:800}
+.why-layout{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center}
+.why-layout h2{font-size:clamp(27px,3vw,40px);line-height:1.1;letter-spacing:-.035em;margin:7px 0 15px}
+.why-layout p{color:#6f7b76;font-size:13px;line-height:1.75;max-width:570px;margin-bottom:23px}
+.why-list{display:grid;gap:10px}.why-list>div{display:flex;gap:13px;padding:16px;border:1px solid #e5e9e7;border-radius:11px;background:#fff}
+.why-list>div>svg{width:22px;height:22px;padding:4px;border-radius:50%;background:var(--primary-soft);color:var(--primary);flex:none}
+.why-list span{display:block}.why-list b{display:block;font-size:12px}.why-list small{display:block;color:#78837e;font-size:10px;line-height:1.5;margin-top:3px}
+.klook-footer .footer-main{background:#f5f7f6}.klook-footer .footer-container{padding-top:38px;padding-bottom:38px}
+.market-wrap .page-hero{background:linear-gradient(135deg,#0b6b55,#124b3d);color:#fff;padding:35px;border-radius:16px}
+.market-wrap .page-hero p{color:#d6e9e2}.market-wrap .eyebrow{color:#a9dfd0}
+.market-card:hover,.catalog-card:hover{border-color:#c9dcd5}
+.offer:hover{border-color:#b8d5cb}
+@media(max-width:1000px){
+ .category-scroller{grid-template-columns:repeat(5,1fr);row-gap:22px}.deal-grid{grid-template-columns:repeat(3,1fr)}
+ .deal-grid .deal-card:nth-child(n+4){display:none}.header-inner{grid-template-columns:auto 1fr auto;gap:10px}
+ .category-trigger,.desktop-nav,.track-link{display:none}.header-search{grid-column:2;grid-row:1}.header-actions{grid-column:3;grid-row:1}
+ .trust-grid{grid-template-columns:repeat(2,1fr)}.trust-grid>div:nth-child(2){border-right:0}.trust-grid>div:nth-child(-n+2){border-bottom:1px solid #e8ecea}
+}
+@media(max-width:700px){
+ .klook-hero,.klook-hero-inner{min-height:470px}.klook-hero-overlay{background:linear-gradient(180deg,rgba(5,35,27,.72),rgba(5,35,27,.9))}
+ .klook-hero-inner{width:calc(100% - 28px);align-items:flex-end;padding-bottom:45px}.klook-hero-inner h1{font-size:39px}
+ .klook-hero-inner p{font-size:13px}.klook-search{height:54px}.klook-search button{padding:0 15px}
+ .category-nav{display:none}.category-nav.is-open{display:block}.category-nav .nav-inner{width:calc(100% - 24px);display:grid;grid-template-columns:1fr 1fr;height:auto;padding:10px 0}
+ .category-nav .nav-inner a{padding:8px}.category-scroller{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px}
+ .k-category{min-width:115px;scroll-snap-align:start}.deal-grid{display:flex;overflow-x:auto;gap:10px;padding-bottom:7px}.deal-card{min-width:205px}.deal-image{height:150px}
+ .destination-grid{display:flex;overflow-x:auto;gap:10px}.destination-card,.destination-card:first-child{min-width:245px;height:180px}
+ .how-grid{grid-template-columns:1fr 1fr}.how-grid>div:nth-child(2){border-right:0}.how-grid>div:nth-child(-n+2){border-bottom:1px solid #e7ebe9}
+ .guide-grid{display:flex;overflow-x:auto}.guide-card{min-width:245px}.why-layout{grid-template-columns:1fr;gap:28px}
+ .trust-grid{transform:translateY(-16px)}.trust-grid>div{padding:14px}.quick-trust{padding-bottom:0}.section{padding:42px 0}
+ .section-container{width:calc(100% - 28px)}
+}
+@media(max-width:520px){
+ .klook-header .header-inner,.app-market-header .header-inner{width:calc(100% - 20px)}.brand-copy strong{font-size:12px}.brand-copy small{font-size:7px}
+ .header-actions .icon-link{width:31px;height:31px}.header-actions .header-login{padding:0 7px}.header-login span{display:none}
+ .header-search button{display:none}.header-search input{font-size:11px}.klook-hero-inner h1{font-size:34px}
+ .trust-grid{grid-template-columns:1fr}.trust-grid>div{border-right:0!important;border-bottom:1px solid #e8ecea!important}.trust-grid>div:last-child{border-bottom:0!important}
+ .how-grid{grid-template-columns:1fr}.how-grid>div{border-right:0!important;border-bottom:1px solid #e7ebe9}.how-grid>div:last-child{border-bottom:0}
+ .why-layout h2{font-size:28px}
+}
