@@ -400,7 +400,7 @@ function productCard(product) {
         </div>
 
         <div class="product-seller">
-          ${product.seller}
+          3 suppliers available · Delivery available
         </div>
       </div>
     </article>
@@ -423,78 +423,16 @@ function imageCard(item, type = 'service') {
   `
 }
 
-function header() {
-  return `
-    <header class="site-header">
-      <div class="header-inner">
-
-        <button class="mobile-menu-button" aria-label="Menu">
-          ${icon.menu}
-        </button>
-
-        <a href="#/" class="brand">
-          <span class="brand-mark">B</span>
-          <span class="brand-copy">
-            <strong>BAGUS</strong>
-            <small>LOAD & DELIVERY</small>
-          </span>
-        </a>
-
-        <button class="category-trigger">
-          Kategori
-          ${icon.chevron}
-        </button>
-
-        <form class="header-search" id="header-search">
-          <span>${icon.search}</span>
-          <input
-            type="search"
-            placeholder="Search materials, products or brands"
-            aria-label="Cari"
-          >
-        </form>
-
-        <button class="location-trigger" id="location-trigger">
-          ${icon.location}
-          <span>
-            <small>Lokasi</small>
-            <strong>Pilih lokasi</strong>
-          </span>
-          ${icon.chevron}
-        </button>
-
-        <div class="header-actions">
-          <a href="#/wishlist" class="header-action" aria-label="Wishlist">
-            ${icon.heart}
-          </a>
-
-          <a href="#/cart" class="header-action cart-action" aria-label="Keranjang">
-            ${icon.cart}
-            <span class="cart-count">0</span>
-          </a>
-
-          <a href="#/login" class="header-login">
-            ${icon.user}
-            <span>Masuk</span>
-          </a>
-        </div>
-
-      </div>
-
-      <nav class="main-nav">
-        <div class="nav-inner">
-          <a href="#/material">Material</a>
-          <a href="#/jasa">Jasa</a>
-          <a href="#/logistik">Logistik</a>
-          <a href="#/properti">Properti</a>
-          <a href="#/promo">Promo</a>
-          <a href="#/blog">Panduan Proyek</a>
-        </div>
-      </nav>
-    </header>
-  `
+function header(){
+return `
+<header class="site-header"><div class="topbar"><div class="header-inner">
+<button class="mobile-menu-button" aria-label="Menu">${icon.menu}</button>
+<a href="#/" class="brand"><span class="brand-mark">B</span><span class="brand-copy"><strong>BALI BAGUS</strong><small>LOAD & DELIVERY</small></span></a>
+<nav class="desktop-nav"><a href="#/material">Materials</a><a href="#/logistik">Delivery</a><a href="#/proyek">Projects</a><a href="#/provider">Suppliers</a><a href="#/blog">Guides</a></nav>
+<form class="header-search" id="header-search"><span>${icon.search}</span><input type="search" placeholder="Search materials, products or brands" aria-label="Search"><button type="submit">Search</button></form>
+<div class="header-actions"><a href="#/orders">Track order</a><a href="#/wishlist">${icon.heart}</a><a href="#/cart" class="cart-action">${icon.cart}<span class="cart-count">0</span></a><a href="#/login" class="header-login">${icon.user}<span>Login</span></a></div>
+</div></div><nav class="main-nav"><div class="nav-inner"><a href="#/material">All materials</a><a href="#/material/besi-baja">Steel & Rebar</a><a href="#/material/semen-beton">Cement</a><a href="#/material/plumbing">Plumbing</a><a href="#/material/listrik">Electrical</a><a href="#/logistik">Delivery</a></div></nav></header>`
 }
-
 function hero() {
   return `
     <section class="hero">
