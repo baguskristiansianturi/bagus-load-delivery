@@ -1,5 +1,5 @@
-import {store,money} from '../app/store.js';
-import {shell,hero} from '../app/ui.js';
+import {store,money} from '../../app/store.js';
+import {shell,hero} from '../../app/ui.js';
 
 const stages=[
  ['Pesanan dibuat','Order tercatat dan menunggu konfirmasi pembayaran.'],
