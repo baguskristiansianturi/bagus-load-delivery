@@ -3831,3 +3831,72 @@ body{font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.45;-web
     padding-top:34px!important;
   }
 }
+
+
+/* FINAL RAIL ALIGNMENT — logo, navbar 2, hero copy/search, homepage content and footer share one rail. */
+@media(min-width:901px){
+  :root{--bb-final-rail:1280px;--bb-final-gutter:16px}
+
+  .app-market-header .header-inner,
+  .app-market-header .category-nav-inner,
+  .hero-slide .klook-hero-inner,
+  .market-wrap,
+  .footer-main .footer-container,
+  .footer-bottom .footer-container{
+    width:min(var(--bb-final-rail),calc(100% - 32px))!important;
+    max-width:var(--bb-final-rail)!important;
+    margin-left:auto!important;
+    margin-right:auto!important;
+    padding-left:0!important;
+    padding-right:0!important;
+    box-sizing:border-box!important;
+  }
+
+  /* Hero background stays full-bleed; every hero text element starts at the rail. */
+  .hero-slide .klook-hero-inner{
+    justify-content:flex-start!important;
+    align-items:center!important;
+  }
+  .hero-slide .hero-label,
+  .hero-slide .hero-location,
+  .hero-slide h1,
+  .hero-slide p,
+  .hero-slide .hero-search,
+  .hero-slide form{
+    margin-left:0!important;
+    margin-right:auto!important;
+  }
+
+  /* Footer content follows the exact same left/right edge as the Bali Bagus logo. */
+  .footer-main .footer-grid,
+  .footer-main .footer-bottom-inner{
+    width:100%!important;
+    max-width:none!important;
+    margin-left:0!important;
+    margin-right:0!important;
+    padding-left:0!important;
+    padding-right:0!important;
+  }
+}
+
+@media(max-width:900px){
+  .app-market-header .header-inner,
+  .app-market-header .category-nav-inner,
+  .hero-slide .klook-hero-inner,
+  .market-wrap,
+  .footer-main .footer-container,
+  .footer-bottom .footer-container{
+    box-sizing:border-box!important;
+    padding-left:14px!important;
+    padding-right:14px!important;
+  }
+  .hero-slide .hero-label,
+  .hero-slide .hero-location,
+  .hero-slide h1,
+  .hero-slide p,
+  .hero-slide .hero-search,
+  .hero-slide form{
+    margin-left:0!important;
+    margin-right:auto!important;
+  }
+}
