@@ -1,4 +1,5 @@
 import {listing,search} from './page-factory.js';
+import {categoryPage} from '../pages/category/index.js';
 import {detail} from '../pages/product/detail.js';
 import {cart} from '../pages/cart/index.js';
 import {checkout} from '../pages/checkout/index.js';
@@ -21,9 +22,9 @@ export function route(homeFn=home){
  let h;
  if(!r)h=homeFn();
  else if(r==='search')h=search(p.get('q')||'');
- else if(r==='material'||r==='materials')h=listing('material',v||'');
- else if(r==='jasa')h=listing('service',v||'');
- else if(r==='logistik'||r==='delivery')h=listing('logistics',v||'');
+ else if(r==='material'||r==='materials')h=v?categoryPage(v):listing('material','');
+ else if(r==='jasa')h=v?categoryPage(v==='plumbing'?'plumbing-service':v):listing('service','');
+ else if(r==='logistik'||r==='delivery')h=v?categoryPage(v):listing('logistics','');
  else if(r==='properti')h=listing('property',v||'');
  else if(r==='detail'||r==='product')h=detail(v);
  else if(r==='cart')h=cart();
