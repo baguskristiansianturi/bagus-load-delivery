@@ -3132,3 +3132,25 @@ body{background:#fff;color:var(--bb-black)}
 .info-grid{width:min(1180px,calc(100% - 40px));margin:0 auto 72px;display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.info-grid article{padding:28px;border:1px solid #e8e8e8;border-radius:12px;background:#fff}.info-grid h3{font-size:17px}.info-grid p{font-size:13px;line-height:1.65;color:#666}
 @media(max-width:800px){.featured-post{grid-template-columns:1fr}.featured-post img{height:220px;min-height:0}.blog-grid{grid-template-columns:1fr 1fr}.article-layout{grid-template-columns:1fr;gap:28px}.article-side{position:static}.info-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:560px){.page-main .page-hero,.blog-page,.article-page{width:calc(100% - 28px)}.blog-grid{grid-template-columns:1fr}.blog-hero h1{font-size:36px}.featured-post>div{padding:22px}.article-head h1{font-size:36px}.article-body{font-size:15px}.info-grid{width:calc(100% - 28px);grid-template-columns:1fr}}
+
+/* CATEGORY MARKETPLACE — SHOPEE-STYLE DENSITY */
+.shopee-category-page{width:min(1280px,calc(100% - 32px));margin:0 auto;padding:18px 0 70px}
+.category-intro{background:#fff;border-bottom:1px solid #eee;padding:18px 0 20px}
+.category-intro h1{font-size:28px;margin:7px 0 8px;line-height:1.15;text-transform:capitalize}
+.category-intro p{font-size:13px;color:#777;margin:0;max-width:720px;line-height:1.55}
+.category-tabs{display:flex;gap:4px;overflow:auto;white-space:nowrap;padding:12px 0;border-bottom:1px solid #eee;scrollbar-width:none}
+.category-tabs::-webkit-scrollbar{display:none}
+.category-tabs a{padding:10px 16px;border-radius:4px;color:#555;text-decoration:none;font-size:12px;font-weight:700;text-transform:capitalize}
+.category-tabs a:hover,.category-tabs a.active{color:#b52d26;background:#fff4f2}
+.shopee-category-page .listing-top{margin-top:14px;padding:12px 14px;background:#f7f7f7;border:1px solid #eee}
+.shopee-category-page .market-filters{border-radius:4px;background:#fff;border:1px solid #eee}
+.shopee-category-page .market-grid{gap:10px}
+.shopee-category-page .market-card{border-radius:3px;border:1px solid #eee;box-shadow:none}
+.shopee-category-page .market-card:hover{transform:none;box-shadow:0 3px 12px rgba(0,0,0,.09)}
+.shopee-category-page .market-title{font-size:13px;line-height:1.35}
+.shopee-category-page .market-body{padding:10px}
+.shopee-category-page .market-body>strong{font-size:17px;color:#b52d26}
+@media(max-width:700px){.shopee-category-page{width:calc(100% - 20px);padding-top:10px}.category-intro h1{font-size:23px}.category-tabs a{padding:9px 12px}.shopee-category-page .listing-layout{display:block}.shopee-category-page .market-filters{margin-bottom:10px}}
+/* CENTER SECOND NAVBAR */
+.category-nav .nav-inner{justify-content:center}
+@media(max-width:760px){.category-nav .nav-inner{justify-content:flex-start}}
