@@ -1245,3 +1245,5 @@ function showLocationModal(){
 function renderApp(){route(homePage);if(!location.hash||location.hash==='#/'||location.hash==='#')bindHomeEvents()}
 window.addEventListener('hashchange',renderApp)
 renderApp()
+
+// Klook marketplace homepage system
