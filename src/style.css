@@ -3206,3 +3206,96 @@ body{font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.45;-web
 .site-footer{margin-top:0}.footer-main{border-top:1px solid #ddd;background:#fafafa}.footer-container{width:var(--bb-content);margin:auto}.footer-main .footer-container{padding:46px 0}.footer-column h3{font-size:12px;text-transform:uppercase;letter-spacing:.06em}.footer-column a,.footer-brand p{font-size:11px}.footer-bottom{background:#fff;border-top:1px solid #ddd}
 @media(max-width:900px){:root{--bb-content:calc(100% - 32px)}.topbar .header-inner{gap:14px}.header-center-links{margin-left:auto}.primary-links{gap:10px}.primary-links a{font-size:11px}.detail-main{grid-template-columns:1fr}.purchase-panel{position:sticky;bottom:8px}.spec-grid{grid-template-columns:repeat(2,1fr)}.info-sections{grid-template-columns:1fr}.info-sections article{border-right:0;border-bottom:1px solid #ddd}.info-sections article:last-child{border-bottom:0}}
 @media(max-width:680px){:root{--bb-content:calc(100% - 24px)}.topbar .header-inner{min-height:58px}.brand-mark{width:32px;height:32px;font-size:16px}.brand-copy strong{font-size:12px}.brand-copy small{font-size:7px}.header-center-links{display:none}.primary-links a:nth-child(1),.primary-links a:nth-child(2),.primary-links a:nth-child(3){display:none}.category-nav .nav-inner{width:100%;justify-content:flex-start}.category-nav .category-link{font-size:11px;padding:0 11px}.hero-slide .klook-hero-inner{width:var(--bb-content)!important;min-height:530px;padding:58px 0 74px!important}.hero-slide h1{font-size:38px!important}.hero-slide p{font-size:14px!important}.detail-copy h1{font-size:27px}.purchase-panel{grid-template-columns:1fr auto}.purchase-panel .qty{grid-column:1}.purchase-panel #add{grid-column:1/-1;width:100%}.spec-grid{grid-template-columns:1fr 1fr}.blog-grid{grid-template-columns:1fr}.featured-post{grid-template-columns:1fr}.featured-post img{height:230px}.footer-main .footer-container{padding:34px 0}.footer-main .footer-container{grid-template-columns:1fr 1fr}}
+
+
+/* HOMEPAGE REFINEMENT — clean premium marketplace */
+.market-wrap{background:#fff}
+.home-section{width:var(--bb-content);margin:0 auto;padding:58px 0 0}
+.section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:22px}
+.section-head .eyebrow{display:block;font-size:10px;font-weight:800;letter-spacing:.14em;color:#999;margin-bottom:7px}
+.section-head h2{margin:0;font-size:28px;line-height:1.12;letter-spacing:-.025em;color:#171717}
+.section-head p{margin:7px 0 0;color:#777;font-size:13px}
+.section-head>a{flex:0 0 auto;color:#222;text-decoration:none;font-size:12px;font-weight:800;white-space:nowrap}
+.section-head>a:hover{color:var(--bb-red)}
+
+.category-grid{display:grid!important;grid-template-columns:repeat(8,1fr);gap:12px;overflow:visible!important}
+.home-category-card{position:relative;display:block;height:172px;border-radius:8px;overflow:hidden;background:#eee;color:#fff;text-decoration:none}
+.home-category-card:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 35%,rgba(0,0,0,.68))}
+.home-category-card img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .35s ease}
+.home-category-card span{position:absolute;z-index:2;left:14px;right:10px;bottom:14px;font-size:13px;font-weight:800;line-height:1.2}
+.home-category-card:hover img{transform:scale(1.06)}
+
+.deal-grid{display:grid!important;grid-template-columns:repeat(6,1fr);gap:12px;overflow:visible!important}
+.deal-card{position:relative;display:block;min-width:0!important;background:#fff;border:1px solid #e8e8e8;border-radius:8px;overflow:hidden;color:#171717;text-decoration:none;transition:transform .18s,box-shadow .18s}
+.deal-card:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(0,0,0,.09)}
+.deal-image{display:block;position:relative;height:180px;background:#f5f5f5;overflow:hidden}
+.deal-image img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s}
+.deal-card:hover .deal-image img{transform:scale(1.035)}
+.deal-image>span{position:absolute;top:9px;left:9px;padding:4px 6px;border-radius:3px;background:#111;color:#fff;font-size:8px;font-weight:800;letter-spacing:.06em}
+.deal-heart{position:absolute;z-index:3;top:9px;right:9px;width:30px;height:30px;border:0;border-radius:50%;background:rgba(255,255,255,.94);display:grid;place-items:center;cursor:pointer}
+.deal-heart svg{width:15px;height:15px}
+.deal-body{padding:13px}
+.deal-body small{font-size:9px;color:#999}
+.deal-body h3{font-size:13px;line-height:1.35;margin:5px 0 7px;min-height:35px}
+.deal-rating{font-size:10px;color:#555}.deal-rating span{color:#999}
+.deal-body>strong{display:block;margin-top:8px;font-size:16px;color:var(--bb-red)}
+.deal-body p{margin:5px 0 0;font-size:10px;color:#888;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.discovery-strip{display:grid;grid-template-columns:1fr 1.45fr;gap:50px;align-items:center;margin-top:58px;padding:34px;border:1px solid #e4e4e4;background:#fafafa}
+.discovery-strip .eyebrow{font-size:10px;font-weight:800;letter-spacing:.14em;color:#999}
+.discovery-strip h2{font-size:28px;line-height:1.12;margin:8px 0}
+.discovery-strip p{font-size:13px;color:#666;line-height:1.65;margin:0}
+.discovery-steps{display:grid;grid-template-columns:repeat(4,1fr);border-left:1px solid #ddd}
+.discovery-steps>div{padding:8px 18px;border-right:1px solid #ddd}
+.discovery-steps b{display:block;font-size:10px;color:#aaa;margin-bottom:22px}
+.discovery-steps strong{display:block;font-size:14px}
+.discovery-steps span{display:block;font-size:10px;color:#888;margin-top:4px}
+
+.guide-grid{display:grid!important;grid-template-columns:repeat(4,1fr);gap:14px;overflow:visible!important}
+.guide-card{display:block;min-width:0!important;border:1px solid #e6e6e6;border-radius:8px;overflow:hidden;color:#171717;text-decoration:none;background:#fff;transition:transform .18s,box-shadow .18s}
+.guide-card:hover{transform:translateY(-3px);box-shadow:0 10px 26px rgba(0,0,0,.08)}
+.guide-card img{width:100%;height:170px;object-fit:cover;display:block}
+.guide-card>div{padding:15px}
+.guide-card small{font-size:9px;color:#999;font-weight:800;text-transform:uppercase;letter-spacing:.08em}
+.guide-card h3{font-size:14px;line-height:1.35;margin:7px 0 12px}
+.guide-card span{font-size:10px;font-weight:800;color:#555}
+
+.final-cta{margin-bottom:72px;display:flex;align-items:center;justify-content:space-between;gap:30px;padding-top:60px}
+.final-cta>div:first-child{max-width:700px}
+.final-cta .eyebrow{font-size:10px;font-weight:800;letter-spacing:.14em;color:#999}
+.final-cta h2{font-size:30px;line-height:1.12;margin:8px 0}
+.final-cta p{font-size:13px;color:#666;line-height:1.65;margin:0}
+.final-cta>div:last-child{display:flex;gap:9px;flex:0 0 auto}
+.final-cta .primary-button,.final-cta .secondary-button{display:inline-flex;align-items:center;justify-content:center;padding:12px 18px;border-radius:5px;text-decoration:none;font-size:12px;font-weight:800}
+.final-cta .primary-button{background:#111;color:#fff}
+.final-cta .secondary-button{border:1px solid #ccc;color:#222;background:#fff}
+
+@media(max-width:1050px){
+ .category-grid{grid-template-columns:repeat(4,1fr)}
+ .deal-grid{grid-template-columns:repeat(3,1fr)}
+ .guide-grid{grid-template-columns:repeat(2,1fr)}
+ .discovery-strip{grid-template-columns:1fr}
+ .discovery-steps{border-left:0;border-top:1px solid #ddd;padding-top:15px}
+}
+@media(max-width:680px){
+ .home-section{padding-top:42px}
+ .section-head{align-items:flex-start;display:block}
+ .section-head>a{display:inline-block;margin-top:12px}
+ .section-head h2{font-size:23px}
+ .category-grid{display:flex!important;overflow-x:auto!important;gap:9px;padding-bottom:5px;scrollbar-width:none}
+ .category-grid::-webkit-scrollbar{display:none}
+ .home-category-card{flex:0 0 130px;height:145px}
+ .deal-grid{display:flex!important;overflow-x:auto!important;gap:10px;padding-bottom:5px;scrollbar-width:none}
+ .deal-grid::-webkit-scrollbar{display:none}
+ .deal-card{flex:0 0 190px}
+ .deal-image{height:155px}
+ .discovery-strip{padding:24px;margin-top:42px}
+ .discovery-strip h2{font-size:24px}
+ .discovery-steps{grid-template-columns:repeat(2,1fr)}
+ .discovery-steps>div{padding:10px 12px;border-bottom:1px solid #ddd}
+ .guide-grid{display:flex!important;overflow-x:auto!important;gap:10px;scrollbar-width:none}
+ .guide-card{flex:0 0 245px}
+ .final-cta{display:block;padding-top:42px;margin-bottom:46px}
+ .final-cta h2{font-size:25px}
+ .final-cta>div:last-child{margin-top:20px}
+}
