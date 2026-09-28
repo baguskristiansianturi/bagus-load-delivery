@@ -3098,3 +3098,6 @@ body{background:#fff;color:var(--bb-black)}
 .hero-slide h1{max-width:720px!important}.hero-slide p{max-width:620px!important}.hero-slide .hero-search{width:min(650px,100%)!important}
 @media(max-width:720px){.category-nav .nav-inner{width:calc(100% - 24px)}.category-only .category-all-mega{display:none!important}.hero-slide .klook-hero-inner{width:calc(100% - 32px)!important;min-height:500px;padding:54px 0 76px!important}}
 @media(max-width:380px){.hero-slide .klook-hero-inner{width:calc(100% - 24px)!important}}
+
+/* HOME SEARCH — rotating search suggestions */
+.hero-slide-search input::placeholder{opacity:1}
