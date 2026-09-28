@@ -4411,3 +4411,33 @@ body{font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.45;-web
   .global-page-hero .hero-slide,
   .global-page-hero .hero-slide .klook-hero-inner{height:420px!important;min-height:420px!important}
 }
+
+/* INTERACTIVE SEARCH / HERO CARDS — transparent surfaces, responsive lift and depth. */
+.global-page-hero .hero-search,
+.global-page-hero .klook-search{
+  background:rgba(255,255,255,.16)!important;
+  border:1px solid rgba(255,255,255,.42)!important;
+  box-shadow:0 12px 35px rgba(0,0,0,.12)!important;
+  backdrop-filter:blur(12px) saturate(135%)!important;
+  -webkit-backdrop-filter:blur(12px) saturate(135%)!important;
+  transition:transform .22s ease,background .22s ease,box-shadow .22s ease,border-color .22s ease!important;
+}
+.global-page-hero .hero-search:hover,
+.global-page-hero .hero-search:focus-within{
+  background:rgba(255,255,255,.24)!important;
+  border-color:rgba(255,255,255,.7)!important;
+  box-shadow:0 16px 42px rgba(0,0,0,.18)!important;
+  transform:translateY(-2px)!important;
+}
+.global-page-hero .hero-search input{
+  background:transparent!important;
+  color:#fff!important;
+}
+.global-page-hero .hero-search input::placeholder{color:rgba(255,255,255,.82)!important}
+@media (hover:hover) and (pointer:fine){
+  .global-page-hero .hero-slide .hero-search{will-change:transform}
+  .global-page-hero .hero-slide .hero-search:hover{transform:translateY(-3px) scale(1.005)!important}
+}
+@media (prefers-reduced-motion:reduce){
+  .global-page-hero .hero-search{transition:none!important}
+}
