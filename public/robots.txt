@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://baguskristiansianturi.github.io/bagus-load-delivery/sitemap.xml
