@@ -4284,3 +4284,82 @@ body{font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.45;-web
  .primary-button.wide-button{width:100%}
  .page-hero h1{font-size:clamp(27px,8vw,36px)!important}
 }
+
+
+/* CATEGORY LISTING ONLY — Shopee-style dense four-column product shelf.
+   Scope intentionally limited to category/material listing pages; other routes untouched. */
+@media(max-width:900px){
+  .shopee-category-page .listing-layout{
+    display:block!important;
+    width:100%!important;
+    max-width:none!important;
+    min-width:0!important;
+  }
+  .shopee-category-page .market-filters{
+    display:flex!important;
+    flex-wrap:nowrap!important;
+    gap:8px!important;
+    width:100%!important;
+    max-width:100%!important;
+    margin:0 0 12px!important;
+    padding:10px!important;
+    overflow-x:auto!important;
+    -webkit-overflow-scrolling:touch;
+    background:#fff!important;
+    border:1px solid #ededed!important;
+    border-radius:8px!important;
+  }
+  .shopee-category-page .market-filters>b{display:none!important}
+  .shopee-category-page .market-filters>label{
+    flex:0 0 145px!important;
+    min-width:145px!important;
+    margin:0!important;
+  }
+  .shopee-category-page .market-grid{
+    display:grid!important;
+    grid-template-columns:repeat(4,minmax(0,1fr))!important;
+    gap:10px!important;
+    width:100%!important;
+    min-width:0!important;
+  }
+  .shopee-category-page .market-card{
+    min-width:0!important;
+    width:100%!important;
+    overflow:hidden!important;
+    border:1px solid #eaeaea!important;
+    border-radius:5px!important;
+    box-shadow:0 1px 3px rgba(0,0,0,.045)!important;
+    background:#fff!important;
+  }
+  .shopee-category-page .market-image{display:block!important;width:100%!important;aspect-ratio:1/1!important}
+  .shopee-category-page .market-image img{width:100%!important;height:100%!important;object-fit:cover!important}
+  .shopee-category-page .market-body{padding:8px!important;min-width:0!important}
+  .shopee-category-page .market-title{
+    display:-webkit-box!important;
+    -webkit-box-orient:vertical!important;
+    -webkit-line-clamp:2!important;
+    overflow:hidden!important;
+    min-height:2.7em!important;
+    font-size:12px!important;
+    line-height:1.35!important;
+    overflow-wrap:anywhere!important;
+  }
+  .shopee-category-page .market-body>strong{font-size:clamp(11px,2.2vw,16px)!important;white-space:normal!important}
+  .shopee-category-page .market-body .rating,
+  .shopee-category-page .market-body small,
+  .shopee-category-page .supplier-count{font-size:9px!important;line-height:1.35!important}
+  .shopee-category-page .market-card-cta{display:block!important;font-size:10px!important;line-height:1.3!important;margin-top:7px!important}
+  .shopee-category-page .listing-top{gap:10px!important;flex-wrap:wrap!important}
+  .shopee-category-page .category-tabs{display:flex!important;gap:8px!important;overflow-x:auto!important;white-space:nowrap!important;padding-bottom:8px!important}
+}
+@media(max-width:420px){
+  .shopee-category-page .market-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:6px!important}
+  .shopee-category-page .market-body{padding:5px!important}
+  .shopee-category-page .market-title{font-size:10px!important;min-height:2.7em!important}
+  .shopee-category-page .market-body>strong{font-size:10px!important}
+  .shopee-category-page .market-body .rating,
+  .shopee-category-page .market-body small,
+  .shopee-category-page .supplier-count{font-size:8px!important}
+  .shopee-category-page .market-card-cta{font-size:9px!important}
+  .shopee-category-page .market-filters>label{flex-basis:130px!important;min-width:130px!important}
+}
