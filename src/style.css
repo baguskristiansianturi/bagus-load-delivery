@@ -3682,3 +3682,40 @@ body{font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.45;-web
     height:54px!important;
   }
 }
+
+
+/* HOMEPAGE DESKTOP — balanced hero breathing room + tighter Explore category cards. */
+@media(min-width:901px){
+  .klook-hero,
+  .hero-carousel,
+  .hero-slide{
+    min-height:360px!important;
+    height:360px!important;
+  }
+  .hero-slide .klook-hero-inner{
+    min-height:360px!important;
+    height:360px!important;
+    padding-top:34px!important;
+    padding-bottom:46px!important;
+  }
+  .hero-slide .hero-search,
+  .hero-slide form{
+    margin-bottom:12px!important;
+  }
+
+  .category-grid{
+    grid-template-columns:repeat(8,minmax(0,1fr))!important;
+    gap:14px!important;
+  }
+  .home-category-card{
+    min-height:132px!important;
+    border-radius:12px!important;
+  }
+  .home-category-card img{
+    height:92px!important;
+  }
+  .home-category-card span{
+    padding:9px 8px 11px!important;
+    font-size:12px!important;
+  }
+}
