@@ -4167,3 +4167,52 @@ body{font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.45;-web
   .page-main > .checkout-page,
   .page-main > .page-hero{padding-left:10px!important;padding-right:10px!important}
 }
+
+
+/* MOBILE HEADER + FULL-WIDTH CONTENT — final */
+@media(max-width:900px){
+  .app-market-header .header-inner{
+    width:100%!important;
+    max-width:none!important;
+    padding:0 8px!important;
+    margin:0!important;
+    display:flex!important;
+    gap:0!important;
+  }
+  .app-market-header .brand{flex:1 1 auto!important;min-width:0!important}
+  .app-market-header .primary-links{margin-left:auto!important;gap:2px!important}
+  .app-market-header .cart-action,
+  .app-market-header .header-mobile-account{width:40px!important;height:40px!important}
+  .app-market-header .cart-action{border-right:1px solid var(--line)!important;border-radius:0!important;margin-right:2px!important}
+  .app-market-header .header-mobile-account{border-radius:0!important}
+
+  /* Full-width mobile content with only a small visual inset. */
+  .page-main{width:100%!important;max-width:none!important;margin:0!important;padding:0!important}
+  .page-main > .market-wrap,
+  .page-main > .detail-market,
+  .page-main > .blog-page,
+  .page-main > .article-page,
+  .page-main > .search-market,
+  .page-main > .info-page,
+  .page-main > .ops-wrap,
+  .page-main > .account-wrap,
+  .page-main > .checkout-page{
+    width:100%!important;max-width:none!important;margin:0!important;padding-left:10px!important;padding-right:10px!important
+  }
+  .page-main > .page-hero{
+    width:100%!important;max-width:none!important;margin:0 0 16px!important;padding-left:10px!important;padding-right:10px!important
+  }
+  .market-wrap .section-container,.market-wrap .footer-container{padding-left:0!important;padding-right:0!important}
+}
+@media(max-width:520px){
+  .page-main > .market-wrap,
+  .page-main > .detail-market,
+  .page-main > .blog-page,
+  .page-main > .article-page,
+  .page-main > .search-market,
+  .page-main > .info-page,
+  .page-main > .ops-wrap,
+  .page-main > .account-wrap,
+  .page-main > .checkout-page,
+  .page-main > .page-hero{padding-left:8px!important;padding-right:8px!important}
+}
