@@ -4139,9 +4139,29 @@ body{font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.45;-web
 }
 
 
-/* MOBILE RAIL CORRECTION — one 10–12px gutter only, never nested twice. */
+/* FINAL MOBILE RESPONSIVE — desktop layout remains unchanged. */
 @media(max-width:900px){
-  .page-main{width:100%!important;padding-left:0!important;padding-right:0!important}
+  .app-market-header .header-inner{
+    width:100%!important;
+    max-width:none!important;
+    padding:0 12px!important;
+    margin:0!important;
+    display:flex!important;
+    gap:0!important;
+  }
+  .app-market-header .brand{flex:1 1 auto!important;min-width:0!important}
+  .app-market-header .primary-links{margin-left:auto!important;gap:4px!important}
+  .app-market-header .cart-action,
+  .app-market-header .header-mobile-account{width:42px!important;height:42px!important}
+  .app-market-header .cart-action{border-right:1px solid var(--line)!important;border-radius:0!important;margin-right:2px!important}
+  .app-market-header .header-mobile-account{border-radius:0!important}
+
+  .page-main{
+    width:100%!important;
+    max-width:none!important;
+    margin:0!important;
+    padding:0!important;
+  }
   .page-main > .market-wrap,
   .page-main > .detail-market,
   .page-main > .blog-page,
@@ -4150,12 +4170,28 @@ body{font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.45;-web
   .page-main > .info-page,
   .page-main > .ops-wrap,
   .page-main > .account-wrap,
-  .page-main > .checkout-page{padding-left:12px!important;padding-right:12px!important}
+  .page-main > .checkout-page{
+    width:100%!important;
+    max-width:none!important;
+    margin:0!important;
+    padding-left:14px!important;
+    padding-right:14px!important;
+    box-sizing:border-box!important;
+  }
+  .page-main > .page-hero{
+    width:100%!important;
+    max-width:none!important;
+    margin:0 0 16px!important;
+    padding-left:14px!important;
+    padding-right:14px!important;
+    box-sizing:border-box!important;
+  }
   .market-wrap .section-container,
   .market-wrap .footer-container{padding-left:0!important;padding-right:0!important}
-  .page-main > .page-hero{padding-left:12px!important;padding-right:12px!important}
 }
+
 @media(max-width:520px){
+  .app-market-header .header-inner{padding-left:10px!important;padding-right:10px!important}
   .page-main > .market-wrap,
   .page-main > .detail-market,
   .page-main > .blog-page,
@@ -4165,6 +4201,8 @@ body{font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.45;-web
   .page-main > .ops-wrap,
   .page-main > .account-wrap,
   .page-main > .checkout-page,
-  .page-main > .page-hero{padding-left:10px!important;padding-right:10px!important}
+  .page-main > .page-hero{
+    padding-left:10px!important;
+    padding-right:10px!important;
+  }
 }
-
