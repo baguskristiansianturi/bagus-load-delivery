@@ -4554,3 +4554,50 @@ body{font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.45;-web
   .catalog-body,
   .product-card-body{padding:6px!important}
 }
+
+
+/* PAGE HERO CONSISTENCY: standard inner-page hero matches the homepage's final geometry. */
+.global-page-hero,
+.global-page-hero .hero-slides,
+.global-page-hero .hero-slide{
+  height:560px!important;
+  min-height:560px!important;
+  max-height:560px!important;
+  box-sizing:border-box!important;
+}
+.global-page-hero .hero-slide .klook-hero-inner{
+  height:560px!important;
+  min-height:560px!important;
+  max-height:560px!important;
+  box-sizing:border-box!important;
+  padding-top:92px!important;
+  padding-bottom:82px!important;
+}
+@media(max-width:720px){
+  .global-page-hero,
+  .global-page-hero .hero-slides,
+  .global-page-hero .hero-slide{
+    height:540px!important;
+    min-height:540px!important;
+    max-height:540px!important;
+  }
+  .global-page-hero .hero-slide .klook-hero-inner{
+    height:540px!important;
+    min-height:540px!important;
+    max-height:540px!important;
+    padding-top:58px!important;
+    padding-bottom:74px!important;
+  }
+}
+@media(max-width:380px){
+  .global-page-hero,
+  .global-page-hero .hero-slides,
+  .global-page-hero .hero-slide,
+  .global-page-hero .hero-slide .klook-hero-inner{
+    height:540px!important;
+    min-height:540px!important;
+    max-height:540px!important;
+  }
+}
+/* Transactional/account screens remain focused on the task, without a marketing hero. */
+.checkout-standalone{margin-top:0!important}
