@@ -1152,35 +1152,79 @@ function mobileBottomNav() {
 }
 
 function homePage() {
+  const cats = [
+    ['Besi & Baja','besi-baja','https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=700&q=80'],
+    ['Semen & Beton','semen-beton','https://images.unsplash.com/photo-1590644365607-1c5a4b5e9bca?auto=format&fit=crop&w=700&q=80'],
+    ['Pasir & Batu','pasir-batu','https://images.unsplash.com/photo-1590579491624-f98f36d4c763?auto=format&fit=crop&w=700&q=80'],
+    ['Kayu & Plywood','kayu','https://images.unsplash.com/photo-1531835551805-16d864c8d1c6?auto=format&fit=crop&w=700&q=80'],
+    ['Cat & Finishing','cat','https://images.unsplash.com/photo-1562259949-e8e7689d7828?auto=format&fit=crop&w=700&q=80'],
+    ['Paku & Baut','paku-baut','https://images.unsplash.com/photo-1586864387967-d02ef85d93e8?auto=format&fit=crop&w=700&q=80'],
+    ['Listrik','listrik','https://images.unsplash.com/photo-1621905252507-b35492cc74b4?auto=format&fit=crop&w=700&q=80'],
+    ['Plumbing','plumbing','https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?auto=format&fit=crop&w=700&q=80'],
+    ['Atap','atap','https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=700&q=80'],
+    ['Tools','tools','https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=700&q=80']
+  ];
+  const deals = products.slice(0,5);
+  const areas = [
+    ['Denpasar','Urban projects','https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=900&q=80'],
+    ['Badung','Villa & hospitality','https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=900&q=80'],
+    ['Gianyar','Renovation','https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=80'],
+    ['Ubud','Villa projects','https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=80'],
+    ['Tabanan','Materials & delivery','https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=900&q=80']
+  ];
+  const guides = [
+    ['Cara memilih besi beton yang tepat','Material','https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=900&q=80'],
+    ['Menghitung kebutuhan semen proyek','Construction','https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=900&q=80'],
+    ['Memilih truck sesuai muatan','Delivery','https://images.unsplash.com/photo-1601584115197-04ecc0da31d8?auto=format&fit=crop&w=900&q=80'],
+    ['Checklist renovasi rumah','Project Planning','https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=900&q=80']
+  ];
   return `
     ${header()}
-
+    <section class="klook-hero">
+      <div class="klook-hero-bg"></div><div class="klook-hero-overlay"></div>
+      <div class="klook-hero-inner">
+        <span class="hero-label">BALI BAGUS LOAD & DELIVERY</span>
+        <h1>Everything your project needs.<br><em>In one place.</em></h1>
+        <p>Find materials, compare suppliers, arrange delivery, and manage your project from one marketplace.</p>
+        <form class="hero-search klook-search" id="hero-search">
+          <span>${icon.search}</span><input placeholder="What are you looking for? Try “besi beton”, “semen”, “truck”..." aria-label="Search"><button>Search</button>
+        </form>
+        <div class="popular-search"><b>Popular:</b><a href="#/search?q=besi+beton">Besi beton</a><a href="#/search?q=semen">Semen</a><a href="#/search?q=cat">Cat</a><a href="#/search?q=pipa">Pipa PVC</a><a href="#/search?q=truck">Truck</a></div>
+      </div>
+    </section>
     <main>
-
-      ${hero()}
-
-      ${categorySection()}
-
-      ${productSection()}
-
-      ${promoSection()}
-
-      ${logisticsSection()}
-
-      ${projectSection()}
-
-      ${articleSection()}
-
-      ${benefitSection()}
-
+      <section class="section quick-trust"><div class="section-container"><div class="trust-grid">
+        <div><b>Compare suppliers</b><span>Price, stock & availability</span></div>
+        <div><b>One project checkout</b><span>Materials from multiple suppliers</span></div>
+        <div><b>Coordinated delivery</b><span>Pickup, loading & delivery</span></div>
+        <div><b>Track every step</b><span>From order to project site</span></div>
+      </div></div></section>
+      <section class="section"><div class="section-container">
+        <div class="section-heading"><div><span class="section-kicker">EXPLORE</span><h2>What do you need for your project?</h2></div><a href="#/material" class="view-all">See all ${icon.arrow}</a></div>
+        <div class="category-scroller">${cats.map(c=>`<a href="#/material/${c[1]}" class="k-category"><div><img src="${c[2]}" alt="${c[0]}" loading="lazy"></div><strong>${c[0]}</strong><small>Explore products</small></a>`).join('')}</div>
+      </div></section>
+      <section class="section soft-section"><div class="section-container">
+        <div class="section-heading"><div><span class="section-kicker">DEALS</span><h2>Popular deals for your project</h2></div><a href="#/promo" class="view-all">See all ${icon.arrow}</a></div>
+        <div class="deal-grid">${deals.map(p=>`<a href="#/detail/${p.id}" class="deal-card"><div class="deal-image"><img src="${p.image}" alt="${p.title}" loading="lazy"><span>DEAL</span><button type="button">${icon.heart}</button></div><div class="deal-body"><small>Construction materials</small><h3>${p.title}</h3><div class="deal-rating">${icon.star} ${p.rating} <span>(80)</span></div><strong>Rp ${money(p.price)}</strong><p>3 suppliers · Delivery available</p></div></a>`).join('')}</div>
+      </div></section>
+      <section class="section"><div class="section-container">
+        <div class="section-heading"><div><span class="section-kicker">SHOP BY AREA</span><h2>Popular project areas</h2></div><a href="#/material" class="view-all">Explore ${icon.arrow}</a></div>
+        <div class="destination-grid">${areas.map(a=>`<a href="#/material" class="destination-card"><img src="${a[2]}" alt="${a[0]}" loading="lazy"><div><strong>${a[0]}</strong><span>${a[1]}</span><small>Explore materials ${icon.arrow}</small></div></a>`).join('')}</div>
+      </div></section>
+      <section class="section how-section"><div class="section-container">
+        <div class="section-heading"><div><span class="section-kicker">HOW IT WORKS</span><h2>From search to delivery</h2></div><a href="#/help" class="view-all">Learn more ${icon.arrow}</a></div>
+        <div class="how-grid"><div><b>01</b><h3>Search</h3><p>Find materials, suppliers and delivery options.</p></div><div><b>02</b><h3>Compare</h3><p>Review price, stock, rating and availability.</p></div><div><b>03</b><h3>Order</h3><p>Combine materials from different suppliers.</p></div><div><b>04</b><h3>Deliver</h3><p>We coordinate pickup, loading and delivery.</p></div></div>
+      </div></section>
+      <section class="section soft-section"><div class="section-container">
+        <div class="section-heading"><div><span class="section-kicker">GUIDES</span><h2>Plan your project with confidence</h2></div><a href="#/blog" class="view-all">Read all ${icon.arrow}</a></div>
+        <div class="guide-grid">${guides.map(g=>`<a href="#/blog" class="guide-card"><img src="${g[2]}" alt="${g[0]}" loading="lazy"><div><small>${g[1]}</small><h3>${g[0]}</h3><span>Read guide ${icon.arrow}</span></div></a>`).join('')}</div>
+      </div></section>
+      <section class="section why-section"><div class="section-container"><div class="why-layout"><div><span class="section-kicker">WHY BALI BAGUS</span><h2>A marketplace built around the way construction actually works.</h2><p>Compare materials, suppliers and delivery options in one workflow instead of coordinating every store yourself.</p><a href="#/proyek" class="primary-button">Explore projects ${icon.arrow}</a></div><div class="why-list"><div>${icon.check}<span><b>Multiple supplier offers</b><small>Compare price, stock and availability.</small></span></div><div>${icon.check}<span><b>Multi-supplier procurement</b><small>Different materials, one checkout.</small></span></div><div>${icon.check}<span><b>Delivery network</b><small>Pickup, loading and delivery coordinated.</small></span></div><div>${icon.check}<span><b>Reviews & support</b><small>Make informed decisions with marketplace feedback.</small></span></div></div></div></div></section>
     </main>
-
     ${footer()}
-
     ${mobileBottomNav()}
   `
 }
-
 
 function bindHomeEvents() {
   ;[document.querySelector('#header-search'),document.querySelector('#hero-search')].forEach(form=>{
