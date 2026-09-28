@@ -4396,3 +4396,18 @@ body{font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.45;-web
 /* Hero surface: soft glass overlay keeps the image visible instead of a flat/rigid color block. */
 .global-page-hero .hero-slide .klook-hero-overlay{background:linear-gradient(90deg,rgba(4,27,21,.50),rgba(4,27,21,.22) 55%,rgba(4,27,21,.05))!important;backdrop-filter:blur(0px)!important}
 .global-page-hero .hero-slide::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(255,255,255,.06),transparent 35%,rgba(0,0,0,.10));mix-blend-mode:soft-light}
+
+/* HERO HEIGHT LOCK — every standard page hero uses the exact homepage desktop/tablet/mobile geometry. */
+.global-page-hero .hero-slides,
+.global-page-hero .hero-slide,
+.global-page-hero .hero-slide .klook-hero-inner{height:560px!important;min-height:560px!important}
+@media(max-width:900px){
+  .global-page-hero .hero-slides,
+  .global-page-hero .hero-slide,
+  .global-page-hero .hero-slide .klook-hero-inner{height:560px!important;min-height:560px!important}
+}
+@media(max-width:640px){
+  .global-page-hero .hero-slides,
+  .global-page-hero .hero-slide,
+  .global-page-hero .hero-slide .klook-hero-inner{height:420px!important;min-height:420px!important}
+}
