@@ -1,5 +1,5 @@
 import {store,money} from '../../app/store.js';
-import {shell,hero} from '../../app/ui.js';
+import {shell,pageHeading,icon} from '../../app/ui.js';
 
 const stages=[
  ['Pesanan dibuat','Order tercatat dan menunggu konfirmasi pembayaran.'],
@@ -25,7 +25,7 @@ export function tracking(id=''){
  };
  const active=stageIndex(o.status);
  const html=shell(
-   hero('TRACK ORDER',o.id,'Lacak tahapan procurement dan delivery dalam satu alur.')+
+   pageHeading('TRACK ORDER',o.id,'Lacak tahapan procurement dan delivery dalam satu alur.','<a class="secondary-button" href="#/orders">'+icon.back+' Pesanan saya</a>')+
    `<div class="tracking-page">
       <form class="ops-card tracking-search" id="tracking-search">
         <label>Nomor pesanan<input name="id" value="${id||''}" placeholder="Contoh: BLD-12345678" required></label>
