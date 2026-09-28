@@ -1,0 +1,13 @@
+export const ROLES=['customer','seller','driver','partner','admin','operations'];
+export const ORDER_STATUSES=['pending','confirmed','supplier-preparing','ready-for-pickup','pickup','loading','in-transit','delivered','completed','cancelled'];
+export const PAYMENT_STATUSES=['pending','submitted','confirmed','failed','refunded'];
+export const SETTLEMENT_STATUSES=['pending','held','eligible','settled','refunded','disputed'];
+export const DELIVERY_METHODS=['same_day','scheduled','self_pickup'];
+export const SELLER_TYPES=['retailer','supplier','wholesaler','distributor','manufacturer','importer','contractor','specialist'];
+export const SELLER_LEVELS=['new','verified','trusted','top','preferred'];
+export const AVAILABILITY=['available','low_stock','out_of_stock','coming_soon','no_supplier','request_supplier','pre_order','made_to_order'];
+export const DISPUTE_TYPES=['stock_issue','missing_item','wrong_item','damaged_item','delivery_issue'];
+export const makeProduct=p=>({id:'',familyId:null,brand:null,title:'',variant:null,category:null,unit:'item',image:'',...p});
+export const makeSupplier=s=>({id:'',name:'',type:'supplier',level:'new',verified:false,rating:null,reviewCount:0,areas:[],...s});
+export const makeOffer=o=>({id:'',productId:'',supplierId:'',price:0,originalPrice:null,stock:0,availability:'available',minimumOrder:1,sameDay:false,deliveryEta:null,...o});
+export const makeOrder=o=>({id:'',status:'pending',paymentStatus:'pending',settlementStatus:'pending',items:[],supplierOrders:[],delivery:null,totals:{subtotal:0,delivery:0,serviceFee:0,tax:0,paymentFee:0,discount:0,total:0},...o});
