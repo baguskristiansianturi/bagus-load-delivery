@@ -3510,3 +3510,81 @@ body{font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.45;-web
     padding-right:14px;
   }
 }
+
+
+/* FINAL DESKTOP ALIGNMENT — one content rail from logo through hero, sections and footer.
+   Only the hero visual/background is full-bleed. */
+@media(min-width:901px){
+  :root{--bb-rail:1280px;--bb-gutter:16px}
+  .app-market-header .header-inner,
+  .app-market-header .category-nav-inner,
+  .hero-slide .klook-hero-inner,
+  .home-page .section-inner,
+  .home-page .section-container,
+  .home-page .container,
+  .home-page .content-container,
+  .home-page .trust-strip-inner,
+  .home-page .way-bali-bagus-inner,
+  .footer-main .footer-inner,
+  .footer-main .footer-container,
+  .footer-main .container,
+  .footer-main .footer-grid,
+  .footer-main .footer-bottom{
+    width:min(var(--bb-rail),calc(100% - 32px))!important;
+    max-width:var(--bb-rail)!important;
+    margin-left:auto!important;
+    margin-right:auto!important;
+    box-sizing:border-box;
+  }
+
+  /* Same left/right rail: do not add a second inset inside the rail. */
+  .app-market-header .header-inner,
+  .app-market-header .category-nav-inner,
+  .hero-slide .klook-hero-inner,
+  .home-page .section-inner,
+  .home-page .section-container,
+  .home-page .container,
+  .home-page .content-container,
+  .home-page .trust-strip-inner,
+  .home-page .way-bali-bagus-inner,
+  .footer-main .footer-inner,
+  .footer-main .footer-container,
+  .footer-main .container,
+  .footer-main .footer-grid,
+  .footer-main .footer-bottom{
+    padding-left:0!important;
+    padding-right:0!important;
+  }
+
+  /* Hero itself remains full width; only its inner copy follows the rail. */
+  .klook-hero,.hero-carousel,.hero-slide{width:100%!important}
+  .hero-slide .klook-hero-inner{justify-content:flex-start!important}
+
+  /* Keep the desktop first viewport compact: navbar 1 + navbar 2 + hero. */
+  .hero-slide .klook-hero-inner{
+    min-height:470px!important;
+    padding-top:64px!important;
+    padding-bottom:58px!important;
+  }
+  .hero-slide h1{
+    max-width:720px!important;
+    margin-bottom:18px!important;
+  }
+  .hero-slide p{
+    max-width:570px!important;
+    margin-bottom:24px!important;
+  }
+}
+
+@media(max-width:900px){
+  .app-market-header .header-inner,
+  .app-market-header .category-nav-inner,
+  .hero-slide .klook-hero-inner,
+  .footer-main .footer-inner,
+  .footer-main .footer-container,
+  .footer-main .container,
+  .footer-main .footer-grid,
+  .footer-main .footer-bottom{
+    box-sizing:border-box;
+  }
+}
