@@ -20,9 +20,9 @@ export function route(homeFn=home){
  let h;
  if(!r)h=homeFn();
  else if(r==='search')h=search(p.get('q')||'');
- else if(r==='material')h=listing('material',v||'');
+ else if(r==='material'||r==='materials')h=listing('material',v||'');
  else if(r==='jasa')h=listing('service',v||'');
- else if(r==='logistik')h=listing('logistics',v||'');
+ else if(r==='logistik'||r==='delivery')h=listing('logistics',v||'');
  else if(r==='properti')h=listing('property',v||'');
  else if(r==='detail')h=detail(v);
  else if(r==='cart')h=cart();
@@ -31,7 +31,7 @@ export function route(homeFn=home){
  else if(r==='order')h=order(v);
  else if(r==='wishlist')h=wishlist();
  else if(r==='login'||r==='register')h=login();
- else if(r==='blog'||r==='article')h=blog(r==='article'?v:'');
+ else if(r==='blog'||r==='guides'||r==='article')h=blog(r==='article'||r==='guides'?v:'');
  else if(r==='provider'||r==='suppliers')h=supplierPage(v||'');
  else if(r==='proyek'||r==='projects')h=projectsPage(v||'');
  else if(['promo','help','faq','about','contact','reviews','terms','privacy','recent'].includes(r))h=misc(r);
