@@ -1,4 +1,4 @@
-const K={cart:'bld_cart_v2',wish:'bld_wishlist_v1',orders:'bld_orders_v2',recent:'bld_recent_v1'};
+const K={cart:'bld_cart_v2',wish:'bld_wishlist_v1',orders:'bld_orders_v2',recent:'bld_recent_v1',user:'bld_user_v1'};
 const read=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}};
 const save=(k,v)=>(localStorage.setItem(k,JSON.stringify(v)),v);
 export const money=v=>new Intl.NumberFormat('id-ID').format(Number(v)||0);
@@ -13,6 +13,6 @@ export const store={
  clearCart:()=>save(K.cart,[]),cartCount:()=>read(K.cart,[]).reduce((n,x)=>n+(Number(x.quantity)||0),0),cartTotal:()=>read(K.cart,[]).reduce((n,x)=>n+(Number(x.price)||0)*(Number(x.quantity)||0),0),
  getWishlist:()=>read(K.wish,[]),isWishlisted:id=>read(K.wish,[]).some(x=>x.id===id),toggleWishlist:item=>{const a=read(K.wish,[]),i=a.findIndex(x=>x.id===item.id);i>=0?a.splice(i,1):a.push(item);return save(K.wish,a)},
  addRecent:item=>{const a=read(K.recent,[]).filter(x=>x.id!==item.id);a.unshift(item);return save(K.recent,a.slice(0,12))},getRecent:()=>read(K.recent,[]),
- getOrders:()=>read(K.orders,[]),getOrder:id=>read(K.orders,[]).find(x=>x.id===id),
+ getUser:()=>read(K.user,null),setUser:u=>save(K.user,u),clearUser:()=>{localStorage.removeItem(K.user)},getOrders:()=>read(K.orders,[]),getOrder:id=>read(K.orders,[]).find(x=>x.id===id),
  createOrder:p=>{const a=read(K.orders,[]),o={id:`BLD-${Date.now().toString().slice(-8)}`,createdAt:new Date().toISOString(),status:'pending',...p};a.unshift(o);save(K.orders,a);return o}
 };
