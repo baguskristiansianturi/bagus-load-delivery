@@ -4014,3 +4014,15 @@ body{font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.45;-web
     margin-top:0!important;
   }
 }
+
+
+/* FINAL HERO → CATEGORY COMPRESSION — category heading/cards should appear immediately after hero. */
+@media(min-width:901px){
+  .category-section{
+    padding-top:8px!important;
+  }
+  .category-section .section-head{
+    margin-top:0!important;
+    margin-bottom:10px!important;
+  }
+}
