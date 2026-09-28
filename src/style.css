@@ -4750,3 +4750,22 @@ body{font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.45;-web
 .header-search button{height:30px;padding:0 13px;border:0;border-radius:7px;background:var(--ink);color:#fff;font-size:11px;font-weight:800;cursor:pointer}
 @media(max-width:980px){.header-search{width:min(330px,32vw)}.header-search button{display:none}}
 @media(max-width:760px){.header-search{display:none}}
+
+
+/* HOME HERO — content centered vertically on the left rail, including search. */
+.hero-carousel .hero-slide .klook-hero-inner{
+  justify-content:center!important;
+  align-items:flex-start!important;
+  text-align:left!important;
+}
+.hero-carousel .hero-slide .klook-hero-inner > .hero-label,
+.hero-carousel .hero-slide .klook-hero-inner > .hero-location,
+.hero-carousel .hero-slide .klook-hero-inner > h1,
+.hero-carousel .hero-slide .klook-hero-inner > p,
+.hero-carousel .hero-slide .klook-hero-inner > .hero-search,
+.hero-carousel .hero-slide .klook-hero-inner > form{
+  align-self:flex-start!important;
+  margin-left:0!important;
+  margin-right:auto!important;
+  text-align:left!important;
+}
