@@ -185,14 +185,14 @@ Jangan menutup PR hanya karena kode sudah ditulis. Pisahkan: `DRAFT`, `IMPLEMENT
 4. Baru lanjut upload media PR-005, Explore PR-006, dan interaksi PR-007.
 5. Setelah alur akun pertama lulus, lanjut toko/branding, chat, dan wallet sesuai dependensi.
 
-**Status terakhir dokumen:** 7 November 2026.  
+**Status terakhir dokumen:** 7 November 2026. Build & deployment Pages untuk commit `506c54836bdd52164cf5f3f39c43cd416c0007d6` terverifikasi sukses; UAT akun nyata masih menunggu.  
 **Catatan:** daftar di atas adalah baseline dari riwayat pengerjaan dan keputusan yang tercatat. Kondisi aktual harus diverifikasi pada awal sesi berikutnya sebelum menandai item selesai atau memulai migrasi baru.
 
 
 ## 7. Checkpoint implementasi pengguna pertama — 7 November 2026
 
 ### CP-006 — Fondasi akun, profil, alamat, media dan Explore
-- **Status kode:** IMPLEMENTED pada branch `main`.
+- **Status kode:** IMPLEMENTED pada branch `main` hingga commit `3cf19546b0b13aa770a0f856e74cc289cd9693bd`.
 - **Status database:** APPLIED dan diverifikasi melalui migration history serta query tabel.
 - **Perubahan:**
   - `src/pages/account/index.js` — Supabase Auth signup/login, profil pengguna, avatar/cover, bio, username unik, lokasi publik, privacy, alamat, upload media, Explore, komentar, like, share, simpan, dan tag akun.
@@ -202,12 +202,21 @@ Jangan menutup PR hanya karena kode sudah ditulis. Pisahkan: `DRAFT`, `IMPLEMENT
   - `supabase/migrations/202611070004_user_first_social_foundation.sql` — profil, alamat privat, postingan, likes, comments, saves, bucket privat dan policies.
   - `supabase/migrations/202611070005_post_account_tags.sql` — relasi tag akun.
 - **Database live terverifikasi:** migrations `pluits_user_first_social_foundation` dan `pluits_post_account_tags` tercatat; tujuh tabel sosial/alamat/profil ada; bucket `pluits-user-media` privat, batas 50 MB, MIME image dan video; policies RLS tersedia.
-- **Build:** GitHub Actions pada commit `642a24bdbed4a85931271e7481f9880a04cc9fc3` melaporkan langkah `npm run build` dan verifikasi `dist/index.html` sukses. Deploy Pages gagal karena aksi deploy mendeteksi artefak `github-pages` ganda saat rerun job, bukan karena build. Commit berikutnya memicu workflow run baru; status deployment harus diperiksa terpisah.
+- **Build & deployment:** GitHub Actions run `42376208078` pada commit `506c54836bdd52164cf5f3f39c43cd416c0007d6` berhasil (`conclusion: success`); langkah Vite build, verifikasi `dist/index.html`, upload artifact, dan deploy Pages semuanya sukses. Commit berikutnya `3cf19546b0b13aa770a0f856e74cc289cd9693bd` hanya memperbaiki alur re-render interaksi pada detail post; workflow terbaru perlu tetap dipantau bila ada commit setelah checkpoint ini.
 - **Belum diuji:** signup/login email nyata, upload media dari Android, geolocation/peta, RLS lintas dua akun, komentar/like/tag lintas akun, dan persistence setelah logout/login.
 - **Keamanan yang diketahui:** alamat dan koordinat disimpan di `user_addresses` dengan RLS pemilik; media disimpan pada bucket privat; signed URL dibuat untuk tampilan. Jangan menyebut fitur lulus sebelum tes akun nyata.
 - **Catatan cakupan:** video dibatasi 50 MB dan upload menggunakan standard Storage upload; resumable/TUS untuk file besar belum dibuat. Story/Reels, followers, notifikasi tag, moderasi, report/block, edit/hapus post, dan halaman profil publik masih PR.
 
-### CP-007 — Panduan UAT mobile pengguna pertama
+### CP-007 — Deployment GitHub Pages untuk akun pengguna
+- **Status:** DEPLOYED pada workflow run `42376208078`.
+- **Build:** sukses; Vite menghasilkan `dist/index.html`.
+- **URL akun:** https://baguskristiansianturi.github.io/bagus-load-delivery/#/account/register
+- **URL profil:** https://baguskristiansianturi.github.io/bagus-load-delivery/#/account/profile
+- **URL Explore:** https://baguskristiansianturi.github.io/bagus-load-delivery/#/account/explore
+- **URL alamat:** https://baguskristiansianturi.github.io/bagus-load-delivery/#/account/addresses
+- **Catatan:** workflow sukses terverifikasi pada commit `506c548...`; perbaikan terakhir commit `3cf1954...` sudah masuk branch main dan perlu deploy run setelah commit tersebut dipastikan.
+
+### CP-008 — Panduan UAT mobile pengguna pertama
 - **Status:** Dokumentasi dibuat.
 - **Bukti:** `MASTER/PLUITS-USER-TESTING.md`.
 - **Tujuan:** Mas Bagus bisa mendaftar sebagai pengguna biasa, menguji profil, alamat/pin, upload foto/video, Explore dan semua interaksi sebelum membuat toko.
