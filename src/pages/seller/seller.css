@@ -121,3 +121,13 @@
  .pluits-image-preview figure{flex-basis:96px}
  .pluits-image-preview img{height:82px}
 }
+
+
+/* Product gallery carousel in Seller Center */
+.pluits-product-gallery{display:flex;gap:6px;flex:0 0 132px;width:132px;max-width:100%;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.pluits-product-gallery::-webkit-scrollbar{display:none}
+.pluits-product-gallery img{flex:0 0 42px;width:42px;height:42px;object-fit:cover;border-radius:7px;background:#edf1f5;scroll-snap-align:start}
+@media(max-width:800px){
+ .pluits-product-gallery{width:100%;flex:0 0 auto}
+ .pluits-product-gallery img{flex:0 0 100%;width:100%;height:150px;border-radius:9px;scroll-snap-align:center}
+}
