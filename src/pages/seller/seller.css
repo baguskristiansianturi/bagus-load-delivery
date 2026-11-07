@@ -88,3 +88,20 @@
  .pluits-owner-pill{display:none}
  .pluits-top .pluits-ghost{padding:7px;font-size:9px}
 }
+
+
+.pluits-thumb{object-fit:cover;overflow:hidden}
+.pluits-advanced-fields{border:1px solid #e5e9ee;border-radius:10px;padding:12px;margin:4px 0 16px}
+.pluits-advanced-fields>summary{cursor:pointer;font-size:11px;font-weight:800;color:#53657a;list-style:none}
+.pluits-advanced-fields>summary::-webkit-details-marker{display:none}
+.pluits-advanced-fields[open]>summary{margin-bottom:12px}
+.pluits-advanced-fields .pluits-form-grid{padding-top:5px}
+@media(max-width:800px){
+ .pluits-product-row{flex-direction:column;align-items:flex-start;gap:8px;padding:10px;min-height:0}
+ .pluits-product-row .pluits-thumb{width:100%;height:125px;border-radius:9px}
+ .pluits-product-row>div{width:100%}
+ .pluits-product-row strong{font-size:12px}
+ .pluits-quick-add{margin-bottom:14px}
+ .pluits-quick-add .pluits-panel{padding:13px}
+ .pluits-advanced-fields{background:#fafbfc}
+}
