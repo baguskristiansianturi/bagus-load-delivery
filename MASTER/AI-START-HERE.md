@@ -65,9 +65,9 @@ Satu status tidak otomatis membuktikan status berikutnya. Dokumen bukan bukti im
 10. Jika founder memberi keputusan bisnis baru, integrasikan ke bagian yang tepat dengan menyesuaikan alur dan aturan lama, bukan menimpa seluruh dokumen.
 
 ## Fokus saat ini
-Checkpoint terbaru adalah CP-011 — Pluits Social Experience Commerce. Model bisnis v1.0 mencatat transaksi menjadi konten, review dan respons merchant, kartu internal, username/mini-website, aturan toko/barang bekas, fulfillment, Trip Story, privasi, moderasi, dan hipotesis pendapatan.
+Checkpoint model bisnis terbaru adalah CP-011 — Pluits Social Experience Commerce. Checkpoint implementasi terbaru adalah CP-012 — Real user registration & public social feed foundation. Model bisnis v1.0 mencatat transaksi menjadi konten, review dan respons merchant, kartu internal, username/mini-website, aturan toko/barang bekas, fulfillment, Trip Story, privasi, moderasi, dan hipotesis pendapatan.
 
-Langkah berikutnya adalah audit implementasi sosial dan backend terhadap bagian 24, petakan gap, lalu tulis spesifikasi dan acceptance criteria. Pertanyaan terbuka di bagian 24.17 harus dibawa ke sesi berikutnya, bukan dijawab dengan asumsi.
+Fondasi registrasi pengguna nyata dan akses feed publik sudah disiapkan. Langkah berikutnya: founder mendaftar sendiri melalui GitHub Pages, mengonfirmasi email, melengkapi profil, mengunggah postingan publik, lalu memeriksa Explore dan Beranda publik. Catat semua error nyata. Jangan membuat akun atau postingan atas nama founder. Setelah UAT akun pertama, lakukan tes privasi menggunakan akun kedua sebelum mengundang lebih banyak tester. Fitur transaksi, review merchant, notifikasi owner, Trip, dan wallet belum dibuat.
 
 ## Tautan utama
 - Business Model Master: https://github.com/baguskristiansianturi/bagus-load-delivery/blob/main/MASTER/BUSINESS-MODEL-MASTER.md
