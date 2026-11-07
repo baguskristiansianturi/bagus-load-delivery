@@ -216,7 +216,7 @@ alter table public.store_audit_logs enable row level security;
 -- scoped, checks auth.uid(), and reads only membership rows to avoid RLS recursion.
 create schema if not exists private;
 revoke all on schema private from public, anon, authenticated;
-grant usage on schema private to authenticated;
+grant usage on schema private to anon, authenticated;
 
 create or replace function private.is_store_member(target_store_id uuid)
 returns boolean
@@ -249,7 +249,7 @@ $;
 
 revoke all on function private.is_store_member(uuid) from public, anon;
 revoke all on function private.is_store_owner(uuid) from public, anon;
-grant execute on function private.is_store_member(uuid), private.is_store_owner(uuid) to authenticated;
+grant execute on function private.is_store_member(uuid), private.is_store_owner(uuid) to anon, authenticated;
 
 create policy "profiles_select_own" on public.profiles
 for select to authenticated using (id = (select auth.uid()));
