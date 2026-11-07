@@ -14,7 +14,7 @@ export async function bindHome(){
   const [profiles,pros,stores]=await Promise.all([
    db.from('user_profiles').select('id,display_name,username,avatar_path,public_city,public_province,visibility').in('id',ids),
    proIds.length?db.from('professional_profiles').select('id,display_name,username,service_city,service_province').in('id',proIds):Promise.resolve({data:[]}),
-   storeIds.length?db.from('stores').select('id,name,username,public_city,public_area,store_logo_path').in('id',storeIds):Promise.resolve({data:[]})
+   storeIds.length?db.from('public_business_profiles').select('id,name,username,public_city,public_area').in('id',storeIds):Promise.resolve({data:[]})
   ]);
   const pmap=new Map((profiles.data||[]).map(p=>[p.id,p])),promap=new Map((pros.data||[]).map(p=>[p.id,p])),smap=new Map((stores.data||[]).map(p=>[p.id,p]));
   const cards=await Promise.all(rows.map(async post=>{
