@@ -56,9 +56,9 @@ Model data konseptual:
 - auth.users: identitas login.
 - user_profiles: Personal Profile.
 - professional_profiles: profil profesional milik user.
-- businesses: entitas bisnis.
-- business_members: hubungan user dengan bisnis dan role.
-- verification_cases: jenis verifikasi, status, bukti, reviewer, audit.
+- stores: entitas Business yang sudah digunakan Pluits.
+- store_members: hubungan user dengan bisnis dan role.
+- profile_verification_cases: jenis verifikasi, status, bukti, reviewer, audit.
 - business roles: owner, business_admin, catalog_manager, order_manager, finance, analyst, support_agent.
 
 Jangan gunakan satu kolom role global untuk semua izin. Permission harus dibatasi berdasarkan resource dan business_id. Anggota bisnis hanya boleh mengakses data sesuai tugasnya.
@@ -135,7 +135,7 @@ Status verifikasi: draft, submitted, under_review, verified, rejected, expired, 
 
 ## 11. Urutan implementasi
 
-P0 — Fondasi identitas: pertahankan Supabase Auth dan user_profiles personal; tambahkan professional_profiles, businesses, business_members, verification_cases; definisikan RLS; buat account switcher dan pengaturan jenis profil.
+P0 — Fondasi identitas: pertahankan Supabase Auth dan user_profiles personal; gunakan stores/store_members untuk Business; tambahkan professional_profiles, profile_verification_cases, account_context_preferences; definisikan RLS; buat account switcher dan pengaturan jenis profil.
 
 P1 — Aktivasi profil: professional onboarding, portofolio, business onboarding, status verifikasi, halaman bisnis, dan role management. Hubungkan Seller Center dengan konteks Business.
 
@@ -143,10 +143,18 @@ P2 — Sosial dan komersial: feed/Story mengikuti konteks profil, ulasan pembeli
 
 P3 — Uang: ledger immutable, payment provider, settlement, withdrawal, rekening terverifikasi, audit. Jangan aktifkan pencairan uang sungguhan sebelum pengujian dan kepatuhan selesai.
 
-## 12. Status backend setelah fondasi 8 November 2026\n\n- `professional_profiles` dan `professional_portfolio_items` sudah dibuat di Supabase dengan RLS pemilik dan pembacaan publik hanya untuk profil aktif/publik.\n- `account_context_preferences` menyimpan konteks aktif Personal/Professional/Business dan memvalidasi akses ke toko melalui owner/anggota aktif.\n- `profile_verification_cases` menerima pengajuan verifikasi profesional/toko; pemohon tidak dapat mengubah status review atau menetapkan dirinya verified. Keputusan reviewer harus dilakukan melalui jalur admin tepercaya.\n- Entitas Business tetap menggunakan tabel `stores` yang sudah ada; keanggotaan tim tetap menggunakan `store_members`. Tidak dibuat tabel bisnis duplikat.\n- Migrasi sumber disimpan di `supabase/migrations/20261108000000_pluits_profile_context_foundation.sql`.\n- Status: backend schema/RLS IMPLEMENTED dan pemeriksaan tabel/policy berhasil. Frontend switcher/onboarding belum IMPLEMENTED/DEPLOYED/TESTED.\n\n## 13. Status aktual yang diketahui sebelum fondasi ini dibuat
+## 12. Status backend setelah fondasi 8 November 2026
+
+- `professional_profiles` dan `professional_portfolio_items` sudah dibuat di Supabase dengan RLS pemilik dan pembacaan publik hanya untuk profil aktif/publik.
+- `account_context_preferences` menyimpan konteks aktif Personal/Professional/Business dan memvalidasi akses ke toko melalui owner/anggota aktif.
+- `profile_verification_cases` menerima pengajuan verifikasi profesional/toko; pemohon tidak dapat mengubah status review atau menetapkan dirinya verified. Keputusan reviewer harus dilakukan melalui jalur admin tepercaya.
+- Entitas Business tetap menggunakan tabel `stores` yang sudah ada; keanggotaan tim tetap menggunakan `store_members`. Tidak dibuat tabel bisnis duplikat.
+- Migrasi sumber disimpan sesuai dua versi yang tercatat di Supabase: `20261107172444_pluits_profile_context_foundation.sql` dan `20261107172504_pluits_profile_context_rls_tuning.sql`.
+- Status: backend schema/RLS IMPLEMENTED dan pemeriksaan tabel/policy berhasil. Frontend switcher/onboarding belum IMPLEMENTED/DEPLOYED/TESTED.
+
+## 13. Status aktual sebelum fondasi ini dibuat
 
 - Frontend sudah memiliki user_profiles, postingan, Explore, likes/comments/saves/tags, alamat, dan autentikasi dasar.
 - Tabel user_stories 24 jam disiapkan; UI upload/viewer belum terverifikasi selesai.
 - Tabel wallet_accounts dan wallet_requests dibuat untuk permintaan manual; belum ada wallet ledger dan belum siap payment/settlement produksi.
-- Professional Profile, Business Entity, membership, verification workflow, account switcher, dan permission bisnis belum dinyatakan implemented.
 - Status pekerjaan harus dibedakan: PROPOSED → DECIDED → SPECIFIED → IMPLEMENTED → DEPLOYED → TESTED → ACCEPTED.
