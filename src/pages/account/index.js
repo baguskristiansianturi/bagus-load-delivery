@@ -19,7 +19,7 @@ function notify(message,type='success'){
 function frame(content,active='explore',avatarUrl=''){
  const userAvatar=avatar(avatarUrl,profile?.display_name||user?.email||'P');
  return `<div class="ua-app ua-social-app">
-  <header class="ua-header">
+  ${active==='profile'||active==='preview'?'':`  <header class="ua-header">
    <a class="ua-mobile-profile" href="#/account/profile" aria-label="Profil saya">${userAvatar}</a>
    <a class="ua-brand" href="#/account/explore">PLUITS<span>INDONESIA</span></a>
    <nav><a class="${active==='explore'?'active':''}" href="#/account/explore">Beranda</a><a class="${active==='profile'?'active':''}" href="#/account/profile">Profil</a><a class="${active==='addresses'?'active':''}" href="#/account/addresses">Alamat</a></nav>
@@ -34,7 +34,9 @@ function frame(content,active='explore',avatarUrl=''){
    <a class="${active==='profile'?'active':''}" href="#/account/profile">${userAvatar}<small>Profil</small></a>
   </nav>
   <div id="ua-toast" class="ua-toast" role="status"></div>
-  <footer class="ua-footer">PLUITS · Identitas pengguna dan aktivitas komunitas</footer>
+  <footer class="ua-footer">PLUITS · Identitas pengguna dan aktivitas komunitas</footer>`}
+  ${active==='profile'||active==='preview'?'<main class="ua-main ua-profile-main">'+content+'</main>':''}
+  <div id="ua-toast" class="ua-toast" role="status"></div>
  </div>`;
 }
 function authScreen(mode='login'){
@@ -164,27 +166,27 @@ async function profilePage(preview=false){
    ${profile.visibility!=='public'?'<div class="ua-empty"><strong>Akun ini privat</strong><p>Postingan hanya dapat dilihat oleh pemilik akun.</p></div>':visiblePosts.length?postGrid(visiblePosts):'<div class="ua-empty"><strong>Belum ada postingan publik</strong><p>Postingan yang Anda atur sebagai privat tidak ditampilkan di profil publik.</p></div>'}
   </section>`;
  }
- return `<div class="ua-page-heading"><div><span class="ua-eyebrow">AKUN PENGGUNA</span><h1>Profil Saya</h1><p>Bangun identitas pribadi dan atur apa yang dapat dilihat orang lain.</p></div><a class="ua-outline" href="#/account/preview">Lihat tampilan profil ↗</a></div>
- <section class="ua-account-hub">
-  <div class="ua-account-hub-head"><div><span class="ua-eyebrow">PUSAT AKUN</span><h2>Kelola akun Anda</h2><p>Semua profil, pengaturan, dan aktivitas dalam satu tempat.</p></div>${contextHeader(accountContext)}</div>
-  <div class="ua-account-menu">
-   <a href="#/account/profile" id="ua-edit-profile-link"><span class="ua-menu-icon">◉</span><span><b>Edit profil pribadi</b><small>Foto, nama, username, bio, dan lokasi publik</small></span><i>›</i></a>
-   <a href="#/account/settings"><span class="ua-menu-icon">⚙</span><span><b>Privasi & pengaturan</b><small>Audiens postingan, Story, komentar, dan pesan</small></span><i>›</i></a>
-   <a href="#/account/professional"><span class="ua-menu-icon">✦</span><span><b>Profil Professional</b><small>Keahlian, portofolio, dan area layanan</small></span><i>›</i></a>
-   <a href="#/seller"><span class="ua-menu-icon">▦</span><span><b>Business & Seller Center</b><small>Kelola toko, produk, harga, dan pesanan</small></span><i>›</i></a>
-   <a href="#/account/wallet"><span class="ua-menu-icon">◈</span><span><b>Wallet</b><small>Saldo dan riwayat permintaan</small></span><i>›</i></a>
-   <a href="#/account/addresses"><span class="ua-menu-icon">⌖</span><span><b>Alamat tersimpan</b><small>Alamat pengiriman pribadi</small></span><i>›</i></a>
-   <button id="ua-menu-logout" type="button"><span class="ua-menu-icon">↪</span><span><b>Keluar dari akun</b><small>Akhiri sesi Pluits di perangkat ini</small></span><i>›</i></button>
-  </div>
- </section>
-
- <section class="ua-profile-card">
+ return ` <section class="ua-profile-card">
   <div class="ua-cover" ${coverUrl?`style="background-image:url('${coverUrl}')"`:''}><span>FOTO SAMPUL</span><label class="ua-cover-edit">Ganti sampul<input id="ua-cover-file" type="file" accept="image/jpeg,image/png,image/webp"></label></div>
   <div class="ua-profile-content"><div class="ua-profile-avatar">${avatar(avatarUrl,profile.display_name,'large')}<label class="ua-avatar-edit">＋<input id="ua-avatar-file" type="file" accept="image/jpeg,image/png,image/webp"></label></div>
    <div class="ua-profile-identity"><h2>${esc(profile.display_name)}</h2><div class="ua-username">@${esc(profile.username)}</div><div class="ua-location">${profile.public_city&&profile.public_province?'⌖ '+esc(profile.public_city)+', '+esc(profile.public_province):'⌖ Tambahkan lokasi publik'}</div><p>${esc(profile.bio||'Bio belum ditambahkan.')}</p></div>
    <div class="ua-profile-count"><strong>${ownPosts.length}</strong><span>Postingan</span></div>
   </div>
  </section>
+ <div class="ua-profile-toolbar"><a class="ua-outline" href="#/account/settings">⚙ Pengaturan akun</a><a class="ua-outline" href="#/account/preview">Pratinjau ↗</a></div>
+ <nav class="ua-profile-tabs" aria-label="Konten profil">
+  <a class="active" href="#profile-posts">Postingan</a><a href="#profile-trips">Trip</a><a href="#profile-labels">Label</a>
+ </nav>
+ <section id="profile-posts" class="ua-panel ua-posts-panel"><div class="ua-section-title"><div><span class="ua-eyebrow">FEED SAYA</span><h2>Postingan</h2></div><a class="ua-outline" href="#/account/compose">＋ Buat</a></div>
+ ${ownPosts.length?postGrid(ownPosts):'<div class="ua-empty"><strong>Belum ada postingan</strong><p>Bagikan foto, video, atau cerita pertama Anda.</p><a class="ua-primary ua-inline" href="#/account/compose">Buat postingan</a></div>'}
+ </section>
+ <section id="profile-trips" class="ua-profile-empty-tab"><h2>Trip</h2><p>Aktivitas perjalanan yang Anda bagikan akan tampil di sini.</p></section>
+ <section id="profile-labels" class="ua-profile-empty-tab"><h2>Label</h2><p>Koleksi label dan topik profil Anda akan tampil di sini.</p></section>
+ <details class="ua-profile-settings">
+  <summary>Pengaturan profil dan akun</summary>
+  <div class="ua-settings-shortcuts"><a href="#/account/settings">Privasi & keamanan</a><a href="#/account/professional">Profil Professional</a><a href="#/seller">Business & Seller Center</a><a href="#/account/wallet">Wallet</a><a href="#/account/addresses">Alamat tersimpan</a></div>
+ </details>
+ 
  <section id="edit-profile" class="ua-grid-layout"><div class="ua-panel ua-edit-panel"><div class="ua-section-title"><div><span class="ua-eyebrow">IDENTITAS PUBLIK</span><h2>Edit profil</h2></div></div>
  <form id="ua-profile-form" class="ua-form-grid">
   <label>Nama tampilan<input name="display_name" maxlength="80" required value="${esc(profile.display_name)}"><small>Nama tampilan boleh sama dengan pengguna lain.</small></label>
