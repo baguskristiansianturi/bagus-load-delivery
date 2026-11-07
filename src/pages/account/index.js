@@ -23,8 +23,7 @@ function frame(content,active='explore',avatarUrl=''){
    <a class="ua-mobile-profile" href="#/account/profile" aria-label="Profil saya">${userAvatar}</a>
    <a class="ua-brand" href="#/account/explore">PLUITS<span>INDONESIA</span></a>
    <nav><a class="${active==='explore'?'active':''}" href="#/account/explore">Beranda</a><a class="${active==='profile'?'active':''}" href="#/account/profile">Profil</a><a class="${active==='addresses'?'active':''}" href="#/account/addresses">Alamat</a></nav>
-   ${contextHeader(accountContext)}
-   <button id="ua-logout" class="ua-logout">Keluar</button>
+   <a class="ua-header-create" href="#/account/compose" aria-label="Buat postingan">＋</a>
   </header>
   <main class="ua-main">${content}</main>
   <nav class="ua-mobile-nav" aria-label="Navigasi utama">
@@ -166,7 +165,19 @@ async function profilePage(preview=false){
   </section>`;
  }
  return `<div class="ua-page-heading"><div><span class="ua-eyebrow">AKUN PENGGUNA</span><h1>Profil Saya</h1><p>Bangun identitas pribadi dan atur apa yang dapat dilihat orang lain.</p></div><a class="ua-outline" href="#/account/preview">Lihat tampilan profil ↗</a></div>
- ${navProfile()}
+ <section class="ua-account-hub">
+  <div class="ua-account-hub-head"><div><span class="ua-eyebrow">PUSAT AKUN</span><h2>Kelola akun Anda</h2><p>Semua profil, pengaturan, dan aktivitas dalam satu tempat.</p></div>${contextHeader(accountContext)}</div>
+  <div class="ua-account-menu">
+   <a href="#/account/profile#edit-profile"><span class="ua-menu-icon">◉</span><span><b>Edit profil pribadi</b><small>Foto, nama, username, bio, dan lokasi publik</small></span><i>›</i></a>
+   <a href="#/account/settings"><span class="ua-menu-icon">⚙</span><span><b>Privasi & pengaturan</b><small>Audiens postingan, Story, komentar, dan pesan</small></span><i>›</i></a>
+   <a href="#/account/professional"><span class="ua-menu-icon">✦</span><span><b>Profil Professional</b><small>Keahlian, portofolio, dan area layanan</small></span><i>›</i></a>
+   <a href="#/seller"><span class="ua-menu-icon">▦</span><span><b>Business & Seller Center</b><small>Kelola toko, produk, harga, dan pesanan</small></span><i>›</i></a>
+   <a href="#/account/wallet"><span class="ua-menu-icon">◈</span><span><b>Wallet</b><small>Saldo dan riwayat permintaan</small></span><i>›</i></a>
+   <a href="#/account/addresses"><span class="ua-menu-icon">⌖</span><span><b>Alamat tersimpan</b><small>Alamat pengiriman pribadi</small></span><i>›</i></a>
+   <button id="ua-menu-logout" type="button"><span class="ua-menu-icon">↪</span><span><b>Keluar dari akun</b><small>Akhiri sesi Pluits di perangkat ini</small></span><i>›</i></button>
+  </div>
+ </section>
+
  <section class="ua-profile-card">
   <div class="ua-cover" ${coverUrl?`style="background-image:url('${coverUrl}')"`:''}><span>FOTO SAMPUL</span><label class="ua-cover-edit">Ganti sampul<input id="ua-cover-file" type="file" accept="image/jpeg,image/png,image/webp"></label></div>
   <div class="ua-profile-content"><div class="ua-profile-avatar">${avatar(avatarUrl,profile.display_name,'large')}<label class="ua-avatar-edit">＋<input id="ua-avatar-file" type="file" accept="image/jpeg,image/png,image/webp"></label></div>
@@ -303,6 +314,7 @@ async function mountAccount(section='profile'){
   const headerAvatar=await signed(profile.avatar_path);document.querySelector('#app').innerHTML=frame(page,section==='explore'?'explore':section==='addresses'?'addresses':section==='compose'?'compose':section==='preview'?'profile':'profile',headerAvatar);
   document.querySelector('#ua-logout')?.addEventListener('click',async()=>{await supabase.auth.signOut();user=null;profile=null;authScreen('login');});
   bindAccountContext({db:supabase,user,ctx:accountContext,profile,refresh:mountAccount});
+  document.querySelector('#ua-menu-logout')?.addEventListener('click',async()=>{await supabase.auth.signOut();user=null;profile=null;location.hash='/';});
   bindProfile();bindCompose();bindAddresses();bindWallet();bindPostActions();if(section==='addresses')initMap();
  }catch(err){document.querySelector('#app').innerHTML=frame('<div class="ua-panel ua-error"><h1>Ada kendala memuat akun</h1><p>'+esc(err.message)+'</p><button class="ua-primary" onclick="location.reload()">Coba lagi</button></div>');document.querySelector('#ua-logout')?.addEventListener('click',()=>supabase.auth.signOut());}
 }
