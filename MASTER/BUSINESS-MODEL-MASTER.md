@@ -1,5 +1,5 @@
 # MASTER MODEL BISNIS — BAGUS LOAD & DELIVERY
-**Versi:** 0.4 | **Pembaruan:** 7 November 2026
+**Versi:** 0.5 | **Pembaruan:** 7 November 2026
 **Status:** Dokumen induk model bisnis; acuan sebelum penyusunan paket dan spesifikasi teknis.
 
 > Dokumen ini menjadi sumber acuan utama. Hal yang belum diputuskan ditandai sebagai terbuka dan bukan kebijakan final.
@@ -58,7 +58,9 @@ Perbandingan harus mempertimbangkan ukuran, mutu, spesifikasi, satuan, panjang/v
 Satu akun pengguna dapat berfungsi sebagai pembeli sekaligus pemilik/pengelola toko. Pengguna tidak perlu membuat identitas akun terpisah hanya untuk berpindah peran. Untuk membuka toko, pengguna mengajukan aktivasi/pendaftaran toko dan memenuhi syarat serta ketentuan penjual, termasuk verifikasi badan usaha sesuai kebijakan platform. Pendaftaran toko bukan berarti setiap akun otomatis menjadi penjual.
 
 ### 5.2 Pembuatan toko dan lokasi
-Sebelum toko diaktifkan, pemilik wajib mengisi alamat toko, titik lokasi/pin peta, dan informasi wilayah operasional. Data lokasi toko menjadi dasar pencarian lokal, estimasi jarak, area layanan, dan perhitungan logistik di masa depan. Dashboard toko harus memungkinkan pemilik mengelola informasi toko sesuai hak aksesnya.
+Alamat dan lokasi toko wajib diisi ketika membuat toko. Sistem menyimpan alamat operasional dan titik koordinat yang cukup akurat untuk perhitungan jarak, zona layanan, dan peta di masa depan. Informasi publik tidak harus menampilkan alamat jalan atau titik persis toko: halaman toko dapat menampilkan nama wilayah/kota (misalnya Denpasar) dan perkiraan jarak dari pembeli. Alamat lengkap dan koordinat presisi hanya digunakan untuk kebutuhan operasional yang sah, seperti validasi zona, pickup, pengiriman, dan administrasi, dengan akses yang dibatasi.
+
+Lokasi pembeli digunakan jika ia memberi izin perangkat; jika tidak, ia dapat memilih lokasi secara manual. IP hanya boleh menjadi perkiraan wilayah kasar, bukan sumber jarak presisi. Tujuan penyamaran alamat publik adalah menjaga transaksi tetap melalui platform, tanpa melarang toko dan pembeli menyepakati kunjungan langsung sesuai kebijakan yang kelak ditetapkan.
 
 ### 5.3 Katalog fleksibel dan atribut fisik
 Toko bebas menambahkan kategori dan jenis barangnya sendiri dalam batas kebijakan platform. Sistem menyediakan kategori/atribut yang terstruktur tetapi tidak membatasi toko hanya pada daftar produk awal. Setiap produk memiliki data dasar seperti nama, merek bila ada, deskripsi, foto, SKU/kode internal opsional, satuan jual, harga, stok, dan status.
@@ -77,6 +79,29 @@ Sistem perlu mencatat waktu perubahan dan pelakunya untuk data penting. Pengelol
 
 ### 5.6 Kartu katalog dan label promosi
 Kartu produk dapat menampilkan label ringkas seperti diskon, gratis ongkir, atau pengiriman hari yang sama. Label hanya muncul jika penawaran memenuhi syarat yang sudah dikonfigurasi dan dapat dibuktikan. Contohnya gratis ongkir memiliki cakupan, minimum belanja, atau batas jarak; same-day memiliki cut-off, wilayah, stok, dan kapasitas layanan. Jangan menampilkan badge promosi sebagai dekorasi atau janji yang tidak dapat dipenuhi.
+
+### 5.7 Harga online dan harga offline
+Toko dapat menetapkan harga khusus kanal online yang berbeda dari harga penjualan langsung/offline. Harga yang tampil dan berlaku pada katalog, keranjang, dan checkout adalah harga online yang ditetapkan toko. Perbedaan harga bukan ditentukan sepihak oleh platform. Syarat harga harus jelas dan harga checkout harus dikunci/ditampilkan secara transparan sebelum pembeli mengonfirmasi pesanan.
+
+### 5.8 Jam operasional, kesiapan pesanan, dan prioritas order
+Toko mengatur sendiri hari dan jam buka, hari libur, status sementara tutup, serta batas waktu penerimaan pesanan. Jam buka toko tidak otomatis berarti semua barang dapat langsung diambil sampai menit terakhir. Setiap produk atau kelompok produk dapat memiliki waktu persiapan/pemuatan dan batas waktu order/pickup yang berbeda. Contohnya barang siap ambil seperti cat dapat memiliki aturan berbeda dari semen, pasir, atau material curah yang membutuhkan waktu menyiapkan dan memuat.
+
+Sistem menyediakan rule dan pilihan konfigurasi; pemilik toko yang menetapkan nilai sesuai kemampuan operasionalnya. Sistem kemudian menggunakan aturan itu untuk menampilkan slot yang realistis, memperkirakan kesiapan, dan mencegah janji pickup/pengiriman yang tidak dapat dipenuhi.
+
+Pesanan yang telah diterima dan dijadwalkan melalui platform harus masuk ke antrean kerja toko dan diproses sesuai komitmen jadwal. Toko perlu melihat prioritas, tenggat, serta konsekuensi performa jika berulang kali mengabaikan atau terlambat memenuhi pesanan yang sudah dikonfirmasi. Sistem mengukur kinerja berdasarkan data objektif—konfirmasi, waktu persiapan, kesiapan, pembatalan, dan ketepatan jadwal—bukan sekadar rating bebas. Ketentuan prioritas, pengecualian, dan sanksi perlu dirancang adil sebelum diberlakukan.
+
+### 5.9 Pengiriman mandiri toko dan zona layanan
+Toko tidak wajib mempublikasikan jenis atau jumlah armadanya. Toko cukup menyatakan layanan pengiriman yang benar-benar sanggup dipenuhi: zona tujuan, minimum pembelian, biaya atau skema gratis ongkir, batas jarak, hari/jam layanan, dan ketentuan barang. Contoh: gratis ongkir Denpasar untuk pembelian minimum Rp2.000.000 atau gratis ongkir seluruh Bali dengan syarat tertentu.
+
+Sistem menyediakan alat untuk menggambar atau memilih zona layanan pada peta, menetapkan ketentuan tiap zona, dan memeriksa apakah alamat tujuan masuk cakupan. Detail kendaraan dan kalkulasi rekomendasi armada dapat dikembangkan kemudian menggunakan data berat/dimensi produk. Toko bertanggung jawab atas kebenaran layanan yang ditawarkannya.
+
+### 5.10 Verifikasi toko bertahap
+Status toko ditampilkan secara jelas, setidaknya sebagai belum diverifikasi dan terverifikasi. Pada tahap awal, toko dapat mulai berjualan setelah melengkapi data minimum dan menerima ketentuan platform, meskipun proses verifikasi dokumen belum selesai. Status belum diverifikasi tidak boleh disamarkan sebagai sudah terverifikasi. Platform dapat menerapkan batas atau penundaan untuk fitur berisiko lebih tinggi—misalnya pencairan dana melalui platform, promosi tertentu, atau batas transaksi—sampai verifikasi selesai. Persyaratan dokumen dapat ditingkatkan bertahap dan perubahan status harus memiliki jejak audit.
+
+Data rekening penerima dan dokumen legal/foto berkas disiapkan sebagai bagian dari profil penjual, tetapi tidak harus menjadi penghalang untuk uji coba awal jika pembayaran/pencairan belum dikelola platform. Sebelum menerima atau menyalurkan dana atas nama platform, identitas penerima dan rekening wajib diverifikasi dengan kontrol yang memadai.
+
+### 5.11 Perlindungan pengaturan toko
+Perubahan profil, alamat, rekening, jam operasional, zona, harga, stok, diskon, dan aturan pesanan hanya boleh dilakukan oleh pemilik atau staf toko yang diberi hak. Sistem menyediakan peran/izin, konfirmasi untuk perubahan sensitif, riwayat perubahan (siapa, kapan, data sebelum/sesudah), serta notifikasi untuk perubahan penting. Operator platform tidak boleh diam-diam mengubah data komersial toko; koreksi oleh admin harus memiliki alasan dan jejak audit. Kredensial dan dokumen sensitif tidak ditampilkan ke publik.
 
 ## 6. Mesin perbandingan harga
 Tujuannya menemukan penawaran paling efisien sesuai kebutuhan, bukan sekadar harga barang terendah.
@@ -102,6 +127,14 @@ Dashboard toko perlu mengelola:
 - Status pesanan dan kesiapan barang.
 
 Opsi pengiriman ditampilkan sesuai wilayah, jenis barang, kapasitas, dan jadwal.
+
+### 7.1 Fitur minimum sisi pembeli dan checkout
+Akun pembeli cukup mencakup registrasi/login, profil dasar, alamat atau lokasi tujuan tersimpan, pencarian dan filter, detail toko/produk, pemilihan variasi dan kuantitas, keranjang, pilihan pengiriman/pickup yang tersedia, ringkasan harga, konfirmasi pesanan, serta riwayat/status pesanan. Pembeli tidak perlu dashboard kompleks pada tahap pertama.
+
+Checkout harus memvalidasi stok, variasi, minimum order, harga online, zona layanan, biaya kirim, jam operasional, waktu persiapan, dan slot pickup/pengiriman. Sebelum konfirmasi, pembeli melihat total biaya dan komitmen waktu. Jika ongkir belum dapat dihitung, tampilkan permintaan konfirmasi/penawaran, bukan biaya rekaan. Pembayaran online dapat menjadi tahap terpisah; metode pembayaran awal harus ditetapkan sebelum transaksi uang sungguhan dibuka.
+
+### 7.2 Pengukuran kinerja penjual dan batas tanggung jawab platform
+Rating dan ulasan utama melekat pada toko/penjual dan transaksi, bukan pada platform sebagai penyedia perangkat lunak. Platform tetap bertanggung jawab atas kualitas sistem, keamanan, keakuratan tampilan, dukungan, dan penanganan laporan. Kinerja toko diukur terpisah dari rating pembeli, misalnya tingkat penerimaan pesanan, waktu persiapan, ketepatan pickup/pengiriman, pembatalan oleh toko, dan respons. Data kinerja harus transparan dan memiliki konteks agar toko tidak dihukum atas kejadian di luar kendalinya.
 
 ## 8. Fase 3 — Uji kebutuhan Bagus Load & Delivery
 Setiap toko pada dasarnya dapat memiliki kendaraan dan mengatur pengirimannya sendiri. Karena itu, pengiriman toko sendiri adalah alur normal marketplace, bukan alasan untuk memaksa semua pesanan memakai armada platform.
@@ -150,19 +183,31 @@ Daftar ini adalah kerangka analisis, bukan keputusan bahwa semua pihak wajib ber
 Jumlah toko terverifikasi dan produk aktif; pencarian yang menghasilkan perbandingan relevan; penawaran dengan total biaya jelas; rasio permintaan menjadi pesanan; waktu pencarian hingga penawaran; ketepatan pemenuhan/pengiriman; pembatalan dan keluhan; retensi toko/pembeli; serta transaksi berulang. Target angka ditetapkan setelah baseline uji coba tersedia.
 
 ## 14. Lokasi dan relevansi pencarian
-Lokasi toko wajib dimasukkan saat proses pembuatan toko, sebelum toko dapat dipublikasikan. Untuk pembeli, sistem meminta izin lokasi perangkat secara jelas. Jika izin diberikan, koordinat perangkat dapat digunakan untuk memprioritaskan toko terdekat atau toko yang melayani area tersebut. Jika izin ditolak/tidak tersedia, sistem menggunakan pilihan lokasi manual; alamat IP hanya boleh menjadi petunjuk perkiraan tingkat wilayah, bukan dianggap sebagai koordinat akurat.
+Lokasi toko wajib dimasukkan saat proses pembuatan toko. Data lokasi presisi disimpan privat untuk perhitungan jarak, zona, dan operasional; kepada publik cukup tampilkan wilayah/kota dan jarak perkiraan, bukan alamat lengkap atau pin persis.
 
-Strategi awal bersifat lokal: peluncuran dan pengujian dimulai dari Bali. Hasil pencarian default memprioritaskan toko di Bali dan area layanan yang relevan, bukan mencampur hasil jauh seperti Surabaya tanpa alasan. Namun, pengguna tetap dapat memperluas wilayah pencarian atau mencari toko dari wilayah lain secara sengaja. Relevansi lokasi tidak boleh menghilangkan pilihan pengguna.
+Untuk pembeli, sistem meminta izin lokasi perangkat secara jelas. Jika izin diberikan, koordinat perangkat dapat digunakan untuk memprioritaskan toko terdekat atau toko yang melayani area tersebut. Jika izin ditolak/tidak tersedia, sistem menggunakan pilihan lokasi manual; alamat IP hanya boleh menjadi petunjuk perkiraan tingkat wilayah, bukan dianggap sebagai koordinat akurat.
+
+Peluncuran dan pendaftaran toko pada tahap uji coba dibatasi ke Bali. Pembatasan harus berupa konfigurasi wilayah operasional/onboarding di backend, bukan hard-code yang menyulitkan ekspansi. Pengguna dari luar Bali tidak dapat membuat toko atau mengaktifkan layanan penjual di luar wilayah yang dibuka. Perluasan wilayah dilakukan bertahap oleh operator setelah kesiapan operasional dinilai. Pencarian default memprioritaskan toko di Bali dan area layanan relevan; pengguna tetap dapat memperluas pencarian jika wilayah lain kelak dibuka.
 
 ## 15. Skenario uji coba awal
 1. Sistem dimulai dengan katalog kosong; tidak ada produk contoh yang membuat hasil pencarian tampak seolah sudah memiliki banyak penjual.
-2. Pendiri mendaftar dan mengelola satu toko uji sebagai pelaku usaha penjual.
-3. Pendiri mengunggah beberapa jenis produk material, termasuk besi dengan variasi ukuran/panjang, satuan, harga, dan stok.
-4. Pengguna pembeli dari akun berbeda mencari produk dan hanya menemukan toko uji tersebut selama belum ada toko lain yang aktif menjual produk itu.
-5. Uji alur melihat toko, detail produk, membandingkan penawaran ketika toko lain kelak bergabung, dan memahami pilihan pengiriman dari toko.
-6. Setelah alur toko dan pembeli stabil, rekrut toko lain untuk menguji marketplace multi-toko. Uji Bagus Load & Delivery dilakukan terpisah berdasarkan kebutuhan nyata pembelian dari beberapa toko.
+2. Satu akun pendiri dapat berpindah peran sebagai pembeli dan pemilik toko; pendaftaran toko mengikuti syarat penjual.
+3. Pendiri membuat satu toko uji dengan alamat privat, wilayah publik, jam operasional, dan aturan persiapan/pickup.
+4. Pendiri mengunggah produk dan variasi, mengisi atribut fisik, harga online, diskon, serta stok.
+5. Pendiri mengatur zona pengiriman dan ketentuan minimum belanja/gratis ongkir; sistem memeriksa tujuan terhadap zona.
+6. Uji perubahan sensitif, hak akses, riwayat perubahan, dan status verifikasi toko.
+7. Uji alur pesanan sesuai jam operasional, batas waktu order, waktu persiapan, antrean, dan prioritas pesanan terjadwal.
+8. Setelah pengalaman penjual stabil, akun pembeli menguji pencarian lokal, detail produk, keranjang, checkout, total biaya, dan jadwal.
+9. Pastikan toko belum diverifikasi ditandai jelas dan tidak ditampilkan seolah telah diverifikasi. Uji pembatasan pendaftaran toko di luar Bali.
+10. Setelah alur toko dan pembeli stabil, rekrut toko lain untuk menguji marketplace multi-toko. Uji Bagus Load & Delivery dilakukan terpisah berdasarkan kebutuhan nyata.
 
 ## 16. Keputusan terbuka
+- Daftar dokumen dan tahapan verifikasi toko PT/CV/UD, serta batas fitur untuk toko belum diverifikasi.
+- Apakah pembayaran/pencairan uang dikelola platform dan kapan rekening penerima wajib diverifikasi.
+- Aturan kunjungan langsung/offline dan cara mencegah penyalahgunaan informasi kontak/alamat publik.
+- Formula performa penjual, bobot prioritas antrean, pengecualian, dan mekanisme keberatan.
+- Rincian konfigurasi jam persiapan/pickup per produk atau kelompok produk.
+- Model pemetaan zona pengiriman, biaya per zona, minimum order, dan gratis ongkir.
 - Wilayah peluncuran dan kategori material awal.
 - Dokumen/prosedur verifikasi PT/CV/UD.
 - Kebijakan verifikasi pekerja dan penyedia jasa.
@@ -181,4 +226,4 @@ Strategi awal bersifat lokal: peluncuran dan pengujian dimulai dari Bali. Hasil 
 6. Dokumen ini menjelaskan arah dan keputusan bisnis; bukan pengganti spesifikasi teknis atau implementasi kode.
 
 ---
-**Status berikutnya:** Versi 0.4 menetapkan backend dan dashboard pemilik toko sebagai pekerjaan implementasi pertama. Setelah seller UX/UI dan pengelolaan produk tervalidasi dengan satu toko uji, pengujian dilanjutkan ke akun pembeli, pencarian lokal Bali, dan alur marketplace. Bagus Load & Delivery tetap menunggu validasi kebutuhan.
+**Status berikutnya:** Versi 0.5 menetapkan alur dan rule operasional sebelum implementasi backend. Tahap berikutnya adalah menyusun spesifikasi backend secara berurutan: akun multi-peran, onboarding toko dan pembatasan wilayah Bali, profil/lokasi privat, verifikasi bertahap, dashboard, katalog, jam operasional dan kesiapan barang, zona pengiriman, lalu checkout. UI/UX dipoles setelah aturan dan alur inti tervalidasi. Bagus Load & Delivery tetap menunggu validasi kebutuhan.
