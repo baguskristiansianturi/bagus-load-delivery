@@ -172,15 +172,32 @@ async function profilePage(preview=false){
    <div class="ua-profile-identity"><div class="ua-profile-name-row"><div><h2>${esc(profile.display_name)}</h2><div class="ua-username">@${esc(profile.username)}</div></div><details class="ua-profile-menu"><summary aria-label="Menu profil">•••</summary><div class="ua-profile-menu-pop"><a href="#/account/settings">Pengaturan & privasi</a><a href="#/account/settings">Pengaturan postingan</a><a href="#/account/professional">Profil Professional</a><a href="#/account/wallet">Wallet</a><a href="#/account/addresses">Alamat</a><button id="ua-menu-logout" type="button">Keluar dari akun</button></div></details></div><p>${esc(profile.bio||'Bio belum ditambahkan.')}</p><div class="ua-location">${profile.public_city&&profile.public_province?'⌖ '+esc(profile.public_city)+', '+esc(profile.public_province):''}</div><div class="ua-profile-stats"><a href="#profile-posts"><strong>${ownPosts.length}</strong><span>Postingan</span></a><a href="#/account/followers"><strong>—</strong><span>Pengikut</span></a><a href="#/account/following"><strong>—</strong><span>Mengikuti</span></a></div></div>
   </div>
  </section>
- <nav class="ua-profile-tabs" aria-label="Konten profil">
-  <a class="active" href="#profile-posts">Postingan</a><a href="#profile-trips">Trip</a><a href="#profile-labels">Label</a>
+ <nav class="ua-profile-tabs" role="tablist" aria-label="Konten profil">
+  <button class="active" type="button" role="tab" aria-selected="true" data-profile-tab="posts">▦ <span>Postingan</span></button><button type="button" role="tab" aria-selected="false" data-profile-tab="trips">⌖ <span>Trip</span></button><button type="button" role="tab" aria-selected="false" data-profile-tab="labels">▤ <span>Label</span></button>
  </nav>
- <section id="profile-posts" class="ua-panel ua-posts-panel"><div class="ua-section-title"><div><span class="ua-eyebrow">FEED SAYA</span><h2>Postingan</h2></div><a class="ua-outline" href="#/account/compose">＋ Buat</a></div>
- ${ownPosts.length?postGrid(ownPosts):'<div class="ua-empty"><strong>Belum ada postingan</strong><p>Bagikan foto, video, atau cerita pertama Anda.</p><a class="ua-primary ua-inline" href="#/account/compose">Buat postingan</a></div>'}
+ <section id="ua-profile-tab-content" class="ua-profile-tab-content" role="tabpanel">
+  <div class="ua-section-title"><strong>Postingan</strong><a class="ua-outline" href="#/account/compose">＋ Buat</a></div>
+  ${ownPosts.length?postGrid(ownPosts):'<div class="ua-empty"><strong>Belum ada postingan</strong><p>Bagikan foto, video, atau cerita pertama Anda.</p><a class="ua-primary ua-inline" href="#/account/compose">Buat postingan</a></div>'}
  </section>
- <section id="profile-trips" class="ua-profile-empty-tab"><h2>Trip</h2><p>Aktivitas perjalanan yang Anda bagikan akan tampil di sini.</p></section>
- <section id="profile-labels" class="ua-profile-empty-tab"><h2>Label</h2><p>Koleksi label dan topik profil Anda akan tampil di sini.</p></section>
 `;
+}
+
+function bindProfileTabs(){
+ const nav=document.querySelector('.ua-profile-tabs'),panel=document.querySelector('#ua-profile-tab-content');
+ if(!nav||!panel)return;
+ const postsMarkup=panel.innerHTML;
+ const views={
+  posts:postsMarkup,
+  trips:'<div class="ua-profile-tab-empty"><span>⌖</span><strong>Trip</strong><p>Catatan perjalanan dan trip yang Anda bagikan akan tampil di sini.</p></div>',
+  labels:'<div class="ua-profile-tab-empty"><span>▤</span><strong>Label</strong><p>Koleksi label dan topik yang Anda buat akan tampil di sini.</p></div>'
+ };
+ nav.addEventListener('click',e=>{
+  const button=e.target.closest('[data-profile-tab]');if(!button)return;
+  const tab=button.dataset.profileTab;if(!views[tab])return;
+  nav.querySelectorAll('[data-profile-tab]').forEach(b=>{const active=b===button;b.classList.toggle('active',active);b.setAttribute('aria-selected',String(active));});
+  panel.innerHTML=views[tab];
+  panel.dataset.activeTab=tab;
+ });
 }
 function postGrid(posts){
  return `<div class="ua-post-grid">${posts.map(p=>`<a class="ua-post-thumb" href="#/account/post/${p.id}">${p.media_path?(p.media_type==='video'?'<span class="ua-video-mark">▶ VIDEO</span><video src="'+p.mediaUrl+'" muted playsinline preload="metadata"></video>':'<img src="'+p.mediaUrl+'" alt="'+esc(p.caption||'Postingan Pluits')+'">'):'<span class="ua-text-thumb">PLUITS</span>'}<span class="ua-thumb-caption">${esc(p.caption||'')}</span></a>`).join('')}</div>`;
@@ -297,6 +314,7 @@ async function mountAccount(section='profile'){
   bindAccountContext({db:supabase,user,ctx:accountContext,profile,refresh:mountAccount});
   document.querySelector('#ua-edit-profile-link')?.addEventListener('click',e=>{e.preventDefault();document.querySelector('#edit-profile')?.scrollIntoView({behavior:'smooth',block:'start'});});
   document.querySelector('#ua-menu-logout')?.addEventListener('click',async()=>{await supabase.auth.signOut();user=null;profile=null;location.hash='/';});
+  bindProfileTabs();
   bindProfile();bindCompose();bindAddresses();bindWallet();bindPostActions();if(section==='addresses')initMap();
  }catch(err){document.querySelector('#app').innerHTML=frame('<div class="ua-panel ua-error"><h1>Ada kendala memuat akun</h1><p>'+esc(err.message)+'</p><button class="ua-primary" onclick="location.reload()">Coba lagi</button></div>');document.querySelector('#ua-logout')?.addEventListener('click',()=>supabase.auth.signOut());}
 }
