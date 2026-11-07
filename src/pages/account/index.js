@@ -305,12 +305,12 @@ function bindPostActions(){
   card.querySelector('[data-action="like"]')?.addEventListener('click',async()=>{
    const p=await supabase.from('post_likes').select('post_id').eq('post_id',id).eq('user_id',user.id).maybeSingle();
    const result=p.data?await supabase.from('post_likes').delete().eq('post_id',id).eq('user_id',user.id):await supabase.from('post_likes').insert({post_id:id,user_id:user.id});
-   if(result.error)notify(result.error.message,'error');else await mountAccount(location.hash.includes('/explore')?'explore':location.hash.split('/')[3]==='post'?'post':'profile');
+   if(result.error)notify(result.error.message,'error');else await mountAccount(location.hash.includes('/explore')?'explore':location.hash.split('/')[2]==='post'?'post':'profile');
   });
   card.querySelector('[data-action="save"]')?.addEventListener('click',async()=>{
    const p=await supabase.from('post_saves').select('post_id').eq('post_id',id).eq('user_id',user.id).maybeSingle();
    const result=p.data?await supabase.from('post_saves').delete().eq('post_id',id).eq('user_id',user.id):await supabase.from('post_saves').insert({post_id:id,user_id:user.id});
-   if(result.error)notify(result.error.message,'error');else{notify(p.data?'Tanda disimpan dibatalkan.':'Postingan disimpan.');await mountAccount('explore');}
+   if(result.error)notify(result.error.message,'error');else{notify(p.data?'Tanda disimpan dibatalkan.':'Postingan disimpan.');await mountAccount(location.hash.includes('/explore')?'explore':location.hash.split('/')[2]==='post'?'post':'profile');}
   });
   card.querySelector('[data-action="share"]')?.addEventListener('click',async()=>{
    const url=location.origin+location.pathname+'#/account/post/'+id;
@@ -323,7 +323,7 @@ function bindPostActions(){
    if(lookupError||!target){notify(lookupError?.message||'Username tidak ditemukan.','error');return;}
    const {error}=await supabase.from('post_tags').insert({post_id:id,tagged_user_id:target.id,tagged_by:user.id});
    if(error)notify(error.code==='23505'?'Akun tersebut sudah ditandai.':error.message,'error');
-   else{notify('@'+target.username+' berhasil ditandai.');await mountAccount(location.hash.includes('/explore')?'explore':'profile');}
+   else{notify('@'+target.username+' berhasil ditandai.');await mountAccount(location.hash.includes('/explore')?'explore':location.hash.split('/')[2]==='post'?'post':'profile');}
   });
   card.querySelector('[data-action="comments"]')?.addEventListener('click',async()=>{
    const box=card.querySelector('.ua-comments');box.hidden=!box.hidden;if(!box.hidden)await loadComments(id,box);
@@ -338,6 +338,6 @@ async function loadComments(postId,box){
  const map=new Map((pr.data||[]).map(p=>[p.id,p]));
  box.innerHTML=(comments.length?comments.map(c=>{const p=map.get(c.user_id);return '<p><strong>'+esc(p?.display_name||'Pengguna Pluits')+'</strong> '+esc(c.body)+'<small>'+fmtDate(c.created_at)+'</small></p>';}).join(''):'<p class="ua-muted">Belum ada komentar.</p>')+
  '<form class="ua-comment-form"><input name="body" maxlength="1200" required placeholder="Tulis komentar…"><button>kirim</button></form>';
- box.querySelector('form').addEventListener('submit',async e=>{e.preventDefault();const body=new FormData(e.currentTarget).get('body');const {error}=await supabase.from('post_comments').insert({post_id:postId,user_id:user.id,body:String(body).trim()});if(error)notify(error.message,'error');else await loadComments(postId,box);});
+ box.querySelector('form').addEventListener('submit',async e=>{e.preventDefault();const body=new FormData(e.currentTarget).get('body');const {error}=await supabase.from('post_comments').insert({post_id:postId,user_id:user.id,body:String(body).trim()});if(error)notify(error.message,'error');else{const counter=document.querySelector('[data-post-id="'+postId+'"] [data-action="comments"] b');if(counter)counter.textContent=String(Number(counter.textContent||0)+1);await loadComments(postId,box);}});
 }
 export function mountUserAccount(section='profile'){mountAccount(section);}
