@@ -137,7 +137,7 @@ async function feedPage(){
  const sorted=posts.sort((a,b)=>(b.likes*3+b.comments)-(a.likes*3+a.comments)||new Date(b.created_at)-new Date(a.created_at));
  return `<div class="ua-page-heading"><div><span class="ua-eyebrow">TEMUKAN KOMUNITAS</span><h1>Explore</h1><p>Foto dan video dari komunitas Pluits, dalam satu aliran.</p></div><a class="ua-primary ua-inline" href="#/account/compose">＋ Buat postingan</a></div>
  <div class="ua-explore-note">Konten baru juga mendapat kesempatan ditemukan. Urutan Explore mempertimbangkan interaksi nyata dan kebaruan, bukan angka viral buatan.</div>
- <section class="ua-feed">${posts.length?posts.map(postCard).join(''):'<div class="ua-panel ua-empty"><strong>Explore masih menunggu cerita pertama.</strong><p>Jadilah pengguna pertama yang mengunggah foto atau video. Konten publik Anda akan muncul di sini setelah tersimpan.</p><a class="ua-primary ua-inline" href="#/account/compose">Unggah foto atau video</a></div>'}</section>`;
+ <section class="ua-feed">${sorted.length?sorted.map(postCard).join(''):'<div class="ua-panel ua-empty"><strong>Explore masih menunggu cerita pertama.</strong><p>Jadilah pengguna pertama yang mengunggah foto atau video. Konten publik Anda akan muncul di sini setelah tersimpan.</p><a class="ua-primary ua-inline" href="#/account/compose">Unggah foto atau video</a></div>'}</section>`;
 }
 function postCard(p){
  return `<article class="ua-post-card" data-post-id="${p.id}"><div class="ua-post-head">${avatar(p.avatarUrl,p.owner.display_name)}<div><strong>${esc(p.owner.display_name)}</strong><small>@${esc(p.owner.username)} ${p.owner.public_city&&p.owner.public_province?'· ⌖ '+esc(p.owner.public_city)+', '+esc(p.owner.public_province):''}</small></div><time>${fmtDate(p.created_at)}</time></div>
