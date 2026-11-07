@@ -16,3 +16,36 @@
 .ua-auth-form .ua-link-button{justify-self:start;text-align:left;text-decoration:none;border:1px solid #cbd5e1;border-radius:7px;padding:9px 11px;background:#fff}
 .ua-auth-form .ua-link-button:disabled{opacity:.6}
 .ua-resend-status{font-weight:650}
+
+/* Pluits social-first mobile account shell */
+.ua-mobile-profile{display:none;text-decoration:none;align-items:center;justify-content:center}
+.ua-mobile-profile .ua-avatar{width:38px;height:38px;border:1px solid #e1e5eb}
+.ua-mobile-nav{display:none}
+.ua-text-post-mark{padding:18px 16px;color:#9aa5b4;font-size:10px;font-weight:900;letter-spacing:.22em;border-top:1px solid #f0f2f5}
+.ua-text-thumb{display:grid;place-items:center;width:100%;height:100%;color:#9aa5b4;font-size:11px;font-weight:900;letter-spacing:.2em;background:linear-gradient(145deg,#f3f5f8,#e6ebf1)}
+@media(max-width:760px){
+ .ua-social-app{padding:0 0 76px}
+ .ua-social-app .ua-header{height:58px;padding:0 14px;gap:12px;background:#fff;border-bottom:1px solid #e9edf1;position:sticky;top:0;z-index:50}
+ .ua-social-app .ua-mobile-profile{display:flex;flex:none}
+ .ua-social-app .ua-brand{display:none}
+ .ua-social-app .ua-header nav{display:none}
+ .ua-social-app .ua-logout{margin-left:auto;border:0;background:transparent;padding:8px 4px;color:#526176}
+ .ua-social-app .ua-main{margin:0 auto 28px;min-height:calc(100vh - 140px);padding:0 12px}
+ .ua-social-app .ua-page-heading{padding:20px 2px 12px;margin-bottom:10px;gap:12px}
+ .ua-social-app .ua-page-heading h1{font-size:24px}
+ .ua-social-app .ua-page-heading p{font-size:11px}
+ .ua-social-app .ua-explore-note{font-size:10px;margin-bottom:12px}
+ .ua-social-app .ua-feed{gap:12px;margin:0 -12px}
+ .ua-social-app .ua-post-card{border-left:0;border-right:0;border-radius:0;box-shadow:none}
+ .ua-social-app .ua-mobile-nav{display:flex;position:fixed;z-index:100;left:0;right:0;bottom:0;height:62px;padding:5px 7px max(5px,env(safe-area-inset-bottom));background:#fff;border-top:1px solid #e6e9ee;align-items:center;justify-content:space-around}
+ .ua-social-app .ua-mobile-nav>a{min-width:0;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;text-decoration:none;color:#778395;font-size:19px}
+ .ua-social-app .ua-mobile-nav>a small{font-size:9px;line-height:1.2}
+ .ua-social-app .ua-mobile-nav>a.active{color:#172b45;font-weight:800}
+ .ua-social-app .ua-mobile-nav .ua-mobile-create span{width:34px;height:30px;border:1.5px solid #172b45;border-radius:9px;display:grid;place-items:center;font-size:25px;line-height:1;color:#172b45}
+ .ua-social-app .ua-mobile-nav .ua-avatar{width:25px;height:25px;border:1px solid #dce2e9}
+ .ua-social-app .ua-mobile-nav .ua-avatar-fallback{font-size:11px}
+ .ua-social-app .ua-footer{display:none}
+ .ua-social-app .ua-post-actions button{font-size:10px}
+ .ua-social-app .ua-compose-panel{padding:14px}
+ .ua-social-app .ua-upload-zone{min-height:140px}
+}
