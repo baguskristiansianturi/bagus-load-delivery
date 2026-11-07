@@ -1,3 +1,5 @@
+> **NOTICE — HISTORICAL SNAPSHOT, NOT CURRENT LIVE STATUS (7 November 2026):** Section 1 below records an earlier review state that said the database was empty and no migration had been deployed. Later project work notes report that seller workspace migrations `202611070002` and `202611070003` were applied. That later report has not been independently re-verified in this checkpoint. Do not use the old "database empty" statement as the current state. Reconcile this document against live Supabase migration history, schema, RLS, Storage, grants, and advisors before the next backend change. Track the verified result in [PROJECT-STATUS-ROADMAP.md](./PROJECT-STATUS-ROADMAP.md).
+
 # Pluits — Security Review of Backend Foundation v1
 
 **Company:** Pluits Indonesia  
