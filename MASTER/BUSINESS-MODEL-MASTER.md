@@ -1,5 +1,5 @@
 # MASTER MODEL BISNIS — BAGUS LOAD & DELIVERY
-**Versi:** 0.6 | **Pembaruan:** 7 November 2026
+**Versi:** 0.7 | **Pembaruan:** 7 November 2026
 **Status:** Dokumen induk model bisnis; acuan sebelum penyusunan paket dan spesifikasi teknis.
 
 > Dokumen ini menjadi sumber acuan utama. Hal yang belum diputuskan ditandai sebagai terbuka dan bukan kebijakan final.
@@ -330,4 +330,33 @@ Lapisan sosial tidak boleh mengubah akses data operasional marketplace. Data tra
 6. **Sosial lanjutan:** Reels, rekomendasi, moderasi lanjutan, dan konten berbasis pengalaman pembelian terverifikasi.
 
 Setiap fase diuji di perangkat mobile. Fitur yang belum terhubung harus diberi status belum aktif dengan jelas; tidak boleh menampilkan data transaksi, saldo, percakapan, atau postingan palsu seolah-olah nyata.
+
+
+
+### 18.9 Nama tampilan, username, dan lokasi publik
+Identitas profil membedakan tiga hal:
+- **Nama tampilan:** nama yang terlihat oleh orang lain; boleh sama dengan nama pengguna lain.
+- **Username:** identitas akun yang unik secara global, tidak peka huruf besar-kecil, dan menjadi alamat profil. Username tidak boleh dipakai dua akun sekaligus.
+- **Lokasi publik:** label wilayah ringkas dengan ikon pin, ditampilkan dalam format dua tingkat seperti `Denpasar, Bali`, `Badung, Bali`, `Gianyar, Bali`, atau `Banjarmasin, Kalimantan Selatan`. Lokasi ini bukan alamat jalan dan bukan koordinat presisi.
+
+Pengguna dapat mengubah lokasi publik sesuai aturan validasi. Profil tidak boleh menampilkan alamat lengkap, nomor rumah, patokan pribadi, atau titik peta presisi secara otomatis. Jika pengguna ingin membagikan alamat atau detail tambahan, ia dapat memilih menuliskannya sendiri di bio/konten publik dengan pemahaman bahwa informasi tersebut akan terlihat oleh audiens yang dipilih.
+
+### 18.10 Pendaftaran alamat dan titik peta pengguna
+Pada pendaftaran atau saat menambahkan alamat, sistem mengumpulkan data alamat yang cukup lengkap untuk layanan: nama penerima, nomor kontak yang diperlukan untuk pengiriman, provinsi, kota/kabupaten, kecamatan, kelurahan/desa, kode pos, alamat jalan/detail, catatan kurir opsional, serta titik peta/koordinat jika pengguna memilih atau mengizinkannya. Formulir harus memandu pengguna mengisi wilayah secara bertingkat dan memvalidasi kode pos serta kecocokan lokasi sejauh data referensi tersedia.
+
+Alamat lengkap dan koordinat presisi merupakan data privat. Pengguna dapat menyimpan beberapa alamat, memberi label (rumah, kantor, proyek, dan sebagainya), memilih alamat utama, mengubah atau menghapus alamat, serta memilih alamat tertentu saat checkout. Lokasi publik profil disimpan sebagai pilihan terpisah dari alamat pengiriman. Jangan pernah menyimpulkan bahwa alamat checkout harus menjadi lokasi publik profil.
+
+Titik peta membantu pengguna memilih titik antar yang tepat, mengurangi kesalahan alamat, dan memudahkan pemesanan berikutnya. Akses lokasi perangkat harus meminta izin secara eksplisit; jika izin ditolak, pengguna tetap dapat mencari wilayah dan memasang pin secara manual. Koordinat hanya dibagikan kepada pihak yang memerlukan untuk pemenuhan pesanan yang sah, sesuai kebijakan privasi dan tahap transaksi. Tidak boleh ditampilkan di profil publik secara default.
+
+### 18.11 Toko yang ditampilkan pada profil pengguna
+Pengguna yang juga merupakan owner toko dapat memilih apakah toko miliknya ditampilkan pada profil sosial pribadinya. Pengaturan ini bersifat opt-in dan dapat diubah kapan saja. Jika diaktifkan, profil pengguna menampilkan kartu/tautan toko yang dipilih, sehingga pengunjung dapat membuka halaman toko publik. Jika dinonaktifkan, toko tidak ditampilkan pada profil pribadi, tetapi status ini tidak menghapus atau menonaktifkan toko maupun website katalog publiknya.
+
+Profil toko dan profil pribadi tetap dua entitas berbeda. Toko memiliki branding sendiri—nama tampilan, username toko, logo/avatar, sampul, deskripsi, bio, kategori, foto, katalog, jam layanan, dan informasi promosi yang diizinkan. Owner dapat membuat materi branding dan promosi, mengunggah foto/video, serta mengelola konten toko melalui dashboard dengan kontrol akses owner/staff. Konten promosi harus mengikuti kebijakan platform dan tidak boleh membuat klaim harga, stok, diskon, atau layanan yang menyesatkan.
+
+Owner juga dapat mengunggah bukti transaksi atau dokumentasi penjualan untuk membantu membangun portofolio dan edukasi toko, khususnya bagi pengguna yang belum terbiasa memakai sistem digital. Sistem harus membedakan:
+- Bukti/dokumentasi yang diunggah sendiri oleh toko (belum diverifikasi oleh Pluits).
+- Transaksi yang benar-benar tercatat dalam sistem Pluits.
+- Transaksi yang telah diverifikasi melalui proses resmi dan dapat diberi label verifikasi.
+
+Unggahan bukti transaksi tidak otomatis menjadi transaksi Pluits dan tidak boleh dipakai untuk memanipulasi angka penjualan, rating, atau label pembelian terverifikasi. Sebelum dipublikasikan, pengguna harus dapat menyunting atau menutupi data sensitif seperti nama pelanggan, nomor telepon, alamat, nomor pesanan eksternal, tanda tangan, rekening, dan bukti pembayaran. Materi yang mengandung data pihak ketiga memerlukan dasar/izin yang sesuai. Bukti privat untuk administrasi toko harus disimpan terpisah dari konten promosi publik.
 
