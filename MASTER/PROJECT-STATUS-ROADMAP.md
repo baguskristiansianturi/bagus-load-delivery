@@ -290,3 +290,12 @@ Build dari commit `642a24bdbed4a85931271e7481f9880a04cc9fc3` berhasil. GitHub Pa
 - **Not done:** actual user registration by founder, confirmation email delivery, password login, upload, Explore visibility, anonymous feed, cross-account RLS test, mobile UAT, and custom domain setup.
 - **Security caution:** anon Storage signed URLs are intentionally limited to files referenced by public published posts or public profiles. Verify after deployment using an anonymous browser session; private media must not load.
 - **Next step:** verify migration history and advisors; commit migration/frontend/docs; inspect GitHub Actions Pages deployment; then founder registers their own account through the normal UI. Never create an account or post on the founder's behalf.
+
+
+## CP-013 — Homepage publik visitor-first (7 November 2026)
+
+- **Keputusan UX:** pengunjung pertama kali harus mengenal dan menjelajahi Pluits tanpa dipaksa mendaftar. Signup/login hanya diminta ketika pengguna memilih aksi yang membutuhkan akun.
+- **Perubahan frontend:** `src/pages/home/index.js` mengganti homepage feed-only menjadi landing page publik yang menjelaskan Pluits, marketplace lokal, jasa/layanan, usaha/penyedia, logistik lokal, pembeda pengalaman, cara mulai sebagai tamu, serta CTA eksplorasi. Feed publik tetap dipertahankan sebagai bagian komunitas dan membaca data nyata dari Supabase; tidak ada postingan/demo palsu yang ditambahkan.
+- **Navigasi:** tautan homepage diarahkan ke rute yang tersedia, bukan anchor hash yang dapat mengganggu router SPA.
+- **Belum diverifikasi:** hasil render di Android, seluruh rute tujuan, respons feed anon dan deployment GitHub Pages untuk commit CP-013.
+- **Acceptance:** pengunjung dapat membuka homepage, memahami gambaran Pluits, menjelajahi halaman publik tanpa login, dan baru diminta daftar saat mencoba aksi yang memerlukan akun.
