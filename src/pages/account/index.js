@@ -237,7 +237,7 @@ async function composePage(){
   <div id="ua-media-preview" class="ua-media-preview"></div>
   <label>Caption<textarea name="caption" rows="4" maxlength="2200" placeholder="Apa yang ingin Anda bagikan?"></textarea></label>
   <label>Tag / kata kunci<input name="tags" placeholder="contoh: proyek, inspirasi, pluits (pisahkan dengan koma)"></label>
-  <label>Siapa yang dapat melihat?<select name="visibility"><option value="public" \${defaultAudience==='public'?'selected':''}>Publik — dapat tampil di Explore</option><option value="private" \${defaultAudience==='private'?'selected':''}>Hanya saya</option></select></label>
+  <label>Siapa yang dapat melihat?<select name="visibility"><option value="public" ${defaultAudience==='public'?'selected':''}>Publik — dapat tampil di Explore</option><option value="private" ${defaultAudience==='private'?'selected':''}>Hanya saya</option></select></label>
   <div class="ua-progress" id="ua-upload-progress" hidden><span></span></div>
   <button class="ua-primary" type="submit">Terbitkan postingan</button><p class="ua-form-note" id="ua-compose-note">Postingan baru akan tampil pada profil Anda. Postingan publik dapat muncul di Explore.</p>
  </form></section>`;
