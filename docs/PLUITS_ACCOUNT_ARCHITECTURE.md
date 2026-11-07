@@ -159,6 +159,6 @@ P3 — Uang: ledger immutable, payment provider, settlement, withdrawal, rekenin
 ## 13. Status aktual sebelum fondasi ini dibuat
 
 - Frontend sudah memiliki user_profiles, postingan, Explore, likes/comments/saves/tags, alamat, dan autentikasi dasar.
-- Tabel user_stories 24 jam disiapkan; UI upload/viewer belum terverifikasi selesai.
+- Tabel user_stories 24 jam disiapkan; UI upload/viewer belum terverifikasi selesai. Preferensi audiens Story tersimpan, tetapi belum diterapkan pada UI Story.
 - Tabel wallet_accounts dan wallet_requests dibuat untuk permintaan manual; belum ada wallet ledger dan belum siap payment/settlement produksi.
 - Status pekerjaan harus dibedakan: PROPOSED → DECIDED → SPECIFIED → IMPLEMENTED → DEPLOYED → TESTED → ACCEPTED.
