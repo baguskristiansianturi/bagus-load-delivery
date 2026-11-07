@@ -18,12 +18,12 @@
 | Supabase Pluits | Project tersedia | Project ref `ytndswhqxayqpftszwfh`, region Singapore |
 | Fondasi seller/backend | Pernah diimplementasikan | Ada migrasi seller workspace dan hardening; wajib diverifikasi ulang sebelum mengandalkan status database |
 | Seller Center frontend | Ada | Pendaftaran/login dan workspace owner pernah dibuat; belum ada bukti end-to-end test lengkap |
-| Akun universal pembeli | Belum terintegrasi penuh | Dashboard pengguna lama masih demo/localStorage menurut pemeriksaan sebelumnya; perlu integrasi Supabase Auth |
-| Profil publik pengguna | Belum diimplementasikan/diuji | Nama tampilan, username unik, avatar, cover, bio, lokasi publik |
-| Alamat dan titik peta pembeli | Belum diimplementasikan/diuji | Form lengkap, kode pos, koordinat privat, banyak alamat |
-| Upload sosial foto/video | Belum diimplementasikan/diuji | Storage, metadata, feed, moderasi, visibilitas |
-| Explore | Belum diimplementasikan/diuji | Feed campuran foto/video dan cold-start content |
-| Like/comment/share/save/tag | Belum diimplementasikan/diuji | Harus tersimpan di backend, bukan interaksi palsu frontend |
+| Akun universal pembeli | Implementasi awal tersedia | Rute akun baru memakai Supabase Auth yang sama dengan Seller Center; belum diuji end-to-end dengan akun nyata |
+| Profil pengguna | Implementasi awal tersedia | Nama tampilan, username unik, avatar, cover, bio, lokasi publik, privasi; halaman profil publik berbasis username masih PR |
+| Alamat dan titik peta pembeli | Implementasi awal tersedia | Form alamat privat, kode pos, Leaflet pin dan geolocation; belum diuji perangkat nyata |
+| Upload sosial foto/video | Implementasi awal tersedia | Bucket privat 50 MB, foto/video, caption, tags, privasi; moderasi dan TUS upload besar masih PR |
+| Explore | Implementasi awal tersedia | Feed campuran foto/video, akun sendiri tampil pada feed setelah upload; ranking sederhana berbasis like/comment dan tanggal |
+| Like/comment/share/save/tag | Implementasi awal tersedia | Backend likes/comments/saves/account tags; share native/copy link; belum diuji lintas akun |
 | Chat dan wallet | Belum diimplementasikan | Wallet UI dapat disiapkan nonaktif; jangan memproses uang sungguhan |
 | Toko tampil di profil pengguna | Sudah diputuskan di model bisnis | Opt-in; profil toko dan profil pribadi tetap entitas terpisah |
 
@@ -187,3 +187,40 @@ Jangan menutup PR hanya karena kode sudah ditulis. Pisahkan: `DRAFT`, `IMPLEMENT
 
 **Status terakhir dokumen:** 7 November 2026.  
 **Catatan:** daftar di atas adalah baseline dari riwayat pengerjaan dan keputusan yang tercatat. Kondisi aktual harus diverifikasi pada awal sesi berikutnya sebelum menandai item selesai atau memulai migrasi baru.
+
+
+## 7. Checkpoint implementasi pengguna pertama — 7 November 2026
+
+### CP-006 — Fondasi akun, profil, alamat, media dan Explore
+- **Status kode:** IMPLEMENTED pada branch `main`.
+- **Status database:** APPLIED dan diverifikasi melalui migration history serta query tabel.
+- **Perubahan:**
+  - `src/pages/account/index.js` — Supabase Auth signup/login, profil pengguna, avatar/cover, bio, username unik, lokasi publik, privacy, alamat, upload media, Explore, komentar, like, share, simpan, dan tag akun.
+  - `src/pages/account/user-account.css` — UI responsif mobile.
+  - `src/app/router.js` — `#/account/*` diarahkan ke dashboard pengguna; rute Seller Center dipisahkan dan diperbaiki agar tidak tertangkap route operations generik.
+  - `index.html`, `src/main.js` — metadata dan SEO Pluits.
+  - `supabase/migrations/202611070004_user_first_social_foundation.sql` — profil, alamat privat, postingan, likes, comments, saves, bucket privat dan policies.
+  - `supabase/migrations/202611070005_post_account_tags.sql` — relasi tag akun.
+- **Database live terverifikasi:** migrations `pluits_user_first_social_foundation` dan `pluits_post_account_tags` tercatat; tujuh tabel sosial/alamat/profil ada; bucket `pluits-user-media` privat, batas 50 MB, MIME image dan video; policies RLS tersedia.
+- **Build:** GitHub Actions pada commit `642a24bdbed4a85931271e7481f9880a04cc9fc3` melaporkan langkah `npm run build` dan verifikasi `dist/index.html` sukses. Deploy Pages gagal karena aksi deploy mendeteksi artefak `github-pages` ganda saat rerun job, bukan karena build. Commit berikutnya memicu workflow run baru; status deployment harus diperiksa terpisah.
+- **Belum diuji:** signup/login email nyata, upload media dari Android, geolocation/peta, RLS lintas dua akun, komentar/like/tag lintas akun, dan persistence setelah logout/login.
+- **Keamanan yang diketahui:** alamat dan koordinat disimpan di `user_addresses` dengan RLS pemilik; media disimpan pada bucket privat; signed URL dibuat untuk tampilan. Jangan menyebut fitur lulus sebelum tes akun nyata.
+- **Catatan cakupan:** video dibatasi 50 MB dan upload menggunakan standard Storage upload; resumable/TUS untuk file besar belum dibuat. Story/Reels, followers, notifikasi tag, moderasi, report/block, edit/hapus post, dan halaman profil publik masih PR.
+
+### CP-007 — Panduan UAT mobile pengguna pertama
+- **Status:** Dokumentasi dibuat.
+- **Bukti:** `MASTER/PLUITS-USER-TESTING.md`.
+- **Tujuan:** Mas Bagus bisa mendaftar sebagai pengguna biasa, menguji profil, alamat/pin, upload foto/video, Explore dan semua interaksi sebelum membuat toko.
+
+### PR status setelah implementasi awal
+- **PR-001 Audit repository/backend:** sebagian selesai; migrasi, tabel, RLS policy list, bucket, advisors diverifikasi. Perlu tes anon/authenticated/owner/staff dan pengecekan exposure Data API yang lebih lanjut.
+- **PR-002 Akun universal:** IMPLEMENTED tahap pertama; perlu UAT login/logout dan sinkronisasi sesi dengan Seller Center.
+- **PR-003 Profil publik:** IMPLEMENTED tahap pertama; halaman publik `/@username`, followers, dan store cards yang tampil di profil masih PR.
+- **PR-004 Alamat privat:** IMPLEMENTED tahap pertama; perlu tes pin manual/geolocation dan validasi data alamat.
+- **PR-005 Upload media:** IMPLEMENTED tahap pertama; perlu tes file nyata, ukuran, MIME, signed URL, retry dan pembersihan file yatim jika metadata gagal.
+- **PR-006 Explore:** IMPLEMENTED tahap pertama; perlu tes akun pertama dan feed lintas akun.
+- **PR-007 Interaksi sosial:** IMPLEMENTED tahap pertama; perlu tes likes/comments/share/save/tag lintas akun.
+- **PR berikutnya:** UAT bersama pengguna pertama; perbaiki semua temuan; lanjutkan halaman profil publik dan store card; setelah itu Story/Reels, followers, notifikasi, dan moderasi.
+
+### Deployment status note
+Build dari commit `642a24bdbed4a85931271e7481f9880a04cc9fc3` berhasil. GitHub Pages deploy pada run `42376030372` gagal karena rerun job menghasilkan dua artefak bernama `github-pages`. Jangan menganggap deployment sukses hanya dari build. Periksa run terbaru setelah commit berikutnya, pastikan conclusion `success`, lalu buka URL Pages untuk verifikasi.
