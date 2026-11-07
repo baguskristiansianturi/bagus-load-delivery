@@ -233,3 +233,15 @@ Jangan menutup PR hanya karena kode sudah ditulis. Pisahkan: `DRAFT`, `IMPLEMENT
 
 ### Deployment status note
 Build dari commit `642a24bdbed4a85931271e7481f9880a04cc9fc3` berhasil. GitHub Pages deploy pada run `42376030372` gagal karena rerun job menghasilkan dua artefak bernama `github-pages`. Jangan menganggap deployment sukses hanya dari build. Periksa run terbaru setelah commit berikutnya, pastikan conclusion `success`, lalu buka URL Pages untuk verifikasi.
+
+## CP-009 — Konsolidasi My Bali ke Pluits (7 November 2026)
+
+- **Keputusan produk:** My Bali tidak lagi dikembangkan sebagai aplikasi terpisah. Arah bisnis dan pola UI/UX sosial yang relevan dikonsolidasikan ke Pluits.
+- **Sumber yang ditinjau:** repository baguskristiansianturi/My-Bali; dokumen MASTER/BUSINESS-MODEL.md, MASTER/PRODUCTS/MY-BALI/PRODUCT-CONCEPT.md, MASTER/PRODUCTS/MY-BALI/SOCIAL-TRIP-AND-EXPERIENCE-FLOWS.md, MASTER/PRODUCTS/MY-BALI/UI-UX-FOUNDATIONS.md, serta prototype app/index.html.
+- **Business model Pluits:** section 22 pada MASTER/BUSINESS-MODEL-MASTER.md mencatat elemen My Bali yang diadopsi, batas ruang lingkup konstruksi, verifikasi penyedia, direct-provider, transparansi harga, reputasi, komersial sebagai hipotesis, dan strategi migrasi.
+- **Frontend Pluits:** src/pages/home/index.js tetap menggunakan feed publik Pluits dari Supabase; src/style.css mendapat adaptasi bahasa visual My Bali: neutral light background, soft sea-blue accents, story rings, rounded cards, compact header, readable feed, and responsive columns. Tidak menyalin akun/posting demo lokal My Bali.
+- **Repository My Bali:** README ditandai sebagai produk yang dikonsolidasikan/retired sebagai produk terpisah. Repository dipertahankan sementara sebagai arsip sumber desain dan sejarah, bukan produk aktif. Penghapusan permanen belum dilakukan.
+- **Batas migrasi:** kategori wisata Bali seperti hotel, trip, tiket, spa, dan restoran tidak otomatis masuk Pluits. Fokus Pluits tetap konstruksi dan layanan terkait.
+- **Status implementasi:** perubahan dokumentasi Pluits tersimpan pada commit 473761af11a219898e5e971d55440e0560fca644; README arsip My Bali pada eb46120752496fd6085ffec7828109c30cc7c850; adaptasi CSS pada fdc1291e43276a6ed124e9e5b9ff1902c991b126.
+- **Status deploy:** workflow run 42377669983 sedang berjalan saat checkpoint ini dicatat. Belum boleh menyatakan deployment selesai sebelum status workflow success.
+- **Pekerjaan lanjutan:** audit seluruh fitur prototype My Bali terhadap Pluits, pindahkan komponen yang relevan secara bertahap, hilangkan simulasi/demo-only, uji guest browsing dan login-required actions, lalu validasi mobile UI. Story/Reels dan bottom navigation penuh tidak boleh dianggap selesai hanya dari adopsi styling.
