@@ -151,3 +151,33 @@
  .ua-social-app .ua-account-hub{margin-left:0;margin-right:0}
  .ua-social-app .ua-profile-card,.ua-social-app .ua-panel,.ua-social-app .ua-grid-layout{margin-left:12px;margin-right:12px}
 }
+
+/* Profile is a focused social page: identity first, content tabs below, no global chrome */
+.ua-profile-toolbar{display:flex;justify-content:flex-end;gap:8px;margin:-6px 0 14px}
+.ua-profile-tabs{display:flex;justify-content:space-around;gap:8px;border-bottom:1px solid #e3e7ed;margin:0 0 14px;position:sticky;top:0;background:#f6f7f9;z-index:5}
+.ua-profile-tabs a{padding:13px 18px;color:#718096;font-size:13px;font-weight:750;text-decoration:none;border-bottom:2px solid transparent}
+.ua-profile-tabs a.active{color:#172b45;border-color:#172b45}
+.ua-profile-empty-tab{background:#fff;border:1px solid #e5e8ed;border-radius:14px;padding:22px;margin:12px 0;color:#26364b}
+.ua-profile-empty-tab h2{font-size:16px;margin:0 0 6px}
+.ua-profile-empty-tab p{font-size:12px;color:#718096;margin:0}
+.ua-profile-settings{margin:18px 0 28px;background:#fff;border:1px solid #e5e8ed;border-radius:12px;padding:15px}
+.ua-profile-settings summary{font-size:13px;font-weight:800;color:#26364b;cursor:pointer}
+.ua-settings-shortcuts{display:grid;gap:0;margin-top:10px}
+.ua-settings-shortcuts a{padding:12px 2px;border-top:1px solid #edf0f3;color:#46546a;font-size:12px;text-decoration:none}
+.ua-profile-main{max-width:900px;margin:12px auto 30px}
+.ua-profile-main .ua-page-heading{display:none}
+@media(max-width:760px){
+ .ua-profile-main{margin:0 -18px 24px;max-width:none;padding:0 12px}
+ .ua-profile-main .ua-profile-card{margin:0 -12px 10px;border-radius:0;border-left:0;border-right:0}
+ .ua-profile-main .ua-cover{height:175px}
+ .ua-profile-main .ua-profile-content{padding:0 14px 17px;gap:12px;min-height:125px;align-items:flex-end}
+ .ua-profile-main .ua-avatar.large{width:82px;height:82px}
+ .ua-profile-main .ua-profile-identity h2{font-size:19px}
+ .ua-profile-main .ua-profile-count{padding:8px}
+ .ua-profile-toolbar{padding:0 2px;margin:8px 0}
+ .ua-profile-tabs{margin:0 -12px 12px}
+ .ua-profile-main .ua-posts-panel{padding:14px 10px;border-radius:0;border-left:0;border-right:0}
+ .ua-profile-main .ua-post-grid{gap:3px}
+ .ua-profile-empty-tab{border-radius:0;margin:0 -12px;padding:18px 14px}
+ .ua-profile-settings{margin:14px 0;border-radius:10px}
+}
