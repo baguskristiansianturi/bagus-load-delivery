@@ -131,3 +131,47 @@
  .pluits-product-gallery{width:100%;flex:0 0 auto}
  .pluits-product-gallery img{flex:0 0 100%;width:100%;height:150px;border-radius:9px;scroll-snap-align:center}
 }
+
+@media(max-width:800px){
+ .pluits-shell{padding:0 0 82px;overflow-x:hidden}
+ .pluits-top{height:54px;padding:0 13px;position:sticky;top:0;z-index:70;background:#fff}
+ .pluits-brand{font-size:16px}.pluits-top>div{display:flex;gap:5px;align-items:center}
+ .pluits-top .pluits-ghost{padding:7px 9px;font-size:10px}
+ .pluits-foot{display:none}
+ .pluits-dashboard-head{margin:15px 13px 12px;display:block}
+ .pluits-dashboard-head h1{font-size:22px;margin:5px 0}
+ .pluits-dashboard-head p{font-size:11px;margin:0}
+ .pluits-owner-pill{display:inline-flex;margin-top:8px;padding:6px 9px;font-size:8px}
+ .pluits-dashboard{display:block;margin:0;width:100%}
+ .pluits-sidebar{display:none!important}
+ .pluits-content{width:100%;min-width:0;padding:0 12px 15px}
+ .pluits-mobile-tabs{display:flex!important;position:fixed;z-index:90;left:0;right:0;bottom:0;gap:7px;overflow-x:auto;white-space:nowrap;padding:8px 10px max(8px,env(safe-area-inset-bottom));background:#fff;border-top:1px solid #e7ebef;scrollbar-width:none}
+ .pluits-mobile-tabs::-webkit-scrollbar{display:none}
+ .pluits-mobile-tabs button{flex:0 0 auto;border:0;border-radius:22px;background:#f2f4f7;color:#647184;padding:10px 13px;font-size:10px;font-weight:750}
+ .pluits-mobile-tabs button.active{background:#172b45;color:#fff}
+ .pluits-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ .pluits-stat-grid article{padding:13px;border-radius:12px;min-width:0}
+ .pluits-stat-grid article strong{font-size:18px}
+ .pluits-welcome{padding:15px;margin-top:10px}.pluits-welcome h2{font-size:18px}
+ .pluits-shortcuts{display:flex;overflow-x:auto;gap:8px;padding-bottom:5px}
+ .pluits-shortcuts button{flex:0 0 145px;white-space:normal;text-align:left}
+ .pluits-section-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:8px 0 12px}
+ .pluits-section-head h2{font-size:18px;margin:4px 0}.pluits-section-head p{font-size:10px;line-height:1.4}
+ .pluits-panel{padding:14px;border-radius:12px}
+ .pluits-form-grid{grid-template-columns:1fr;gap:0}.pluits-span{grid-column:auto}
+ .pluits-form-actions{align-items:stretch;flex-direction:column}
+ .pluits-form-actions .pluits-primary{width:100%}
+ .pluits-quick-add{margin-bottom:12px}
+ .pluits-quick-add>summary{position:sticky;top:55px;z-index:10;background:#172b45;color:#fff;border-radius:10px;padding:12px 14px;font-size:12px}
+ .pluits-product-list{display:grid;grid-template-columns:1fr;gap:8px}
+ .pluits-product-row{display:grid;grid-template-columns:minmax(0,1fr);gap:8px;padding:11px;border:1px solid #e7ebef;border-radius:12px;background:#fff;min-width:0}
+ .pluits-product-gallery{display:flex!important;overflow-x:auto!important;gap:6px!important;width:100%!important;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+ .pluits-product-gallery img{flex:0 0 78%!important;width:78%!important;height:auto!important;aspect-ratio:16/10;object-fit:cover;scroll-snap-align:start}
+ .pluits-image-preview{display:flex;overflow-x:auto;gap:7px;max-width:100%}
+ .pluits-image-preview img{flex:0 0 86px;width:86px;height:86px;object-fit:cover;border-radius:8px}
+ .pluits-advanced-fields{margin-top:10px}
+ .pluits-list-head{display:flex;justify-content:space-between;align-items:center;margin:14px 0 8px}
+ .pluits-list-head h3{font-size:13px}
+ .pluits-store-form{margin:0 12px 20px}
+ .pluits-pagehead{margin:20px 13px 12px}.pluits-pagehead h1{font-size:23px}
+}
