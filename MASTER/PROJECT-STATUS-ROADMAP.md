@@ -1,0 +1,189 @@
+# PLUITS — PROJECT STATUS, CHECKPOINTS & ROADMAP
+
+**Perusahaan:** Pluits Indonesia  
+**Produk:** Pluits  
+**Repository:** https://github.com/baguskristiansianturi/bagus-load-delivery  
+**Branch:** `main`  
+**Dokumen model bisnis:** [BUSINESS-MODEL-MASTER.md](./BUSINESS-MODEL-MASTER.md)  
+**Dokumen ini:** sumber status implementasi, checkpoint, dan PR; bukan pengganti model bisnis.
+
+> **Aturan kerja:** jangan menimpa sejarah checkpoint. Tambahkan entri baru. Pisahkan status dokumentasi, kode, database, deployment, dan pengujian. "Selesai" hanya jika ada bukti. Pada awal sesi baru, baca dokumen model bisnis ini, dokumen status ini, spesifikasi teknis terkait, lalu verifikasi repo/backend sebelum mengerjakan PR.
+
+## 1. Ringkasan kondisi proyek
+
+| Area | Status terakhir yang diketahui | Catatan |
+|---|---|---|
+| Identitas Pluits | Ditetapkan | Produk Pluits, perusahaan Pluits Indonesia; terpisah dari Bagusin dan Bali Trans |
+| Repository dan branch | Ada | `baguskristiansianturi/bagus-load-delivery`, `main` |
+| Supabase Pluits | Project tersedia | Project ref `ytndswhqxayqpftszwfh`, region Singapore |
+| Fondasi seller/backend | Pernah diimplementasikan | Ada migrasi seller workspace dan hardening; wajib diverifikasi ulang sebelum mengandalkan status database |
+| Seller Center frontend | Ada | Pendaftaran/login dan workspace owner pernah dibuat; belum ada bukti end-to-end test lengkap |
+| Akun universal pembeli | Belum terintegrasi penuh | Dashboard pengguna lama masih demo/localStorage menurut pemeriksaan sebelumnya; perlu integrasi Supabase Auth |
+| Profil publik pengguna | Belum diimplementasikan/diuji | Nama tampilan, username unik, avatar, cover, bio, lokasi publik |
+| Alamat dan titik peta pembeli | Belum diimplementasikan/diuji | Form lengkap, kode pos, koordinat privat, banyak alamat |
+| Upload sosial foto/video | Belum diimplementasikan/diuji | Storage, metadata, feed, moderasi, visibilitas |
+| Explore | Belum diimplementasikan/diuji | Feed campuran foto/video dan cold-start content |
+| Like/comment/share/save/tag | Belum diimplementasikan/diuji | Harus tersimpan di backend, bukan interaksi palsu frontend |
+| Chat dan wallet | Belum diimplementasikan | Wallet UI dapat disiapkan nonaktif; jangan memproses uang sungguhan |
+| Toko tampil di profil pengguna | Sudah diputuskan di model bisnis | Opt-in; profil toko dan profil pribadi tetap entitas terpisah |
+
+**Peringatan konsistensi dokumen:** `PLUITS-SECURITY-REVIEW.md` memuat snapshot lama yang menyatakan database kosong/migrasi belum diterapkan, sedangkan catatan pekerjaan yang lebih baru menyebut migrasi `202611070002` dan `202611070003` telah diterapkan. Status live Supabase belum diverifikasi ulang pada checkpoint ini. Sebelum perubahan skema berikutnya, periksa migration history, tabel, RLS, Storage, dan advisor secara langsung lalu perbarui security review. Jangan menganggap salah satu catatan lama sebagai bukti status saat ini.
+
+## 2. Checkpoint yang sudah tercatat
+
+### CP-001 — Identitas produk dan pemisahan proyek
+- **Status:** Selesai sebagai keputusan/dokumentasi.
+- **Keputusan:** nama platform Pluits; perusahaan Pluits Indonesia; proyek/backend Pluits terpisah dari Bagusin dan Bali Trans.
+- **Bukti:** dokumen model bisnis dan repository Pluits.
+- **Tes:** bukan checkpoint implementasi.
+
+### CP-002 — Fondasi Seller Center dan skema seller
+- **Status:** Dibangun sebagian; belum lulus uji end-to-end.
+- **Cakupan yang pernah dibuat:** Supabase project Pluits; migrasi seller workspace dan hardening; tabel profil, wilayah, toko, anggota toko, pengaturan, jam operasional, zona pengiriman, kategori, produk, variasi, gambar, pergerakan stok, audit; private Storage bucket; RPC pembuatan toko dan update profil; frontend Seller Center.
+- **Bukti file:** `supabase/migrations/202611070002_pluits_seller_workspace.sql`, `supabase/migrations/202611070003_pluits_store_profile_hardening.sql`, `src/pages/seller/index.js`, `src/pages/seller/seller.css`.
+- **Belum terbukti:** signup/login nyata, konfirmasi email, create store, upload foto dari ponsel, RLS seluruh role, dan deployment Pages.
+- **Catatan keamanan:** granular permission staff, audit write path, stok atomik, serta tes lintas role masih menjadi pekerjaan wajib sebelum mengundang staff atau menerima transaksi nyata.
+
+### CP-003 — Model akun universal dan sosial
+- **Status:** Keputusan bisnis didokumentasikan; implementasi belum.
+- **Cakupan keputusan:** satu akun sebagai pembeli/owner/staff; profil publik/privat; chat; wallet dengan pagar keamanan; feed, post, Story, Reels; konten transaksi hanya dibagikan atas persetujuan.
+- **Bukti:** bagian 18 pada model bisnis.
+
+### CP-004 — Profil publik, lokasi, branding toko, dan konten
+- **Status:** Keputusan bisnis didokumentasikan; implementasi belum.
+- **Cakupan keputusan:** nama tampilan boleh sama; username akun unik; lokasi publik dua tingkat wilayah dengan ikon pin; alamat lengkap, kode pos dan koordinat disimpan privat; toko dapat ditampilkan secara opt-in di profil; owner dapat membangun branding dan promosi toko; bukti transaksi yang diunggah sendiri tidak otomatis terverifikasi.
+- **Bukti:** bagian 18.9–18.11 pada model bisnis.
+
+### CP-005 — Perjalanan pengguna pertama dan Explore
+- **Status:** Baru didokumentasikan; implementasi belum.
+- **Cakupan:** onboarding pengguna biasa, avatar, cover, bio, username, alamat lengkap dan pin peta, upload foto/video, profil, Explore campuran, like, komentar, share, simpan/tandai dan tag.
+- **Bukti:** bagian 19 pada model bisnis.
+- **Kriteria:** lihat PR dan checkpoint CP-006 yang direncanakan di bawah.
+
+## 3. PR dan urutan pekerjaan
+
+### PR-001 — Audit kondisi aktual repository dan Supabase
+**Prioritas:** P0 — sebelum mengubah backend.
+- [ ] Periksa file aktual router, dashboard pengguna, auth, services, store, models dan CSS.
+- [ ] Verifikasi branch, commit, deploy Pages dan jalur uji mobile.
+- [ ] Verifikasi migration history Supabase, tabel, kolom, RLS, Storage bucket/policies, RPC, grants dan advisor.
+- [ ] Cocokkan `PLUITS-SECURITY-REVIEW.md` dengan keadaan aktual; tandai temuan lama yang sudah diselesaikan dan temuan yang masih terbuka.
+- [ ] Pastikan dashboard pengguna tidak lagi mengandalkan localStorage demo untuk identitas/sesi.
+- **Acceptance:** laporan audit berisi bukti commit/file dan hasil query aktual; tidak ada asumsi status.
+
+### PR-002 — Fondasi akun pengguna universal
+**Prioritas:** P0 — dependensi semua fitur pengguna.
+- [ ] Satu Supabase Auth identity dipakai oleh pembeli dan Seller Center.
+- [ ] Dashboard pengguna normal setelah login; tidak memaksa atau mempromosikan pembuatan toko.
+- [ ] Menu pengguna: Ringkasan, Transaksi, Ulasan, Wishlist, Keranjang, Alamat, Profil, Pengaturan, Chat, Saldo (nonaktif jika belum siap), Postingan, dan Buat Toko.
+- [ ] Menu Buat Toko hanya pilihan opsional dan membuka Seller Center.
+- [ ] Tidak ada pesanan, saldo, chat, postingan, atau angka contoh yang disajikan sebagai data nyata.
+- **Acceptance:** akun yang sama bisa membuka dashboard pembeli dan Seller Center sesuai keanggotaan; logout/login konsisten.
+
+### PR-003 — Profil publik dan pengaturan privasi
+**Prioritas:** P0.
+- [ ] Nama tampilan tidak unik; username unik case-insensitive dengan validasi dan aturan reserved words.
+- [ ] Avatar, foto sampul, bio, pengaturan publik/privat.
+- [ ] Lokasi publik terpisah dari alamat pengiriman; format wilayah dua tingkat (kota/kabupaten, provinsi) dengan ikon pin.
+- [ ] Pilihan toko yang ditampilkan di profil bersifat opt-in.
+- [ ] Toko tetap memiliki branding/halaman publik sendiri.
+- **Acceptance:** perubahan tersimpan ke backend dan terlihat konsisten; alamat dan koordinat privat tidak bocor ke profil publik atau API anonim.
+
+### PR-004 — Alamat pengguna dan titik peta privat
+**Prioritas:** P0 sebelum checkout/pemesanan.
+- [ ] Form alamat berjenjang: penerima, kontak, provinsi, kota/kabupaten, kecamatan, kelurahan/desa, kode pos, alamat detail, catatan kurir.
+- [ ] Peta untuk memilih pin; izin lokasi perangkat opsional; input manual tetap tersedia.
+- [ ] Banyak alamat, label rumah/kantor/proyek, alamat utama, edit/hapus.
+- [ ] Data privat dan koordinat hanya diberikan kepada pihak yang perlu untuk pemenuhan pesanan yang sah.
+- **Acceptance:** pengguna dapat menyimpan, memilih, mengubah, dan menghapus alamat; profil publik hanya menampilkan lokasi publik yang dipilih.
+
+### PR-005 — Upload media dan profil konten
+**Prioritas:** P1 setelah fondasi auth/profil.
+- [ ] Storage bucket/policies untuk avatar, cover, foto postingan dan video dengan batas ukuran/format/durasi.
+- [ ] Upload mobile dengan progress, preview, error, retry dan status publikasi.
+- [ ] Metadata konten: owner, media, caption, visibility, timestamps, moderation state.
+- [ ] Konten tampil pada profil pengguna setelah upload berhasil di backend.
+- [ ] Pisahkan bukti transaksi privat dari media promosi/publik.
+- **Acceptance:** upload foto dan video dari Android nyata, refresh halaman dan login ulang tetap memuat media; pengguna lain hanya melihat konten yang boleh mereka akses.
+
+### PR-006 — Explore feed campuran
+**Prioritas:** P1; bergantung PR-005.
+- [ ] Satu aliran campuran foto dan video.
+- [ ] Ranking relevansi, kebaruan, minat dan engagement nyata; popularitas bukan satu-satunya faktor.
+- [ ] Cold-start: konten akun pertama terlihat di profil dan dapat muncul pada Explore untuk menguji alur, tanpa memalsukan viralitas/angka engagement.
+- [ ] Privasi, blokir, moderasi dan konten terhapus dihormati.
+- **Acceptance:** akun pertama mengunggah foto dan video, lalu keduanya dapat ditemukan di Explore dan profil; konten tidak muncul jika tidak memenuhi aturan akses.
+
+### PR-007 — Interaksi sosial
+**Prioritas:** P1; bergantung PR-005/006.
+- [ ] Like/unlike.
+- [ ] Komentar dan balasan.
+- [ ] Share melalui native share/copy link sesuai dukungan perangkat.
+- [ ] Save/bookmark/tandai ke koleksi pribadi.
+- [ ] Tag akun lain dan produk/toko bila relevan.
+- [ ] Report, block, moderation, hapus/edit konten.
+- **Acceptance:** interaksi persisten setelah refresh/login ulang; hitungan konsisten; kontrol privasi berlaku; tidak ada angka palsu.
+
+### PR-008 — Toko pada profil dan branding mandiri
+**Prioritas:** P2 setelah profil pengguna dan Seller Center stabil.
+- [ ] Owner memilih toko yang ditampilkan di profil.
+- [ ] Profil toko memiliki logo, cover, nama, username toko, bio/deskripsi, kategori, media, promosi, katalog.
+- [ ] Owner/staff mengunggah bukti/dokumentasi transaksi dengan label sumber yang jujur.
+- [ ] Alat menyamarkan data pribadi pelanggan sebelum publikasi.
+- **Acceptance:** pengaturan tampil/sembunyi tidak menghapus toko; konten unggahan sendiri tidak diberi label transaksi terverifikasi tanpa verifikasi sistem.
+
+### PR-009 — Chat dan wallet
+**Prioritas:** P2/P3.
+- [ ] Chat pengguna dengan toko dan dukungan Pluits dengan RLS peserta.
+- [ ] UI wallet dapat ditampilkan nonaktif untuk pengujian visual.
+- [ ] Uang sungguhan baru setelah ledger, rekonsiliasi, idempotensi, antifraud, verifikasi rekening, payment provider dan kajian regulasi.
+- **Acceptance:** isolasi chat teruji; wallet tidak mengklaim saldo atau transaksi uang sungguhan sebelum sistem siap.
+
+## 4. Skenario uji akun pertama — pengguna biasa
+
+Akun pertama digunakan sebagai pengguna biasa terlebih dahulu, bukan langsung sebagai owner toko.
+
+1. Daftar dan login; verifikasi sesi dan email sesuai konfigurasi Auth.
+2. Buka dashboard pengguna; pastikan tidak ada paksaan membuat toko.
+3. Tambah/ganti foto profil.
+4. Tambah/ganti foto sampul.
+5. Isi bio dan nama tampilan.
+6. Pilih username unik; uji penolakan username yang sudah dipakai.
+7. Atur profil publik dan privat.
+8. Isi alamat lengkap, kode pos dan titik peta; simpan sebagai alamat utama.
+9. Tambahkan alamat kedua dan uji pemilihan alamat.
+10. Unggah satu foto dengan caption; pastikan muncul pada profil dan Explore.
+11. Unggah satu video dengan caption; pastikan muncul pada profil dan Explore.
+12. Uji like, unlike, komentar, balasan, share, save/tandai dan tag.
+13. Refresh, logout/login kembali; pastikan profil, alamat, media dan interaksi tetap tersimpan.
+14. Uji akses dari akun kedua untuk memastikan konten privat dan data alamat tidak bocor.
+15. Baru setelah alur pengguna lulus, lanjutkan pengujian Buat Toko dan Seller Center.
+
+**Definisi lulus:** alur ini harus benar-benar bekerja dari Android/mobile browser. Screenshot/mockup atau preview lokal bukan bukti backend bekerja.
+
+## 5. Aturan pencatatan checkpoint berikutnya
+
+Gunakan format berikut untuk setiap checkpoint baru:
+
+- **ID dan tanggal**
+- **Tujuan**
+- **Perubahan kode/database/dokumen**
+- **Commit SHA dan file terkait**
+- **Deployment URL dan status** (jika ada)
+- **Tes yang dijalankan dan hasilnya**
+- **Bukti/masalah yang ditemukan**
+- **PR tersisa dan dependensi**
+- **Keputusan model bisnis yang ikut berubah**
+
+Jangan menutup PR hanya karena kode sudah ditulis. Pisahkan: `DRAFT`, `IMPLEMENTED`, `DEPLOYED`, `TESTED`, `ACCEPTED`. Bila tes belum dilakukan, tulis `NOT TESTED`.
+
+## 6. Prioritas sesi berikutnya
+
+1. Jalankan PR-001 audit repo/backend.
+2. Perbaiki atau buat fondasi akun universal PR-002 tanpa merusak Seller Center.
+3. Bangun profil publik PR-003 dan alamat privat PR-004.
+4. Baru lanjut upload media PR-005, Explore PR-006, dan interaksi PR-007.
+5. Setelah alur akun pertama lulus, lanjut toko/branding, chat, dan wallet sesuai dependensi.
+
+**Status terakhir dokumen:** 7 November 2026.  
+**Catatan:** daftar di atas adalah baseline dari riwayat pengerjaan dan keputusan yang tercatat. Kondisi aktual harus diverifikasi pada awal sesi berikutnya sebelum menandai item selesai atau memulai migrasi baru.
