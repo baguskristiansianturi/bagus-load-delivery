@@ -30,7 +30,7 @@ function frame(content,active='explore',avatarUrl=''){
    <a class="${active==='explore'?'active':''}" href="#/account/explore"><span>⌂</span><small>Beranda</small></a>
    <a href="#/account/explore"><span>⌕</span><small>Jelajah</small></a>
    <a class="ua-mobile-create" href="#/account/compose" aria-label="Buat postingan"><span>＋</span></a>
-   <a class="${active==='addresses'?'active':''}" href="#/account/addresses"><span>▤</span><small>Alamat</small></a>
+   <a href="#/material"><span>▦</span><small>Marketplace</small></a>
    <a class="${active==='profile'?'active':''}" href="#/account/profile">${userAvatar}<small>Profil</small></a>
   </nav>
   <div id="ua-toast" class="ua-toast" role="status"></div>
