@@ -4979,3 +4979,5 @@ body{font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.45;-web
 .pl-social-footer{max-width:1240px;color:#849197;border-color:var(--pl-line)}
 @media(max-width:1000px){.pl-social-layout{grid-template-columns:180px minmax(0,650px);gap:20px;padding-inline:18px}}
 @media(max-width:650px){.pl-social-header{height:62px;padding:0 14px;gap:12px}.pl-social-brand{font-size:20px}.pl-social-layout{display:block;margin:0;padding:14px 10px 0}.pl-feed-stories{padding:13px 11px}.pl-social-footer{padding:18px 12px}}
+
+.pl-post-context{display:inline-flex;vertical-align:middle;margin-left:6px;border:1px solid #dce3eb;border-radius:20px;padding:3px 7px;color:#53647b;font-size:8px;font-style:normal;font-weight:750;letter-spacing:.04em}
