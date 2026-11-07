@@ -5016,3 +5016,8 @@ body{font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.45;-web
  .pl-home-mobile-nav a.active{color:#315d6a}
  .pl-home-mobile-nav .pl-home-create{font-size:23px;color:#20282c}
 }
+
+/* Public text-only posts: render as first-class feed cards */
+.pl-public-text-post{display:grid;place-items:center;min-height:118px;padding:22px;background:linear-gradient(135deg,#f4f7f8,#e9eff1);color:#52636d;font-size:13px;font-weight:850;letter-spacing:.18em;text-align:center}
+.pl-public-post:has(.pl-public-text-post)>p{font-size:15px;line-height:1.65;color:#26343a;overflow-wrap:anywhere}
+@media(max-width:650px){.pl-public-text-post{min-height:100px;margin:0 12px 8px;border-radius:10px}.pl-public-post:has(.pl-public-text-post)>p{font-size:14px;padding:8px 13px 12px}}
