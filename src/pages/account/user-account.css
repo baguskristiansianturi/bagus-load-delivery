@@ -76,3 +76,37 @@
  .ua-wallet-row{grid-template-columns:minmax(0,1fr) auto;gap:8px}
  .ua-wallet-row .ua-wallet-status{grid-column:1/-1;justify-self:start}
 }
+
+
+/* Multi-context account switcher and profile settings */
+.ua-context-switch{display:grid;gap:4px;min-width:142px;margin-left:8px}
+.ua-context-switch label{font-size:8px;letter-spacing:.14em;font-weight:850;color:#8994a3}
+.ua-context-switch select{max-width:190px;border:1px solid #dce2e9;border-radius:8px;background:#fff;padding:8px 10px;color:#26364b;font:inherit;font-size:11px;font-weight:750}
+.ua-professional-card{display:flex;align-items:center;gap:18px;background:#fff;border:1px solid #e5e8ed;border-radius:16px;padding:22px;margin:18px 0}
+.ua-professional-avatar{width:62px;height:62px;border-radius:16px;display:grid;place-items:center;background:#e7edf4;color:#172b45;font-size:23px;font-weight:900;flex:none}
+.ua-professional-card h2{margin:0 0 5px;font-size:20px}
+.ua-professional-card strong{font-size:12px;color:#53647b}
+.ua-professional-card p{font-size:12px;color:#6d7b8f;line-height:1.6;margin:8px 0}
+.ua-professional-card small{font-size:10px;color:#8994a3}
+.ua-professional-panel,.ua-professional-form,.ua-settings-form{padding:22px;margin:16px 0}
+.ua-review-pill{display:inline-flex;align-items:center;border:1px solid #dce2e9;border-radius:30px;padding:7px 11px;font-size:10px;font-weight:800;color:#52647b;background:#f7f9fb}
+.ua-skill-list{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0 18px}
+.ua-skill-list span{border:1px solid #dce3eb;background:#f7f9fb;border-radius:30px;padding:7px 10px;font-size:10px;color:#42536a}
+.ua-professional-meta{display:flex;flex-wrap:wrap;gap:16px;font-size:11px;color:#596a80;padding:12px 0;border-top:1px solid #edf0f3}
+.ua-professional-note{font-size:11px;line-height:1.6;color:#69788d;background:#f3f6f9;padding:12px;border-radius:9px;margin:16px 0}
+.ua-settings-form{display:grid;gap:22px;max-width:760px}
+.ua-settings-section{display:grid;gap:12px;border-bottom:1px solid #edf0f3;padding-bottom:18px}
+.ua-settings-section h2{margin:0;font-size:17px}
+.ua-settings-section>p{margin:0;color:#718096;font-size:11px;line-height:1.6}
+.ua-settings-section>label:not(.ua-checkbox){display:grid;gap:7px;font-size:11px;font-weight:750;color:#46546a}
+.ua-settings-section select{max-width:100%;border:1px solid #dce2e9;border-radius:8px;padding:11px 12px;background:#fff;color:#26364b;font:inherit;font-size:12px}
+@media(max-width:760px){
+ .ua-context-switch{margin-left:auto;min-width:112px}
+ .ua-context-switch label{font-size:7px}
+ .ua-context-switch select{max-width:145px;padding:7px 8px;font-size:10px}
+ .ua-social-app .ua-header{gap:9px}
+ .ua-professional-card{align-items:flex-start;padding:16px;gap:12px}
+ .ua-professional-avatar{width:48px;height:48px;border-radius:13px}
+ .ua-professional-card h2{font-size:17px}
+ .ua-professional-panel,.ua-professional-form,.ua-settings-form{padding:15px}
+}
