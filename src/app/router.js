@@ -14,6 +14,7 @@ import {home} from '../pages/home/index.js';
 import {operations} from '../pages/operations/index.js';
 import {tracking} from '../pages/tracking/index.js';
 import {sellerPage} from '../pages/seller/index.js';
+import {mountUserAccount} from '../pages/account/index.js';
 import {updateSEO} from '../pages/seo.js';
 
 export function route(homeFn=home){
@@ -38,9 +39,10 @@ export function route(homeFn=home){
  else if(r==='provider'||r==='suppliers')h=supplierPage(v||'');
  else if(r==='proyek'||r==='projects')h=projectsPage(v||'');
  else if(['promo','help','faq','about','contact','reviews','terms','privacy','recent'].includes(r))h=misc(r);
- else if(['account','seller','driver','partner','admin'].includes(r))h=operations(r,v||'');
- else if(r==='track'||r==='track-order')h=tracking(v||p.get('id')||'');
+ else if(r==='account'){h='<div class="pluits-loading">Membuka akun Pluits…</div>';queueMicrotask(()=>mountUserAccount(v||'profile'));}
  else if(r==='seller'){h='<div class="pluits-loading">Membuka Seller Center Pluits…</div>';queueMicrotask(()=>sellerPage());}
+ else if(['driver','partner','admin'].includes(r))h=operations(r,v||'');
+ else if(r==='track'||r==='track-order')h=tracking(v||p.get('id')||'');
  else h='<div class="empty-state large"><h1>Halaman tidak ditemukan</h1><p>Rute belum tersedia pada frontend ini.</p><a class="primary-button" href="#/">Kembali ke beranda</a></div>';
  document.querySelector('#app').innerHTML=h;
  updateSEO({title:document.querySelector('h1')?.textContent?document.querySelector('h1').textContent+' — Bali Bagus':'Bali Bagus Load & Delivery',description:'Material konstruksi, supplier, procurement dan delivery untuk kebutuhan proyek.',path:path});
