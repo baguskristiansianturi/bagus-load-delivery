@@ -1,6 +1,6 @@
 # PLUITS — MODEL AKUN & IDENTITAS
 Versi 1.0 · 8 November 2026
-Status: SPECIFIED — dasar implementasi bertahap.
+Status: IMPLEMENTED bertahap — fondasi backend P0, account switcher, onboarding Professional, dan pusat pengaturan sudah masuk; fitur lanjutan tetap mengikuti roadmap.
 
 ## 1. Prinsip arsitektur
 
