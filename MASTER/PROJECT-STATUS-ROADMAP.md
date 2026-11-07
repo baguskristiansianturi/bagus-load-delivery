@@ -245,3 +245,24 @@ Build dari commit `642a24bdbed4a85931271e7481f9880a04cc9fc3` berhasil. GitHub Pa
 - **Status implementasi:** perubahan dokumentasi Pluits tersimpan pada commit 473761af11a219898e5e971d55440e0560fca644; README arsip My Bali pada eb46120752496fd6085ffec7828109c30cc7c850; adaptasi CSS pada fdc1291e43276a6ed124e9e5b9ff1902c991b126.
 - **Status deploy:** workflow run 42377669983 sedang berjalan saat checkpoint ini dicatat. Belum boleh menyatakan deployment selesai sebelum status workflow success.
 - **Pekerjaan lanjutan:** audit seluruh fitur prototype My Bali terhadap Pluits, pindahkan komponen yang relevan secara bertahap, hilangkan simulasi/demo-only, uji guest browsing dan login-required actions, lalu validasi mobile UI. Story/Reels dan bottom navigation penuh tidak boleh dianggap selesai hanya dari adopsi styling.
+
+## CP-010 — Perubahan arah Pluits menjadi platform universal lokal + social + Trip (7 November 2026)
+
+- **Status:** KEPUTUSAN MODEL BISNIS DICATAT; audit teknis dan implementasi lanjutan BELUM dilakukan.
+- **Arahan founder:** homepage mengikuti social-first model My Bali; Marketplace mempertahankan desain marketplace Pluits yang telah ada; Trip/Travel menjadi pilar ketiga dalam satu platform dan satu akun.
+- **Perubahan identitas:** Pluits tidak lagi berfokus khusus pada konstruksi. Marketplace menjadi universal sesuai kategori yang disetujui: produk/retail lokal, makanan/layanan, transportasi lokal, serta kategori Trip seperti Stay, Rental, Activity, Tour, Event dan layanan perjalanan.
+- **Pembeda Marketplace:** transaksi barang dibatasi berdasarkan area layanan lokal penyedia. Barang toko Bali tidak dapat di-checkout untuk alamat Jakarta melalui kurir parcel antardaerah seperti JNE/J&T. Checkout hanya aktif jika area tujuan cocok dan penyedia memiliki kapasitas pemenuhan lokal instant/same-day yang nyata. Tidak boleh mengklaim layanan same-day jika jam, stok, jarak, persiapan, atau kapasitas tidak mendukung.
+- **Trip exception:** pengguna boleh merencanakan dan memesan akomodasi/aktivitas untuk tanggal mendatang dari luar wilayah karena layanan akan dipenuhi di destinasi penyedia. Ini bukan pengiriman barang antardaerah dan memakai booking workflow tersendiri.
+- **Role adjustment:** satu akun lintas member/buyer/traveler, store/business owner, provider/operator, host/accommodation manager, driver/courier/field staff, dan platform admin/moderator/support. Pendaftaran toko/provider opsional; login biasa tidak otomatis menjadi owner.
+- **Desain:** homepage social feed mengadopsi pola My Bali; halaman Marketplace mempertahankan desain Pluits lama. Kartu Marketplace ditingkatkan konsistensi dan informasinya, bukan diganti dengan kartu My Bali.
+- **Sumber yang dibaca:** My Bali MASTER/BUSINESS-MODEL.md, MASTER/PRODUCT-VISION.md, MASTER/PRODUCTS/MY-BALI/PRODUCT-CONCEPT.md, PROVIDER-ECOSYSTEM.md, SOCIAL-TRIP-AND-EXPERIENCE-FLOWS.md, TRAVEL-JOURNEY.md, ROUTE-INTELLIGENCE.md, PUBLIC-WEB-AND-COMMUNITY-MVP.md, dan OPEN-QUESTIONS.md; dibandingkan dengan master bisnis dan roadmap Pluits.
+- **Keputusan yang belum final:** daftar kategori fase pertama; apakah pickup toko menjadi opsi; definisi lokasi pengguna untuk transaksi; cakupan same-day/instant per kategori; provider verification checklist per kategori; kebijakan booking/deposit/refund; legalitas host/driver/guide; komisi dan biaya; metode pembayaran/settlement; dan batas wilayah awal yang siap diuji.
+- **PR berikutnya:**
+  1. Audit repo/frontend/backend terhadap bagian 23 tanpa merusak desain Marketplace Pluits.
+  2. Revisi navigation dan homepage menjadi social-first; cek guest browsing dan login boundaries.
+  3. Rancang location context + service area enforcement untuk pencarian, keranjang, checkout dan backend order.
+  4. Rancang entity/role provider universal dan verifikasi per kategori; jangan menganggap semua kategori tunduk pada PT/CV/UD.
+  5. Buat spesifikasi Trip terpisah: Trip Plan, Stay inventory/calendar/booking, activity/tour/rental/transport, Trip Experience.
+  6. Petakan migrasi skema Supabase dan RLS sebelum menerapkan migration baru.
+  7. Uji mobile-first dari Android dan catat commit/deploy/test secara terpisah.
+- **Status implementasi:** tidak ada fitur baru yang dinyatakan selesai hanya karena model bisnis diperbarui. Kode, schema, deployment dan UAT belum diverifikasi pada checkpoint ini.
