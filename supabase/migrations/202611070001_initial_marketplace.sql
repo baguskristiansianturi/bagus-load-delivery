@@ -212,34 +212,44 @@ alter table public.product_images enable row level security;
 alter table public.inventory_movements enable row level security;
 alter table public.store_audit_logs enable row level security;
 
-create or replace function public.is_store_member(target_store_id uuid)
+-- Membership helpers live outside exposed schemas. SECURITY DEFINER is narrowly
+-- scoped, checks auth.uid(), and reads only membership rows to avoid RLS recursion.
+create schema if not exists private;
+revoke all on schema private from public, anon, authenticated;
+grant usage on schema private to authenticated;
+
+create or replace function private.is_store_member(target_store_id uuid)
 returns boolean
 language sql
 stable
-security invoker
+security definer
 set search_path = ''
-as $$
-  select exists (
+as $
+  select (select auth.uid()) is not null and exists (
     select 1 from public.store_members sm
     where sm.store_id = target_store_id
       and sm.user_id = (select auth.uid())
   );
-$$;
+$;
 
-create or replace function public.is_store_owner(target_store_id uuid)
+create or replace function private.is_store_owner(target_store_id uuid)
 returns boolean
 language sql
 stable
-security invoker
+security definer
 set search_path = ''
-as $$
-  select exists (
+as $
+  select (select auth.uid()) is not null and exists (
     select 1 from public.store_members sm
     where sm.store_id = target_store_id
       and sm.user_id = (select auth.uid())
       and sm.role = 'owner'
   );
-$$;
+$;
+
+revoke all on function private.is_store_member(uuid) from public, anon;
+revoke all on function private.is_store_owner(uuid) from public, anon;
+grant execute on function private.is_store_member(uuid), private.is_store_owner(uuid) to authenticated;
 
 create policy "profiles_select_own" on public.profiles
 for select to authenticated using (id = (select auth.uid()));
@@ -253,65 +263,71 @@ for select to anon, authenticated using (is_open_for_buyers or is_open_for_selle
 
 create policy "stores_read_active_or_member" on public.stores
 for select to authenticated using (
-  store_status = 'active' or owner_user_id = (select auth.uid()) or public.is_store_member(id)
+  store_status = 'active' or owner_user_id = (select auth.uid()) or private.is_store_member(id)
 );
 create policy "stores_public_read_active" on public.stores
 for select to anon using (store_status = 'active');
 create policy "stores_create_as_owner" on public.stores
-for insert to authenticated with check (owner_user_id = (select auth.uid()));
+for insert to authenticated with check (
+  owner_user_id = (select auth.uid())
+  and exists (
+    select 1 from public.operating_regions r
+    where r.id = region_id and r.is_open_for_sellers = true
+  )
+);
 create policy "stores_update_owner" on public.stores
-for update to authenticated using (public.is_store_owner(id)) with check (public.is_store_owner(id));
+for update to authenticated using (private.is_store_owner(id)) with check (private.is_store_owner(id));
 
 create policy "store_members_read_self_or_owner" on public.store_members
-for select to authenticated using (user_id = (select auth.uid()) or public.is_store_owner(store_id));
+for select to authenticated using (user_id = (select auth.uid()) or private.is_store_owner(store_id));
 create policy "store_members_insert_owner_self" on public.store_members
 for insert to authenticated with check (
   user_id = (select auth.uid()) and role = 'owner'
   and exists (select 1 from public.stores s where s.id = store_id and s.owner_user_id = (select auth.uid()))
 );
 create policy "store_members_update_owner" on public.store_members
-for update to authenticated using (public.is_store_owner(store_id)) with check (public.is_store_owner(store_id));
+for update to authenticated using (private.is_store_owner(store_id)) with check (private.is_store_owner(store_id));
 create policy "store_members_delete_owner" on public.store_members
-for delete to authenticated using (public.is_store_owner(store_id));
+for delete to authenticated using (private.is_store_owner(store_id));
 
 create policy "private_location_members_only" on public.store_private_locations
-for all to authenticated using (public.is_store_member(store_id)) with check (public.is_store_member(store_id));
+for all to authenticated using (private.is_store_member(store_id)) with check (private.is_store_member(store_id));
 
 create policy "hours_read_active_or_member" on public.store_operating_hours
 for select to anon, authenticated using (
   exists (select 1 from public.stores s where s.id = store_id and s.store_status = 'active')
-  or public.is_store_member(store_id)
+  or private.is_store_member(store_id)
 );
 create policy "hours_manage_members" on public.store_operating_hours
-for all to authenticated using (public.is_store_member(store_id)) with check (public.is_store_member(store_id));
+for all to authenticated using (private.is_store_member(store_id)) with check (private.is_store_member(store_id));
 
 create policy "zones_read_active_or_member" on public.store_delivery_zones
 for select to anon, authenticated using (
   (is_active and exists (select 1 from public.stores s where s.id = store_id and s.store_status = 'active'))
-  or public.is_store_member(store_id)
+  or private.is_store_member(store_id)
 );
 create policy "zones_manage_members" on public.store_delivery_zones
-for all to authenticated using (public.is_store_member(store_id)) with check (public.is_store_member(store_id));
+for all to authenticated using (private.is_store_member(store_id)) with check (private.is_store_member(store_id));
 
 create policy "categories_read_active" on public.product_categories
 for select to anon, authenticated using (
   is_active and (store_id is null or exists (
     select 1 from public.stores s where s.id = store_id and s.store_status = 'active'
   ))
-  or (store_id is not null and public.is_store_member(store_id))
+  or (store_id is not null and private.is_store_member(store_id))
 );
 create policy "categories_manage_members" on public.product_categories
-for all to authenticated using (store_id is not null and public.is_store_member(store_id))
-with check (store_id is not null and public.is_store_member(store_id));
+for all to authenticated using (store_id is not null and private.is_store_member(store_id))
+with check (store_id is not null and private.is_store_member(store_id));
 
 create policy "products_read_published" on public.products
 for select to anon, authenticated using (
   (status = 'published' and exists (
     select 1 from public.stores s where s.id = store_id and s.store_status = 'active'
-  )) or public.is_store_member(store_id)
+  )) or private.is_store_member(store_id)
 );
 create policy "products_manage_members" on public.products
-for all to authenticated using (public.is_store_member(store_id)) with check (public.is_store_member(store_id));
+for all to authenticated using (private.is_store_member(store_id)) with check (private.is_store_member(store_id));
 
 create policy "variants_read_published_product" on public.product_variants
 for select to anon, authenticated using (
@@ -319,41 +335,41 @@ for select to anon, authenticated using (
     select 1 from public.products p join public.stores s on s.id = p.store_id
     where p.id = product_id and p.status = 'published' and s.store_status = 'active'
   )) or exists (
-    select 1 from public.products p where p.id = product_id and public.is_store_member(p.store_id)
+    select 1 from public.products p where p.id = product_id and private.is_store_member(p.store_id)
   )
 );
 create policy "variants_manage_members" on public.product_variants
 for all to authenticated using (
-  exists (select 1 from public.products p where p.id = product_id and public.is_store_member(p.store_id))
+  exists (select 1 from public.products p where p.id = product_id and private.is_store_member(p.store_id))
 ) with check (
-  exists (select 1 from public.products p where p.id = product_id and public.is_store_member(p.store_id))
+  exists (select 1 from public.products p where p.id = product_id and private.is_store_member(p.store_id))
 );
 
 create policy "images_read_published_product" on public.product_images
 for select to anon, authenticated using (
   exists (select 1 from public.products p join public.stores s on s.id = p.store_id
     where p.id = product_id and p.status = 'published' and s.store_status = 'active')
-  or exists (select 1 from public.products p where p.id = product_id and public.is_store_member(p.store_id))
+  or exists (select 1 from public.products p where p.id = product_id and private.is_store_member(p.store_id))
 );
 create policy "images_manage_members" on public.product_images
 for all to authenticated using (
-  exists (select 1 from public.products p where p.id = product_id and public.is_store_member(p.store_id))
+  exists (select 1 from public.products p where p.id = product_id and private.is_store_member(p.store_id))
 ) with check (
-  exists (select 1 from public.products p where p.id = product_id and public.is_store_member(p.store_id))
+  exists (select 1 from public.products p where p.id = product_id and private.is_store_member(p.store_id))
 );
 
 create policy "inventory_read_members" on public.inventory_movements
-for select to authenticated using (public.is_store_member(store_id));
+for select to authenticated using (private.is_store_member(store_id));
 create policy "inventory_insert_members" on public.inventory_movements
 for insert to authenticated with check (
-  public.is_store_member(store_id) and exists (
+  private.is_store_member(store_id) and exists (
     select 1 from public.product_variants v join public.products p on p.id = v.product_id
     where v.id = variant_id and p.store_id = store_id
   )
 );
 
 create policy "audit_read_members" on public.store_audit_logs
-for select to authenticated using (public.is_store_member(store_id));
+for select to authenticated using (private.is_store_member(store_id));
 
 -- Restrict table privileges; RLS remains the row-level boundary.
 grant select on public.operating_regions, public.stores, public.store_operating_hours,
