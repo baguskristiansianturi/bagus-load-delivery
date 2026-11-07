@@ -1,10 +1,10 @@
 # MASTER MODEL BISNIS — PLUITS
-**Versi:** 0.9 | **Pembaruan:** 7 November 2026
+**Versi:** 1.0 | **Pembaruan:** 7 November 2026
 **Status:** Dokumen induk model bisnis; acuan sebelum penyusunan paket dan spesifikasi teknis.
 
 > Dokumen ini menjadi sumber acuan utama. Hal yang belum diputuskan ditandai sebagai terbuka dan bukan kebijakan final.
 >
-> **Catatan arah terbaru:** Pluits berkembang dari konsep marketplace konstruksi menjadi platform universal social media + marketplace lokal berbasis wilayah + Trip/Travel. Bagian 23 adalah keputusan terbaru dan menjadi acuan jika ada pertentangan dengan bagian lama. Bagian lama tetap dipertahankan sebagai riwayat dan detail operasional yang masih relevan.
+> **Catatan arah terbaru:** Pluits berkembang dari konsep marketplace konstruksi menjadi platform universal social media + marketplace lokal berbasis wilayah + Trip/Travel. Bagian 24 adalah arah produk terbaru dan menjadi acuan jika ada pertentangan dengan bagian sebelumnya. Bagian 23 adalah keputusan konsolidasi sebelumnya; bagian lama tetap dipertahankan sebagai riwayat dan detail operasional yang masih relevan. Bagian lama tetap dipertahankan sebagai riwayat dan detail operasional yang masih relevan.
 
 ## 1. Visi
 Prioritas utama adalah mendigitalkan toko material bangunan menjadi marketplace multi-toko: toko bangunan, toko besi, toko cat, toko semen, dan pemasok material lainnya dapat menampilkan katalog dan melayani pembeli secara digital. Platform membantu pembeli melihat toko dan membandingkan produk/harga tanpa harus mendatangi toko satu per satu. Dalam jangka panjang ekosistem dapat diperluas ke pekerja, jasa konstruksi, dan logistik. Bagus Load & Delivery sebagai layanan pengiriman tersendiri bukan fokus awal dan baru dipertimbangkan setelah kebutuhan serta modelnya diuji.
@@ -655,4 +655,93 @@ Untuk menghindari dua arah bisnis yang saling bertentangan:
 - Bagian 22.3 yang menyatakan kategori wisata/akomodasi tidak otomatis masuk Pluits dinyatakan **digantikan** oleh bagian 23.4.
 - Bagian 22.4 tentang ekspansi lintas Indonesia diperjelas: ekspansi boleh lintas wilayah sebagai jaringan area lokal, tetapi tidak berarti barang dapat dikirim bebas lintas daerah.
 - Detail Seller Center, owner/staff, katalog, variasi, stok, audit, keamanan, dan histori pada bagian lama tetap dipakai sepanjang tidak bertentangan dengan model provider universal dan pemenuhan lokal.
+
+
+
+## 24. Pluits Social Experience Commerce — media sosial berbasis pengalaman nyata (7 November 2026)
+
+**Status:** Arah strategis hasil diskusi founder; keputusan konsep dicatat. Spesifikasi rinci, kebijakan privasi final, implementasi, dan pengujian belum selesai. Bagian ini menjadi acuan terbaru untuk evolusi sosial Pluits. Jangan menganggap fitur yang dijelaskan di sini sudah tersedia di aplikasi.
+
+### 24.1 Posisi produk
+Pluits adalah platform social-first yang menghubungkan empat lapisan: (1) Social—ekspresi diri, personal branding, foto/video, teks, opini, hashtag, percakapan, dan inspirasi; (2) Verified Experience—kunjungan, aktivitas, review, dan transaksi dengan tingkat bukti berbeda; (3) Local Commerce & Services—restoran, kafe, toko, freelancer, vendor, dan penyedia jasa lokal; (4) Trip—perjalanan, itinerary, booking, aktivitas, dan pengalaman perjalanan. Pluits bukan sekadar salinan Facebook, Instagram, Twitter, atau marketplace. Pembeda utamanya adalah pengalaman sosial yang dapat terhubung dengan aktivitas nyata dan halaman usaha/layanan.
+
+### 24.2 Social-first feed
+Homepage utama memprioritaskan feed sosial dan harus tetap menarik walaupun pengguna tidak sedang berbelanja. Konten dapat berupa foto/video dan caption pribadi, cerita, opini, aktivitas, personal branding, pengalaman tempat/perjalanan, serta postingan yang berasal dari transaksi Pluits. Konten biasa tetap diperbolehkan; feed tidak boleh berubah menjadi katalog iklan yang monoton. Promosi jasa/produk harus mengikuti aturan platform dan tidak menjadi spam.
+
+### 24.3 Postingan yang berasal dari transaksi
+Setelah transaksi berhasil melalui alur Pluits (misalnya QR/barcode dan saldo Pluits ketika pembayaran benar-benar tersedia), sistem dapat menawarkan pembuatan postingan pengalaman. Pembayaran tidak berarti otomatis mempublikasikan riwayat belanja. Pengguna memilih berbagi atau mengaktifkan pengaturan berbagi otomatis yang jelas dan dapat dicabut.
+
+Jika pengguna tidak mengambil foto, postingan dapat memakai foto resmi item/menu dari katalog merchant sesuai izin dan pengaturan. Jika pengguna memiliki foto pribadi, ia dapat memilih foto tersebut sebagai media utama atau tambahan. Merchant terdorong menjaga kualitas foto, katalog, deskripsi, harga, dan promo karena materi katalog dapat tampil pada postingan pelanggan.
+
+Postingan dapat memuat nama merchant/item, foto pribadi atau katalog, caption opsional, hashtag, serta kartu internal menuju item/merchant. Nominal transaksi adalah pilihan tampilan pengguna, bukan informasi yang otomatis dibuka. Bukti bayar mentah, nomor transaksi internal, metode pembayaran sensitif, saldo, dan data pelanggan tidak boleh bocor ke publik.
+
+### 24.4 Tingkat bukti yang berbeda
+Sistem harus membedakan:
+1. **Sinyal lokasi:** perangkat mendeteksi pengguna di sekitar tempat. Ini bukan bukti kunjungan pasti atau transaksi.
+2. **Kunjungan terkonfirmasi:** dapat didukung check-in/QR merchant, booking yang dipenuhi, atau mekanisme lain yang ditetapkan.
+3. **Transaksi terverifikasi:** catatan transaksi sah yang berhasil dan terhubung ke akun, merchant, serta item. Hanya bukti backend ini yang dapat mendukung label transaksi terverifikasi.
+
+Foto, caption, hashtag, geotag, klaim pengguna, dan geofence saja tidak cukup untuk label transaksi terverifikasi.
+
+### 24.5 Satu pengalaman, beberapa tampilan
+Gunakan satu objek pengalaman kanonis yang dapat ditampilkan sebagai review merchant, postingan feed, entri Trip/timeline, atau arsip privat. Hindari data pengalaman ganda yang tidak sinkron. Mengubah caption sosial tidak boleh mengubah fakta transaksi historis. Data internal transaksi tetap privat.
+
+### 24.6 Review dan respons merchant
+Review yang memenuhi syarat tampil di halaman merchant dengan label bukti yang sesuai. Owner dan staff yang memiliki izin menerima notifikasi review baru dan dapat membalas atau berkomentar dalam thread review; pengguna dapat menerima notifikasi balasan. Merchant tidak boleh menghapus atau memanipulasi review negatif secara sepihak. Pelaporan, moderasi, hak jawab, banding, dan penanganan review palsu perlu dirancang adil. Review memberi promosi organik sekaligus insentif menjaga layanan, produk, dan harga.
+
+### 24.7 Kartu internal dan aturan tautan
+Caption/komentar membatasi URL eksternal bebas. Teks dan hashtag diperbolehkan. Sistem menyediakan kartu internal terstruktur menuju profil pengguna/merchant, toko, item/menu, layanan, postingan, pengalaman, Trip, atau itinerary Pluits. Kartu transaksi membuka halaman item/merchant Pluits. Halaman tersebut menampilkan informasi terkini seperti harga, variasi, stok/status, promo, lokasi publik, layanan, dan review. Harga historis pada transaksi harus dibedakan dari harga saat ini.
+
+### 24.8 Username dan mini-website
+Pengguna dan entitas usaha/penyedia yang memenuhi syarat dapat memiliki username/slug unik dan URL publik Pluits. Pelaku usaha dapat membagikannya ke Instagram, Facebook, WhatsApp, dan kanal luar lainnya. Klik membuka halaman publik responsif seperti landing page/mini-website tanpa mengharuskan pengunjung memasang aplikasi atau login. Halaman usaha dapat menampilkan profil, kategori, foto, katalog/menu/layanan, harga publik, area layanan, jam operasional, review, serta tindakan kontak/pemesanan. Data privat tidak ditampilkan.
+
+Username harus unik, case-insensitive, memiliki aturan karakter/panjang dan reserved names, serta perlindungan impersonasi. Nama tokoh publik, merek, dan institusi memerlukan kebijakan verifikasi, klaim identitas, pelaporan, dan penyelesaian sengketa. Hak username, perubahan, pemulihan, dan masa karantina belum ditetapkan final.
+
+### 24.9 Promosi jasa dan vendor
+Pengguna dapat membagikan pengalaman atau menawarkan jasa, misalnya rental mobil, freelancer, vendor, dan layanan lokal. Calon pelanggan diarahkan ke profil/halaman penyedia yang menampilkan layanan, cakupan lokasi, harga atau permintaan penawaran, status verifikasi, review, ketersediaan, dan cara memesan. Tidak semua penyedia harus berbentuk PT/CV/UD; verifikasi mengikuti kategori dan risiko layanan.
+
+### 24.10 Barang bekas dan listing toko
+Toko resmi pada marketplace tidak diperuntukkan bagi jual-beli barang bekas sesuai kebijakan yang sedang diuji. Barang bekas mungkin dapat disebut atau ditampilkan sebagai konten sosial pribadi, tetapi bukan otomatis listing katalog toko. Batas antara konten sosial, iklan, dan listing komersial harus diuji agar tidak menjadi celah spam atau perdagangan terselubung.
+
+### 24.11 Pickup dan pengiriman
+Halaman merchant dan checkout menjelaskan pilihan pemenuhan yang benar-benar tersedia: ambil sendiri/pickup, pengiriman oleh toko, atau pengiriman melalui mitra yang terintegrasi dan tersedia di wilayah tersebut. Bagus Load & Delivery dapat dipertimbangkan sebagai mitra jika benar-benar dibangun; integrasi Maxim atau penyedia lain juga kemungkinan masa depan, bukan fitur yang sudah tersedia. Biaya, estimasi, cakupan, dan tanggung jawab harus transparan.
+
+### 24.12 Trip Story
+Trip menghubungkan perpindahan wilayah, itinerary, booking, aktivitas, dan pengalaman. Deteksi perjalanan lintas kota/negara dapat memicu draft Trip Story atau permintaan konfirmasi. Sistem membedakan perjalanan direncanakan, dipesan, dikunjungi, dan diselesaikan. Pengguna memilih apakah entri hanya tersimpan di Trip, dibagikan ke feed, atau keduanya. Deteksi lokasi latar belakang memerlukan izin eksplisit. Lokasi real-time, waktu persis, penginapan, teman perjalanan, dan rute privat tidak boleh otomatis dipublikasikan. Itinerary hanya dapat dibagikan/disalin sesuai pengaturan pemilik. Pilihan final draft, prompt, auto-share dan feed/Trip masih terbuka.
+
+### 24.13 Kualitas, spam, dan moderasi
+Kurangi beban moderasi dengan aturan produk yang dapat ditegakkan: pembatasan URL eksternal bebas, review terverifikasi hanya dari transaksi sah, promosi diarahkan ke halaman penyedia, rate limit, deteksi pola spam, report, block, mute, moderasi, banding, dan label jujur untuk konten berbayar/promosi/kunjungan/transaksi. Tidak ada sistem yang dapat menjamin 100% tidak ada postingan palsu. Tujuannya membuat klaim transaksi palsu jauh lebih sulit, memberi label tingkat bukti secara benar, dan menangani spam/penyalahgunaan.
+
+### 24.14 Privasi dan pilihan berbagi
+Nominal transaksi, nama item, tanggal, merchant, foto, dan lokasi harus memiliki aturan visibilitas jelas. Pengguna mengendalikan default berbagi dan pilihan per-posting. Pengguna dapat menarik izin berbagi konten sosial tanpa mengubah catatan transaksi historis yang wajib disimpan untuk operasional/sengketa/kepatuhan. Dasar hukum, retensi, persetujuan, pemrosesan lokasi, dan kebijakan data final harus ditinjau sebelum peluncuran.
+
+### 24.15 Hipotesis pendapatan
+Sumber pendapatan yang perlu diuji: biaya/komisi transaksi merchant atau booking; paket merchant/penyedia untuk fitur operasional, analitik, katalog, atau branding; promosi berbayar berlabel; biaya layanan transaksi/fulfillment jika ada nilai tambah; dan kemitraan logistik/perjalanan. Pendapatan tidak boleh mendorong review palsu, ranking berbayar tanpa label, atau feed yang didominasi iklan. Tarif, settlement, wallet, payment gateway, pajak, dan regulasi masih terbuka.
+
+### 24.16 Urutan pembangunan yang disarankan
+1. Sempurnakan fondasi sosial: profil publik, feed, post, komentar/balasan, like, share, save, hashtag, notifikasi, report/block, dan aturan tautan.
+2. Bangun username dan halaman publik responsif untuk pengguna serta merchant/penyedia.
+3. Bangun entity pengalaman, review, dan notifikasi merchant.
+4. Integrasikan katalog/menu dan transaksi agar posting pengalaman berasal dari sumber transaksi sah.
+5. Bangun kartu internal Pluits menuju item/merchant/layanan.
+6. Bangun Trip timeline/Story dengan persetujuan dan kontrol privasi.
+7. Kembangkan pickup/pengiriman dan integrasi mitra setelah alur inti tervalidasi.
+8. Uji pendapatan setelah kualitas sosial dan pengalaman pengguna terbukti.
+
+Ini rekomendasi produk; prioritas sprint aktual mengikuti audit kode/backend dan dependensi.
+
+### 24.17 Pertanyaan terbuka
+- Trip Story dibuat sebagai draft, meminta konfirmasi, atau auto-share setelah pengguna mengaktifkannya?
+- Pengalaman transaksi default privat, Trip-only, feed, atau mengikuti pengaturan per akun?
+- Nominal transaksi ditampilkan, disembunyikan, atau dipilih per posting?
+- Foto katalog merchant menjadi default atau pengguna memilih terlebih dahulu?
+- Merchant dapat memilih item mana yang boleh dipakai untuk posting pengalaman?
+- Kapan transaksi memenuhi syarat review: pembayaran sukses, pesanan selesai, atau setelah masa komplain?
+- Bagaimana menangani refund, partial refund, pembatalan, chargeback, dan review setelah transaksi dibatalkan?
+- Apa bukti kunjungan terkonfirmasi tanpa transaksi?
+- Bagaimana reserved username, verified identity, impersonasi, public figures, dan brand claims ditangani?
+- Apa kebijakan final barang bekas, promosi jasa, tautan, spam, konten berbayar, dan iklan?
+- Apa cakupan pickup, pengiriman merchant, Bagus Load & Delivery, dan integrasi pihak ketiga?
+- Apa model monetisasi, komisi, biaya, dan mekanisme saldo/pembayaran?
+- Apa persetujuan, retensi, dan batas pemrosesan lokasi serta data transaksi?
 
