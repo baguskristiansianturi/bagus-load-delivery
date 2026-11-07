@@ -1,5 +1,6 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import './user-account.css';
+import {loadAccountContext,contextHeader,professionalPage,professionalFormPage,accountSettingsPage,bindAccountContext} from './account-context.js';
 
 const SUPABASE_URL='https://ytndswhqxayqpftszwfh.supabase.co';
 const SUPABASE_KEY='sb_publishable_kOUbKBYg88nXgz8FQRSnvA_k0hvKY65';
@@ -8,7 +9,7 @@ const BUCKET='pluits-user-media';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmtDate=v=>new Date(v).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'});
 const initials=v=>String(v||'P').trim().slice(0,1).toUpperCase();
-let user=null,profile=null,addresses=[],noticeTimer=null,leafletMap=null,leafletMarker=null;
+let user=null,profile=null,addresses=[],noticeTimer=null,leafletMap=null,leafletMarker=null,accountContext={active:'personal',professional:null,stores:[],prefs:{}};
 
 function notify(message,type='success'){
  const el=document.querySelector('#ua-toast');if(!el)return;
@@ -22,6 +23,7 @@ function frame(content,active='explore',avatarUrl=''){
    <a class="ua-mobile-profile" href="#/account/profile" aria-label="Profil saya">${userAvatar}</a>
    <a class="ua-brand" href="#/account/explore">PLUITS<span>INDONESIA</span></a>
    <nav><a class="${active==='explore'?'active':''}" href="#/account/explore">Beranda</a><a class="${active==='profile'?'active':''}" href="#/account/profile">Profil</a><a class="${active==='addresses'?'active':''}" href="#/account/addresses">Alamat</a></nav>
+   ${contextHeader(accountContext)}
    <button id="ua-logout" class="ua-logout">Keluar</button>
   </header>
   <main class="ua-main">${content}</main>
@@ -112,7 +114,7 @@ function avatar(url,name,size=''){
  return url?`<img class="ua-avatar ${size}" src="${url}" alt="Foto profil">`:`<span class="ua-avatar ua-avatar-fallback ${size}">${esc(initials(name))}</span>`;
 }
 function navProfile(){
- return `<div class="ua-subnav"><a href="#/account/profile">Profil Saya</a><a href="#/account/wallet">Wallet</a><a href="#/account/addresses">Alamat Tersimpan</a><a href="#/account/explore">Explore</a></div>`;
+ return `<div class="ua-subnav"><a href="#/account/profile">Personal</a><a href="#/account/professional">Professional</a><a href="#/account/settings">Pengaturan</a><a href="#/account/wallet">Wallet</a><a href="#/account/addresses">Alamat</a><a href="#/account/explore">Explore</a></div>`;
 }
 const rupiah=v=>new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(Number(v||0));
 async function walletPage(){
@@ -227,13 +229,15 @@ function postCard(p){
  </article>`;
 }
 async function composePage(){
+ const {data:contentPrefs}=await supabase.from('account_content_preferences').select('*').eq('user_id',user.id).maybeSingle();
+ const defaultAudience=accountContext.active==='professional'?(contentPrefs?.professional_default_visibility==='unlisted'?'private':'public'):accountContext.active==='business'?(contentPrefs?.business_default_visibility==='unlisted'?'private':'public'):(contentPrefs?.personal_default_visibility||'public');
  return `<div class="ua-page-heading"><div><span class="ua-eyebrow">CERITAKAN SESUATU</span><h1>Buat postingan</h1><p>Bagikan foto atau video dari perangkat Anda.</p></div><a class="ua-outline" href="#/account/profile">Kembali ke profil</a></div>
  <section class="ua-panel ua-compose-panel"><form id="ua-post-form" class="ua-compose-form">
   <label class="ua-upload-zone" for="ua-post-file"><span class="ua-upload-icon">＋</span><strong>Tambahkan foto atau video (opsional)</strong><small>Anda juga bisa menerbitkan tulisan tanpa gambar atau video · Maksimal 50 MB</small><input id="ua-post-file" type="file" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm"></label>
   <div id="ua-media-preview" class="ua-media-preview"></div>
   <label>Caption<textarea name="caption" rows="4" maxlength="2200" placeholder="Apa yang ingin Anda bagikan?"></textarea></label>
   <label>Tag / kata kunci<input name="tags" placeholder="contoh: proyek, inspirasi, pluits (pisahkan dengan koma)"></label>
-  <label>Siapa yang dapat melihat?<select name="visibility"><option value="public">Publik — dapat tampil di Explore</option><option value="private">Hanya saya</option></select></label>
+  <label>Siapa yang dapat melihat?<select name="visibility"><option value="public" \${defaultAudience==='public'?'selected':''}>Publik — dapat tampil di Explore</option><option value="private" \${defaultAudience==='private'?'selected':''}>Hanya saya</option></select></label>
   <div class="ua-progress" id="ua-upload-progress" hidden><span></span></div>
   <button class="ua-primary" type="submit">Terbitkan postingan</button><p class="ua-form-note" id="ua-compose-note">Postingan baru akan tampil pada profil Anda. Postingan publik dapat muncul di Explore.</p>
  </form></section>`;
@@ -294,10 +298,11 @@ async function mountAccount(section='profile'){
  const {data:{session}}=await supabase.auth.getSession();user=session?.user||null;
  if(!user){authScreen(section==='register'?'register':'login');return;}
  try{
-  await loadProfile();
-  const page=section==='explore'?await feedPage():section==='compose'?await composePage():section==='addresses'?await addressPage():section==='wallet'?await walletPage():section==='post'?await postDetailPage(location.hash.split('/')[3]||''):section==='preview'?await profilePage(true):await profilePage();
+  await loadProfile();accountContext=await loadAccountContext(supabase,user);
+  const page=section==='explore'?await feedPage():section==='compose'?await composePage():section==='addresses'?await addressPage():section==='wallet'?await walletPage():section==='post'?await postDetailPage(location.hash.split('/')[3]||''):section==='preview'?await profilePage(true):section==='professional'?professionalPage(accountContext,profile):section==='professional-create'?professionalFormPage(accountContext,profile):section==='settings'?await accountSettingsPage(supabase,user):await profilePage();
   const headerAvatar=await signed(profile.avatar_path);document.querySelector('#app').innerHTML=frame(page,section==='explore'?'explore':section==='addresses'?'addresses':section==='compose'?'compose':section==='preview'?'profile':'profile',headerAvatar);
   document.querySelector('#ua-logout')?.addEventListener('click',async()=>{await supabase.auth.signOut();user=null;profile=null;authScreen('login');});
+  bindAccountContext({db:supabase,user,ctx:accountContext,profile,refresh:mountAccount});
   bindProfile();bindCompose();bindAddresses();bindWallet();bindPostActions();if(section==='addresses')initMap();
  }catch(err){document.querySelector('#app').innerHTML=frame('<div class="ua-panel ua-error"><h1>Ada kendala memuat akun</h1><p>'+esc(err.message)+'</p><button class="ua-primary" onclick="location.reload()">Coba lagi</button></div>');document.querySelector('#ua-logout')?.addEventListener('click',()=>supabase.auth.signOut());}
 }
