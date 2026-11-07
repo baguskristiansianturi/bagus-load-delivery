@@ -6,7 +6,8 @@ alter table public.user_posts
 alter table public.user_posts
  add column if not exists business_store_id uuid references public.stores(id) on delete set null;
 alter table public.user_posts
- add constraint user_posts_context_target_check check (
+ drop constraint if exists user_posts_context_target_check;
+alter table public.user_posts add constraint user_posts_context_target_check check (
   (profile_context='personal' and professional_profile_id is null and business_store_id is null)
   or (profile_context='professional' and professional_profile_id is not null and business_store_id is null)
   or (profile_context='business' and business_store_id is not null and professional_profile_id is null)
