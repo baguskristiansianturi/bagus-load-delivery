@@ -1,0 +1,331 @@
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import './user-account.css';
+
+const SUPABASE_URL='https://ytndswhqxayqpftszwfh.supabase.co';
+const SUPABASE_KEY='sb_publishable_kOUbKBYg88nXgz8FQRSnvA_k0hvKY65';
+const supabase=createClient(SUPABASE_URL,SUPABASE_KEY);
+const BUCKET='pluits-user-media';
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmtDate=v=>new Date(v).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'});
+const initials=v=>String(v||'P').trim().slice(0,1).toUpperCase();
+let user=null,profile=null,addresses=[],noticeTimer=null,leafletMap=null,leafletMarker=null;
+
+function notify(message,type='success'){
+ const el=document.querySelector('#ua-toast');if(!el)return;
+ el.textContent=message;el.className='ua-toast show '+type;
+ clearTimeout(noticeTimer);noticeTimer=setTimeout(()=>el.classList.remove('show'),3800);
+}
+function frame(content,active='profile'){
+ return `<div class="ua-app">
+  <header class="ua-header"><a class="ua-brand" href="#/account">PLUITS<span>INDONESIA</span></a>
+   <nav><a class="${active==='explore'?'active':''}" href="#/account/explore">Explore</a><a class="${active==='profile'?'active':''}" href="#/account/profile">Profil</a><a class="${active==='addresses'?'active':''}" href="#/account/addresses">Alamat</a></nav>
+   <button id="ua-logout" class="ua-logout">Keluar</button>
+  </header>
+  <main class="ua-main">${content}</main>
+  <div id="ua-toast" class="ua-toast" role="status"></div>
+  <footer class="ua-footer">PLUITS · Identitas pengguna dan aktivitas komunitas</footer>
+ </div>`;
+}
+function authScreen(mode='login'){
+ const signup=mode==='register';
+ document.querySelector('#app').innerHTML=`<div class="ua-app ua-auth-app"><header class="ua-header"><a class="ua-brand" href="#/">PLUITS<span>INDONESIA</span></a><a href="#/" class="ua-logout">Kembali</a></header>
+ <main class="ua-auth-wrap"><section class="ua-auth-copy"><span class="ua-eyebrow">PLUITS COMMUNITY</span><h1>Belanja, berbagi, dan membangun reputasi dalam satu akun.</h1><p>Mulai sebagai pengguna biasa. Lengkapi profil dan jelajahi Pluits tanpa harus membuat toko.</p><div class="ua-auth-points"><span>Profil pribadi dan privasi</span><span>Alamat tersimpan untuk pemesanan</span><span>Foto, video, dan Explore</span></div></section>
+ <form id="ua-auth-form" class="ua-panel ua-auth-form"><span class="ua-eyebrow">${signup?'BUAT AKUN':'SELAMAT DATANG'}</span><h2>${signup?'Daftar Pluits':'Masuk ke Pluits'}</h2>
+ ${signup?'<label>Nama tampilan<input name="full_name" required maxlength="80" autocomplete="name" placeholder="Nama yang ingin ditampilkan"></label>':''}
+ <label>Email<input name="email" type="email" required autocomplete="email" placeholder="nama@email.com"></label>
+ <label>Password<input name="password" type="password" required minlength="8" autocomplete="${signup?'new-password':'current-password'}" placeholder="Minimal 8 karakter"></label>
+ <button class="ua-primary" type="submit">${signup?'Buat akun':'Masuk'}</button><p id="ua-auth-notice" class="ua-form-note"></p>
+ <p class="ua-auth-switch">${signup?'Sudah punya akun?':'Belum punya akun?'} <a href="#/account/${signup?'login':'register'}">${signup?'Masuk':'Daftar'}</a></p>
+ </form></main><footer class="ua-footer">PLUITS INDONESIA</footer></div>`;
+ document.querySelector('#ua-auth-form').addEventListener('submit',async e=>{
+  e.preventDefault();const form=new FormData(e.currentTarget),btn=e.currentTarget.querySelector('button'),note=document.querySelector('#ua-auth-notice');
+  btn.disabled=true;btn.textContent=signup?'Mendaftarkan…':'Memeriksa akun…';note.textContent='';
+  try{
+   const email=String(form.get('email')).trim().toLowerCase(),password=String(form.get('password'));
+   if(signup){
+    const full_name=String(form.get('full_name')).trim();
+    const {data,error}=await supabase.auth.signUp({email,password,options:{data:{full_name}}});if(error)throw error;
+    if(!data.session){note.textContent='Pendaftaran diterima. Periksa email untuk konfirmasi, lalu masuk kembali.';btn.textContent='Email konfirmasi dikirim';return;}
+   }else{const {error}=await supabase.auth.signInWithPassword({email,password});if(error)throw error;}
+   await mountAccount('profile');
+  }catch(err){note.textContent=err.message||'Tidak dapat memproses akun.';btn.disabled=false;btn.textContent=signup?'Buat akun':'Masuk';}
+ });
+}
+async function signed(path){
+ if(!path)return '';
+ const {data,error}=await supabase.storage.from(BUCKET).createSignedUrl(path,3600);
+ return error?'':data.signedUrl;
+}
+async function loadProfile(){
+ const {data,error}=await supabase.from('user_profiles').select('*').eq('id',user.id).maybeSingle();
+ if(error)throw error;
+ if(data){profile=data;return;}
+ const seed='user_'+user.id.replaceAll('-','').slice(0,12);
+ const {data:created,error:insertError}=await supabase.from('user_profiles').insert({id:user.id,display_name:user.user_metadata?.full_name||'Pengguna Pluits',username:seed}).select().single();
+ if(insertError)throw insertError;profile=created;
+}
+async function loadAddresses(){
+ const {data,error}=await supabase.from('user_addresses').select('*').eq('user_id',user.id).order('is_default',{ascending:false}).order('created_at',{ascending:false});
+ if(error)throw error;addresses=data||[];
+}
+function avatar(url,name,size=''){
+ return url?`<img class="ua-avatar ${size}" src="${url}" alt="Foto profil">`:`<span class="ua-avatar ua-avatar-fallback ${size}">${esc(initials(name))}</span>`;
+}
+function navProfile(){
+ return `<div class="ua-subnav"><a href="#/account/profile">Profil Saya</a><a href="#/account/addresses">Alamat Tersimpan</a><a href="#/account/explore">Explore</a></div>`;
+}
+async function profilePage(){
+ const [avatarUrl,coverUrl,postsResult,storesResult]=await Promise.all([
+  signed(profile.avatar_path),signed(profile.cover_path),
+  supabase.from('user_posts').select('*').eq('user_id',user.id).order('created_at',{ascending:false}),
+  supabase.from('stores').select('id,name,username,public_city,public_area,store_status').eq('owner_user_id',user.id)
+ ]);
+ if(postsResult.error)throw postsResult.error;
+ const ownPosts=await hydratePosts(postsResult.data||[]);
+ const stores=storesResult.error?[]:(storesResult.data||[]);
+ return `<div class="ua-page-heading"><div><span class="ua-eyebrow">AKUN PENGGUNA</span><h1>Profil Saya</h1><p>Bangun identitas pribadi dan atur apa yang dapat dilihat orang lain.</p></div><a class="ua-outline" href="#/account/explore">Jelajahi Explore ↗</a></div>
+ ${navProfile()}
+ <section class="ua-profile-card">
+  <div class="ua-cover" ${coverUrl?`style="background-image:url('${coverUrl}')"`:''}><span>FOTO SAMPUL</span><label class="ua-cover-edit">Ganti sampul<input id="ua-cover-file" type="file" accept="image/jpeg,image/png,image/webp"></label></div>
+  <div class="ua-profile-content"><div class="ua-profile-avatar">${avatar(avatarUrl,profile.display_name,'large')}<label class="ua-avatar-edit">＋<input id="ua-avatar-file" type="file" accept="image/jpeg,image/png,image/webp"></label></div>
+   <div class="ua-profile-identity"><h2>${esc(profile.display_name)}</h2><div class="ua-username">@${esc(profile.username)}</div><div class="ua-location">${profile.public_city&&profile.public_province?'⌖ '+esc(profile.public_city)+', '+esc(profile.public_province):'⌖ Tambahkan lokasi publik'}</div><p>${esc(profile.bio||'Bio belum ditambahkan.')}</p></div>
+   <div class="ua-profile-count"><strong>${ownPosts.length}</strong><span>Postingan</span></div>
+  </div>
+ </section>
+ <section class="ua-grid-layout"><div class="ua-panel ua-edit-panel"><div class="ua-section-title"><div><span class="ua-eyebrow">IDENTITAS PUBLIK</span><h2>Edit profil</h2></div></div>
+ <form id="ua-profile-form" class="ua-form-grid">
+  <label>Nama tampilan<input name="display_name" maxlength="80" required value="${esc(profile.display_name)}"><small>Nama tampilan boleh sama dengan pengguna lain.</small></label>
+  <label>Username<input name="username" maxlength="30" pattern="[a-z0-9][a-z0-9._]{2,29}" required value="${esc(profile.username)}"><small>Unik, huruf kecil, angka, titik, atau garis bawah.</small></label>
+  <label class="ua-span-2">Bio<textarea name="bio" rows="3" maxlength="500" placeholder="Ceritakan sedikit tentang diri Anda…">${esc(profile.bio)}</textarea></label>
+  <label>Kota / Kabupaten<input name="public_city" value="${esc(profile.public_city||'')}" placeholder="Contoh: Denpasar"></label>
+  <label>Provinsi<input name="public_province" value="${esc(profile.public_province||'')}" placeholder="Contoh: Bali"></label>
+  <label>Privasi akun<select name="visibility"><option value="public" ${profile.visibility==='public'?'selected':''}>Publik</option><option value="private" ${profile.visibility==='private'?'selected':''}>Privat</option></select><small>Akun privat tidak muncul di Explore pengguna lain.</small></label>
+  <label class="ua-checkbox"><input name="show_store" type="checkbox" ${profile.show_store?'checked':''}> Tampilkan toko saya di profil pribadi</label>
+  <div class="ua-span-2 ua-form-actions"><button class="ua-primary" type="submit">Simpan perubahan</button><span id="ua-profile-note" class="ua-form-note"></span></div>
+ </form></div>
+ <aside class="ua-panel ua-profile-side"><span class="ua-eyebrow">TOKO SAYA</span><h2>Identitas bisnis terpisah</h2>${stores.length?stores.map(s=>`<div class="ua-store-mini"><strong>${esc(s.name)}</strong><small>@${esc(s.username)} · ${esc(s.public_city||'')}</small><span class="ua-status">${esc(s.store_status)}</span></div>`).join(''):'<p>Belum ada toko yang terhubung. Anda dapat memakai Pluits sebagai pengguna biasa terlebih dahulu.</p>'}
+ <p class="ua-muted">Toko hanya ditampilkan di profil jika Anda mengaktifkan pilihan di atas. Branding dan katalog toko tetap dikelola terpisah.</p><a href="#/seller/register" class="ua-outline ua-full">Buat Toko (opsional)</a></aside></section>
+ <section class="ua-panel ua-posts-panel"><div class="ua-section-title"><div><span class="ua-eyebrow">GALERI SAYA</span><h2>Postingan saya</h2></div><a class="ua-outline" href="#/account/explore">Buat postingan</a></div>
+ ${ownPosts.length?postGrid(ownPosts):'<div class="ua-empty"><strong>Belum ada postingan</strong><p>Unggah foto atau video pertama Anda. Setelah berhasil, konten akan tampil di sini dan Explore jika akun Anda publik.</p><a class="ua-primary ua-inline" href="#/account/explore">Mulai berbagi</a></div>'}</section>`;
+}
+function postGrid(posts){
+ return `<div class="ua-post-grid">${posts.map(p=>`<a class="ua-post-thumb" href="#/account/post/${p.id}">${p.media_type==='video'?'<span class="ua-video-mark">▶ VIDEO</span>':''}<img src="${p.mediaUrl}" alt="${esc(p.caption||'Postingan Pluits')}"><span class="ua-thumb-caption">${esc(p.caption||'')}</span></a>`).join('')}</div>`;
+}
+async function hydratePosts(rows){
+ if(!rows.length)return [];
+ const ids=[...new Set(rows.map(p=>p.user_id))],postIds=rows.map(p=>p.id);
+ const [profilesRes,likesRes,commentsRes,savesRes]=await Promise.all([
+  supabase.from('user_profiles').select('id,display_name,username,avatar_path,public_city,public_province,visibility').in('id',ids),
+  supabase.from('post_likes').select('post_id,user_id').in('post_id',postIds),
+  supabase.from('post_comments').select('post_id').in('post_id',postIds),
+  supabase.from('post_saves').select('post_id,user_id').in('post_id',postIds).eq('user_id',user.id)
+ ]);
+ const pmap=new Map((profilesRes.data||[]).map(x=>[x.id,x]));
+ const likeRows=likesRes.data||[],commentRows=commentsRes.data||[],saved=new Set((savesRes.data||[]).map(x=>x.post_id));
+ return Promise.all(rows.map(async p=>{
+  const owner=pmap.get(p.user_id)||{display_name:'Pengguna Pluits',username:'pengguna',visibility:'private'};
+  return {...p,owner,mediaUrl:await signed(p.media_path),avatarUrl:await signed(owner.avatar_path),likes:likeRows.filter(x=>x.post_id===p.id).length,liked:likeRows.some(x=>x.post_id===p.id&&x.user_id===user.id),comments:commentRows.filter(x=>x.post_id===p.id).length,saved:saved.has(p.id)};
+ }));
+}
+async function feedPage(){
+ const {data,error}=await supabase.from('user_posts').select('*').order('created_at',{ascending:false}).limit(60);
+ if(error)throw error;
+ const posts=await hydratePosts(data||[]);
+ const sorted=posts.sort((a,b)=>(b.likes*3+b.comments)-(a.likes*3+a.comments)||new Date(b.created_at)-new Date(a.created_at));
+ return `<div class="ua-page-heading"><div><span class="ua-eyebrow">TEMUKAN KOMUNITAS</span><h1>Explore</h1><p>Foto dan video dari komunitas Pluits, dalam satu aliran.</p></div><a class="ua-primary ua-inline" href="#/account/compose">＋ Buat postingan</a></div>
+ <div class="ua-explore-note">Konten baru juga mendapat kesempatan ditemukan. Urutan Explore mempertimbangkan interaksi nyata dan kebaruan, bukan angka viral buatan.</div>
+ <section class="ua-feed">${posts.length?posts.map(postCard).join(''):'<div class="ua-panel ua-empty"><strong>Explore masih menunggu cerita pertama.</strong><p>Jadilah pengguna pertama yang mengunggah foto atau video. Konten publik Anda akan muncul di sini setelah tersimpan.</p><a class="ua-primary ua-inline" href="#/account/compose">Unggah foto atau video</a></div>'}</section>`;
+}
+function postCard(p){
+ return `<article class="ua-post-card" data-post-id="${p.id}"><div class="ua-post-head">${avatar(p.avatarUrl,p.owner.display_name)}<div><strong>${esc(p.owner.display_name)}</strong><small>@${esc(p.owner.username)} ${p.owner.public_city&&p.owner.public_province?'· ⌖ '+esc(p.owner.public_city)+', '+esc(p.owner.public_province):''}</small></div><time>${fmtDate(p.created_at)}</time></div>
+ <p class="ua-caption">${esc(p.caption)}</p>${p.tags?.length?'<div class="ua-tags">'+p.tags.map(t=>'<span>#'+esc(t)+'</span>').join(' ')+'</div>':''}
+ <div class="ua-media">${p.media_type==='video'?'<video src="'+p.mediaUrl+'" controls playsinline preload="metadata"></video>':'<img src="'+p.mediaUrl+'" alt="'+esc(p.caption||'Foto postingan')+'">'}</div>
+ <div class="ua-post-actions"><button data-action="like" class="${p.liked?'is-liked':''}">♥ <span>${p.liked?'Disukai':'Suka'}</span> <b>${p.likes}</b></button><button data-action="comments">◯ Komentar <b>${p.comments}</b></button><button data-action="share">↗ Bagikan</button><button data-action="save" class="${p.saved?'is-saved':''}">▱ ${p.saved?'Tersimpan':'Tandai'}</button><button data-action="tag">＠ Tag</button></div><div class="ua-comments" hidden></div>
+ </article>`;
+}
+async function composePage(){
+ return `<div class="ua-page-heading"><div><span class="ua-eyebrow">CERITAKAN SESUATU</span><h1>Buat postingan</h1><p>Bagikan foto atau video dari perangkat Anda.</p></div><a class="ua-outline" href="#/account/profile">Kembali ke profil</a></div>
+ <section class="ua-panel ua-compose-panel"><form id="ua-post-form" class="ua-compose-form">
+  <label class="ua-upload-zone" for="ua-post-file"><span class="ua-upload-icon">＋</span><strong>Pilih foto atau video</strong><small>JPG, PNG, WebP, GIF, MP4 atau WebM · Maksimal 50 MB</small><input id="ua-post-file" type="file" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm" required></label>
+  <div id="ua-media-preview" class="ua-media-preview"></div>
+  <label>Caption<textarea name="caption" rows="4" maxlength="2200" placeholder="Apa yang ingin Anda bagikan?"></textarea></label>
+  <label>Tag / kata kunci<input name="tags" placeholder="contoh: proyek, inspirasi, pluits (pisahkan dengan koma)"></label>
+  <label>Siapa yang dapat melihat?<select name="visibility"><option value="public">Publik — dapat tampil di Explore</option><option value="private">Hanya saya</option></select></label>
+  <div class="ua-progress" id="ua-upload-progress" hidden><span></span></div>
+  <button class="ua-primary" type="submit">Terbitkan postingan</button><p class="ua-form-note" id="ua-compose-note">Postingan baru akan tampil pada profil Anda. Postingan publik dapat muncul di Explore.</p>
+ </form></section>`;
+}
+async function addressPage(){
+ await loadAddresses();
+ return `<div class="ua-page-heading"><div><span class="ua-eyebrow">DATA PENGIRIMAN PRIVAT</span><h1>Alamat tersimpan</h1><p>Alamat lengkap dan titik peta hanya untuk akun Anda dan kebutuhan pemenuhan pesanan.</p></div></div>
+ ${navProfile()}
+ <section class="ua-grid-layout ua-address-layout"><div class="ua-panel"><div class="ua-section-title"><div><span class="ua-eyebrow">ALAMAT SAYA</span><h2>${addresses.length} alamat tersimpan</h2></div></div>
+ ${addresses.length?addresses.map(a=>`<article class="ua-address-card"><div><strong>${esc(a.label)} ${a.is_default?'<span class="ua-default">UTAMA</span>':''}</strong><p>${esc(a.recipient_name)} · ${esc(a.phone)}</p><p>${esc(a.address_line)}, ${esc(a.village||'')}, ${esc(a.district)}, ${esc(a.city)}, ${esc(a.province)} ${esc(a.postal_code)}</p><small>${a.latitude!==null&&a.longitude!==null?'⌖ Titik peta tersimpan':'Titik peta belum ditentukan'}</small></div><div class="ua-address-actions"><button data-edit-address="${a.id}">Edit</button><button data-delete-address="${a.id}">Hapus</button></div></article>`).join(''):'<div class="ua-empty"><strong>Belum ada alamat</strong><p>Tambahkan alamat rumah, kantor, atau lokasi proyek agar pemesanan berikutnya lebih mudah.</p></div>'}
+ </div><div class="ua-panel"><span class="ua-eyebrow">TAMBAH LOKASI</span><h2 id="ua-address-form-title">Tambah alamat</h2>
+ <form id="ua-address-form" class="ua-address-form">
+ <input type="hidden" name="id">
+ <label>Label alamat<input name="label" required value="Rumah" placeholder="Rumah, kantor, proyek"></label>
+ <label>Nama penerima<input name="recipient_name" required></label><label>Nomor telepon<input name="phone" type="tel" required></label>
+ <label>Provinsi<input name="province" required placeholder="Bali"></label><label>Kota / Kabupaten<input name="city" required placeholder="Denpasar"></label>
+ <label>Kecamatan<input name="district" required></label><label>Kelurahan / Desa<input name="village"></label>
+ <label>Kode pos<input name="postal_code" inputmode="numeric" pattern="[0-9]{5}" maxlength="5" required placeholder="802xx"></label>
+ <label>Alamat lengkap<textarea name="address_line" rows="3" required placeholder="Nama jalan, nomor, banjar, patokan…"></textarea></label>
+ <label>Catatan kurir (opsional)<input name="delivery_note" placeholder="Petunjuk tambahan"></label>
+ <div class="ua-map-head"><strong>Titik peta</strong><button type="button" id="ua-use-location" class="ua-outline">Gunakan lokasi saya</button></div>
+ <div id="ua-address-map" class="ua-map"></div>
+ <div class="ua-coordinates"><label>Latitude<input name="latitude" id="ua-lat" inputmode="decimal" placeholder="-8.65"></label><label>Longitude<input name="longitude" id="ua-lng" inputmode="decimal" placeholder="115.21"></label></div>
+ <small class="ua-muted">Ketuk peta untuk memasang pin. Koordinat tidak ditampilkan di profil publik.</small>
+ <label class="ua-checkbox"><input type="checkbox" name="is_default"> Jadikan alamat utama</label>
+ <button class="ua-primary" type="submit">Simpan alamat</button><button class="ua-outline ua-full" type="button" id="ua-reset-address">Kosongkan formulir</button><p class="ua-form-note" id="ua-address-note"></p>
+ </form></div></section>`;
+}
+async function loadLeaflet(){
+ if(window.L)return;
+ await new Promise((resolve,reject)=>{
+  if(!document.querySelector('#ua-leaflet-css')){const l=document.createElement('link');l.id='ua-leaflet-css';l.rel='stylesheet';l.href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';document.head.appendChild(l);}
+  const s=document.createElement('script');s.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';s.onload=resolve;s.onerror=reject;document.head.appendChild(s);
+ });
+}
+async function initMap(){
+ const el=document.querySelector('#ua-address-map');if(!el)return;
+ try{
+  await loadLeaflet();if(!document.querySelector('#ua-address-map'))return;
+  leafletMap=window.L.map(el).setView([-8.65,115.2167],11);
+  window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(leafletMap);
+  const latInput=document.querySelector('#ua-lat'),lngInput=document.querySelector('#ua-lng');
+  const setPin=(lat,lng)=>{latInput.value=Number(lat).toFixed(6);lngInput.value=Number(lng).toFixed(6);if(leafletMarker)leafletMarker.setLatLng([lat,lng]);else leafletMarker=window.L.marker([lat,lng]).addTo(leafletMap);};
+  leafletMap.on('click',e=>setPin(e.latlng.lat,e.latlng.lng));
+  if(latInput.value&&lngInput.value){const lat=Number(latInput.value),lng=Number(lngInput.value);leafletMap.setView([lat,lng],16);setPin(lat,lng);}
+  latInput.addEventListener('change',()=>{if(latInput.value&&lngInput.value){const ll=[Number(latInput.value),Number(lngInput.value)];setPin(...ll);leafletMap.setView(ll,16);}});
+  lngInput.addEventListener('change',()=>{if(latInput.value&&lngInput.value){const ll=[Number(latInput.value),Number(lngInput.value)];setPin(...ll);leafletMap.setView(ll,16);}});
+  setTimeout(()=>leafletMap.invalidateSize(),250);
+ }catch{el.innerHTML='<p class="ua-muted">Peta tidak dapat dimuat. Anda tetap dapat memasukkan koordinat secara manual atau memakai lokasi perangkat.</p>';}
+}
+async function postDetailPage(id){
+ const {data,error}=await supabase.from('user_posts').select('*').eq('id',id).single();if(error)throw error;
+ const [p]=await hydratePosts([data]);if(!p)throw new Error('Postingan tidak tersedia.');
+ return `<div class="ua-page-heading"><div><span class="ua-eyebrow">POSTINGAN</span><h1>Detail postingan</h1></div><a class="ua-outline" href="#/account/explore">Kembali ke Explore</a></div>${postCard(p)}`;
+}
+async function mountAccount(section='profile'){
+ const {data:{session}}=await supabase.auth.getSession();user=session?.user||null;
+ if(!user){authScreen(section==='register'?'register':'login');return;}
+ try{
+  await loadProfile();
+  const page=section==='explore'?await feedPage():section==='compose'?await composePage():section==='addresses'?await addressPage():section==='post'?await postDetailPage(location.hash.split('/')[3]||''):await profilePage();
+  document.querySelector('#app').innerHTML=frame(page,section==='explore'?'explore':section==='addresses'?'addresses':'profile');
+  document.querySelector('#ua-logout')?.addEventListener('click',async()=>{await supabase.auth.signOut();user=null;profile=null;authScreen('login');});
+  bindProfile();bindCompose();bindAddresses();bindPostActions();if(section==='addresses')initMap();
+ }catch(err){document.querySelector('#app').innerHTML=frame('<div class="ua-panel ua-error"><h1>Ada kendala memuat akun</h1><p>'+esc(err.message)+'</p><button class="ua-primary" onclick="location.reload()">Coba lagi</button></div>');document.querySelector('#ua-logout')?.addEventListener('click',()=>supabase.auth.signOut());}
+}
+function bindProfile(){
+ const form=document.querySelector('#ua-profile-form');
+ form?.addEventListener('submit',async e=>{
+  e.preventDefault();const f=new FormData(form),note=document.querySelector('#ua-profile-note');
+  const username=String(f.get('username')).trim().toLowerCase();
+  if(!/^[a-z0-9][a-z0-9._]{2,29}$/.test(username)){note.textContent='Username 3–30 karakter, huruf kecil, angka, titik, atau garis bawah.';return;}
+  const payload={id:user.id,display_name:String(f.get('display_name')).trim(),username,bio:String(f.get('bio')||'').trim(),public_city:String(f.get('public_city')||'').trim()||null,public_province:String(f.get('public_province')||'').trim()||null,visibility:String(f.get('visibility')),show_store:f.get('show_store')==='on',avatar_path:profile.avatar_path,cover_path:profile.cover_path,updated_at:new Date().toISOString()};
+  const btn=form.querySelector('button');btn.disabled=true;note.textContent='Menyimpan…';
+  const {data,error}=await supabase.from('user_profiles').upsert(payload).select().single();
+  btn.disabled=false;if(error){note.textContent=error.code==='23505'?'Username sudah digunakan. Pilih username lain.':error.message;return;}
+  profile=data;note.textContent='Profil berhasil disimpan.';notify('Profil diperbarui.');setTimeout(()=>mountAccount('profile'),450);
+ });
+ bindImageUpload('ua-avatar-file','avatar_path','avatar');bindImageUpload('ua-cover-file','cover_path','cover');
+}
+function bindImageUpload(inputId,column,label){
+ const input=document.getElementById(inputId);input?.addEventListener('change',async()=>{
+  const file=input.files?.[0];if(!file)return;
+  if(file.size>8*1024*1024){notify('Foto maksimal 8 MB.', 'error');return;}
+  if(!['image/jpeg','image/png','image/webp'].includes(file.type)){notify('Gunakan JPG, PNG, atau WebP.','error');return;}
+  try{notify('Mengunggah '+label+'…','info');const ext=file.name.split('.').pop().toLowerCase(),path=user.id+'/'+crypto.randomUUID()+'.'+ext;
+   const {error}=await supabase.storage.from(BUCKET).upload(path,file,{contentType:file.type,upsert:false});if(error)throw error;
+   const {data,error:updateError}=await supabase.from('user_profiles').update({[column]:path,updated_at:new Date().toISOString()}).eq('id',user.id).select().single();if(updateError)throw updateError;
+   profile=data;notify(label==='avatar'?'Foto profil diperbarui.':'Foto sampul diperbarui.');await mountAccount('profile');
+  }catch(err){notify(err.message||'Upload gagal.','error');}
+ });
+}
+function bindCompose(){
+ const fileInput=document.querySelector('#ua-post-file'),preview=document.querySelector('#ua-media-preview');
+ fileInput?.addEventListener('change',()=>{
+  const f=fileInput.files?.[0];if(!f)return;preview.innerHTML='';
+  const url=URL.createObjectURL(f);preview.innerHTML=f.type.startsWith('video/')?'<video controls playsinline src="'+url+'"></video>':'<img src="'+url+'" alt="Pratinjau foto">';
+ });
+ document.querySelector('#ua-post-form')?.addEventListener('submit',async e=>{
+  e.preventDefault();const form=e.currentTarget,f=form.querySelector('#ua-post-file'),file=f.files?.[0],note=document.querySelector('#ua-compose-note'),btn=form.querySelector('button[type=submit]'),progress=document.querySelector('#ua-upload-progress');
+  if(!file)return;
+  const isVideo=file.type.startsWith('video/'),allowed=isVideo?['video/mp4','video/webm']:['image/jpeg','image/png','image/webp','image/gif'];
+  if(!allowed.includes(file.type)){note.textContent='Format file tidak didukung.';return;}
+  if(file.size>50*1024*1024){note.textContent='Ukuran file maksimal 50 MB.';return;}
+  btn.disabled=true;btn.textContent='Mengunggah…';progress.hidden=false;progress.querySelector('span').style.width='35%';
+  try{
+   const ext=file.name.split('.').pop().toLowerCase(),path=user.id+'/'+crypto.randomUUID()+'.'+ext;
+   const {error:uploadError}=await supabase.storage.from(BUCKET).upload(path,file,{contentType:file.type,upsert:false});if(uploadError)throw uploadError;
+   progress.querySelector('span').style.width='75%';
+   const data=new FormData(form),tags=String(data.get('tags')||'').split(',').map(x=>x.trim().replace(/^#/,'').toLowerCase()).filter(Boolean).slice(0,12);
+   const {error:insertError}=await supabase.from('user_posts').insert({user_id:user.id,caption:String(data.get('caption')||'').trim(),tags,media_path:path,media_type:isVideo?'video':'image',visibility:String(data.get('visibility'))});if(insertError)throw insertError;
+   progress.querySelector('span').style.width='100%';notify('Postingan berhasil diterbitkan.');await mountAccount('profile');
+  }catch(err){note.textContent=err.message||'Tidak dapat mengunggah postingan.';btn.disabled=false;btn.textContent='Coba lagi';progress.hidden=true;}
+ });
+}
+function bindAddresses(){
+ const form=document.querySelector('#ua-address-form');if(!form)return;
+ form.addEventListener('submit',async e=>{
+  e.preventDefault();const f=new FormData(form),id=String(f.get('id')||''),note=document.querySelector('#ua-address-note');
+  const payload={user_id:user.id,label:String(f.get('label')).trim(),recipient_name:String(f.get('recipient_name')).trim(),phone:String(f.get('phone')).trim(),province:String(f.get('province')).trim(),city:String(f.get('city')).trim(),district:String(f.get('district')).trim(),village:String(f.get('village')||'').trim()||null,postal_code:String(f.get('postal_code')).trim(),address_line:String(f.get('address_line')).trim(),delivery_note:String(f.get('delivery_note')||'').trim()||null,latitude:f.get('latitude')?Number(f.get('latitude')):null,longitude:f.get('longitude')?Number(f.get('longitude')):null,is_default:f.get('is_default')==='on'};
+  if((payload.latitude===null)!==(payload.longitude===null)){note.textContent='Isi latitude dan longitude bersama-sama.';return;}
+  const btn=form.querySelector('button[type=submit]');btn.disabled=true;note.textContent='Menyimpan alamat…';
+  try{
+   if(payload.is_default)await supabase.from('user_addresses').update({is_default:false}).eq('user_id',user.id);
+   const result=id?await supabase.from('user_addresses').update(payload).eq('id',id).select().single():await supabase.from('user_addresses').insert(payload).select().single();
+   if(result.error)throw result.error;notify('Alamat berhasil disimpan.');await mountAccount('addresses');
+  }catch(err){note.textContent=err.message;btn.disabled=false;}
+ });
+ document.querySelector('#ua-reset-address')?.addEventListener('click',()=>{form.reset();form.elements.id.value='';document.querySelector('#ua-address-form-title').textContent='Tambah alamat';});
+ document.querySelector('#ua-use-location')?.addEventListener('click',()=>{
+  if(!navigator.geolocation){notify('Browser tidak mendukung lokasi perangkat.','error');return;}
+  notify('Meminta izin lokasi perangkat…','info');
+  navigator.geolocation.getCurrentPosition(pos=>{const lat=pos.coords.latitude,lng=pos.coords.longitude;form.elements.latitude.value=lat.toFixed(6);form.elements.longitude.value=lng.toFixed(6);if(leafletMap){leafletMap.setView([lat,lng],17);if(leafletMarker)leafletMarker.setLatLng([lat,lng]);else leafletMarker=window.L.marker([lat,lng]).addTo(leafletMap);}notify('Titik lokasi berhasil diambil. Periksa pin sebelum menyimpan.');},err=>notify(err.message,'error'),{enableHighAccuracy:true,timeout:12000});
+ });
+ document.querySelectorAll('[data-edit-address]').forEach(btn=>btn.addEventListener('click',()=>{
+  const a=addresses.find(x=>x.id===btn.dataset.editAddress);if(!a)return;
+  Object.entries(a).forEach(([k,v])=>{if(form.elements[k]){if(form.elements[k].type==='checkbox')form.elements[k].checked=!!v;else form.elements[k].value=v??'';}});
+  document.querySelector('#ua-address-form-title').textContent='Edit alamat';document.querySelector('#ua-address-form').scrollIntoView({behavior:'smooth',block:'start'});
+  if(leafletMap&&a.latitude!==null&&a.longitude!==null){leafletMap.setView([a.latitude,a.longitude],16);if(leafletMarker)leafletMarker.setLatLng([a.latitude,a.longitude]);else leafletMarker=window.L.marker([a.latitude,a.longitude]).addTo(leafletMap);}
+ }));
+ document.querySelectorAll('[data-delete-address]').forEach(btn=>btn.addEventListener('click',async()=>{
+  if(!confirm('Hapus alamat ini?'))return;const {error}=await supabase.from('user_addresses').delete().eq('id',btn.dataset.deleteAddress);if(error)notify(error.message,'error');else{notify('Alamat dihapus.');await mountAccount('addresses');}
+ }));
+}
+function bindPostActions(){
+ document.querySelectorAll('.ua-post-card').forEach(card=>{
+  const id=card.dataset.postId;
+  card.querySelector('[data-action="like"]')?.addEventListener('click',async()=>{
+   const p=await supabase.from('post_likes').select('post_id').eq('post_id',id).eq('user_id',user.id).maybeSingle();
+   const result=p.data?await supabase.from('post_likes').delete().eq('post_id',id).eq('user_id',user.id):await supabase.from('post_likes').insert({post_id:id,user_id:user.id});
+   if(result.error)notify(result.error.message,'error');else await mountAccount(location.hash.includes('/explore')?'explore':location.hash.split('/')[3]==='post'?'post':'profile');
+  });
+  card.querySelector('[data-action="save"]')?.addEventListener('click',async()=>{
+   const p=await supabase.from('post_saves').select('post_id').eq('post_id',id).eq('user_id',user.id).maybeSingle();
+   const result=p.data?await supabase.from('post_saves').delete().eq('post_id',id).eq('user_id',user.id):await supabase.from('post_saves').insert({post_id:id,user_id:user.id});
+   if(result.error)notify(result.error.message,'error');else{notify(p.data?'Tanda disimpan dibatalkan.':'Postingan disimpan.');await mountAccount('explore');}
+  });
+  card.querySelector('[data-action="share"]')?.addEventListener('click',async()=>{
+   const url=location.origin+location.pathname+'#/account/post/'+id;
+   try{if(navigator.share)await navigator.share({title:'Postingan Pluits',url});else{await navigator.clipboard.writeText(url);notify('Tautan disalin.');}}catch{}
+  });
+  card.querySelector('[data-action="tag"]')?.addEventListener('click',()=>notify('Tag/kata kunci postingan: '+(card.querySelector('.ua-tags')?.innerText||'Belum ada tag.')));
+  card.querySelector('[data-action="comments"]')?.addEventListener('click',async()=>{
+   const box=card.querySelector('.ua-comments');box.hidden=!box.hidden;if(!box.hidden)await loadComments(id,box);
+  });
+ });
+}
+async function loadComments(postId,box){
+ const {data,error}=await supabase.from('post_comments').select('*').eq('post_id',postId).order('created_at',{ascending:true});
+ if(error){box.innerHTML='<p class="ua-muted">'+esc(error.message)+'</p>';return;}
+ const comments=data||[],ids=[...new Set(comments.map(c=>c.user_id))];
+ const pr=ids.length?await supabase.from('user_profiles').select('id,display_name,username').in('id',ids):{data:[]};
+ const map=new Map((pr.data||[]).map(p=>[p.id,p]));
+ box.innerHTML=(comments.length?comments.map(c=>{const p=map.get(c.user_id);return '<p><strong>'+esc(p?.display_name||'Pengguna Pluits')+'</strong> '+esc(c.body)+'<small>'+fmtDate(c.created_at)+'</small></p>';}).join(''):'<p class="ua-muted">Belum ada komentar.</p>')+
+ '<form class="ua-comment-form"><input name="body" maxlength="1200" required placeholder="Tulis komentar…"><button>kirim</button></form>';
+ box.querySelector('form').addEventListener('submit',async e=>{e.preventDefault();const body=new FormData(e.currentTarget).get('body');const {error}=await supabase.from('post_comments').insert({post_id:postId,user_id:user.id,body:String(body).trim()});if(error)notify(error.message,'error');else await loadComments(postId,box);});
+}
+export function mountUserAccount(section='profile'){mountAccount(section);}
