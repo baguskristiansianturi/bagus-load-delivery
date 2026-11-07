@@ -45,6 +45,6 @@ export function route(homeFn=home){
  else if(r==='track'||r==='track-order')h=tracking(v||p.get('id')||'');
  else h='<div class="empty-state large"><h1>Halaman tidak ditemukan</h1><p>Rute belum tersedia pada frontend ini.</p><a class="primary-button" href="#/">Kembali ke beranda</a></div>';
  document.querySelector('#app').innerHTML=h;
- updateSEO({title:document.querySelector('h1')?.textContent?document.querySelector('h1').textContent+' — Bali Bagus':'Bali Bagus Load & Delivery',description:'Material konstruksi, supplier, procurement dan delivery untuk kebutuhan proyek.',path:path});
+ updateSEO({title:document.querySelector('h1')?.textContent?document.querySelector('h1').textContent+' — Pluits Indonesia':'Pluits — Pluits Indonesia',description:'Jelajahi material konstruksi, toko, supplier, jasa, dan layanan pengiriman di Pluits Indonesia. Tidak perlu login untuk mulai menjelajah.',path:path});
  window.scrollTo(0,0);
 }
