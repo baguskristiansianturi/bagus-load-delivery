@@ -1,5 +1,5 @@
 # MASTER MODEL BISNIS — BAGUS LOAD & DELIVERY
-**Versi:** 0.5 | **Pembaruan:** 7 November 2026
+**Versi:** 0.6 | **Pembaruan:** 7 November 2026
 **Status:** Dokumen induk model bisnis; acuan sebelum penyusunan paket dan spesifikasi teknis.
 
 > Dokumen ini menjadi sumber acuan utama. Hal yang belum diputuskan ditandai sebagai terbuka dan bukan kebijakan final.
@@ -103,6 +103,27 @@ Data rekening penerima dan dokumen legal/foto berkas disiapkan sebagai bagian da
 ### 5.11 Perlindungan pengaturan toko
 Perubahan profil, alamat, rekening, jam operasional, zona, harga, stok, diskon, dan aturan pesanan hanya boleh dilakukan oleh pemilik atau staf toko yang diberi hak. Sistem menyediakan peran/izin, konfirmasi untuk perubahan sensitif, riwayat perubahan (siapa, kapan, data sebelum/sesudah), serta notifikasi untuk perubahan penting. Operator platform tidak boleh diam-diam mengubah data komersial toko; koreksi oleh admin harus memiliki alasan dan jejak audit. Kredensial dan dokumen sensitif tidak ditampilkan ke publik.
 
+### 5.12 Struktur owner dan staff toko
+Akun yang mendaftarkan toko otomatis menjadi **owner utama** toko tersebut. Akun owner adalah identitas pribadi, bukan akun bersama. Owner dapat mengundang staff menggunakan akun masing-masing sehingga staff dapat login dari komputer/perangkatnya sendiri tanpa memakai kata sandi owner. Setiap staff terikat pada toko tertentu dan memiliki jabatan serta izin yang ditentukan owner. Satu pengguna dapat menjadi staff di satu toko dan owner di toko lain.
+
+Owner memegang kendali tertinggi: kepemilikan toko, undangan/pencabutan akses, perubahan rekening penerima, penarikan/pencairan dana, pengaturan keamanan dan perubahan sensitif lain. Owner dapat mengerjakan pengelolaan dari handphone. Staff dapat diberi izin operasional seperti katalog, stok, harga, diskon, pemrosesan pesanan, layanan pelanggan, pengaturan jam/zona, dan analisis penjualan. Hak accounting dapat mencakup pencatatan biaya, rekonsiliasi, membaca laporan, dan mengunduh PDF, tetapi tidak otomatis mencakup pengubahan rekening atau penarikan dana. Izin harus dapat dipisahkan per tindakan; jabatan bukan satu-satunya dasar otorisasi.
+
+Sistem harus menolak tindakan yang tidak diizinkan di backend, bukan hanya menyembunyikan tombol di UI. Perubahan rekening, penerima dana, penarikan, transfer kepemilikan, penunjukan owner, dan perubahan keamanan kritis memerlukan autentikasi ulang owner, notifikasi, serta catatan audit. Staff tidak boleh mengubah dirinya menjadi owner atau memberi izin owner kepada dirinya sendiri. Penggunaan akun bersama dilarang. Rincian MFA, masa tunggu perubahan rekening, dan verifikasi transaksi bernilai tinggi masih perlu ditetapkan sebelum uang sungguhan diproses.
+
+### 5.13 Username toko, URL publik, dan website katalog
+Setiap toko mempunyai **nama tampilan** dan **username/slug publik** yang berbeda. Nama tampilan toko boleh sama dengan toko lain; username harus unik secara global, tidak peka huruf besar-kecil, memiliki aturan karakter dan panjang, serta tidak dapat dipakai toko lain setelah terdaftar. Username menjadi alamat permanen halaman toko, misalnya `https://domain-platform/t/username-toko` (format final mengikuti domain platform yang dipilih). Owner dapat membagikan URL tersebut ke Instagram, Facebook, WhatsApp, dan kanal lain.
+
+Setiap toko otomatis memperoleh website katalog publik yang responsif pada URL tersebut. Halaman menampilkan identitas toko, katalog dan kategori, detail produk/varian, harga yang boleh dipublikasikan, status ketersediaan, jam layanan, area layanan, serta tombol kontak/aksi sesuai kebijakan platform. Website tidak menampilkan alamat privat, koordinat presisi, data staff, data rekening, laporan internal, atau informasi pelanggan. Produk hanya tampil jika toko aktif, produk dipublikasikan, dan varian memenuhi aturan ketersediaan. Website katalog adalah manfaat utama pendaftaran toko, bukan proyek website terpisah untuk setiap penjual.
+
+Username harus dapat diubah melalui proses aman dengan redirect dari URL lama agar tautan media sosial lama tidak langsung mati. Username lama sebaiknya masuk masa karantina dan tidak langsung diberikan kepada toko lain. Domain khusus milik toko dapat dipertimbangkan sebagai fitur lanjutan; bukan syarat tahap pertama.
+
+### 5.14 Keuangan, histori permanen, dan laporan PDF
+Setiap toko mempunyai catatan keuangan dan histori operasional yang terpisah. Sistem menyimpan transaksi, item pesanan, harga pada saat transaksi, diskon, biaya, pajak bila berlaku, pembayaran, refund, penyesuaian, dan pencairan sebagai catatan historis yang tidak ditimpa ketika harga produk berubah. Perubahan harga hanya berlaku untuk transaksi berikutnya; histori lama tetap menggunakan snapshot harga dan rincian saat pesanan dibuat.
+
+Data penjualan tidak dihapus atau diganti setiap pergantian tahun. Tahun berjalan dan tahun-tahun sebelumnya tetap tersedia untuk pencarian, filter, analisis, dan audit. Laporan dapat dipilih berdasarkan bulan, rentang tiga bulan, delapan bulan, satu tahun, atau rentang tanggal khusus, serta diekspor menjadi PDF. Laporan dapat memuat ringkasan penjualan, jumlah pesanan, produk terjual, pembatalan/refund, diskon, biaya, dan nilai bersih sesuai definisi akuntansi yang disepakati. Hak melihat, mencatat, mengubah, dan mengekspor laporan ditetapkan terpisah; PDF untuk laporan internal tidak otomatis berarti staff boleh mencairkan dana.
+
+Catatan keuangan harus memakai ledger/riwayat append-only: koreksi dibuat sebagai entri pembalik atau penyesuaian yang merujuk catatan asal, bukan menghapus atau menulis ulang transaksi lama. Laporan lama dapat dibuat ulang dari data sumber yang sama dan periode yang sama. Retensi, backup, akses, serta format ekspor harus dirancang agar data lintas tahun tetap dapat diakses. Ketentuan pajak, pembukuan formal, dan masa retensi legal perlu dikonfirmasi sebelum sistem dipakai sebagai pembukuan resmi.
+
 ## 6. Mesin perbandingan harga
 Tujuannya menemukan penawaran paling efisien sesuai kebutuhan, bukan sekadar harga barang terendah.
 
@@ -135,6 +156,13 @@ Checkout harus memvalidasi stok, variasi, minimum order, harga online, zona laya
 
 ### 7.2 Pengukuran kinerja penjual dan batas tanggung jawab platform
 Rating dan ulasan utama melekat pada toko/penjual dan transaksi, bukan pada platform sebagai penyedia perangkat lunak. Platform tetap bertanggung jawab atas kualitas sistem, keamanan, keakuratan tampilan, dukungan, dan penanganan laporan. Kinerja toko diukur terpisah dari rating pembeli, misalnya tingkat penerimaan pesanan, waktu persiapan, ketepatan pickup/pengiriman, pembatalan oleh toko, dan respons. Data kinerja harus transparan dan memiliki konteks agar toko tidak dihukum atas kejadian di luar kendalinya.
+
+### 7.3 Operasional staff, keuangan, dan pelaporan
+Dashboard toko harus mendukung beberapa pengguna dan sesi perangkat secara bersamaan. Owner mengelola akses dari handphone; staff dapat bekerja dari komputer masing-masing dengan akun personal. Menu dan tindakan yang tersedia menyesuaikan izin. Owner dapat melihat aktivitas staff, mengundang, menonaktifkan, dan mencabut akses kapan saja. Aktivitas penting tercatat dengan pelaku, waktu, perangkat/sesi bila tersedia, serta data sebelum/sesudah.
+
+Staff operasional dapat mengelola stok, produk, harga, diskon, pesanan, dan analisis sesuai izin. Staff accounting dapat membaca dan mengekspor laporan, serta melakukan pencatatan biaya/rekonsiliasi jika diberi hak. Rekening bank, metode pencairan, penerima dana, penarikan, dan perubahan kepemilikan tetap khusus owner. Sistem tidak boleh menganggap semua staff accounting berhak memindahkan uang.
+
+Laporan harus mendukung filter periode bulanan, triwulan/3 bulan, 8 bulan, tahunan, dan rentang kustom. Data lintas tahun disimpan terus-menerus; pergantian tahun hanya membuat periode laporan baru, bukan menghapus atau mengosongkan histori. Ekspor PDF harus menyertakan identitas toko, periode, waktu pembuatan, filter, ringkasan dan rincian yang relevan, serta penanda bahwa laporan berasal dari sistem. Angka pada PDF harus bersumber dari query laporan yang sama dengan dashboard.
 
 ## 8. Fase 3 — Uji kebutuhan Bagus Load & Delivery
 Setiap toko pada dasarnya dapat memiliki kendaraan dan mengatur pengirimannya sendiri. Karena itu, pengiriman toko sendiri adalah alur normal marketplace, bukan alasan untuk memaksa semua pesanan memakai armada platform.
@@ -216,6 +244,11 @@ Peluncuran dan pendaftaran toko pada tahap uji coba dibatasi ke Bali. Pembatasan
 - Model pendapatan, komisi, langganan, dan layanan berbayar.
 - Aturan pembatalan, refund, garansi, sengketa, dan tanggung jawab pengiriman.
 - Struktur paket, batas fitur, dan harga.
+- Format final URL toko dan domain platform; kebijakan perubahan username, redirect, dan masa karantina username lama.
+- Matriks izin rinci untuk owner, manager, catalog, inventory, order, accounting, customer service, dan staff lainnya.
+- Mekanisme MFA/autentikasi ulang, notifikasi keamanan, masa tunggu perubahan rekening, serta batas verifikasi pencairan.
+- Definisi laporan keuangan/penjualan, metode pengakuan penjualan, biaya, pajak, refund, dan format PDF.
+- Kebijakan retensi, backup, pemulihan, dan akses histori lintas tahun.
 
 ## 17. Aturan dokumen master
 1. Dokumen ini menjadi acuan utama diskusi bisnis dan penyusunan paket Bagus Load & Delivery.
@@ -226,4 +259,4 @@ Peluncuran dan pendaftaran toko pada tahap uji coba dibatasi ke Bali. Pembatasan
 6. Dokumen ini menjelaskan arah dan keputusan bisnis; bukan pengganti spesifikasi teknis atau implementasi kode.
 
 ---
-**Status berikutnya:** Versi 0.5 menetapkan alur dan rule operasional sebelum implementasi backend. Tahap berikutnya adalah menyusun spesifikasi backend secara berurutan: akun multi-peran, onboarding toko dan pembatasan wilayah Bali, profil/lokasi privat, verifikasi bertahap, dashboard, katalog, jam operasional dan kesiapan barang, zona pengiriman, lalu checkout. UI/UX dipoles setelah aturan dan alur inti tervalidasi. Bagus Load & Delivery tetap menunggu validasi kebutuhan.
+**Status berikutnya:** Versi 0.6 menambahkan struktur owner/staff, kontrol keuangan owner, histori transaksi lintas tahun, laporan PDF, username unik, dan website katalog otomatis untuk setiap toko. Tahap berikutnya adalah menyelaraskan skema backend dan menguji otorisasi owner/staff sebelum menghubungkan UI. Bagus Load & Delivery tetap menunggu validasi kebutuhan.
