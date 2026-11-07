@@ -168,7 +168,7 @@ async function profilePage(preview=false){
  <section class="ua-account-hub">
   <div class="ua-account-hub-head"><div><span class="ua-eyebrow">PUSAT AKUN</span><h2>Kelola akun Anda</h2><p>Semua profil, pengaturan, dan aktivitas dalam satu tempat.</p></div>${contextHeader(accountContext)}</div>
   <div class="ua-account-menu">
-   <a href="#/account/profile#edit-profile"><span class="ua-menu-icon">◉</span><span><b>Edit profil pribadi</b><small>Foto, nama, username, bio, dan lokasi publik</small></span><i>›</i></a>
+   <a href="#/account/profile" id="ua-edit-profile-link"><span class="ua-menu-icon">◉</span><span><b>Edit profil pribadi</b><small>Foto, nama, username, bio, dan lokasi publik</small></span><i>›</i></a>
    <a href="#/account/settings"><span class="ua-menu-icon">⚙</span><span><b>Privasi & pengaturan</b><small>Audiens postingan, Story, komentar, dan pesan</small></span><i>›</i></a>
    <a href="#/account/professional"><span class="ua-menu-icon">✦</span><span><b>Profil Professional</b><small>Keahlian, portofolio, dan area layanan</small></span><i>›</i></a>
    <a href="#/seller"><span class="ua-menu-icon">▦</span><span><b>Business & Seller Center</b><small>Kelola toko, produk, harga, dan pesanan</small></span><i>›</i></a>
@@ -314,6 +314,7 @@ async function mountAccount(section='profile'){
   const headerAvatar=await signed(profile.avatar_path);document.querySelector('#app').innerHTML=frame(page,section==='explore'?'explore':section==='addresses'?'addresses':section==='compose'?'compose':section==='preview'?'profile':'profile',headerAvatar);
   document.querySelector('#ua-logout')?.addEventListener('click',async()=>{await supabase.auth.signOut();user=null;profile=null;authScreen('login');});
   bindAccountContext({db:supabase,user,ctx:accountContext,profile,refresh:mountAccount});
+  document.querySelector('#ua-edit-profile-link')?.addEventListener('click',e=>{e.preventDefault();document.querySelector('#edit-profile')?.scrollIntoView({behavior:'smooth',block:'start'});});
   document.querySelector('#ua-menu-logout')?.addEventListener('click',async()=>{await supabase.auth.signOut();user=null;profile=null;location.hash='/';});
   bindProfile();bindCompose();bindAddresses();bindWallet();bindPostActions();if(section==='addresses')initMap();
  }catch(err){document.querySelector('#app').innerHTML=frame('<div class="ua-panel ua-error"><h1>Ada kendala memuat akun</h1><p>'+esc(err.message)+'</p><button class="ua-primary" onclick="location.reload()">Coba lagi</button></div>');document.querySelector('#ua-logout')?.addEventListener('click',()=>supabase.auth.signOut());}
