@@ -114,7 +114,7 @@ function avatar(url,name,size=''){
 function navProfile(){
  return `<div class="ua-subnav"><a href="#/account/profile">Profil Saya</a><a href="#/account/addresses">Alamat Tersimpan</a><a href="#/account/explore">Explore</a></div>`;
 }
-async function profilePage(){
+async function profilePage(preview=false){
  const [avatarUrl,coverUrl,postsResult,storesResult]=await Promise.all([
   signed(profile.avatar_path),signed(profile.cover_path),
   supabase.from('user_posts').select('*').eq('user_id',user.id).order('created_at',{ascending:false}),
@@ -123,7 +123,22 @@ async function profilePage(){
  if(postsResult.error)throw postsResult.error;
  const ownPosts=await hydratePosts(postsResult.data||[]);
  const stores=storesResult.error?[]:(storesResult.data||[]);
- return `<div class="ua-page-heading"><div><span class="ua-eyebrow">AKUN PENGGUNA</span><h1>Profil Saya</h1><p>Bangun identitas pribadi dan atur apa yang dapat dilihat orang lain.</p></div><a class="ua-outline" href="#/account/explore">Jelajahi Explore ↗</a></div>
+ if(preview){
+  const visiblePosts=profile.visibility==='public'?ownPosts.filter(p=>p.visibility==='public'&&p.moderation_status==='published'):[];
+  return `<div class="ua-page-heading"><div><span class="ua-eyebrow">PRATINJAU PROFIL</span><h1>Begini profil Anda terlihat</h1><p>Ini adalah simulasi tampilan profil bagi pengunjung Pluits.</p></div><a class="ua-outline" href="#/account/profile">← Kembali ke Edit Profil</a></div>
+  <div class="ua-preview-status">${profile.visibility==='public'?'Profil Anda bersifat publik.':'Profil Anda privat. Pengunjung lain tidak dapat melihat postingan Anda.'}</div>
+  <section class="ua-profile-card ua-public-profile">
+   <div class="ua-cover" ${coverUrl?`style="background-image:url('${coverUrl}')"`:''}><span>PLUITS PROFILE</span></div>
+   <div class="ua-profile-content"><div class="ua-profile-avatar">${avatar(avatarUrl,profile.display_name,'large')}</div>
+    <div class="ua-profile-identity"><h2>${esc(profile.display_name)}</h2><div class="ua-username">@${esc(profile.username)}</div><div class="ua-location">${profile.public_city&&profile.public_province?'⌖ '+esc(profile.public_city)+', '+esc(profile.public_province):''}</div><p>${esc(profile.bio||'Bio belum ditambahkan.')}</p></div>
+    <div class="ua-profile-count"><strong>${visiblePosts.length}</strong><span>Postingan publik</span></div>
+   </div>
+  </section>
+  <section class="ua-panel ua-posts-panel"><div class="ua-section-title"><div><span class="ua-eyebrow">KONTEN PROFIL</span><h2>Postingan</h2></div></div>
+   ${profile.visibility!=='public'?'<div class="ua-empty"><strong>Akun ini privat</strong><p>Postingan hanya dapat dilihat oleh pemilik akun.</p></div>':visiblePosts.length?postGrid(visiblePosts):'<div class="ua-empty"><strong>Belum ada postingan publik</strong><p>Postingan yang Anda atur sebagai privat tidak ditampilkan di profil publik.</p></div>'}
+  </section>`;
+ }
+ return `<div class="ua-page-heading"><div><span class="ua-eyebrow">AKUN PENGGUNA</span><h1>Profil Saya</h1><p>Bangun identitas pribadi dan atur apa yang dapat dilihat orang lain.</p></div><a class="ua-outline" href="#/account/preview">Lihat tampilan profil ↗</a></div>
  ${navProfile()}
  <section class="ua-profile-card">
   <div class="ua-cover" ${coverUrl?`style="background-image:url('${coverUrl}')"`:''}><span>FOTO SAMPUL</span><label class="ua-cover-edit">Ganti sampul<input id="ua-cover-file" type="file" accept="image/jpeg,image/png,image/webp"></label></div>
@@ -255,8 +270,8 @@ async function mountAccount(section='profile'){
  if(!user){authScreen(section==='register'?'register':'login');return;}
  try{
   await loadProfile();
-  const page=section==='explore'?await feedPage():section==='compose'?await composePage():section==='addresses'?await addressPage():section==='post'?await postDetailPage(location.hash.split('/')[3]||''):await profilePage();
-  const headerAvatar=await signed(profile.avatar_path);document.querySelector('#app').innerHTML=frame(page,section==='explore'?'explore':section==='addresses'?'addresses':section==='compose'?'compose':'profile',headerAvatar);
+  const page=section==='explore'?await feedPage():section==='compose'?await composePage():section==='addresses'?await addressPage():section==='post'?await postDetailPage(location.hash.split('/')[3]||''):section==='preview'?await profilePage(true):await profilePage();
+  const headerAvatar=await signed(profile.avatar_path);document.querySelector('#app').innerHTML=frame(page,section==='explore'?'explore':section==='addresses'?'addresses':section==='compose'?'compose':section==='preview'?'profile':'profile',headerAvatar);
   document.querySelector('#ua-logout')?.addEventListener('click',async()=>{await supabase.auth.signOut();user=null;profile=null;authScreen('login');});
   bindProfile();bindCompose();bindAddresses();bindPostActions();if(section==='addresses')initMap();
  }catch(err){document.querySelector('#app').innerHTML=frame('<div class="ua-panel ua-error"><h1>Ada kendala memuat akun</h1><p>'+esc(err.message)+'</p><button class="ua-primary" onclick="location.reload()">Coba lagi</button></div>');document.querySelector('#ua-logout')?.addEventListener('click',()=>supabase.auth.signOut());}
