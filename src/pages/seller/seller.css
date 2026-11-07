@@ -1,0 +1,47 @@
+
+/* Pluits seller workspace */
+.pluits-shell{min-height:100vh;background:#f5f6f8;color:#17202a;font-family:Inter,system-ui,-apple-system,sans-serif;padding:0 18px}
+.pluits-top{height:68px;max-width:1240px;margin:auto;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #e6e8eb}
+.pluits-brand{font-weight:900;letter-spacing:.18em;color:#17202a;text-decoration:none;font-size:19px}.pluits-brand span{font-size:9px;letter-spacing:.12em;display:block;color:#718096;margin-top:2px}
+.pluits-ghost{border:1px solid #d7dce2;background:#fff;color:#263445;padding:9px 14px;border-radius:9px;text-decoration:none;font:inherit;cursor:pointer}
+.pluits-foot{max-width:1240px;margin:40px auto 0;padding:22px 0;color:#8993a0;font-size:12px;border-top:1px solid #e4e7eb}
+.pluits-auth{max-width:1120px;margin:58px auto;display:grid;grid-template-columns:1fr 440px;gap:65px;align-items:center}
+.pluits-auth-intro h1,.pluits-pagehead h1,.pluits-dashboard-head h1{font-size:clamp(30px,5vw,46px);line-height:1.08;letter-spacing:-.04em;margin:12px 0}
+.pluits-auth-intro p,.pluits-pagehead p,.pluits-dashboard-head p{color:#657181;line-height:1.7;max-width:620px}
+.pluits-eyebrow{font-size:10px;font-weight:800;letter-spacing:.16em;color:#64748b}
+.pluits-auth-points{display:grid;gap:13px;margin-top:30px;color:#465465;font-size:14px}
+.pluits-panel{background:#fff;border:1px solid #e5e8ec;border-radius:16px;padding:24px;box-shadow:0 8px 30px rgba(22,34,51,.04)}
+.pluits-form h2{margin:0 0 20px;font-size:22px}.pluits-form label,.pluits-store-form label{display:grid;gap:8px;font-size:12px;font-weight:700;color:#4a5565;margin-bottom:16px}
+.pluits-form input,.pluits-form select,.pluits-form textarea,.pluits-store-form input,.pluits-store-form select{width:100%;border:1px solid #dce1e7;border-radius:9px;padding:12px 13px;background:#fff;color:#17202a;font:inherit;font-size:14px;min-width:0}
+.pluits-form input:focus,.pluits-store-form input:focus,.pluits-form select:focus{outline:2px solid #b8c6d8;border-color:#8799b1}
+.pluits-form small,.pluits-store-form small{font-size:10px;color:#8a95a3;font-weight:400}
+.pluits-primary{border:0;background:#172b45;color:white;border-radius:9px;padding:13px 18px;font-weight:750;cursor:pointer;font:inherit;font-size:13px}
+.pluits-primary:disabled{opacity:.6;cursor:wait}.pluits-form>.pluits-primary{width:100%;margin-top:4px}
+.pluits-switch{font-size:12px;color:#667384;text-align:center;margin:18px 0 0}.pluits-switch a{color:#172b45;font-weight:800}
+.pluits-notice{font-size:12px;color:#687789;min-height:18px;margin:8px 0}.pluits-notice.error{color:#b42318}.pluits-notice.success{color:#167447}
+.pluits-pagehead{max-width:1050px;margin:48px auto 24px}.pluits-store-form{max-width:1050px;margin:0 auto}
+.pluits-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 18px}.pluits-span{grid-column:1/-1}
+.pluits-form-actions{border-top:1px solid #edf0f2;padding-top:14px;display:flex;justify-content:space-between;align-items:center;gap:15px}
+.pluits-dashboard-head{max-width:1240px;margin:36px auto 25px;display:flex;align-items:center;justify-content:space-between;gap:15px}
+.pluits-dashboard-head h1{font-size:32px;margin:7px 0}.pluits-dashboard-head p{margin:0;font-size:13px}
+.pluits-owner-pill{border:1px solid #dbe3eb;border-radius:30px;padding:8px 12px;color:#4d6279;font-size:10px;font-weight:800;letter-spacing:.1em;background:#fff}
+.pluits-dashboard{max-width:1240px;margin:auto;display:grid;grid-template-columns:230px minmax(0,1fr);gap:22px;align-items:start}
+.pluits-sidebar{background:#fff;border:1px solid #e5e8ec;border-radius:14px;padding:16px;min-height:480px;position:sticky;top:16px}
+.pluits-user{padding:5px 4px 17px;border-bottom:1px solid #edf0f2;display:grid;gap:5px;overflow-wrap:anywhere}.pluits-user b{font-size:12px}.pluits-user small{font-size:10px;color:#8b95a2}
+.pluits-sidebar nav{display:grid;gap:5px;margin:16px 0}.pluits-sidebar nav button,.pluits-shortcuts button{border:0;background:transparent;text-align:left;padding:11px 10px;border-radius:8px;color:#596777;font:inherit;font-size:12px;cursor:pointer}
+.pluits-sidebar nav button.active{background:#edf1f6;color:#172b45;font-weight:800}
+.pluits-sidebar-foot{font-size:10px;font-weight:800;letter-spacing:.1em;color:#667487;margin:30px 4px 0}.pluits-sidebar-foot small{font-weight:400;letter-spacing:0}
+.pluits-content{min-width:0}.pluits-stat-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.pluits-stat-grid article{background:#fff;border:1px solid #e5e8ec;border-radius:13px;padding:19px;display:grid;gap:8px}.pluits-stat-grid span,.pluits-stat-grid small{font-size:11px;color:#778394}.pluits-stat-grid strong{font-size:25px;letter-spacing:-.03em}.pluits-stat-grid .pluits-status{font-size:16px;text-transform:capitalize}
+.pluits-welcome{margin-top:16px;padding:28px}.pluits-welcome h2{font-size:25px;margin:8px 0}.pluits-welcome p{font-size:13px;color:#687789;line-height:1.7;max-width:600px}
+.pluits-shortcuts{display:flex;gap:8px;flex-wrap:wrap;margin-top:20px}.pluits-shortcuts button{background:#f1f3f6;color:#263b53;font-weight:700}
+.pluits-section-head{display:flex;justify-content:space-between;align-items:end;margin:3px 0 18px}.pluits-section-head h2{font-size:25px;margin:7px 0}.pluits-section-head p{font-size:12px;color:#718093;margin:0}
+.pluits-inline-form{display:flex;align-items:end;gap:12px;margin-bottom:16px}.pluits-inline-form label{flex:1;display:grid;gap:8px;font-size:12px}.pluits-inline-form input{border:1px solid #dce1e7;border-radius:8px;padding:12px;font:inherit}
+.pluits-product-list{display:grid;gap:8px}.pluits-product-row{display:flex;align-items:center;gap:13px;padding:12px 14px;background:#fff;border:1px solid #e6e9ed;border-radius:11px;min-width:0}.pluits-product-row>div{display:grid;gap:4px;min-width:0;flex:1}.pluits-product-row b{font-size:12px;overflow-wrap:anywhere}.pluits-product-row small{font-size:10px;color:#8792a0}.pluits-product-row strong{font-size:12px;white-space:nowrap}
+.pluits-thumb,.pluits-category-icon{width:42px;height:42px;border-radius:9px;background:#edf1f5;display:grid;place-items:center;font-size:10px;color:#64748b;font-weight:800;flex:none}.pluits-thumb.empty{font-size:19px}
+.pluits-list-head{display:flex;justify-content:space-between;align-items:center;margin:22px 0 12px}.pluits-list-head h3{font-size:14px}.pluits-list-head span{font-size:11px;color:#788494}
+.pluits-empty{background:#fff;border:1px dashed #d7dde4;border-radius:12px;padding:30px;text-align:center;color:#7a8795;font-size:12px}
+.pluits-check{display:flex!important;align-items:center;gap:10px!important}.pluits-check input{width:16px}
+.pluits-note{margin-top:16px}.pluits-note p{font-size:12px;color:#718093;line-height:1.6}
+@media(max-width:800px){.pluits-auth{grid-template-columns:1fr;gap:22px;margin:30px auto}.pluits-auth-intro h1{font-size:32px}.pluits-dashboard{grid-template-columns:1fr}.pluits-sidebar{position:static;min-height:0}.pluits-sidebar nav{display:flex;overflow:auto;padding-bottom:5px}.pluits-sidebar nav button{white-space:nowrap}.pluits-sidebar-foot{display:none}.pluits-dashboard-head{margin:25px auto 18px}.pluits-stat-grid{grid-template-columns:1fr 1fr}.pluits-stat-grid article:last-child{grid-column:1/-1}}
+@media(max-width:540px){.pluits-shell{padding:0 12px}.pluits-form-grid{grid-template-columns:1fr}.pluits-span{grid-column:auto}.pluits-panel{padding:17px}.pluits-form-actions{align-items:stretch;flex-direction:column}.pluits-form-actions .pluits-primary{width:100%}.pluits-dashboard-head h1{font-size:26px}.pluits-owner-pill{font-size:8px}.pluits-stat-grid{gap:8px}.pluits-stat-grid article{padding:13px}.pluits-stat-grid strong{font-size:20px}.pluits-inline-form{align-items:stretch;flex-direction:column}.pluits-inline-form .pluits-primary{width:100%}}
