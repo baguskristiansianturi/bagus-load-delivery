@@ -1,75 +1,26 @@
-import {icon,header,footer,nav} from '../../app/ui.js';
-import {PRODUCTS} from '../../data/catalog.js';
-import {store} from '../../app/store.js';
-
 const categories=[
- ['Besi & Baja','besi-baja','https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=800&q=82'],
- ['Semen & Beton','semen-beton','https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=800&q=82'],
- ['Pasir & Batu','pasir-batu','https://images.unsplash.com/photo-1590579491624-f98f36d4c763?auto=format&fit=crop&w=800&q=82'],
- ['Kayu & Multiplek','kayu-multiplek','https://images.unsplash.com/photo-1531835551805-16d864c8d1c6?auto=format&fit=crop&w=800&q=82'],
- ['Cat & Finishing','cat-pelapis','https://images.unsplash.com/photo-1562259949-e8e7689d7828?auto=format&fit=crop&w=800&q=82'],
- ['Listrik','listrik','https://images.unsplash.com/photo-1621905252507-b35492cc74b4?auto=format&fit=crop&w=800&q=82'],
- ['Plumbing','pipa-plumbing','https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?auto=format&fit=crop&w=800&q=82'],
- ['Atap','atap','https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=800&q=82']
+ ['Material bangunan','besi-baja','Besi, baja, semen, pasir, batu, kayu, cat, listrik, plumbing dan kebutuhan konstruksi lainnya.','▦'],
+ ['Jasa konstruksi','jasa','Temukan tenaga dan penyedia jasa untuk pekerjaan bangunan, instalasi, renovasi dan perawatan.','⌂'],
+ ['Angkutan & delivery','logistik','Atur pengiriman material dan kebutuhan logistik proyek sesuai lokasi dan kebutuhan.','⇢'],
+ ['Supplier & toko','provider','Kenali penyedia barang dan toko yang bergabung langsung di Pluits.','▤']
 ];
-
-const guides=[
- ['cara-memilih-besi-beton','Material Guide','Cara memilih besi beton yang tepat untuk proyek','https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1000&q=82'],
- ['hitung-kebutuhan-semen','Construction','Cara menghitung kebutuhan semen sebelum membeli','https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=1000&q=82'],
- ['pilih-truck-material','Delivery','Memilih truck sesuai jenis dan volume material','https://images.unsplash.com/photo-1601584115197-04ecc0da31d8?auto=format&fit=crop&w=1000&q=82'],
- ['checklist-renovasi','Project Planning','Checklist kebutuhan material untuk renovasi','https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1000&q=82']
+const journeys=[
+ ['01','Temukan kebutuhan','Cari material, jasa, supplier, dan layanan pengiriman dalam satu tempat.'],
+ ['02','Bandingkan pilihan','Pelajari informasi penyedia dan pilihan yang tersedia sebelum menentukan.'],
+ ['03','Lanjutkan saat siap','Buat akun ketika ingin menyimpan, menghubungi, atau melanjutkan transaksi.']
 ];
-
-const money=n=>new Intl.NumberFormat('id-ID').format(n);
-function deal(p){
- return `<article class="deal-card"><a href="#/detail/${p.id}" class="deal-image"><img src="${p.image}" alt="${p.title}" loading="lazy"><span>DEMO DEAL</span></a><button type="button" class="deal-heart" data-wish="${p.id}" aria-label="Simpan">${icon.heart}</button><div class="deal-body"><small>Construction material</small><h3>${p.title}</h3><div class="deal-rating">★ ${p.rating||4.8} <span>(demo)</span></div><strong>Rp ${money(p.price)}</strong><p>${p.provider} · ${p.stock}</p></div></article>`;
-}
-
 export function home(){
- const slides=[
-  'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=2200&q=88',
-  'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=2200&q=88',
-  'https://images.unsplash.com/photo-1601584115197-04ecc0da31d8?auto=format&fit=crop&w=2200&q=88'
- ];
- const deals=PRODUCTS.slice(0,6);
- return `${header()}
-<section class="klook-hero hero-carousel"><div class="hero-slides">${slides.map((img,i)=>`<article class="hero-slide ${i===0?'is-active':''}" style="--hero-image:url('${img}')"><div class="klook-hero-overlay"></div><div class="klook-hero-inner"><span class="hero-label">BAGUS LOAD & DELIVERY</span><h1>Everything your project needs.<br><em>In one place.</em></h1><p>Temukan material, bandingkan supplier, atur delivery, dan kelola kebutuhan proyek dari satu marketplace.</p><form class="hero-search klook-search hero-slide-search"><span>${icon.search}</span><input placeholder="Besi Ulir" aria-label="Cari kebutuhan proyek"><button type="submit">Cari</button></form></div></article>`).join('')}</div><button class="hero-arrow hero-prev" aria-label="Sebelumnya">‹</button><button class="hero-arrow hero-next" aria-label="Berikutnya">›</button><div class="hero-dots">${slides.map((_,i)=>`<button class="${i===0?'is-active':''}" aria-label="Slide ${i+1}"></button>`).join('')}</div></section>
-
-<main class="market-wrap">
-<section class="home-section category-section"><div class="section-head"><div><span class="eyebrow">EXPLORE KATEGORI</span><h2>Belanja berdasarkan kategori</h2><p>Material dan kebutuhan proyek dalam satu tempat.</p></div><a href="#/material">Lihat semua ${icon.arrow}</a></div><div class="category-grid">${categories.map(c=>`<a class="home-category-card" href="#/material/${c[1]}"><img src="${c[2]}" alt="${c[0]}" loading="lazy"><span>${c[0]}</span></a>`).join('')}</div></section>
-
-<section class="home-section trust-strip"><div class="trust-intro"><span class="eyebrow">WHY BAGUS</span><h2>Pengadaan proyek, tanpa harus mengoordinasikan semuanya sendiri.</h2><p>Satu alur untuk mencari material, membandingkan supplier, mengatur delivery, dan memantau pesanan.</p></div><div class="trust-grid"><a href="#/material" class="trust-card"><b>✓</b><strong>Transaksi terstruktur</strong><span>Pesanan dan pembayaran dicatat dalam satu alur.</span><i>Jelajahi material →</i></a><a href="#/provider" class="trust-card"><b>✓</b><strong>Supplier terkurasi</strong><span>Status supplier dan ketersediaan ditampilkan secara transparan.</span><i>Lihat supplier →</i></a><a href="#/logistik" class="trust-card"><b>🚚</b><strong>Delivery terkoordinasi</strong><span>Multi-supplier dapat digabung dalam satu workflow pengiriman.</span><i>Lihat delivery →</i></a><a href="#/help" class="trust-card"><b>◉</b><strong>Bantuan manusia</strong><span>Hubungi tim jika kebutuhan proyek Anda kompleks.</span><i>Dapatkan bantuan →</i></a></div></section>
-
-<section class="home-section"><div class="section-head"><div><span class="eyebrow">DEALS</span><h2>Material pilihan untuk proyek</h2><p>Contoh katalog frontend — harga dan stok akan terhubung ke backend supplier.</p></div><a href="#/material">Jelajahi produk ${icon.arrow}</a></div><div class="deal-grid">${deals.map(deal).join('')}</div></section>
-
-<section class="home-section discovery-strip"><div><span class="eyebrow">ONE WORKFLOW</span><h2>Dari material sampai lokasi proyek.</h2><p>Bandingkan supplier, pilih jumlah, tentukan delivery, lalu kelola pesanan dalam satu alur.</p></div><div class="discovery-steps"><div><b>01</b><strong>Discover</strong><span>Cari material</span></div><div><b>02</b><strong>Decide</strong><span>Bandingkan supplier</span></div><div><b>03</b><strong>Order</strong><span>Atur delivery</span></div><div><b>04</b><strong>Track</strong><span>Pantau pesanan</span></div></div></section>
-
-<section class="home-section"><div class="section-head"><div><span class="eyebrow">PROJECT GUIDES</span><h2>Panduan proyek</h2><p>Insight praktis sebelum membeli material dan mengatur pengiriman.</p></div><a href="#/blog">Lihat semua ${icon.arrow}</a></div><div class="guide-grid">${guides.map(g=>`<a class="guide-card" href="#/article/${g[0]}"><img src="${g[3]}" alt="${g[2]}" loading="lazy"><div><small>${g[1]}</small><h3>${g[2]}</h3><span>Baca panduan ${icon.arrow}</span></div></a>`).join('')}</div></section>
-
-<section class="home-section final-cta"><div><span class="eyebrow">READY TO START?</span><h2>Bangun alur pengadaan proyek yang lebih sederhana.</h2><p>Mulai dari material yang Anda butuhkan. Fitur procurement, supplier, pembayaran, dan delivery akan terus dikembangkan.</p></div><div><a class="primary-button" href="#/material">Mulai belanja</a><a class="secondary-button" href="#/proyek">Kelola proyek</a></div></section>
-</main>${footer()}${nav()}`;
+ return `<div class="pl-home">
+ <header class="pl-header"><a class="pl-logo" href="#/" aria-label="Pluits beranda"><span class="pl-logo-mark">P</span><span>PLUITS<small>INDONESIA</small></span></a><nav class="pl-desktop-nav"><a href="#/material">Material</a><a href="#/jasa">Jasa</a><a href="#/logistik">Angkutan</a><a href="#/provider">Supplier</a><a href="#/blog">Panduan</a></nav><div class="pl-header-actions"><a class="pl-login" href="#/account/login">Masuk</a><a class="pl-register" href="#/account/register">Daftar</a></div></header>
+ <main>
+  <section class="pl-hero"><div class="pl-hero-content"><span class="pl-kicker">CONSTRUCTION COMMERCE PLATFORM</span><h1>Kebutuhan konstruksi,<br><em>lebih mudah ditemukan.</em></h1><p>Pluits menghubungkan kebutuhan material, toko, tenaga jasa, supplier, dan pengiriman dalam satu ekosistem. Jelajahi dulu—akun bisa dibuat kapan saja saat Anda siap.</p><form class="pl-search" id="pl-home-search"><span>⌕</span><input name="q" aria-label="Cari di Pluits" placeholder="Cari besi, semen, tukang, supplier…"><button type="submit">Cari</button></form><div class="pl-hero-links"><a href="#/material">Jelajahi material →</a><a href="#/jasa">Temukan jasa →</a></div></div><div class="pl-hero-art" aria-hidden="true"><div class="pl-art-card pl-art-main"><span>PLUITS MARKETPLACE</span><strong>From materials<br>to project delivery.</strong><div class="pl-art-lines"><i></i><i></i><i></i></div></div><div class="pl-art-card pl-art-small"><b>01</b><span>Discover<br>Compare<br>Connect</span></div><div class="pl-art-orbit"></div></div></section>
+  <section class="pl-section pl-category-section"><div class="pl-section-heading"><div><span class="pl-kicker">JELAJAHI PLUITS</span><h2>Apa yang sedang Anda butuhkan?</h2><p>Mulai dari kategori yang paling relevan dengan pekerjaan Anda.</p></div><a href="#/material">Lihat semua kategori →</a></div><div class="pl-category-grid">${categories.map((c,i)=>`<a class="pl-category-card" href="#/${c[1]}"><span class="pl-category-icon">${c[3]}</span><small>0${i+1} / KATEGORI</small><h3>${c[0]}</h3><p>${c[2]}</p><b>Jelajahi <span>↗</span></b></a>`).join('')}</div></section>
+  <section class="pl-value-section"><div><span class="pl-kicker">KENAPA PLUITS</span><h2>Lebih transparan.<br>Lebih terhubung.</h2><p>Pluits dibangun untuk membantu proses pengadaan konstruksi menjadi lebih terbuka dan efisien—menghubungkan pengguna langsung dengan toko, supplier, dan penyedia jasa.</p></div><div class="pl-value-points"><article><b>01</b><div><strong>Tanpa perantara yang tidak perlu</strong><p>Pengguna dapat menemukan penyedia dan berkomunikasi melalui platform.</p></div></article><article><b>02</b><div><strong>Pilihan yang bisa dibandingkan</strong><p>Informasi kebutuhan dan penawaran disusun agar keputusan lebih terarah.</p></div></article><article><b>03</b><div><strong>Satu akun untuk berbagai peran</strong><p>Gunakan Pluits sebagai pembeli. Jika suatu saat ingin membuka toko, opsinya tersedia terpisah.</p></div></article></div></section>
+  <section class="pl-how-section"><div class="pl-section-heading"><div><span class="pl-kicker">MULAI DARI SINI</span><h2>Kenali Pluits sebelum bergabung.</h2><p>Anda tidak perlu membuat akun hanya untuk melihat-lihat.</p></div></div><div class="pl-journey-grid">${journeys.map(x=>`<article><span>${x[0]}</span><h3>${x[1]}</h3><p>${x[2]}</p></article>`).join('')}</div></section>
+  <section class="pl-cta"><div><span class="pl-kicker">WHEN YOU ARE READY</span><h2>Sudah menemukan yang Anda cari?</h2><p>Buat akun gratis untuk mulai menyimpan kebutuhan, berinteraksi, dan melanjutkan proses di Pluits.</p></div><div><a class="pl-register" href="#/account/register">Buat akun Pluits</a><a class="pl-cta-secondary" href="#/material">Lanjut menjelajah</a></div></section>
+ </main><footer class="pl-footer"><a class="pl-logo" href="#/"><span class="pl-logo-mark">P</span><span>PLUITS<small>INDONESIA</small></span></a><p>Ekosistem digital untuk kebutuhan konstruksi Indonesia.</p><div><a href="#/material">Material</a><a href="#/jasa">Jasa</a><a href="#/logistik">Logistik</a><a href="#/provider">Supplier</a><a href="#/help">Bantuan</a><a href="#/account/login">Masuk</a></div><small>© 2026 Pluits Indonesia</small></footer>
+ </div>`;
 }
-
 export function bindHome(){
- const hero=document.querySelector('.klook-hero');
- if(hero&&!hero.dataset.ready){
-  hero.dataset.ready='1';
-  const slides=[...hero.querySelectorAll('.hero-slide')],dots=[...hero.querySelectorAll('.hero-dots button')];
-  let n=0,t;
-  const show=i=>{n=(i+slides.length)%slides.length;slides.forEach((s,j)=>s.classList.toggle('is-active',j===n));dots.forEach((d,j)=>d.classList.toggle('is-active',j===n));};
-  const restart=()=>{clearInterval(t);t=setInterval(()=>show(n+1),5500);};
-  hero.querySelector('.hero-prev').onclick=()=>{show(n-1);restart()};
-  hero.querySelector('.hero-next').onclick=()=>{show(n+1);restart()};
-  dots.forEach((d,i)=>d.onclick=()=>{show(i);restart()});
-  restart();
- }
- const searchSuggestions=['Besi Ulir','Triplek','Jasa Mobil Angkutan','Besi Beton 12mm','Semen Portland','Pipa PVC','Truck Material'];
- document.querySelectorAll('.hero-slide-search').forEach((f,index)=>{
-  const input=f.querySelector('input'); let suggestionIndex=index%searchSuggestions.length;
-  const setPlaceholder=()=>{input.placeholder=searchSuggestions[suggestionIndex];suggestionIndex=(suggestionIndex+1)%searchSuggestions.length};
-  setPlaceholder(); setInterval(()=>{if(document.activeElement!==input&&!input.value.trim())setPlaceholder()},2600);
-  f.addEventListener('submit',e=>{e.preventDefault();const q=input.value.trim()||input.placeholder;const area=window.__BLD_VISITOR_AREA||'Indonesia';location.hash='#/search?q='+encodeURIComponent(q)+'&area='+encodeURIComponent(area)});
- });
- document.querySelectorAll('[data-wish]').forEach(b=>b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();const x=PRODUCTS.find(p=>p.id===b.dataset.wish);if(x){store.toggleWishlist(x);b.classList.toggle('is-saved',store.isWishlisted(x.id));}}));
-
+ document.querySelector('#pl-home-search')?.addEventListener('submit',e=>{e.preventDefault();const q=new FormData(e.currentTarget).get('q')?.toString().trim();if(q)location.hash='#/search?q='+encodeURIComponent(q);});
 }
