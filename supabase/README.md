@@ -28,6 +28,7 @@
 2. `202611070003_pluits_store_profile_hardening.sql` — hardening store private/public boundary.
 3. `202611070004_user_first_social_foundation.sql` — user profiles, private addresses, posts, likes, comments, saves, private user media bucket and RLS.
 4. `202611070005_post_account_tags.sql` — account tags on posts.
+5. `20261107140000_pluits_public_social_read.sql` — anonymous read-only access to public profiles/posts and tightly scoped signed URL creation for public media.
 
 Database schema is applied in Supabase. Confirm the live migration list and advisors before further DDL. Do not assume a migration file in GitHub has been applied unless it appears in the Supabase migration history.
 
@@ -37,7 +38,7 @@ Private bucket: `pluits-user-media`.
 - Allowed MIME: JPEG, PNG, WebP, GIF, MP4, WebM.
 - Object path starts with the authenticated user's UUID.
 - RLS restricts uploads/deletes to the owner and reads to the owner or content allowed by public profile/post visibility.
-- The frontend uses short-lived signed URLs for rendering. Never expose a service-role key in the browser.
+- The frontend uses short-lived signed URLs for rendering. Anonymous read policy permits signed URLs only for media referenced by public published posts or public profiles; private posts and private profiles remain inaccessible. Never expose a service-role key in the browser.
 
 ## Security
 - RLS is enabled on all user profile, address, post, interaction and tag tables.
@@ -55,3 +56,11 @@ Private bucket: `pluits-user-media`.
 - [Project checkpoints and PR roadmap](../MASTER/PROJECT-STATUS-ROADMAP.md)
 - [Mobile first-user test guide](../MASTER/PLUITS-USER-TESTING.md)
 - [Security review](../MASTER/PLUITS-SECURITY-REVIEW.md)
+
+
+## First real-user test
+- Use `#/account/register` to create a real Supabase Auth account.
+- Email confirmation redirects to the GitHub Pages site root; then sign in if no session is present.
+- An Auth trigger creates the initial user profile row. Username can be personalized in profile settings.
+- A public post should appear in the signed-in Explore feed and the public homepage feed. A private post should remain visible only to its owner.
+- No test user, sample post, fake review, or fake transaction has been inserted by this setup.
