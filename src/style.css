@@ -4981,3 +4981,38 @@ body{font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.45;-web
 @media(max-width:650px){.pl-social-header{height:62px;padding:0 14px;gap:12px}.pl-social-brand{font-size:20px}.pl-social-layout{display:block;margin:0;padding:14px 10px 0}.pl-feed-stories{padding:13px 11px}.pl-social-footer{padding:18px 12px}}
 
 .pl-post-context{display:inline-flex;vertical-align:middle;margin-left:6px;border:1px solid #dce3eb;border-radius:20px;padding:3px 7px;color:#53647b;font-size:8px;font-style:normal;font-weight:750;letter-spacing:.04em}
+
+/* Pluits mobile social home */
+.pl-home-shortcuts{display:flex;gap:9px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding:2px 1px 14px;margin:0 0 5px;scrollbar-width:none}
+.pl-home-shortcuts::-webkit-scrollbar{display:none}
+.pl-home-shortcuts a{flex:0 0 104px;min-height:72px;display:flex;align-items:center;gap:8px;flex-direction:column;justify-content:center;border:1px solid #e7ecef;border-radius:12px;background:#fff;color:#52636d;font-size:10px;font-weight:750;scroll-snap-align:start}
+.pl-home-shortcuts b{display:grid;place-items:center;width:31px;height:31px;border-radius:9px;background:#edf3f5;color:#315d6a;font-size:16px}
+.pl-home-mobile-nav{display:none}
+@media(max-width:650px){
+ .pl-social-home{padding-bottom:72px}
+ .pl-social-header{height:54px;padding:0 14px;gap:8px}
+ .pl-social-header nav{display:none}
+ .pl-social-header>div{margin-left:auto}
+ .pl-social-layout{margin:0;padding:12px 0 0;display:block}
+ .pl-social-sidebar,.pl-social-right{display:none}
+ .pl-social-feed{width:100%;min-width:0}
+ .pl-feed-intro{padding:0 14px;align-items:center;margin-bottom:12px}
+ .pl-feed-intro p{display:none}
+ .pl-feed-intro h1{font-size:21px;margin:3px 0}
+ .pl-feed-intro>a{font-size:10px;padding:9px 11px;white-space:nowrap}
+ .pl-feed-stories{border-left:0;border-right:0;border-radius:0;margin:0 0 12px;padding:11px 13px;gap:13px;scroll-snap-type:x mandatory}
+ .pl-feed-stories a{flex:0 0 68px;scroll-snap-align:start}
+ .pl-feed-stories b{width:49px;height:49px}
+ .pl-home-shortcuts{padding:0 13px 13px}
+ .pl-public-post{border-left:0;border-right:0;border-radius:0;margin-bottom:10px}
+ .pl-public-post-media img,.pl-public-post-media video{max-height:min(68vh,540px);object-fit:cover}
+ .pl-public-post-head{padding:12px 13px 7px}
+ .pl-public-post>p{padding:6px 13px 10px}
+ .pl-public-post-actions{padding:12px 9px}
+ .pl-social-footer{display:none}
+ .pl-home-mobile-nav{display:flex;position:fixed;z-index:110;left:0;right:0;bottom:0;height:64px;padding:5px 6px max(5px,env(safe-area-inset-bottom));background:#fff;border-top:1px solid #e5e9ed;justify-content:space-around;align-items:center;box-shadow:0 -5px 20px #1e343b0a}
+ .pl-home-mobile-nav a{flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:2px;color:#74818a;font-size:18px;font-weight:750}
+ .pl-home-mobile-nav a small{font-size:9px}
+ .pl-home-mobile-nav a.active{color:#315d6a}
+ .pl-home-mobile-nav .pl-home-create{font-size:23px;color:#20282c}
+}
