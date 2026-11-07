@@ -69,7 +69,7 @@ export function bindAccountContext({db,user,ctx,profile,refresh}){
  selector?.addEventListener('change',async()=>{
   const next=selector.value;
   if(next==='professional'&&!ctx.professional){location.hash='/account/professional-create';return;}
-  const store=ctx.stores[0];
+  const store=ctx.stores.find(s=>s.id===ctx.prefs?.active_store_id)||ctx.stores[0];
   const {error}=await db.from('account_context_preferences').upsert({user_id:user.id,active_context:next,active_store_id:next==='business'?store?.id:null});
   if(error){selector.value=ctx.active;alert(error.message);return;}
   if(next==='business'){location.hash='/seller';return;}
