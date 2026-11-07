@@ -143,7 +143,7 @@ P2 — Sosial dan komersial: feed/Story mengikuti konteks profil, ulasan pembeli
 
 P3 — Uang: ledger immutable, payment provider, settlement, withdrawal, rekening terverifikasi, audit. Jangan aktifkan pencairan uang sungguhan sebelum pengujian dan kepatuhan selesai.
 
-## 12. Status aktual yang diketahui saat dokumen dibuat
+## 12. Status backend setelah fondasi 8 November 2026\n\n- `professional_profiles` dan `professional_portfolio_items` sudah dibuat di Supabase dengan RLS pemilik dan pembacaan publik hanya untuk profil aktif/publik.\n- `account_context_preferences` menyimpan konteks aktif Personal/Professional/Business dan memvalidasi akses ke toko melalui owner/anggota aktif.\n- `profile_verification_cases` menerima pengajuan verifikasi profesional/toko; pemohon tidak dapat mengubah status review atau menetapkan dirinya verified. Keputusan reviewer harus dilakukan melalui jalur admin tepercaya.\n- Entitas Business tetap menggunakan tabel `stores` yang sudah ada; keanggotaan tim tetap menggunakan `store_members`. Tidak dibuat tabel bisnis duplikat.\n- Migrasi sumber disimpan di `supabase/migrations/20261108000000_pluits_profile_context_foundation.sql`.\n- Status: backend schema/RLS IMPLEMENTED dan pemeriksaan tabel/policy berhasil. Frontend switcher/onboarding belum IMPLEMENTED/DEPLOYED/TESTED.\n\n## 13. Status aktual yang diketahui sebelum fondasi ini dibuat
 
 - Frontend sudah memiliki user_profiles, postingan, Explore, likes/comments/saves/tags, alamat, dan autentikasi dasar.
 - Tabel user_stories 24 jam disiapkan; UI upload/viewer belum terverifikasi selesai.
