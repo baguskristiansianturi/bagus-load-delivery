@@ -1,5 +1,5 @@
 # MASTER MODEL BISNIS — BAGUS LOAD & DELIVERY
-**Versi:** 0.3 | **Pembaruan:** 7 November 2026
+**Versi:** 0.4 | **Pembaruan:** 7 November 2026
 **Status:** Dokumen induk model bisnis; acuan sebelum penyusunan paket dan spesifikasi teknis.
 
 > Dokumen ini menjadi sumber acuan utama. Hal yang belum diputuskan ditandai sebagai terbuka dan bukan kebijakan final.
@@ -43,7 +43,7 @@ Platform membantu pembeli menemukan penawaran dan membantu penyedia mengelola pe
 Contoh tenaga/pekerjaan: tukang bangunan, tukang ledeng/plumbing, pembuat kolam renang, tukang listrik, pengecatan, plafon, keramik, atap, dan spesialis konstruksi lainnya.
 
 ## 5. Fase 1 — Marketplace material
-Fokus awal adalah marketplace material multi-toko yang benar-benar dapat diuji. Toko yang lolos verifikasi dapat membuat profil dan mengunggah katalog; pembeli dapat mencari produk, melihat toko yang menjualnya, membandingkan harga dan spesifikasi, lalu memilih cara pemenuhan yang ditawarkan toko. Produk tidak perlu diisi sebagai data katalog bawaan oleh pengembang: katalog awal sengaja kosong dan baru terisi ketika toko mendaftar serta mengunggah produknya. Pada uji coba pertama, hanya satu toko uji milik pendiri yang aktif sehingga hasil pencarian hanya menampilkan toko tersebut. Setelah alur toko berjalan, akun pengguna lain dipakai untuk menguji pengalaman pembeli.
+Fokus awal adalah marketplace material multi-toko yang benar-benar dapat diuji. Pengembangan dimulai dari sisi penjual: pendaftaran akun, pembuatan toko, dashboard, dan pengelolaan katalog. Katalog awal sengaja kosong dan hanya terisi ketika toko mendaftar serta mengunggah produknya sendiri. Pada uji coba pertama, pendiri mengoperasikan satu toko uji; setelah pengalaman penjual stabil, akun lain digunakan untuk menguji sisi pembeli. Toko bebas menjual berbagai jenis produk yang diizinkan kebijakan platform, bukan hanya material konstruksi tertentu.
 
 Filter dan pengurutan perlu mendukung:
 - Harga barang dan total biaya sampai tujuan.
@@ -54,25 +54,50 @@ Filter dan pengurutan perlu mendukung:
 
 Perbandingan harus mempertimbangkan ukuran, mutu, spesifikasi, satuan, panjang/volume/berat, dan kondisi penawaran agar tidak membandingkan barang berbeda. Pengiriman toko sendiri merupakan opsi normal yang ditampilkan sebagai bagian dari penawaran toko. Platform tidak boleh mengasumsikan semua toko menggunakan armada bersama.
 
+### 5.1 Akun pengguna dan peran toko
+Satu akun pengguna dapat berfungsi sebagai pembeli sekaligus pemilik/pengelola toko. Pengguna tidak perlu membuat identitas akun terpisah hanya untuk berpindah peran. Untuk membuka toko, pengguna mengajukan aktivasi/pendaftaran toko dan memenuhi syarat serta ketentuan penjual, termasuk verifikasi badan usaha sesuai kebijakan platform. Pendaftaran toko bukan berarti setiap akun otomatis menjadi penjual.
+
+### 5.2 Pembuatan toko dan lokasi
+Sebelum toko diaktifkan, pemilik wajib mengisi alamat toko, titik lokasi/pin peta, dan informasi wilayah operasional. Data lokasi toko menjadi dasar pencarian lokal, estimasi jarak, area layanan, dan perhitungan logistik di masa depan. Dashboard toko harus memungkinkan pemilik mengelola informasi toko sesuai hak aksesnya.
+
+### 5.3 Katalog fleksibel dan atribut fisik
+Toko bebas menambahkan kategori dan jenis barangnya sendiri dalam batas kebijakan platform. Sistem menyediakan kategori/atribut yang terstruktur tetapi tidak membatasi toko hanya pada daftar produk awal. Setiap produk memiliki data dasar seperti nama, merek bila ada, deskripsi, foto, SKU/kode internal opsional, satuan jual, harga, stok, dan status.
+
+Untuk barang fisik, skema produk/variasi harus dapat menyimpan berat dan dimensi terukur—panjang, lebar, tinggi, serta satuan ukur—dan bila relevan diameter, volume, bentuk/kemasan, atau jumlah per ikat/pack. Atribut yang wajib diisi bergantung pada jenis produk; jangan memaksa atribut yang tidak relevan. Data ini disimpan sejak awal untuk kalkulator kebutuhan ruang/muatan dan rekomendasi kendaraan di masa depan, bukan berarti kalkulator armada harus dibangun sekarang.
+
+### 5.4 Produk dengan variasi dan harga tampil
+Satu halaman produk dapat memiliki beberapa variasi, misalnya “Besi Ulir” dengan pilihan diameter/ukuran 10, 12, dan 13. Setiap variasi dapat memiliki SKU, foto bila diperlukan, satuan, berat/dimensi, harga, diskon, dan stok masing-masing. Pengguna memilih variasi sebelum memasukkan barang ke keranjang atau membuat pesanan.
+
+Pada kartu hasil pencarian atau katalog, sistem dapat menampilkan harga mulai dari atau harga variasi termurah yang benar-benar tersedia dan dapat dibeli. Harga termurah tidak boleh berasal dari variasi kosong, stok habis, atau syarat yang disembunyikan. Pengelompokan variasi dalam satu halaman produk juga membantu pencarian internal dan SEO; judul, atribut, dan konten harus tetap akurat serta tidak membuat halaman duplikat yang menyesatkan.
+
+### 5.5 Dashboard toko dan pembaruan katalog
+Dashboard penjual harus menjadi pusat operasional toko, bukan sekadar halaman profil. Pemilik dapat mengelola profil toko, katalog, variasi, foto, harga normal, diskon, stok, pesanan, jam operasional, dan pengaturan pengiriman sesuai hak akses. Perubahan stok, harga, dan diskon harus tersimpan dengan benar dan tercermin pada katalog setelah proses penyimpanan berhasil; status pembaruan harus jelas agar penjual tidak mengira perubahan sudah aktif padahal gagal.
+
+Sistem perlu mencatat waktu perubahan dan pelakunya untuk data penting. Pengelolaan stok harus mengurangi risiko overselling ketika beberapa pembeli memesan bersamaan. Realtime berarti pembaruan tersinkron sesuai kemampuan sistem dan tidak menampilkan data lama sebagai data terkini; implementasi teknis dan batas latensinya ditetapkan dalam spesifikasi.
+
+### 5.6 Kartu katalog dan label promosi
+Kartu produk dapat menampilkan label ringkas seperti diskon, gratis ongkir, atau pengiriman hari yang sama. Label hanya muncul jika penawaran memenuhi syarat yang sudah dikonfigurasi dan dapat dibuktikan. Contohnya gratis ongkir memiliki cakupan, minimum belanja, atau batas jarak; same-day memiliki cut-off, wilayah, stok, dan kapasitas layanan. Jangan menampilkan badge promosi sebagai dekorasi atau janji yang tidak dapat dipenuhi.
+
 ## 6. Mesin perbandingan harga
 Tujuannya menemukan penawaran paling efisien sesuai kebutuhan, bukan sekadar harga barang terendah.
 
-Faktor perbandingan: harga satuan, kuantitas, total barang, ongkir, jarak, MOQ, jadwal, gratis ongkir dan syaratnya, kapasitas muatan, serta biaya tambahan wajib.
+Faktor perbandingan: harga satuan, kuantitas, total barang, ongkir, jarak, MOQ, jadwal, gratis ongkir dan syaratnya, kapasitas muatan, serta biaya tambahan wajib. Untuk produk bervariasi, perbandingan harus memakai variasi dan satuan yang setara.
 
 **Estimasi total = total harga barang + ongkos kirim + biaya wajib lain yang diungkapkan.**
 
 Jika ongkir belum dapat dihitung otomatis, tampilkan sebagai estimasi atau minta penawaran—jangan membuat angka seolah pasti. Gratis ongkir harus mencantumkan syarat seperti minimum belanja, batas jarak, atau kuota jika berlaku.
 
 ## 7. Fase 2 — Operasional toko
-Backend dan dashboard toko adalah pekerjaan teknis pertama setelah fondasi marketplace. Pengujian dilakukan dengan pendiri sebagai pemilik satu toko uji: mendaftarkan/melengkapi profil usaha, mengunggah berbagai jenis produk (termasuk berbagai ukuran besi), mengatur harga dan stok, lalu memeriksa bagaimana produk muncul pada pencarian dan halaman produk dari akun pembeli terpisah.
+Backend toko dan dashboard penjual adalah pekerjaan implementasi pertama. Fokus pengujian awal adalah pengalaman pemilik toko (seller UX/UI): mendaftar sebagai pengguna, mengajukan pembuatan toko, mengisi data usaha dan alamat, masuk ke dashboard, membuat produk dan variasi, mengatur dimensi/berat, stok, harga, diskon, serta memeriksa status penyimpanan dan pembaruan katalog. Pengujian sisi pembeli dilakukan setelah alur toko cukup stabil.
 
 Dashboard toko perlu mengelola:
-- Profil dan dokumen usaha, alamat toko, dan titik pemuatan barang.
-- Jam buka dan jam layanan.
-- Katalog, variasi, harga, stok, dan MOQ.
-- Zona/wilayah pengiriman.
-- Kapasitas pemrosesan pesanan dan kapasitas/loading.
-- Hari dan slot pickup/pengiriman.
+- Profil usaha, dokumen verifikasi, alamat, titik lokasi/pin peta, dan titik pemuatan barang.
+- Jam buka, jam layanan, dan status toko.
+- Kategori toko dan katalog yang fleksibel.
+- Produk, foto, SKU, variasi, atribut fisik, satuan, berat, dimensi, harga, diskon, dan stok.
+- Status publikasi produk serta riwayat perubahan penting.
+- MOQ dan ketentuan pembelian.
+- Zona/wilayah pengiriman, kapasitas, hari dan slot pengiriman.
 - Pilihan pemenuhan: pengiriman sendiri oleh toko sebagai opsi utama; layanan/mitra Route & Delivery hanya sebagai alternatif jika tersedia dan telah diuji.
 - Status pesanan dan kesiapan barang.
 
@@ -93,8 +118,8 @@ Profil dapat memuat keahlian, area layanan, pengalaman, portofolio, ketersediaan
 ## 10. Urutan pengembangan
 | Fase | Fokus | Hasil |
 |---|---|---|
-| 1 | Marketplace toko material | Fondasi backend, akun toko, verifikasi usaha, katalog kosong yang diisi penjual, pencarian, halaman toko/produk, perbandingan dan alur pesanan |
-| 2 | Penguatan operasional toko | Dashboard, harga/stok, jam buka, zona, MOQ, kapasitas, jadwal, pengiriman mandiri toko |
+| 1 | Backend dan pengalaman pemilik toko | Akun multi-peran, pendaftaran/aktivasi toko, verifikasi, alamat toko, dashboard, katalog kosong, produk/variasi, atribut fisik, stok, harga, diskon |
+| 2 | Pengalaman pembeli dan marketplace | Pencarian, halaman toko/produk, variasi, harga mulai dari, lokasi relevan, perbandingan, keranjang/pesanan, label promosi yang memenuhi syarat |
 | 3 | Validasi Bagus Load & Delivery | Uji kebutuhan penggabungan belanja lintas toko, driver, kendaraan, ongkir/rute, pickup, dan status |
 | 4 | Ekosistem jasa | Profil pekerja/tenaga ahli, penyedia jasa, arsitek, permintaan, penawaran, ulasan |
 
@@ -124,7 +149,12 @@ Daftar ini adalah kerangka analisis, bukan keputusan bahwa semua pihak wajib ber
 ## 13. Indikator keberhasilan
 Jumlah toko terverifikasi dan produk aktif; pencarian yang menghasilkan perbandingan relevan; penawaran dengan total biaya jelas; rasio permintaan menjadi pesanan; waktu pencarian hingga penawaran; ketepatan pemenuhan/pengiriman; pembatalan dan keluhan; retensi toko/pembeli; serta transaksi berulang. Target angka ditetapkan setelah baseline uji coba tersedia.
 
-## 14. Skenario uji coba awal
+## 14. Lokasi dan relevansi pencarian
+Lokasi toko wajib dimasukkan saat proses pembuatan toko, sebelum toko dapat dipublikasikan. Untuk pembeli, sistem meminta izin lokasi perangkat secara jelas. Jika izin diberikan, koordinat perangkat dapat digunakan untuk memprioritaskan toko terdekat atau toko yang melayani area tersebut. Jika izin ditolak/tidak tersedia, sistem menggunakan pilihan lokasi manual; alamat IP hanya boleh menjadi petunjuk perkiraan tingkat wilayah, bukan dianggap sebagai koordinat akurat.
+
+Strategi awal bersifat lokal: peluncuran dan pengujian dimulai dari Bali. Hasil pencarian default memprioritaskan toko di Bali dan area layanan yang relevan, bukan mencampur hasil jauh seperti Surabaya tanpa alasan. Namun, pengguna tetap dapat memperluas wilayah pencarian atau mencari toko dari wilayah lain secara sengaja. Relevansi lokasi tidak boleh menghilangkan pilihan pengguna.
+
+## 15. Skenario uji coba awal
 1. Sistem dimulai dengan katalog kosong; tidak ada produk contoh yang membuat hasil pencarian tampak seolah sudah memiliki banyak penjual.
 2. Pendiri mendaftar dan mengelola satu toko uji sebagai pelaku usaha penjual.
 3. Pendiri mengunggah beberapa jenis produk material, termasuk besi dengan variasi ukuran/panjang, satuan, harga, dan stok.
@@ -132,7 +162,7 @@ Jumlah toko terverifikasi dan produk aktif; pencarian yang menghasilkan perbandi
 5. Uji alur melihat toko, detail produk, membandingkan penawaran ketika toko lain kelak bergabung, dan memahami pilihan pengiriman dari toko.
 6. Setelah alur toko dan pembeli stabil, rekrut toko lain untuk menguji marketplace multi-toko. Uji Bagus Load & Delivery dilakukan terpisah berdasarkan kebutuhan nyata pembelian dari beberapa toko.
 
-## 15. Keputusan terbuka
+## 16. Keputusan terbuka
 - Wilayah peluncuran dan kategori material awal.
 - Dokumen/prosedur verifikasi PT/CV/UD.
 - Kebijakan verifikasi pekerja dan penyedia jasa.
@@ -142,7 +172,7 @@ Jumlah toko terverifikasi dan produk aktif; pencarian yang menghasilkan perbandi
 - Aturan pembatalan, refund, garansi, sengketa, dan tanggung jawab pengiriman.
 - Struktur paket, batas fitur, dan harga.
 
-## 16. Aturan dokumen master
+## 17. Aturan dokumen master
 1. Dokumen ini menjadi acuan utama diskusi bisnis dan penyusunan paket Bagus Load & Delivery.
 2. Keputusan terbuka tidak boleh dianggap final tanpa persetujuan dan pencatatan.
 3. Perubahan visi, prinsip anti-calo, syarat toko PT/CV/UD, atau urutan fase harus dicatat di sini.
@@ -151,4 +181,4 @@ Jumlah toko terverifikasi dan produk aktif; pencarian yang menghasilkan perbandi
 6. Dokumen ini menjelaskan arah dan keputusan bisnis; bukan pengganti spesifikasi teknis atau implementasi kode.
 
 ---
-**Status berikutnya:** Versi 0.3 menetapkan marketplace toko material sebagai prioritas implementasi. Langkah teknis pertama adalah merancang dan membangun backend toko serta alur uji satu toko milik pendiri, lalu menguji sisi pembeli melalui akun berbeda. Paket bisnis dan layanan logistik dibahas setelah validasi marketplace.
+**Status berikutnya:** Versi 0.4 menetapkan backend dan dashboard pemilik toko sebagai pekerjaan implementasi pertama. Setelah seller UX/UI dan pengelolaan produk tervalidasi dengan satu toko uji, pengujian dilanjutkan ke akun pembeli, pencarian lokal Bali, dan alur marketplace. Bagus Load & Delivery tetap menunggu validasi kebutuhan.
