@@ -299,3 +299,26 @@ Build dari commit `642a24bdbed4a85931271e7481f9880a04cc9fc3` berhasil. GitHub Pa
 - **Navigasi:** tautan homepage diarahkan ke rute yang tersedia, bukan anchor hash yang dapat mengganggu router SPA.
 - **Belum diverifikasi:** hasil render di Android, seluruh rute tujuan, respons feed anon dan deployment GitHub Pages untuk commit CP-013.
 - **Acceptance:** pengunjung dapat membuka homepage, memahami gambaran Pluits, menjelajahi halaman publik tanpa login, dan baru diminta daftar saat mencoba aksi yang memerlukan akun.
+
+
+## CP-014 — Mobile commerce UX + backend integration audit (8 November 2026)
+
+- **Status frontend:** mobile CSS committed for marketplace catalog, product detail, cart, checkout and Seller Center. Responsive rules include horizontal category/filter strips, two-column product grid, swipeable product galleries, sticky mobile purchase/checkout actions, compact cart rows, single-column checkout forms, and horizontally scrollable seller navigation/product photos.
+- **Commits:** dd0024a88048573a178ba991cd15789c616d9991 (commerce mobile CSS); cf8c19beca7fff487d572413b4e02a8f06188118 (Seller Center mobile CSS).
+- **Deployment:** GitHub Actions run 362 was queued/in progress at checkpoint creation. NOT DEPLOYED/NOT TESTED until run is successful and Android UAT is performed.
+- **Backend audit:** active Supabase project is ytndswhqxayqpftszwfh (pluits, ap-southeast-1). Current schema has store, store_members, store_settings, categories, products, product_variants, product_images, inventory_movements, and audit logs. All these tables have RLS enabled.
+- **Live data state:** one store exists (Toko Bagus) but remains draft and unverified; online sales are disabled. One product exists but remains draft. Do not expose it as a public live listing and do not fabricate stock, ratings, orders, reviews or sales.
+- **Critical commerce gap:** no order, order-item, checkout, payment, refund, shipment/fulfillment or customer cart tables exist yet. Existing src/app/store.js, src/pages/cart/index.js and src/pages/checkout/index.js store cart/orders only in browser localStorage; checkout currently creates a local demo order, clears the local cart and labels payment as pending without a backend transaction. Existing marketplace listing/detail are built from static src/data/catalog.js and src/data/marketplace.js data, not live Pluits seller records.
+- **Public storefront gap:** current seller RLS policies allow store members to manage catalog data but do not provide the complete verified-store/published-product public read contract. Store media bucket is private and needs a scoped public image delivery design before live storefront publication.
+- **Required next backend milestone (do not skip):**
+  1. Define and review the public storefront contract: only verified + active + online-sales-enabled stores and published/active products/variants; never expose private addresses or draft inventory.
+  2. Add scoped public read policies for store public profile, categories, published products, active variants and product images; implement safe public media URLs for the private pluits-store-media bucket.
+  3. Design canonical orders/order_items/store_orders or equivalent, immutable price snapshots, inventory reservation/decrement rules, status/event history, cancellation/refund states, and RLS by buyer/store membership.
+  4. Decide delivery calculation and pickup rules from actual store settings/zones; remove hardcoded Rp95,000 delivery and 1% service fee until a real pricing rule is approved.
+  5. Integrate checkout to an authenticated backend transaction/RPC with server-side totals and idempotency; do not mark payment successful until a real provider webhook/verified receipt confirms it.
+  6. Replace static demo catalog and local-only cart/order flow with Supabase-backed public catalog, buyer cart persistence policy, and real order history. Preserve guest browsing; require login at checkout.
+  7. Add staff permission checks for catalog/inventory/orders before enabling staff operations; review current SECURITY DEFINER warnings.
+  8. Run advisors, RLS tests across anonymous/buyer/owner/other-store users, build, Pages deployment, and Android UAT.
+- **UX acceptance:** app-first mobile layout; categories and filter controls swipe horizontally; cards fit two columns; detail gallery/add-to-cart is thumb-friendly; cart has persistent total/checkout action; checkout is a clean standalone flow without site header/footer; Seller Center is manageable by phone and product image selection is swipeable.
+- **Known security warnings from live Supabase advisor:** create_store and update_store_profile SECURITY DEFINER functions are callable by authenticated users and require review; leaked-password protection is disabled. Do not ignore these before production.
+- **Important truth label:** mobile CSS is IMPLEMENTED in repository; deployment and real-device appearance are NOT TESTED. Commerce backend integration is NOT IMPLEMENTED. The current demo/localStorage checkout must not be described as a working real transaction.
