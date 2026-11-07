@@ -38,29 +38,47 @@ function authScreen(mode='login'){
  <p class="ua-auth-switch">${signup?'Sudah punya akun?':'Belum punya akun?'} <a href="#/account/${signup?'login':'register'}">${signup?'Masuk':'Daftar'}</a></p>
  </form></main><footer class="ua-footer">PLUITS INDONESIA</footer></div>`;
  document.querySelector('#ua-auth-form').addEventListener('submit',async e=>{
-  e.preventDefault();const form=new FormData(e.currentTarget),btn=e.currentTarget.querySelector('button'),note=document.querySelector('#ua-auth-notice');
-  btn.disabled=true;btn.textContent=signup?'Mendaftarkan…':'Memeriksa akun…';note.textContent='';
+  e.preventDefault();
+  const form=new FormData(e.currentTarget),btn=e.currentTarget.querySelector('button'),note=document.querySelector('#ua-auth-notice');
+  btn.disabled=true;btn.textContent=signup?'Mengirim pendaftaran…':'Memeriksa akun…';note.className='ua-form-note is-loading';note.setAttribute('role','status');note.setAttribute('aria-live','polite');note.textContent=signup?'Menghubungi server Pluits dan meminta email konfirmasi. Mohon tunggu, jangan tekan tombol lagi.':'Sedang memeriksa email dan password…';
   try{
    const email=String(form.get('email')).trim().toLowerCase(),password=String(form.get('password'));
    if(signup){
     const full_name=String(form.get('full_name')).trim();
     const emailRedirectTo=window.location.origin+window.location.pathname;
-    const {data,error}=await supabase.auth.signUp({email,password,options:{data:{full_name},emailRedirectTo}});if(error)throw error;
+    const {data,error}=await supabase.auth.signUp({email,password,options:{data:{full_name},emailRedirectTo}});
+    if(error)throw error;
     if(!data.session){
-     note.innerHTML='Pendaftaran diterima. Buka email Anda dan tekan tautan konfirmasi Pluits. Jika email belum masuk, periksa folder spam atau kirim ulang konfirmasi. <button type="button" id="ua-resend-confirm" class="ua-link-button">Kirim ulang email konfirmasi</button>';
+     note.className='ua-form-note is-pending';
+     note.innerHTML='<strong>Pendaftaran diterima — konfirmasi masih menunggu.</strong><span>Server menerima permintaan pendaftaran. Ini belum membuktikan email sudah sampai ke inbox. Periksa alamat email, Inbox, Spam, dan Promosi.</span><span id="ua-resend-status" class="ua-resend-status">Status: menunggu email konfirmasi.</span><button type="button" id="ua-resend-confirm" class="ua-link-button">Kirim ulang email konfirmasi</button>';
      btn.textContent='Menunggu konfirmasi';
-     document.querySelector('#ua-resend-confirm')?.addEventListener('click',async()=>{
-      const resend=document.querySelector('#ua-resend-confirm');if(!resend)return;
-      resend.disabled=true;resend.textContent='Mengirim…';
-      const {error:resendError}=await supabase.auth.resend({type:'signup',email,options:{emailRedirectTo}});
-      if(resendError){note.firstChild.textContent='Belum berhasil mengirim ulang: '+resendError.message+' ' ;resend.disabled=false;resend.textContent='Coba kirim ulang';}
-      else{note.firstChild.textContent='Email konfirmasi baru sudah diminta. Periksa inbox dan folder spam. ';resend.textContent='Email diminta';}
+     const resend=document.querySelector('#ua-resend-confirm');
+     resend?.addEventListener('click',async()=>{
+      if(!resend||resend.disabled)return;
+      resend.disabled=true;resend.textContent='Sedang meminta pengiriman…';
+      const status=document.querySelector('#ua-resend-status');
+      if(status)status.textContent='Status: permintaan pengiriman ulang sedang diproses.';
+      try{
+       const {error:resendError}=await supabase.auth.resend({type:'signup',email,options:{emailRedirectTo}});
+       if(resendError)throw resendError;
+       if(status)status.textContent='Status: permintaan diterima server. Email belum dapat dipastikan sampai; periksa Inbox dan Spam.';
+       resend.textContent='Permintaan terkirim ke server';
+      }catch(err){
+       const msg=String(err?.message||'').toLowerCase();
+       if(status)status.textContent=msg.includes('rate limit')||msg.includes('too many')?'Status: dibatasi sementara oleh server. Tunggu sebelum mencoba lagi.':('Status: belum berhasil meminta email — '+(err.message||'kesalahan tidak diketahui'));
+       resend.textContent='Coba lagi nanti';
+       if(!msg.includes('rate limit')&&!msg.includes('too many'))resend.disabled=false;
+      }
      });
      return;
     }
    }else{const {error}=await supabase.auth.signInWithPassword({email,password});if(error)throw error;}
    await mountAccount('profile');
-  }catch(err){note.textContent=err.message||'Tidak dapat memproses akun.';btn.disabled=false;btn.textContent=signup?'Buat akun':'Masuk';}
+  }catch(err){
+   const msg=String(err?.message||'');
+   note.className='ua-form-note is-error';note.textContent=(/rate limit|too many requests|over_email_send_rate_limit/i.test(msg)?'Pengiriman email sedang dibatasi oleh server. Jangan daftar ulang berkali-kali; tunggu sampai batas kirim berakhir. ': '')+(msg||'Tidak dapat memproses akun.');
+   btn.disabled=false;btn.textContent=signup?'Buat akun':'Masuk';
+  }
  });
 }
 async function signed(path){
