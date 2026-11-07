@@ -105,3 +105,19 @@
  .pluits-quick-add .pluits-panel{padding:13px}
  .pluits-advanced-fields{background:#fafbfc}
 }
+
+
+/* Mobile gallery picker for Seller Center */
+.pluits-image-picker{grid-column:1/-1}
+.pluits-image-picker input[type=file]{padding:10px;background:#f8fafc;font-size:12px}
+.pluits-image-preview{grid-column:1/-1;display:flex;gap:10px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding:3px 1px 12px;max-width:100%}
+.pluits-image-preview:empty{display:none}
+.pluits-image-preview figure{flex:0 0 112px;min-width:0;margin:0;scroll-snap-align:start;border:1px solid #e5e9ee;border-radius:10px;overflow:hidden;background:#fff}
+.pluits-image-preview img{display:block;width:100%;height:92px;object-fit:cover;background:#edf1f5}
+.pluits-image-preview figcaption{padding:6px 7px;font-size:9px;color:#64748b;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:540px){
+ .pluits-image-picker{grid-column:1}
+ .pluits-image-preview{margin:0 -2px}
+ .pluits-image-preview figure{flex-basis:96px}
+ .pluits-image-preview img{height:82px}
+}
