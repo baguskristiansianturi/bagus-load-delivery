@@ -277,3 +277,16 @@ Build dari commit `642a24bdbed4a85931271e7481f9880a04cc9fc3` berhasil. GitHub Pa
 - **Belum dikerjakan:** skema transaksi/experience/review/notifikasi baru; respons merchant; halaman publik usaha; kartu internal; validasi link; Trip Story; peningkatan moderasi/rate limit; consent privasi; pembayaran/wallet; integrasi logistik.
 - **Langkah berikutnya:** (1) buat panduan AI Start Here; (2) audit repo, Supabase schema/RLS, route dan feed terhadap bagian 24; (3) tulis PRD dan model data experience/review sebelum migration; (4) lanjutkan fondasi sosial dan halaman publik/username; (5) implementasikan notifikasi dan balasan merchant dengan authorization/RLS; (6) integrasikan transaksi hanya setelah payment flow nyata siap; (7) UAT Android lintas akun pengguna dan merchant.
 - **Deployment:** perubahan checkpoint ini adalah dokumentasi. Tidak ada perubahan kode/database atau klaim fitur selesai. Status Pages tidak berubah karena dokumentasi saja.
+
+
+## CP-012 — Real user registration & public social feed foundation (7 November 2026)
+
+- **Status:** backend access policy applied; frontend registration UX updated in repository; GitHub Pages deployment pending verification; real-user end-to-end UAT NOT TESTED.
+- **Existing foundation audited:** Supabase Auth email/password, trigger creating `user_profiles`, private addresses, posts/interactions, private `pluits-user-media` bucket, profile/compose/Explore routes.
+- **Gap found:** anonymous visitors had table grants but no anon RLS SELECT policies for public profiles/posts, so the homepage public feed could not reliably query public content. Storage signed URL creation also lacked an anon policy even for media referenced by public content.
+- **Backend migration applied:** `20261107140000_pluits_public_social_read.sql` adds anon SELECT policies limited to public profiles and published public posts, plus anon Storage SELECT only for media referenced by those public posts or public profiles. Private addresses, private posts, and unrelated user media remain protected.
+- **Frontend changes:** registration sends email confirmation back to the current GitHub Pages base URL; when confirmation is required, UI explains next steps and provides resend confirmation; account copy updated; homepage copy now describes local business/services instead of only construction; metadata updated.
+- **Testing guide:** updated with account creation, email confirmation, first public/private post and anonymous public feed checks.
+- **Not done:** actual user registration by founder, confirmation email delivery, password login, upload, Explore visibility, anonymous feed, cross-account RLS test, mobile UAT, and custom domain setup.
+- **Security caution:** anon Storage signed URLs are intentionally limited to files referenced by public published posts or public profiles. Verify after deployment using an anonymous browser session; private media must not load.
+- **Next step:** verify migration history and advisors; commit migration/frontend/docs; inspect GitHub Actions Pages deployment; then founder registers their own account through the normal UI. Never create an account or post on the founder's behalf.
