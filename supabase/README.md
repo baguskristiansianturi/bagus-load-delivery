@@ -64,3 +64,9 @@ Private bucket: `pluits-user-media`.
 - An Auth trigger creates the initial user profile row. Username can be personalized in profile settings.
 - A public post should appear in the signed-in Explore feed and the public homepage feed. A private post should remain visible only to its owner.
 - No test user, sample post, fake review, or fake transaction has been inserted by this setup.
+
+
+## Supabase Auth redirect for GitHub Pages testing
+Set the GitHub Pages base URL as an allowed redirect URL in Supabase Authentication → URL Configuration:
+`https://baguskristiansianturi.github.io/bagus-load-delivery/`
+The registration flow uses the current GitHub Pages base path as `emailRedirectTo`. When a custom domain is purchased, add the new domain to Redirect URLs before switching the frontend callback target. Keep the GitHub Pages URL during transition until the custom domain is verified.
