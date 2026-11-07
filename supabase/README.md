@@ -28,7 +28,7 @@
 2. `202611070003_pluits_store_profile_hardening.sql` — hardening store private/public boundary.
 3. `202611070004_user_first_social_foundation.sql` — user profiles, private addresses, posts, likes, comments, saves, private user media bucket and RLS.
 4. `202611070005_post_account_tags.sql` — account tags on posts.
-5. `20261107140000_pluits_public_social_read.sql` — anonymous read-only access to public profiles/posts and tightly scoped signed URL creation for public media.
+5. `20261107142901_pluits_public_social_read.sql` — anonymous read-only access to public profiles/posts and tightly scoped signed URL creation for public media.
 
 Database schema is applied in Supabase. Confirm the live migration list and advisors before further DDL. Do not assume a migration file in GitHub has been applied unless it appears in the Supabase migration history.
 
