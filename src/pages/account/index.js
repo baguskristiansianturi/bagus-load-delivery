@@ -369,7 +369,8 @@ function bindCompose(){
     uploadedPath=path;progress.querySelector('span').style.width='75%';
    }
    const tags=String(data.get('tags')||'').split(',').map(x=>x.trim().replace(/^#/,'').toLowerCase()).filter(Boolean).slice(0,12);
-   const {error:insertError}=await supabase.from('user_posts').insert({user_id:user.id,caption,tags,media_path:uploadedPath,media_type:file?(isVideo?'video':'image'):'text',visibility:String(data.get('visibility'))});
+   const postContext={profile_context:accountContext.active,professional_profile_id:accountContext.active==='professional'?accountContext.professional?.id||null:null,business_store_id:accountContext.active==='business'?(accountContext.prefs?.active_store_id||accountContext.stores[0]?.id||null):null};
+   const {error:insertError}=await supabase.from('user_posts').insert({user_id:user.id,...postContext,caption,tags,media_path:uploadedPath,media_type:file?(isVideo?'video':'image'):'text',visibility:String(data.get('visibility'))});
    if(insertError)throw new Error('Media tersimpan tetapi postingan gagal dibuat: '+insertError.message);
    if(file)progress.querySelector('span').style.width='100%';
    notify(file?'Postingan dengan media berhasil diterbitkan.':'Postingan teks berhasil diterbitkan.');
