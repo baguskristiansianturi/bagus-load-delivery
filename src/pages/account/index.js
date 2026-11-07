@@ -143,7 +143,7 @@ function postCard(p){
  return `<article class="ua-post-card" data-post-id="${p.id}"><div class="ua-post-head">${avatar(p.avatarUrl,p.owner.display_name)}<div><strong>${esc(p.owner.display_name)}</strong><small>@${esc(p.owner.username)} ${p.owner.public_city&&p.owner.public_province?'· ⌖ '+esc(p.owner.public_city)+', '+esc(p.owner.public_province):''}</small></div><time>${fmtDate(p.created_at)}</time></div>
  <p class="ua-caption">${esc(p.caption)}</p>${(p.tags?.length||p.tagged?.length)?'<div class="ua-tags">'+(p.tags||[]).map(t=>'<span>#'+esc(t)+'</span>').join(' ')+(p.tagged||[]).map(t=>'<span>＠'+esc(t.username)+'</span>').join(' ')+'</div>':''}
  <div class="ua-media">${p.media_type==='video'?'<video src="'+p.mediaUrl+'" controls playsinline preload="metadata"></video>':'<img src="'+p.mediaUrl+'" alt="'+esc(p.caption||'Foto postingan')+'">'}</div>
- <div class="ua-post-actions"><button data-action="like" class="${p.liked?'is-liked':''}">♥ <span>${p.liked?'Disukai':'Suka'}</span> <b>${p.likes}</b></button><button data-action="comments">◯ Komentar <b>${p.comments}</b></button><button data-action="share">↗ Bagikan</button><button data-action="save" class="${p.saved?'is-saved':''}">▱ ${p.saved?'Tersimpan':'Tandai'}</button><button data-action="tag">＠ Tag</button></div><div class="ua-comments" hidden></div>
+ <div class="ua-post-actions"><button data-action="like" class="${p.liked?'is-liked':''}">♥ <span>${p.liked?'Disukai':'Suka'}</span> <b>${p.likes}</b></button><button data-action="comments">◯ Komentar <b>${p.comments}</b></button><button data-action="share">↗ Bagikan</button><button data-action="save" class="${p.saved?'is-saved':''}">▱ ${p.saved?'Tersimpan':'Tandai'}</button><button data-action="tag" ${p.user_id===user.id?'':'disabled title="Hanya pemilik postingan dapat menandai akun"'}>＠ Tag</button></div><div class="ua-comments" hidden></div>
  </article>`;
 }
 async function composePage(){
@@ -191,6 +191,7 @@ async function loadLeaflet(){
 }
 async function initMap(){
  const el=document.querySelector('#ua-address-map');if(!el)return;
+ if(leafletMap){leafletMap.remove();leafletMap=null;leafletMarker=null;}
  try{
   await loadLeaflet();if(!document.querySelector('#ua-address-map'))return;
   leafletMap=window.L.map(el).setView([-8.65,115.2167],11);
@@ -260,7 +261,7 @@ function bindCompose(){
   if(file.size>50*1024*1024){note.textContent='Ukuran file maksimal 50 MB.';return;}
   btn.disabled=true;btn.textContent='Mengunggah…';progress.hidden=false;progress.querySelector('span').style.width='35%';
   try{
-   const ext=file.name.split('.').pop().toLowerCase(),path=user.id+'/'+crypto.randomUUID()+'.'+ext;
+   const ext=file.name.split('.').pop().toLowerCase(),path=user.id+'/'+(crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random().toString(36).slice(2))+'.'+ext;
    const {error:uploadError}=await supabase.storage.from(BUCKET).upload(path,file,{contentType:file.type,upsert:false});if(uploadError)throw uploadError;
    progress.querySelector('span').style.width='75%';
    const data=new FormData(form),tags=String(data.get('tags')||'').split(',').map(x=>x.trim().replace(/^#/,'').toLowerCase()).filter(Boolean).slice(0,12);
@@ -313,7 +314,7 @@ function bindPostActions(){
   });
   card.querySelector('[data-action="share"]')?.addEventListener('click',async()=>{
    const url=location.origin+location.pathname+'#/account/post/'+id;
-   try{if(navigator.share)await navigator.share({title:'Postingan Pluits',url});else{await navigator.clipboard.writeText(url);notify('Tautan disalin.');}}catch{}
+   try{if(navigator.share)await navigator.share({title:'Postingan Pluits',url});else if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(url);notify('Tautan disalin.');}else{prompt('Salin tautan postingan ini:',url);}}catch{}
   });
   card.querySelector('[data-action="tag"]')?.addEventListener('click',async()=>{
    const handle=prompt('Masukkan username akun yang ingin ditandai (tanpa @):');if(!handle)return;
