@@ -400,6 +400,52 @@ Aksi hanya boleh tercatat setelah backend mengonfirmasi. Jumlah interaksi dihitu
 ### 19.5 Kriteria lulus pengalaman akun pertama
 Uji pengguna pertama dinyatakan lulus apabila pengguna dapat mendaftar/login, mengganti foto profil dan sampul, mengisi bio, menetapkan username, mengatur privasi, menambah alamat lengkap dan kode pos, memasang titik peta, mengunggah foto dan video, melihat hasil unggahan pada profil dan Explore, serta menggunakan like, komentar, share, simpan/tandai dan tag tanpa data contoh palsu. Pengujian ini mendahului pengujian fitur toko dan tidak menandakan fitur sosial sudah selesai sebelum benar-benar diuji.
 
+
+## 21. Arsitektur sosial sebagai beranda utama dan marketplace sebagai ruang terpisah
+
+Keputusan produk: **Pluits adalah platform sosial-komunitas yang memiliki marketplace terintegrasi, bukan marketplace yang hanya diberi fitur sosial.** Beranda utama harus berfungsi sebagai social feed yang dapat dilihat pengunjung tanpa login. Halaman katalog belanja bukan halaman pembuka utama.
+
+### 21.1 Beranda publik (visitor-first social feed)
+- URL utama `/` menampilkan linimasa komunitas Pluits.
+- Pengunjung tanpa akun dapat melihat konten publik yang memenuhi aturan visibilitas dan moderasi, membaca caption, melihat profil publik, serta menjelajahi konten.
+- Feed dapat memuat foto dan video dari pengguna, aktivitas komunitas, inspirasi proyek, dokumentasi pekerjaan, pengalaman penggunaan produk/jasa, dan konten relevan lain.
+- Konten baru dari akun kecil tetap memperoleh peluang tampil; ranking dapat mempertimbangkan relevansi, minat, kebaruan dan interaksi yang sah tanpa angka palsu.
+- Cerita/Stories dan video pendek/Reels merupakan pengembangan tersendiri; jangan menganggap placeholder stories sebagai fitur yang sudah berfungsi.
+- Pengunjung tidak perlu login untuk mengenal aplikasi. Login/registrasi diminta secara kontekstual ketika melakukan aksi yang membutuhkan identitas, misalnya like, komentar, follow, menyimpan, membuat postingan, chat, checkout, atau transaksi.
+- Jangan menampilkan produk contoh, toko fiktif, angka engagement palsu, atau saldo/transaksi simulasi sebagai data nyata.
+
+### 21.2 Marketplace sebagai area khusus
+Marketplace diakses melalui navigasi tersendiri. Di dalamnya pengguna dapat mencari dan menelusuri:
+- Material dan produk konstruksi.
+- Toko, supplier, distributor, dan penyedia resmi yang memenuhi persyaratan.
+- Jasa tukang dan tenaga profesional lintas bidang konstruksi (misalnya tukang bangunan, ledeng/plumbing, listrik, kolam renang, renovasi, dan layanan terkait).
+- Angkutan dan delivery material.
+- Kategori layanan/produk lain yang disetujui dalam roadmap.
+
+Marketplace harus mendukung pencarian, kategori, filter, detail produk/jasa/toko, perbandingan informasi, kontak/chat, keranjang, checkout, dan transaksi sesuai fase implementasi. Persyaratan legalitas toko PT/CV/UD serta prinsip mengurangi perantara/calo dan transparansi harga tetap berlaku di marketplace.
+
+### 21.3 Navigasi produk
+Navigasi utama yang konsisten:
+1. **Beranda** — feed sosial publik.
+2. **Marketplace** — katalog material, produk, toko, supplier, jasa, dan logistik.
+3. **Explore** — penemuan konten komunitas, termasuk foto dan video.
+4. **Buat postingan** — untuk pengguna yang login.
+5. **Aktivitas/Notifikasi** — interaksi sosial dan aktivitas akun.
+6. **Profil** — identitas sosial pribadi, terpisah dari profil toko.
+7. **Akun** — transaksi, wishlist, keranjang, alamat, chat, saldo, pengaturan, dan opsi Buat Toko.
+
+Pada mobile, navigasi dapat diringkas menjadi bottom navigation yang tetap memprioritaskan Beranda, Explore, Buat, Marketplace, dan Profil. Menu akun/aktivitas dapat ditempatkan pada area sekunder sesuai hasil uji UX.
+
+### 21.4 Prinsip identitas dan akses
+- Feed publik dapat dibaca tanpa akun selama kebijakan RLS dan Storage mengizinkan konten publik.
+- Interaksi yang memerlukan identitas harus meminta login/registrasi pada saat aksi dilakukan, bukan memblokir pengunjung sejak halaman pertama.
+- Akun privat, konten privat, konten terhapus, konten yang diblokir, atau konten yang tidak lolos moderasi tidak boleh tampil kepada pengunjung umum.
+- Data alamat lengkap, koordinat privat, nomor telepon, bukti pembayaran, dan data transaksi tidak boleh terekspos pada feed.
+- Marketplace dan feed berbagi identitas akun yang sama, tetapi keduanya tetap memiliki fungsi, navigasi, dan pengalaman yang berbeda.
+
+### 21.5 Perubahan keputusan terhadap desain beranda sebelumnya
+Konsep beranda katalog/landing page yang menonjolkan kategori material, jasa, dan supplier sebagai isi utama halaman pertama **digantikan** oleh beranda social feed. Kategori dan penjelasan marketplace tetap ada, tetapi dipindahkan ke halaman Marketplace serta tautan/komponen sekunder pada feed. Keputusan ini mengubah arsitektur informasi dan navigasi, bukan menghapus kebutuhan marketplace.
+
 ## 20. Aturan sinkronisasi model bisnis, checkpoint, dan PR
 Model bisnis ini menyimpan keputusan dan arah produk; ia bukan satu-satunya catatan status implementasi. Status pekerjaan harus dikelola dalam dokumen **PROJECT-STATUS-ROADMAP.md** yang menjadi pasangan wajib dokumen ini.
 
