@@ -187,7 +187,7 @@ async function profilePage(preview=false){
   <div class="ua-settings-shortcuts"><a href="#/account/settings">Privasi & keamanan</a><a href="#/account/professional">Profil Professional</a><a href="#/seller">Business & Seller Center</a><a href="#/account/wallet">Wallet</a><a href="#/account/addresses">Alamat tersimpan</a></div>
  </details>
  
- <section id="edit-profile" class="ua-grid-layout"><div class="ua-panel ua-edit-panel"><div class="ua-section-title"><div><span class="ua-eyebrow">IDENTITAS PUBLIK</span><h2>Edit profil</h2></div></div>
+ <details class="ua-profile-settings ua-edit-settings"><summary>Edit identitas dan pengaturan profil</summary><section id="edit-profile" class="ua-grid-layout"><div class="ua-panel ua-edit-panel"><div class="ua-section-title"><div><span class="ua-eyebrow">IDENTITAS PUBLIK</span><h2>Edit profil</h2></div></div>
  <form id="ua-profile-form" class="ua-form-grid">
   <label>Nama tampilan<input name="display_name" maxlength="80" required value="${esc(profile.display_name)}"><small>Nama tampilan boleh sama dengan pengguna lain.</small></label>
   <label>Username<input name="username" maxlength="30" pattern="[a-z0-9][a-z0-9._]{2,29}" required value="${esc(profile.username)}"><small>Unik, huruf kecil, angka, titik, atau garis bawah.</small></label>
@@ -199,9 +199,7 @@ async function profilePage(preview=false){
   <div class="ua-span-2 ua-form-actions"><button class="ua-primary" type="submit">Simpan perubahan</button><span id="ua-profile-note" class="ua-form-note"></span></div>
  </form></div>
  <aside class="ua-panel ua-profile-side"><span class="ua-eyebrow">TOKO SAYA</span><h2>Identitas bisnis terpisah</h2>${stores.length?stores.map(s=>`<div class="ua-store-mini"><strong>${esc(s.name)}</strong><small>@${esc(s.username)} · ${esc(s.public_city||'')}</small><span class="ua-status">${esc(s.store_status)}</span></div>`).join(''):'<p>Belum ada toko yang terhubung. Anda dapat memakai Pluits sebagai pengguna biasa terlebih dahulu.</p>'}
- <p class="ua-muted">Toko hanya ditampilkan di profil jika Anda mengaktifkan pilihan di atas. Branding dan katalog toko tetap dikelola terpisah.</p><a href="#/seller/register" class="ua-outline ua-full">Buat Toko (opsional)</a></aside></section>
- <section class="ua-panel ua-posts-panel"><div class="ua-section-title"><div><span class="ua-eyebrow">GALERI SAYA</span><h2>Postingan saya</h2></div><a class="ua-outline" href="#/account/explore">Buat postingan</a></div>
- ${ownPosts.length?postGrid(ownPosts):'<div class="ua-empty"><strong>Belum ada postingan</strong><p>Unggah foto atau video pertama Anda. Setelah berhasil, konten akan tampil di sini dan Explore jika akun Anda publik.</p><a class="ua-primary ua-inline" href="#/account/explore">Mulai berbagi</a></div>'}</section>`;
+ <p class="ua-muted">Toko hanya ditampilkan di profil jika Anda mengaktifkan pilihan di atas. Branding dan katalog toko tetap dikelola terpisah.</p><a href="#/seller/register" class="ua-outline ua-full">Buat Toko (opsional)</a></aside></section></details>`;
 }
 function postGrid(posts){
  return `<div class="ua-post-grid">${posts.map(p=>`<a class="ua-post-thumb" href="#/account/post/${p.id}">${p.media_path?(p.media_type==='video'?'<span class="ua-video-mark">▶ VIDEO</span><video src="'+p.mediaUrl+'" muted playsinline preload="metadata"></video>':'<img src="'+p.mediaUrl+'" alt="'+esc(p.caption||'Postingan Pluits')+'">'):'<span class="ua-text-thumb">PLUITS</span>'}<span class="ua-thumb-caption">${esc(p.caption||'')}</span></a>`).join('')}</div>`;
