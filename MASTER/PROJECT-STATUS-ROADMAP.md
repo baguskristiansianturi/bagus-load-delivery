@@ -266,3 +266,14 @@ Build dari commit `642a24bdbed4a85931271e7481f9880a04cc9fc3` berhasil. GitHub Pa
   6. Petakan migrasi skema Supabase dan RLS sebelum menerapkan migration baru.
   7. Uji mobile-first dari Android dan catat commit/deploy/test secara terpisah.
 - **Status implementasi:** tidak ada fitur baru yang dinyatakan selesai hanya karena model bisnis diperbarui. Kode, schema, deployment dan UAT belum diverifikasi pada checkpoint ini.
+
+
+## CP-011 — Pluits Social Experience Commerce (7 November 2026)
+
+- **Status:** ARAH MODEL BISNIS DIDOKUMENTASIKAN; implementasi fitur baru pada checkpoint ini BELUM dimulai/diuji.
+- **Sumber keputusan:** MASTER/BUSINESS-MODEL-MASTER.md bagian 24.
+- **Konsep yang dicatat:** social-first feed; transaksi sah dapat menjadi sumber postingan; foto katalog merchant dapat dipakai bila pengguna tidak mengambil foto; satu pengalaman kanonis untuk review/feed/Trip/arsip; pembedaan sinyal lokasi, kunjungan terkonfirmasi, dan transaksi terverifikasi; notifikasi review kepada owner/staff berizin dan fitur balasan; pembatasan URL eksternal bebas dan penggunaan kartu internal Pluits; username/halaman publik sebagai mini-website; promosi jasa yang diarahkan ke halaman penyedia; pembatasan barang bekas pada listing toko; pilihan pickup/pengiriman toko/mitra; Trip Story dengan kontrol privasi; moderasi, spam controls, dan hipotesis pendapatan.
+- **Guardrail:** jangan menjanjikan tidak ada postingan palsu secara absolut. Label transaksi terverifikasi hanya jika ada bukti backend yang sah. Foto, caption, geotag, atau geofence saja tidak cukup. Jangan mempublikasikan nominal, lokasi real-time, atau detail transaksi tanpa kontrol privasi.
+- **Belum dikerjakan:** skema transaksi/experience/review/notifikasi baru; respons merchant; halaman publik usaha; kartu internal; validasi link; Trip Story; peningkatan moderasi/rate limit; consent privasi; pembayaran/wallet; integrasi logistik.
+- **Langkah berikutnya:** (1) buat panduan AI Start Here; (2) audit repo, Supabase schema/RLS, route dan feed terhadap bagian 24; (3) tulis PRD dan model data experience/review sebelum migration; (4) lanjutkan fondasi sosial dan halaman publik/username; (5) implementasikan notifikasi dan balasan merchant dengan authorization/RLS; (6) integrasikan transaksi hanya setelah payment flow nyata siap; (7) UAT Android lintas akun pengguna dan merchant.
+- **Deployment:** perubahan checkpoint ini adalah dokumentasi. Tidak ada perubahan kode/database atau klaim fitur selesai. Status Pages tidak berubah karena dokumentasi saja.
