@@ -219,3 +219,26 @@
  .ua-profile-main .ua-post-grid{gap:2px}
  .ua-profile-empty-tab{border:0;border-top:1px solid #edf0f3}
 }
+/* App-like profile tabs: one active view at a time, never stack content */
+.ua-profile-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;background:#fff;border-bottom:1px solid #e7eaf0;margin:0}
+.ua-profile-tabs button{appearance:none;border:0;border-bottom:2px solid transparent;background:transparent;color:#8993a2;padding:13px 6px;display:flex;align-items:center;justify-content:center;gap:7px;font:inherit;font-size:13px;font-weight:700;cursor:pointer}
+.ua-profile-tabs button.active{color:#20354f;border-bottom-color:#20354f}
+.ua-profile-tab-content{min-height:38vh;background:#fff;padding:14px 0 30px}
+.ua-profile-tab-content>.ua-section-title{display:flex;justify-content:space-between;align-items:center;padding:0 12px 12px;font-size:14px}
+.ua-profile-tab-empty{min-height:34vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:28px 18px;color:#718096}
+.ua-profile-tab-empty>span{width:48px;height:48px;border:1px solid #e2e8f0;border-radius:50%;display:grid;place-items:center;font-size:23px;margin-bottom:12px;color:#53657c}
+.ua-profile-tab-empty strong{color:#26364b;font-size:15px}
+.ua-profile-tab-empty p{font-size:12px;line-height:1.5;max-width:270px}
+@media(max-width:760px){
+ html,body,#app{width:100%;min-height:100%;overflow-x:hidden}
+ .ua-profile-main{width:100%;max-width:none;margin:0!important;padding:0!important}
+ .ua-profile-main .ua-profile-card{width:100%;margin:0!important;border:0;border-radius:0;box-shadow:none;border-bottom:1px solid #edf0f3}
+ .ua-profile-main .ua-cover{height:clamp(128px,34vw,175px)}
+ .ua-profile-main .ua-profile-content{padding:0 14px 14px;gap:10px}
+ .ua-profile-tabs{position:sticky;top:0;z-index:20}
+ .ua-profile-tabs button{min-height:48px;font-size:12px}
+ .ua-profile-tab-content{min-height:45vh;padding-top:12px}
+ .ua-profile-tab-content .ua-post-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2px}
+ .ua-profile-tab-content .ua-post-thumb{aspect-ratio:1/1;min-width:0}
+ .ua-profile-tab-empty{min-height:42vh}
+}
