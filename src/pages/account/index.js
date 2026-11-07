@@ -185,7 +185,7 @@ async function profilePage(preview=false){
    <div class="ua-profile-count"><strong>${ownPosts.length}</strong><span>Postingan</span></div>
   </div>
  </section>
- <section class="ua-grid-layout"><div class="ua-panel ua-edit-panel"><div class="ua-section-title"><div><span class="ua-eyebrow">IDENTITAS PUBLIK</span><h2>Edit profil</h2></div></div>
+ <section id="edit-profile" class="ua-grid-layout"><div class="ua-panel ua-edit-panel"><div class="ua-section-title"><div><span class="ua-eyebrow">IDENTITAS PUBLIK</span><h2>Edit profil</h2></div></div>
  <form id="ua-profile-form" class="ua-form-grid">
   <label>Nama tampilan<input name="display_name" maxlength="80" required value="${esc(profile.display_name)}"><small>Nama tampilan boleh sama dengan pengguna lain.</small></label>
   <label>Username<input name="username" maxlength="30" pattern="[a-z0-9][a-z0-9._]{2,29}" required value="${esc(profile.username)}"><small>Unik, huruf kecil, angka, titik, atau garis bawah.</small></label>
