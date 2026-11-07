@@ -20,7 +20,7 @@ export async function loadAccountContext(db,user){
 export function contextHeader(ctx){
  return `<div class="ua-context-switch"><label for="ua-context-select">KONTEKS AKUN</label><select id="ua-context-select"><option value="personal" ${ctx.active==='personal'?'selected':''}>Personal</option>${ctx.professional?'<option value="professional" '+(ctx.active==='professional'?'selected':'')+'>Professional</option>':''}${ctx.stores.length?'<option value="business" '+(ctx.active==='business'?'selected':'')+'>Business</option>':''}</select></div>`;
 }
-const nav=()=>`<div class="ua-subnav"><a href="#/account/profile">Personal</a><a href="#/account/professional">Professional</a><a href="#/account/settings">Pengaturan</a><a href="#/account/wallet">Wallet</a><a href="#/account/addresses">Alamat</a><a href="#/account/explore">Explore</a></div>`;
+const nav=()=>`<a class="ua-account-back" href="#/account/profile">← Kembali ke menu akun</a>`;
 export function professionalPage(ctx,profile){
  const p=ctx.professional;
  if(!p)return professionalFormPage(ctx,profile);
