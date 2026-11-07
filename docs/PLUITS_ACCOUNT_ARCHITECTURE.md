@@ -143,14 +143,14 @@ P2 — Sosial dan komersial: feed/Story mengikuti konteks profil, ulasan pembeli
 
 P3 — Uang: ledger immutable, payment provider, settlement, withdrawal, rekening terverifikasi, audit. Jangan aktifkan pencairan uang sungguhan sebelum pengujian dan kepatuhan selesai.
 
-## 12. Status backend setelah fondasi 8 November 2026
+## 12. Status implementasi per 8 November 2026
 
 - `professional_profiles` dan `professional_portfolio_items` sudah dibuat di Supabase dengan RLS pemilik dan pembacaan publik hanya untuk profil aktif/publik.
 - `account_context_preferences` menyimpan konteks aktif Personal/Professional/Business dan memvalidasi akses ke toko melalui owner/anggota aktif.
 - `profile_verification_cases` menerima pengajuan verifikasi profesional/toko; pemohon tidak dapat mengubah status review atau menetapkan dirinya verified. Keputusan reviewer harus dilakukan melalui jalur admin tepercaya.
 - Entitas Business tetap menggunakan tabel `stores` yang sudah ada; keanggotaan tim tetap menggunakan `store_members`. Tidak dibuat tabel bisnis duplikat.
 - Migrasi sumber disimpan sesuai dua versi yang tercatat di Supabase: `20261107172444_pluits_profile_context_foundation.sql` dan `20261107172504_pluits_profile_context_rls_tuning.sql`.
-- Status: backend schema/RLS IMPLEMENTED dan pemeriksaan tabel/policy berhasil. Frontend switcher/onboarding belum IMPLEMENTED/DEPLOYED/TESTED.
+- Backend schema/RLS untuk Professional, konteks akun, verifikasi, dan preferensi audiens sudah IMPLEMENTED di Supabase.\n- Frontend account switcher Personal/Professional/Business, halaman onboarding/edit draft Professional, pusat pengaturan privasi/audiens, dan default audiens pada composer sudah ditambahkan ke repository.\n- Postingan kini menyimpan konteks `personal`/`professional`/`business` beserta target profil/toko; RLS memvalidasi kepemilikan konteks. Konten Professional baru hanya dapat dibaca publik jika profil profesional aktif dan publik; konten Business hanya jika toko aktif dan terverifikasi.\n- Business Center masih memakai Seller Center yang sudah ada; switcher mengarah ke workspace toko, tidak membuat halaman Business duplikat.\n- Build dan deployment GitHub Pages masih menunggu hasil workflow setelah commit frontend.
 
 ## 13. Status aktual sebelum fondasi ini dibuat
 
