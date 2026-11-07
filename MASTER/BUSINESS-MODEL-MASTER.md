@@ -1,8 +1,10 @@
-# MASTER MODEL BISNIS — BAGUS LOAD & DELIVERY
-**Versi:** 0.8 | **Pembaruan:** 7 November 2026
+# MASTER MODEL BISNIS — PLUITS
+**Versi:** 0.9 | **Pembaruan:** 7 November 2026
 **Status:** Dokumen induk model bisnis; acuan sebelum penyusunan paket dan spesifikasi teknis.
 
 > Dokumen ini menjadi sumber acuan utama. Hal yang belum diputuskan ditandai sebagai terbuka dan bukan kebijakan final.
+>
+> **Catatan arah terbaru:** Pluits berkembang dari konsep marketplace konstruksi menjadi platform universal social media + marketplace lokal berbasis wilayah + Trip/Travel. Bagian 23 adalah keputusan terbaru dan menjadi acuan jika ada pertentangan dengan bagian lama. Bagian lama tetap dipertahankan sebagai riwayat dan detail operasional yang masih relevan.
 
 ## 1. Visi
 Prioritas utama adalah mendigitalkan toko material bangunan menjadi marketplace multi-toko: toko bangunan, toko besi, toko cat, toko semen, dan pemasok material lainnya dapat menampilkan katalog dan melayani pembeli secara digital. Platform membantu pembeli melihat toko dan membandingkan produk/harga tanpa harus mendatangi toko satu per satu. Dalam jangka panjang ekosistem dapat diperluas ke pekerja, jasa konstruksi, dan logistik. Bagus Load & Delivery sebagai layanan pengiriman tersendiri bukan fokus awal dan baru dipertimbangkan setelah kebutuhan serta modelnya diuji.
@@ -511,3 +513,146 @@ Setiap checkpoint harus memiliki kriteria penerimaan dan bukti. Setiap PR harus 
 
 ---
 **Riwayat revisi:** v0.8 menambahkan pengalaman onboarding pengguna baru, profil publik, unggah foto/video, Explore campuran, interaksi konten, dan kewajiban sinkronisasi checkpoint/PR. Rincian progres dan pekerjaan tertunda dilacak pada dokumen status proyek, bukan dengan menghapus riwayat model bisnis.
+
+
+## 23. Arah bisnis terbaru — Pluits sebagai platform sosial, marketplace lokal, dan Trip
+
+**Keputusan founder, 7 November 2026:** Pluits tidak lagi dibatasi sebagai marketplace konstruksi. Identitas Pluits menjadi platform universal yang menggabungkan tiga ruang utama dalam satu akun dan satu ekosistem:
+
+1. **Social Media / Community** — beranda utama untuk melihat dan menerbitkan foto/video, mengikuti orang dan penyedia, berteman/berinteraksi, memberi suka, komentar, membagikan konten, menyimpan, membuat Story/Status, menemukan komunitas, serta chat.
+2. **Local Marketplace** — ruang khusus untuk menemukan dan membeli produk serta layanan dari penyedia lokal di wilayah tempat pengguna berada atau yang dipilihnya sebagai area kunjungan. Desain marketplace Pluits yang sudah ada dipertahankan; pengembangan dilakukan pada kategori, kartu, filter, detail, ketersediaan, dan aturan pemenuhan, bukan mengganti seluruh desainnya dengan tampilan marketplace My Bali.
+3. **Trip / Travel** — ruang untuk merencanakan perjalanan, menemukan destinasi, akomodasi, aktivitas, tur, rental, transportasi, event, dan penyedia perjalanan lokal; termasuk alur penginapan dan pemesanan yang memiliki pola fungsi seperti platform akomodasi (misalnya Airbnb), tetapi menggunakan identitas dan rancangan Pluits sendiri.
+
+Pluits harus mempunyai alasan penggunaan sepanjang hari. Ketika pengguna tidak sedang berbelanja atau bepergian, mereka tetap dapat membuka feed, melihat aktivitas teman, berbagi konten, mencari inspirasi, mengikuti penyedia, dan mengobrol. Ketika membutuhkan sesuatu, mereka dapat berpindah ke Marketplace atau Trip tanpa berpindah aplikasi maupun akun.
+
+### 23.1 Prioritas beranda dan navigasi
+
+- URL utama Pluits menampilkan **social feed** sebagai homepage utama, mengikuti model bisnis dan pola pengalaman sosial My Bali.
+- Homepage bukan katalog produk dan bukan landing page konstruksi.
+- Feed dapat berisi konten umum pengguna, teman/following, penyedia lokal, tempat, perjalanan, aktivitas, dan konten komunitas yang relevan. Konten tidak harus terkait transaksi atau perjalanan.
+- Konten bisnis dapat ditautkan ke profil penyedia, toko, produk, layanan, destinasi, akomodasi, atau aktivitas. Konten sponsor harus diberi label jelas.
+- Pengunjung dapat membaca konten publik tanpa login. Login diminta ketika melakukan tindakan yang membutuhkan identitas seperti follow, berteman, like, komentar, posting, chat, menyimpan, booking, atau checkout.
+- Stories/Status bersifat permukaan konten tersendiri dan tidak otomatis menjadi postingan permanen. Reels/video pendek dapat dikembangkan sebagai format tersendiri.
+- Navigasi utama sekurang-kurangnya: **Beranda, Marketplace, Trip, Explore, Buat, Aktivitas/Notifikasi, Chat, dan Profil/Akun**. Susunan desktop/mobile ditetapkan melalui pengujian UX. Marketplace tetap mudah dijangkau dari homepage.
+
+### 23.2 Marketplace lokal berbasis wilayah — pembeda utama Pluits
+
+**Keputusan founder:** Pluits tidak menjadi marketplace pengiriman nasional seperti Shopee yang memungkinkan produk dari satu pulau/daerah dikirim bebas ke daerah lain menggunakan kurir paket antarkota. Pluits memprioritaskan transaksi lokal dan pemenuhan cepat di wilayah operasional penyedia.
+
+Contoh aturan: produk dari toko di Bali tidak dapat dipesan oleh pembeli di Jakarta untuk dikirim menggunakan JNE, J&T, atau layanan parcel antardaerah. Produk tersebut hanya dapat dipesan jika pembeli berada/menetapkan alamat tujuan di area layanan lokal toko dan toko benar-benar sanggup memenuhi pesanan secara **instant atau same-day** sesuai kapasitas dan jam operasionalnya.
+
+Aturan inti:
+- Setiap penyedia wajib menetapkan lokasi operasional dan wilayah layanan yang nyata serta dapat diverifikasi.
+- Setiap produk/layanan harus memiliki cakupan pemenuhan yang jelas: area/zona, jam operasional, waktu persiapan, kapasitas, cut-off, ketersediaan, dan jenis pemenuhan.
+- Sistem memeriksa kecocokan wilayah pembeli dengan wilayah layanan penyedia sebelum tombol pesan/checkout diaktifkan.
+- Jika alamat tujuan berada di luar wilayah layanan atau penyedia tidak mampu memenuhi instant/same-day pada slot yang tersedia, produk tidak dapat dipesan untuk alamat tersebut. Tampilkan alasan yang jelas; jangan menerima order lalu berharap penyedia mencari kurir.
+- Tidak boleh menawarkan pengiriman nasional/antardaerah untuk barang Marketplace sebagai opsi checkout standar. Kurir parcel antarkota seperti JNE/J&T tidak digunakan untuk mengakali batas wilayah lokal.
+- Same-day/instant bukan janji otomatis. Waktu nyata harus dihitung dari jarak, traffic bila tersedia, jam buka, stok, waktu persiapan, kapasitas kurir/armada, dan batas operasional.
+- Penyedia dapat menggunakan armada sendiri atau mitra lokal yang memenuhi standar Pluits. Tanggung jawab pemenuhan, pelacakan, serah terima, dan bukti penerimaan harus tercatat.
+- Pickup di lokasi penyedia dapat dipertimbangkan sebagai opsi tambahan hanya setelah aturan operasionalnya ditetapkan; bukan alasan untuk mengaktifkan pengiriman antardaerah.
+- Pengguna lokal tetap dapat menggunakan marketplace untuk kebutuhan sehari-hari di wilayahnya. Wisatawan dapat menemukan dan membeli produk khas/lokal ketika berada di area tujuan, dengan pemenuhan lokal yang cepat.
+- Pengguna yang sudah meninggalkan wilayah asal tetap dapat melihat konten dan profil penyedia, tetapi tidak otomatis dapat memesan barang untuk dikirim ke kota/daerah lain. Pengecualian lintas wilayah memerlukan keputusan founder terpisah dan tidak boleh diselundupkan sebagai fitur kurir biasa.
+
+**Dampak terhadap eksklusivitas:** nilai Pluits bukan menjanjikan semua barang bisa dikirim ke mana saja, melainkan menghubungkan pengguna dengan produk, penyedia, dan pengalaman lokal yang benar-benar dapat diakses di wilayah tersebut. Batas wilayah harus ditegakkan backend pada pencarian yang dapat dipesan, validasi keranjang, checkout, pembuatan order, dan pemilihan fulfillment—bukan hanya menyembunyikan kartu di frontend.
+
+### 23.3 Wilayah operasional dan pengalaman wisatawan
+
+- Pluits dapat mempunyai banyak wilayah operasional, tetapi tiap wilayah harus diaktifkan berdasarkan kesiapan provider, fulfillment, dukungan, dan standar kualitas.
+- Model data perlu mendukung negara, provinsi, kota/kabupaten, kecamatan/area, dan zona layanan penyedia sesuai kebutuhan. Wilayah yang dipilih pengguna menjadi konteks discovery dan transaksi.
+- Pengguna dapat memilih lokasi secara manual; izin lokasi perangkat dapat membantu mendeteksi area saat ini. Jangan memaksa akses GPS.
+- Pengguna lokal melihat penyedia di area tempat tinggal/aktivitasnya. Wisatawan domestik maupun internasional dapat mengganti konteks lokasi ke destinasi yang sedang atau akan dikunjungi.
+- Konten sosial dapat ditemukan secara luas, sedangkan hasil Marketplace dan ketersediaan transaksi diprioritaskan menurut area aktif yang dipilih.
+- Bahasa, mata uang, zona waktu, format tanggal, dan informasi harga perlu disiapkan untuk pengguna lokal serta wisatawan internasional. Harga dan ketentuan penyedia harus transparan; aturan harga khusus wisatawan tidak boleh dibuat tanpa dasar hukum/keputusan yang sah.
+- Alamat lengkap, nomor telepon, koordinat presisi, detail akomodasi privat, dan data transaksi tetap dilindungi. Lokasi publik cukup berupa wilayah umum kecuali pengguna/penyedia secara sadar memilih membagikan detail lain.
+
+### 23.4 Trip / Travel sebagai pilar produk ketiga
+
+Trip mengadopsi arah My Bali, bukan sekadar kategori produk tambahan. Ruang ini membantu pengguna dari tahap inspirasi hingga pengalaman perjalanan:
+- **Discover:** destinasi, tempat menarik, restoran, event, aktivitas, dan rekomendasi komunitas.
+- **Trip Plan / Bali Plan:** rencana perjalanan masa depan, tanggal, rute, tempat yang ingin dikunjungi, akomodasi, aktivitas, minat, catatan, dan estimasi anggaran. Rencana harus diberi label rencana, bukan booking atau kunjungan yang sudah terjadi.
+- **Stay:** hotel, villa, guesthouse, homestay, dan akomodasi lain. Provider dapat mengelola profil properti/unit, fasilitas, foto, aturan, kalender ketersediaan, harga, kapasitas, permintaan reservasi, konfirmasi, pembayaran, check-in/check-out, pembatalan, dan ulasan sesuai fase dan aturan kategori.
+- **Trip & Activity:** tur, guide, atraksi, tiket, watersport, diving, snorkeling, trekking, aktivitas budaya, dan pengalaman lokal.
+- **Rental:** kendaraan dan perlengkapan yang disewakan, dengan persyaratan identitas, ketersediaan, deposit, serah-terima, dan perlindungan sesuai kategori.
+- **Transport:** airport/port transfer, taxi, kendaraan dengan sopir, perjalanan lokal, dan layanan mobilitas lain dari operator yang memenuhi verifikasi.
+- **Trip Experience:** catatan perjalanan yang benar-benar terjadi, dibuat pengguna secara sukarela, dan dapat ditautkan ke booking/aktivitas yang memenuhi syarat bukti.
+
+Trip Plan, pencarian, booking request, booking confirmed, pembayaran, layanan selesai, check-in, dan pengalaman yang dibagikan harus menjadi status/entitas berbeda. Pembayaran tidak otomatis membuktikan kehadiran; booking tidak otomatis membuktikan layanan selesai; GPS atau unggahan foto saja tidak otomatis menjadi bukti transaksi.
+
+Pemesanan Trip dapat dilakukan sebelum wisatawan tiba di wilayah tujuan, karena yang dipesan adalah layanan/akomodasi yang akan dipenuhi di wilayah penyedia pada tanggal tertentu. Ini berbeda dari pengiriman barang Marketplace lintas daerah. Batas lokal Marketplace tidak boleh secara keliru memblokir pemesanan akomodasi atau aktivitas masa depan yang memang berlokasi di destinasi tersebut.
+
+### 23.5 Pemisahan desain dan pengalaman Marketplace
+
+- Pertahankan desain Marketplace Pluits yang sudah ada sebelum konsolidasi My Bali sebagai dasar halaman Marketplace.
+- Jangan mengganti kartu, susunan katalog, dan pola belanja Pluits dengan desain katalog My Bali.
+- Pengembangan berikutnya berfokus pada konsistensi kartu antar-homepage Marketplace, katalog, produk serupa, rekomendasi, detail produk, filter lokasi, label instant/same-day yang valid, dan checkout berbasis area.
+- Bahasa visual social feed/homepage mengambil prinsip My Bali: feed bersih, konten visual, stories, composer, explore, dan layout responsif. Identitas visual tetap Pluits.
+- Trip dapat memakai pola discovery dan detail yang sesuai kebutuhan akomodasi/aktivitas, tetapi tidak boleh mengubah marketplace menjadi satu katalog campur-aduk. Produk, layanan lokal, akomodasi, dan booking Trip mempunyai model data serta alur transaksi yang berbeda.
+
+### 23.6 Peran dan otorisasi yang disesuaikan
+
+Satu akun Pluits tetap satu identitas lintas seluruh modul. Role bukan akun terpisah dan seseorang dapat mempunyai beberapa keanggotaan sesuai kewenangannya.
+
+| Peran/konteks | Hak dan batas utama |
+|---|---|
+| Visitor/guest | Melihat feed publik, Explore, profil publik, listing publik, destinasi, dan informasi umum; tidak melakukan aksi yang membutuhkan identitas |
+| Member/user | Mengelola profil, posting, follow/pertemanan, chat, wishlist, Trip Plan, dan interaksi sesuai privasi |
+| Local buyer/customer | Mencari dan memesan produk/layanan lokal hanya jika area tujuan cocok dengan cakupan pemenuhan; mengelola alamat, keranjang, pembayaran, dan transaksi sendiri |
+| Traveler/guest | Menjelajahi destinasi, membuat Trip Plan, meminta/mengonfirmasi booking Stay/Trip/Activity/Rental/Transport sesuai ketersediaan dan aturan wilayah |
+| Store/business owner | Mengelola profil penyedia, katalog, harga, stok, jam, wilayah layanan, pesanan, staf, dan laporan sesuai kategori serta verifikasi |
+| Provider/operator | Mengelola layanan, jadwal, kapasitas, harga, ketersediaan, pemesanan, dan pemenuhan untuk kategori yang disetujui |
+| Host/accommodation manager | Mengelola properti/unit, fasilitas, kalender, tarif, reservasi, aturan, check-in/out, dan komunikasi tamu |
+| Driver/courier/field staff | Menjalankan penugasan yang diberikan, melihat data minimum untuk tugas, memperbarui status, dan mengunggah bukti serah terima; tidak otomatis memiliki hak keuangan atau owner |
+| Store/provider staff | Akun individual dengan izin per tindakan dan per penyedia; tidak menggunakan kredensial owner bersama |
+| Platform admin/moderator/support | Verifikasi, moderasi, dukungan, sengketa, dan tindakan platform berdasarkan role terpisah, alasan, audit, serta pembatasan akses data |
+
+Ketentuan:
+- Login tidak otomatis menjadikan pengguna sebagai owner toko atau provider. Setelah login, pengguna masuk ke pengalaman member biasa; menu **Buat Toko / Daftarkan Penyedia** adalah pilihan opsional.
+- Pendaftaran toko/penyedia membuat pendaftar menjadi owner utama untuk entitas yang didaftarkan, setelah proses penerimaan sesuai kategori. Satu akun dapat menjadi buyer, owner di satu entitas, staff di entitas lain, host, atau provider lain tanpa membuat akun baru.
+- Owner dapat mengundang staff menggunakan akun masing-masing. Hak sensitif—rekening, settlement, refund tertentu, penarikan, transfer ownership, dan keamanan—dibatasi untuk owner/otorisasi khusus serta autentikasi ulang.
+- Kategori usaha tidak lagi dibatasi pada konstruksi. Persyaratan badan usaha dan dokumen harus ditentukan berdasarkan jenis penyedia dan ketentuan hukum kategori. Persyaratan PT/CV/UD dari model konstruksi lama tidak boleh otomatis diberlakukan pada semua host, UMKM, individu, driver, guide, atau penyedia jasa; verifikasi tetap wajib dan disesuaikan dengan risikonya.
+- Admin platform, moderator konten, tim verifikasi, customer support, dan finance/settlement harus memiliki izin terpisah. Tidak semua admin boleh mengakses alamat privat, dokumen legal, percakapan pribadi, atau data pembayaran.
+- Semua otorisasi harus ditegakkan di backend/RLS/API; menyembunyikan tombol pada UI tidak cukup.
+
+### 23.7 Trust, kualitas, konten, dan komunikasi
+
+- Utamakan penyedia langsung atau operator yang benar-benar berwenang. Agen/reseller hanya boleh jika hubungan dan otorisasinya jelas; jangan menampilkan perantara seolah penyedia langsung.
+- Verifikasi mencakup identitas/otoritas, lokasi atau area layanan nyata, kategori, izin yang diwajibkan, produk/layanan, dan pembaruan data. Verifikasi dapat ditinjau ulang; status dan batasnya harus transparan.
+- Pisahkan profil sosial pribadi dan halaman bisnis/provider. Owner dapat memilih menampilkan toko/provider pada profil pribadi (opt-in).
+- Postingan umum tidak membutuhkan transaksi. Postingan pengalaman dapat ditautkan secara sukarela ke booking/order yang benar-benar ada; fakta sistem tidak dapat diedit seolah-olah fakta tersebut berasal dari pengguna.
+- Chat mendukung percakapan pengguna dengan teman, provider, host, driver pada konteks tugas, dan dukungan Pluits. Akses percakapan dibatasi pada peserta/role yang sah; data kontak dan transaksi tidak dibuka ke pihak lain.
+- Sediakan report, block, mute, moderasi, banding, kontrol privasi, dan perlindungan terhadap spam, penipuan, pelecehan, impersonasi, serta konten yang melanggar hak cipta.
+- Review harus terkait pengalaman yang relevan dan tidak boleh dibuat seolah transaksi terverifikasi jika tidak ada bukti sistem.
+- Rekomendasi tidak boleh diam-diam dibeli. Sponsored placement wajib ditandai dan tidak menggantikan ranking organik secara menyesatkan.
+
+### 23.8 Keputusan yang tidak otomatis ikut berubah
+
+- Hipotesis komisi 2% UMKM dan hingga 5% bisnis besar dari My Bali **bukan tarif Pluits**. Belum ada tarif final yang disetujui.
+- Prinsip equal local/foreign provider pricing dari My Bali menjadi arah transparansi, tetapi implementasi per kategori harus mematuhi hukum dan aturan resmi yang berlaku.
+- Domisili awal Bali pada backend adalah konfigurasi wilayah awal, bukan pembatas permanen identitas produk. Aktivasi wilayah baru memerlukan kesiapan nyata.
+- Wallet, pembayaran, escrow, settlement, refund, asuransi, jaminan perjalanan, dan perlindungan konsumen tidak boleh diklaim tersedia sebelum desain, mitra, regulasi, dan pengujian selesai.
+- Kategori berisiko tinggi seperti properti, kendaraan bekas, produk teregulasi, dan layanan yang memerlukan izin khusus membutuhkan kebijakan terpisah sebelum diterima.
+
+### 23.9 Dampak pada roadmap dan data model
+
+Sebelum memperluas implementasi, lakukan audit dampak atas:
+- Hierarki wilayah dan pemilihan lokasi aktif pengguna.
+- Provider entity generik dengan tipe/kategori dan verifikasi khusus.
+- Service area polygon/zone, jam, kapasitas, cut-off, fulfillment mode, dan validasi lokal pada cart/checkout/order.
+- Pemisahan order barang lokal dari booking Stay/Trip/Activity/Rental/Transport.
+- Calendar/inventory untuk akomodasi dan aktivitas; Trip Plan dan Trip Experience sebagai entitas berbeda.
+- Profil sosial, follow/friend, chat, notifikasi, media, moderasi, dan public discovery.
+- Role/permission matrix untuk owner, staff, host, driver, moderator, support, dan finance.
+- Keamanan data pribadi, transaksi, itinerary, alamat, dan komunikasi.
+- Analitik ketersediaan, pemenuhan instant/same-day, pembatalan, keterlambatan, keluhan, serta kualitas penyedia.
+
+Urutan implementasi perlu direvisi setelah audit. Jangan menganggap perubahan model bisnis ini berarti seluruh kategori, booking engine, chat, atau fulfillment sudah dibuat. Setiap modul tetap mempunyai status DECIDED, DESIGNED, IMPLEMENTED, DEPLOYED, TESTED, dan ACCEPTED yang terpisah.
+
+### 23.10 Bagian lama yang digantikan
+
+Untuk menghindari dua arah bisnis yang saling bertentangan:
+- Visi konstruksi pada bagian 1 dan batas vertikal konstruksi pada bagian 22.1–22.4 tidak lagi menjadi arah utama Pluits; bagian tersebut dipertahankan sebagai sejarah konsep awal.
+- Bagian 21 tentang social-first homepage tetap berlaku, tetapi marketplace tidak lagi khusus konstruksi dan harus mengikuti batas transaksi lokal pada bagian 23.2.
+- Bagian 22.3 yang menyatakan kategori wisata/akomodasi tidak otomatis masuk Pluits dinyatakan **digantikan** oleh bagian 23.4.
+- Bagian 22.4 tentang ekspansi lintas Indonesia diperjelas: ekspansi boleh lintas wilayah sebagai jaringan area lokal, tetapi tidak berarti barang dapat dikirim bebas lintas daerah.
+- Detail Seller Center, owner/staff, katalog, variasi, stok, audit, keamanan, dan histori pada bagian lama tetap dipakai sepanjang tidak bertentangan dengan model provider universal dan pemenuhan lokal.
+
