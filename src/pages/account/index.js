@@ -112,7 +112,32 @@ function avatar(url,name,size=''){
  return url?`<img class="ua-avatar ${size}" src="${url}" alt="Foto profil">`:`<span class="ua-avatar ua-avatar-fallback ${size}">${esc(initials(name))}</span>`;
 }
 function navProfile(){
- return `<div class="ua-subnav"><a href="#/account/profile">Profil Saya</a><a href="#/account/addresses">Alamat Tersimpan</a><a href="#/account/explore">Explore</a></div>`;
+ return `<div class="ua-subnav"><a href="#/account/profile">Profil Saya</a><a href="#/account/wallet">Wallet</a><a href="#/account/addresses">Alamat Tersimpan</a><a href="#/account/explore">Explore</a></div>`;
+}
+const rupiah=v=>new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(Number(v||0));
+async function walletPage(){
+ const [a,r]=await Promise.all([
+  supabase.from('wallet_accounts').select('balance_minor,currency,updated_at').eq('user_id',user.id).maybeSingle(),
+  supabase.from('wallet_requests').select('id,request_type,amount_minor,payment_method,status,created_at').eq('user_id',user.id).order('created_at',{ascending:false}).limit(20)
+ ]);
+ if(a.error)throw a.error;if(r.error)throw r.error;
+ const balance=a.data?.balance_minor||0,items=r.data||[];
+ return `<div class="ua-page-heading"><div><span class="ua-eyebrow">KEUANGAN AKUN</span><h1>Wallet</h1><p>Kelola saldo, ajukan top up, dan tarik saldo Pluits.</p></div></div>
+ ${navProfile()}
+ <section class="ua-wallet-balance"><span>Saldo tersedia</span><strong>${rupiah(balance/100)}</strong><small>Saldo hanya berubah setelah transaksi diverifikasi dan diproses Pluits.</small></section>
+ <section class="ua-wallet-actions"><form id="ua-wallet-form" class="ua-panel ua-wallet-form">
+  <div class="ua-section-title"><div><span class="ua-eyebrow">AJUKAN TRANSAKSI</span><h2>Top Up atau Tarik Saldo</h2></div></div>
+  <label>Jenis transaksi<select name="request_type"><option value="top_up">Top Up saldo</option><option value="withdrawal">Tarik saldo</option></select></label>
+  <label>Nominal (Rp)<input name="amount" type="number" min="10000" step="1000" required placeholder="Contoh: 100000"></label>
+  <label>Metode pembayaran / bank<input name="payment_method" maxlength="80" placeholder="Contoh: Transfer BCA"></label>
+  <label>Detail rekening / referensi<textarea name="destination_details" rows="2" maxlength="500" placeholder="Isi detail yang diperlukan"></textarea></label>
+  <label>Catatan tambahan<textarea name="note" rows="2" maxlength="300" placeholder="Opsional"></textarea></label>
+  <p class="ua-wallet-disclaimer">Permintaan berstatus menunggu dan diproses manual untuk saat ini. Saldo tidak langsung berubah ketika formulir dikirim.</p>
+  <button class="ua-primary" type="submit">Kirim permintaan</button><p id="ua-wallet-note" class="ua-form-note"></p>
+ </form><aside class="ua-panel ua-wallet-info"><span class="ua-eyebrow">INFORMASI</span><h2>Transaksi tercatat</h2><p>Setiap permintaan tersimpan di riwayat akun. Jangan pernah membagikan password atau kode OTP.</p><p>Pembayaran otomatis dan verifikasi transfer akan dihubungkan pada tahap payment gateway.</p></aside></section>
+ <section class="ua-panel ua-wallet-history"><div class="ua-section-title"><div><span class="ua-eyebrow">RIWAYAT</span><h2>Permintaan transaksi</h2></div></div>
+ ${items.length?items.map(x=>`<div class="ua-wallet-row"><div><strong>${x.request_type==='top_up'?'Top Up':'Tarik Saldo'}</strong><small>${fmtDate(x.created_at)} · ${esc(x.payment_method||'Metode belum diisi')}</small></div><b>${rupiah(Number(x.amount_minor)/100)}</b><span class="ua-wallet-status ${esc(x.status)}">${x.status==='pending'?'Menunggu':x.status==='approved'?'Disetujui':x.status==='rejected'?'Ditolak':'Dibatalkan'}</span></div>`).join(''):'<div class="ua-empty"><strong>Belum ada transaksi</strong><p>Riwayat permintaan top up dan penarikan akan tampil di sini.</p></div>'}
+ </section>`;
 }
 async function profilePage(preview=false){
  const [avatarUrl,coverUrl,postsResult,storesResult]=await Promise.all([
@@ -270,11 +295,23 @@ async function mountAccount(section='profile'){
  if(!user){authScreen(section==='register'?'register':'login');return;}
  try{
   await loadProfile();
-  const page=section==='explore'?await feedPage():section==='compose'?await composePage():section==='addresses'?await addressPage():section==='post'?await postDetailPage(location.hash.split('/')[3]||''):section==='preview'?await profilePage(true):await profilePage();
+  const page=section==='explore'?await feedPage():section==='compose'?await composePage():section==='addresses'?await addressPage():section==='wallet'?await walletPage():section==='post'?await postDetailPage(location.hash.split('/')[3]||''):section==='preview'?await profilePage(true):await profilePage();
   const headerAvatar=await signed(profile.avatar_path);document.querySelector('#app').innerHTML=frame(page,section==='explore'?'explore':section==='addresses'?'addresses':section==='compose'?'compose':section==='preview'?'profile':'profile',headerAvatar);
   document.querySelector('#ua-logout')?.addEventListener('click',async()=>{await supabase.auth.signOut();user=null;profile=null;authScreen('login');});
-  bindProfile();bindCompose();bindAddresses();bindPostActions();if(section==='addresses')initMap();
+  bindProfile();bindCompose();bindAddresses();bindWallet();bindPostActions();if(section==='addresses')initMap();
  }catch(err){document.querySelector('#app').innerHTML=frame('<div class="ua-panel ua-error"><h1>Ada kendala memuat akun</h1><p>'+esc(err.message)+'</p><button class="ua-primary" onclick="location.reload()">Coba lagi</button></div>');document.querySelector('#ua-logout')?.addEventListener('click',()=>supabase.auth.signOut());}
+}
+function bindWallet(){
+ const form=document.querySelector('#ua-wallet-form');if(!form)return;
+ form.addEventListener('submit',async e=>{
+  e.preventDefault();const d=new FormData(form),amount=Number(d.get('amount')),type=String(d.get('request_type')),note=document.querySelector('#ua-wallet-note'),btn=form.querySelector('button[type=submit]');
+  if(!Number.isSafeInteger(amount)||amount<10000){note.textContent='Nominal minimum Rp10.000.';return;}
+  if(type==='withdrawal'&&!String(d.get('destination_details')||'').trim()){note.textContent='Isi detail rekening tujuan untuk penarikan.';return;}
+  btn.disabled=true;note.textContent='Mengirim permintaan…';
+  const {error}=await supabase.from('wallet_requests').insert({user_id:user.id,request_type:type,amount_minor:Math.round(amount*100),payment_method:String(d.get('payment_method')||'').trim()||null,destination_details:String(d.get('destination_details')||'').trim()||null,note:String(d.get('note')||'').trim()||null});
+  if(error){note.textContent=error.message;btn.disabled=false;return;}
+  notify('Permintaan transaksi berhasil dikirim.');await mountAccount('wallet');
+ });
 }
 function bindProfile(){
  const form=document.querySelector('#ua-profile-form');
