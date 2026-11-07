@@ -49,3 +49,30 @@
  .ua-social-app .ua-compose-panel{padding:14px}
  .ua-social-app .ua-upload-zone{min-height:140px}
 }
+
+/* Pluits Wallet */
+.ua-wallet-balance{background:#172b45;color:#fff;border-radius:16px;padding:25px 26px;display:grid;gap:8px;margin:18px 0}
+.ua-wallet-balance>span{font-size:11px;color:#d7e0eb}
+.ua-wallet-balance strong{font-size:clamp(27px,5vw,38px);letter-spacing:-.04em}
+.ua-wallet-balance small{font-size:10px;color:#c4d0df;line-height:1.5}
+.ua-wallet-actions{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(230px,.7fr);gap:16px;margin-bottom:18px;align-items:start}
+.ua-wallet-form,.ua-wallet-info,.ua-wallet-history{padding:20px}
+.ua-wallet-form{display:grid;gap:12px}
+.ua-wallet-form label{display:grid;gap:7px;font-size:11px;font-weight:750;color:#46546a}
+.ua-wallet-form input,.ua-wallet-form select,.ua-wallet-form textarea{width:100%;border:1px solid #dce2e9;border-radius:8px;padding:11px 12px;font:inherit;font-size:13px;color:#1e293b;background:#fff}
+.ua-wallet-form textarea{resize:vertical}
+.ua-wallet-disclaimer,.ua-wallet-info p{font-size:11px;line-height:1.65;color:#718096}
+.ua-wallet-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:14px;padding:14px 0;border-top:1px solid #edf0f3}
+.ua-wallet-row>div{display:grid;gap:4px;min-width:0}
+.ua-wallet-row strong{font-size:12px}
+.ua-wallet-row small{font-size:10px;color:#8290a0}
+.ua-wallet-row>b{font-size:12px;white-space:nowrap}
+.ua-wallet-status{font-size:10px;font-weight:750;padding:5px 8px;border-radius:20px;background:#eef2f6;color:#52647b;white-space:nowrap}
+.ua-wallet-status.approved{background:#e8edf3;color:#172b45}
+.ua-wallet-status.rejected{background:#f8eaea;color:#8b3038}
+@media(max-width:760px){
+ .ua-wallet-actions{grid-template-columns:1fr}
+ .ua-wallet-form,.ua-wallet-info,.ua-wallet-history{padding:15px}
+ .ua-wallet-row{grid-template-columns:minmax(0,1fr) auto;gap:8px}
+ .ua-wallet-row .ua-wallet-status{grid-column:1/-1;justify-self:start}
+}
