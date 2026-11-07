@@ -136,3 +136,18 @@
  .ua-social-app .ua-page-heading{padding-top:15px}
  .ua-social-app .ua-subnav{display:none}
 }
+
+/* Pluits mobile-first social navigation: keep secondary account tools inside Profile */
+@media(max-width:760px){
+ .ua-social-app .ua-mobile-nav{height:64px;grid-template-columns:repeat(5,minmax(0,1fr));}
+ .ua-social-app .ua-mobile-nav>a{font-size:18px;gap:3px}
+ .ua-social-app .ua-mobile-nav>a small{font-size:9px;white-space:nowrap}
+ .ua-social-app .ua-mobile-nav .ua-mobile-create span{width:34px;height:32px}
+ .ua-social-app .ua-header nav{display:none!important}
+ .ua-social-app .ua-header-create{margin-left:auto}
+ .ua-social-app .ua-subnav{display:none!important}
+ .ua-social-app .ua-main{padding-left:0;padding-right:0}
+ .ua-social-app .ua-page-heading{padding-left:14px;padding-right:14px}
+ .ua-social-app .ua-account-hub{margin-left:0;margin-right:0}
+ .ua-social-app .ua-profile-card,.ua-social-app .ua-panel,.ua-social-app .ua-grid-layout{margin-left:12px;margin-right:12px}
+}
