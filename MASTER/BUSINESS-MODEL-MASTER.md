@@ -446,6 +446,56 @@ Pada mobile, navigasi dapat diringkas menjadi bottom navigation yang tetap mempr
 ### 21.5 Perubahan keputusan terhadap desain beranda sebelumnya
 Konsep beranda katalog/landing page yang menonjolkan kategori material, jasa, dan supplier sebagai isi utama halaman pertama **digantikan** oleh beranda social feed. Kategori dan penjelasan marketplace tetap ada, tetapi dipindahkan ke halaman Marketplace serta tautan/komponen sekunder pada feed. Keputusan ini mengubah arsitektur informasi dan navigasi, bukan menghapus kebutuhan marketplace.
 
+
+## 22. Integrasi model bisnis My Bali ke dalam Pluits — keputusan konsolidasi
+
+**Keputusan founder, 7 November 2026:** My Bali tidak lagi dikembangkan sebagai produk/aplikasi mandiri. Arah produk, prinsip sosial, model discovery, serta pola UI/UX yang relevan dari My Bali dikonsolidasikan ke Pluits. Pluits menjadi satu-satunya produk aktif untuk pengembangan ekosistem ini. Repository My-Bali diperlakukan sebagai arsip sumber desain dan keputusan sampai seluruh materi yang relevan dipindahkan; jangan menghapus sumber historis sebelum audit migrasi selesai.
+
+### 22.1 Identitas produk hasil konsolidasi
+Pluits adalah **platform sosial-komunitas dengan marketplace konstruksi terintegrasi**. Lapisan sosial menjadi pengalaman utama dan pintu masuk; marketplace menjadi ruang khusus untuk mencari, membandingkan, menghubungi, dan bertransaksi kebutuhan konstruksi. Pluits bukan katalog marketplace yang ditempeli feed.
+
+### 22.2 Elemen My Bali yang diadopsi
+- Social-first home: feed foto/video, Stories/Status, Explore, profil, aktivitas, postingan pengguna, serta interaksi sosial.
+- Pengunjung dapat membaca konten publik tanpa akun. Login diminta saat melakukan tindakan yang memerlukan identitas, dan setelah login pengguna dikembalikan ke tindakan/halaman yang dituju bila aman.
+- Social discovery: konten dapat terhubung ke akun penyedia, profil toko, produk, material, jasa, atau proyek yang relevan. Postingan tidak otomatis menjadi bukti transaksi.
+- Profil penyedia yang dikelola langsung oleh pihak yang berwenang; informasi usaha, harga, lokasi, ketersediaan, dan media harus jelas sumber dan waktu pembaruannya.
+- Verifikasi bertingkat berdasarkan identitas, legalitas, kewenangan, lokasi usaha, kategori, serta bukti layanan. Label terverifikasi hanya diberikan setelah pemeriksaan yang sesuai.
+- Satu identitas akun universal untuk pengguna, pembeli, owner toko, dan staf sesuai peran serta izin.
+- Transparansi harga dan pemisahan antara harga yang dipasang penyedia, estimasi sistem, penawaran yang dikonfirmasi, dan nilai transaksi akhir.
+- Alur transaksi yang terhubung: komunikasi, penawaran, pesanan, pembayaran, pemenuhan/pengiriman, penyelesaian, ulasan, refund, dan sengketa.
+- Reputasi pengguna dan penyedia berbasis perilaku nyata, bukti, konteks, hak jawab, dan mekanisme banding; bukan sekadar jumlah pengikut atau pengeluaran.
+- Rekomendasi mempertimbangkan relevansi, minat, kebaruan, kualitas, interaksi sah, dan peluang distribusi bagi akun/konten baru. Konten sponsor wajib diberi label.
+- Penyedia dapat menerbitkan update, koleksi, penawaran, dan dokumentasi melalui profil toko. Informasi permanen katalog/harga tidak boleh diam-diam digantikan postingan sementara.
+
+### 22.3 Batas ruang lingkup yang tetap khusus Pluits
+Model My Bali bersifat Bali-wide/local-life dan mencakup makanan, wisata, hotel, spa, aktivitas, tiket, perjalanan, dan akomodasi. Kategori tersebut **tidak otomatis dipindahkan** ke Pluits. Fokus Pluits tetap digitalisasi ekosistem konstruksi: material, produk, toko, supplier, distributor, tukang/tenaga ahli lintas pekerjaan, kontraktor/penyedia jasa, dan angkutan/pengiriman material. Fitur sosial bersifat lintas kategori, tetapi marketplace dan transaksi harus relevan dengan konstruksi. Perluasan vertikal di luar konstruksi membutuhkan keputusan founder tersendiri.
+
+### 22.4 Wilayah dan pertumbuhan
+Pluits tetap dirancang untuk dapat berkembang lintas Indonesia. Bali adalah wilayah operasional awal yang sudah tercatat pada backend; perluasan wilayah harus dikendalikan melalui konfigurasi operating regions dan kesiapan penyedia, bukan klaim cakupan nasional yang belum tersedia. Prinsip My Bali tentang kedekatan penyedia lokal dapat diterapkan sebagai pencarian berbasis wilayah dan jarak, tanpa mengunci Pluits menjadi produk khusus Bali.
+
+### 22.5 Komersial dan biaya platform
+My Bali mencatat hipotesis komisi sekitar 2% untuk UMKM dan hingga 5% untuk bisnis lebih besar. Angka tersebut dipindahkan hanya sebagai **hipotesis untuk kajian**, bukan tarif Pluits, bukan komitmen kepada toko, dan tidak boleh ditampilkan di UI. Struktur biaya Pluits harus dihitung terpisah berdasarkan kategori konstruksi, pembayaran, logistik, risiko, pajak, refund, dan biaya operasional. Prinsip utamanya: biaya transparan, tidak membebani penyedia kecil secara tidak proporsional, dan mengupayakan harga kompetitif tanpa menjanjikan harga termurah sebelum ada pembuktian.
+
+### 22.6 Prinsip harga dan transaksi yang diadopsi dengan penyesuaian
+Penyedia menetapkan harga dan memperbarui informasinya sendiri. Pluits dapat membantu membandingkan harga dan menghitung estimasi, tetapi wajib memberi label jelas antara harga tercantum, estimasi, penawaran final yang dikonfirmasi, serta jumlah transaksi. Harga, ongkir, biaya platform, pajak, diskon, dan syarat pemenuhan ditampilkan secara transparan. Jangan mengimpor kebijakan tarif lokal-versus-turis My Bali sebagai aturan Pluits.
+
+### 22.7 Migrasi desain dan pengalaman
+Frontend My Bali `app/index.html` menjadi referensi utama untuk bahasa visual Pluits social app, khususnya:
+- Topbar ringkas dengan brand, navigasi, pencarian, dan akses akun.
+- Feed utama dengan lebar baca nyaman, kartu konten, avatar, metadata, dan aksi konsisten.
+- Stories horizontal, quick category chips, composer, dan sidebar kontekstual.
+- Explore grid untuk penemuan foto/video.
+- Palet netral terang dengan aksen sea-blue lembut, garis tipis, radius kartu yang konsisten, tipografi bersih, dan ruang putih.
+- Layout responsif desktop dua/ tiga kolom dan mobile satu kolom dengan navigasi bawah.
+Desain harus diadaptasi ke identitas Pluits dan konteks konstruksi; jangan mempertahankan nama, logo, copy, gambar Bali, atau konten demo My Bali. Reuse pola dan komponen visual, bukan data contoh atau klaim fitur prototype.
+
+### 22.8 Aturan konsolidasi dan status My Bali
+- Semua keputusan bisnis yang relevan dipelihara di dokumen master Pluits.
+- My Bali tidak boleh lagi menjadi produk kedua yang dikembangkan paralel atau ditautkan sebagai aplikasi terpisah.
+- Repository My-Bali tetap menjadi arsip referensi sementara migrasi dan pengecekan kelengkapan selesai. README-nya ditandai sebagai proyek yang dikonsolidasikan ke Pluits. Penghapusan permanen repository tidak dilakukan otomatis karena akan menghilangkan jejak desain dan keputusan; lakukan hanya setelah arsip yang diperlukan sudah diverifikasi.
+- Fitur My Bali yang tidak relevan dengan konstruksi tetap berada di arsip dan tidak menjadi roadmap Pluits.
+- Setiap pengadopsian fitur harus dibedakan statusnya: keputusan model bisnis, rancangan UI, implementasi kode, backend, deploy, dan hasil uji.
+
 ## 20. Aturan sinkronisasi model bisnis, checkpoint, dan PR
 Model bisnis ini menyimpan keputusan dan arah produk; ia bukan satu-satunya catatan status implementasi. Status pekerjaan harus dikelola dalam dokumen **PROJECT-STATUS-ROADMAP.md** yang menjadi pasangan wajib dokumen ini.
 
