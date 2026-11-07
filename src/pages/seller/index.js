@@ -108,7 +108,7 @@ async function productsPanel(){
   if(path){const {data}=await supabase.storage.from('pluits-store-media').createSignedUrl(path,1800);image=data?.signedUrl||'';}
   return `<article class="pluits-product-row">${image?`<img class="pluits-thumb" src="${image}" alt="${esc(p.name)}" loading="lazy">`:'<span class="pluits-thumb empty">＋</span>'}<div><b>${esc(p.name)}</b><small>${esc(p.status)} · ${p.product_variants?.length||0} varian</small></div><strong>${p.product_variants?.length?money(p.product_variants[0].online_price):'Belum ada harga'}</strong></article>`;
  })).then(x=>x.join(''));
- return `<div class="pluits-section-head"><div><span class="pluits-eyebrow">CATALOG MANAGEMENT</span><h2>Produk & gambar</h2><p>Tambahkan produk, varian, harga, stok, dan foto.</p></div></div><details class="pluits-quick-add"><summary>＋ Tambah produk baru</summary><form id="pluits-product-form" class="pluits-panel pluits-form"><div class="pluits-form-grid"><label>Nama produk<input name="name" required placeholder="Contoh: Semen Portland 40 kg"></label><label>Kategori<select name="category_id" id="pluits-category-select"><option value="">Tanpa kategori</option></select></label><label>Harga jual (Rp)<input name="price" required type="number" min="0" step="1" value="0"></label><label>Stok awal<input name="stock" type="number" min="0" step="0.001" value="0"></label><label>Foto produk<input name="image" type="file" accept="image/jpeg,image/png,image/webp"></label><label>Satuan<input name="unit" required value="pcs"></label><details class="pluits-advanced-fields"><summary>Detail tambahan (opsional)</summary><div class="pluits-form-grid"><label>SKU / kode produk<input name="sku" placeholder="SKU-001"></label><label>Harga offline (Rp)<input name="offline" type="number" min="0" step="1"></label><label class="pluits-span">Deskripsi<textarea name="description" rows="3" placeholder="Spesifikasi, ukuran, merek, dan keterangan produk"></textarea></label></div></details></div><div class="pluits-form-actions"><p id="pluits-notice" class="pluits-notice"></p><button class="pluits-primary" type="submit">Simpan produk</button></div></form></details><div class="pluits-list-head"><h3>Daftar produk</h3><span>${products?.length||0} produk</span></div><div class="pluits-product-list">${rows||'<div class="pluits-empty">Belum ada produk. Tambahkan produk pertama toko Anda.</div>'}</div>`;
+ return `<div class="pluits-section-head"><div><span class="pluits-eyebrow">CATALOG MANAGEMENT</span><h2>Produk & gambar</h2><p>Tambahkan produk, varian, harga, stok, dan foto.</p></div></div><details class="pluits-quick-add"><summary>＋ Tambah produk baru</summary><form id="pluits-product-form" class="pluits-panel pluits-form"><div class="pluits-form-grid"><label>Nama produk<input name="name" required placeholder="Contoh: Semen Portland 40 kg"></label><label>Kategori<select name="category_id" id="pluits-category-select"><option value="">Tanpa kategori</option></select></label><label>Harga jual (Rp)<input name="price" required type="number" min="0" step="1" value="0"></label><label>Stok awal<input name="stock" type="number" min="0" step="0.001" value="0"></label><label class="pluits-image-picker">Foto produk (maks. 15)<input id="pluits-product-images" name="images" type="file" accept="image/jpeg,image/png,image/webp" multiple><small>Pilih hingga 15 foto · Maksimal 10 MB per foto.</small></label><div id="pluits-image-preview" class="pluits-image-preview" aria-live="polite"></div><label>Satuan<input name="unit" required value="pcs"></label><details class="pluits-advanced-fields"><summary>Detail tambahan (opsional)</summary><div class="pluits-form-grid"><label>SKU / kode produk<input name="sku" placeholder="SKU-001"></label><label>Harga offline (Rp)<input name="offline" type="number" min="0" step="1"></label><label class="pluits-span">Deskripsi<textarea name="description" rows="3" placeholder="Spesifikasi, ukuran, merek, dan keterangan produk"></textarea></label></div></details></div><div class="pluits-form-actions"><p id="pluits-notice" class="pluits-notice"></p><button class="pluits-primary" type="submit">Simpan produk</button></div></form></details><div class="pluits-list-head"><h3>Daftar produk</h3><span>${products?.length||0} produk</span></div><div class="pluits-product-list">${rows||'<div class="pluits-empty">Belum ada produk. Tambahkan produk pertama toko Anda.</div>'}</div>`;
 }
 async function categoriesPanel(){
  const {data}=await supabase.from('product_categories').select('id,name,is_active').eq('store_id',activeStore.id).order('name');
@@ -134,16 +134,63 @@ async function bindPanel(user,stores){
  const categorySelect=document.querySelector('#pluits-category-select');
  if(categorySelect){const {data}=await supabase.from('product_categories').select('id,name').eq('store_id',activeStore.id);(data||[]).forEach(c=>categorySelect.insertAdjacentHTML('beforeend',`<option value="${c.id}">${esc(c.name)}</option>`));}
  const form=document.querySelector('#pluits-product-form');
- if(form)form.addEventListener('submit',async e=>{
-  e.preventDefault();const f=new FormData(form),btn=form.querySelector('button');btn.disabled=true;
-  try{
-   const {data:p,error}=await supabase.from('products').insert({store_id:activeStore.id,name:f.get('name'),category_id:f.get('category_id')||null,description:f.get('description')||null,status:'draft'}).select().single();if(error)throw error;
-   const {data:v,error:ve}=await supabase.from('product_variants').insert({product_id:p.id,sku:f.get('sku')||null,variant_name:'Default',sale_unit:f.get('unit'),online_price:Number(f.get('price')),offline_price:f.get('offline')?Number(f.get('offline')):null,stock_quantity:Number(f.get('stock'))}).select().single();if(ve)throw ve;
-   const file=f.get('image');if(file?.size){const path=`${activeStore.id}/${p.id}/${crypto.randomUUID()}-${file.name.replace(/[^a-zA-Z0-9._-]/g,'_')}`;const {error:up}=await supabase.storage.from('pluits-store-media').upload(path,file,{contentType:file.type,upsert:false});if(up)throw up;const {error:im}=await supabase.from('product_images').insert({product_id:p.id,storage_path:path,alt_text:f.get('name'),sort_order:0});if(im)throw im;}
-   notice('Produk tersimpan. Foto disimpan di penyimpanan privat toko.','success');activeTab='products';await dashboard(user,stores);
-  }catch(err){notice(err.message||'Produk gagal disimpan.','error');}finally{btn.disabled=false;}
+ const imageInput=document.querySelector('#pluits-product-images');
+ const imagePreview=document.querySelector('#pluits-image-preview');
+ let previewUrls=[];
+ const clearImagePreview=()=>{previewUrls.forEach(url=>URL.revokeObjectURL(url));previewUrls=[];if(imagePreview)imagePreview.innerHTML='';};
+ imageInput?.addEventListener('change',()=>{
+  clearImagePreview();
+  const files=Array.from(imageInput.files||[]);
+  if(files.length>15){notice('Pilih maksimal 15 foto untuk satu produk.','error');imageInput.value='';return;}
+  const invalid=files.find(file=>!['image/jpeg','image/png','image/webp'].includes(file.type)||file.size>10*1024*1024);
+  if(invalid){notice(invalid.size>10*1024*1024?'Setiap foto maksimal 10 MB.':'Gunakan foto JPG, PNG, atau WebP.','error');imageInput.value='';return;}
+  if(!files.length)return;
+  imagePreview.innerHTML=files.map((file,index)=>{
+   const url=URL.createObjectURL(file);previewUrls.push(url);
+   return '<figure><img src="'+url+'" alt="Pratinjau foto '+(index+1)+'"><figcaption>'+(index+1)+'. '+esc(file.name)+'</figcaption></figure>';
+  }).join('');
+  notice(files.length+' foto siap diunggah.','info');
  });
- const cf=document.querySelector('#pluits-category-form');if(cf)cf.addEventListener('submit',async e=>{e.preventDefault();const f=new FormData(cf);const {error}=await supabase.from('product_categories').insert({store_id:activeStore.id,name:f.get('name')});if(error)notice(error.message,'error');else await dashboard(user,stores);});
+ if(form)form.addEventListener('submit',async e=>{
+  e.preventDefault();
+  const f=new FormData(form),btn=form.querySelector('button[type="submit"]'),files=Array.from(imageInput?.files||[]);
+  if(files.length>15){notice('Pilih maksimal 15 foto.','error');return;}
+  const invalid=files.find(file=>!['image/jpeg','image/png','image/webp'].includes(file.type)||file.size>10*1024*1024);
+  if(invalid){notice(invalid.size>10*1024*1024?'Setiap foto maksimal 10 MB.':'Format foto tidak didukung.','error');return;}
+  btn.disabled=true;btn.textContent='Menyimpan produk…';
+  let createdProductId=null,uploadedPaths=[];
+  try{
+   const {data:p,error}=await supabase.from('products').insert({store_id:activeStore.id,name:f.get('name'),category_id:f.get('category_id')||null,description:f.get('description')||null,status:'draft'}).select().single();
+   if(error)throw error;createdProductId=p.id;
+   const {error:ve}=await supabase.from('product_variants').insert({product_id:p.id,sku:f.get('sku')||null,variant_name:'Default',sale_unit:f.get('unit'),online_price:Number(f.get('price')),offline_price:f.get('offline')?Number(f.get('offline')):null,stock_quantity:Number(f.get('stock'))});
+   if(ve)throw ve;
+   for(let index=0;index<files.length;index++){
+    const file=files[index],random=crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random().toString(36).slice(2);
+    const path=activeStore.id+'/'+p.id+'/'+random+'-'+file.name.replace(/[^a-zA-Z0-9._-]/g,'_');
+    const {error:up}=await supabase.storage.from('pluits-store-media').upload(path,file,{contentType:file.type,upsert:false});
+    if(up)throw new Error('Foto ke-'+(index+1)+' gagal diunggah: '+up.message);
+    uploadedPaths.push(path);
+   }
+   if(uploadedPaths.length){
+    const imageRows=uploadedPaths.map((path,index)=>({product_id:p.id,storage_path:path,alt_text:String(f.get('name')),sort_order:index}));
+    const {error:im}=await supabase.from('product_images').insert(imageRows);
+    if(im)throw new Error('Foto sudah diunggah tetapi data galeri gagal disimpan: '+im.message);
+   }
+   notice(files.length?'Produk dan '+files.length+' foto berhasil disimpan.':'Produk berhasil disimpan tanpa foto.','success');
+   activeTab='products';await dashboard(user,stores);
+  }catch(err){
+   let cleanupFailed=false;
+   if(uploadedPaths.length){const {error}=await supabase.storage.from('pluits-store-media').remove(uploadedPaths);if(error)cleanupFailed=true;}
+   if(createdProductId){
+    await supabase.from('product_images').delete().eq('product_id',createdProductId);
+    await supabase.from('product_variants').delete().eq('product_id',createdProductId);
+    const {error}=await supabase.from('products').delete().eq('id',createdProductId);if(error)cleanupFailed=true;
+   }
+   notice((err.message||'Produk gagal disimpan.')+(cleanupFailed?' Pembersihan data parsial perlu diperiksa dari Seller Center.':' Data parsial berhasil dibersihkan.'),'error');
+  }finally{
+   btn.disabled=false;btn.textContent='Simpan produk';
+  }
+ }); const cf=document.querySelector('#pluits-category-form');if(cf)cf.addEventListener('submit',async e=>{e.preventDefault();const f=new FormData(cf);const {error}=await supabase.from('product_categories').insert({store_id:activeStore.id,name:f.get('name')});if(error)notice(error.message,'error');else await dashboard(user,stores);});
  const zf=document.querySelector('#pluits-zone-form');if(zf)zf.addEventListener('submit',async e=>{e.preventDefault();const f=new FormData(zf);const {error}=await supabase.from('store_delivery_zones').insert({store_id:activeStore.id,name:f.get('name'),coverage_description:f.get('coverage'),minimum_order_amount:Number(f.get('minimum')||0),delivery_fee:f.get('fee')===''?null:Number(f.get('fee')),free_delivery_minimum:f.get('free')===''?null:Number(f.get('free')),max_distance_km:f.get('distance')===''?null:Number(f.get('distance'))});if(error)notice(error.message,'error');else await dashboard(user,stores);});
  const pf=document.querySelector('#pluits-profile-form');if(pf)pf.addEventListener('submit',async e=>{e.preventDefault();const f=new FormData(pf);const {error}=await supabase.rpc('update_store_profile',{p_store_id:activeStore.id,p_name:f.get('name'),p_city:f.get('public_city'),p_area:f.get('public_area')||null,p_description:f.get('description')||null,p_phone:f.get('phone')||null});if(error)notice(error.message,'error');else{activeStore.name=f.get('name');activeStore.public_city=f.get('public_city');activeStore.public_area=f.get('public_area');activeStore.phone=f.get('phone');activeStore.description=f.get('description');notice('Profil toko diperbarui.','success');}});
  const sf=document.querySelector('#pluits-settings-form');if(sf)sf.addEventListener('submit',async e=>{e.preventDefault();const f=new FormData(sf);const {error}=await supabase.from('store_settings').update({minimum_order_amount:Number(f.get('minimum')||0),allow_pickup:f.get('pickup')==='on',allow_delivery:f.get('delivery')==='on'}).eq('store_id',activeStore.id);if(error)notice(error.message,'error');else notice('Pengaturan disimpan.','success');});
