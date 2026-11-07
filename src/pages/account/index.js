@@ -109,11 +109,14 @@ async function profilePage(){
  ${ownPosts.length?postGrid(ownPosts):'<div class="ua-empty"><strong>Belum ada postingan</strong><p>Unggah foto atau video pertama Anda. Setelah berhasil, konten akan tampil di sini dan Explore jika akun Anda publik.</p><a class="ua-primary ua-inline" href="#/account/explore">Mulai berbagi</a></div>'}</section>`;
 }
 function postGrid(posts){
- return `<div class="ua-post-grid">${posts.map(p=>`<a class="ua-post-thumb" href="#/account/post/${p.id}">${p.media_type==='video'?'<span class="ua-video-mark">▶ VIDEO</span>':''}<img src="${p.mediaUrl}" alt="${esc(p.caption||'Postingan Pluits')}"><span class="ua-thumb-caption">${esc(p.caption||'')}</span></a>`).join('')}</div>`;
+ return `<div class="ua-post-grid">${posts.map(p=>`<a class="ua-post-thumb" href="#/account/post/${p.id}">${p.media_type==='video'?'<span class="ua-video-mark">▶ VIDEO</span><video src="'+p.mediaUrl+'" muted playsinline preload="metadata"></video>':'<img src="'+p.mediaUrl+'" alt="'+esc(p.caption||'Postingan Pluits')+'">'}<span class="ua-thumb-caption">${esc(p.caption||'')}</span></a>`).join('')}</div>`;
 }
 async function hydratePosts(rows){
  if(!rows.length)return [];
- const ids=[...new Set(rows.map(p=>p.user_id))],postIds=rows.map(p=>p.id);
+ const postIds=rows.map(p=>p.id);
+ const [tagRowsRes]=await Promise.all([supabase.from('post_tags').select('post_id,tagged_user_id').in('post_id',postIds)]);
+ const taggedRows=tagRowsRes.data||[];
+ const ids=[...new Set([...rows.map(p=>p.user_id),...taggedRows.map(t=>t.tagged_user_id)])];
  const [profilesRes,likesRes,commentsRes,savesRes]=await Promise.all([
   supabase.from('user_profiles').select('id,display_name,username,avatar_path,public_city,public_province,visibility').in('id',ids),
   supabase.from('post_likes').select('post_id,user_id').in('post_id',postIds),
@@ -124,7 +127,7 @@ async function hydratePosts(rows){
  const likeRows=likesRes.data||[],commentRows=commentsRes.data||[],saved=new Set((savesRes.data||[]).map(x=>x.post_id));
  return Promise.all(rows.map(async p=>{
   const owner=pmap.get(p.user_id)||{display_name:'Pengguna Pluits',username:'pengguna',visibility:'private'};
-  return {...p,owner,mediaUrl:await signed(p.media_path),avatarUrl:await signed(owner.avatar_path),likes:likeRows.filter(x=>x.post_id===p.id).length,liked:likeRows.some(x=>x.post_id===p.id&&x.user_id===user.id),comments:commentRows.filter(x=>x.post_id===p.id).length,saved:saved.has(p.id)};
+  return {...p,owner,tagged:taggedRows.filter(t=>t.post_id===p.id).map(t=>pmap.get(t.tagged_user_id)).filter(Boolean),mediaUrl:await signed(p.media_path),avatarUrl:await signed(owner.avatar_path),likes:likeRows.filter(x=>x.post_id===p.id).length,liked:likeRows.some(x=>x.post_id===p.id&&x.user_id===user.id),comments:commentRows.filter(x=>x.post_id===p.id).length,saved:saved.has(p.id)};
  }));
 }
 async function feedPage(){
@@ -138,7 +141,7 @@ async function feedPage(){
 }
 function postCard(p){
  return `<article class="ua-post-card" data-post-id="${p.id}"><div class="ua-post-head">${avatar(p.avatarUrl,p.owner.display_name)}<div><strong>${esc(p.owner.display_name)}</strong><small>@${esc(p.owner.username)} ${p.owner.public_city&&p.owner.public_province?'· ⌖ '+esc(p.owner.public_city)+', '+esc(p.owner.public_province):''}</small></div><time>${fmtDate(p.created_at)}</time></div>
- <p class="ua-caption">${esc(p.caption)}</p>${p.tags?.length?'<div class="ua-tags">'+p.tags.map(t=>'<span>#'+esc(t)+'</span>').join(' ')+'</div>':''}
+ <p class="ua-caption">${esc(p.caption)}</p>${(p.tags?.length||p.tagged?.length)?'<div class="ua-tags">'+(p.tags||[]).map(t=>'<span>#'+esc(t)+'</span>').join(' ')+(p.tagged||[]).map(t=>'<span>＠'+esc(t.username)+'</span>').join(' ')+'</div>':''}
  <div class="ua-media">${p.media_type==='video'?'<video src="'+p.mediaUrl+'" controls playsinline preload="metadata"></video>':'<img src="'+p.mediaUrl+'" alt="'+esc(p.caption||'Foto postingan')+'">'}</div>
  <div class="ua-post-actions"><button data-action="like" class="${p.liked?'is-liked':''}">♥ <span>${p.liked?'Disukai':'Suka'}</span> <b>${p.likes}</b></button><button data-action="comments">◯ Komentar <b>${p.comments}</b></button><button data-action="share">↗ Bagikan</button><button data-action="save" class="${p.saved?'is-saved':''}">▱ ${p.saved?'Tersimpan':'Tandai'}</button><button data-action="tag">＠ Tag</button></div><div class="ua-comments" hidden></div>
  </article>`;
@@ -236,7 +239,7 @@ function bindImageUpload(inputId,column,label){
   const file=input.files?.[0];if(!file)return;
   if(file.size>8*1024*1024){notify('Foto maksimal 8 MB.', 'error');return;}
   if(!['image/jpeg','image/png','image/webp'].includes(file.type)){notify('Gunakan JPG, PNG, atau WebP.','error');return;}
-  try{notify('Mengunggah '+label+'…','info');const ext=file.name.split('.').pop().toLowerCase(),path=user.id+'/'+crypto.randomUUID()+'.'+ext;
+  try{notify('Mengunggah '+label+'…','info');const ext=file.name.split('.').pop().toLowerCase(),path=user.id+'/'+(crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random().toString(36).slice(2))+'.'+ext;
    const {error}=await supabase.storage.from(BUCKET).upload(path,file,{contentType:file.type,upsert:false});if(error)throw error;
    const {data,error:updateError}=await supabase.from('user_profiles').update({[column]:path,updated_at:new Date().toISOString()}).eq('id',user.id).select().single();if(updateError)throw updateError;
    profile=data;notify(label==='avatar'?'Foto profil diperbarui.':'Foto sampul diperbarui.');await mountAccount('profile');
@@ -312,7 +315,15 @@ function bindPostActions(){
    const url=location.origin+location.pathname+'#/account/post/'+id;
    try{if(navigator.share)await navigator.share({title:'Postingan Pluits',url});else{await navigator.clipboard.writeText(url);notify('Tautan disalin.');}}catch{}
   });
-  card.querySelector('[data-action="tag"]')?.addEventListener('click',()=>notify('Tag/kata kunci postingan: '+(card.querySelector('.ua-tags')?.innerText||'Belum ada tag.')));
+  card.querySelector('[data-action="tag"]')?.addEventListener('click',async()=>{
+   const handle=prompt('Masukkan username akun yang ingin ditandai (tanpa @):');if(!handle)return;
+   const username=handle.trim().replace(/^@/,'').toLowerCase();
+   const {data:target,error:lookupError}=await supabase.from('user_profiles').select('id,username').eq('username',username).maybeSingle();
+   if(lookupError||!target){notify(lookupError?.message||'Username tidak ditemukan.','error');return;}
+   const {error}=await supabase.from('post_tags').insert({post_id:id,tagged_user_id:target.id,tagged_by:user.id});
+   if(error)notify(error.code==='23505'?'Akun tersebut sudah ditandai.':error.message,'error');
+   else{notify('@'+target.username+' berhasil ditandai.');await mountAccount(location.hash.includes('/explore')?'explore':'profile');}
+  });
   card.querySelector('[data-action="comments"]')?.addEventListener('click',async()=>{
    const box=card.querySelector('.ua-comments');box.hidden=!box.hidden;if(!box.hidden)await loadComments(id,box);
   });
