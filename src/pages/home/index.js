@@ -6,13 +6,27 @@ export function home(){return `<div class="pl-social-home"><header class="pl-soc
 export async function bindHome(){
  const target=document.querySelector('#pl-public-feed');if(!target)return;
  try{
-  const {data:rows,error}=await db.from('user_posts').select('id,user_id,caption,media_path,media_type,tags,created_at').eq('visibility','public').order('created_at',{ascending:false}).limit(30);
+  const {data:rows,error}=await db.from('user_posts').select('id,user_id,caption,media_path,media_type,tags,created_at,profile_context,professional_profile_id,business_store_id').eq('visibility','public').order('created_at',{ascending:false}).limit(30);
   if(error)throw error;
   if(!rows?.length){target.innerHTML='<div class="pl-feed-empty"><div>▧</div><h3>Pluits sedang membuka ruang untuk cerita pertamamu</h3><p>Di sini kamu akan menemukan foto, video, cerita, dan pengalaman dari komunitas. Jelajahi Pluits sebagai pengunjung, lalu buat akun jika ingin ikut berbagi dan berinteraksi.</p><a href="#/account/register">Buat akun Pluits</a></div>';return;}
   const ids=[...new Set(rows.map(x=>x.user_id))];
-  const {data:profiles}=await db.from('user_profiles').select('id,display_name,username,avatar_path,public_city,public_province,visibility').in('id',ids);
-  const pmap=new Map((profiles||[]).map(p=>[p.id,p]));
-  const cards=await Promise.all(rows.map(async post=>{const p=pmap.get(post.user_id)||{display_name:'Pengguna Pluits',username:'pengguna'};if(p.visibility==='private')return '';const [avatar,media]=await Promise.all([mediaUrl(p.avatar_path),mediaUrl(post.media_path)]);if(!media)return '';const initials=safe((p.display_name||'P').slice(0,1).toUpperCase());return `<article class="pl-public-post"><div class="pl-public-post-head">${avatar?`<img src="${avatar}" alt="">`:`<b>${initials}</b>`}<div><strong>${safe(p.display_name)}</strong><small>@${safe(p.username)}${p.public_city&&p.public_province?' · '+safe(p.public_city)+', '+safe(p.public_province):''}</small></div><time>${new Date(post.created_at).toLocaleDateString('id-ID',{day:'numeric',month:'short'})}</time></div>${post.caption?`<p>${safe(post.caption)}</p>`:''}<div class="pl-public-post-media">${post.media_type==='video'?`<video src="${media}" controls playsinline preload="metadata"></video>`:`<img src="${media}" alt="Postingan komunitas Pluits" loading="lazy">`}</div>${post.tags?.length?`<div class="pl-public-post-tags">${post.tags.map(t=>'#'+safe(t)).join(' ')}</div>`:''}<div class="pl-public-post-actions"><a href="#/account/login">♡ Suka</a><a href="#/account/login">Komentar</a><a href="#/account/login">↗ Bagikan</a><a href="#/account/login">Simpan</a></div></article>`;}));
+  const proIds=[...new Set(rows.map(x=>x.professional_profile_id).filter(Boolean))],storeIds=[...new Set(rows.map(x=>x.business_store_id).filter(Boolean))];
+  const [profiles,pros,stores]=await Promise.all([
+   db.from('user_profiles').select('id,display_name,username,avatar_path,public_city,public_province,visibility').in('id',ids),
+   proIds.length?db.from('professional_profiles').select('id,display_name,username,service_city,service_province').in('id',proIds):Promise.resolve({data:[]}),
+   storeIds.length?db.from('stores').select('id,name,username,public_city,public_area,store_logo_path').in('id',storeIds):Promise.resolve({data:[]})
+  ]);
+  const pmap=new Map((profiles.data||[]).map(p=>[p.id,p])),promap=new Map((pros.data||[]).map(p=>[p.id,p])),smap=new Map((stores.data||[]).map(p=>[p.id,p]));
+  const cards=await Promise.all(rows.map(async post=>{
+   const personal=pmap.get(post.user_id)||{display_name:'Pengguna Pluits',username:'pengguna'};
+   if(post.profile_context==='personal'&&personal.visibility==='private')return '';
+   const author=post.profile_context==='business'?(smap.get(post.business_store_id)||personal):post.profile_context==='professional'?(promap.get(post.professional_profile_id)||personal):personal;
+   const name=author.name||author.display_name||'Pengguna Pluits',handle=author.username||'pengguna';
+   const city=author.public_city||author.service_city||'',province=author.public_province||author.service_province||'';
+   const [avatar,media]=await Promise.all([mediaUrl(personal.avatar_path),mediaUrl(post.media_path)]);if(!media)return '';
+   const initials=safe((name||'P').slice(0,1).toUpperCase()),kind=post.profile_context==='business'?'Business':post.profile_context==='professional'?'Professional':'';
+   return `<article class="pl-public-post"><div class="pl-public-post-head">${avatar?`<img src="${avatar}" alt="">`:`<b>${initials}</b>`}<div><strong>${safe(name)} ${kind?`<em class="pl-post-context">${kind}</em>`:''}</strong><small>@${safe(handle)}${city?' · '+safe(city)+(province?', '+safe(province):''):''}</small></div><time>${new Date(post.created_at).toLocaleDateString('id-ID',{day:'numeric',month:'short'})}</time></div>${post.caption?`<p>${safe(post.caption)}</p>`:''}<div class="pl-public-post-media">${post.media_type==='video'?`<video src="${media}" controls playsinline preload="metadata"></video>`:`<img src="${media}" alt="Postingan komunitas Pluits" loading="lazy">`}</div>${post.tags?.length?`<div class="pl-public-post-tags">${post.tags.map(t=>'#'+safe(t)).join(' ')}</div>`:''}<div class="pl-public-post-actions"><a href="#/account/login">♡ Suka</a><a href="#/account/login">Komentar</a><a href="#/account/login">↗ Bagikan</a><a href="#/account/login">Simpan</a></div></article>`;
+  }));
   const visible=cards.filter(Boolean);target.innerHTML=visible.length?visible.join(''):'<div class="pl-feed-empty"><h3>Belum ada cerita publik untuk ditampilkan</h3><p>Feed ini akan menampilkan postingan publik komunitas Pluits. Kamu tetap bisa menjelajahi bagian lain tanpa mendaftar.</p><a href="#/account/register">Buat akun Pluits</a></div>';
  }catch(err){target.innerHTML='<div class="pl-feed-empty"><h3>Feed belum dapat dimuat</h3><p>Silakan muat ulang halaman beberapa saat lagi.</p><a href="#/account/explore">Buka Explore setelah masuk</a></div>';}
 }
