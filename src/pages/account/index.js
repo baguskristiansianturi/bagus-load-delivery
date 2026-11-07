@@ -169,11 +169,9 @@ async function profilePage(preview=false){
  return ` <section class="ua-profile-card">
   <div class="ua-cover" ${coverUrl?`style="background-image:url('${coverUrl}')"`:''}><span>FOTO SAMPUL</span><label class="ua-cover-edit">Ganti sampul<input id="ua-cover-file" type="file" accept="image/jpeg,image/png,image/webp"></label></div>
   <div class="ua-profile-content"><div class="ua-profile-avatar">${avatar(avatarUrl,profile.display_name,'large')}<label class="ua-avatar-edit">＋<input id="ua-avatar-file" type="file" accept="image/jpeg,image/png,image/webp"></label></div>
-   <div class="ua-profile-identity"><h2>${esc(profile.display_name)}</h2><div class="ua-username">@${esc(profile.username)}</div><div class="ua-location">${profile.public_city&&profile.public_province?'⌖ '+esc(profile.public_city)+', '+esc(profile.public_province):'⌖ Tambahkan lokasi publik'}</div><p>${esc(profile.bio||'Bio belum ditambahkan.')}</p></div>
-   <div class="ua-profile-count"><strong>${ownPosts.length}</strong><span>Postingan</span></div>
+   <div class="ua-profile-identity"><div class="ua-profile-name-row"><div><h2>${esc(profile.display_name)}</h2><div class="ua-username">@${esc(profile.username)}</div></div><details class="ua-profile-menu"><summary aria-label="Menu profil">•••</summary><div class="ua-profile-menu-pop"><a href="#/account/settings">Pengaturan & privasi</a><a href="#/account/settings">Pengaturan postingan</a><a href="#/account/professional">Profil Professional</a><a href="#/account/wallet">Wallet</a><a href="#/account/addresses">Alamat</a><button id="ua-menu-logout" type="button">Keluar dari akun</button></div></details></div><p>${esc(profile.bio||'Bio belum ditambahkan.')}</p><div class="ua-location">${profile.public_city&&profile.public_province?'⌖ '+esc(profile.public_city)+', '+esc(profile.public_province):''}</div><div class="ua-profile-stats"><a href="#profile-posts"><strong>${ownPosts.length}</strong><span>Postingan</span></a><a href="#/account/followers"><strong>—</strong><span>Pengikut</span></a><a href="#/account/following"><strong>—</strong><span>Mengikuti</span></a></div></div>
   </div>
  </section>
- <div class="ua-profile-toolbar"><a class="ua-outline" href="#/account/settings">⚙ Pengaturan akun</a><a class="ua-outline" href="#/account/preview">Pratinjau ↗</a></div>
  <nav class="ua-profile-tabs" aria-label="Konten profil">
   <a class="active" href="#profile-posts">Postingan</a><a href="#profile-trips">Trip</a><a href="#profile-labels">Label</a>
  </nav>
@@ -182,24 +180,7 @@ async function profilePage(preview=false){
  </section>
  <section id="profile-trips" class="ua-profile-empty-tab"><h2>Trip</h2><p>Aktivitas perjalanan yang Anda bagikan akan tampil di sini.</p></section>
  <section id="profile-labels" class="ua-profile-empty-tab"><h2>Label</h2><p>Koleksi label dan topik profil Anda akan tampil di sini.</p></section>
- <details class="ua-profile-settings">
-  <summary>Pengaturan profil dan akun</summary>
-  <div class="ua-settings-shortcuts"><a href="#/account/settings">Privasi & keamanan</a><a href="#/account/professional">Profil Professional</a><a href="#/seller">Business & Seller Center</a><a href="#/account/wallet">Wallet</a><a href="#/account/addresses">Alamat tersimpan</a></div>
- </details>
- 
- <details class="ua-profile-settings ua-edit-settings"><summary>Edit identitas dan pengaturan profil</summary><section id="edit-profile" class="ua-grid-layout"><div class="ua-panel ua-edit-panel"><div class="ua-section-title"><div><span class="ua-eyebrow">IDENTITAS PUBLIK</span><h2>Edit profil</h2></div></div>
- <form id="ua-profile-form" class="ua-form-grid">
-  <label>Nama tampilan<input name="display_name" maxlength="80" required value="${esc(profile.display_name)}"><small>Nama tampilan boleh sama dengan pengguna lain.</small></label>
-  <label>Username<input name="username" maxlength="30" pattern="[a-z0-9][a-z0-9._]{2,29}" required value="${esc(profile.username)}"><small>Unik, huruf kecil, angka, titik, atau garis bawah.</small></label>
-  <label class="ua-span-2">Bio<textarea name="bio" rows="3" maxlength="500" placeholder="Ceritakan sedikit tentang diri Anda…">${esc(profile.bio)}</textarea></label>
-  <label>Kota / Kabupaten<input name="public_city" value="${esc(profile.public_city||'')}" placeholder="Contoh: Denpasar"></label>
-  <label>Provinsi<input name="public_province" value="${esc(profile.public_province||'')}" placeholder="Contoh: Bali"></label>
-  <label>Privasi akun<select name="visibility"><option value="public" ${profile.visibility==='public'?'selected':''}>Publik</option><option value="private" ${profile.visibility==='private'?'selected':''}>Privat</option></select><small>Akun privat tidak muncul di Explore pengguna lain.</small></label>
-  <label class="ua-checkbox"><input name="show_store" type="checkbox" ${profile.show_store?'checked':''}> Tampilkan toko saya di profil pribadi</label>
-  <div class="ua-span-2 ua-form-actions"><button class="ua-primary" type="submit">Simpan perubahan</button><span id="ua-profile-note" class="ua-form-note"></span></div>
- </form></div>
- <aside class="ua-panel ua-profile-side"><span class="ua-eyebrow">TOKO SAYA</span><h2>Identitas bisnis terpisah</h2>${stores.length?stores.map(s=>`<div class="ua-store-mini"><strong>${esc(s.name)}</strong><small>@${esc(s.username)} · ${esc(s.public_city||'')}</small><span class="ua-status">${esc(s.store_status)}</span></div>`).join(''):'<p>Belum ada toko yang terhubung. Anda dapat memakai Pluits sebagai pengguna biasa terlebih dahulu.</p>'}
- <p class="ua-muted">Toko hanya ditampilkan di profil jika Anda mengaktifkan pilihan di atas. Branding dan katalog toko tetap dikelola terpisah.</p><a href="#/seller/register" class="ua-outline ua-full">Buat Toko (opsional)</a></aside></section></details>`;
+`;
 }
 function postGrid(posts){
  return `<div class="ua-post-grid">${posts.map(p=>`<a class="ua-post-thumb" href="#/account/post/${p.id}">${p.media_path?(p.media_type==='video'?'<span class="ua-video-mark">▶ VIDEO</span><video src="'+p.mediaUrl+'" muted playsinline preload="metadata"></video>':'<img src="'+p.mediaUrl+'" alt="'+esc(p.caption||'Postingan Pluits')+'">'):'<span class="ua-text-thumb">PLUITS</span>'}<span class="ua-thumb-caption">${esc(p.caption||'')}</span></a>`).join('')}</div>`;
