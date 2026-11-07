@@ -104,3 +104,13 @@ The initial migration must be revised and reviewed before application. After sch
 5. Run advisors and verify the schema and test results.
 6. Continue with orders and immutable financial records as a separate milestone.
 
+
+
+## 2026-11-07 — Anonymous public social feed policy (CP-012)
+- Applied migration: `20261107142901_pluits_public_social_read`.
+- Anonymous role can SELECT only public profiles and published public posts from public profiles.
+- Anonymous Storage SELECT is limited to objects referenced by published public posts or avatar/cover paths on public profiles.
+- The `pluits-user-media` bucket remains private. Public media is served through short-lived signed URLs after RLS checks. Private posts, private profiles, addresses, and unrelated media remain inaccessible to anonymous users.
+- Explore interactions and all write operations remain authenticated-only.
+- This policy requires UAT from a logged-out browser: public post and media should load; private content and addresses must not load.
+- Existing advisor warning about authenticated SECURITY DEFINER store RPCs is unchanged; it relates to seller functions, not this public feed migration. Existing FK index performance notices also remain.
