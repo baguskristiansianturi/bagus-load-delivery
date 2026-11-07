@@ -1,5 +1,5 @@
 # MASTER MODEL BISNIS — BAGUS LOAD & DELIVERY
-**Versi:** 0.7 | **Pembaruan:** 7 November 2026
+**Versi:** 0.8 | **Pembaruan:** 7 November 2026
 **Status:** Dokumen induk model bisnis; acuan sebelum penyusunan paket dan spesifikasi teknis.
 
 > Dokumen ini menjadi sumber acuan utama. Hal yang belum diputuskan ditandai sebagai terbuka dan bukan kebijakan final.
@@ -360,3 +360,58 @@ Owner juga dapat mengunggah bukti transaksi atau dokumentasi penjualan untuk mem
 
 Unggahan bukti transaksi tidak otomatis menjadi transaksi Pluits dan tidak boleh dipakai untuk memanipulasi angka penjualan, rating, atau label pembelian terverifikasi. Sebelum dipublikasikan, pengguna harus dapat menyunting atau menutupi data sensitif seperti nama pelanggan, nomor telepon, alamat, nomor pesanan eksternal, tanda tangan, rekening, dan bukti pembayaran. Materi yang mengandung data pihak ketiga memerlukan dasar/izin yang sesuai. Bukti privat untuk administrasi toko harus disimpan terpisah dari konten promosi publik.
 
+
+
+## 19. Pengalaman pengguna baru dan Explore
+Pluits harus dapat digunakan terlebih dahulu sebagai platform pengguna biasa sebelum pengguna memutuskan membuka toko. Akun pertama pada tahap pengujian akan dipakai untuk memvalidasi perjalanan pengguna dari registrasi hingga publikasi konten. Tidak boleh memaksa pengguna membuat toko atau mengisi data usaha untuk menikmati fitur pengguna.
+
+### 19.1 Profil pengguna dan onboarding
+Pengguna dapat melengkapi profil secara bertahap:
+- Foto profil/avatar.
+- Foto sampul/cover profil.
+- Nama tampilan (boleh sama dengan pengguna lain).
+- Username unik.
+- Bio.
+- Lokasi publik ringkas dua tingkat wilayah dengan ikon pin, misalnya Denpasar, Bali.
+- Preferensi privasi akun publik atau privat.
+- Alamat tersimpan yang lengkap, termasuk kode pos dan titik peta, untuk kebutuhan pemesanan/pengiriman; data ini tidak otomatis menjadi lokasi publik.
+
+Pengguna dapat menguji ganti foto profil dan sampul, mengubah bio, mengatur username, menambah alamat, memilih titik peta, dan mengatur privasi tanpa harus menjadi owner toko.
+
+### 19.2 Unggah foto dan video
+Pengguna dapat membuat postingan foto dan video dari perangkat mobile. Alur minimum mencakup memilih media, pratinjau, menambahkan caption, mengatur audiens/privasi, menerbitkan, lalu melihat hasil pada profil dan Explore. Status upload, progres, kegagalan, dan percobaan ulang harus jelas. Validasi format, ukuran, durasi, rasio, batas unggahan, penyimpanan, serta moderasi ditentukan dalam spesifikasi teknis.
+
+Media yang berhasil dipublikasikan harus benar-benar tersimpan dan dapat dimuat kembali; jangan menganggap upload berhasil hanya karena preview lokal terlihat. Konten milik pengguna baru harus terlihat pada profilnya dan dapat ditemukan pada Explore selama memenuhi aturan visibilitas dan moderasi. Untuk menguji alur cold-start, Explore dapat menyertakan konten milik akun sendiri dengan penandaan wajar sebagai konten sendiri; ini bukan manipulasi angka viral atau engagement.
+
+### 19.3 Explore dan pemeringkatan konten
+Explore menyajikan campuran foto dan video dalam satu aliran, bukan tab terpisah yang memaksa format tertentu. Urutan dapat mempertimbangkan relevansi, minat, kebaruan, kualitas, interaksi yang sah, dan popularitas/viralitas. Popularitas bukan satu-satunya faktor; konten baru dari akun kecil tetap memiliki peluang ditemukan. Jangan membuat likes, komentar, view, atau angka viral palsu. Konten privat, diblokir, dihapus, diturunkan moderator, atau tidak memenuhi syarat visibilitas tidak boleh muncul.
+
+### 19.4 Interaksi pada setiap konten
+Setiap postingan foto/video menyediakan aksi yang konsisten:
+- Suka/like dan batalkan suka.
+- Komentar dan balasan.
+- Bagikan/share melalui mekanisme berbagi yang aman.
+- Simpan/tandai/bookmark ke koleksi pribadi.
+- Tandai akun lain dan, bila relevan, tandai produk/toko.
+- Laporkan konten dan kontrol pemilik untuk menghapus atau mengubah postingan.
+
+Aksi hanya boleh tercatat setelah backend mengonfirmasi. Jumlah interaksi dihitung dari data nyata dan harus konsisten antara Explore, profil, serta detail postingan. Privasi akun dan aturan blokir berlaku pada seluruh interaksi.
+
+### 19.5 Kriteria lulus pengalaman akun pertama
+Uji pengguna pertama dinyatakan lulus apabila pengguna dapat mendaftar/login, mengganti foto profil dan sampul, mengisi bio, menetapkan username, mengatur privasi, menambah alamat lengkap dan kode pos, memasang titik peta, mengunggah foto dan video, melihat hasil unggahan pada profil dan Explore, serta menggunakan like, komentar, share, simpan/tandai dan tag tanpa data contoh palsu. Pengujian ini mendahului pengujian fitur toko dan tidak menandakan fitur sosial sudah selesai sebelum benar-benar diuji.
+
+## 20. Aturan sinkronisasi model bisnis, checkpoint, dan PR
+Model bisnis ini menyimpan keputusan dan arah produk; ia bukan satu-satunya catatan status implementasi. Status pekerjaan harus dikelola dalam dokumen **PROJECT-STATUS-ROADMAP.md** yang menjadi pasangan wajib dokumen ini.
+
+Setiap perubahan besar hasil diskusi harus:
+1. Ditambahkan pada bagian yang sesuai atau sebagai subbagian baru tanpa menghapus keputusan lama yang masih berlaku.
+2. Jika keputusan lama berubah, tandai sebagai digantikan/deprecated dan catat keputusan baru serta alasannya; jangan menimpa sejarah tanpa jejak.
+3. Diperiksa dampaknya terhadap skema data, UI, keamanan, alur pengguna, dan fase roadmap.
+4. Memperbarui checkpoint dan daftar PR: apa yang selesai, apa yang belum, bukti commit, status pengujian, dependensi, dan langkah berikutnya.
+5. Tidak menandai pekerjaan selesai hanya karena dokumen atau mockup selesai. Implementasi, deploy, dan pengujian dicatat sebagai status yang berbeda.
+6. Memulai sesi kerja baru dengan membaca model bisnis, status/roadmap, spesifikasi teknis yang relevan, serta status repo/backend terkini.
+
+Setiap checkpoint harus memiliki kriteria penerimaan dan bukti. Setiap PR harus menjelaskan prioritas, dependensi, ruang lingkup, serta cara pengujian. Dokumen status tidak boleh mengklaim deploy atau tes berhasil tanpa bukti aktual.
+
+---
+**Riwayat revisi:** v0.8 menambahkan pengalaman onboarding pengguna baru, profil publik, unggah foto/video, Explore campuran, interaksi konten, dan kewajiban sinkronisasi checkpoint/PR. Rincian progres dan pekerjaan tertunda dilacak pada dokumen status proyek, bukan dengan menghapus riwayat model bisnis.
