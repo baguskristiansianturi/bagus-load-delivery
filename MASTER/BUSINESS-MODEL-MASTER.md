@@ -260,3 +260,74 @@ Peluncuran dan pendaftaran toko pada tahap uji coba dibatasi ke Bali. Pembatasan
 
 ---
 **Status berikutnya:** Versi 0.6 menambahkan struktur owner/staff, kontrol keuangan owner, histori transaksi lintas tahun, laporan PDF, username unik, dan website katalog otomatis untuk setiap toko. Tahap berikutnya adalah menyelaraskan skema backend dan menguji otorisasi owner/staff sebelum menghubungkan UI. Bagus Load & Delivery tetap menunggu validasi kebutuhan.
+
+
+## 18. Akun universal pengguna, komunikasi, saldo, dan jejaring sosial
+
+### 18.1 Prinsip akun universal
+Pluits menggunakan satu identitas akun untuk seluruh aktivitas pengguna. Setiap akun otomatis memiliki fasilitas pengguna/pembeli. Pengguna tidak diarahkan untuk membuat toko setelah login dan tidak diberi promosi pembuatan toko sebagai bagian wajib dashboard. Menu **Buat Toko** tersedia sebagai salah satu pilihan di dashboard; keputusan untuk menjadi penjual sepenuhnya berasal dari pengguna.
+
+Dashboard pengguna sekurang-kurangnya menyediakan:
+- Ringkasan akun dan aktivitas.
+- Transaksi/pesanan.
+- Chat.
+- Saldo.
+- Wishlist.
+- Keranjang.
+- Ulasan.
+- Alamat.
+- Profil dan identitas sosial.
+- Postingan, Story, dan Reels.
+- Pengaturan akun dan privasi.
+- Buat Toko (akses terpisah menuju onboarding Seller Center).
+
+### 18.2 Transaksi pembeli
+Riwayat transaksi harus lengkap dan dapat dibuka per pesanan: nomor dan tanggal transaksi, toko, item, foto, variasi, kuantitas, snapshot harga satuan, diskon, subtotal, biaya, ongkos kirim, total, alamat pengiriman saat checkout, metode dan status pembayaran, bukti/invoice, status pemenuhan, informasi kurir/pelacakan, serta kronologi perubahan status dengan timestamp.
+
+Catatan transaksi harus immutable untuk data historis penting. Perubahan harga katalog, nama produk, atau alamat profil tidak boleh mengubah snapshot transaksi yang sudah terjadi. Sistem perlu mendukung pembatalan, refund, komplain/sengketa, dan unduhan invoice sesuai kebijakan yang akan ditetapkan.
+
+### 18.3 Chat dan pusat bantuan
+Akun menyediakan inbox percakapan dengan:
+- Toko/penjual tertentu, dengan konteks produk atau pesanan.
+- Pusat bantuan resmi Pluits.
+- Riwayat percakapan, daftar pesan, timestamp, status terkirim/terbaca, dan lampiran yang diizinkan.
+- Hubungan dari halaman produk, toko, dan transaksi ke percakapan yang relevan.
+- Kategori bantuan dan nomor tiket untuk kasus yang memerlukan penanganan.
+
+Otorisasi percakapan wajib berbasis peserta. Toko hanya dapat mengakses percakapan yang melibatkan toko tersebut; percakapan pengguna dengan toko lain atau bantuan Pluits tidak boleh terbuka. Retensi, pelaporan penyalahgunaan, blokir, dan moderasi akan dirinci pada spesifikasi teknis.
+
+### 18.4 Saldo / Pluits Balance
+Antarmuka akun menyiapkan ringkasan saldo, saldo tersedia, saldo tertahan/dalam proses, top up, penarikan, riwayat mutasi, biaya, status, dan bukti transaksi. Fitur dapat ditampilkan dalam keadaan nonaktif selama fase uji UI.
+
+Saldo uang sungguhan tidak boleh dibuat hanya sebagai angka frontend atau saldo demo yang tampak dapat dicairkan. Sebelum aktivasi diperlukan ledger double-entry/append-only yang dapat direkonsiliasi, idempotensi transaksi, kontrol fraud, autentikasi kuat, verifikasi rekening penerima, proses refund/chargeback, integrasi penyedia pembayaran yang sesuai, serta kajian persyaratan hukum dan regulasi yang berlaku. Top up, pembayaran, refund, penahanan, pelepasan, dan penarikan harus memiliki catatan mutasi terpisah dan dapat diaudit. Aktivasi dompet/penyimpanan dana merupakan keputusan terbuka sampai model hukum dan mitra penyedia disetujui.
+
+### 18.5 Profil pengguna dan privasi
+Profil memiliki foto/avatar, nama tampilan, username unik, bio, jumlah pengikut/mengikuti, serta halaman konten. Nama tampilan merupakan identitas publik dan tidak harus sama dengan nama legal. Username menjadi identitas unik. Nama legal, email, nomor telepon, alamat, data verifikasi, rekening, dan informasi transaksi tetap privat secara default.
+
+Pengguna dapat mengatur akun publik atau privat. Sistem perlu mendukung permintaan mengikuti, persetujuan pengikut untuk akun privat, blokir, mute, pelaporan, serta kontrol siapa yang dapat mengirim pesan dan melihat Story/konten tertentu. Pengaturan privasi harus berlaku konsisten di feed, profil, pencarian, Story, komentar, dan hasil berbagi.
+
+### 18.6 Jejaring sosial: feed, postingan, Story, dan Reels
+Pluits menyiapkan lapisan sosial yang mencakup:
+- Feed konten dari akun yang diikuti dan rekomendasi yang dikendalikan preferensi.
+- Postingan foto/video dengan caption dan galeri profil berbentuk grid.
+- Story dengan masa tayang dan pengaturan audiens.
+- Reels/video pendek vertikal.
+- Like, komentar, bagikan, simpan, follow/unfollow, dan pelaporan konten.
+- Profil sosial untuk pengguna dan, pada fase berikutnya, toko/penyedia.
+- Moderasi, hak cipta, kontrol konten, dan keamanan pengguna.
+
+Konten tidak boleh dipublikasikan otomatis tanpa tindakan dan persetujuan pengguna. Konten yang dibuat dari transaksi harus melalui tindakan eksplisit seperti **Bagikan ke Story** atau **Buat Postingan**. Jika asal konten benar-benar terkait transaksi yang valid, Pluits dapat menampilkan label **Pembelian Terverifikasi** tanpa membocorkan nomor pesanan, alamat, harga privat, bukti pembayaran, atau data personal. Pengguna dapat memilih gambar produk katalog, menambahkan foto/video sendiri, menulis pengalaman, dan memilih audiens. Menghapus postingan tidak menghapus catatan transaksi asli.
+
+### 18.7 Pemisahan data dan akses
+Lapisan sosial tidak boleh mengubah akses data operasional marketplace. Data transaksi privat, alamat, saldo, rekening, chat privat, dan data verifikasi tidak boleh ikut masuk ke feed atau profil publik. Setiap objek sosial memiliki pemilik, status visibilitas, dan kebijakan akses yang diperiksa di backend, bukan hanya disembunyikan melalui UI.
+
+### 18.8 Tahapan implementasi
+1. **Fondasi akun:** satu autentikasi, profil, username, nama tampilan, avatar, pengaturan privasi, dan dashboard navigasi.
+2. **Fasilitas pembeli:** wishlist, keranjang, alamat, transaksi, dan ulasan yang terhubung ke backend.
+3. **Komunikasi:** inbox, chat toko, dan pusat bantuan.
+4. **UI saldo:** tampilan dan status nonaktif untuk pengujian; ledger dan integrasi uang sungguhan hanya setelah keputusan legal/penyedia dan kontrol keamanan siap.
+5. **Sosial dasar:** profil publik/privat, feed, postingan foto, follow, like, komentar, dan Story.
+6. **Sosial lanjutan:** Reels, rekomendasi, moderasi lanjutan, dan konten berbasis pengalaman pembelian terverifikasi.
+
+Setiap fase diuji di perangkat mobile. Fitur yang belum terhubung harus diberi status belum aktif dengan jelas; tidak boleh menampilkan data transaksi, saldo, percakapan, atau postingan palsu seolah-olah nyata.
+
