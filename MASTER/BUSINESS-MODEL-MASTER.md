@@ -753,3 +753,46 @@ Setiap fitur wajib dapat ditelusuri dari cerita/masalah → journey → aturan b
 Prinsip narrative-first, familiar-first, social-first, GeoDirectory sebagai peta entitas lokal, serta Bali-first rollout menjadi arah founder. Hal-hal berikut belum otomatis menjadi spesifikasi implementasi final: komisi, paket SaaS, donasi dan wallet, bukti kehadiran, seller verification, sumber data lengkap, kantor lokal, SLA sengketa, lowongan kerja, kemitraan pemerintah, URL regional final, dan jadwal ekspansi.
 
 Semua angka finansial, ROI, kebutuhan kantor, headcount, dan biaya harus dihitung dari data operasional. Jangan mengarang angka untuk proposal investor.
+
+
+### 32.10 Lokasi fisik sebagai dasar kepercayaan dan pemenuhan lokal
+GeoDirectory bukan sekadar kumpulan pin peta atau katalog alamat. Untuk usaha yang menawarkan barang dari toko fisik, lokasi yang nyata membantu pengguna memahami bahwa penyedia memiliki tempat operasional yang dapat didatangi. Pengguna dapat memilih pengantaran lokal atau mengambil sendiri apabila penyedia memang menawarkan opsi tersebut. Untuk sekolah, rumah ibadah, kantor, fasilitas publik, dan organisasi, pin menunjukkan keberadaan lokasi/entitas; pin tidak otomatis berarti entitas tersebut membuka layanan transaksi.
+
+Aturan model:
+- Setiap entitas memiliki jenis lokasi yang tepat: tempat tetap, cabang, kantor layanan, lokasi kegiatan, atau area layanan bergerak. Jangan memaksakan alamat rumah/pribadi kepada profesi yang bekerja berdasarkan janji temu atau datang ke pelanggan.
+- Listing toko fisik yang dapat menerima pickup harus mempunyai lokasi fisik yang dapat diperiksa. Area layanan pengantaran dicatat terpisah dari alamat toko.
+- Peta harus membedakan data yang baru bersumber/tercatat, lokasi yang belum dikonfirmasi, lokasi yang dikelola, dan lokasi/entitas yang telah diverifikasi. Pin bukan bukti tunggal kepemilikan atau kualitas.
+- Identitas toko, pemilik, operator, alamat, dan jenis penjual harus jelas. Lokasi tidak boleh dibuat hanya untuk menciptakan kesan toko fisik.
+- Pengguna dapat melaporkan lokasi tidak ditemukan, alamat tidak sesuai, entitas ganda, atau penyedia yang tidak beroperasi. Laporan memicu pemeriksaan; bukan penghapusan otomatis. Sistem menggabungkan bukti independen, riwayat laporan, data sumber, dan respons pengelola, lalu melakukan tindakan proporsional setelah verifikasi.
+- Tindakan dapat berupa koreksi pin, penandaan perlu verifikasi, pembatasan klaim/fitur transaksi, penggabungan duplikat, penurunan visibilitas sementara, atau pengarsipan setelah pemeriksaan. Sediakan hak jawab dan banding agar laporan palsu tidak dapat menjatuhkan pesaing.
+- Alur klaim tidak boleh hanya mengandalkan pilihan peran dan pernyataan teks. Perlu bukti kewenangan yang sesuai kategori, pemeriksaan manusia untuk kasus berisiko, audit trail, serta pencabutan akses jika hubungan kerja/mandat berakhir.
+
+Dengan demikian, GeoDirectory memberi pengguna konteks untuk memilih: siapa penyedia, di mana keberadaannya, apakah dapat didatangi, dan apakah pemenuhan lokal benar-benar tersedia. Data tempat yang tidak diklaim tetap dapat berguna sebagai referensi, tetapi tidak boleh dipasarkan sebagai penjual terverifikasi.
+
+### 32.11 Reputasi personal, peluang kerja, dan tata kelola komunitas
+Nilai akun personal tidak berhenti pada postingan. Profil dapat menjadi representasi sosial dan profesional: identitas, portofolio, keahlian, karya, pengalaman, serta afiliasi dengan perusahaan, instansi, organisasi, atau komunitas. Organisasi dapat mempublikasikan lowongan dan kebutuhan tenaga; calon pekerja dapat ditemukan melalui profil dan portofolio yang relevan.
+
+Prinsip:
+- Afiliasi pekerjaan/jabatan harus diverifikasi oleh pihak organisasi yang berwenang; pengguna tidak boleh mengaku bekerja di instansi hanya dengan mengisi sendiri.
+- Organisasi mempunyai profil terpisah dari akun personal, dengan pemilik/pengelola dan staf yang diberi hak sesuai tugas. Satu pengguna dapat mengelola beberapa entitas tanpa membuat identitas login baru.
+- Lowongan harus memiliki penerbit yang jelas, status aktif, lokasi/jenis kerja, persyaratan, masa berlaku, dan kanal lamaran. PLUITS tidak menjanjikan pekerjaan atau memvalidasi kompetensi hanya dari jumlah pengikut.
+- Pengguna mengendalikan bagian portofolio dan afiliasi yang ditampilkan publik. Informasi sensitif, data kepegawaian, dan dokumen lamaran tidak menjadi konten publik secara default.
+- Profil yang terawat dapat menjadi insentif alami karena pengguna ingin menjaga reputasi di hadapan teman, pelanggan, organisasi, dan calon pemberi kerja. Ini adalah hipotesis perilaku yang perlu diuji, bukan alasan untuk memaksa semua data menjadi publik.
+
+### 32.12 Kontribusi organisasi dan potensi kemitraan layanan publik
+Rumah ibadah, banjar, yayasan, sekolah, komunitas, dan lembaga publik dapat menggunakan profil entitas untuk menyampaikan pengumuman, kegiatan, kebutuhan, dan informasi layanan kepada masyarakat di area terkait. Pengguna dapat mengikuti informasi, mendaftar kegiatan, menjadi relawan, atau memberi kontribusi sesuai kebutuhan yang sah.
+
+Kontribusi sosial harus memberi pilihan yang jelas:
+- kontribusi dapat bersifat publik atau privat; pengguna tidak dipaksa memamerkan nominal atau identitas donor;
+- bila pengguna memilih membagikan kontribusi, konten tersebut merupakan pilihan sadar dan tidak boleh membuka bukti pembayaran mentah atau data keuangan privat;
+- pengelola wajib diverifikasi dan setiap pengumpulan dana memiliki penerima, tujuan, status penyaluran, biaya, bukti, serta mekanisme pertanggungjawaban;
+- fitur wallet/donasi uang tetap nonaktif sampai model dana, mitra pembayaran, ledger, settlement, refund, audit, perlindungan penyalahgunaan, dan kepatuhan hukum siap.
+
+Keterlibatan pemerintah atau lembaga publik merupakan potensi manfaat dari peta entitas dan komunikasi lokal, bukan kemitraan atau dukungan pemerintah yang sudah diperoleh. Jangan menggunakan logo, nama, atau status seolah-olah lembaga telah meresmikan/menyetujui PLUITS tanpa otorisasi tertulis.
+
+### 32.13 Bali-first, dukungan wilayah, dan ekspansi bertahap
+Bali menjadi wilayah operasional awal untuk menguji pengalaman pengguna, kepadatan data, kualitas penyedia, klaim, moderasi, layanan bantuan, dan sengketa. Pendaftaran wilayah lain dapat tetap dibatasi sampai gate Bali dipenuhi. Pembatasan harus ditegakkan di backend, bukan hanya berdasarkan pilihan kota di frontend.
+
+Kantor dan staf lokal dipertimbangkan ketika volume verifikasi, sengketa, kunjungan lapangan, moderasi, atau permintaan dukungan melampaui kapasitas operasi jarak jauh. Gagasan awal founder tentang cakupan 50–60% bukan ambang baku. Pemicu harus ditetapkan dari metrik aktual seperti kasus per wilayah, waktu penyelesaian, kasus yang memerlukan kunjungan, jumlah entitas aktif, dan biaya dukungan.
+
+Ekspansi ke Surabaya, Yogyakarta, Bandung, Jakarta, wilayah lain di Indonesia, dan kemudian negara lain dilakukan satu per satu. Setiap wilayah memerlukan data geografi, bahasa/mata uang, kebijakan lokal, sumber data berlisensi, verifikator/mitra, dukungan, serta kesiapan sengketa. URL dapat mengikuti struktur negara/wilayah/kota yang kanonis, tetapi URL tidak menggantikan kontrol akses atau konfigurasi region backend.
