@@ -158,3 +158,12 @@ Founder reports that Pluits is already published and has at least one registered
 - Confirmed the active entry and router use Pluits Auth/account, Seller Center, Marketplace, Trip, GeoDirectory, Social, messages and moderation modules; no active route imports the deleted legacy files.
 - Expanded `scripts/verify-production-surface.mjs` to fail CI if these retired files return or old Bagus/BLD account/cart markers appear in key runtime files.
 - This is source-level cleanup and regression protection. It does not certify every external integration or all Android behavior.
+
+
+## 14. Legacy master-data module removed from runtime
+
+- Confirmed no active app/router/page module imports `src/data/master-data.js`.
+- The file still contained the retired platform identity, a static legacy taxonomy for materials/services/logistics/property, old fulfillment/payment/order/commission rules, and demo location comments. It was not connected to the current Pluits backend.
+- Preserved a sanitized, non-executable text snapshot at `docs/pluits/archive/legacy-master-data.snapshot.txt` for taxonomy/history review only. It is explicitly non-authoritative and must never be imported or used as active business rules.
+- Deleted `src/data/master-data.js` from runtime and added it to the CI forbidden-file/import list.
+- This preserves potentially useful category ideas without allowing the old taxonomy, old payment rules, or demo locations to drive Pluits.
