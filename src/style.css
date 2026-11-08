@@ -5221,3 +5221,10 @@ body{font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.45;-web
  .pl-public-post-actions a{font-size:9px}
  .ua-main{margin-top:12px}
 }
+
+/* Home feed interaction controls */
+.pl-public-post-actions button{border:0;background:transparent;color:#647278;font:inherit;font-size:11px;font-weight:750;padding:3px 7px;cursor:pointer}
+.pl-public-post-actions button.is-liked{color:#b13c55}
+.pl-public-post-actions button:disabled{opacity:.55;cursor:wait}
+.pl-public-post-actions button:focus-visible,.pl-public-post-actions a:focus-visible{outline:2px solid #477b8b;outline-offset:3px;border-radius:5px}
+@media(max-width:760px){.pl-public-post-actions{display:flex;justify-content:space-around;gap:3px}.pl-public-post-actions button,.pl-public-post-actions a{font-size:10px;padding:5px 3px}}
