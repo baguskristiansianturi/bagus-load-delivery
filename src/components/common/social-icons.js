@@ -5,6 +5,7 @@ const paths={
  send:'<path d="m22 2-7 20-4-9-9-4Z"></path><path d="M22 2 11 13"></path>',
  bookmark:'<path d="M6 4.5A1.5 1.5 0 0 1 7.5 3h9A1.5 1.5 0 0 1 18 4.5V21l-6-4-6 4Z"></path>',
  more:'<circle cx="5" cy="12" r="1"></circle><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle>',
+ edit:'<path d="m14 5 5 5M4 20l4.2-.8L19 8.4a2.1 2.1 0 0 0-3-3L5.2 16.2Z"></path>',
  plus:'<path d="M12 5v14M5 12h14"></path>',
  home:'<path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7h-6v7H4a1 1 0 0 1-1-1Z"></path>',
  compass:'<circle cx="12" cy="12" r="9"></circle><path d="m15.5 8.5-2.2 5-4.8 2 2-4.8Z"></path>',
