@@ -919,3 +919,15 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - **Belum dilakukan:** tidak ada migration file yang dihasilkan melalui Supabase CLI, tidak ada staging branch karena Supabase meminta konfirmasi biaya untuk membuat branch, tidak ada DDL production, tidak ada deploy.
 - **Gate berikutnya:** siapkan environment staging/disposable; review SQL + policy names/ACL; uji dua akun founder-controlled dan anon; jalankan Supabase advisors. Production hanya setelah test lulus dan rollback siap.
 - **Prioritas:** Social P0 tetap. Jangan mulai ekspansi fitur sebelum privacy gate lulus.
+
+
+### CP-055 — Social & Store UAT readiness audit (9 November 2026)
+- **Status:** Audit snapshot diperbarui; release gate masih BLOCKED.
+- **Scope:** Social Media, Seller Center, live RLS, Storage, Security Advisor, responsive source review.
+- **Evidence:** `docs/pluits/SOCIAL-AND-STORE-UAT-READINESS-AUDIT-2026-11-09.md`.
+- **Repository commit saat audit:** `ee05def9f4f03d66c9d961d4e325e3ec564d7978`; Pages run #1032 SUCCESS. Audit doc committed separately; docs-only deploy does not prove frontend UAT.
+- **Live DB:** 62/62 public tables have RLS; SOC-01–04 and GDT-01 still confirmed in live policies; 20 authenticated-callable SECURITY DEFINER advisor warnings, leaked-password protection disabled; 84 unused-index INFO; health lints 0.
+- **Seller findings:** PT/CV/UD-only form and RPC conflict with active business model; profile query omits `phone`, `public_area`, `description`; verification submit and several product/order action buttons lack handlers; online-sales UI attempts direct UPDATE on `stores` without an owner UPDATE policy; multi-store selector and branding upload are absent.
+- **Database changes:** none. RLS remediation candidate remains NOT APPLIED TO PRODUCTION; no Supabase dev branch exists.
+- **Tests:** static source/live policy inspection only. Android, two-account, store creation RPC, upload and end-to-end UAT remain NOT TESTED.
+- **Next:** secure staging/cost approval → validate and test RLS remediation → align store business type across schema/RPC/UI → fix Seller Center → build/deploy exact SHA → founder UAT.
