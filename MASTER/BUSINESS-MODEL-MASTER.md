@@ -1022,3 +1022,51 @@ Gunakan data sendiri, kontribusi komunitas termoderasi, sumber terbuka berlisens
 - Supabase memiliki fondasi social/profile/follow, store/product, operating_regions, dan account preferences; belum ditemukan tabel GeoDirectory universal, entity locations/sources, claims, atau manager memberships.
 - PostGIS dan pgvector tersedia sebagai extension tetapi belum terpasang pada database. PostGIS prioritas untuk nearby; vector/AI tidak diperlukan untuk MVP.
 - Audit ini tidak mengubah schema, extension, frontend, atau deployment.
+
+
+## 29. Implementasi inti GeoDirectory dan evaluasi tahap pertama
+**Tanggal: 8 November 2026**
+
+Bagian ini mencatat implementasi aktual setelah keputusan Bagian 28. Status yang dicatat hanya yang telah diverifikasi.
+
+### 29.1 Status implementasi
+- **DECIDED:** nearby, hybrid home, local-first Bali/Denpasar, adaptive personalization.
+- **DESIGNED:** skema kanonis, RLS, PostGIS, claim, relationship, source provenance, user preferences, activity and feedback.
+- **IMPLEMENTED (database):** PostGIS, kategori, entitas/lokasi, provenance, claims, memberships, preferences, activity, feedback, saved/recent, relationships, media metadata, social post links, dan Marketplace store link.
+- **IMPLEMENTED (frontend):** home nearby preview, direktori list/map, search/category/radius/area, opt-in GPS, detail tempat, claim form, adaptive interest controls, feedback, saved places dan recent places.
+- **DEPLOYED:** GitHub Actions Pages run #506 sukses pada commit `2432e4a81d8588eb46c62c9e3a10b18fafd00a03`. Migration SQL sesudahnya tidak mengubah frontend; workflow terbaru harus tetap diverifikasi setelah pembaruan dokumen.
+- **TESTED (database):** query publik/anon, radius, kategori, invalid latitude, RLS, grants, private trigger execute, dan GiST index berhasil diperiksa.
+- **ACCEPTED / UAT:** belum. Pengujian visual pada perangkat Android, akun nyata, GPS, klaim nyata, dan koneksi lambat masih menunggu pengujian pengguna.
+
+### 29.2 Data awal dan sumber
+Empat entitas awal yang dimasukkan: Museum Bali, Lapangan Puputan Badung, Pantai Pandawa, dan Pura Luhur Uluwatu. Referensi koordinat berbasis OpenStreetMap yang ditampilkan melalui Mapcarta; provenance, atribusi, dan ODbL metadata disimpan. Ini hanya starter set, bukan direktori Bali yang lengkap. Tidak ada scraping atau penyalinan Google Maps.
+
+### 29.3 Keamanan klaim dan data
+- RLS aktif pada seluruh tabel publik baru.
+- Tabel sumber provenance, klaim, dan preferensi pribadi tidak dapat dibaca anon.
+- Klaim hanya satu yang aktif per entitas. Trigger internal menandai klaim pending dan membuat membership setelah reviewer menyetujui.
+- Client tidak dapat menyetujui klaim, mengubah role, atau memublikasikan media direktori.
+- Media baru berstatus pending; alur upload Storage dan moderation console belum selesai.
+- Lokasi perangkat hanya dipakai setelah tombol lokasi ditekan dan tidak disimpan sebagai tracking trail.
+
+### 29.4 Batasan yang wajib dipertahankan
+- Ranking tahap pertama deterministic, bukan AI/ML. Sinyal meliputi minat eksplisit dan aktivitas 90 hari, jarak, serta feedback.
+- Wishlist dan baru dilihat untuk entitas GeoDirectory sudah server-side. Wishlist produk, keranjang, dan pesanan marketplace lama masih menggunakan localStorage dan belum dimigrasikan.
+- Relasi stores dan social posts ke entitas sudah tersedia di schema, tetapi UI pengaitan dan backfill toko belum selesai.
+- Trip belum terhubung karena lifecycle Trip belum selesai.
+- Direktori baru memiliki empat data tempat; import terbuka yang berlisensi, deduplikasi, correction workflow, dan perluasan Bali masih diperlukan.
+- Belum ada dashboard admin klaim, media, laporan data, dan banding.
+
+### 29.5 Evaluasi dampak dan saran
+1. GeoDirectory membuat halaman tempat tersedia sebelum pengelola mendaftar; ini membuka peluang klaim resmi tanpa mengharuskan setiap pengunjung membuat tempat baru.
+2. Satu ID entitas mengurangi duplikasi tempat lintas Social, Marketplace, Event, dan Trip.
+3. Data sumber dan status klaim harus selalu terlihat; imported/unclaimed tidak sama dengan official/verified.
+4. Jangan membuat skor moral atau blacklist otomatis dari popularitas dan laporan tanpa bukti. Terapkan moderasi berbasis pelanggaran kebijakan, pemeriksaan manusia, alasan sanksi, dan banding.
+5. Jangan menyimpulkan agama, politik, kesehatan, orientasi, atau atribut sensitif dari minat dan riwayat.
+6. Bangun dashboard admin dan alur koreksi/deduplikasi sebelum memperbesar import data.
+7. Prioritaskan UAT Android dan sinkronisasi commerce cart sebelum mengundang pengguna luas.
+
+### 29.6 Referensi implementasi
+- `docs/pluits/GEODIRECTORY-ARCHITECTURE.md`
+- `docs/pluits/GEODIRECTORY-IMPLEMENTATION-REPORT-2026-11-08.md`
+- `supabase/migrations/20261108040323_pluits_geodirectory_core.sql` dan migration lanjutan sampai `20261108041053_pluits_directory_sources_deny_client.sql`
