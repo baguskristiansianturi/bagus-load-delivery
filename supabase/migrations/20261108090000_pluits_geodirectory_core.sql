@@ -1,6 +1,7 @@
 -- Pluits GeoDirectory core: global-ready schema, local-first rollout.
 -- PostGIS is installed in the non-exposed extensions schema.
 create extension if not exists postgis with schema extensions;
+create extension if not exists pg_trgm with schema extensions;
 
 create table if not exists public.directory_categories (
   id uuid primary key default gen_random_uuid(),
@@ -66,7 +67,7 @@ create index if not exists directory_locations_city_idx
 create index if not exists directory_entities_public_type_idx
   on public.directory_entities(status, entity_type, published_at desc);
 create index if not exists directory_entities_name_trgm_idx
-  on public.directory_entities using gin (name gin_trgm_ops);
+  on public.directory_entities using gin (name extensions.gin_trgm_ops);
 
 create table if not exists public.directory_entity_sources (
   id uuid primary key default gen_random_uuid(),
