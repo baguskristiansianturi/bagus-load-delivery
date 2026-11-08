@@ -258,7 +258,8 @@ async function hydratePosts(rows){
 async function feedPage(){
   const {data,error}=await supabase.from('user_posts').select('*').eq('visibility','public').eq('moderation_status','published').order('created_at',{ascending:false}).limit(100);
   if(error)throw error;
-  let source=data||[],followingIds=[];
+  let source=data||[],followingIds=[],blockedIds=[];
+   if(user?.id){const {data:blocks,error:blockError}=await supabase.from('user_blocks').select('blocker_id,blocked_id').or('blocker_id.eq.'+user.id+',blocked_id.eq.'+user.id);if(blockError)throw blockError;blockedIds=(blocks||[]).map(x=>x.blocker_id===user.id?x.blocked_id:x.blocker_id);source=source.filter(post=>!blockedIds.includes(post.user_id));}
   if(exploreFilter==='following'){
    const {data:follows,error:followError}=await supabase.from('user_follows').select('following_id').eq('follower_id',user.id).eq('status','accepted');
    if(followError)throw followError;
@@ -319,7 +320,7 @@ function postCard(p){
  return `<article class="ua-post-card" data-post-id="${p.id}"><div class="ua-post-head"><a class="ua-post-avatar-link" href="${profileHref}" aria-label="Buka profil ${esc(p.owner.display_name)}">${avatar(p.avatarUrl,p.owner.display_name)}</a><div><a class="ua-author-link" href="${profileHref}"><strong>${esc(p.owner.display_name)}</strong></a><small>@${esc(p.owner.username)} ${p.owner.public_city&&p.owner.public_province?'· ⌖ '+esc(p.owner.public_city)+', '+esc(p.owner.public_province):''}</small></div><time>${fmtDate(p.created_at)}</time></div>
  <p class="ua-caption">${esc(p.caption)}</p>${(p.tags?.length||p.tagged?.length)?'<div class="ua-tags">'+(p.tags||[]).map(t=>'<span>#'+esc(t)+'</span>').join(' ')+(p.tagged||[]).map(t=>'<span>＠'+esc(t.username)+'</span>').join(' ')+'</div>':''}
  ${mediaMarkup}
- ${user?`<div class="ua-post-actions"><button data-action="like" class="${p.liked?'is-liked':''}">♥ <span>${p.liked?'Disukai':'Suka'}</span> <b>${p.likes}</b></button><button data-action="comments">◯ Komentar <b>${p.comments}</b></button><button data-action="share">↗ Bagikan</button><button data-action="save" class="${p.saved?'is-saved':''}">▱ ${p.saved?'Tersimpan':'Tandai'}</button><button data-action="tag" ${p.user_id===user.id?'':'disabled title="Hanya pemilik postingan dapat menandai akun"'}>＠ Tag</button>${p.user_id===user.id?'<button data-action="edit">Edit postingan</button>':''}</div>${p.user_id===user.id?'<section class="ua-post-editor" hidden></section>':''}<div class="ua-comments" hidden></div>`:`<div class="ua-post-actions"><a class="ua-login-action" href="#/account/login">Masuk untuk menyukai, berkomentar, atau menyimpan</a></div>`}
+ ${user?`<div class="ua-post-actions"><button data-action="like" class="${p.liked?'is-liked':''}">♥ <span>${p.liked?'Disukai':'Suka'}</span> <b>${p.likes}</b></button><button data-action="comments">◯ Komentar <b>${p.comments}</b></button><button data-action="share">↗ Bagikan</button><button data-action="save" class="${p.saved?'is-saved':''}">▱ ${p.saved?'Tersimpan':'Tandai'}</button><button data-action="tag" ${p.user_id===user.id?'':'disabled title="Hanya pemilik postingan dapat menandai akun"'}>＠ Tag</button>${p.user_id===user.id?'<button data-action="edit">Edit postingan</button>':'<button data-action="report">Laporkan</button>'}</div>${p.user_id===user.id?'<section class="ua-post-editor" hidden></section>':''}<div class="ua-comments" hidden></div>`:`<div class="ua-post-actions"><a class="ua-login-action" href="#/account/login">Masuk untuk menyukai, berkomentar, atau menyimpan</a></div>`}
  </article>`;
 }
 async function composePage(){
