@@ -731,3 +731,12 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - Preserved its historical category/taxonomy reference as sanitized plain text in `docs/pluits/archive/legacy-master-data.snapshot.txt`; this archive is non-runtime and non-authoritative.
 - Removed the old JavaScript module from `src/data`; CI now fails if it is reintroduced or imported.
 - Old fulfillment/payment/commission/order rules and demo location data in the archive are not Pluits requirements and must not be revived without explicit founder approval.
+
+
+### CP-039 final deployment evidence — 8 November 2026
+
+- **Latest tested commit:** `b9f6bdf3553b17c56036ba0b372de02fb5fdd221`.
+- **GitHub Actions run:** #897 / `42486221382` — SUCCESS.
+- **CI checks:** production-surface regression test, Vite production build, build-output verification, Pages artifact upload, and Pages deployment all succeeded.
+- **Live test URL:** `https://baguskristiansianturi.github.io/pluits/?v=b9f6bdf`.
+- **Status:** IMPLEMENTED + DEPLOYED. Founder Android/mobile UAT and real owner/staff REST tests remain NOT TESTED / NOT ACCEPTED.
