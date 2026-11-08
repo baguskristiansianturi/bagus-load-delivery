@@ -159,3 +159,5 @@ These are limited smoke tests, not a substitute for signed-in two-account and fu
 
 - Recommendation ranking diberi recency decay dan cap skor 90 hari; event yang saat ini tercatat dari UI terutama view/click/save/hide. Follow/share/check-in/report masih menunggu integrasi lintas modul.
 - Bottom navigation mobile kini memiliki pintasan langsung ke GeoDirectory.
+
+- Migration live `20261108041421_pluits_directory_claim_revocation` mengikat membership ke source claim dan mencabut akses yang berasal dari claim bila approval kemudian dicabut/ditolak/disengketakan/ditarik. Fungsi trigger private tidak dapat dieksekusi langsung oleh role API.
