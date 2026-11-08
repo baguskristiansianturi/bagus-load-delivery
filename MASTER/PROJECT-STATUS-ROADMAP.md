@@ -740,3 +740,20 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - **CI checks:** production-surface regression test, Vite production build, build-output verification, Pages artifact upload, and Pages deployment all succeeded.
 - **Live test URL:** `https://baguskristiansianturi.github.io/pluits/?v=b9f6bdf`.
 - **Status:** IMPLEMENTED + DEPLOYED. Founder Android/mobile UAT and real owner/staff REST tests remain NOT TESTED / NOT ACCEPTED.
+
+
+## CP-040 — Social-first production hardening and founder UAT scope (8 November 2026)
+
+- **Founder decision:** Pluits is already published and has a registered account. Treat it as production, not demo/prototype. Social Media is P0; Café, Resto, Marketplace expansion and other experience verticals wait until Social Media passes founder UAT.
+- **Canonical spec:** `MASTER/PLUITS-SOCIAL-FIRST-RELEASE-SPEC.md`. It defines core social journeys, privacy/security acceptance, offline DM boundaries, notification types, music rights and FYP integrity, settings, responsive testing and release gate.
+- **DM implementation:** `src/pages/messages/index.js` now has follow-contact list, username search, inbox, Supabase realtime message subscription, cached contact/thread metadata, device-local outbox, reconnect retry and idempotent `client_message_id`. This is not offline server delivery; new conversations and remote history require a network. Android/offline/two-account UAT NOT TESTED.
+- **Live DB migration:** `20261108135647_pluits_social_realtime_offline_message_queue` adds idempotency key, message/unfollow notifications, notification types and realtime publication for messages/follows/notifications. Live publication and columns verified. Matching migration SQL is committed.
+- **Account settings:** `src/pages/account/security-settings.js` is a separate module for username, public/private profile, password update, phone OTP, TOTP MFA, language preference, location permission and native media picker. Language preference is persisted, but complete English translation is NOT IMPLEMENTED. Phone OTP depends on configured SMS provider; TOTP, Auth and real-account UAT NOT TESTED.
+- **Language migration:** `20261108140017_pluits_account_language_preference` applied live and matching SQL committed.
+- **Notification UI:** activity center recognizes follow request/new follower/accepted/unfollow/post like/comment/new message/system update. New message and unfollow event triggers are live. System announcement publishing/admin management, realtime activity refresh/badge and actual system notice content remain NOT IMPLEMENTED.
+- **Icons:** professional SVG icon set expanded and account settings navigation now uses SVG icons.
+- **Regression guard:** `npm test` now checks retired demo modules remain absent, Marketplace/Trip backend contracts, DM realtime/offline contracts, account security settings, and notification type mappings. GitHub Actions runs this before Vite build.
+- **Music/FYP:** no licensed music catalog or production-grade FYP/viral recommendation algorithm exists. The current Reels ordering is a simple heuristic. Rights and ranking requirements are specified; do not import or copy commercial tracks.
+- **Optional personal verification:** NOT IMPLEMENTED. Current verification schema only covers professional/store; no personal identity badge should be issued.
+- **Responsive/performance:** responsive CSS exists; device matrix, Android media upload/playback, accessibility and measured performance remain NOT TESTED.
+- **Release status:** implementation increment committed; deploy and CI must be verified on the latest head. Not yet accepted by founder. Do not label social release complete.
