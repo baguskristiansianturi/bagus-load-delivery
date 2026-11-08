@@ -535,3 +535,16 @@ Build dari commit `642a24bdbed4a85931271e7481f9880a04cc9fc3` berhasil. GitHub Pa
 - Verification: notification table RLS enabled; anon has no SELECT; authenticated has SELECT but no table-wide UPDATE; authenticated may update only `read_at`; 4 event triggers exist; anon/authenticated cannot execute the trigger function. Supabase Security Advisor no longer reports this new function; remaining 2 SECURITY DEFINER findings are legacy store RPCs, plus Auth leaked-password protection remains disabled.
 - **Status:** backend schema/triggers and frontend inbox implemented; real two-account event-flow and Android visual UAT pending; deployment must be confirmed from the latest Pages workflow.
 - **Next Phase 1 work:** media upload progress/retry and preserving original dimensions across every feed surface; then complete threaded comments, sharing/repost attribution, and post audience/comment controls before moving deeper into Phase 2 trust and safety.
+
+
+## CP-025 — Help Center, Terms, Privacy & Policy Blueprint (8 November 2026)
+
+- Founder clarification: bantuan, syarat penggunaan, privasi, pedoman komunitas, dan aturan tiap fitur harus berkembang seiring sharing, keputusan produk, dan pengujian; bukan pekerjaan dokumentasi yang ditunda sampai akhir.
+- Blueprint dibuat di `docs/pluits/HELP-CENTER-LEGAL-CONTENT-BLUEPRINT.md`.
+- Struktur mencakup Pusat Bantuan; Keamanan & Kepercayaan; Ketentuan & Kebijakan; Tentang & Kontak; artikel bantuan per domain; dokumen Terms, Privacy, Community Guidelines, Marketplace, Trip, Location/Directory, dan Verification.
+- Setiap masukan wajib menjadi Decision Record dan dipetakan ke Master Business Model, Product Roadmap, PRD/architecture, UI copy, Help Center, Terms, Privacy, Guidelines, serta test cases.
+- Status dipisah: PROPOSED, DECIDED, IMPLEMENTED, DEPLOYED, TESTED, PUBLISHED, LEGAL REVIEW REQUIRED, SUPERSEDED. Keputusan founder tidak otomatis menjadi kebijakan aktif.
+- Privacy Policy harus mengikuti data inventory dan kontrol backend yang nyata. Dilarang menjanjikan fitur keamanan, retensi, penghapusan, enkripsi, atau perlindungan transaksi yang belum dibuktikan.
+- **Status:** BLUEPRINT CREATED / COMMITTED. Belum ada halaman Help/Legal publik dan belum ada Terms/Privacy final yang diterbitkan. Draft legal memerlukan inventaris data dan review profesional sebelum diberlakukan.
+- **Delivery gates:** H0 blueprint; H1 data map + account/social help and community baseline; H2 GeoDirectory/location; H3 Marketplace; H4 Trip; H5 Trust/Safety/Operations.
+- **Aturan kerja ke depan:** setiap checkpoint fitur harus mengecek dampak ke bantuan, disclosure, Terms, Privacy, dan Guidelines. Konten yang menjelaskan perilaku pengguna harus diperbarui sebelum/bersamaan dengan rilis fitur terkait.
