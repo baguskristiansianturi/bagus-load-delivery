@@ -84,9 +84,15 @@ Fondasi registrasi dan akses feed publik sudah disiapkan. Langkah berikutnya: fo
 - Tahap lanjutan yang masih terbuka: notifikasi, report/block/mute/moderasi/banding, DM, dan penyempurnaan public feed actions. Jangan menambahkan ide produk baru di luar Business Model Master tanpa membahasnya dengan founder.
 - Security gate belum selesai: leaked-password protection masih nonaktif; dua SECURITY DEFINER RPC toko lama masih perlu review; dua akun nyata dan Android UAT masih diperlukan.
 
-
-## Ide terbaru — Pluits Official (CP-033)
-- Founder mengusulkan identitas resmi platform bernama Pluits Official untuk menerbitkan pembaruan fitur, pengumuman layanan, panduan, dan kebijakan.
-- Distribusi pengumuman yang ditujukan ke semua pengguna tidak bergantung pada follower atau ranking feed organik.
-- Gagasan dicatat sebagai PROPOSED di Bagian 30 Business Model Master dan CP-033 Project Status & Roadmap. Belum ada implementasi atau keputusan final.
-- Saat melanjutkan, baca bagian tersebut sebelum merancang akun sistem, slot Beranda, notifikasi, arsip pembaruan, role/capability, dan RLS.
+## Tata kelola dokumentasi dan cara AI melanjutkan pekerjaan
+- Baca dokumen orientasi, peta dokumentasi, Business Model Master, Project Status & Roadmap, UAT, security review, audit terbaru, serta spesifikasi arsitektur yang relevan secara menyeluruh sebelum mengubah kode/schema. Jangan hanya membaca ringkasan atau bagian paling akhir.
+- Gunakan MASTER/BUSINESS-MODEL-MASTER.md hanya untuk model bisnis dan keputusan produk yang sudah disetujui. Ide yang belum diputuskan harus berada di IDEAS/IDEA-BACKLOG.md.
+- Setiap ide harus mencatat masalah, hipotesis nilai, alasan untuk tidak membangunnya, risiko, alternatif dari platform besar, pertanyaan terbuka, dan kriteria keputusan. Jangan otomatis mempromosikan ide menjadi roadmap.
+- MASTER/PROJECT-STATUS-ROADMAP.md adalah daftar pekerjaan dan checkpoint implementasi. Tiap item harus menyatakan status terpisah: NOT STARTED, IN PROGRESS, IMPLEMENTED, DEPLOYED, TESTED, ACCEPTED, BLOCKED, atau NOT VERIFIED; sertakan bukti commit, migration, workflow, test, dan UAT jika ada.
+- Pertahankan checklist yang membedakan DONE (dengan bukti), TODO, FAILED, BLOCKED, dan NOT TESTED. Jangan menandai deployment sukses hanya karena commit tersedia.
+- Sebelum perubahan teknis, audit struktur modular, dependency, kontrak antar-modul, route, schema, RLS, storage, workflow, dan compatibility. Hindari refactor luas pada modul yang sudah dipakai pengguna; gunakan perubahan kecil, backward-compatible, migration bertahap, feature flags bila tepat, dan rollback plan.
+- Rancang pertumbuhan dengan observability, logging terstruktur, error IDs, monitoring, backup/recovery, rate limits, least privilege, secret management, dependency/security updates, incident response, dan pengujian beban.
+- Gagasan AI agents untuk operasi masa depan dicatat sebagai ide, bukan fitur aktif: security monitoring, vulnerability/dependency review, bug/error triage, availability/performance, incident summarization, serta laporan harian/mingguan/bulanan dengan bukti, severity, dampak, rekomendasi, dan status. Agent tidak boleh otomatis mengubah production, mengakses secret tanpa kebutuhan, atau menutup temuan tanpa verifikasi manusia.
+- Founder bekerja solo dan mobile-first; dokumentasi, checklist, workflow, serta laporan harus mudah dibaca dan ditindaklanjuti dari Android.
+- Domain yang disebut founder sebagai target masa depan: fluids.com. Hubungannya dengan nama/brand produk di repository perlu dikonfirmasi. Jangan mengganti nama produk, URL, repo, atau konfigurasi deployment sebelum ada keputusan eksplisit.
+- Keinginan menyembunyikan repository adalah kebutuhan privasi/keamanan yang harus ditangani melalui perubahan visibility dan arsitektur hosting, bukan dengan menganggap custom domain menyembunyikan sumber kode. Lihat IDEA-BACKLOG.md; jangan mengubah visibility atau memindahkan hosting tanpa persetujuan dan rencana migrasi.
