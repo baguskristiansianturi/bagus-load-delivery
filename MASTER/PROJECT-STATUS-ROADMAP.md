@@ -397,3 +397,23 @@ Build dari commit `642a24bdbed4a85931271e7481f9880a04cc9fc3` berhasil. GitHub Pa
 - Verified active migration directory: 17 files; live history: 17 records; exact version/name set match; zero missing and zero extra active migrations.
 - No DDL was applied and no live data/database was reset.
 - **Status:** migration history reconciled. Future DDL may proceed only through the normal reviewed migration workflow, with RLS/security tests and advisors.
+
+
+## CP-019 — Social media ownership security fix (8 November 2026)
+
+- A rollback-only adversarial test proved the old `user_posts` insert policy accepted a public post whose `media_path` began with another UUID folder.
+- Applied migration `20261108011806_enforce_social_media_owner_paths`: validated CHECK constraints now require post/story media paths to begin with the matching `user_id` UUID folder and include a non-empty object name.
+- Re-tested: foreign-folder media paths are rejected for both posts and Stories; valid same-user paths pass. All probe inserts were rolled back.
+- Created and committed the exact migration SQL recovered from live Supabase history.
+- **Status:** media-path ownership invariant implemented and verified at database level.
+
+## CP-020 — RLS policy/performance hardening (8 November 2026)
+
+- Applied migration `20261108011838_optimize_story_and_wallet_rls_policies`.
+- Consolidated Stories read policies: anonymous users see only active public Stories from public profiles; authenticated users see their own Stories plus active public Stories.
+- Changed wallet RLS identity expressions to `(select auth.uid())`.
+- Re-ran advisors: wallet RLS init-plan warnings (3) and duplicate permissive Stories policy warning (1) are cleared.
+- Remaining performance notices: 14 unindexed foreign keys and 12 unused-index notices. No index was dropped.
+- Security warnings still remaining: 2 authenticated-callable SECURITY DEFINER RPCs and leaked-password protection disabled.
+- Live migrations and active GitHub migration files: 19 / 19, exact version/name match.
+- **Status:** two backend hardening migrations applied and verified; production readiness remains NOT APPROVED pending Auth leaked-password setting, full account-level tests and remaining security review.
