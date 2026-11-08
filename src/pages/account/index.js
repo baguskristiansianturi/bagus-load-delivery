@@ -115,7 +115,7 @@ function avatar(url,name,size=''){
  return url?`<img class="ua-avatar ${size}" src="${url}" alt="Foto profil">`:`<span class="ua-avatar ua-avatar-fallback ${size}">${esc(initials(name))}</span>`;
 }
 function navProfile(){
- return `<div class="ua-subnav"><a href="#/account/profile">Personal</a><a href="#/account/professional">Professional</a><a href="#/account/settings">Pengaturan</a><a href="#/account/wallet">Wallet</a><a href="#/account/addresses">Alamat</a><a href="#/account/explore">Explore</a></div>`;
+ return `<div class="ua-subnav"><a href="#/account/profile">Personal</a><a href="#/account/followers">Pengikut</a><a href="#/account/following">Mengikuti</a><a href="#/account/settings">Pengaturan</a><a href="#/account/wallet">Wallet</a><a href="#/account/addresses">Alamat</a><a href="#/account/explore">Explore</a></div>`;
 }
 const rupiah=v=>new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(Number(v||0));
 async function walletPage(){
@@ -150,6 +150,12 @@ async function profilePage(preview=false){
  ]);
  if(postsResult.error)throw postsResult.error;
  const ownPosts=await hydratePosts(postsResult.data||[]);
+ const [followersCount,followingCount,pendingCount]=await Promise.all([
+  supabase.from('user_follows').select('*',{count:'exact',head:true}).eq('following_id',user.id).eq('status','accepted'),
+  supabase.from('user_follows').select('*',{count:'exact',head:true}).eq('follower_id',user.id).eq('status','accepted'),
+  supabase.from('user_follows').select('*',{count:'exact',head:true}).eq('following_id',user.id).eq('status','pending')
+ ]);
+ if(followersCount.error||followingCount.error||pendingCount.error)throw followersCount.error||followingCount.error||pendingCount.error;
  const stores=storesResult.error?[]:(storesResult.data||[]);
  if(preview){
   const visiblePosts=profile.visibility==='public'?ownPosts.filter(p=>p.visibility==='public'&&p.moderation_status==='published'):[];
@@ -169,7 +175,7 @@ async function profilePage(preview=false){
  return ` <section class="ua-profile-card">
   <div class="ua-cover" ${coverUrl?`style="background-image:url('${coverUrl}')"`:''}><span>FOTO SAMPUL</span><label class="ua-cover-edit">Ganti sampul<input id="ua-cover-file" type="file" accept="image/jpeg,image/png,image/webp"></label></div>
   <div class="ua-profile-content"><div class="ua-profile-avatar">${avatar(avatarUrl,profile.display_name,'large')}<label class="ua-avatar-edit">＋<input id="ua-avatar-file" type="file" accept="image/jpeg,image/png,image/webp"></label></div>
-   <div class="ua-profile-identity"><div class="ua-profile-name-row"><div><h2>${esc(profile.display_name)}</h2><div class="ua-username">@${esc(profile.username)}</div></div><details class="ua-profile-menu"><summary aria-label="Menu profil">•••</summary><div class="ua-profile-menu-pop"><a href="#/account/settings">Pengaturan & privasi</a><a href="#/account/settings">Pengaturan postingan</a><a href="#/account/professional">Profil Professional</a><a href="#/account/wallet">Wallet</a><a href="#/account/addresses">Alamat</a><button id="ua-menu-logout" type="button">Keluar dari akun</button></div></details></div><p>${esc(profile.bio||'Bio belum ditambahkan.')}</p><div class="ua-location">${profile.public_city&&profile.public_province?'⌖ '+esc(profile.public_city)+', '+esc(profile.public_province):''}</div><div class="ua-profile-stats"><a href="#profile-posts"><strong>${ownPosts.length}</strong><span>Postingan</span></a><a href="#/account/followers"><strong>—</strong><span>Pengikut</span></a><a href="#/account/following"><strong>—</strong><span>Mengikuti</span></a></div></div>
+   <div class="ua-profile-identity"><div class="ua-profile-name-row"><div><h2>${esc(profile.display_name)}</h2><div class="ua-username">@${esc(profile.username)}</div></div><details class="ua-profile-menu"><summary aria-label="Menu profil">•••</summary><div class="ua-profile-menu-pop"><a href="#/account/settings">Pengaturan & privasi</a><a href="#/account/settings">Pengaturan postingan</a><a href="#/account/professional">Profil Professional</a><a href="#/account/wallet">Wallet</a><a href="#/account/addresses">Alamat</a><button id="ua-menu-logout" type="button">Keluar dari akun</button></div></details></div><p>${esc(profile.bio||'Bio belum ditambahkan.')}</p><div class="ua-location">${profile.public_city&&profile.public_province?'⌖ '+esc(profile.public_city)+', '+esc(profile.public_province):''}</div><div class="ua-profile-stats"><a href="#profile-posts"><strong>${ownPosts.length}</strong><span>Postingan</span></a><a href="#/account/followers"><strong>${followersCount.count||0}</strong><span>Pengikut</span></a><a href="#/account/following"><strong>${followingCount.count||0}</strong><span>Mengikuti</span></a></div></div>
   </div>
  </section>
  <nav class="ua-profile-tabs" role="tablist" aria-label="Konten profil">
@@ -257,7 +263,7 @@ async function reelsPage(){
 }
 
 function postCard(p){
- return `<article class="ua-post-card" data-post-id="${p.id}"><div class="ua-post-head">${avatar(p.avatarUrl,p.owner.display_name)}<div><strong>${esc(p.owner.display_name)}</strong><small>@${esc(p.owner.username)} ${p.owner.public_city&&p.owner.public_province?'· ⌖ '+esc(p.owner.public_city)+', '+esc(p.owner.public_province):''}</small></div><time>${fmtDate(p.created_at)}</time></div>
+ return `<article class="ua-post-card" data-post-id="${p.id}"><div class="ua-post-head">${avatar(p.avatarUrl,p.owner.display_name)}<div><a class="ua-author-link" href="#/account/user/${encodeURIComponent(p.owner.username)}"><strong>${esc(p.owner.display_name)}</strong></a><small>@${esc(p.owner.username)} ${p.owner.public_city&&p.owner.public_province?'· ⌖ '+esc(p.owner.public_city)+', '+esc(p.owner.public_province):''}</small></div><time>${fmtDate(p.created_at)}</time></div>
  <p class="ua-caption">${esc(p.caption)}</p>${(p.tags?.length||p.tagged?.length)?'<div class="ua-tags">'+(p.tags||[]).map(t=>'<span>#'+esc(t)+'</span>').join(' ')+(p.tagged||[]).map(t=>'<span>＠'+esc(t.username)+'</span>').join(' ')+'</div>':''}
  ${p.media_path?'<div class="ua-media">'+(p.media_type==='video'?'<video src="'+p.mediaUrl+'" controls playsinline preload="metadata"></video>':'<img src="'+p.mediaUrl+'" alt="'+esc(p.caption||'Foto postingan')+'">')+'</div>':'<div class="ua-text-post-mark">PLUITS</div>'}
  <div class="ua-post-actions"><button data-action="like" class="${p.liked?'is-liked':''}">♥ <span>${p.liked?'Disukai':'Suka'}</span> <b>${p.likes}</b></button><button data-action="comments">◯ Komentar <b>${p.comments}</b></button><button data-action="share">↗ Bagikan</button><button data-action="save" class="${p.saved?'is-saved':''}">▱ ${p.saved?'Tersimpan':'Tandai'}</button><button data-action="tag" ${p.user_id===user.id?'':'disabled title="Hanya pemilik postingan dapat menandai akun"'}>＠ Tag</button></div><div class="ua-comments" hidden></div>
@@ -324,24 +330,85 @@ async function initMap(){
   setTimeout(()=>leafletMap.invalidateSize(),250);
  }catch{el.innerHTML='<p class="ua-muted">Peta tidak dapat dimuat. Anda tetap dapat memasukkan koordinat secara manual atau memakai lokasi perangkat.</p>';}
 }
+async function publicProfilePage(username){
+ const {data,error}=await supabase.rpc('get_user_profile_directory',{p_username:username});
+ if(error)throw error;
+ const target=Array.isArray(data)?data[0]:data;
+ if(!target)throw new Error('Profil tidak ditemukan atau tidak tersedia.');
+ const isOwner=!!user&&target.id===user.id;
+ let relation=null;
+ if(user&&!isOwner){
+  const {data:r,error:re}=await supabase.from('user_follows').select('follower_id,following_id,status').eq('follower_id',user.id).eq('following_id',target.id).maybeSingle();
+  if(re)throw re;relation=r;
+ }
+ const [followers,following]=await Promise.all([
+  supabase.from('user_follows').select('*',{count:'exact',head:true}).eq('following_id',target.id).eq('status','accepted'),
+  supabase.from('user_follows').select('*',{count:'exact',head:true}).eq('follower_id',target.id).eq('status','accepted')
+ ]);
+ const avatarUrl=await signed(target.avatar_path),coverUrl=await signed(target.cover_path);
+ let posts=[];
+ if(target.visibility==='public'||isOwner||relation?.status==='accepted'){
+  const {data:rows,error:pe}=await supabase.from('user_posts').select('*').eq('user_id',target.id).eq('visibility','public').eq('moderation_status','published').order('created_at',{ascending:false}).limit(60);
+  if(pe)throw pe;posts=await hydratePosts(rows||[]);
+ }
+ const followLabel=isOwner?'Edit profil':relation?.status==='accepted'?'Mengikuti':relation?.status==='pending'?'Permintaan terkirim':target.visibility==='private'?'Minta mengikuti':'Ikuti';
+ return `<div class="ua-page-heading"><div><span class="ua-eyebrow">PROFIL PENGGUNA</span><h1>@${esc(target.username)}</h1></div><a class="ua-outline" href="#/account/explore">Kembali ke Explore</a></div>
+ <section class="ua-profile-card ua-public-profile">
+  <div class="ua-cover" ${coverUrl?`style="background-image:url('${coverUrl}')"`:''}><span>PLUITS PROFILE</span></div>
+  <div class="ua-profile-content"><div class="ua-profile-avatar">${avatar(avatarUrl,target.display_name,'large')}</div>
+   <div class="ua-profile-identity"><h2>${esc(target.display_name)}</h2><div class="ua-username">@${esc(target.username)}</div>
+   <div class="ua-location">${target.public_city&&target.public_province?'⌖ '+esc(target.public_city)+', '+esc(target.public_province):''}</div>
+   <p>${esc(target.bio||'')}</p>
+   <div class="ua-profile-stats"><span><strong>${posts.length}</strong><span>Postingan</span></span><span><strong>${followers.count||0}</strong><span>Pengikut</span></span><span><strong>${following.count||0}</strong><span>Mengikuti</span></span></div>
+   ${isOwner?`<a class="ua-primary ua-inline" href="#/account/profile">Edit profil</a>`:user?`<button type="button" class="ua-primary ua-inline" data-follow-target="${target.id}" data-follow-state="${relation?.status||''}" data-follow-username="${esc(target.username)}" ${relation?.status==='pending'&&relation.follower_id!==user.id?'disabled':''}>${followLabel}</button>`:`<a class="ua-primary ua-inline" href="#/account/login">Masuk untuk mengikuti</a>`}
+   </div>
+  </div>
+ </section>
+ <section class="ua-panel ua-posts-panel"><div class="ua-section-title"><div><span class="ua-eyebrow">KONTEN PROFIL</span><h2>Postingan</h2></div></div>
+ ${target.visibility==='private'&&!isOwner&&relation?.status!=='accepted'?'<div class="ua-empty"><strong>Akun ini privat</strong><p>Ajukan permintaan mengikuti untuk melihat postingan publik akun ini setelah disetujui.</p></div>':posts.length?postGrid(posts):'<div class="ua-empty"><strong>Belum ada postingan publik</strong><p>Postingan publik akan tampil di sini.</p></div>'}
+ </section>`;
+}
+async function followListPage(kind='followers'){
+ const incoming=kind==='followers';
+ const {data,error}=await supabase.from('user_follows').select('follower_id,following_id,status,created_at')
+  .eq(incoming?'following_id':'follower_id',user.id).order('created_at',{ascending:false}).limit(100);
+ if(error)throw error;
+ const rows=data||[],ids=[...new Set(rows.map(r=>incoming?r.follower_id:r.following_id))];
+ const profiles=ids.length?await supabase.from('user_profiles').select('id,username,display_name,avatar_path').in('id',ids):{data:[],error:null};
+ if(profiles.error)throw profiles.error;
+ const map=new Map((profiles.data||[]).map(p=>[p.id,p]));
+ const title=incoming?'Pengikut':'Mengikuti';
+ return `<div class="ua-page-heading"><div><span class="ua-eyebrow">JARINGAN KOMUNITAS</span><h1>${title}</h1><p>${incoming?'Kelola pengikut dan permintaan mengikuti akun Anda.':'Akun yang Anda ikuti dan permintaan yang masih menunggu.'}</p></div><a class="ua-outline" href="#/account/profile">Kembali ke profil</a></div>
+ ${navProfile()}
+ <section class="ua-panel ua-follow-list">${rows.length?rows.map(r=>{
+  const id=incoming?r.follower_id:r.following_id,p=map.get(id);
+  if(!p)return '';
+  const pending=r.status==='pending';
+  return `<article class="ua-follow-row"><a href="#/account/user/${encodeURIComponent(p.username)}" class="ua-follow-person">${avatar('',p.display_name)}<span><strong>${esc(p.display_name)}</strong><small>@${esc(p.username)}</small></span></a><div class="ua-follow-actions">${pending?incoming?`<button class="ua-primary ua-inline" data-follow-accept="${id}">Terima</button><button class="ua-outline" data-follow-remove="${id}">Tolak</button>`:`<span class="ua-follow-pending">Menunggu</span><button class="ua-outline" data-follow-remove="${id}">Batalkan</button>`: `<span class="ua-follow-pending">Mengikuti</span><button class="ua-outline" data-follow-remove="${id}">${incoming?'Hapus':'Berhenti'}</button>`}</div></article>`;
+ }).join(''):'<div class="ua-empty"><strong>Belum ada data</strong><p>Aktivitas mengikuti akun akan tampil di sini.</p></div>'}</section>`;
+}
 async function postDetailPage(id){
  const {data,error}=await supabase.from('user_posts').select('*').eq('id',id).single();if(error)throw error;
  const [p]=await hydratePosts([data]);if(!p)throw new Error('Postingan tidak tersedia.');
  return `<div class="ua-page-heading"><div><span class="ua-eyebrow">POSTINGAN</span><h1>Detail postingan</h1></div><a class="ua-outline" href="#/account/explore">Kembali ke Explore</a></div>${postCard(p)}`;
 }
-async function mountAccount(section='profile'){
+async function mountAccount(section='profile',parameter=''){
  const {data:{session}}=await supabase.auth.getSession();user=session?.user||null;
+ if(!user&&section==='user'){
+  try{const page=await publicProfilePage(parameter);document.querySelector('#app').innerHTML=frame(page,'explore');return;}
+  catch(err){document.querySelector('#app').innerHTML='<div class="ua-panel ua-error"><h1>Profil tidak tersedia</h1><p>'+esc(err.message)+'</p><a href="#/">Kembali</a></div>';return;}
+ }
  if(!user){authScreen(section==='register'?'register':'login');return;}
  try{
   await loadProfile();accountContext=await loadAccountContext(supabase,user);
-  const page=section==='explore'?await feedPage():section==='reels'?await reelsPage():section==='compose'?await composePage():section==='addresses'?await addressPage():section==='wallet'?await walletPage():section==='post'?await postDetailPage(location.hash.split('/')[3]||''):section==='preview'?await profilePage(true):section==='professional'?professionalPage(accountContext,profile):section==='professional-create'?professionalFormPage(accountContext,profile):section==='settings'?await accountSettingsPage(supabase,user):await profilePage();
+  const page=section==='explore'?await feedPage():section==='reels'?await reelsPage():section==='compose'?await composePage():section==='addresses'?await addressPage():section==='wallet'?await walletPage():section==='post'?await postDetailPage(parameter||location.hash.split('/')[3]||''):section==='user'?await publicProfilePage(parameter):section==='followers'?await followListPage('followers'):section==='following'?await followListPage('following'):section==='requests'?await followListPage('followers'):section==='preview'?await profilePage(true):section==='professional'?professionalPage(accountContext,profile):section==='professional-create'?professionalFormPage(accountContext,profile):section==='settings'?await accountSettingsPage(supabase,user):await profilePage();
   const headerAvatar=await signed(profile.avatar_path);document.querySelector('#app').innerHTML=frame(page,section==='explore'||section==='reels'?'explore':section==='addresses'?'addresses':section==='compose'?'compose':section==='preview'?'profile':'profile',headerAvatar);
   document.querySelector('#ua-logout')?.addEventListener('click',async()=>{await supabase.auth.signOut();user=null;profile=null;authScreen('login');});
   bindAccountContext({db:supabase,user,ctx:accountContext,profile,refresh:mountAccount});
   document.querySelector('#ua-edit-profile-link')?.addEventListener('click',e=>{e.preventDefault();document.querySelector('#edit-profile')?.scrollIntoView({behavior:'smooth',block:'start'});});
   document.querySelector('#ua-menu-logout')?.addEventListener('click',async()=>{await supabase.auth.signOut();user=null;profile=null;location.hash='/';});
   bindProfileTabs();
-  bindProfile();bindCompose();bindStoryCompose();bindStories();bindAddresses();bindWallet();bindPostActions();if(section==='addresses')initMap();
+  bindProfile();bindCompose();bindStoryCompose();bindStories();bindAddresses();bindWallet();bindPostActions();bindFollowActions();if(section==='addresses')initMap();
  }catch(err){document.querySelector('#app').innerHTML=frame('<div class="ua-panel ua-error"><h1>Ada kendala memuat akun</h1><p>'+esc(err.message)+'</p><button class="ua-primary" onclick="location.reload()">Coba lagi</button></div>');document.querySelector('#ua-logout')?.addEventListener('click',()=>supabase.auth.signOut());}
 }
 function bindWallet(){
@@ -530,6 +597,35 @@ function bindAddresses(){
  }));
  document.querySelectorAll('[data-delete-address]').forEach(btn=>btn.addEventListener('click',async()=>{
   if(!confirm('Hapus alamat ini?'))return;const {error}=await supabase.from('user_addresses').delete().eq('id',btn.dataset.deleteAddress);if(error)notify(error.message,'error');else{notify('Alamat dihapus.');await mountAccount('addresses');}
+ }));
+}
+function bindFollowActions(){
+ document.querySelectorAll('[data-follow-target]').forEach(button=>button.addEventListener('click',async()=>{
+  if(button.disabled)return;
+  const target=button.dataset.followTarget,state=button.dataset.followState,username=button.dataset.followUsername;
+  button.disabled=true;
+  try{
+   if(state==='accepted'||state==='pending'){
+    const {error}=await supabase.from('user_follows').delete().eq('follower_id',user.id).eq('following_id',target);
+    if(error)throw error;
+    notify(state==='pending'?'Permintaan mengikuti dibatalkan.':'Anda berhenti mengikuti akun ini.');
+   }else{
+    const {error}=await supabase.from('user_follows').insert({follower_id:user.id,following_id:target});
+    if(error&&error.code!=='23505')throw error;
+    notify('Permintaan mengikuti berhasil dikirim.');
+   }
+   await mountAccount('user',username);
+  }catch(err){notify(err.message||'Tidak dapat memperbarui hubungan.','error');button.disabled=false;}
+ }));
+ document.querySelectorAll('[data-follow-accept]').forEach(button=>button.addEventListener('click',async()=>{
+  const follower=button.dataset.followAccept;button.disabled=true;
+  const {error}=await supabase.from('user_follows').update({status:'accepted'}).eq('follower_id',follower).eq('following_id',user.id).eq('status','pending');
+  if(error){notify(error.message,'error');button.disabled=false;}else{notify('Permintaan mengikuti diterima.');await mountAccount('followers');}
+ }));
+ document.querySelectorAll('[data-follow-remove]').forEach(button=>button.addEventListener('click',async()=>{
+  const other=button.dataset.followRemove, incoming=location.hash.includes('/followers');
+  const {error}=await supabase.from('user_follows').delete().eq('follower_id',incoming?other:user.id).eq('following_id',incoming?user.id:other);
+  if(error)notify(error.message,'error');else{notify(incoming?'Pengikut dihapus.':'Anda berhenti mengikuti akun ini.');await mountAccount(incoming?'followers':'following');}
  }));
 }
 function bindPostActions(){
