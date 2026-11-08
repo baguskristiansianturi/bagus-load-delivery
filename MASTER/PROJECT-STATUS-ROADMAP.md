@@ -838,3 +838,14 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - **Baseline deployment before documentation changes:** commit `6ef528980dc8ba62c6eeb72b01f603cc4a5a6672`; GitHub Actions run #969 / `42490201110` — SUCCESS, all 10 steps including Pages deployment passed.
 - **Founder UAT:** Social Media remains NOT ACCEPTED. Android real-media upload/playback, two-account social/DM, offline reconnect, notification recipient tests, SMS/TOTP and real-device matrix remain open.
 - **Next:** add automated checks that protect post edit/delete/double-tap interactions and verify the new governance documents are present; then run the exact commit through CI/Pages.
+
+
+## CP-048 — Canonical authenticated homepage feed (8 November 2026)
+
+- **Gap:** logged-in users opening `#/` received a separate public feed without the full owner post menu/edit/delete, canonical comments, or double-tap like behavior.
+- **Correction:** authenticated homepage sessions now mount the canonical account Explore feed; logged-out visitors retain the public read-only homepage feed.
+- **Regression guard:** CI checks that the signed-in homepage routes to `mountUserAccount('explore')` and protects the post menu, edit/delete/save and double-tap like contracts.
+- **Specification/audit:** updated `MASTER/PLUITS-SOCIAL-FIRST-RELEASE-SPEC.md` and the frontend/backend alignment audit.
+- **Implementation commit:** `23ccf6504b4ac426eaa91be8cdb63859d4d5d18f`.
+- **GitHub Actions:** run #983 / `42492769040` — SUCCESS; production regression checks, Vite build, output verification, artifact upload, and GitHub Pages deployment passed for the exact implementation commit.
+- **Founder UAT:** NOT TESTED on Android; founder verification of logged-in homepage, edit menu, media interactions and double-tap remains open. Social release remains NOT ACCEPTED.
