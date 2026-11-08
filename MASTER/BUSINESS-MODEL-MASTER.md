@@ -153,14 +153,13 @@ Sebelum memperluas implementasi, lakukan audit dampak atas:
 
 Urutan implementasi perlu direvisi setelah audit. Jangan menganggap perubahan model bisnis ini berarti seluruh kategori, booking engine, chat, atau fulfillment sudah dibuat. Setiap modul tetap mempunyai status DECIDED, DESIGNED, IMPLEMENTED, DEPLOYED, TESTED, dan ACCEPTED yang terpisah.
 
-### 23.10 Bagian lama yang digantikan
-
-Untuk menghindari dua arah bisnis yang saling bertentangan:
-- Visi konstruksi pada bagian 1 dan batas vertikal konstruksi pada bagian 22.1–22.4 tidak lagi menjadi arah utama Pluits; bagian tersebut dipertahankan sebagai sejarah konsep awal.
-- Bagian 21 tentang social-first homepage tetap berlaku, tetapi marketplace tidak lagi khusus konstruksi dan harus mengikuti batas transaksi lokal pada bagian 23.2.
-- Bagian 22.3 yang menyatakan kategori wisata/akomodasi tidak otomatis masuk Pluits dinyatakan **digantikan** oleh bagian 23.4.
-- Bagian 22.4 tentang ekspansi lintas Indonesia diperjelas: ekspansi boleh lintas wilayah sebagai jaringan area lokal, tetapi tidak berarti barang dapat dikirim bebas lintas daerah.
-- Detail Seller Center, owner/staff, katalog, variasi, stok, audit, keamanan, dan histori pada bagian lama tetap dipakai sepanjang tidak bertentangan dengan model provider universal dan pemenuhan lokal.
+### 23.10 Konsolidasi arah bisnis sebelumnya
+Model awal marketplace konstruksi, procurement, dan konsep layanan terpisah telah dipindahkan ke arsip sejarah non-authoritative. Arah aktif Pluits adalah visi Bagian 1 dan keputusan Bagian 23–30. Jangan mengambil kategori, nama produk, route, data contoh, atau proses dari arsip sebagai instruksi implementasi.
+- Marketplace kini bersifat universal dan lokal-first, bukan vertikal konstruksi.
+- Social Media adalah ruang utama interaksi dan konten.
+- Trip/Travel memiliki lifecycle itinerary dan permintaan layanan; permintaan bukan booking terkonfirmasi.
+- GeoDirectory adalah identitas kanonis tempat, organisasi, dan penyedia.
+- Rincian operasional seller yang masih relevan hanya boleh dipakai jika cocok dengan model provider universal, permission matrix, dan status backend terbaru.
 
 
 
@@ -521,13 +520,14 @@ Gunakan data sendiri, kontribusi komunitas termoderasi, sumber terbuka berlisens
 8. Migrasikan wishlist/recent/cart ke backend dengan guest merge dan validasi server.
 9. Uji mobile, RLS lintas akun, GPS granted/denied, duplikasi/klaim palsu, koneksi lambat, dan performa radius.
 
-### 28.12 Audit baseline 8 November 2026
-- Frontend memakai Vite/JavaScript modular dan hash routing; Beranda aktif masih berupa feed sosial dan shortcut Marketplace, belum nearby directory.
-- `src/app/services.js` masih memakai katalog lokal untuk pencarian; `categoryService.list()` mengembalikan array kosong.
-- `src/app/store.js` menyimpan cart, wishlist, recent, orders, dan user cache di localStorage; belum sinkron lintas perangkat atau menjadi sumber kebenaran transaksi.
-- Supabase memiliki fondasi social/profile/follow, store/product, operating_regions, dan account preferences; belum ditemukan tabel GeoDirectory universal, entity locations/sources, claims, atau manager memberships.
-- PostGIS dan pgvector tersedia sebagai extension tetapi belum terpasang pada database. PostGIS prioritas untuk nearby; vector/AI tidak diperlukan untuk MVP.
-- Audit ini tidak mengubah schema, extension, frontend, atau deployment.
+### 28.12 Status implementasi terkini — 8 November 2026
+Snapshot awal pada saat spesifikasi GeoDirectory dibuat telah digantikan oleh implementasi Bagian 29 dan audit frontend/backend terbaru.
+- GeoDirectory sudah memiliki tabel entitas, lokasi, kategori, sumber, klaim, membership, relasi, media metadata, preferensi, activity, feedback, saved/recent, serta penghubung ke social dan Marketplace.
+- Frontend aktif memiliki route Social, Marketplace, Trip, GeoDirectory, Seller Center, messages, dan moderation. Katalog statis serta halaman demo procurement/operations lama telah dihapus.
+- Marketplace checkout membuat pesanan melalui RPC backend yang memvalidasi produk/varian, harga, stok, toko, minimum order, dan zona fulfillment.
+- Cart Marketplace masih disimpan lokal di browser sebagai draft; pemeriksaan live menemukan belum ada tabel cart pada schema public. Cart server-side dan guest-to-account merge masih merupakan gap yang harus diselesaikan sebelum sinkronisasi lintas perangkat.
+- Trip saat ini mendukung itinerary dan service request. Service request tidak boleh ditampilkan sebagai reservasi, tiket, atau booking yang telah dikonfirmasi.
+- Status keamanan, RLS, migration, dan UAT mengikuti audit live terbaru serta Project Status & Roadmap, bukan snapshot awal ini.
 
 
 ## 29. Implementasi inti GeoDirectory dan evaluasi tahap pertama
