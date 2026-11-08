@@ -93,3 +93,35 @@ This audit inspected source and docs. It does not prove that browser flows work 
 - This task did not perform a full credential/secret-scanning certification. A publishable Supabase client key is expected in a browser app; service-role/secret keys must never be committed or bundled. Run GitHub secret scanning and review the complete history before claiming the repository contains no leaked secrets.
 - package.json currently has dev/build/preview scripts but no automated test or lint script. CI verifies production build output and deploy; it does not prove route behavior, authorization, checkout, media upload, or Android UX.
 - src/style.css remains a large shared stylesheet with historical selectors. Legacy pages are removed from routing and source, but unused CSS cleanup should be a separate measured task to avoid breaking active layouts.
+
+
+## 10. Live production hardening increment — 8 November 2026, 13:30 UTC
+
+### Confirmed user-facing production context
+Founder reports that Pluits is already published and has at least one registered account. Treat all current user records and sessions as production data. This audit did not inspect account identity, email, profile content, or private user data.
+
+### Seller authorization — permission enforcement applied
+- Applied live migration `20261108132935_enforce_store_member_permission_grants` and committed its matching SQL file.
+- Owner remains fully authorized. Other active members can read their store workspace but writes to catalog/product/media require explicit `catalog.manage=true`; store settings, operating hours and delivery zones require `store.settings.manage=true`.
+- Verified helper behavior with rollback-only SQL probes: owner positive, non-member negative, explicit staff catalog grant positive, absent settings grant negative. The temporary staff-role/grant change was rolled back.
+- Inspected live `pg_policies`: write policies now reference `private.has_store_permission`.
+- **Not yet tested:** authenticated REST/API access with separate real owner/staff accounts, Storage operations from the browser, and privileged RPC authorization. Staff invitation/grant management UI remains unavailable; do not invite staff yet.
+
+### Demo/placeholder regression protection
+- Added `scripts/verify-production-surface.mjs`.
+- Added `npm test` and `npm run verify:production` scripts.
+- GitHub Pages workflow now runs `npm test` before the production Vite build.
+- The guard checks that retired demo procurement modules remain absent and that Marketplace catalog/order and Trip itinerary/request flows retain backend integration.
+- This is a scoped regression guard, not a certification that every visible placeholder label, all historical files, secrets, or every frontend screen has been audited. The earlier legacy procurement demo modules and their fake order/review data were removed from active source/router. Empty states and form placeholders are legitimate UX text, not demo data.
+
+### Marketplace cart — still open
+- Live schema still has no canonical server-side cart tables; current `src/pages/marketplace/index.js` uses `localStorage` key `pluits_market_cart_v1`.
+- Checkout calls backend `place_marketplace_order`, which revalidates the order. The browser cart itself is not synchronized across devices or account sessions.
+- No local cart values were migrated or deleted. A server-cart migration still requires an explicit guest/account merge contract and stale price/stock refresh behavior.
+
+### Current security/advisor evidence
+- Security: 20 authenticated-callable SECURITY DEFINER warnings and 1 leaked-password-protection warning remain.
+- Performance: 84 unused-index notices (informational; do not drop indexes without workload evidence).
+- Health: 0 lints.
+- Repository remains PUBLIC. No visibility change or credential rotation was performed.
+- Full Android UAT, two-account API tests, end-to-end order/payment, and full secret-history scan remain NOT TESTED / NOT VERIFIED.
