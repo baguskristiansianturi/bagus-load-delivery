@@ -2,7 +2,7 @@
 
 **Produk:** Pluits  
 **Perusahaan:** Pluits Indonesia  
-**Repository:** `baguskristiansianturi/bagus-load-delivery`  
+**Repository:** `baguskristiansianturi/pluits`  
 **Supabase project:** `ytndswhqxayqpftszwfh` (Singapore)
 
 ## Prinsip
@@ -68,10 +68,14 @@ Private bucket: `pluits-user-media`.
 
 ## Supabase Auth redirect for GitHub Pages testing
 Set the GitHub Pages base URL as an allowed redirect URL in Supabase Authentication → URL Configuration:
-`https://baguskristiansianturi.github.io/bagus-load-delivery/`
+`https://baguskristiansianturi.github.io/pluits/`
 The registration flow uses the current GitHub Pages base path as `emailRedirectTo`. When a custom domain is purchased, add the new domain to Redirect URLs before switching the frontend callback target. Keep the GitHub Pages URL during transition until the custom domain is verified.
 
-## Live audit snapshot — 8 November 2026
+## Historical audit snapshot — superseded
+
+Angka-angka pada catatan lama di bawah adalah snapshot historis, bukan kondisi live terkini. Gunakan audit terbaru dan verifikasi ulang sebelum perubahan.
+
+### Snapshot awal — 8 November 2026
 
 - Supabase project `pluits` is ACTIVE_HEALTHY in `ap-southeast-1`, PostgreSQL 17.
 - All 28 tables in the public schema have RLS enabled.
