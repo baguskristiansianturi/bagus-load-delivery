@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pluits-shell-v1';
+const CACHE_NAME = 'pluits-shell-v2';
 const APP_SHELL = [
   '/pluits/',
   '/pluits/index.html',
