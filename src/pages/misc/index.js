@@ -1,6 +1,5 @@
 import {createClient} from 'https://esm.sh/@supabase/supabase-js@2';
-import {shell,hero,card,pageHeading,icon} from '../../app/ui.js';
-import {store} from '../../app/store.js';
+import {shell,hero,pageHeading,icon} from '../../app/ui.js';
 const db=createClient('https://ytndswhqxayqpftszwfh.supabase.co','sb_publishable_kOUbKBYg88nXgz8FQRSnvA_k0hvKY65');
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const D={promo:['PROMO','Penawaran untuk proyek','Temukan penawaran demo untuk kebutuhan material dan delivery.'],help:['BANTUAN','Pusat Bantuan','Jawaban praktis tentang pencarian, supplier, checkout, pembayaran dan delivery.'],faq:['FAQ','Pertanyaan yang sering muncul','Jawaban singkat untuk hal yang paling sering ditanyakan pelanggan.'],about:['TENTANG KAMI','Tentang Pluits','Social, local marketplace, trip, dan GeoDirectory dalam satu ekosistem.'],contact:['KONTAK','Hubungi Pluits','Pilih kanal yang sesuai untuk kebutuhan dan bantuan.'],terms:['LEGAL','Syarat & Ketentuan','Aturan penggunaan marketplace.'],privacy:['LEGAL','Kebijakan Privasi','Informasi pengelolaan data pengguna.'],reviews:['REVIEWS','Ulasan pelanggan','Ringkasan feedback marketplace akan tampil di sini.']};
