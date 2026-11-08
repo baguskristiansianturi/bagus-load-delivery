@@ -189,3 +189,17 @@ No implementation status is asserted by this planning document. Repository and a
 - **Status:** IA baseline DOCUMENTED / COMMITTED. Full UI implementation NOT STARTED under this checkpoint. No claim of Trip, payment, checkout, or end-to-end marketplace completion.
 - **Next implementation sequence:** (1) shared app shell and global navigation aligned to Social / Marketplace / Trip / Places; (2) account context switcher and settings destinations; (3) hybrid home and unified Explore; (4) Marketplace taxonomy and seller/buyer lifecycle reconciliation; (5) Trip domain and routes; (6) GeoDirectory cross-links, claims/admin and provenance; (7) real-device UAT.
 - Preserve working features and existing data. Every screen must map to an approved user journey and backend capability before being redesigned.
+
+ 
+## CP-034 — Connected product spaces implementation increment (8 November 2026)
+
+- Added shared signed-in navigation links for Social, GeoDirectory, Marketplace and Trip; mobile bottom navigation now exposes Home, Explore/Places, Create, Trip and Profile. Public home Marketplace links now route to the Marketplace space instead of the legacy material catalog.
+- Added a Marketplace discovery landing page and public verified-shop profile route. Public catalogue access uses restricted `security_invoker=true` views with underlying RLS policies; only active, verified stores and published products with active variants can appear. Draft/unverified stores remain hidden. Anonymous SELECT was tested successfully after adding the required safe filter-column grant.
+- Added Trip discovery and a private-by-default itinerary workspace backed by `trip_itineraries` and `trip_itinerary_items`. Owners can create plans, add/remove agenda items and attach GeoDirectory entities. New tables have RLS enabled; an impersonated second-user test confirmed another account sees zero rows for the owner's private itinerary.
+- Added reproducible SQL migration files for Trip tables and Marketplace public catalogue views/policies/grants.
+- Fixed the Pages workflow concurrency group to isolate this release queue after a stale earlier run blocked newer deployments.
+- **Build/deploy:** GitHub Actions run #603 succeeded for commit `f3ba7ea04f3f2a5feeaea70bb1abe33caeadf9b9`. Build, artifact upload and GitHub Pages deployment all passed.
+- **Security audit:** the Marketplace security-definer-view errors were removed by switching to invoker views and explicit RLS. Existing warnings remain for two pre-existing SECURITY DEFINER store RPCs and disabled leaked-password protection; these require a separate permission/configuration review.
+- **Not complete / not to be represented as live:** Marketplace cart-to-order checkout, payment processing, fulfilment/refund/dispute lifecycle, Trip provider availability/reservation/booking/cancellation, itinerary sharing, full Social moderation/messaging/follow completion, and Android end-to-end acceptance. Existing legacy cart/checkout routes are not yet connected to the new verified Marketplace catalogue.
+- **Next gates:** implement a real server-validated Marketplace order lifecycle before exposing purchase buttons; define distinct Trip booking lifecycle per bookable product type; finish unified Explore and merchant/entity detail cross-links; run account-owner/staff/buyer tests and Android viewport testing.
+- **Status:** Shared navigation + Marketplace discovery + Trip itinerary foundation IMPLEMENTED and DEPLOYED. Full Pluits product completion remains IN PROGRESS.
