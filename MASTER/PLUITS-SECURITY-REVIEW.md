@@ -217,3 +217,12 @@ This snapshot supersedes earlier live counts in this document.
 - **Rollback-only matrix test passed:** owner, manager, catalog, orders, accounting, and explicit staff grant; cross-permission denials also passed. All temporary changes to the existing owner membership row were rolled back.
 - RPC definitions inspected after the migration; anonymous execution remains false for the reviewed functions and authenticated execution remains intentional with in-function authorization.
 - This does not close the 20 SECURITY DEFINER advisor findings as a group. Each remaining function still needs individual review and adversarial tests. Full browser/API tests with separate accounts remain NOT TESTED.
+
+
+### 2026-11-08 13:34 UTC — RLS policy overlap removed
+
+- Applied and committed `20261108133402_split_store_permission_write_policies_by_action`.
+- Split write authorization into distinct INSERT, UPDATE, and DELETE policies. Existing SELECT access remains in separate read policies.
+- Re-ran Supabase advisors: the 7 multiple-permissive-policy warnings introduced by the initial split are now cleared.
+- Final snapshot: 20 authenticated-callable SECURITY DEFINER warnings remain; leaked-password protection remains disabled; 84 unused-index INFO notices remain; Health Advisor has 0 lints.
+- Live policy inspection shows one policy per write operation on the affected tables. Products/images/variants retain separate public/authenticated SELECT policies as intended.
