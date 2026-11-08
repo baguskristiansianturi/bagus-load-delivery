@@ -706,3 +706,11 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - Product publishing, order fulfilment and payment review RPCs now use that same helper as table RLS.
 - Rollback-only permission matrix tests passed for all role presets and cross-permission denial cases.
 - Real-account REST/Storage authorization tests and staff grant UI remain NOT TESTED / NOT IMPLEMENTED. Existing owner data was restored by transaction rollback.
+
+
+### CP-039 addendum — RLS policy overlap cleanup
+
+- Applied `20261108133402_split_store_permission_write_policies_by_action`; matching migration SQL committed.
+- Split permission-aware writes into INSERT/UPDATE/DELETE policies, preserving separate read policies.
+- Supabase advisor recheck cleared the 7 multiple-permissive-policy notices caused by the initial `FOR ALL` write policy design.
+- Current advisor snapshot: 20 SECURITY DEFINER WARN, 1 leaked-password protection WARN, 84 unused-index INFO, 0 health lints.
