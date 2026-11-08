@@ -167,3 +167,15 @@ The active GitHub migration directory contains 19 files, matching all 19 live Su
 - Applied migration `20261108011838_optimize_story_and_wallet_rls_policies`; Stories read policies are now split by role and wallet policies use `(select auth.uid())`.
 - Advisors after changes: 2 authenticated-callable SECURITY DEFINER warnings remain; leaked-password protection remains disabled. Performance: 14 unindexed FK notices and 12 unused-index notices; the three wallet init-plan warnings and duplicate Stories policy warning are cleared. Health: no lints.
 - Live migration history and active GitHub migration directory now both contain 19 exact version/name entries.
+
+## 2026-11-08 — Follow graph dan profil privat
+
+- Ditambahkan `public.user_follows` dengan RLS, trigger status otomatis, indeks relasi, dan batas perubahan status hanya oleh target permintaan.
+- Akun publik menerima follow langsung; akun privat memerlukan persetujuan.
+- Helper `private.is_user_following` menghindari rekursi policy. Helper directory dan follow counts ditempatkan di schema private; public RPC wrapper memakai `SECURITY INVOKER`.
+- Policy profil, post, Story, dan Storage mengizinkan akses follower yang diterima sesuai audience; pending requester hanya mendapat identitas dasar melalui directory RPC.
+- Pengujian rollback: public follow accepted, private follow pending, target acceptance, self-follow ditolak, private directory anon redacted, private avatar anonim ditolak, accepted follower avatar/post dapat diakses.
+- Migration CP-023: 10 file baru cocok dengan 10 statements live; baseline 19 sebelumnya tetap dipertahankan. Jangan reset/replay database.
+- Advisor security tetap: dua SECURITY DEFINER RPC toko lama (`create_store`, `update_store_profile`) dan leaked-password protection nonaktif. Tidak ada peringatan baru untuk helper private CP-023.
+- Advisor performance masih melaporkan 14 foreign key tanpa covering index dan sejumlah unused-index notices. Jangan menghapus index hanya karena belum terpakai pada database dengan trafik rendah.
+- Frontend follow/profile dan responsive CSS telah diubah; Pages deployment, build CI, dua akun nyata, dan Android UAT setelah CP-023 belum dinyatakan lulus.
