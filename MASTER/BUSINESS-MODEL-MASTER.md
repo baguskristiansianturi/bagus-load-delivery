@@ -9,7 +9,7 @@
 >
 > **Arah aktif:** Pluits adalah platform social-first yang menghubungkan Social Media, Local Marketplace, Trip/Travel, dan GeoDirectory melalui satu identitas pengguna dan data entitas kanonis. Bagian 23–30 merupakan arah aktif terkonsolidasi. Bagian 1–22 dipertahankan sebagai riwayat keputusan/operasional terdahulu dan tidak boleh dipakai untuk menghidupkan kembali arah atau brand yang sudah ditinggalkan. Jika ada konflik, bagian aktif terbaru dan keputusan bertanggal paling baru yang berlaku.
 >
-> **Larangan identitas ganda:** Bagus Load & Delivery / Baguslot and Delivery bukan lagi nama produk, layanan, repository, backend, atau roadmap Pluits. Jangan membuat, merujuk, menghidupkan, atau menggabungkannya sebagai brand aktif. Riwayat teknis hanya dipertahankan bila diperlukan untuk menjelaskan migrasi atau kompatibilitas.
+ > **Larangan identitas ganda:** Pluits adalah satu-satunya identitas aktif proyek ini. Jangan membuat brand, repository, backend, atau roadmap kedua untuk produk yang sama. Artefak historis yang tidak lagi dipakai hanya boleh dipertahankan sebagai catatan migrasi yang tidak aktif.
 
 ## 1. Visi Pluits — arah aktif
 Pluits adalah ekosistem digital mobile-first yang menghubungkan manusia, komunitas, konten, tempat, pelaku usaha, perdagangan lokal, dan perjalanan. Social Media menjadi pintu masuk utama; Local Marketplace dan Trip/Travel menjadi ruang produk dengan alur transaksi/layanan masing-masing; GeoDirectory menjadi lapisan identitas tempat dan entitas bersama. Keunggulan Pluits adalah kesinambungan dari menemukan, mengenal, mengambil tindakan, hingga membagikan pengalaman nyata—dengan identitas terpadu, bukti yang jelas, dan kendali privasi pengguna.
@@ -176,7 +176,7 @@ Staff operasional dapat mengelola stok, produk, harga, diskon, pesanan, dan anal
 
 Laporan harus mendukung filter periode bulanan, triwulan/3 bulan, 8 bulan, tahunan, dan rentang kustom. Data lintas tahun disimpan terus-menerus; pergantian tahun hanya membuat periode laporan baru, bukan menghapus atau mengosongkan histori. Ekspor PDF harus menyertakan identitas toko, periode, waktu pembuatan, filter, ringkasan dan rincian yang relevan, serta penanda bahwa laporan berasal dari sistem. Angka pada PDF harus bersumber dari query laporan yang sama dengan dashboard.
 
-## 8. Fase 3 — Uji kebutuhan Bagus Load & Delivery
+## 8. Fase 3 — Gagasan layanan logistik terpisah (historis, tidak aktif)
 Setiap toko pada dasarnya dapat memiliki kendaraan dan mengatur pengirimannya sendiri. Karena itu, pengiriman toko sendiri adalah alur normal marketplace, bukan alasan untuk memaksa semua pesanan memakai armada platform.
 
 Bagus Load & Delivery diposisikan sebagai alternatif yang perlu diuji, terutama ketika pembeli membutuhkan barang dalam jumlah kecil dari beberapa toko berbeda dan memerlukan satu driver untuk mengambil serta mengantarkan beberapa pesanan. Pengembangan layanan ini dilakukan setelah marketplace toko berjalan dan data kebutuhan nyata tersedia. Jangan membangun sistem logistik kompleks atau menetapkan tarif sebelum uji kebutuhan, jenis kendaraan, kapasitas, rute, biaya, dan tanggung jawab operasional.
