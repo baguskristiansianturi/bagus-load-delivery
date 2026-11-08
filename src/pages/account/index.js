@@ -286,7 +286,8 @@ async function reelsPage(){
 }
 
 function postCard(p){
- return `<article class="ua-post-card" data-post-id="${p.id}"><div class="ua-post-head">${avatar(p.avatarUrl,p.owner.display_name)}<div><a class="ua-author-link" href="#/account/user/${encodeURIComponent(p.owner.username)}"><strong>${esc(p.owner.display_name)}</strong></a><small>@${esc(p.owner.username)} ${p.owner.public_city&&p.owner.public_province?'· ⌖ '+esc(p.owner.public_city)+', '+esc(p.owner.public_province):''}</small></div><time>${fmtDate(p.created_at)}</time></div>
+ const profileHref='#/account/user/'+encodeURIComponent(p.owner.username);
+ return `<article class="ua-post-card" data-post-id="${p.id}"><div class="ua-post-head"><a class="ua-post-avatar-link" href="${profileHref}" aria-label="Buka profil ${esc(p.owner.display_name)}">${avatar(p.avatarUrl,p.owner.display_name)}</a><div><a class="ua-author-link" href="${profileHref}"><strong>${esc(p.owner.display_name)}</strong></a><small>@${esc(p.owner.username)} ${p.owner.public_city&&p.owner.public_province?'· ⌖ '+esc(p.owner.public_city)+', '+esc(p.owner.public_province):''}</small></div><time>${fmtDate(p.created_at)}</time></div>
  <p class="ua-caption">${esc(p.caption)}</p>${(p.tags?.length||p.tagged?.length)?'<div class="ua-tags">'+(p.tags||[]).map(t=>'<span>#'+esc(t)+'</span>').join(' ')+(p.tagged||[]).map(t=>'<span>＠'+esc(t.username)+'</span>').join(' ')+'</div>':''}
  ${p.media_path?'<div class="ua-media">'+(p.media_type==='video'?'<video src="'+p.mediaUrl+'" controls playsinline preload="metadata"></video>':'<img src="'+p.mediaUrl+'" alt="'+esc(p.caption||'Foto postingan')+'">')+'</div>':'<div class="ua-text-post-mark">PLUITS</div>'}
  ${user?`<div class="ua-post-actions"><button data-action="like" class="${p.liked?'is-liked':''}">♥ <span>${p.liked?'Disukai':'Suka'}</span> <b>${p.likes}</b></button><button data-action="comments">◯ Komentar <b>${p.comments}</b></button><button data-action="share">↗ Bagikan</button><button data-action="save" class="${p.saved?'is-saved':''}">▱ ${p.saved?'Tersimpan':'Tandai'}</button><button data-action="tag" ${p.user_id===user.id?'':'disabled title="Hanya pemilik postingan dapat menandai akun"'}>＠ Tag</button></div><div class="ua-comments" hidden></div>`:`<div class="ua-post-actions"><a class="ua-login-action" href="#/account/login">Masuk untuk menyukai, berkomentar, atau menyimpan</a></div>`}
@@ -704,13 +705,43 @@ function bindPostActions(){
  });
 }
 async function loadComments(postId,box){
- const {data,error}=await supabase.from('post_comments').select('*').eq('post_id',postId).order('created_at',{ascending:true});
+ box.innerHTML='<p class="ua-muted">Memuat komentar…</p>';
+ const {data,error}=await supabase.from('post_comments').select('id,post_id,user_id,body,created_at,parent_comment_id').eq('post_id',postId).order('created_at',{ascending:true});
  if(error){box.innerHTML='<p class="ua-muted">'+esc(error.message)+'</p>';return;}
- const comments=data||[],ids=[...new Set(comments.map(c=>c.user_id))];
- const pr=ids.length?await supabase.from('user_profiles').select('id,display_name,username').in('id',ids):{data:[]};
- const map=new Map((pr.data||[]).map(p=>[p.id,p]));
- box.innerHTML=(comments.length?comments.map(c=>{const p=map.get(c.user_id);return '<p><strong>'+esc(p?.display_name||'Pengguna Pluits')+'</strong> '+esc(c.body)+'<small>'+fmtDate(c.created_at)+'</small></p>';}).join(''):'<p class="ua-muted">Belum ada komentar.</p>')+
- '<form class="ua-comment-form"><input name="body" maxlength="1200" required placeholder="Tulis komentar…"><button>kirim</button></form>';
- box.querySelector('form').addEventListener('submit',async e=>{e.preventDefault();const body=new FormData(e.currentTarget).get('body');const {error}=await supabase.from('post_comments').insert({post_id:postId,user_id:user.id,body:String(body).trim()});if(error)notify(error.message,'error');else{const counter=document.querySelector('[data-post-id="'+postId+'"] [data-action="comments"] b');if(counter)counter.textContent=String(Number(counter.textContent||0)+1);await loadComments(postId,box);}});
+ const comments=data||[],ids=[...new Set(comments.map(c=>c.user_id))],commentIds=comments.map(c=>c.id);
+ const [pr,likesRes]=await Promise.all([
+  ids.length?supabase.from('user_profiles').select('id,display_name,username').in('id',ids):Promise.resolve({data:[],error:null}),
+  commentIds.length?supabase.from('post_comment_likes').select('comment_id,user_id').in('comment_id',commentIds):Promise.resolve({data:[],error:null})
+ ]);
+ if(pr.error||likesRes.error){box.innerHTML='<p class="ua-muted">'+esc((pr.error||likesRes.error).message)+'</p>';return;}
+ const people=new Map((pr.data||[]).map(p=>[p.id,p])),likes=likesRes.data||[];
+ const children=new Map();
+ comments.forEach(c=>{const parent=c.parent_comment_id||'root';if(!children.has(parent))children.set(parent,[]);children.get(parent).push(c);});
+ const render=(c,depth=0)=>{
+  const person=people.get(c.user_id),username=person?.username||'pengguna',liked=likes.some(x=>x.comment_id===c.id&&x.user_id===user.id),count=likes.filter(x=>x.comment_id===c.id).length;
+  const replies=(children.get(c.id)||[]).map(x=>render(x,Math.min(depth+1,3))).join('');
+  return '<article class="ua-comment-item" data-comment-id="'+c.id+'" style="--comment-depth:'+Math.min(depth,3)+'"><div class="ua-comment-copy"><a href="#/account/user/'+encodeURIComponent(username)+'" class="ua-comment-author">'+esc(person?.display_name||'Pengguna Pluits')+'</a><p>'+esc(c.body)+'</p><small>'+fmtDate(c.created_at)+'</small><div class="ua-comment-actions"><button type="button" data-comment-like="'+c.id+'" class="'+(liked?'is-liked':'')+'">♥ '+(liked?'Disukai':'Suka')+' <b>'+count+'</b></button><button type="button" data-comment-reply="'+c.id+'">Balas</button></div><form class="ua-reply-form" data-reply-form="'+c.id+'" hidden><input name="body" maxlength="1200" required placeholder="Balas komentar…"><button type="submit">Kirim</button></form></div>'+replies+'</article>';
+ };
+ box.innerHTML='<div class="ua-comment-thread">'+(children.get('root')||[]).map(c=>render(c)).join('')+'</div>'+'<form class="ua-comment-form"><input name="body" maxlength="1200" required placeholder="Tulis komentar…"><button type="submit">Kirim</button></form>';
+ box.querySelectorAll('[data-comment-like]').forEach(button=>button.addEventListener('click',async()=>{
+  const commentId=button.dataset.commentLike;button.disabled=true;
+  const exists=likes.some(x=>x.comment_id===commentId&&x.user_id===user.id);
+  const result=exists?await supabase.from('post_comment_likes').delete().eq('comment_id',commentId).eq('user_id',user.id):await supabase.from('post_comment_likes').insert({comment_id:commentId,user_id:user.id});
+  if(result.error){notify(result.error.message,'error');button.disabled=false;}else await loadComments(postId,box);
+ }));
+ box.querySelectorAll('[data-comment-reply]').forEach(button=>button.addEventListener('click',()=>{
+  const form=box.querySelector('[data-reply-form="'+button.dataset.commentReply+'"]');if(form){form.hidden=!form.hidden;if(!form.hidden)form.querySelector('input')?.focus();}
+ }));
+ const submitComment=async(form,parentId=null)=>{
+  const body=String(new FormData(form).get('body')||'').trim();if(!body)return;
+  const submit=form.querySelector('button');submit.disabled=true;
+  const {error:insertError}=await supabase.from('post_comments').insert({post_id:postId,user_id:user.id,body,parent_comment_id:parentId});
+  if(insertError){notify(insertError.message,'error');submit.disabled=false;}else{
+   const counter=document.querySelector('[data-post-id="'+postId+'"] [data-action="comments"] b');if(counter)counter.textContent=String(Number(counter.textContent||0)+1);
+   await loadComments(postId,box);
+  }
+ };
+ box.querySelector('.ua-comment-form')?.addEventListener('submit',e=>{e.preventDefault();submitComment(e.currentTarget);});
+ box.querySelectorAll('[data-reply-form]').forEach(form=>form.addEventListener('submit',e=>{e.preventDefault();submitComment(form,form.dataset.replyForm);}));
 }
 export function mountUserAccount(section='profile',parameter=''){mountAccount(section,parameter);}
