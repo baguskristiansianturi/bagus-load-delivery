@@ -1,6 +1,5 @@
-import {createClient} from 'https://esm.sh/@supabase/supabase-js@2';
 import './discovery.css';
-const db=createClient('https://ytndswhqxayqpftszwfh.supabase.co','sb_publishable_kOUbKBYg88nXgz8FQRSnvA_k0hvKY65');
+import { supabase as db } from '../../lib/supabase/client.js';
 const cats=[['all','Semua'],['things','Thing to do'],['restaurant','Restaurant'],['cafe','Cafe'],['tourist-attraction','Wisata'],['shopping','Belanja'],['event','Event']];
 const categoryTerms={things:['things-to-do','thingstodo','activity','activities','experience','pengalaman'],restaurant:['restaurant','restoran','food','kuliner'],cafe:['cafe','coffee','kopi'], 'tourist-attraction':['wisata','tourism','destination','destinasi','beach','pantai','museum','landmark'],shopping:['shopping','belanja','store','shop'],event:['event','acara','festival']};
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
