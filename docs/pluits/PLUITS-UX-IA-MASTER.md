@@ -145,3 +145,7 @@ The following are structural gaps, not just styling issues:
 ### Release
 - Each increment: regression, narrow Android viewport, tablet/desktop, anonymous/authenticated, RLS negative tests, storage access, build/deploy, commit and rollback recorded.
 - DECIDED, DESIGNED, IMPLEMENTED, DEPLOYED, TESTED and ACCEPTED are separate states.
+
+
+## 13. Alignment audit update — 8 November 2026
+See docs/pluits/BUSINESS-FRONTEND-BACKEND-ALIGNMENT-AUDIT-2026-11-08.md for the code-level route/service/backend audit. The active router has been disconnected from the former static/demo procurement and operations pages. Remaining legacy source files are pending import-graph verification before physical deletion. Marketplace cart is still local-only and must be migrated to server-owned state; order creation is server-validated. Trip service requests are inquiries, not confirmed bookings. Wallet is non-operational and staged. Seller staff permission enforcement remains a security gate.
