@@ -210,10 +210,10 @@ Jangan menutup PR hanya karena kode sudah ditulis. Pisahkan: `DRAFT`, `IMPLEMENT
 ### CP-007 — Deployment GitHub Pages untuk akun pengguna
 - **Status:** DEPLOYED pada workflow run `42376208078`.
 - **Build:** sukses; Vite menghasilkan `dist/index.html`.
-- **URL akun:** https://baguskristiansianturi.github.io/bagus-load-delivery/#/account/register
-- **URL profil:** https://baguskristiansianturi.github.io/bagus-load-delivery/#/account/profile
-- **URL Explore:** https://baguskristiansianturi.github.io/bagus-load-delivery/#/account/explore
-- **URL alamat:** https://baguskristiansianturi.github.io/bagus-load-delivery/#/account/addresses
+- **URL akun:** https://baguskristiansianturi.github.io/pluits/#/account/register
+- **URL profil:** https://baguskristiansianturi.github.io/pluits/#/account/profile
+- **URL Explore:** https://baguskristiansianturi.github.io/pluits/#/account/explore
+- **URL alamat:** https://baguskristiansianturi.github.io/pluits/#/account/addresses
 - **Catatan:** workflow sukses terverifikasi pada commit `3cf1954...` yang sudah memuat perbaikan interaksi detail postingan.
 
 ### CP-008 — Panduan UAT mobile pengguna pertama
