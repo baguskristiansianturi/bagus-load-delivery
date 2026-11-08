@@ -745,3 +745,103 @@ Ini rekomendasi produk; prioritas sprint aktual mengikuti audit kode/backend dan
 - Apa model monetisasi, komisi, biaya, dan mekanisme saldo/pembayaran?
 - Apa persetujuan, retensi, dan batas pemrosesan lokasi serta data transaksi?
 
+
+
+## 25. Pengalaman Sosial Berbasis Transaksi, Kehadiran Bersama, dan Reputasi Entitas — 8 November 2026
+
+**Status:** Konsep bisnis tambahan dicatat dari arahan founder. Prinsip pengalaman sosial yang tersambung ke transaksi dan entitas resmi menjadi arah yang harus dirancang. Rincian UI, skema data, aturan persetujuan tag, kebijakan review, verifikasi merchant, pembayaran QR, dan implementasi masih memerlukan desain serta pengujian. Bagian ini melengkapi Bagian 24 dan tidak menghapus riwayat sebelumnya.
+
+### 25.1 Prinsip utama: aktivitas nyata menjadi konten sosial
+Pluits harus memberi cara yang alami bagi pengguna untuk membagikan pengalaman dari aktivitas yang benar-benar dilakukan, bukan mendorong orang membuat postingan promosi yang terasa dipaksakan. Contohnya makan di restoran, membeli produk, pergi ke barbershop atau salon, mengunjungi tempat wisata, menggunakan jasa teknisi, menghadiri acara, dan aktivitas lain yang terjadi melalui ekosistem Pluits.
+
+Konten yang berasal dari transaksi atau kunjungan terkonfirmasi dapat menjadi tontonan sosial yang menarik bagi teman-teman pengguna. Namun postingan biasa tetap diperbolehkan. Sistem wajib membedakan postingan biasa, klaim lokasi, kehadiran yang dikonfirmasi, dan transaksi yang benar-benar diverifikasi. Tidak boleh memberi kesan seseorang membeli atau mengunjungi tempat jika bukti sistem tidak mendukungnya.
+
+### 25.2 Siapa yang dapat membuat postingan pengalaman transaksi
+Dalam satu kelompok teman yang makan bersama, orang yang melakukan pembayaran melalui Pluits dan memiliki transaksi sah dapat memulai postingan pengalaman berbasis transaksi tersebut. Pengguna lain yang ikut hadir dapat ditandai sebagai teman yang menyertai melalui mekanisme tag/undangan.
+
+Contoh: empat teman makan bersama; tiga orang melakukan pembayaran melalui Pluits. Salah satu pembayar dapat membuat satu postingan pengalaman restoran dan mengundang teman-temannya untuk ditandai. Sistem menghubungkan postingan dengan transaksi yang relevan tanpa mengungkap bukti pembayaran mentah atau data sensitif.
+
+Penandaan teman tidak boleh otomatis mengubah status teman tersebut menjadi pembeli atau pemilik transaksi. Teman yang ditandai perlu dapat menerima/menolak atau mengonfirmasi keikutsertaannya. Label transaksi terverifikasi melekat pada transaksi dan pembayar yang tercatat; status hadir bersama harus memakai bukti/konfirmasi yang sesuai. Satu transaksi tidak boleh digandakan menjadi beberapa transaksi hanya karena beberapa orang tampil pada satu postingan.
+
+### 25.3 Kartu pengalaman pada feed
+Kartu pengalaman di feed dapat menggunakan gambar utama resmi dari restoran/merchant/tempat sebagai latar atau cover, dengan identitas visual tempat yang konsisten dengan halaman publik/mini-website entitas. Di atas kartu dapat tampil beberapa gelembung foto profil pengguna yang hadir atau dikonfirmasi ikut, misalnya tiga avatar kecil yang terhubung secara visual ke lokasi tersebut.
+
+Elemen kartu yang direncanakan:
+- Foto utama merchant/tempat, diprioritaskan dari media resmi yang diizinkan.
+- Nama merchant/tempat dalam ukuran ringkas.
+- Alamat atau area publik yang relevan; jangan membuka alamat privat atau koordinat sensitif.
+- Avatar pengguna yang membuat postingan dan teman yang telah menerima/terkonfirmasi ditandai.
+- Ringkasan item/menu/layanan yang relevan, misalnya “Menikmati lobster bersama …”.
+- Tautan internal ke merchant dan rincian item yang tercatat pada transaksi.
+- Review/rating pengalaman jika pengguna memilih mengisinya.
+- Nilai transaksi dapat ditampilkan secara opsional oleh pengguna; default dan kontrol privasinya harus dirancang jelas.
+
+Kalimat ringkas seperti “Yanti menikmati lobster di [Restoran] bersama dua teman” dapat dibantu sistem berdasarkan item transaksi dan tag yang sudah dikonfirmasi. Teks otomatis harus faktual, dapat ditinjau pengguna sebelum dipublikasikan, tidak mengarang item atau peserta, dan tidak membocorkan informasi yang tidak disetujui.
+
+### 25.4 Tautan ke rincian transaksi dan katalog merchant
+Tautan pada kartu pengalaman mengarah ke halaman internal Pluits yang relevan. Pengguna yang membuka tautan dapat melihat merchant dan item/menu yang terkait dengan pengalaman tersebut, misalnya lobster dan item lain yang tercatat. Harga historis dan total transaksi hanya ditampilkan jika pemilik transaksi mengizinkan dan kebijakan privasi memperbolehkan.
+
+Rincian transaksi yang ditampilkan harus merupakan snapshot historis yang berasal dari catatan transaksi sah, bukan harga katalog terbaru yang dianggap sebagai harga pembelian lama. Halaman merchant juga dapat menampilkan katalog/menu terkini secara terpisah. Data sensitif seperti nomor referensi pembayaran internal, token, detail rekening, kredensial, dan bukti bayar mentah tidak pernah ditampilkan sebagai konten publik.
+
+### 25.5 Satu sumber data untuk postingan, review, dan profil merchant
+Pengalaman yang sama harus memakai satu objek pengalaman kanonis dan dapat ditampilkan pada beberapa permukaan:
+- Feed pengguna yang membuat postingan.
+- Profil pengguna sebagai riwayat pengalaman yang dibagikan.
+- Halaman merchant sebagai review/aktivitas pelanggan yang memenuhi syarat.
+- Katalog atau halaman item terkait sebagai ringkasan review yang relevan.
+- Notifikasi merchant dan thread respons.
+
+Jika pengguna mengedit caption, media pilihan, visibilitas, atau bagian sosial yang diizinkan, tampilan yang berasal dari pengalaman yang sama harus tersinkron sesuai aturan. Perubahan sosial tidak boleh mengubah fakta transaksi, identitas merchant, item yang dibeli, waktu pembayaran, jumlah yang dibayar, atau status penyelesaian. Fakta transaksi bersifat immutable/append-only; koreksi transaksi hanya melalui mekanisme pembalik/penyesuaian resmi dengan audit, bukan edit postingan.
+
+Jika pengguna menghapus atau menyembunyikan postingan, konten sosial dapat dihapus/disembunyikan sesuai kebijakan dan retensi. Catatan transaksi tetap ada untuk kebutuhan operasional, akuntansi, sengketa, keamanan, dan kewajiban hukum. Penghapusan postingan tidak boleh menghapus transaksi atau menghapus review yang wajib dipertahankan tanpa proses kebijakan yang sah. Pengguna perlu memahami dampak tindakan hapus/sembunyikan terhadap review merchant dan arsipnya.
+
+### 25.6 Review merchant, kualitas pengalaman, dan batas rating
+Review yang dibuat dari pengalaman/transaksi yang memenuhi syarat dapat tersinkron ke halaman merchant secara konsisten dan real-time atau mendekati real-time sesuai kemampuan sistem. Review harus menampilkan tingkat bukti yang benar: transaksi terverifikasi, kunjungan terkonfirmasi, atau feedback komunitas biasa.
+
+Pengguna dapat memberi komentar pengalaman dan rating sesuai kebijakan yang akan ditetapkan. Founder mengusulkan pembatasan agar review publik tidak dapat memberi bintang 1 atau 2 dan nilai terendah yang dapat diberikan adalah 3, dengan tujuan menjaga komunitas tetap relevan dan tidak menjadi ruang serangan buruk. **Usulan batas minimum tiga bintang ini dicatat sebagai PROPOSED / perlu evaluasi, belum menjadi aturan final.** Sebelum disahkan, evaluasi risiko distorsi reputasi, hilangnya informasi kualitas, perlindungan konsumen, kewajiban hukum, dan kepercayaan pengguna. Alternatif yang perlu dikaji termasuk review privat untuk keluhan serius, jalur komplain/sengketa, moderasi terhadap penyalahgunaan, dan pemisahan rating publik dari laporan keselamatan/layanan.
+
+Rating merchant harus dihitung dari review yang memenuhi syarat dan tidak boleh dimanipulasi oleh merchant, staf, pembayaran, atau promosi berbayar. Review palsu, transaksi mandiri yang direkayasa, tekanan kepada pelanggan, imbalan untuk rating positif, dan penghapusan kritik secara sepihak harus dicegah.
+
+### 25.7 Respons merchant pada postingan dan halaman resmi
+Ketika pengalaman/review baru dipublikasikan dan memenuhi aturan, owner serta staff merchant yang memiliki izin menerima notifikasi. Notifikasi dapat membuka langsung postingan feed pelanggan agar merchant bisa membalas secara kontekstual, misalnya mengucapkan terima kasih atau menjawab pertanyaan.
+
+Respons merchant juga dapat tampil pada halaman merchant/review yang tersinkron dengan pengalaman yang sama. Respons harus memiliki identitas entitas dan pengelola yang jelas. Merchant tidak boleh mengubah postingan pelanggan, menghapus review, atau mengedit fakta pengalaman. Pengguna tetap mengendalikan postingan pribadinya; merchant hanya mengelola balasan dari sisi entitas.
+
+### 25.8 Jenis entitas dan identitas pengelolanya
+Model harus mendukung berbagai entitas fisik dan penyedia layanan, bukan hanya restoran: toko, restoran, kafe, barbershop, salon, tempat wisata, hotel, fasilitas, penyelenggara acara, komunitas, penyedia jasa, dan merchant lokal lainnya.
+
+Entitas mempunyai profil resmi sendiri, lokasi/area, kategori, foto utama seperti homepage, katalog/menu/layanan, jadwal, pengumuman, promo, event, pemesanan/tiket, dan pengikut sesuai jenisnya. Entitas bukan akun manusia. Satu atau beberapa identitas personal dapat ditautkan sebagai owner, pengelola, atau staff dengan izin berbeda. Akun personal pengelola tetap terpisah dari profil resmi entitas; pengunjung dapat mengikuti entitas tanpa harus mengikuti kehidupan pribadi owner.
+
+### 25.9 GeoDirectory, penemuan lokal, dan verifikasi keberadaan
+Pluits diarahkan menjadi GeoDirectory: pengguna dapat mengeksplorasi tempat, merchant, layanan, komunitas, dan acara di sekitar wilayahnya berdasarkan kategori, lokasi, kebutuhan, dan minat. Profil entitas harus terhubung ke titik/area lokasi yang tepat dengan kontrol privasi sesuai jenis entitas.
+
+Verifikasi dapat mencakup identitas pengelola, kewenangan mengelola entitas, dokumen usaha/izin sesuai kategori dan risiko, bukti lokasi fisik atau area layanan, serta validasi lapangan jika diperlukan. Tingkat verifikasi harus dijelaskan; badge tidak boleh menyiratkan hal yang belum diperiksa. Laporan pengguna tentang lokasi palsu, impersonasi, entitas fiktif, atau informasi menyesatkan masuk ke alur investigasi, bukti, hak jawab/banding, pembatasan sementara jika berisiko, dan penghapusan bila pelanggaran terbukti. Keberadaan tempat tidak boleh hanya diasumsikan benar karena pin peta atau klaim pemilik.
+
+### 25.10 QR merchant dan pembayaran yang dapat digunakan lintas merchant
+Arah jangka panjang adalah pembayaran merchant yang mudah digunakan di banyak merchant terdaftar—dari toko kecil hingga bisnis besar—melalui QR/barcode dan integrasi penyedia pembayaran yang sesuai. Pluits tidak harus menjadi wallet transfer antarbank atau transfer antarindividu. Fokusnya adalah memfasilitasi pembayaran pembelian/layanan merchant dan menerima konfirmasi transaksi yang sah untuk menghubungkan aktivitas ke akun, merchant, dan item.
+
+Alur target:
+1. Pengguna memilih merchant/item/layanan atau memindai QR merchant.
+2. Sistem membuat konteks pembayaran yang terikat ke merchant dan rincian order yang benar.
+3. Pembayaran diproses oleh penyedia pembayaran/kanal yang berizin dan sesuai skema yang dipilih.
+4. Status berhasil dikonfirmasi melalui callback/API tepercaya dan direkonsiliasi; screenshot atau klaim pengguna tidak cukup.
+5. Pluits mencatat transaksi dan snapshot item/nominal/status secara aman.
+6. Setelah memenuhi syarat, pengguna dapat memilih membuat postingan pengalaman, review, atau bukti aktivitas.
+7. Settlement merchant, refund, pembatalan, sengketa, rekonsiliasi, fraud, biaya, pajak, dan kepatuhan ditangani dengan desain tersendiri.
+
+Dukungan QRIS atau metode pembayaran tertentu harus melalui penyedia/mitra berizin dan kajian teknis serta regulasi. Jangan menyatakan Pluits sebagai penerbit, wallet, penyelenggara jasa pembayaran, atau pemegang dana sebelum status dan izin modelnya dipastikan. Saldo/wallet transfer bukan bagian yang otomatis disetujui oleh arah ini.
+
+### 25.11 Prinsip keamanan, privasi, dan anti-penyalahgunaan
+- Berbagi pengalaman tidak otomatis aktif hanya karena pembayaran berhasil; pengguna mengendalikan publikasi dan detail yang ditampilkan.
+- Tag teman memerlukan kontrol penerimaan/penolakan, pembatalan tag, dan pelaporan. Tag bukan bukti transaksi teman tersebut.
+- Pengguna dapat menyembunyikan nominal, item tertentu, atau seluruh detail pembelian sesuai aturan; informasi sensitif tidak boleh bocor melalui kartu feed, metadata gambar, notifikasi, atau URL.
+- Merchant tidak dapat mengubah transaksi atau postingan pelanggan; pengelola hanya membalas dan mengelola profil/katalog miliknya.
+- Satu pengalaman kanonis mencegah jumlah review, konten, dan ringkasan katalog tidak sinkron.
+- Sediakan report, block, mute, moderation, appeal, rate limits, deteksi transaksi palsu, review palsu, tag spam, lokasi palsu, dan penyalahgunaan identitas.
+- Geolokasi perangkat hanya sinyal tambahan; jangan menyatakan kehadiran pasti dari GPS/geofence saja.
+- Perubahan konten sosial dan status transaksi harus dipisahkan secara teknis, memiliki audit trail, dan mematuhi retensi serta permintaan privasi yang sah.
+
+### 25.12 Status keputusan dan pertanyaan yang masih terbuka
+**Arah yang dicatat:** pengalaman sosial dari transaksi nyata; pembayar yang sah dapat memulai postingan; teman dapat ditandai dengan persetujuan; kartu feed terhubung ke merchant dan item; pengalaman/review tersinkron ke halaman merchant; merchant dapat merespons; entitas mempunyai profil resmi yang dikelola identitas manusia; GeoDirectory lokal; pembayaran merchant melalui QR/barcode dan mitra pembayaran; fakta transaksi tidak dapat diedit melalui editor postingan.
+
+**Masih perlu diputuskan/desain:** apakah satu atau beberapa pembayar dapat menjadi co-author; bagaimana membagi item/menu di antara peserta; apakah teman yang ditandai perlu QR/konfirmasi merchant; kapan review memenuhi syarat (paid, fulfilled, atau setelah masa komplain); aturan edit/hapus postingan dan review; model rating minimum tiga bintang (masih usulan); apakah review buruk diarahkan ke komplain privat atau tetap ada rating rendah yang jujur; cara menghitung rating merchant; verifikasi lokasi dan kewenangan pengelola; skema QR/payment provider, settlement, refund, biaya, pajak, dan regulasi; serta retensi data transaksi dan persetujuan berbagi.
