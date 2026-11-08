@@ -233,3 +233,15 @@ No implementation status is asserted by this planning document. Repository and a
 - Newly added indexes may appear as unused-index notices while the database has little traffic; do not remove them based on that signal alone.
 - GitHub Pages build/deploy run #668 succeeded for commit `4a878b88d3c9805921d7a51f23515e91bdd8c642`.
 - Still required: leaked-password protection setting, admin role provisioning, two-account end-to-end UAT, real Android upload/playback and responsive checks, real seller verification and a full test purchase. Do not mark Pluits production-ready until these gates pass.
+
+
+## CP-037 — Marketplace RLS policy consolidation (8 November 2026)
+
+- Live Supabase migration `20261108161000_pluits_marketplace_rls_policy_consolidation` applied successfully to project `ytndswhqxayqpftszwfh`.
+- Replaced overlapping Marketplace SELECT policies for `products`, `product_variants`, `product_images`, and `stores` with one role-specific SELECT policy for anon and one for authenticated users.
+- Split the former authenticated `ALL` member policies on products, variants and images into explicit INSERT, UPDATE and DELETE policies, retaining the original `private.is_store_member` checks for write access.
+- Preserved anonymous catalog visibility conditions, authenticated store-member visibility, owner visibility, and admin/moderator visibility. Product image public visibility continues to require online sales enabled.
+- Post-migration verification: Performance Advisor now reports no WARN findings (only informational unused-index notices); Health Advisor reports no findings. The previous four `multiple_permissive_policies` warnings are gone.
+- Security Advisor still reports 20 authenticated-callable SECURITY DEFINER RPCs and leaked-password protection disabled. The reviewed RPCs deny anon execution; their SECURITY DEFINER use is intentional for controlled workflows. The `public` schema CREATE privilege is denied to anon/authenticated/public, and the reviewed functions pin search_path. Do not remove required authenticated execution without replacing the workflows with a safe alternative.
+- Remaining external configuration: leaked-password protection must be enabled in Supabase Auth dashboard; this is not exposed by the connected database migration workflow.
+- Release validation still required: two-account buyer/seller tests, unauthorized cross-store read/write negative tests, real Android media upload/playback, store verification/admin role provisioning, and end-to-end order/payment/fulfilment tests.
