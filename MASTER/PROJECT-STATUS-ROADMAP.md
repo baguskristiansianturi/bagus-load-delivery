@@ -625,3 +625,13 @@ Build dari commit `642a24bdbed4a85931271e7481f9880a04cc9fc3` berhasil. GitHub Pa
 - Evidence: code commits `35e53b7`, `d5483b4`, `2ebb5a6`, `29939c2`, `558ecf7`, and final mobile-spacing correction `3b18a76`.
 - GitHub Pages workflow run `42475956080` for commit `3b18a76e0444919693430c6dcd262612d6764905`: **SUCCESS**; Vite build, output verification, artifact upload, and Deploy to GitHub Pages all completed successfully.
 - **Status:** IMPLEMENTED + DEPLOYED. Android visual UAT remains pending; founder should verify the navbar icon and the end-of-feed/bottom-navigation spacing on the live Pages link.
+
+
+## CP-034 — Correct public-home navigation wiring and remove remaining legacy backups (8 November 2026)
+
+- Audit found the previous navbar-icon correction targeted the marketplace header in `src/app/ui.js`, while the public homepage had separate hard-coded navigation in `src/pages/home/index.js`. Therefore that correction did not change the homepage navigation being viewed by the founder.
+- Rewired the public homepage to use the shared social navigation component in `src/components/social/navigation.js`. Desktop links and the mobile navigation are now rendered from the shared component rather than duplicate inline markup.
+- Mobile navigation uses the shared SVG icon set (Beranda, Jelajah, Buat, Reels, Profil) instead of text glyphs.
+- Removed the unused legacy Bagus Load & Delivery stylesheet `src/style.backup.css` and backup icon module `src/components-backup/common/icons.js`. Neither file was imported by the active application entry chain.
+- Canonical route remains `index.html` → `src/main.js` → `src/pages/home/index.js`; account navigation retains its existing rendering path.
+- **Status:** code committed; production build and GitHub Pages deployment must be verified against the final commit before marking DEPLOYED. Android visual UAT remains NOT TESTED until the founder checks the live site.
