@@ -28,9 +28,9 @@ function frame(content,active='explore',avatarUrl=''){
   <main class="ua-main">${content}</main>
   <nav class="ua-mobile-nav" aria-label="Navigasi utama">
    <a class="${active==='explore'?'active':''}" href="#/account/explore"><span>⌂</span><small>Beranda</small></a>
-   <a href="#/account/activity"><span>♡</span><small>Aktivitas</small></a>
+   <a href="#/account/explore"><span>⌕</span><small>Jelajah</small></a>
    <a class="ua-mobile-create" href="#/account/compose" aria-label="Buat postingan"><span>＋</span></a>
-   <a href="#/material"><span>▦</span><small>Marketplace</small></a>
+   <a href="#/account/activity"><span>♡</span><small>Aktivitas</small></a>
    <a class="${active==='profile'?'active':''}" href="#/account/profile">${userAvatar}<small>Profil</small></a>
   </nav>
   <div id="ua-toast" class="ua-toast" role="status"></div>
