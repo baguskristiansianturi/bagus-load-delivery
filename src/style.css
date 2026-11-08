@@ -5733,3 +5733,23 @@ body{font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.45;-web
     object-fit: contain;
   }
 }
+
+/* Pluits social messaging: network and offline outbox states */
+.pl-msg-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.pl-msg-network{font-size:11px;font-weight:750;color:#24734e;white-space:nowrap}
+.pl-msg-network.is-offline{color:#9b5c19}
+.pl-msg-offline-note,.pl-msg-chat-status{font-size:10px;line-height:1.5;color:#78869a;padding:9px 12px;margin:0}
+.pl-msg-bubble.is-pending{border-style:dashed;opacity:.78}
+.pl-msg-chat-status{border-top:1px solid #edf0f4}
+.pl-msg-thread,.pl-msg-contact{cursor:pointer}
+.pl-msg-thread:focus-visible,.pl-msg-contact:focus-visible,.pl-msg-sidebar button:focus-visible{outline:2px solid #34577d;outline-offset:2px}
+@media(max-width:680px){
+ .pl-msg-heading{align-items:flex-start}
+ .pl-msg-layout{border-radius:12px}
+ .pl-msg-sidebar{padding:12px}
+ .pl-msg-chat{min-height:calc(100dvh - 300px)}
+ .pl-msg-stream{max-height:none;min-height:280px;overscroll-behavior:contain}
+ #pl-msg-compose{position:sticky;bottom:0;background:#fff;padding:10px;align-items:flex-end}
+ #pl-msg-compose textarea{min-height:44px;max-height:120px}
+ #pl-msg-compose button{min-height:44px;padding:0 16px;flex:none}
+}
