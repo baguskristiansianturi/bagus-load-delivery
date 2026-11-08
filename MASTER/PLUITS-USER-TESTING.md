@@ -1,13 +1,13 @@
 # Pluits — Panduan Uji Pengguna Pertama (Mobile)
 
 **Tujuan:** menguji Pluits sebagai pengguna biasa sebelum membuat toko.  
-**Halaman uji:** https://baguskristiansianturi.github.io/bagus-load-delivery/#/account/register  
-**Profil:** https://baguskristiansianturi.github.io/bagus-load-delivery/#/account/profile  
-**Explore:** https://baguskristiansianturi.github.io/bagus-load-delivery/#/account/explore  
-**Alamat:** https://baguskristiansianturi.github.io/bagus-load-delivery/#/account/addresses
+**Halaman uji:** https://baguskristiansianturi.github.io/pluits/#/account/register  
+**Profil:** https://baguskristiansianturi.github.io/pluits/#/account/profile  
+**Explore:** https://baguskristiansianturi.github.io/pluits/#/account/explore  
+**Alamat:** https://baguskristiansianturi.github.io/pluits/#/account/addresses
 
 ## Sebelum mulai
-- Pastikan Supabase Dashboard → Authentication → URL Configuration mengizinkan redirect `https://baguskristiansianturi.github.io/bagus-load-delivery/` (tambahkan URL tersebut pada Redirect URLs; gunakan Site URL yang sesuai untuk tahap GitHub Pages).
+- Pastikan Supabase Dashboard → Authentication → URL Configuration mengizinkan redirect `https://baguskristiansianturi.github.io/pluits/` (tambahkan URL tersebut pada Redirect URLs; gunakan Site URL yang sesuai untuk tahap GitHub Pages).
 - Gunakan browser Android dengan koneksi internet.
 - Siapkan email yang bisa dibuka untuk konfirmasi jika Supabase Auth meminta verifikasi email.
 - Siapkan satu foto profil, satu foto sampul, satu foto postingan, dan satu video pendek MP4/WebM.
