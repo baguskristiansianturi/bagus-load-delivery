@@ -118,4 +118,4 @@ This is a limited anonymous smoke test only. It does not replace signed-in owner
 - Public profile directory dan follow-count tersedia melalui public wrapper `SECURITY INVOKER`; helper `SECURITY DEFINER` berada di schema private dan tidak menjadi endpoint public langsung.
 - Private profile fields dan media tidak dibuka kepada pending requester atau anon.
 - Frontend menyediakan profil publik berdasarkan username, follow/unfollow, permintaan follow, accept/decline, followers/following list, dan guest public profile/post view.
-- Backend rollback tests passed. Real user/Android UAT and Pages deployment verification remain pending.
+- Backend rollback tests passed. GitHub Pages run #465 passed build and deployment. Real user/Android UAT and Lighthouse/runtime performance measurement remain pending. Build bundle: JS 172.94 kB (gzip 49.59 kB), CSS 258.32 kB (gzip 44.57 kB).
