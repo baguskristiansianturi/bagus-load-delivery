@@ -156,3 +156,6 @@ These are limited smoke tests, not a substitute for signed-in two-account and fu
 - Migration terakhir pada audit ini: `20261108041216_pluits_directory_fk_indexes`; FK GeoDirectory telah diberi indeks pendukung.
 - Performance Advisor tersisa 14 temuan unindexed FK yang semuanya pada tabel legacy Social/Marketplace; 43 unused-index advisory masih perlu diamati setelah trafik. Tidak ada indeks GeoDirectory yang dihapus.
 - Security Advisor kini hanya menampilkan dua RPC toko lama SECURITY DEFINER dan leaked-password protection disabled; RLS no-policy warning untuk source provenance telah ditutup dengan explicit deny policy dan revoke grants.
+
+- Recommendation ranking diberi recency decay dan cap skor 90 hari; event yang saat ini tercatat dari UI terutama view/click/save/hide. Follow/share/check-in/report masih menunggu integrasi lintas modul.
+- Bottom navigation mobile kini memiliki pintasan langsung ke GeoDirectory.
