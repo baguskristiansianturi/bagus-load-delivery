@@ -895,3 +895,15 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - **Tahapan:** Social P0; security hotfix track 0S; GeoDirectory Trust Bali; Identity & Organizations; Business Center; Local Commerce; Trip; Creator/contribution finance; community/public services; regional expansion.
 - **Batas:** dokumen ini bukan bukti fitur selesai. GDT-01 RLS issue masih memerlukan persetujuan untuk perubahan production dan negative tests. Social First Release tetap menunggu founder UAT.
 - **Next action:** jalankan P0 Social audit/UAT dan susun remediation plan terisolasi untuk GDT-01; jangan mulai vertical expansion.
+
+
+## CP-053 — Social privacy and release audit
+- **Tanggal:** 9 November 2026.
+- **Status:** READ-ONLY AUDIT COMPLETE; remediation NOT STARTED; founder UAT NOT ACCEPTED.
+- **Dokumen:** `docs/pluits/SOCIAL-PRIVACY-AND-RELEASE-AUDIT-2026-11-09.md`.
+- **Temuan utama:** SOC-01 child-row RLS comments/likes tidak memeriksa akses parent post; SOC-02 insert like/comment tidak konsisten dengan akses parent; SOC-03 block belum tampak ditegakkan pada user_posts read policy; SOC-04 media post privat berpotensi tidak terbaca oleh accepted follower.
+- **Bukti:** live `pg_policies` read-only dan source `src/pages/account/index.js`, `src/pages/home/index.js`, `src/pages/messages/index.js`. Static code presence bukan bukti runtime.
+- **Tindakan:** perbaiki dengan migration baru setelah approval security change dan rollback plan; jangan ubah migration terapan. Terapkan predicate akses parent yang konsisten untuk post/media/comments/likes/storage dan uji negative authorization dua akun.
+- **Prioritas:** Social First Release tetap P0. Android real-media, two-account, DM reconnect, notification, settings, privacy, dan founder UAT tetap NOT TESTED/NOT ACCEPTED.
+- **Tidak dilakukan:** tidak ada migration, policy change, data edit, atau deployment.
+- **Next action:** susun remediation SQL dan test matrix untuk SOC-01–SOC-04; minta persetujuan sebelum menerapkan perubahan RLS production.
