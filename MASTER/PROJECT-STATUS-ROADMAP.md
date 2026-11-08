@@ -548,3 +548,13 @@ Build dari commit `642a24bdbed4a85931271e7481f9880a04cc9fc3` berhasil. GitHub Pa
 - **Status:** BLUEPRINT CREATED / COMMITTED. Belum ada halaman Help/Legal publik dan belum ada Terms/Privacy final yang diterbitkan. Draft legal memerlukan inventaris data dan review profesional sebelum diberlakukan.
 - **Delivery gates:** H0 blueprint; H1 data map + account/social help and community baseline; H2 GeoDirectory/location; H3 Marketplace; H4 Trip; H5 Trust/Safety/Operations.
 - **Aturan kerja ke depan:** setiap checkpoint fitur harus mengecek dampak ke bantuan, disclosure, Terms, Privacy, dan Guidelines. Konten yang menjelaskan perilaku pengguna harus diperbarui sebelum/bersamaan dengan rilis fitur terkait.
+
+
+### CP-027 — Standar responsivitas lintas perangkat (8 November 2026)
+- Pluits adalah platform sosial multi-perangkat. Mobile menjadi prioritas utama, tetapi tablet dan desktop/laptop harus memiliki tata letak yang memang dirancang untuk layar besar, bukan sekadar pembesaran tampilan mobile.
+- Satu akun, fitur, data, dan hak akses yang konsisten; navigasi, kepadatan informasi, kolom, dan affordance menyesuaikan ukuran layar serta input sentuh/keyboard.
+- Mobile: satu kolom, bottom navigation, kontrol sentuh, carousel horizontal untuk rail konten, media mempertahankan rasio aslinya.
+- Tablet: navigasi adaptif, dua kolom bila membantu, feed tetap terbaca.
+- Desktop: navigasi persisten yang sesuai, feed terpusat dengan contextual rail bila relevan, pengaturan multi-kolom, keyboard/focus/hover.
+- Viewport QA: 360×800, 390×844, 768×1024, 1024×768, 1366×768, 1440×900; uji zoom 200%, label panjang, overflow, dan keyboard.
+- Account Center telah mendapat pass CSS awal: satu kolom di mobile, dua kolom di tablet/desktop. Status deploy dan QA perangkat masih menunggu; standar ini berlaku untuk seluruh halaman, bukan hanya pengaturan.
