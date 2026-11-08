@@ -178,3 +178,14 @@ No implementation status is asserted by this planning document. Repository and a
 - Ranking uses accepted-follow affinity, recency decay, and capped likes/comments as lightweight signals. This is an initial transparent ranking, not machine-learning or watch-time personalization; watch duration, skips, reports/hides, and creator diversity need dedicated event telemetry before use.
 - Deleting media synchronizes the parent post's primary path and media type so stale references are not left behind.
 - UAT still required on Android for autoplay, filters, mixed media carousel, edit/delete and duration boundaries.
+
+
+## CP-033 — Unified Pluits UX / Information Architecture baseline (8 November 2026)
+
+- Read the latest founder-approved business model sections 24–29 and account architecture, then compared them with current routes, shared account shell, home, GeoDirectory, Seller Center, and service layer.
+- Added `docs/pluits/PLUITS-UX-IA-MASTER.md` as the interface architecture baseline for the three product spaces: Social, Local Marketplace and Trip, with GeoDirectory as a shared entity/location layer.
+- Confirmed structural gaps: account shell is still primarily Social-only; no coherent Trip route/lifecycle; legacy material/procurement routes remain construction-oriented; service layer still has local in-memory catalog and hard-coded procurement/delivery estimates plus unconnected payment placeholders; Marketplace checkout and transaction lifecycle are not production-ready; GeoDirectory is implemented but starter data/admin workflows and cross-module links remain incomplete.
+- The recent CSS-only home pass does not resolve these product-architecture gaps. It must not be treated as completion of the Pluits redesign.
+- **Status:** IA baseline DOCUMENTED / COMMITTED. Full UI implementation NOT STARTED under this checkpoint. No claim of Trip, payment, checkout, or end-to-end marketplace completion.
+- **Next implementation sequence:** (1) shared app shell and global navigation aligned to Social / Marketplace / Trip / Places; (2) account context switcher and settings destinations; (3) hybrid home and unified Explore; (4) Marketplace taxonomy and seller/buyer lifecycle reconciliation; (5) Trip domain and routes; (6) GeoDirectory cross-links, claims/admin and provenance; (7) real-device UAT.
+- Preserve working features and existing data. Every screen must map to an approved user journey and backend capability before being redesigned.
