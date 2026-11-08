@@ -174,3 +174,10 @@ Pluits is already published and has a registered account. Production code and ex
 - Role presets are owner / manager / catalog / orders / accounting, while staff can receive explicit grants.
 - Matrix was verified using rollback-only SQL tests. Real-account API and Storage tests remain outstanding.
 - The remaining product/UX question is how an owner should safely invite, suspend, revoke, and audit staff access. Keep staff invitations unavailable until the management flow and two-account tests are ready.
+
+
+### IDEA-006 update — Starter/demo residue cleanup
+- Removed the unused Vite counter and Vite/JavaScript starter artwork.
+- Removed an orphaned fake Bagus login page and wrappers pointing at deleted demo modules.
+- Added CI assertions so those specific modules/markers cannot silently return.
+- This cleanup does not remove legitimate empty-state/form placeholder text and does not relabel unclaimed directory places as verified.
