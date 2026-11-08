@@ -15,7 +15,7 @@ import {tracking} from '../pages/tracking/index.js';
 import {sellerPage} from '../pages/seller/index.js';
 import {mountUserAccount} from '../pages/account/index.js';
 import {updateSEO} from '../pages/seo.js';
-import {marketplacePage,bindMarketplacePage,storePage,bindStorePage} from '../pages/marketplace/index.js';
+import {marketplacePage,bindMarketplacePage,storePage,bindStorePage,marketCartPage,bindMarketCartPage,marketCheckoutPage,bindMarketCheckoutPage,marketOrderPage,bindMarketOrderPage,marketOrdersPage,bindMarketOrdersPage} from '../pages/marketplace/index.js';
 import {tripPage,bindTripPage,tripItineraryPage,bindTripItineraryPage} from '../pages/trip/index.js';
 import {directoryPage,bindDirectoryPage,placePage,claimPage,bindPlacePage} from '../pages/directory/index.js';
 
@@ -28,6 +28,10 @@ export function route(homeFn=home){
  else if(r==='places'){h=directoryPage();queueMicrotask(()=>bindDirectoryPage());}
  else if(r==='marketplace'){h=marketplacePage();queueMicrotask(()=>bindMarketplacePage());}
  else if(r==='shop'){h=storePage();queueMicrotask(()=>bindStorePage(v||''));}
+ else if(r==='market-cart'){h=marketCartPage();queueMicrotask(()=>bindMarketCartPage());}
+ else if(r==='market-checkout'){h=marketCheckoutPage();queueMicrotask(()=>bindMarketCheckoutPage());}
+ else if(r==='market-orders'){h=marketOrdersPage();queueMicrotask(()=>bindMarketOrdersPage());}
+ else if(r==='market-order'){h=marketOrderPage(v||'');queueMicrotask(()=>bindMarketOrderPage(v||''));}
  else if(r==='trip'){h=s[1]==='itinerary'?tripItineraryPage(s[2]||''):tripPage();queueMicrotask(()=>s[1]==='itinerary'?bindTripItineraryPage(s[2]||''):bindTripPage());}
  else if(r==='place'){
   h='<div class="pl-directory-loading">Membuka tempat…</div>';
