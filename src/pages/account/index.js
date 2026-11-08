@@ -314,8 +314,8 @@ async function reelsPage(){
  const {data:vm,error:me}=await supabase.from('post_media').select('post_id,duration_ms').eq('media_type','video').lte('duration_ms',60000).order('created_at',{ascending:false}).limit(160);if(me)throw me;
  const ids=[...new Set((vm||[]).map(x=>x.post_id))];let rows=[];
  if(ids.length){const q=await supabase.from('user_posts').select('*').in('id',ids).eq('visibility','public').eq('moderation_status','published').order('created_at',{ascending:false}).limit(100);if(q.error)throw q.error;rows=q.data||[];}
- let followingIds=[];
- if(user?.id){const f=await supabase.from('user_follows').select('following_id').eq('follower_id',user.id).eq('status','accepted');if(f.error)throw f.error;followingIds=(f.data||[]).map(x=>x.following_id);}
+ let followingIds=[],blockedIds=[];
+ if(user?.id){const b=await supabase.from('user_blocks').select('blocker_id,blocked_id').or('blocker_id.eq.'+user.id+',blocked_id.eq.'+user.id);if(b.error)throw b.error;blockedIds=(b.data||[]).map(x=>x.blocker_id===user.id?x.blocked_id:x.blocker_id);rows=rows.filter(p=>!blockedIds.includes(p.user_id));const f=await supabase.from('user_follows').select('following_id').eq('follower_id',user.id).eq('status','accepted');if(f.error)throw f.error;followingIds=(f.data||[]).map(x=>x.following_id);}
  const posts=await hydratePosts(rows),eligible=posts.filter(p=>p.media?.length===1&&p.media[0].media_type==='video'&&Number(p.media[0].duration_ms||0)>0&&Number(p.media[0].duration_ms)<=60000);
  const now=Date.now(),sorted=eligible.filter(p=>reelsFilter!=='following'||followingIds.includes(p.user_id)).sort((x,y)=>{
   if(reelsFilter==='latest')return new Date(y.created_at)-new Date(x.created_at);
