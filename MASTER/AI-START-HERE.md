@@ -65,7 +65,7 @@ Satu status tidak otomatis membuktikan status berikutnya. Dokumen bukan bukti im
 10. Jika founder memberi keputusan bisnis baru, integrasikan ke bagian yang tepat dengan menyesuaikan alur dan aturan lama, bukan menimpa seluruh dokumen.
 
 ## Fokus saat ini
-Checkpoint model bisnis terbaru adalah CP-011 — Pluits Social Experience Commerce. Checkpoint implementasi terbaru adalah CP-012 — Real user registration & public social feed foundation. Model bisnis v1.0 mencatat transaksi menjadi konten, review dan respons merchant, kartu internal, username/mini-website, aturan toko/barang bekas, fulfillment, Trip Story, privasi, moderasi, dan hipotesis pendapatan.
+Checkpoint model bisnis terbaru adalah CP-011 — Pluits Social Experience Commerce. Checkpoint implementasi terbaru adalah CP-023 — Follow graph, profil publik, dan privasi akun. Model bisnis v1.0 mencatat transaksi menjadi konten, review dan respons merchant, kartu internal, username/mini-website, aturan toko/barang bekas, fulfillment, Trip Story, privasi, moderasi, dan hipotesis pendapatan.
 
 Fondasi registrasi dan akses feed publik sudah disiapkan. Langkah berikutnya: founder mendaftar sendiri melalui GitHub Pages, mengonfirmasi email, melengkapi profil, mengunggah postingan publik, lalu memeriksa Explore dan Beranda publik. Catat semua error nyata. Jangan membuat akun atau postingan atas nama founder. Setelah UAT akun pertama, lakukan tes privasi menggunakan akun kedua sebelum mengundang lebih banyak tester.\n\nStatus yang belum selesai: leaked-password protection masih nonaktif; tes Android dan dua akun belum dilakukan; Stories UI dan feed Reels vertikal dasar sudah dibuat dan dideploy; upload/playback dengan akun nyata masih menunggu UAT. Yang belum lengkap: full-screen swipe/autoplay Reels, follow graph, DM, notifikasi, report/block/moderasi, transaksi merchant, payment, dan wallet operasional. Security advisor masih melaporkan dua SECURITY DEFINER RPC yang perlu tes batas akses dan satu peringatan password bocor. Jangan klaim production-ready.
 
@@ -74,3 +74,12 @@ Fondasi registrasi dan akses feed publik sudah disiapkan. Langkah berikutnya: fo
 - Project Status & Roadmap: https://github.com/baguskristiansianturi/bagus-load-delivery/blob/main/MASTER/PROJECT-STATUS-ROADMAP.md
 - GitHub Pages: https://baguskristiansianturi.github.io/bagus-load-delivery/
 \n\n## Audit dan status terbaru\n- Live audit: https://github.com/baguskristiansianturi/bagus-load-delivery/blob/main/docs/pluits/LIVE-AUDIT-2026-11-08.md\n- Master Product Vision: https://github.com/baguskristiansianturi/bagus-load-delivery/blob/main/docs/pluits/MASTER-PRODUCT-VISION.md\n- Product Roadmap: https://github.com/baguskristiansianturi/bagus-load-delivery/blob/main/docs/pluits/PRODUCT-ROADMAP.md\n
+## Fokus terbaru — CP-023 Follow graph
+
+- Implementasi follow graph dan profil publik/privat sudah ditambahkan di repository dan backend.
+- Akun publik langsung menerima follow; akun privat membutuhkan persetujuan. Permintaan yang belum disetujui tidak membuka bio/avatar/media.
+- Sepuluh migration CP-023 sudah disimpan dan cocok dengan live migration statements. Jangan menghapus migration yang sudah diterapkan atau mereset database.
+- Pengujian database rollback lintas dua akun berhasil untuk public follow, private request, acceptance, private media access, dan self-follow rejection.
+- UI profil publik, daftar pengikut/mengikuti/permintaan, dan guest profile/post view sudah diimplementasikan; tunggu bukti CI/Pages dan UAT Android sebelum menyebut deployed/tested.
+- Tahap lanjutan yang masih terbuka: notifikasi, report/block/mute/moderasi/banding, DM, dan penyempurnaan public feed actions. Jangan menambahkan ide produk baru di luar Business Model Master tanpa membahasnya dengan founder.
+- Security gate belum selesai: leaked-password protection masih nonaktif; dua SECURITY DEFINER RPC toko lama masih perlu review; dua akun nyata dan Android UAT masih diperlukan.
