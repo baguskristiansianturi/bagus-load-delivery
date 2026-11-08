@@ -24,7 +24,7 @@ Pintu masuk wajib untuk setiap chat/sesi AI baru yang mengerjakan Pluits. AI har
 - Pages: `https://baguskristiansianturi.github.io/pluits/`.
 - Supabase: `ytndswhqxayqpftszwfh`.
 - Bagusin dan Bali Trans adalah proyek terpisah.
-- Bagus Load & Delivery / Baguslot and Delivery telah dipensiunkan sebagai identitas/proyek. Jangan membuat, menghidupkan, atau mempertahankan folder, backup, URL, branch, backend, atau roadmap dengan nama itu. Audit dependensi dan pindahkan informasi relevan sebelum menghapus artefak lama.
+- Pluits adalah satu-satunya identitas aktif proyek ini. Jangan membuat atau mempertahankan identitas, repository, backend, atau roadmap kedua untuk produk yang sama. Audit dependency dan pindahkan informasi relevan sebelum menghapus artefak lama.
 - Jangan mengganti brand, repo, hosting, domain, atau Supabase project tanpa keputusan eksplisit founder.
 
 ## Hierarki sumber kebenaran
