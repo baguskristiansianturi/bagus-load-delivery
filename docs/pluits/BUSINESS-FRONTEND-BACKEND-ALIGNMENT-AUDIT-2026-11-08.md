@@ -60,6 +60,7 @@ The seller foundation spec is now explicitly labeled as a historical baseline an
 - Homepage shortcuts no longer promote a standalone logistics product; jasa/provider links point to GeoDirectory.
 - GeoDirectory navigation links use the Pluits Marketplace route.
 - Wallet settings state is staged, not ready.
+- Replaced the old generic shell/navigation and removed its demo catalogue/store dependency; recent-place history now reads user_recent_items and directory_entities.
 - Backend foundation spec identifies Pluits and its historical status.
 
 ## 5. Physical deletion still gated
