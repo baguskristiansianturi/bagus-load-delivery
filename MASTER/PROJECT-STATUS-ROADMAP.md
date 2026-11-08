@@ -772,3 +772,14 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - **Personal verification:** explicitly unavailable; no fake verification badge or application form.
 - **CI:** production regression guard expanded for DM, settings, notifications and announcement publisher. Pages workflow runs npm test before Vite build.
 - **Remaining P0 acceptance:** Android photo/video upload/playback; two-account RLS and social action tests; DM offline/reconnect; notifications; Auth/SMS/TOTP; device matrix, accessibility and measured performance. Founder UAT not yet accepted.
+
+
+## CP-042 — Social-first production deployment verified (8 November 2026)
+
+- **Exact deployed commit:** `cc49e07785022e3270af934038220fcde4616ae6`.
+- **GitHub Actions:** run #940 / `42488945266` — SUCCESS.
+- **Steps verified:** dependency install, production surface/backend regression checks, Vite build, output verification, Pages artifact upload, GitHub Pages deployment.
+- **Live URL:** `https://baguskristiansianturi.github.io/pluits/?v=cc49e077`.
+- **Live Supabase:** Health Advisor 0 lints. Realtime publication includes `user_follows`, `user_messages`, `user_notifications`, and `pluits_system_announcements`.
+- **Not accepted yet:** deployment success is not founder UAT. Android real-media upload/playback, two-account social/DM, offline reconnect, MFA/SMS, admin announcements, mobile/tablet/desktop rendering, accessibility and measured performance remain NOT TESTED.
+- **Next work order:** founder tests the social build and reports UI/UX findings; fix all P0 regressions; add global unread notification indicator; complete media and two-account authorization tests; implement licensed/original audio and evaluated FYP only after rights and ranking requirements are satisfied. Café/Resto/experience verticals remain paused until Social Media is accepted.
