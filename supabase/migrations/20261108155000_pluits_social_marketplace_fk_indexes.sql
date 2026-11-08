@@ -1,0 +1,32 @@
+-- Add covering indexes for foreign keys reported by the live Supabase advisor.
+-- Additive only: no rows, constraints, or existing indexes are modified.
+create index if not exists content_reports_moderator_user_id_fk_idx on public.content_reports (moderator_user_id);
+create index if not exists content_reports_reporter_user_id_fk_idx on public.content_reports (reporter_user_id);
+create index if not exists inventory_movements_created_by_fk_idx on public.inventory_movements (created_by);
+create index if not exists inventory_movements_variant_id_fk_idx on public.inventory_movements (variant_id);
+create index if not exists marketplace_order_events_actor_user_id_fk_idx on public.marketplace_order_events (actor_user_id);
+create index if not exists marketplace_order_events_order_id_fk_idx on public.marketplace_order_events (order_id);
+create index if not exists marketplace_order_items_product_id_fk_idx on public.marketplace_order_items (product_id);
+create index if not exists marketplace_order_items_variant_id_fk_idx on public.marketplace_order_items (variant_id);
+create index if not exists marketplace_orders_delivery_zone_id_fk_idx on public.marketplace_orders (delivery_zone_id);
+create index if not exists marketplace_payment_records_buyer_user_id_fk_idx on public.marketplace_payment_records (buyer_user_id);
+create index if not exists marketplace_payment_records_reviewed_by_fk_idx on public.marketplace_payment_records (reviewed_by);
+create index if not exists post_comment_likes_user_id_fk_idx on public.post_comment_likes (user_id);
+create index if not exists post_comments_parent_post_fk_idx on public.post_comments (parent_comment_id, post_id);
+create index if not exists post_comments_user_id_fk_idx on public.post_comments (user_id);
+create index if not exists post_likes_user_id_fk_idx on public.post_likes (user_id);
+create index if not exists post_media_user_id_fk_idx on public.post_media (user_id);
+create index if not exists post_saves_user_id_fk_idx on public.post_saves (user_id);
+create index if not exists post_tags_tagged_by_fk_idx on public.post_tags (tagged_by);
+create index if not exists product_categories_parent_id_fk_idx on public.product_categories (parent_id);
+create index if not exists products_category_id_fk_idx on public.products (category_id);
+create index if not exists store_audit_logs_actor_user_id_fk_idx on public.store_audit_logs (actor_user_id);
+create index if not exists store_audit_logs_store_id_fk_idx on public.store_audit_logs (store_id);
+create index if not exists store_delivery_zones_store_id_fk_idx on public.store_delivery_zones (store_id);
+create index if not exists store_members_invited_by_fk_idx on public.store_members (invited_by);
+create index if not exists stores_owner_user_id_fk_idx on public.stores (owner_user_id);
+create index if not exists stores_region_id_fk_idx on public.stores (region_id);
+create index if not exists user_blocks_blocked_id_fk_idx on public.user_blocks (blocked_id);
+create index if not exists user_conversations_created_by_fk_idx on public.user_conversations (created_by);
+create index if not exists user_messages_sender_id_fk_idx on public.user_messages (sender_id);
+create index if not exists user_notifications_actor_user_id_fk_idx on public.user_notifications (actor_user_id);
