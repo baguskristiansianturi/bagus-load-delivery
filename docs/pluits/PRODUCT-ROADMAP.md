@@ -82,3 +82,14 @@ Exit gate: measurable improvement without degrading safety, performance or user 
 
 ## Current status
 No implementation status is asserted by this planning document. Repository and application audit must be completed before marking any phase item done.
+
+
+## CP-024 — Social activity inbox and notification backend (8 November 2026)
+
+- Backend: added `public.user_notifications` with recipient ownership, actor, notification type, linked post/profile, created/read timestamps, recipient/time and unread indexes, and RLS.
+- Database triggers create notifications for follow requests, accepted follows, post likes, and post comments. Self-actions do not generate notifications.
+- Security: clients cannot insert notifications or edit their content/actor/recipient; authenticated users can read only their own rows and update only `read_at`. Trigger function is isolated in the non-exposed `private` schema, uses a fixed `pg_catalog` search path, and is not executable by anon/authenticated roles.
+- Frontend: added the Activity entry to the signed-in social navigation, an activity inbox with actor identity, event type, timestamp, unread state, mark-one-read and mark-all-read behavior.
+- Verification: notification table RLS enabled; anon has no SELECT; authenticated has SELECT but no table-wide UPDATE; authenticated may update only `read_at`; 4 event triggers exist; anon/authenticated cannot execute the trigger function. Supabase Security Advisor no longer reports this new function; remaining 2 SECURITY DEFINER findings are legacy store RPCs, plus Auth leaked-password protection remains disabled.
+- **Status:** backend schema/triggers and frontend inbox implemented; real two-account event-flow and Android visual UAT pending; deployment must be confirmed from the latest Pages workflow.
+- **Next Phase 1 work:** media upload progress/retry and preserving original dimensions across every feed surface; then complete threaded comments, sharing/repost attribution, and post audience/comment controls before moving deeper into Phase 2 trust and safety.
