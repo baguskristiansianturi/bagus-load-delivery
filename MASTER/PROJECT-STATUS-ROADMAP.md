@@ -618,7 +618,7 @@ Build dari commit `642a24bdbed4a85931271e7481f9880a04cc9fc3` berhasil. GitHub Pa
 
 ## CP-033 — Homepage source cleanup, navbar icon, and mobile feed spacing (8 November 2026)
 
-- Retired duplicate root entry point `main.js` and obsolete Bagus Load & Delivery homepage backup `src/main.backup.js`. The canonical entry remains `index.html` → `src/main.js` → `src/pages/home/index.js`.
+- Retired duplicate root entry point `main.js` and obsolete legacy homepage backup `src/main.backup.js`. The canonical entry remains `index.html` → `src/main.js` → `src/pages/home/index.js`.
 - Fixed the literal navbar search-icon interpolation in `src/app/ui.js` so SVG markup is rendered instead of the raw `${icon.search}` text.
 - Bumped the service-worker shell cache from `pluits-shell-v1` to `pluits-shell-v2` so installed clients discard the previous shell cache during activation.
 - Adjusted mobile home bottom padding to match the fixed navigation height and safe-area inset, removing the extra visible gap while preserving scroll clearance for the final feed content.
@@ -632,7 +632,7 @@ Build dari commit `642a24bdbed4a85931271e7481f9880a04cc9fc3` berhasil. GitHub Pa
 - Audit found the previous navbar-icon correction targeted the marketplace header in `src/app/ui.js`, while the public homepage had separate hard-coded navigation in `src/pages/home/index.js`. Therefore that correction did not change the homepage navigation being viewed by the founder.
 - Rewired the public homepage to use the shared social navigation component in `src/components/social/navigation.js`. Desktop links and the mobile navigation are now rendered from the shared component rather than duplicate inline markup.
 - Mobile navigation uses the shared SVG icon set (Beranda, Jelajah, Buat, Reels, Profil) instead of text glyphs.
-- Removed the unused legacy Bagus Load & Delivery stylesheet `src/style.backup.css` and backup icon module `src/components-backup/common/icons.js`. Neither file was imported by the active application entry chain.
+- Removed the unused legacy stylesheet `src/style.backup.css` and backup icon module `src/components-backup/common/icons.js`. Neither file was imported by the active application entry chain.
 - Canonical route remains `index.html` → `src/main.js` → `src/pages/home/index.js`; account navigation retains its existing rendering path.
 - **Status:** IMPLEMENTED + DEPLOYED. GitHub Actions run `42476646765` for commit `f0e176e926b57bee05b9784e4b4c5836db4d2e5a` completed successfully; Vite build, output verification, artifact upload, and Deploy to GitHub Pages all succeeded. The deployed Pages artifact contains the modular navigation bundle `assets/index-YeGyxrWa.js` and the SVG navigation component markers. Android visual UAT remains NOT TESTED until the founder checks the live site.
 
