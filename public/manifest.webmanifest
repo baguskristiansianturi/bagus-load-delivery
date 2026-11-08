@@ -1,0 +1,21 @@
+{
+  "id": "/pluits/",
+  "name": "Pluits",
+  "short_name": "Pluits",
+  "description": "Pluits — berbagi pengalaman, komunitas, usaha lokal, marketplace, dan perjalanan.",
+  "lang": "id-ID",
+  "start_url": "/pluits/",
+  "scope": "/pluits/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#ffffff",
+  "theme_color": "#172b45",
+  "icons": [
+    {
+      "src": "/pluits/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
