@@ -85,6 +85,24 @@ assert.match(moderator, /pluits_system_announcements/, 'Moderators must be able 
 assert.match(account, /pluits_system_announcement_reads/, 'Users must be able to read and mark system announcements.');
 
 
+const postActions = read('src/pages/account/index.js');
+assert.ok(postActions.includes('data-post-menu'), 'Feed cards must expose the post action menu.');
+assert.ok(postActions.includes('data-action="edit"'), 'Owners must have a functional edit-post action.');
+assert.ok(postActions.includes('data-action="delete-post"'), 'Owners must have a delete-post action.');
+assert.ok(postActions.includes('data-save-post'), 'Post editor must expose a save action.');
+assert.match(postActions, /dblclick/, 'Photo posts must support double-tap/double-click like.');
+assert.match(postActions, /toggleLike\(true\)/, 'Double-tap must call the like action without toggling an existing like off.');
+
+for (const path of [
+  'MASTER/DECISION-LOG.md',
+  'SOP/README.md',
+  'SOP/PRODUCT-CHANGE-CONTROL.md',
+  'SOP/ENGINEERING-DELIVERY.md',
+  'SOP/RELEASE-UAT.md',
+]) {
+  assert.ok(existsSync(path), 'Required project governance document missing: ' + path);
+}
+
 const navigationCss = read('src/styles/social-navigation.css');
 assert.match(navigationCss, /max-width:\s*760px/, 'Social navigation must retain its mobile layout breakpoint.');
 assert.match(navigationCss, /min-width:\s*761px/, 'Social navigation must retain its desktop layout breakpoint.');
