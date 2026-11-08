@@ -76,9 +76,10 @@ Never display fabricated counts, prices, balances, stock, verified status, payme
 
 ## 5. Refactor order
 
-1. Audit every existing Supabase client initialization and auth-state listener.
-2. Create the single client/session boundary; prove no duplicate auth listeners.
-3. Extract account/profile services and preserve all existing account paths.
+1. [x] Audit existing page-level Supabase client initialization.
+2. [x] Create one shared browser client at `src/lib/supabase/client.js`; route account, seller, marketplace, trip, messages, directory, moderation, and home through it.
+3. [ ] Audit auth-state listeners and establish one session owner; the shared client alone does not prove listener deduplication.
+4. [ ] Extract account/profile services and preserve all existing account paths.
 4. Extract Social post/media/interactions/follow services; add direct API negative tests.
 5. Extract Messaging/activity services and verify realtime/offline semantics.
 6. Extract moderation/admin operations and server-side role checks.
