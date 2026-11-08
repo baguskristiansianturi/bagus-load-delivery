@@ -32,6 +32,7 @@ export function renderSocialHeader({ active = 'explore', profileView = false, us
         <a href="#/marketplace">Marketplace</a>
         <a href="#/trip">Trip</a>
         <a class="${active === 'reels' ? 'active' : ''}" href="#/account/reels">Reels</a>
+        <a href='#/messages'>${socialIcon('message', { size: 17 })}<span>Pesan</span></a>
         <a class="${active === 'activity' ? 'active' : ''}" href="#/account/activity">Aktivitas</a>
         <a class="${profileView ? 'active' : ''}" href="#/account/profile">Profil</a>
       </nav>
@@ -82,6 +83,8 @@ export function renderSocialMobileNav({ active = 'explore', profileView = false,
           ${socialIcon(item.icon, { size: 22 })}
           <small>${item.label}</small>
         </a>`).join('')}
+      <a href='#/messages' aria-label='Pesan'>${socialIcon('message', { size: 22 })}<small>Pesan</small></a>
+      <a class='${active === 'activity' ? 'active' : ''}' href='#/account/activity' aria-label='Aktivitas'>${socialIcon('bell', { size: 22 })}<small>Aktivitas</small></a>
       <a class="${profileView ? 'active' : ''}" href="${profileHref}" aria-label="Profil">
         ${userAvatar || socialIcon('user', { size: 22 })}
         <small>Profil</small>
