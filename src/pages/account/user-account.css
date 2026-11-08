@@ -902,3 +902,24 @@
  .ua-social-home .ua-feed-search{font-size:11px;padding:0 8px}
  .ua-social-home .ua-feed-top>div{gap:8px}
 }
+
+
+/* CP-035 — functional post menu, edit/delete actions, and double-tap like */
+.ua-post-head{position:relative}
+.ua-post-head .ua-post-menu-wrap{position:relative;display:flex;justify-content:flex-end;align-items:center;flex:0 0 auto;min-width:36px}
+.ua-post-more{display:grid;place-items:center;width:36px;height:36px;border:0;border-radius:50%;background:transparent;color:#526174;cursor:pointer}
+.ua-post-more:hover,.ua-post-more[aria-expanded="true"]{background:#f0f3f6}
+.ua-post-menu{position:absolute;z-index:50;top:calc(100% + 4px);right:0;min-width:190px;padding:6px;background:#fff;border:1px solid #e1e6ec;border-radius:12px;box-shadow:0 12px 32px rgba(20,35,52,.16)}
+.ua-post-menu[hidden]{display:none}
+.ua-post-menu button{display:flex;align-items:center;gap:10px;width:100%;padding:11px 10px;border:0;border-radius:8px;background:transparent;color:#253447;text-align:left;font:inherit;font-size:13px;cursor:pointer}
+.ua-post-menu button:hover{background:#f3f6f8}
+.ua-menu-delete-icon{display:grid;place-items:center;width:16px;height:16px;font-size:20px;line-height:1;color:#c43d4d}
+.ua-post-editor[hidden]{display:none}
+.ua-post-editor{position:relative;z-index:1}
+.ua-media,.ua-media-gallery{position:relative}
+.ua-media img,.ua-gallery-item img{cursor:pointer;user-select:none;-webkit-user-select:none;-webkit-user-drag:none}
+.ua-double-tap-heart{position:absolute;z-index:5;left:50%;top:50%;display:grid;place-items:center;color:#ff3158;pointer-events:none;transform:translate(-50%,-50%) scale(.45);filter:drop-shadow(0 5px 14px rgba(0,0,0,.25));animation:ua-heart-pop .78s cubic-bezier(.18,.8,.25,1) forwards}
+.ua-double-tap-heart svg{fill:#ff3158;stroke:#fff;stroke-width:1.3}
+.ua-post-actions button.is-liked svg{fill:#e63d58;stroke:#e63d58}
+.ua-post-actions button:disabled{opacity:.65;cursor:wait}
+@keyframes ua-heart-pop{0%{opacity:0;transform:translate(-50%,-50%) scale(.35)}35%{opacity:1;transform:translate(-50%,-50%) scale(1.15)}65%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-50%) scale(.9)}}
