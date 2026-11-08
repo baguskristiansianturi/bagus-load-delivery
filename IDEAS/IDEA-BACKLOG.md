@@ -213,3 +213,79 @@ Source: founder's Social Media priority, 8 November 2026.
 
 ### Release boundary
 This idea is part of the Social Media product direction, but it is not approved for implementation as a full music marketplace or an algorithm promising viral reach. Define legal, technical and moderation requirements first.
+
+
+## IDEA-008 — Local presence, distinct account types, specialist professionals, and transaction-proven social activity
+Status: PROPOSED / NEEDS PRODUCT DESIGN — NOT APPROVED FOR IMPLEMENTATION  
+Source: founder sharing and strategic discussion, 9 November 2026.
+
+### Founder narrative and context
+Founder describes a practical reason people and communities may adopt Pluits: many local community organizations, such as a banjar, do not have their own website or an accessible digital information hub. Pluits could give such a community an online presence with an identity/profile page, an information catalogue, a way to communicate directly, and updates relevant to its local area. The founder sees this as a real utility rather than asking people to download an app without a reason. As more local organizations and businesses become discoverable and useful through Pluits, residents may naturally have a reason to install and use the platform.
+
+This local directory concept is not intended to be merely a static list of businesses. It connects local presence and information with the social layer. For example, a restaurant may become known because people see its content on Pluits, discover its physical location, and visit it in person. The founder is not insisting that every offline purchase must be forced into an online checkout. Someone may visit a restaurant and pay cash. However, that visit and cash purchase do not create the same transaction evidence or transaction-linked publishing capability as a purchase made through Pluits. This difference can become part of the platform's identity: Pluits can distinguish a claimed visit from an activity supported by an in-platform transaction.
+
+### Account and entity distinctions raised by the founder
+The founder explicitly corrects the assumption that one account should freely create one store and one service offering interchangeably. The founder's current thinking is that account/entity types should have clear boundaries:
+- A **store** is for selling products. A store should remain a store; it should not simply be switched into a service-provider profile.
+- A **professional** is not a general-purpose shop. The professional identity should be anchored to one clear specialty, rather than allowing a profile to claim a long, unrestricted list of unrelated skills. Examples raised: a dentist should be represented as a dentist; a massage practitioner as a massage practitioner. The founder dislikes a broad, catch-all skill list because it weakens clarity and may make it easier for spam or unreliable profiles to present themselves as professionals.
+- A **personal account** is for an ordinary individual participating socially. It should not have to publish a private home address or exact location merely to exist as a user.
+
+These are conceptual boundaries raised in discussion, not a finalized data model. The distinction between a user account and the entities that the user owns, manages, represents, or works for still needs careful modeling. Do not infer that each person can own only one entity, or that the founder has approved a one-account/one-entity restriction.
+
+### Physical-presence and location expectations
+The founder proposes a strict trust requirement for professional service profiles: a professional who offers an in-person service should have a real physical location that customers can visit. This is intended as an anti-spam and trust filter, not just a display preference. The founder contrasts this with an ordinary personal account, which should not be required to expose its private address. A personal account may still provide a broad locality or service-area indication such as Tambora, West Jakarta, or Gianyar, Bali, without displaying a precise address.
+
+The founder also distinguishes store location information from personal privacy. A store's detailed location should be displayed because customers need to know where the business operates. The precise fields, verification evidence, exceptions, and rules for mobile/on-site professionals are not yet defined. Do not silently assume that every professional service can only operate from a fixed clinic or office; this requires further discussion, especially for legitimate mobile or home-visit services.
+
+### Transaction-linked social activity: the Kecak example
+The founder gives an example of three people attending a Kecak performance. One person buys the tickets through Pluits. The purchaser has an in-platform transaction record and can publish an activity associated with that transaction. The other two people may be tagged as companions or participants. The founder imagines the post or activity appearing automatically in the tagged friends' feeds, similar to a Facebook-style social distribution effect, subject to the eventual product rules.
+
+The key distinction is evidence and participation:
+- The person who paid through Pluits has a transaction record associated with their account.
+- Friends tagged by the purchaser may be participants in the shared experience, but tagging must not falsely imply that they personally paid for the tickets.
+- A person who only views or likes the post has not thereby proven attendance or purchase.
+- A person who paid cash at the venue may still share a normal social post, but that post should not be represented as a Pluits-verified transaction.
+
+The founder describes this as a social "bubble" or network effect previously discussed: one real-world activity can connect the purchaser, their companions, the venue/provider, and the wider social feed. The founder's underlying intention is to create a meaningful difference from generic social platforms: Pluits can connect social content to real places, activities, and transaction evidence, rather than treating every post as an equally verified claim about an experience.
+
+### Potential value and strategic implications
+- Local communities gain a useful digital presence and a direct local information channel.
+- Local businesses and providers become discoverable through social content and directory profiles.
+- People can discover places through the feed and choose to transact online or offline.
+- In-platform transactions create a stronger evidence layer for purchase-linked activities.
+- Tagging companions may create social distribution and shared memory without falsely assigning payment to every participant.
+- Clear store, professional, and personal distinctions may improve directory quality, user understanding, trust, and spam resistance.
+- Coarse location for ordinary users can support locality relevance while protecting exact personal addresses.
+
+### Important unresolved design questions
+1. Is a banjar or community represented as an Organization, a Place, or an Organization attached to a Place? How are official representatives and administrators verified?
+2. What is the formal distinction between a personal account, store entity, professional entity, community/organization, and physical place?
+3. Can one personal account own or manage multiple stores, professional practices, or organizations? What memberships and roles are needed?
+4. Does a professional specialty map to one canonical primary category, with optional credentials or sub-specialties, rather than a free-form skill list?
+5. What counts as a verifiable physical location? How are home-based practices, mobile professionals, and legitimate service-area businesses handled?
+6. What evidence is required before a professional may publish a public address or claim a verified professional identity?
+7. Can a store have multiple branches or locations while remaining one store identity?
+8. How does Pluits represent offline cash purchases and visits without falsely marking them as in-platform transactions?
+9. What exact proof is required for transaction-linked posts: paid order, redeemed ticket, check-in, completed service, or another event?
+10. How does a purchaser invite/tag companions, and how do companions accept, decline, remove the tag, or control feed distribution?
+11. Does tagging automatically publish to another person's feed, or does it create a pending activity invitation requiring consent? This is a privacy and unwanted-content risk that must be resolved.
+12. How are refunds, cancellations, ticket transfers, group purchases, and multiple attendees represented?
+13. What is shown publicly versus privately about the transaction, purchaser, companions, and exact attendance?
+14. How do the Social, GeoDirectory, Marketplace, Trip/Activities, and identity/permission domains share references without duplicating entities or weakening authorization?
+
+### Initial risk and counterpoints
+- Requiring a fixed physical address for every professional could exclude legitimate mobile, remote, home-visit, or appointment-only professionals. The founder's intent is physical accountability; the exact rule needs careful exceptions rather than an overly broad assumption.
+- A verified transaction proves a particular purchase/payment event, not necessarily that every tagged person attended or used the service.
+- Automatic posting to tagged friends' feeds without their consent could create privacy, spam, harassment, and social-pressure problems.
+- Offline purchases should not be described as inferior or invalid; they simply lack Pluits transaction evidence unless a legitimate verification flow is later designed.
+- Community pages require governance to prevent impersonation, disputed representation, and unauthorized announcements.
+- Strict account-type boundaries must not accidentally prevent one person from managing multiple legitimate entities.
+
+### Classification
+- Founder statements: account-type distinction, specialist professional identity, physical-location expectation for in-person professionals, privacy distinction for personal accounts, and transaction-linked social example.
+- Strategic observations: local communities may adopt Pluits for practical digital-presence needs; social discovery can drive offline visits; transaction evidence can differentiate Pluits.
+- Hypotheses requiring validation: organic app adoption through local utility, stronger trust/spam resistance through physical-location requirements, and network effects from transaction-linked companion tagging.
+- Decisions: none recorded. Founder has not approved this concept as a final business rule, schema, or implementation scope.
+
+### Next step
+Continue founder discussion to clarify entity/account relationships, professional location exceptions, and consent-based transaction activity sharing. Keep this idea in the backlog until the founder explicitly approves any business rule. Do not update the Business Model Master, Decision Log, product specification, or implementation roadmap solely on the basis of this discussion.
