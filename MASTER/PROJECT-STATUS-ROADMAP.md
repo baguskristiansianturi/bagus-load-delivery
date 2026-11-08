@@ -602,3 +602,11 @@ Build dari commit `642a24bdbed4a85931271e7481f9880a04cc9fc3` berhasil. GitHub Pa
 - Reels untuk video tunggal maksimal 60.000 ms; video lebih dari 60.000 ms tidak masuk Reels. Video dalam carousel campuran tetap bagian postingan, bukan Reels terpisah.
 - Tabel `post_media` menyimpan urutan, tipe, path, durasi, pemilik; RLS, backfill media lama, dan trigger batas 15. Frontend: multi-upload, preview, carousel, editor, hapus media, Reels vertikal dan satu video aktif.
 - Belum UAT Android: batas 15/16, edit/hapus, video 60 detik dan >60 detik, privasi, autoplay.
+
+
+## CP-032 — Reels ranking, filter, and build repair (8 November 2026)
+- Fixed a literal escaped newline that caused Vite parse failure and blocked deployment; build must pass before claiming deployed.
+- Reels has Untuk Anda, Mengikuti, and Terbaru filters. Candidate pool is public, published, single-video posts only, with measured duration >0 and <=60,000 ms.
+- Ranking uses accepted-follow affinity, recency decay, and capped likes/comments as lightweight signals. This is an initial transparent ranking, not machine-learning or watch-time personalization; watch duration, skips, reports/hides, and creator diversity need dedicated event telemetry before use.
+- Deleting media synchronizes the parent post's primary path and media type so stale references are not left behind.
+- UAT still required on Android for autoplay, filters, mixed media carousel, edit/delete and duration boundaries.
