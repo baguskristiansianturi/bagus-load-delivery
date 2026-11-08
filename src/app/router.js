@@ -15,7 +15,7 @@ import {tracking} from '../pages/tracking/index.js';
 import {sellerPage} from '../pages/seller/index.js';
 import {mountUserAccount} from '../pages/account/index.js';
 import {updateSEO} from '../pages/seo.js';
-import {marketplacePage,bindMarketplacePage,storePage,bindStorePage,marketCartPage,bindMarketCartPage,marketCheckoutPage,bindMarketCheckoutPage,marketOrderPage,bindMarketOrderPage,marketOrdersPage,bindMarketOrdersPage} from '../pages/marketplace/index.js';
+import {marketplacePage,bindMarketplacePage,storePage,bindStorePage,marketCartPage,bindMarketCartPage,marketCheckoutPage,bindMarketCheckoutPage,marketOrderPage,bindMarketOrderPage,marketOrdersPage,bindMarketOrdersPage,marketProductPage,bindMarketProductPage} from '../pages/marketplace/index.js';
 import {tripPage,bindTripPage,tripItineraryPage,bindTripItineraryPage} from '../pages/trip/index.js';
 import {messagesPage,bindMessagesPage} from '../pages/messages/index.js';
 import {moderationPage,bindModerationPage} from '../pages/admin/moderation.js';
@@ -30,6 +30,7 @@ export function route(homeFn=home){
  else if(r==='places'){h=directoryPage();queueMicrotask(()=>bindDirectoryPage());}
  else if(r==='marketplace'){h=marketplacePage();queueMicrotask(()=>bindMarketplacePage());}
  else if(r==='shop'){h=storePage();queueMicrotask(()=>bindStorePage(v||''));}
+ else if(r==='market-product'){h=marketProductPage();queueMicrotask(()=>bindMarketProductPage(v||''));}
  else if(r==='market-cart'){h=marketCartPage();queueMicrotask(()=>bindMarketCartPage());}
  else if(r==='market-checkout'){h=marketCheckoutPage();queueMicrotask(()=>bindMarketCheckoutPage());}
  else if(r==='market-orders'){h=marketOrdersPage();queueMicrotask(()=>bindMarketOrdersPage());}
