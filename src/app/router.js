@@ -39,7 +39,7 @@ export function route(homeFn=home){
  else if(r==='provider'||r==='suppliers')h=supplierPage(v||'');
  else if(r==='proyek'||r==='projects')h=projectsPage(v||'');
  else if(['promo','help','faq','about','contact','reviews','terms','privacy','recent'].includes(r))h=misc(r);
- else if(r==='account'){h='<div class="pluits-loading">Membuka akun Pluits…</div>';queueMicrotask(()=>mountUserAccount(v||'explore'));}
+ else if(r==='account'){h='<div class="pluits-loading">Membuka akun Pluits…</div>';queueMicrotask(()=>mountUserAccount(v||'explore',s[2]||''));}
  else if(r==='seller'){h='<div class="pluits-loading">Membuka Seller Center Pluits…</div>';queueMicrotask(()=>sellerPage());}
  else if(['driver','partner','admin'].includes(r))h=operations(r,v||'');
  else if(r==='track'||r==='track-order')h=tracking(v||p.get('id')||'');
