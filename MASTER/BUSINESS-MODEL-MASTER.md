@@ -1081,3 +1081,8 @@ Empat entitas awal yang dimasukkan: Museum Bali, Lapangan Puputan Badung, Pantai
 - Sinyal perilaku 90 hari memakai decay berdasarkan recency dan batas skor kategori agar satu kategori tidak mendominasi tanpa batas.
 - UI mobile memiliki akses langsung ke GeoDirectory dari bottom navigation.
 - Event follow/share/check-in/report sudah disiapkan pada schema tetapi integrasinya ke seluruh modul belum selesai; sinyal aktif saat ini terutama view/click/save/hide.
+
+### 29.9 Pencabutan akses klaim
+- Migration live `20261108041421_pluits_directory_claim_revocation` menautkan membership ke `source_claim_id`.
+- Jika klaim yang sudah disetujui kemudian ditolak, disengketakan, atau ditarik, membership yang berasal dari klaim tersebut dicabut. Status verifikasi entitas tetap mempertimbangkan klaim lain yang masih disetujui.
+- Trigger tetap berada di schema private, SECURITY DEFINER internal, tanpa EXECUTE untuk anon/authenticated.
