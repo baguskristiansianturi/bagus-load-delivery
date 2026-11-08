@@ -45,19 +45,17 @@ Inspected the GitHub main branch tree and key frontend files, live Supabase proj
 - Region: `ap-southeast-1` (Singapore).
 - PostgreSQL 17.
 - 28 tables in `public`; all 28 have RLS enabled.
-- 17 migration history records.
+- 19 migration history records.
 - 0 Edge Functions deployed.
 - One draft, unverified store and one draft product exist. They are not public active listings.
 
-## 5. Migration drift — blocker
-The repository contains 13 migration files, while the live database records 17 applied migrations. Five applied migration files are missing from GitHub:
-- `20261107160447_allow_text_only_social_posts`
-- `20261107161245_secure_pluits_user_media_owner_upload_and_public_post_read`
-- `20261107163224_allow_legacy_photo_media_type`
-- `20261107165743_add_pluits_24h_user_stories`
-- `20261107170245_add_pluits_wallet_accounts_and_requests`
+## 5. Migration history reconciliation — resolved
 
-The repository also contains `202611070001_initial_marketplace.sql`, which is not listed in live migration history. Do not reset, clone, replay or make further schema changes until the exact migration history is reconciled. The current live schema cannot be recreated reliably from the tracked migration directory alone.
+The active `supabase/migrations/` directory contains 19 files and the live database has 19 migration history records. Version/name comparison confirms an exact match: zero missing records and zero extra active files.
+
+Five missing SQL definitions were recovered from the authoritative `supabase_migrations.schema_migrations.statements` records. Four early file names were corrected; five divergent drafts were replaced with exact applied SQL and archived. The unapplied legacy `202611070001_initial_marketplace.sql` is archived outside the active migration directory.
+
+Two additional migrations were applied and committed: `20261108011806_enforce_social_media_owner_paths` and `20261108011838_optimize_story_and_wallet_rls_policies`. No production reset or migration replay was performed.
 
 ## 6. Security findings
 ### Positive
@@ -67,12 +65,15 @@ The repository also contains `202611070001_initial_marketplace.sql`, which is no
 - Store owner and staff roles are represented separately.
 - Anonymous public social reads are limited by public visibility and published status.
 
-### Needs remediation or adversarial tests
-- Supabase security advisor reports two SECURITY DEFINER functions callable by authenticated users: `public.create_store` and `public.update_store_profile`. Both check `auth.uid()`, use fixed search_path, and anonymous execution is denied. Verify exact grants and test unrelated-user/owner boundaries before production; do not blindly change the security mode.
-- Leaked-password protection is disabled.
-- Social post RLS does not visibly enforce that a referenced media object path belongs to the posting user. Test whether one user can attach another user's private object path to a public post; add a database-level ownership invariant if absent.
-- Story SELECT has overlapping permissive policies for authenticated users; simplify after privacy regression tests.
-- RLS being enabled is not equivalent to policy correctness. Run anonymous, owner, unrelated user, staff and revoked-staff tests.
+### Fixed in live database
+- Validated media-path owner constraints on `user_posts` and `user_stories`. Foreign UUID-folder paths are rejected; same-user paths pass. Tests ran in rollback transactions.
+- Stories SELECT policies are now separated by role; the multiple-permissive-policy warning is cleared.
+- Wallet RLS policies use `(select auth.uid())`; three RLS init-plan warnings are cleared.
+
+### Remaining security work
+- Two SECURITY DEFINER store RPCs remain callable by authenticated users. Both check `auth.uid()` and anonymous execution is denied; unrelated-user RPC probe was rejected. Keep owner-boundary tests and review staff permissions.
+- Leaked-password protection remains disabled and must be enabled in Supabase Auth settings before public launch.
+- RLS being enabled is not equivalent to policy correctness. Two-account owner/unrelated-user tests remain outstanding.
 
 ## 7. Performance advisor
 - 14 foreign keys without covering indexes.
@@ -98,8 +99,8 @@ The repository also contains `202611070001_initial_marketplace.sql`, which is no
 
 ## 10. Verification status
 - Repository and database audit: completed for this snapshot.
-- Media-ratio correction: committed; deployment pending workflow 369 at report time.
-- Security fixes: not applied in this audit; require settings or migration workflow plus verification.
+- Media-ratio correction: committed and deployed by successful GitHub Pages workflows 369 and 374.
+- Security fixes: media ownership constraints and RLS policy optimizations applied and verified; leaked-password protection still requires Auth settings.
 - Android UAT and two-account privacy tests: not performed.
 - Production readiness: NOT APPROVED by this report.
 
