@@ -818,3 +818,12 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - **Remaining P0 UAT:** Android photo/video upload/playback; two-account likes/comments/follow/privacy/DM; new-DM offline draft/reconnect; notification recipients and system notice; SMS/TOTP; device widths 320–1440 px, accessibility and measured performance.
 - **Not implemented yet:** licensed/original audio library and FYP ranking; full English localization; personal identity verification. These remain clearly identified as open work, not simulated features.
 - **Founder acceptance:** NOT TESTED / NOT ACCEPTED. Keep Café/Resto/other experience verticals paused until Social Media is accepted.
+
+
+## CP-046 — Responsive/design regression guard and final social deploy (8 November 2026)
+
+- Expanded CI static regression checks for mobile/desktop navigation breakpoints, Android safe-area spacing, keyboard focus visibility, and shared Social design tokens.
+- Latest deployed commit: `281c2fbc2e513f3206167462a490c6d4f3a09686`.
+- GitHub Actions run #968 / `42490137616` — SUCCESS. Regression checks, Vite build, output verification, Pages artifact upload and deploy succeeded.
+- Live URL: `https://baguskristiansianturi.github.io/pluits/?v=281c2fbc`.
+- This CI guard verifies responsive CSS contracts; it does not replace real rendering tests on Android, iOS, tablet or desktop. Those device checks and measured speed remain NOT TESTED.
