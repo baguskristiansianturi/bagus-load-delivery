@@ -1,7 +1,7 @@
 import {createClient} from 'https://esm.sh/@supabase/supabase-js@2';
 import './discovery.css';
 const db=createClient('https://ytndswhqxayqpftszwfh.supabase.co','sb_publishable_kOUbKBYg88nXgz8FQRSnvA_k0hvKY65');
-const cats=[['all','Semua'],['things','Thing to do'],['restaurant','Restaurant'],['cafe','Cafe'],['tourist-attraction','Wisata'],['beach','Pantai'],['shopping','Belanja'],['event','Event']];
+const cats=[['all','Semua'],['things','Thing to do'],['restaurant','Restaurant'],['cafe','Cafe'],['tourist-attraction','Wisata'],['shopping','Belanja'],['event','Event']];
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let active='all',loading=false;
 const signed=async p=>{if(!p)return '';const {data}=await db.storage.from('pluits-user-media').createSignedUrl(p,3600);return data?.signedUrl||''};
