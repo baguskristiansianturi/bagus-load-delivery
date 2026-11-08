@@ -50,4 +50,25 @@ const trip = read('src/pages/trip/index.js');
 assert.match(trip, /trip_itineraries/, 'Trip itineraries must persist through the backend.');
 assert.match(trip, /request_trip_service/, 'Trip service requests must use the backend lifecycle.');
 
-console.log('Production surface verification passed: no retired demo modules, active Marketplace and Trip backend contracts present.');
+
+const messages = read('src/pages/messages/index.js');
+assert.match(messages, /postgres_changes/, 'DM inbox must subscribe to realtime messages.');
+assert.match(messages, /client_message_id/, 'DM outbox must use idempotent message identifiers.');
+assert.match(messages, /flushOutbox/, 'DM outbox must retry queued messages after connectivity returns.');
+assert.match(messages, /contactsKey/, 'DM contacts must be cached for offline access.');
+
+const accountSettings = read('src/pages/account/security-settings.js');
+assert.match(accountSettings, /auth\.mfa\.enroll/, 'Account settings must provide authenticator enrollment.');
+assert.match(accountSettings, /auth\.updateUser\(\{password/, 'Account settings must support password updates.');
+assert.match(accountSettings, /verifyOtp/, 'Account settings must verify phone ownership.');
+assert.match(accountSettings, /preferred_language/, 'Account language preference must persist.');
+assert.match(accountSettings, /visibility/, 'Account privacy setting must persist.');
+
+const account = read('src/pages/account/index.js');
+for (const type of ['new_message', 'unfollow', 'system_update']) {
+  assert.ok(account.includes(type), `Activity center missing notification type: ${type}`);
+}
+assert.ok(existsSync('supabase/migrations/20261108135647_pluits_social_realtime_offline_message_queue.sql'));
+assert.ok(existsSync('supabase/migrations/20261108140017_pluits_account_language_preference.sql'));
+
+console.log('Production surface verification passed: legacy modules absent; Marketplace, Trip, social DM, account security and notification contracts present.');
