@@ -861,7 +861,7 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - **Status:** workflow retry-artifact collision fix IMPLEMENTED and DEPLOYED. This does not change the separate founder Android UAT status.
 
 
-## CP-027 — Narrative-first business model, investor proposal, and technology blueprint (9 November 2026)
+## CP-050 — Narrative-first business model, investor proposal, and technology blueprint (9 November 2026)
 - **Status:** DOCUMENTED; audit read-only dilakukan; bukan checkpoint implementasi produk.
 - **Founder direction:** cerita Ibu Nia dan masalah manusia menjadi fondasi model bisnis; familiar social UX menurunkan hambatan adopsi; GeoDirectory menghubungkan entitas nyata dan kehidupan lokal; dampak menjangkau personal, bisnis, profesional, organisasi, komunitas, dan lembaga publik; rollout dimulai dari Bali.
 - **Deliverables:** Business Model Master Bagian 32; D-004; IDEA-010 untuk workflow organisasi/kontribusi/hiring/operasi yang perlu riset; investor proposal; business/product/technology blueprint; audit live; enam visual SVG.
