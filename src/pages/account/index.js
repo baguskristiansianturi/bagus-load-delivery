@@ -126,6 +126,14 @@ function navProfile(){
  return `<div class="ua-subnav"><a href="#/account/profile">Personal</a><a href="#/account/followers">Pengikut</a><a href="#/account/following">Mengikuti</a><a href="#/account/requests">Permintaan</a><a href="#/messages">Pesan</a><a href="#/account/settings">Pengaturan</a><a href="#/account/wallet">Wallet</a><a href="#/account/addresses">Alamat</a><a href="#/account/explore">Explore</a></div>`;
 }
 const rupiah=v=>new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(Number(v||0));
+async function blockedAccountsPage(){
+ const {data:rows,error}=await supabase.from('user_blocks').select('blocked_id,created_at').eq('blocker_id',user.id).order('created_at',{ascending:false});
+ if(error)return '<div class="ua-panel"><h2>Daftar blokir belum dapat dimuat</h2><p>'+esc(error.message)+'</p></div>';
+ const ids=(rows||[]).map(x=>x.blocked_id),{data:profiles}=ids.length?await supabase.from('user_profiles').select('id,display_name,username,avatar_path').in('id',ids):{data:[]};
+ const people=new Map((profiles||[]).map(x=>[x.id,x]));
+ return '<div class="ua-page-heading"><div><span class="ua-eyebrow">PRIVASI DAN KEAMANAN</span><h1>Akun yang diblokir</h1><p>Akun yang Anda blokir tidak akan muncul di Explore Anda.</p></div></div><section class="ua-panel ua-blocked-list">'+((rows||[]).map(x=>{const p=people.get(x.blocked_id)||{display_name:'Akun Pluits',username:'akun'};return '<article><div><b>'+esc(p.display_name)+'</b><small>@'+esc(p.username)+'</small></div><button data-unblock-user="'+x.blocked_id+'">Buka blokir</button></article>';}).join('')||'<div class="ua-empty">Anda belum memblokir akun apa pun.</div>')+'</section>';
+}
+function bindBlockedAccounts(){document.querySelectorAll('[data-unblock-user]').forEach(b=>b.onclick=async()=>{const {error}=await supabase.rpc('unblock_user',{p_blocked_user_id:b.dataset.unblockUser});if(error)notify(error.message,'error');else{notify('Blokir akun dibuka.');await mountAccount('blocked');}});}
 function settingsHubPage(){
  const groups=[
   ['Akun Anda','Kelola identitas dan peran di Pluits',[
@@ -136,6 +144,8 @@ function settingsHubPage(){
   ['Cara Anda menggunakan Pluits','Atur pengalaman komunitas dan penemuan lokal',[
    ['◉','Privasi dan audiens','Siapa yang dapat melihat postingan dan berinteraksi','/account/content-settings','ready'],
    ['♡','Pengikut dan permintaan','Kelola hubungan dan permintaan mengikuti','/account/followers','ready'],
+   ['✉','Pesan','Percakapan pribadi antar akun Pluits','/messages','ready'],
+   ['⊘','Akun diblokir','Kelola akun yang Anda blokir','/account/blocked','ready'],
    ['⌕','Jelajah dan GeoDirectory','Tempat, layanan, komunitas, dan penyedia lokal','/places','ready'],
    ['▤','Marketplace','Toko, produk, layanan, dan pesanan','/','ready'],
    ['⌁','Trip dan perjalanan','Temukan tempat dan rencanakan pengalaman','/places','staged'],
@@ -474,7 +484,7 @@ async function mountAccount(section='profile',parameter=''){
  if(!user){authScreen(section==='register'?'register':'login');return;}
  try{
   await loadProfile();accountContext=await loadAccountContext(supabase,user);
-  const page=section==='explore'?await feedPage():section==='activity'?await notificationPage():section==='reels'?await reelsPage():section==='compose'?await composePage():section==='addresses'?await addressPage():section==='wallet'?await walletPage():section==='post'?await postDetailPage(parameter||location.hash.split('/')[3]||''):section==='user'?await publicProfilePage(parameter):section==='followers'?await followListPage('followers'):section==='following'?await followListPage('following'):section==='requests'?await followListPage('followers'):section==='preview'?await profilePage(true):section==='professional'?professionalPage(accountContext,profile):section==='professional-create'?professionalFormPage(accountContext,profile):section==='settings'?settingsHubPage():section==='content-settings'?await accountSettingsPage(supabase,user):await profilePage();
+  const page=section==='explore'?await feedPage():section==='activity'?await notificationPage():section==='reels'?await reelsPage():section==='compose'?await composePage():section==='addresses'?await addressPage():section==='wallet'?await walletPage():section==='post'?await postDetailPage(parameter||location.hash.split('/')[3]||''):section==='user'?await publicProfilePage(parameter):section==='followers'?await followListPage('followers'):section==='following'?await followListPage('following'):section==='requests'?await followListPage('followers'):section==='preview'?await profilePage(true):section==='professional'?professionalPage(accountContext,profile):section==='professional-create'?professionalFormPage(accountContext,profile):section==='settings'?settingsHubPage():section==='blocked'?await blockedAccountsPage():section==='content-settings'?await accountSettingsPage(supabase,user):await profilePage();
   const headerAvatar=await signed(profile.avatar_path);document.querySelector('#app').innerHTML=frame(page,section==='explore'||section==='reels'?'explore':section==='activity'?'activity':section==='addresses'?'addresses':section==='compose'?'compose':section==='preview'?'profile':'profile',headerAvatar);
   document.querySelector('#ua-logout')?.addEventListener('click',async()=>{await supabase.auth.signOut();user=null;profile=null;authScreen('login');});
   bindAccountContext({db:supabase,user,ctx:accountContext,profile,refresh:mountAccount});
@@ -483,7 +493,7 @@ async function mountAccount(section='profile',parameter=''){
   document.querySelector('#ua-menu-logout')?.addEventListener('click',async()=>{await supabase.auth.signOut();user=null;profile=null;location.hash='/';});
   bindProfileTabs();
   bindNotificationActions();
-  bindProfile();bindCompose();bindStoryCompose();bindStories();bindExploreFilters();bindAddresses();bindWallet();bindPostActions();bindFollowActions();if(section==='reels')bindReelsPlayback();if(section==='addresses')initMap();
+  bindProfile();bindCompose();bindStoryCompose();bindStories();bindExploreFilters();bindAddresses();bindWallet();bindPostActions();bindFollowActions();if(section==='blocked')bindBlockedAccounts();if(section==='reels')bindReelsPlayback();if(section==='addresses')initMap();
  }catch(err){document.querySelector('#app').innerHTML=frame('<div class="ua-panel ua-error"><h1>Ada kendala memuat akun</h1><p>'+esc(err.message)+'</p><button class="ua-primary" onclick="location.reload()">Coba lagi</button></div>');document.querySelector('#ua-logout')?.addEventListener('click',()=>supabase.auth.signOut());}
 }
 function bindWallet(){
