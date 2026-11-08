@@ -29,7 +29,7 @@ export function route(homeFn=home){
   h='<div class="pl-directory-loading">Membuka tempat…</div>';
   queueMicrotask(async()=>{
    const content=s[2]==='claim'?await claimPage(v||''):await placePage(v||'');
-   const app=document.querySelector('#app');if(app){app.innerHTML=content;if(s[2]!=='claim')bindPlacePage();}
+   const app=document.querySelector('#app');if(app){app.innerHTML=content;bindPlacePage();}
   });
  }
  else if(r==='search')h=search(p.get('q')||'');
