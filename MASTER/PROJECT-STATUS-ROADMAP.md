@@ -507,3 +507,13 @@ Build dari commit `642a24bdbed4a85931271e7481f9880a04cc9fc3` berhasil. GitHub Pa
 - Audit Supabase: fondasi social/profile/follow dan store/product tersedia; GeoDirectory universal belum ditemukan. PostGIS belum terpasang walau tersedia. Wishlist/cart/recent frontend masih localStorage.
 - Tahap berikutnya: audit RLS/RPC/storage; finalisasi taxonomy Bali; migration PostGIS + entity/location/source core + GiST + nearby RPC + RLS; UI map/list/detail; claims; integrasi lintas modul.
 - Belum ada perubahan schema, kode aplikasi, atau deployment dari analisis ini.
+
+
+## GeoDirectory — implementasi dan evaluasi (8 November 2026)
+- Database IMPLEMENTED: PostGIS, 27 kategori, 4 starter places, directory entities/locations/sources/claims/memberships, RLS, nearby RPC, saved/recent, preferences/activity/feedback, relationships, media metadata, social post tags, store entity link.
+- Frontend IMPLEMENTED: home nearby, `#/places`, `#/place/:slug`, claim form, list/map, category/radius/area filters, opt-in GPS, explicit interest controls, activity-based deterministic ranking, feedback, saved/recent directory entities.
+- Supabase verification: anon nearby 15 km = 2, 50 km = 4, beach filter = 1, invalid latitude = 0; all 16 new public tables checked have RLS; source/claim/preferences not readable by anon; GiST index exists.
+- GitHub Actions Pages run #506 succeeded at commit `2432e4a`. Final documentation and SQL-only changes trigger a new build; verify latest run before final close.
+- Not complete: four-place data coverage only; no import/dedup pipeline, claim/media admin dashboard, media Storage upload, store backfill/authoring UI, Trip link, full commerce cart/wishlist migration, Android device UAT, Lighthouse/load test.
+- Security residuals: legacy `create_store` and `update_store_profile` remain SECURITY DEFINER (current definitions check auth.uid; update checks private.is_store_owner); Supabase leaked-password protection remains disabled. Do not change these without seller/auth regression testing and configuration access.
+- Next: confirm latest Pages run; complete real-device UAT; build claim/media moderation and data import; connect Trip; migrate commerce cart and product wishlist; enable leaked-password protection and separately review legacy RPCs.
