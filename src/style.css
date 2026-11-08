@@ -5753,3 +5753,12 @@ body{font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.45;-web
  #pl-msg-compose textarea{min-height:44px;max-height:120px}
  #pl-msg-compose button{min-height:44px;padding:0 16px;flex:none}
 }
+
+.pl-mod-announcement-form{display:grid;gap:12px;padding:16px;border:1px solid #e4e8ee;border-radius:12px;background:#fff;margin-bottom:16px}
+.pl-mod-announcement-form label{display:grid;gap:6px;font-size:11px;font-weight:750;color:#536176}
+.pl-mod-announcement-form input,.pl-mod-announcement-form textarea,.pl-mod-announcement-form select{width:100%;min-width:0;border:1px solid #dce2e9;border-radius:8px;padding:10px 12px;font:inherit;font-size:13px;background:#fff}
+.pl-mod-announcement-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.pl-mod-announcement-form button,.pl-mod-announcement-list button{border:0;border-radius:8px;background:#172b45;color:#fff;padding:10px 14px;font:inherit;font-size:11px;font-weight:750;cursor:pointer;justify-self:start}
+.pl-mod-announcement-form button:disabled{opacity:.6}
+.pl-mod-announcement-list{display:grid;gap:10px}
+@media(max-width:560px){.pl-mod-announcement-grid{grid-template-columns:1fr}}
