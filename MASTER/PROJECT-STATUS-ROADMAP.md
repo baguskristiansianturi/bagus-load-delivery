@@ -558,3 +558,18 @@ Build dari commit `642a24bdbed4a85931271e7481f9880a04cc9fc3` berhasil. GitHub Pa
 - Desktop: navigasi persisten yang sesuai, feed terpusat dengan contextual rail bila relevan, pengaturan multi-kolom, keyboard/focus/hover.
 - Viewport QA: 360×800, 390×844, 768×1024, 1024×768, 1366×768, 1440×900; uji zoom 200%, label panjang, overflow, dan keyboard.
 - Account Center telah mendapat pass CSS awal: satu kolom di mobile, dua kolom di tablet/desktop. Status deploy dan QA perangkat masih menunggu; standar ini berlaku untuk seluruh halaman, bukan hanya pengaturan.
+
+
+## CP-028 — Functional social interactions & profile navigation (8 November 2026)
+
+- Masukan UAT founder: Feed, Explore, upload media, komentar, interaksi komentar, dan navigasi profil harus benar-benar berfungsi sebagai satu pengalaman sosial; tombol dekoratif atau tautan yang hanya memindahkan ke layar lain bukan kriteria selesai.
+- Home feed signed-in: like/unlike dan save/unsave langsung; Share memakai native share atau salin tautan; Komentar membuka detail postingan. Nama dan avatar penulis membuka profil pengguna.
+- Explore/Reels/detail postingan: pemilik postingan tetap dapat menyukai dan mengomentari postingannya sendiri. Policy komentar memberi pengecualian bagi pemilik postingan walau preferensi komentar membatasi komentar dari pengguna lain.
+- Threaded comments diterapkan melalui parent_comment_id dengan foreign key yang memastikan balasan tetap berada di postingan yang sama. Tabel post_comment_likes menyediakan like/unlike komentar dengan RLS authenticated dan satu like per akun per komentar.
+- UI komentar menampilkan penulis, balasan bertingkat, tombol balas, like dan jumlah like. Navigasi desktop dan mobile tetap tersedia ketika membuka halaman profil; avatar profil menjadi tautan yang jelas.
+- Migration DB: 20261108051829_pluits_post_comment_replies_and_likes.sql. Sudah diterapkan ke Supabase project pluits (ytndswhqxayqpftszwfh). Kolom, tabel, dan policy RLS telah diverifikasi melalui query schema.
+- Status implementasi: DB APPLIED; frontend IMPLEMENTED; build/deploy harus mengikuti workflow terbaru; Android/two-account UAT BELUM DILAKUKAN.
+- Video upload: frontend yang ada menerima MP4/WebM hingga 50 MB melalui Storage private bucket dan signed URL. Belum boleh dinyatakan lulus sampai tes upload dan playback dari Android nyata berhasil.
+- Masih terbuka: validasi dua akun, like/komentar/balasan setelah refresh, private-profile access, laporan/moderasi, alur Stories/Reels, Explore discovery dan pemeriksaan responsif lintas perangkat.
+- Acceptance test wajib: owner like dan komentar pada postingan sendiri; akun kedua like/komentar; balas komentar dan balas balasan; like komentar; refresh mempertahankan thread/counter; klik avatar/nama membuka profil yang benar; uji Home/Explore/Reels/Detail/Profile pada ponsel, tablet, desktop.
+- Next: uji upload video nyata di Android dan dua akun; lengkapi discovery Explore serta report/block/moderasi dan pengalaman Stories/Reels sebelum menyatakan Social Core siap UAT penuh.
