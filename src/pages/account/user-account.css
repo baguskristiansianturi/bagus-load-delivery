@@ -826,3 +826,45 @@
     max-width: 100%;
   }
 }
+
+
+/* PLUITS MOBILE + MEDIA CONSISTENCY OVERRIDE
+   Keep source media uncropped and unstretched; use one 4:5 feed/detail frame. */
+.ua-social-app,.ua-social-app *{box-sizing:border-box}
+.ua-social-app{width:100%;max-width:100%;overflow-x:hidden}
+.ua-social-app .ua-main{width:100%;max-width:1080px;min-width:0}
+.ua-social-app .ua-social-home,.ua-social-app .ua-feed,.ua-social-app .ua-post-card{min-width:0;max-width:100%}
+.ua-social-app .ua-social-home{width:min(100%,620px);margin-inline:auto}
+.ua-social-app .ua-feed{display:grid;width:100%;margin:0;gap:0}
+.ua-social-app .ua-post-card{width:100%;margin:0;border-radius:0;overflow:hidden}
+.ua-social-app .ua-media,
+.ua-social-app .ua-gallery-item,
+.ua-social-app .ua-media-preview{
+ display:grid!important;position:relative;width:100%!important;min-width:0!important;
+ aspect-ratio:4/5!important;height:auto!important;max-height:min(72svh,680px)!important;
+ overflow:hidden!important;place-items:center!important;background:#f3f4f6!important
+}
+.ua-social-app .ua-media img,.ua-social-app .ua-media video,
+.ua-social-app .ua-gallery-item img,.ua-social-app .ua-gallery-item video,
+.ua-social-app .ua-media-preview img,.ua-social-app .ua-media-preview video{
+ display:block!important;width:100%!important;height:100%!important;min-width:0!important;
+ max-width:100%!important;max-height:100%!important;object-fit:contain!important;
+ object-position:center!important;background:#f3f4f6!important
+}
+.ua-social-app .ua-media-gallery{display:block!important;width:100%!important;min-width:0!important;max-height:min(72svh,680px)!important;overflow:hidden!important;background:#f3f4f6!important}
+.ua-social-app .ua-gallery-track{display:flex!important;width:100%!important;min-width:0!important;gap:0!important;overflow-x:auto!important;overflow-y:hidden!important;scroll-snap-type:x mandatory;overscroll-behavior-x:contain}
+.ua-social-app .ua-gallery-item{flex:0 0 100%!important;min-width:100%!important;max-width:100%!important;scroll-snap-align:start}
+.ua-social-app .ua-post-grid{display:grid!important;width:100%!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:2px!important}
+.ua-social-app .ua-post-thumb{display:block!important;width:100%!important;min-width:0!important;aspect-ratio:1/1!important;overflow:hidden!important}
+.ua-social-app .ua-post-thumb img,.ua-social-app .ua-post-thumb video{display:block!important;width:100%!important;height:100%!important;object-fit:cover!important}
+.ua-social-app .ua-compose-panel,.ua-social-app .ua-auth-wrap,.ua-social-app .ua-grid-layout{width:100%;max-width:100%;min-width:0}
+@media(max-width:760px){
+ .ua-social-app{width:100%;max-width:100%;margin:0;padding-bottom:calc(64px + env(safe-area-inset-bottom))}
+ .ua-social-app .ua-main{display:block;width:100%;max-width:none;min-height:0;margin:0;padding:0}
+ .ua-social-app .ua-social-home{width:100%;max-width:none;margin:0;padding:0}
+ .ua-social-app .ua-feed-top,.ua-social-app .ua-stories-block,.ua-social-app .ua-explore-filters,.ua-social-app .ua-feed{width:100%;margin-inline:0}
+ .ua-social-app .ua-post-card{width:100%;margin:0;border-radius:0}
+ .ua-social-app .ua-media,.ua-social-app .ua-gallery-item,.ua-social-app .ua-media-preview{max-height:72svh!important;border-radius:0!important}
+ .ua-social-app .ua-compose-panel{padding:14px;border-radius:0}
+ .ua-social-app .ua-profile-card,.ua-social-app .ua-panel{max-width:100%;min-width:0}
+}
