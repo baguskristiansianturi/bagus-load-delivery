@@ -108,3 +108,8 @@
     font-size: 8px;
   }
 }
+
+.pl-social-header .pl-nav-activity,.pl-social-mobile-nav .pl-mobile-activity{position:relative}
+.pl-nav-unread{position:absolute;top:-5px;right:-9px;display:inline-flex;align-items:center;justify-content:center;min-width:16px;height:16px;padding:0 4px;border:2px solid #fff;border-radius:999px;background:#c53e49;color:#fff;font-size:8px;font-style:normal;font-weight:800;line-height:1}
+.ua-social-app .pl-social-mobile-nav .pl-mobile-activity{overflow:visible}
+.ua-social-app .pl-social-mobile-nav .pl-mobile-activity .pl-nav-unread{top:3px;right:calc(50% - 20px)}
