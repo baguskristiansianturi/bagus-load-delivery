@@ -1,98 +1,55 @@
 # PLUITS — AI START HERE
-
-**Versi:** 1.0  
-**Pembaruan:** 7 November 2026  
-**Repository:** https://github.com/baguskristiansianturi/pluits  
-**Produk:** Pluits  
-**Perusahaan yang direncanakan:** Pluits Indonesia  
+**Versi:** 2.0 | **Pembaruan:** 8 November 2026
+**Produk:** Pluits | **Repository:** https://github.com/baguskristiansianturi/pluits
 **GitHub Pages:** https://baguskristiansianturi.github.io/pluits/
+**Supabase project:** `ytndswhqxayqpftszwfh`
 
 ## Tujuan
-Baca dokumen ini sebelum melanjutkan pekerjaan Pluits di chat/sesi baru. Dokumen ini memberi urutan baca, batas produk, cara memahami status, dan aturan agar AI tidak mencampur proyek atau menganggap rencana sebagai fitur selesai.
+Pintu masuk wajib untuk setiap chat/sesi AI baru yang mengerjakan Pluits. AI harus membaca Model Bisnis Master terlebih dahulu sebelum memberi analisis, rekomendasi, desain, atau perubahan frontend/backend/database/roadmap. Jangan mengandalkan ringkasan chat atau ingatan sebagai pengganti repository terkini.
 
-## Urutan wajib membaca
-1. MASTER/AI-START-HERE.md — orientasi dan aturan.
-4. MASTER/BUSINESS-MODEL-MASTER.md — sumber kebenaran model bisnis. Baca visi/prinsip dan terutama bagian 23–24. Bagian 24 adalah arah terbaru untuk social experience commerce; pertanyaan terbuka di 24.17 belum menjadi keputusan final.
-5. MASTER/PROJECT-STATUS-ROADMAP.md — checkpoint, PR, dependensi, tes, deployment.
-6. MASTER/PLUITS-USER-TESTING.md — panduan UAT mobile.
-7. supabase/README.md dan MASTER/PLUITS-SECURITY-REVIEW.md — backend, RLS, Storage, keamanan, temuan yang perlu diverifikasi.\n8. docs/pluits/LIVE-AUDIT-2026-11-08.md — audit live repository/database, migration reconciliation, dan status tes terbaru.\n7. docs/pluits/MASTER-PRODUCT-VISION.md dan PRODUCT-ROADMAP.md — arah produk dan inovasi sebagai dokumen pendamping, bukan pengganti Business Model Master.
+## Urutan baca wajib
+1. Dokumen ini.
+2. `MASTER/PLUITS-AI-GOVERNANCE.md`.
+3. `MASTER/BUSINESS-MODEL-MASTER.md` — baca seluruh dokumen; sumber tunggal keputusan bisnis.
+4. `MASTER/PROJECT-STATUS-ROADMAP.md` — satu-satunya roadmap delivery.
+5. `MASTER/DOCUMENTATION-MAP-AND-CHECKLIST.md`.
+6. `MASTER/PLUITS-USER-TESTING.md`.
+7. `MASTER/PLUITS-SECURITY-REVIEW.md`, `MASTER/BACKEND-FOUNDATION-SPEC.md`, `supabase/README.md`, dan `docs/pluits/TECHNICAL-ARCHITECTURE-SECURITY.md`.
+8. Audit live terbaru dan spesifikasi arsitektur modul yang relevan.
+9. `IDEAS/IDEA-BACKLOG.md` — ide belum disetujui, bukan instruksi implementasi.
 
-Jika ada konflik, ikuti keputusan terbaru di Business Model Master. Jangan menghapus sejarah lama; tandai bagian lama sebagai superseded bila perlu.
+## Identitas proyek
+- Produk, frontend, backend, repository: **Pluits**.
+- Repo: `baguskristiansianturi/pluits`, branch `main`.
+- Pages: `https://baguskristiansianturi.github.io/pluits/`.
+- Supabase: `ytndswhqxayqpftszwfh`.
+- Bagusin dan Bali Trans adalah proyek terpisah.
+- Bagus Load & Delivery / Baguslot and Delivery telah dipensiunkan sebagai identitas/proyek. Jangan membuat, menghidupkan, atau mempertahankan folder, backup, URL, branch, backend, atau roadmap dengan nama itu. Audit dependensi dan pindahkan informasi relevan sebelum menghapus artefak lama.
+- Jangan mengganti brand, repo, hosting, domain, atau Supabase project tanpa keputusan eksplisit founder.
 
-## Identitas dan batas proyek
-- Produk/backend bernama Pluits; perusahaan direncanakan Pluits Indonesia.
-- Repository ini khusus Pluits: baguskristiansianturi/bagus-load-delivery.
-- Jangan mencampur backend, desain, database, repository, atau identitas Pluits dengan Bagusin atau Bali Trans.
-- Pluits diarahkan menjadi platform social-first + marketplace lokal + Trip/Travel dalam satu akun.
-- Homepage utama adalah feed sosial. Halaman Marketplace tetap mempertahankan fondasi desain marketplace Pluits yang sudah ada.
-- Katalog awal harus berasal dari pelaku usaha nyata. Jangan membuat toko, produk, transaksi, saldo, review, atau engagement palsu agar terlihat ramai.
+## Hierarki sumber kebenaran
+1. Business Model Master: apa yang Pluits bangun dan aturan bisnis.
+2. Idea Backlog: ide/hipotesis belum disetujui.
+3. Project Status & Roadmap: apa yang disetujui untuk dikerjakan dan bukti statusnya.
+4. Spesifikasi teknis: bagaimana keputusan diwujudkan.
+5. Source code/schema/runtime: kondisi aktual, bukan otoritas untuk mengubah model bisnis.
+6. Audit dan UAT: bukti hasil serta keterbatasan.
 
-## Prinsip produk
-- Konten sosial biasa tetap diperbolehkan; feed bukan katalog iklan saja.
-- Transaksi hanya disebut terverifikasi jika ada bukti transaksi sah dari backend.
-- Sinyal lokasi, kunjungan terkonfirmasi, dan transaksi terverifikasi adalah tiga tingkat bukti berbeda.
-- Foto, caption, geotag, dan geofence tidak membuktikan pembayaran.
-- Review yang memenuhi syarat terhubung ke pengalaman/transaksi kanonis; merchant menerima notifikasi dan dapat merespons sesuai izin.
-- URL eksternal bebas dibatasi; gunakan kartu internal Pluits untuk profil, merchant, produk, layanan, post, dan Trip.
-- Username/halaman publik usaha berfungsi sebagai mini-website yang dapat dibagikan ke media sosial lain.
-- Data transaksi, nominal, lokasi presisi/real-time, alamat, dan informasi pribadi tidak boleh dibuka tanpa persetujuan dan dasar yang sah.
-- Jangan menjanjikan spam atau konten palsu bisa dihapus 100%; bangun pencegahan, bukti, pelaporan, moderasi, rate limit, dan banding.
-- Toko resmi tidak menjual barang bekas menurut kebijakan yang sedang diuji; konten sosial pribadi harus dipisahkan dari listing toko.
-- Pickup, pengiriman toko, Bagus Load & Delivery, dan integrasi pihak ketiga belum boleh diklaim tersedia sebelum benar-benar dibangun dan diuji.
+Jika dokumen bertentangan, jangan menebak. Ikuti keputusan aktif terbaru di Business Model Master, catat konflik, perbaiki dokumen turunan, dan jangan mengubah keputusan bisnis tanpa persetujuan founder.
 
-## Cara membaca status
-Setiap fitur harus memiliki status terpisah:
-- PROPOSED: ide/hipotesis.
-- DECIDED: keputusan produk yang disepakati.
-- SPECIFIED: kebutuhan dan acceptance criteria ditulis.
-- IMPLEMENTED: kode/schema dibuat.
-- DEPLOYED: deployment berhasil.
-- TESTED: tes nyata dilakukan dan hasil dicatat.
-- ACCEPTED: founder menerima hasil setelah melihat/menguji.
+## Aturan kerja
+- Periksa branch/commit terbaru dan baca bagian model bisnis terkait sebelum coding.
+- Setiap fitur harus memiliki traceability: keputusan bisnis → user journey/acceptance → backend contract/security → frontend → tests → deploy → UAT.
+- Backend menegakkan authorization dan aturan bisnis; menyembunyikan tombol bukan kontrol keamanan.
+- Satu fungsi/route/komponen memiliki satu implementasi kanonis.
+- Jangan mengubah desain/fitur yang tidak diminta. Pertahankan modul berjalan; gunakan perubahan bertahap, kompatibel, dan rollback.
+- Ide baru dicatat di backlog. Tidak otomatis menjadi keputusan atau pekerjaan.
+- Migration yang sudah diterapkan tidak dihapus/ditulis ulang.
+- Jangan seed toko, produk, review, transaksi, saldo, engagement, akun, atau postingan palsu.
+- Pisahkan DECIDED, SPECIFIED, IMPLEMENTED, DEPLOYED, TESTED, ACCEPTED, BLOCKED, NOT TESTED, dan NOT VERIFIED.
+- Build/deploy harus diverifikasi untuk commit yang tepat. Deploy sukses tidak sama dengan UAT.
+- Catat commit, workflow run, hasil tes, migration, risiko, dan pekerjaan tersisa.
+- Founder bekerja mobile-first; laporan harus mudah diuji dari Android.
 
-Satu status tidak otomatis membuktikan status berikutnya. Dokumen bukan bukti implementasi. Commit bukan bukti deployment. Deployment bukan bukti UAT. Jika belum diuji, tulis NOT TESTED.
-
-## Cara melanjutkan pekerjaan
-1. Periksa branch dan commit terbaru.
-2. Baca checkpoint terbaru di roadmap.
-3. Audit file, route, schema, RLS, Storage, dan workflow aktual sebelum mengubah apa pun.
-4. Cocokkan perubahan dengan Business Model Master dan pertanyaan terbuka.
-5. Kerjakan bertahap; jangan merusak Marketplace saat membangun social feed.
-6. Untuk perubahan database, baca skill Supabase dan audit RLS/security sebelum migration.
-7. Setelah perubahan frontend, jalankan build dan periksa GitHub Actions/Pages; berikan link mobile untuk diuji.
-8. Catat commit SHA, file, deployment run, tes nyata, masalah, dan pekerjaan tersisa di roadmap.
-9. Jangan menandai fitur selesai jika hanya mockup, demo lokal, atau data dummy.
-10. Jika founder memberi keputusan bisnis baru, integrasikan ke bagian yang tepat dengan menyesuaikan alur dan aturan lama, bukan menimpa seluruh dokumen.
-
-## Fokus saat ini
-Checkpoint model bisnis terbaru adalah CP-011 — Pluits Social Experience Commerce. Checkpoint implementasi terbaru adalah CP-023 — Follow graph, profil publik, dan privasi akun. Model bisnis v1.0 mencatat transaksi menjadi konten, review dan respons merchant, kartu internal, username/mini-website, aturan toko/barang bekas, fulfillment, Trip Story, privasi, moderasi, dan hipotesis pendapatan.
-
-Fondasi registrasi dan akses feed publik sudah disiapkan. Langkah berikutnya: founder mendaftar sendiri melalui GitHub Pages, mengonfirmasi email, melengkapi profil, mengunggah postingan publik, lalu memeriksa Explore dan Beranda publik. Catat semua error nyata. Jangan membuat akun atau postingan atas nama founder. Setelah UAT akun pertama, lakukan tes privasi menggunakan akun kedua sebelum mengundang lebih banyak tester.\n\nStatus yang belum selesai: leaked-password protection masih nonaktif; tes Android dan dua akun belum dilakukan; Stories UI dan feed Reels vertikal dasar sudah dibuat dan dideploy; upload/playback dengan akun nyata masih menunggu UAT. Yang belum lengkap: full-screen swipe/autoplay Reels, follow graph, DM, notifikasi, report/block/moderasi, transaksi merchant, payment, dan wallet operasional. Security advisor masih melaporkan dua SECURITY DEFINER RPC yang perlu tes batas akses dan satu peringatan password bocor. Jangan klaim production-ready.
-
-## Tautan utama
-- Business Model Master: https://github.com/baguskristiansianturi/pluits/blob/main/MASTER/BUSINESS-MODEL-MASTER.md
-- Project Status & Roadmap: https://github.com/baguskristiansianturi/pluits/blob/main/MASTER/PROJECT-STATUS-ROADMAP.md
-- GitHub Pages: https://baguskristiansianturi.github.io/pluits/
-\n\n## Audit dan status terbaru\n- Live audit: https://github.com/baguskristiansianturi/pluits/blob/main/docs/pluits/LIVE-AUDIT-2026-11-08.md\n- Master Product Vision: https://github.com/baguskristiansianturi/pluits/blob/main/docs/pluits/MASTER-PRODUCT-VISION.md\n- Product Roadmap: https://github.com/baguskristiansianturi/pluits/blob/main/docs/pluits/PRODUCT-ROADMAP.md\n
-## Fokus terbaru — CP-023 Follow graph
-
-- Implementasi follow graph dan profil publik/privat sudah ditambahkan di repository dan backend.
-- Akun publik langsung menerima follow; akun privat membutuhkan persetujuan. Permintaan yang belum disetujui tidak membuka bio/avatar/media.
-- Sepuluh migration CP-023 sudah disimpan dan cocok dengan live migration statements. Jangan menghapus migration yang sudah diterapkan atau mereset database.
-- Pengujian database rollback lintas dua akun berhasil untuk public follow, private request, acceptance, private media access, dan self-follow rejection.
-- UI profil publik, daftar pengikut/mengikuti/permintaan, dan guest profile/post view sudah diimplementasikan. GitHub Pages run #465 sukses build/deploy; UAT Android dan dua akun nyata masih pending. Bundle build: JS 172.94 kB gzip, CSS 44.57 kB gzip; Lighthouse/runtime speed belum diukur.
-- Tahap lanjutan yang masih terbuka: notifikasi, report/block/mute/moderasi/banding, DM, dan penyempurnaan public feed actions. Jangan menambahkan ide produk baru di luar Business Model Master tanpa membahasnya dengan founder.
-- Security gate belum selesai: leaked-password protection masih nonaktif; dua SECURITY DEFINER RPC toko lama masih perlu review; dua akun nyata dan Android UAT masih diperlukan.
-
-## Tata kelola dokumentasi dan cara AI melanjutkan pekerjaan
-- Baca dokumen orientasi, peta dokumentasi, Business Model Master, Project Status & Roadmap, UAT, security review, audit terbaru, serta spesifikasi arsitektur yang relevan secara menyeluruh sebelum mengubah kode/schema. Jangan hanya membaca ringkasan atau bagian paling akhir.
-- Gunakan MASTER/BUSINESS-MODEL-MASTER.md hanya untuk model bisnis dan keputusan produk yang sudah disetujui. Ide yang belum diputuskan harus berada di IDEAS/IDEA-BACKLOG.md.
-- Setiap ide harus mencatat masalah, hipotesis nilai, alasan untuk tidak membangunnya, risiko, alternatif dari platform besar, pertanyaan terbuka, dan kriteria keputusan. Jangan otomatis mempromosikan ide menjadi roadmap.
-- MASTER/PROJECT-STATUS-ROADMAP.md adalah daftar pekerjaan dan checkpoint implementasi. Tiap item harus menyatakan status terpisah: NOT STARTED, IN PROGRESS, IMPLEMENTED, DEPLOYED, TESTED, ACCEPTED, BLOCKED, atau NOT VERIFIED; sertakan bukti commit, migration, workflow, test, dan UAT jika ada.
-- Pertahankan checklist yang membedakan DONE (dengan bukti), TODO, FAILED, BLOCKED, dan NOT TESTED. Jangan menandai deployment sukses hanya karena commit tersedia.
-- Sebelum perubahan teknis, audit struktur modular, dependency, kontrak antar-modul, route, schema, RLS, storage, workflow, dan compatibility. Hindari refactor luas pada modul yang sudah dipakai pengguna; gunakan perubahan kecil, backward-compatible, migration bertahap, feature flags bila tepat, dan rollback plan.
-- Rancang pertumbuhan dengan observability, logging terstruktur, error IDs, monitoring, backup/recovery, rate limits, least privilege, secret management, dependency/security updates, incident response, dan pengujian beban.
-- Gagasan AI agents untuk operasi masa depan dicatat sebagai ide, bukan fitur aktif: security monitoring, vulnerability/dependency review, bug/error triage, availability/performance, incident summarization, serta laporan harian/mingguan/bulanan dengan bukti, severity, dampak, rekomendasi, dan status. Agent tidak boleh otomatis mengubah production, mengakses secret tanpa kebutuhan, atau menutup temuan tanpa verifikasi manusia.
-- Founder bekerja solo dan mobile-first; dokumentasi, checklist, workflow, serta laporan harus mudah dibaca dan ditindaklanjuti dari Android.
-- Domain yang disebut founder sebagai target masa depan: fluids.com. Hubungannya dengan nama/brand produk di repository perlu dikonfirmasi. Jangan mengganti nama produk, URL, repo, atau konfigurasi deployment sebelum ada keputusan eksplisit.
-- Keinginan menyembunyikan repository adalah kebutuhan privasi/keamanan yang harus ditangani melalui perubahan visibility dan arsitektur hosting, bukan dengan menganggap custom domain menyembunyikan sumber kode. Lihat IDEA-BACKLOG.md; jangan mengubah visibility atau memindahkan hosting tanpa persetujuan dan rencana migrasi.
+## Baseline audit
+Snapshot audit sebelumnya: 60 public tables dengan RLS aktif, 73 migration history entries, 20 SECURITY DEFINER advisor warnings, leaked-password protection nonaktif, dan 84 unused-index notices. Angka ini bukan kondisi permanen; verifikasi ulang sebelum perubahan backend/security. Temuan authorization staff granular tetap prioritas sampai terbukti ditutup.
