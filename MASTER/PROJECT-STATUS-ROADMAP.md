@@ -964,3 +964,15 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - **Live database:** read-only inspection mengonfirmasi constraint, RPC, dan verification requirements masih belum sesuai D-005. Tidak ada DDL/data/Auth changes.
 - **Tidak dilakukan:** tidak ada perubahan frontend, browser rendering, Android test, staging branch, atau deployment fitur. GitHub clone lokal gagal karena runtime tidak dapat menjangkau GitHub; tool browser/device automation tidak tersedia.
 - **Next:** staging approval → schema/RPC alignment dan negative tests → onboarding UX + location/privacy → dashboard modules → automated build → Android founder UAT.
+
+
+## CP-059 — Backend-first foundation dan local CI tanpa upgrade Supabase
+- **Tanggal:** 9 November 2026
+- **Status:** SPECIFIED + IMPLEMENTED ON WORK BRANCH; CI NOT VERIFIED; NOT DEPLOYED.
+- **Arah founder:** bangun alur dan struktur backend terlebih dahulu, kemudian selaraskan frontend; tunda peningkatan kuota sampai PLUITS siap dibuka dan kebutuhan aktual membuktikannya.
+- **Perubahan branch:** `work/backend-first-flow-foundation`.
+- **File:** `supabase/config.toml` (local-only sentinel), `.github/workflows/backend-contracts.yml`, `docs/pluits/BACKEND-FIRST-FOUNDATION-AND-LOCAL-CI-2026-11-09.md`, `docs/pluits/FRONTEND-BACKEND-ALIGNMENT-PLAN-2026-11-09.md`.
+- **Environment safety:** tidak membuat hosted Supabase branch/project; tidak upgrade plan; workflow tidak diberi Supabase secret dan hanya replay migration pada local stack.
+- **Repository baseline:** `8bb79e378c112f4713abbdd3ad1468210d169ac8`; 81 migration files terdeteksi.
+- **Belum terbukti:** local stack berhasil start, semua migration replay berhasil, RLS role-context tests, service extraction, frontend refactor, deploy, Android UAT.
+- **Langkah berikutnya:** jalankan CI pada PR; perbaiki error replay tanpa menyentuh production; tambahkan structural/RLS tests; setelah backend contract stabil, refactor frontend bertahap dimulai dari account/session dan Social P0.
