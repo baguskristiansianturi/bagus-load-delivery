@@ -478,13 +478,13 @@ Build dari commit `642a24bdbed4a85931271e7481f9880a04cc9fc3` berhasil. GitHub Pa
 
 ## 2026-11-08 — Konsolidasi identitas dan arsitektur Pluits
 
-- **Keputusan founder terbaru:** nama produk adalah Pluits; Bagus Load & Delivery dihentikan sebagai identitas produk ini. Fungsi delivery dapat menjadi layanan di dalam Pluits, bukan nama produk utama.
+- **Keputusan founder terbaru:** nama produk, frontend, backend, dan repository adalah Pluits. Fungsi delivery dapat menjadi layanan di dalam Pluits, bukan nama produk utama.
 - Tiga ruang utama: Social Media/Community (fondasi sosial dari My Bali), Local Marketplace (berbagai produk/layanan lokal dengan siklus katalog-order-pembayaran-fulfillment tersendiri), dan Trip (tujuan, itinerary, reservasi/booking, kunjungan, dan pengalaman perjalanan).
 - GeoDirectory adalah direktori universal/peta bersama untuk toko, restoran, tempat wisata, monumen, gereja, sekolah, fasilitas, alamat, layanan, komunitas, event, dan entitas lokasi lainnya. Satu entitas/lokasi kanonis dapat ditautkan lintas modul; tidak semua tempat adalah toko atau dapat dipesan.
 - Taxonomy bisnis/tempat/aktivitas dari My Bali tetap menjadi referensi dan perlu dipetakan ke GeoDirectory, Trip, dan Marketplace tanpa menyamakan siklus ketiganya.
-- **Repository belum berganti nama:** saat ini masih `bagus-load-delivery`. Rename repository menjadi `pluits` masih merupakan tindakan teknis tertunda; jangan menyatakan selesai sampai GitHub mengonfirmasi rename dan URL Pages/integrasi diverifikasi.
+- **Repository:** `baguskristiansianturi/pluits`; URL Pages kanonis: `https://baguskristiansianturi.github.io/pluits/`. Status deployment terbaru tetap harus diverifikasi per commit.
 - **Status implementasi:** catatan ini adalah keputusan/dokumentasi. Belum membuktikan audit kode, migrasi backend/frontend, rename repository, deployment, atau UAT selesai.
-- **Checkpoint berikutnya:** audit seluruh referensi Bagus Load & Delivery dan asumsi konstruksi; petakan taxonomy My Bali; susun model universal GeoDirectory; pisahkan siklus Marketplace dan Trip; pertahankan fondasi social-first; kemudian implementasikan secara bertahap dan uji mobile.
+- **Checkpoint berikutnya:** audit seluruh asumsi konstruksi lama; petakan taxonomy My Bali; susun model universal GeoDirectory; pisahkan siklus Marketplace dan Trip; pertahankan fondasi social-first; kemudian implementasikan secara bertahap dan uji mobile.
 
 
 ## Keputusan produk — identitas, klaim direktori, dan kepercayaan (8 November 2026)
