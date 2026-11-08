@@ -792,3 +792,15 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - Supabase Performance Advisor now clears the announcement FK and four announcement RLS initplan warnings. Remaining 87 unused-index INFO notices are informational; no indexes were dropped.
 - Health Advisor: 0 lints. Security Advisor: 20 authenticated-callable SECURITY DEFINER warnings and leaked-password protection warning remain.
 - Database-only hardening does not change frontend behavior. The previous frontend deploy remains valid; repository CI/deploy is triggered by the matching migration/docs commits.
+
+
+## CP-044 — Inbox-first mobile navigation and offline new-DM drafts (8 November 2026)
+
+- **Mobile navigation:** restored a compact sticky top header with direct Inbox and Activity shortcuts; retained a five-item bottom navigation (Beranda, Jelajah, Buat, Reels, Profil). Desktop header now exposes Inbox and Activity. Activity displays an unread notification count.
+- **Offline DM:** cached contacts can now be selected offline to draft a new conversation. The local outbox stores recipient ID and message; on reconnect Pluits creates the direct conversation, sends with idempotent client message ID, and avoids sending the local timestamp to the database. This remains device-local, not encrypted by Pluits, and not actual delivery while offline.
+- **Regression checks:** CI verifies inbox/activity navigation and offline new-conversation draft/reconnect contracts.
+- **UAT update:** founder checklist now includes creating a new DM draft offline, reconnecting, and confirming exactly one delivered message.
+- **Latest frontend commit:** `a3d37290d65d0fa3205030caaab0ac5eb5161b26`.
+- **GitHub Actions:** run #958 / `42489770125` — SUCCESS; regression checks, Vite build, output verification, artifact upload and Pages deployment all succeeded.
+- **Live test URL:** `https://baguskristiansianturi.github.io/pluits/?v=a3d37290`.
+- **Not yet accepted:** real Android interaction, two-account realtime delivery, offline new-conversation flow, and 320–1440 px device matrix remain NOT TESTED by founder. Do not call the Social Media release complete.
