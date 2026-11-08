@@ -1,6 +1,6 @@
--- Permit logged-out visitors to browse only public social profiles and published public posts.
--- Private profiles, posts, addresses and interactions remain inaccessible to anon.
 
+-- Allow anonymous visitors to browse only public Pluits profiles and published public posts.
+-- Private profiles, private posts, addresses and user interactions remain inaccessible.
 drop policy if exists user_profiles_read_public_anon on public.user_profiles;
 create policy user_profiles_read_public_anon
 on public.user_profiles
@@ -24,8 +24,8 @@ using (
   )
 );
 
--- Keep the bucket private. Anonymous signed URLs are allowed only for assets
--- referenced by public published posts or public profiles.
+-- Private bucket remains private. Anonymous signed-URL creation is limited to
+-- media explicitly referenced by a public published post or a public profile.
 drop policy if exists pluits_user_media_read_public_anon on storage.objects;
 create policy pluits_user_media_read_public_anon
 on storage.objects
