@@ -37,8 +37,26 @@
 
 @media (max-width: 760px) {
   .ua-social-app .pl-social-header {
-    display: none;
+    display: flex;
+    position: sticky;
+    top: 0;
+    z-index: 230;
+    min-height: 54px;
+    padding: 0 14px;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #edf0f4;
+    background: rgba(255,255,255,.98);
+    backdrop-filter: blur(12px);
   }
+
+  .ua-social-app .pl-social-header nav,
+  .ua-social-app .pl-social-header .ua-header-profile,
+  .ua-social-app .pl-social-header .ua-header-create { display: none; }
+
+  .pl-social-mobile-actions { display: flex; align-items: center; gap: 18px; }
+  .pl-social-mobile-actions a { display: inline-flex; align-items: center; justify-content: center; color: #172b45; min-width: 28px; min-height: 36px; }
+  .pl-social-mobile-actions .pl-icon { width: 22px; height: 22px; }
 
   .ua-social-app .pl-social-mobile-nav {
     display: flex;
@@ -95,6 +113,7 @@
 }
 
 @media (min-width: 761px) {
+  .pl-social-mobile-actions { display: none !important; }
   .ua-social-app .pl-social-mobile-nav {
     display: none !important;
   }
