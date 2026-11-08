@@ -77,3 +77,12 @@ Demo-only procurement modules and localStorage order state were not a canonical 
 
 ## 7. Verification limits
 This audit inspected source and docs. It does not prove that browser flows work on Android, that a real purchase can complete, or that staff permissions are fixed. Those remain NOT TESTED / NOT VERIFIED until evidence is recorded.
+
+
+## 8. Refreshed live Supabase evidence — 8 November 2026, 12:37 UTC
+- Public schema contains 60 base tables and every listed table has RLS enabled.
+- Read-only information_schema query returned no public base table with a cart-related name.
+- Security Advisor: 20 authenticated-callable SECURITY DEFINER warnings; 1 leaked-password-protection warning.
+- Performance Advisor: 84 unused-index notices (informational); Health Advisor: 0 lints.
+- These counts are a timestamped snapshot. The SECURITY DEFINER notices require individual review; they are not automatically confirmed vulnerabilities.
+- No database schema, permissions, Auth settings, or user data were changed in this documentation/router cleanup.
