@@ -1,0 +1,2 @@
+alter table public.user_posts drop constraint if exists user_posts_media_type_check;
+alter table public.user_posts add constraint user_posts_media_type_check check (media_type = any (array['text'::text, 'image'::text, 'photo'::text, 'video'::text]));
