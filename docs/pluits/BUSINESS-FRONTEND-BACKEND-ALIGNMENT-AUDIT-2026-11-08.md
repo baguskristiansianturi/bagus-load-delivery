@@ -125,3 +125,18 @@ Founder reports that Pluits is already published and has at least one registered
 - Health: 0 lints.
 - Repository remains PUBLIC. No visibility change or credential rotation was performed.
 - Full Android UAT, two-account API tests, end-to-end order/payment, and full secret-history scan remain NOT TESTED / NOT VERIFIED.
+
+
+## 11. Permission matrix and privileged Marketplace RPC alignment — 8 November 2026, 13:33 UTC
+
+- Applied `20261108133221_align_marketplace_rpcs_with_store_permission_grants`.
+- Permission helper now implements explicit role capabilities and additional grants consistently:
+  - owner: all store permissions;
+  - manager: catalog, store settings, orders, and payments;
+  - catalog: catalog only;
+  - orders: fulfilment only;
+  - accounting: payment review only;
+  - staff: only explicitly granted permissions.
+- Updated product publishing, order fulfilment, and payment review RPCs to use the same permission helper as RLS.
+- Rollback-only SQL matrix tests passed for all listed roles and denied cross-role capabilities. No membership changes were committed.
+- Remaining: test actual REST/RLS and Storage requests as distinct real accounts, add a staff invitation/grant management UI with audit trail, and complete individual review of remaining SECURITY DEFINER functions.
