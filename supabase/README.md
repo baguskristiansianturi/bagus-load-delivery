@@ -105,3 +105,9 @@ This is a limited anonymous smoke test only. It does not replace signed-in owner
 - RLS smoke test confirmed public Story visible to anon and private Story hidden from anon.
 - GitHub Pages workflow run 423 passed build and deploy. Real account and Android UAT still required.
 - Story records expire from active reads after 24 hours; scheduled media cleanup/archive is not implemented.
+
+### Reels UI status — 8 November 2026
+- Explore links to a dedicated vertical Reels feed based on existing video posts.
+- Likes/comments/share/save reuse the existing social post interaction flow.
+- Video aspect ratio is preserved; autoplay/full-screen swipe are not enabled yet.
+- GitHub Pages workflow run 432 passed build and deploy. Real video upload and Android UAT still required.
