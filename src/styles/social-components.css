@@ -73,3 +73,10 @@
  .ua-social-app .ua-post-more{width:34px;height:34px}
  .ua-social-app .ua-edit-media-list{grid-template-columns:repeat(3,minmax(0,1fr))}
 }
+
+.ua-social-app .ua-mobile-nav>a>.pl-icon{width:22px;height:22px;stroke-width:1.8}
+.ua-social-app .ua-mobile-nav>a small{font-size:10px;line-height:1.2;font-weight:550;letter-spacing:0}
+.ua-social-app .ua-mobile-nav>a.active>.pl-icon{color:var(--pl-color-ink);stroke-width:2.1}
+.ua-social-app .ua-profile-menu summary{display:grid;place-items:center;list-style:none;cursor:pointer}
+.ua-social-app .ua-profile-menu summary::-webkit-details-marker{display:none}
+.ua-social-app .ua-profile-menu summary .pl-icon{width:20px;height:20px}
