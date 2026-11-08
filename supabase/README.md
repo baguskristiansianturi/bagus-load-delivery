@@ -111,3 +111,11 @@ This is a limited anonymous smoke test only. It does not replace signed-in owner
 - Likes/comments/share/save reuse the existing social post interaction flow.
 - Video aspect ratio is preserved; autoplay/full-screen swipe are not enabled yet.
 - GitHub Pages workflow run 432 passed build and deploy. Real video upload and Android UAT still required.
+
+## Follow graph — backend dan frontend
+
+- Live migration `20261108014153` sampai `20261108014743` menambah follow graph, privacy-aware requests, safe profile directory, safe follow counts, accepted-follower access, dan policy recursion hardening.
+- Public profile directory dan follow-count tersedia melalui public wrapper `SECURITY INVOKER`; helper `SECURITY DEFINER` berada di schema private dan tidak menjadi endpoint public langsung.
+- Private profile fields dan media tidak dibuka kepada pending requester atau anon.
+- Frontend menyediakan profil publik berdasarkan username, follow/unfollow, permintaan follow, accept/decline, followers/following list, dan guest public profile/post view.
+- Backend rollback tests passed. Real user/Android UAT and Pages deployment verification remain pending.
