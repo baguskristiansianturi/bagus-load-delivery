@@ -13,6 +13,12 @@ Pluits is a mobile-first connected platform for Social Media, Local Marketplace,
 
 Before analysing, designing, or changing Pluits, read the complete Business Model Master first. Then read AI Governance, Project Status & Roadmap, and the technical documents relevant to the task. Do not treat the historical archive or Idea Backlog as approved product requirements.
 
+## Business and investor package
+- [Investor proposal](docs/pluits/PLUITS-INVESTOR-PROPOSAL.md)
+- [Business, product & technology blueprint](docs/pluits/PLUITS-BUSINESS-AND-PRODUCT-BLUEPRINT.md)
+- [Repository/backend audit and roadmap](docs/pluits/PLUITS-TECHNOLOGY-ROADMAP-AND-AUDIT-2026-11-09.md)
+- [Visual diagrams and mobile mockup](docs/pluits/visuals/)
+
 ## Product spaces
 
 1. Social Media — community, profiles, posts, media, and interactions.
