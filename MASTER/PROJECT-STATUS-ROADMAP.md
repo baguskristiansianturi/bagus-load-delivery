@@ -485,3 +485,15 @@ Build dari commit `642a24bdbed4a85931271e7481f9880a04cc9fc3` berhasil. GitHub Pa
 - **Repository belum berganti nama:** saat ini masih `bagus-load-delivery`. Rename repository menjadi `pluits` masih merupakan tindakan teknis tertunda; jangan menyatakan selesai sampai GitHub mengonfirmasi rename dan URL Pages/integrasi diverifikasi.
 - **Status implementasi:** catatan ini adalah keputusan/dokumentasi. Belum membuktikan audit kode, migrasi backend/frontend, rename repository, deployment, atau UAT selesai.
 - **Checkpoint berikutnya:** audit seluruh referensi Bagus Load & Delivery dan asumsi konstruksi; petakan taxonomy My Bali; susun model universal GeoDirectory; pisahkan siklus Marketplace dan Trip; pertahankan fondasi social-first; kemudian implementasikan secara bertahap dan uji mobile.
+
+
+## Keputusan produk — identitas, klaim direktori, dan kepercayaan (8 November 2026)
+- Pluits diarahkan menjadi ekosistem identitas manusia dan entitas/tempat: satu identitas personal dapat memiliki banyak role yang diverifikasi dan dibatasi permission-nya.
+- GeoDirectory harus menyediakan profil tempat sebelum pengelola mendaftar. Sumber data peta/direktori wajib legal dan berlisensi; scraping Google Maps tidak boleh diasumsikan diizinkan.
+- Tambahkan alur “Klaim tempat ini” dengan verifikasi kewenangan, pencegahan klaim ganda, audit log, dan pencabutan role.
+- Bedakan akun personal yang boleh menawarkan/menjual dari toko atau penyedia resmi yang mengklaim sebagai pihak langsung. Status dan bukti harus terlihat.
+- Perlindungan transaksi dibatasi pada transaksi yang tercatat melalui Pluits; transaksi eksternal tidak otomatis memiliki bukti atau perlindungan Pluits.
+- Pertahankan kamera dan pengalaman sosial My Bali sebagai fondasi Social Media Pluits. Moderasi konten harus kontekstual: konten pantai berbikini tidak otomatis dilarang; konten sensitif dapat diberi interstitial, sedangkan eksploitasi seksual, konten seksual anak, kekerasan grafis, dan pelanggaran berat ditangani tegas.
+- Penegakan akun harus berdasarkan perilaku/pelanggaran yang terbukti, bukan identitas atau penampilan; sediakan alasan, banding, dan peninjauan.
+- Direktori tempat/organisasi dapat menyediakan dukungan atau donasi hanya dengan transparansi penerima dan mekanisme pembayaran/penyaluran yang patuh hukum.
+- Status: keputusan model bisnis terdokumentasi; fitur-fitur tersebut belum dinyatakan selesai di kode, backend, deployment, atau pengujian.
