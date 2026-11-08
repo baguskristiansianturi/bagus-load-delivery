@@ -20,7 +20,7 @@ function writeQueue(rows) {
   try { if(rows.length>50)return false; localStorage.setItem(queueKey(), JSON.stringify(rows)); return true; }
   catch { return false; }
 }
-function queueFor(conversationId) { return readQueue().filter(row => row.conversation_id === conversationId); }
+function queueFor(conversationId) { return readQueue().filter(row => row.conversation_id === conversationId || (String(conversationId).startsWith('draft:') && row.recipient_user_id === String(conversationId).slice(6))); }
 function formatTime(value) {
   return new Date(value).toLocaleString('id-ID', {dateStyle:'short',timeStyle:'short'});
 }
@@ -70,7 +70,7 @@ async function loadContacts() {
 }
 function bindStartChat(box) {
   box.querySelectorAll('[data-start-chat]').forEach(button=>button.onclick=async()=>{
-    if(!navigator.onLine){alert('Anda sedang offline. Kontak tersimpan, tetapi percakapan baru perlu dibuat saat online.');return;}
+    if(!navigator.onLine){await openDraftConversation(button.dataset.startChat);return;}
     button.disabled=true;
     const {data:id,error}=await db.rpc('start_direct_conversation',{p_other_user_id:button.dataset.startChat});
     if(error){alert(error.message);button.disabled=false;return;}
@@ -108,6 +108,32 @@ export async function bindMessagesPage() {
   await flushOutbox();
 }
 function onOnline() { updateNetworkStatus(); flushOutbox(); }
+async function openDraftConversation(recipientId) {
+  currentConversation='draft:'+recipientId;
+  let person=null;
+  try { person=(JSON.parse(localStorage.getItem(contactsKey())||'[]')).find(item=>item.id===recipientId)||null; } catch {}
+  if(!person){document.querySelector('#pl-msg-chat').innerHTML='<div class="pl-msg-empty">Kontak ini belum tersimpan. Muat kontak saat online sebelum memulai DM offline.</div>';return;}
+  const chat=document.querySelector('#pl-msg-chat');if(!chat)return;
+  const queued=queueFor(currentConversation);
+  chat.innerHTML='<header class="pl-msg-chat-head"><div><b>'+esc(person.display_name||person.username)+'</b><small>@'+esc(person.username)+'</small></div><span>Draft offline</span></header>'+
+    '<div class="pl-msg-stream"><div class="pl-msg-empty">Percakapan baru akan dibuat saat koneksi kembali. Riwayat pesan belum tersedia offline.</div>'+queued.map(row=>messageMarkup(row,true)).join('')+'</div>'+
+    '<form id="pl-msg-compose"><textarea name="body" rows="2" maxlength="5000" placeholder="Tulis pesan…" required></textarea><button type="submit">Simpan pesan</button></form>'+
+    '<p class="pl-msg-chat-status" role="status">'+queued.length+' pesan menunggu koneksi. Draft hanya tersimpan di perangkat ini.</p>';
+  chat.querySelector('#pl-msg-compose').onsubmit=async event=>{
+    event.preventDefault();const form=event.currentTarget,body=String(new FormData(form).get('body')||'').trim();if(!body)return;
+    if(navigator.onLine){
+      const {data:id,error}=await db.rpc('start_direct_conversation',{p_other_user_id:recipientId});
+      if(error){chat.querySelector('.pl-msg-chat-status').textContent=error.message;return;}
+      await loadConversations();await openConversation(id);
+      const liveForm=document.querySelector('#pl-msg-compose');if(liveForm){liveForm.querySelector('textarea').value=body;liveForm.requestSubmit();}
+      return;
+    }
+    const queue=readQueue();queue.push({client_message_id:crypto.randomUUID(),conversation_id:null,recipient_user_id:recipientId,sender_id:currentUser.id,body,created_at:new Date().toISOString()});
+    if(!writeQueue(queue)){chat.querySelector('.pl-msg-chat-status').textContent='Batas antrean 50 pesan tercapai atau penyimpanan perangkat tidak tersedia. Pesan belum disimpan.';return;}
+    await openDraftConversation(recipientId);
+  };
+  chat.querySelector('.pl-msg-stream').scrollTop=chat.querySelector('.pl-msg-stream').scrollHeight;
+}
 async function loadConversations() {
   const list=document.querySelector('#pl-msg-conversations'); if(!list)return;
   const {data:members,error}=await db.from('user_conversation_members').select('conversation_id,last_read_at').eq('user_id',currentUser.id);
@@ -145,6 +171,7 @@ async function loadConversations() {
   list.querySelectorAll('[data-open-chat]').forEach(button=>button.onclick=()=>openConversation(button.dataset.openChat));
 }
 async function openConversation(id) {
+  if(String(id).startsWith('draft:'))return openDraftConversation(String(id).slice(6));
   currentConversation=id;
   const chat=document.querySelector('#pl-msg-chat'); if(!chat)return;
   chat.innerHTML='<div class="pl-msg-empty">Memuat pesan…</div>';
@@ -192,9 +219,17 @@ async function flushOutbox() {
     const queue=readQueue(),remaining=[];
     for(const item of queue) {
       if(!navigator.onLine){remaining.push(item,...queue.slice(queue.indexOf(item)+1));break;}
-      const {created_at,...messagePayload}=item;
+      let targetConversation=item.conversation_id;
+      if(!targetConversation&&item.recipient_user_id){
+        const started=await db.rpc('start_direct_conversation',{p_other_user_id:item.recipient_user_id});
+        if(started.error){remaining.push(item);continue;}
+        targetConversation=started.data;
+        if(currentConversation==='draft:'+item.recipient_user_id)currentConversation=targetConversation;
+      }
+      const {created_at,recipient_user_id,...messagePayload}=item;
+      messagePayload.conversation_id=targetConversation;
       const {error}=await db.from('user_messages').upsert(messagePayload,{onConflict:'sender_id,client_message_id',ignoreDuplicates:true});
-      if(error) remaining.push(item);
+      if(error) remaining.push({...item,conversation_id:targetConversation});
     }
     writeQueue(remaining);
     if(currentConversation) await openConversation(currentConversation);
