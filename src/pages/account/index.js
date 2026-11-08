@@ -390,6 +390,7 @@ function bindCompose(){
   btn.disabled=true;btn.textContent=file?'Mengunggah media…':'Menerbitkan tulisan…';note.textContent=file?'Mengunggah media ke penyimpanan Pluits…':'Menyimpan postingan teks…';
   if(file){progress.hidden=false;progress.querySelector('span').style.width='25%';}
   let uploadedPath=null;
+  let storyInserted=false;
   try{
    if(file){
     const ext=file.name.split('.').pop().toLowerCase(),path=user.id+'/'+(crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random().toString(36).slice(2))+'.'+ext;
@@ -481,11 +482,12 @@ function bindStoryCompose(){
     visibility
    });
    if(insert.error)throw new Error('Story gagal disimpan: '+insert.error.message);
+   storyInserted=true;
    notify('Story berhasil dibagikan dan akan hilang setelah 24 jam.');
    await mountAccount('explore');
   }catch(error){
-   if(uploadedPath)await supabase.storage.from(BUCKET).remove([uploadedPath]);
-   note.textContent=error.message||'Tidak dapat membagikan Story.';
+   if(uploadedPath&&!storyInserted)await supabase.storage.from(BUCKET).remove([uploadedPath]);
+   note.textContent=storyInserted?'Story sudah tersimpan. Buka ulang Explore jika belum terlihat.':(error.message||'Tidak dapat membagikan Story.');
    button.disabled=false;
    button.textContent='Coba lagi';
   }
