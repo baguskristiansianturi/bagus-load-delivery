@@ -375,7 +375,7 @@ async function followListPage(kind='followers'){
   .eq(incoming?'following_id':'follower_id',user.id).order('created_at',{ascending:false}).limit(100);
  if(error)throw error;
  const rows=data||[],ids=[...new Set(rows.map(r=>incoming?r.follower_id:r.following_id))];
- const profiles=ids.length?await supabase.from('user_profiles').select('id,username,display_name,avatar_path').in('id',ids):{data:[],error:null};
+ const profiles=ids.length?await supabase.rpc('get_user_profile_directory_by_ids',{p_ids:ids}):{data:[],error:null};
  if(profiles.error)throw profiles.error;
  const map=new Map((profiles.data||[]).map(p=>[p.id,p]));
  const title=incoming?'Pengikut':'Mengikuti';
