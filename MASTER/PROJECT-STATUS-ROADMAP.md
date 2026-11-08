@@ -386,3 +386,14 @@ Build dari commit `642a24bdbed4a85931271e7481f9880a04cc9fc3` berhasil. GitHub Pa
 - Stories table currently has 0 rows.
 - **Not tested:** Android handset rendering, registration email delivery, signed-in owner vs unrelated-user RLS, media upload/delete, and adversarial media path attempts.
 - **Status:** build/deployment workflow verified; limited anonymous boundary smoke test passed; production readiness remains NOT APPROVED pending migration reconciliation and authenticated security tests.
+
+
+## CP-018 — Migration history reconciliation (8 November 2026)
+
+- Recovered five missing applied migration SQL definitions from `supabase_migrations.schema_migrations.statements`.
+- Corrected four early migration filenames to the exact version/name recorded in the live database.
+- Replaced five tracked migration files whose SQL differed from the applied live statements; previous drafts preserved under `supabase/archive/`.
+- Archived the unapplied legacy `202611070001_initial_marketplace.sql` because it is absent from live history and conflicts with the later applied seller workspace migration.
+- Verified active migration directory: 17 files; live history: 17 records; exact version/name set match; zero missing and zero extra active migrations.
+- No DDL was applied and no live data/database was reset.
+- **Status:** migration history reconciled. Future DDL may proceed only through the normal reviewed migration workflow, with RLS/security tests and advisors.
