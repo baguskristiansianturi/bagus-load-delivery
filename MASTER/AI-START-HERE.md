@@ -9,8 +9,8 @@ Pintu masuk wajib untuk setiap chat/sesi AI baru yang mengerjakan Pluits. AI har
 
 ## Urutan baca wajib
 1. Dokumen ini.
-2. `MASTER/PLUITS-AI-GOVERNANCE.md`.
-3. `MASTER/BUSINESS-MODEL-MASTER.md` — baca seluruh dokumen; sumber tunggal keputusan bisnis.
+2. `MASTER/BUSINESS-MODEL-MASTER.md` — baca seluruh dokumen terlebih dahulu; ini sumber tunggal visi, keputusan, dan aturan bisnis.
+3. `MASTER/PLUITS-AI-GOVERNANCE.md` — aturan kerja setelah memahami model bisnis.
 4. `MASTER/PROJECT-STATUS-ROADMAP.md` — satu-satunya roadmap delivery.
 5. `MASTER/DOCUMENTATION-MAP-AND-CHECKLIST.md`.
 6. `MASTER/PLUITS-USER-TESTING.md`.
