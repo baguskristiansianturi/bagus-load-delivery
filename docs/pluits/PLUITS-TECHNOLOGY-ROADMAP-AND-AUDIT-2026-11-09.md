@@ -101,6 +101,8 @@ Sumber peta saat ini Leaflet/OpenStreetMap. GeoDirectory data harus mengikuti li
 
 ## 7. Roadmap yang diturunkan dari model bisnis
 
+![Bali-first roadmap](./visuals/06-roadmap.svg)
+
 | Urutan | Tahap | Deliverable | Gate |
 |---|---|---|---|
 | P0 | Social First Release | Feed, Story/Reels, profile, post, follow, comments, messages, notifications, privacy | Founder UAT dua akun dan Android |
