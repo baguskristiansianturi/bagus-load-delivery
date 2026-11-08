@@ -56,6 +56,8 @@ assert.match(messages, /postgres_changes/, 'DM inbox must subscribe to realtime 
 assert.match(messages, /client_message_id/, 'DM outbox must use idempotent message identifiers.');
 assert.match(messages, /flushOutbox/, 'DM outbox must retry queued messages after connectivity returns.');
 assert.match(messages, /contactsKey/, 'DM contacts must be cached for offline access.');
+assert.match(messages, /openDraftConversation/, 'A new DM can be drafted offline from a cached contact.');
+assert.match(messages, /recipient_user_id/, 'Offline new-conversation drafts must resolve their recipient when reconnecting.');
 
 const accountSettings = read('src/pages/account/security-settings.js');
 assert.match(accountSettings, /auth\.mfa\.enroll/, 'Account settings must provide authenticator enrollment.');
@@ -64,7 +66,12 @@ assert.match(accountSettings, /verifyOtp/, 'Account settings must verify phone o
 assert.match(accountSettings, /preferred_language/, 'Account language preference must persist.');
 assert.match(accountSettings, /visibility/, 'Account privacy setting must persist.');
 
+const navigation = read('src/components/social/navigation.js');
+assert.match(navigation, /#\/messages/, 'Social navigation must expose inbox access.');
+assert.match(navigation, /#\/account\/activity/, 'Social navigation must expose activity access.');
+
 const account = read('src/pages/account/index.js');
+assert.match(account, /unreadNotificationCount/, 'Social navigation must receive unread notification count.');
 for (const type of ['new_message', 'unfollow', 'system_update']) {
   assert.ok(account.includes(type), `Activity center missing notification type: ${type}`);
 }
