@@ -5346,3 +5346,91 @@ body{font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.45;-web
  .pl-home-mobile-nav a.active{color:#172b45}
  .pl-home-mobile-nav .pl-home-create{font-size:24px;color:#172b45}
 }
+
+
+/* PLUITS product spaces — unified responsive foundation */
+.pl-trip,.pl-market{min-height:100vh;background:#f7f8fa;color:#172033;font-family:Inter,system-ui,-apple-system,sans-serif}
+.pl-trip-head,.pl-market-head{position:sticky;top:0;z-index:30;display:flex;align-items:center;justify-content:space-between;gap:22px;padding:14px clamp(16px,4vw,56px);background:rgba(255,255,255,.96);border-bottom:1px solid #e6e9ef;backdrop-filter:blur(14px)}
+.pl-trip-brand,.pl-market-brand{font-weight:850;letter-spacing:.12em;color:#172033;text-decoration:none;white-space:nowrap}
+.pl-trip-brand span,.pl-market-brand span{display:block;font-size:9px;letter-spacing:.2em;color:#63728a;margin-top:3px}
+.pl-trip-head nav,.pl-market-head nav{display:flex;align-items:center;gap:clamp(12px,2vw,28px);overflow:auto;white-space:nowrap}
+.pl-trip-head nav a,.pl-market-head nav a,.pl-market-head>div a,.pl-trip-account{font-size:13px;color:#526078;text-decoration:none}
+.pl-trip-head nav a.active,.pl-market-head nav a.active{color:#132d53;font-weight:750}
+.pl-trip-account,.pl-market-head>div a{padding:9px 13px;border:1px solid #dce2eb;border-radius:999px}
+.pl-trip-hero{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(260px,.8fr);align-items:center;gap:28px;padding:clamp(34px,6vw,76px) clamp(18px,7vw,100px);background:linear-gradient(115deg,#edf3fa,#f7f8fa 62%,#e8eef5)}
+.pl-trip-hero small,.pl-trip-section-head small,.pl-trip-create small,.pl-market-hero small,.pl-market-title small,.pl-market-seller-cta small{font-size:10px;letter-spacing:.18em;font-weight:800;color:#5c6e89}
+.pl-trip-hero h1,.pl-market-hero h1{font-size:clamp(32px,5.3vw,62px);line-height:1.04;letter-spacing:-.045em;max-width:720px;margin:14px 0}
+.pl-trip-hero p,.pl-market-hero p{max-width:620px;color:#5d687b;line-height:1.7}
+.pl-trip-primary,.pl-market-hero>a{display:inline-flex;gap:18px;align-items:center;margin-top:16px;padding:13px 18px;background:#172f52;color:white;text-decoration:none;border-radius:999px;font-weight:700;font-size:13px}
+.pl-trip-hero-art{min-height:240px;border-radius:24px;background:linear-gradient(145deg,#19385e,#7f9bb9);color:white;padding:28px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 18px 45px #1c35551c}
+.pl-trip-hero-art span{font-size:12px;letter-spacing:.3em}.pl-trip-hero-art i{font-style:normal;font-size:54px;align-self:flex-end}.pl-trip-hero-art b{font-size:23px;line-height:1.25}
+.pl-trip-content,.pl-market-content{max-width:1180px;margin:0 auto;padding:38px clamp(16px,4vw,28px) 72px}
+.pl-trip-section-head,.pl-market-title{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin:0 0 18px}
+.pl-trip-section-head h2,.pl-trip-create h2,.pl-market-title h2,.pl-market-seller-cta h2{font-size:clamp(22px,3vw,30px);letter-spacing:-.03em;margin:7px 0}
+.pl-trip-section-head p,.pl-trip-create p,.pl-market-title p,.pl-market-seller-cta p{color:#68758a;font-size:13px;line-height:1.65;margin:6px 0}
+.pl-trip-private{font-size:11px;color:#5b6b82;background:#eaf0f7;border-radius:999px;padding:8px 12px;white-space:nowrap}
+.pl-trip-plans{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:40px}
+.pl-trip-plan{display:flex;justify-content:space-between;align-items:center;gap:16px;background:#fff;border:1px solid #e5e9ef;border-radius:16px;padding:18px}
+.pl-trip-plan small,.pl-trip-place small{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:#708098}
+.pl-trip-plan h3,.pl-trip-place h3{font-size:16px;margin:7px 0}.pl-trip-plan p,.pl-trip-place p{font-size:12px;color:#68758a;line-height:1.55;margin:0}
+.pl-trip-plan>a,.pl-trip-place a,.pl-trip-discover-head>a{font-size:12px;color:#244a78;font-weight:750;text-decoration:none;white-space:nowrap}
+.pl-trip-create{background:white;border:1px solid #e3e8ef;border-radius:20px;padding:24px;display:grid;gap:14px;margin:0 0 46px;max-width:720px}
+.pl-trip-create label{display:grid;gap:7px;font-size:12px;font-weight:700;color:#3c4a5f}
+.pl-trip-create input,.pl-trip-create textarea{width:100%;box-sizing:border-box;border:1px solid #dce2ea;border-radius:11px;padding:12px;background:#fbfcfd;font:inherit;color:#172033}
+.pl-trip-date-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pl-trip-create button{border:0;border-radius:999px;background:#172f52;color:white;padding:13px 18px;font-weight:750;cursor:pointer;justify-self:start}
+.pl-trip-create [role=status]{font-size:12px;color:#8b3c37}
+.pl-trip-discover-head{margin-top:12px}
+.pl-trip-place-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.pl-trip-place{display:grid;grid-template-columns:42px 1fr 34px;align-items:start;gap:12px;background:white;border:1px solid #e5e9ef;border-radius:16px;padding:16px;min-width:0}
+.pl-trip-place-icon{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:#edf2f8;color:#284a73;font-size:21px}
+.pl-trip-place>div:nth-child(2){min-width:0}.pl-trip-place a{display:inline-block;margin-top:12px}
+.pl-trip-place>button{width:32px;height:32px;border:1px solid #dce3ec;background:white;border-radius:50%;font-size:19px;color:#284a73}
+.pl-trip-empty,.pl-market-empty,.pl-trip-loading{grid-column:1/-1;padding:24px;border:1px dashed #cfd7e2;border-radius:14px;background:#fff;color:#66758a;font-size:13px;line-height:1.6}
+.pl-trip-back{display:inline-block;margin-bottom:22px;color:#35587f;text-decoration:none;font-size:13px}
+.pl-trip-detail{max-width:820px;margin:0 auto}.pl-trip-detail>.pl-trip-section-head{margin-bottom:24px}
+.pl-trip-detail>.pl-trip-section-head h1{font-size:clamp(28px,5vw,42px);margin:8px 0}
+.pl-trip-day-list{display:grid;gap:10px;margin-bottom:28px}
+.pl-trip-day-list article{display:grid;grid-template-columns:72px 1fr auto;align-items:center;gap:14px;padding:16px;background:white;border:1px solid #e5e9ef;border-radius:14px}
+.pl-trip-day-list article>span{font-size:10px;font-weight:800;color:#65768e;letter-spacing:.1em}.pl-trip-day-list h3{margin:0 0 5px;font-size:15px}.pl-trip-day-list p{margin:0;color:#6b7789;font-size:12px}
+.pl-trip-day-list button{border:0;background:transparent;color:#a64b4b;font-size:12px}
+.pl-trip-footer,.pl-market-footer{padding:28px;text-align:center;background:#17263b;color:#dce5f0;font-size:10px;letter-spacing:.14em}
+.pl-market-hero{padding:clamp(40px,7vw,84px) clamp(18px,7vw,100px);background:linear-gradient(120deg,#edf2f8,#f8f9fb);border-bottom:1px solid #e7ebf1}
+.pl-market-hero h1{max-width:780px}.pl-market-content{padding-top:34px}
+.pl-market-store-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:42px}
+.pl-market-store{display:flex;gap:13px;align-items:flex-start;padding:18px;background:white;border:1px solid #e5e9ef;border-radius:16px;text-decoration:none;color:#172033}
+.pl-market-store-icon{width:42px;height:42px;flex:0 0 42px;border-radius:13px;display:grid;place-items:center;background:#edf2f8;color:#284a73;font-size:21px}
+.pl-market-store h3{font-size:15px;margin:2px 0 5px}.pl-market-store small,.pl-market-product small{font-size:10px;color:#718096}.pl-market-store p{font-size:12px;color:#68758a;line-height:1.5}.pl-market-store b{font-size:10px;color:#355d86}
+.pl-market-product-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:42px}
+.pl-market-product{overflow:hidden;background:#fff;border:1px solid #e5e9ef;border-radius:16px}
+.pl-market-product-art{aspect-ratio:1.25;background:linear-gradient(145deg,#edf2f8,#dce5ef);display:grid;place-items:center;color:#9aa9bb;font-size:11px;letter-spacing:.2em;font-weight:800}
+.pl-market-product-body{padding:14px;display:grid;gap:6px}.pl-market-product h3{font-size:14px;line-height:1.4;margin:0}.pl-market-product p{font-size:11px;color:#7a8798;margin:0}.pl-market-product strong{font-size:15px;color:#172f52}.pl-market-product del{font-size:11px;color:#8c97a6}.pl-market-product span{font-size:10px;color:#758196}
+.pl-market-seller-cta{display:flex;justify-content:space-between;align-items:center;gap:24px;padding:26px;border-radius:20px;background:#eaf0f7}
+.pl-market-seller-cta>a{padding:12px 16px;background:#172f52;color:white;border-radius:999px;text-decoration:none;font-size:12px;font-weight:750;white-space:nowrap}
+@media(max-width:760px){
+ .pl-trip-head,.pl-market-head{gap:10px;padding:12px 14px;flex-wrap:wrap}
+ .pl-trip-head nav,.pl-market-head nav{order:3;width:100%;gap:20px;padding-top:8px;border-top:1px solid #edf0f4}
+ .pl-trip-head nav a,.pl-market-head nav a{font-size:12px}
+ .pl-trip-account,.pl-market-head>div a{font-size:11px;padding:7px 10px}
+ .pl-trip-hero{grid-template-columns:1fr;padding:34px 18px;gap:22px}
+ .pl-trip-hero-art{min-height:150px}.pl-trip-hero-art i{font-size:36px}
+ .pl-trip-content,.pl-market-content{padding:28px 14px 60px}
+ .pl-trip-plans{grid-template-columns:1fr}
+ .pl-trip-plan{padding:15px}
+ .pl-trip-section-head,.pl-market-title{align-items:flex-start;flex-direction:column}
+ .pl-trip-place-grid{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:10px;padding:0 1px 12px;margin-right:-14px}
+ .pl-trip-place{min-width:82vw;max-width:82vw;scroll-snap-align:start;box-sizing:border-box}
+ .pl-trip-date-row{grid-template-columns:1fr 1fr}
+ .pl-trip-create{padding:18px}
+ .pl-trip-day-list article{grid-template-columns:58px 1fr auto;gap:8px;padding:13px}
+ .pl-market-store-grid{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:10px;padding-bottom:12px;margin-right:-14px}
+ .pl-market-store{min-width:82vw;max-width:82vw;scroll-snap-align:start;box-sizing:border-box}
+ .pl-market-product-grid{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:10px;padding-bottom:12px;margin-right:-14px}
+ .pl-market-product{min-width:58vw;max-width:58vw;scroll-snap-align:start}
+ .pl-market-seller-cta{align-items:flex-start;flex-direction:column;padding:20px}
+}
+@media(min-width:761px) and (max-width:1050px){.pl-trip-place-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.pl-market-store-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.pl-market-product-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+/* Signed-in Pluits navigation: expose connected product spaces */
+.ua-header nav{gap:clamp(9px,1.5vw,20px);overflow-x:auto;white-space:nowrap}
+.ua-header nav a{font-size:12px}
+@media(max-width:760px){.ua-header nav{max-width:100%;padding:0 4px}.ua-header nav a{font-size:11px}.ua-header .ua-brand{font-size:15px}.ua-mobile-nav{grid-template-columns:repeat(5,minmax(0,1fr))}.ua-mobile-nav>a{gap:3px}.ua-mobile-nav>a small{font-size:9px}}
