@@ -1,6 +1,6 @@
 # PLUITS — LIVE REPOSITORY & SUPABASE AUDIT
 Date: 8 November 2026
-Repository: https://github.com/baguskristiansianturi/bagus-load-delivery
+Repository: https://github.com/baguskristiansianturi/pluits
 Supabase project: `pluits` / `ytndswhqxayqpftszwfh`
 
 ## 1. Scope and evidence
