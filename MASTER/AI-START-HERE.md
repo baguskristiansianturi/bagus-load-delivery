@@ -12,7 +12,8 @@ Pintu masuk wajib untuk setiap chat/sesi AI baru yang mengerjakan Pluits. AI har
 2. `MASTER/BUSINESS-MODEL-MASTER.md` — baca seluruh dokumen terlebih dahulu; ini sumber tunggal visi, keputusan, dan aturan bisnis.
 3. `MASTER/PLUITS-AI-GOVERNANCE.md` — aturan kerja setelah memahami model bisnis.
 4. `MASTER/PROJECT-STATUS-ROADMAP.md` — satu-satunya roadmap delivery.
-5. `MASTER/DOCUMENTATION-MAP-AND-CHECKLIST.md`.
+5. `MASTER/PLUITS-SOCIAL-FIRST-RELEASE-SPEC.md` — wajib untuk seluruh pekerjaan Social Media dan release gate sebelum vertikal pengalaman lain.
+6. `MASTER/DOCUMENTATION-MAP-AND-CHECKLIST.md`.
 6. `MASTER/PLUITS-USER-TESTING.md`.
 7. `MASTER/PLUITS-SECURITY-REVIEW.md`, `MASTER/BACKEND-FOUNDATION-SPEC.md`, `supabase/README.md`, dan `docs/pluits/TECHNICAL-ARCHITECTURE-SECURITY.md`.
 8. Audit live terbaru dan docs/pluits/BUSINESS-FRONTEND-BACKEND-ALIGNMENT-AUDIT-2026-11-08.md, lalu spesifikasi arsitektur modul yang relevan.
@@ -26,6 +27,9 @@ Pintu masuk wajib untuk setiap chat/sesi AI baru yang mengerjakan Pluits. AI har
 - Bagusin dan Bali Trans adalah proyek terpisah.
 - Pluits adalah satu-satunya identitas aktif proyek ini. Jangan membuat atau mempertahankan identitas, repository, backend, atau roadmap kedua untuk produk yang sama. Audit dependency dan pindahkan informasi relevan sebelum menghapus artefak lama.
 - Jangan mengganti brand, repo, hosting, domain, atau Supabase project tanpa keputusan eksplisit founder.
+
+## Prioritas produk saat ini
+Pluits sudah dipublikasikan dan memiliki pengguna terdaftar. Perlakukan akun/data yang ada sebagai production. Fokus delivery saat ini adalah Social Media sampai founder menyatakan lulus UAT; jangan lanjut Café, Resto, Marketplace expansion, atau vertical pengalaman lain sebelum gate Social First Release terpenuhi. Baca `MASTER/PLUITS-SOCIAL-FIRST-RELEASE-SPEC.md`.
 
 ## Hierarki sumber kebenaran
 1. Business Model Master: apa yang Pluits bangun dan aturan bisnis.
