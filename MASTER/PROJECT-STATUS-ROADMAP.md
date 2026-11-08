@@ -472,5 +472,5 @@ Build dari commit `642a24bdbed4a85931271e7481f9880a04cc9fc3` berhasil. GitHub Pa
 - Riwayat migrasi CP-023 memuat beberapa pembaruan policy yang berulang akibat iterasi hardening. Jangan menghapus atau mengubah migration yang sudah diterapkan; rapikan hanya melalui migration baru bila benar-benar diperlukan.
 - Notifikasi follow/request belum dibuat. UI menampilkan daftar permintaan secara langsung, tetapi belum ada inbox notifikasi, push, atau email.
 - Blokir, mute, report, moderasi, banding, DM, dan kontrol anti-spam masih belum tersedia.
-- GitHub Pages build/deploy dan pengujian Android setelah perubahan CP-023 masih harus diverifikasi; jangan menganggap commit sebagai bukti deploy.
+- GitHub Pages workflow run #465 (run ID 42435951991) pada commit `fc2314e81f21d5edd55d99108da8777198d7d6f4`: **SUCCESS**, termasuk Vite build, artifact upload, dan Deploy to GitHub Pages. Build output: JS 172.94 kB (gzip 49.59 kB), CSS 258.32 kB (gzip 44.57 kB), HTML 1.09 kB. Ini ukuran build, bukan skor Lighthouse atau pengukuran runtime. Android/real-account UAT masih pending.
 - **Status:** backend follow + privacy rules implemented and rollback-tested; frontend follow/profile implemented in repository; deployment and real-account UAT pending.
