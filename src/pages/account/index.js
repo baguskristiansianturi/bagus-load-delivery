@@ -1,5 +1,6 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import {socialIcon} from '../../components/common/social-icons.js';
+import {updateSEO} from '../seo.js';
 import { Upload as TusUpload } from 'https://esm.sh/tus-js-client@4.3.1';
 import './user-account.css';
 import {loadAccountContext,contextHeader,professionalPage,professionalFormPage,accountSettingsPage,bindAccountContext} from './account-context.js';
@@ -34,7 +35,7 @@ function frame(content,active='explore',avatarUrl=''){
     <a class="${active==='activity'?'active':''}" href="#/account/activity">Aktivitas</a>
     <a class="${profileView?'active':''}" href="#/account/profile">Profil</a>
    </nav>
-   <a class="ua-header-profile" href="#/account/profile" aria-label="Buka profil saya">${userAvatar}</a>
+   <a class="ua-header-profile" href="#/@${encodeURIComponent(profile.username)}" aria-label="Buka profil saya">${userAvatar}</a>
    <a class="ua-header-create" href="#/account/compose" aria-label="Buat postingan">＋</a>
   </header>
   <main class="ua-main ${profileView?'ua-profile-main':''}">${content}</main>
@@ -43,7 +44,7 @@ function frame(content,active='explore',avatarUrl=''){
    <a class="${active==='discover'?'active':''}" href="#/search" aria-label="Jelajah"><span>⌕</span><small>Jelajah</small></a>
    <a class="ua-mobile-create" href="#/account/compose" aria-label="Buat postingan"><span>＋</span><small>Buat</small></a>
    <a class="${active==='reels'?'active':''}" href="#/account/reels" aria-label="Reels"><span>▣</span><small>Reels</small></a>
-   <a class="${profileView?'active':''}" href="#/account/profile" aria-label="Profil">${userAvatar}<small>Profil</small></a>
+   <a class="${profileView?'active':''}" href="#/@${encodeURIComponent(profile.username)}" aria-label="Profil">${userAvatar}<small>Profil</small></a>
   </nav>
   <div id="ua-toast" class="ua-toast" role="status"></div>
   <footer class="ua-footer">PLUITS · Identitas pengguna dan aktivitas komunitas</footer>
@@ -426,6 +427,7 @@ async function publicProfilePage(username){
  const target=Array.isArray(data)?data[0]:data;
  if(!target)throw new Error('Profil tidak ditemukan atau tidak tersedia.');
  const isOwner=!!user&&target.id===user.id;
+ updateSEO({title:target.display_name+' (@'+target.username+') — Pluits',description:(target.bio||'Lihat foto, video, dan aktivitas '+target.display_name+' di Pluits.').slice(0,160),path:'#/@'+encodeURIComponent(target.username)});
  let relation=null;
  if(user&&!isOwner){
   const {data:r,error:re}=await supabase.from('user_follows').select('follower_id,following_id,status').eq('follower_id',user.id).eq('following_id',target.id).maybeSingle();
@@ -470,7 +472,7 @@ async function notificationPage(){
  const people=new Map((profiles.data||[]).map(p=>[p.id,p]));
  const unread=rows.filter(n=>!n.read_at).length;
  const labels={follow_request:'Permintaan mengikuti',new_follower:'Pengikut baru',follow_accepted:'Permintaan diterima',post_like:'Suka postingan',post_comment:'Komentar'};
- const items=rows.map(n=>{const actor=people.get(n.actor_user_id),name=actor?.display_name||'Pengguna Pluits';const href=n.entity_type==='post'&&n.entity_id?'#/account/post/'+n.entity_id:actor?.username?'#/account/user/'+encodeURIComponent(actor.username):'#/account/profile';return '<a class="ua-notification-row '+(n.read_at?'':'is-unread')+'" href="'+href+'" data-notification-id="'+n.id+'" data-notification-href="'+href+'"><span class="ua-notification-avatar">'+esc(name.slice(0,1).toUpperCase())+'</span><span class="ua-notification-copy"><strong>'+esc(name)+'</strong><span>'+esc(n.message||labels[n.notification_type]||'Aktivitas baru')+'</span><small>'+esc(labels[n.notification_type]||'Aktivitas')+' · '+fmtDate(n.created_at)+'</small></span>'+(n.read_at?'':'<i aria-label="Belum dibaca"></i>')+'</a>';}).join('');
+ const items=rows.map(n=>{const actor=people.get(n.actor_user_id),name=actor?.display_name||'Pengguna Pluits';const href=n.entity_type==='post'&&n.entity_id?'#/account/post/'+n.entity_id:actor?.username?'#/@'+encodeURIComponent(actor.username):'#/account/profile';return '<a class="ua-notification-row '+(n.read_at?'':'is-unread')+'" href="'+href+'" data-notification-id="'+n.id+'" data-notification-href="'+href+'"><span class="ua-notification-avatar">'+esc(name.slice(0,1).toUpperCase())+'</span><span class="ua-notification-copy"><strong>'+esc(name)+'</strong><span>'+esc(n.message||labels[n.notification_type]||'Aktivitas baru')+'</span><small>'+esc(labels[n.notification_type]||'Aktivitas')+' · '+fmtDate(n.created_at)+'</small></span>'+(n.read_at?'':'<i aria-label="Belum dibaca"></i>')+'</a>';}).join('');
  return '<div class="ua-page-heading"><div><span class="ua-eyebrow">AKTIVITAS AKUN</span><h1>Aktivitas</h1><p>'+(unread?unread+' pemberitahuan belum dibaca':'Semua aktivitas sudah dibaca')+'</p></div>'+(unread?'<button type="button" class="ua-outline" data-notifications-read-all>Tandai semua dibaca</button>':'')+'</div><section class="ua-panel ua-notification-list">'+(items||'<div class="ua-empty"><strong>Belum ada aktivitas</strong><p>Permintaan mengikuti, suka, dan komentar akan muncul di sini.</p></div>')+'</section>';
 }
 function bindNotificationActions(){
@@ -493,7 +495,7 @@ async function followListPage(kind='followers'){
   const id=incoming?r.follower_id:r.following_id,p=map.get(id);
   if(!p)return '';
   const pending=r.status==='pending';
-  return `<article class="ua-follow-row"><a href="#/account/user/${encodeURIComponent(p.username)}" class="ua-follow-person">${avatar('',p.display_name)}<span><strong>${esc(p.display_name)}</strong><small>@${esc(p.username)}</small></span></a><div class="ua-follow-actions">${pending?incoming?`<button class="ua-primary ua-inline" data-follow-accept="${id}">Terima</button><button class="ua-outline" data-follow-remove="${id}">Tolak</button>`:`<span class="ua-follow-pending">Menunggu</span><button class="ua-outline" data-follow-remove="${id}">Batalkan</button>`: `<span class="ua-follow-pending">Mengikuti</span><button class="ua-outline" data-follow-remove="${id}">${incoming?'Hapus':'Berhenti'}</button>`}</div></article>`;
+  return `<article class="ua-follow-row"><a href="#/@${encodeURIComponent(p.username)}" class="ua-follow-person">${avatar('',p.display_name)}<span><strong>${esc(p.display_name)}</strong><small>@${esc(p.username)}</small></span></a><div class="ua-follow-actions">${pending?incoming?`<button class="ua-primary ua-inline" data-follow-accept="${id}">Terima</button><button class="ua-outline" data-follow-remove="${id}">Tolak</button>`:`<span class="ua-follow-pending">Menunggu</span><button class="ua-outline" data-follow-remove="${id}">Batalkan</button>`: `<span class="ua-follow-pending">Mengikuti</span><button class="ua-outline" data-follow-remove="${id}">${incoming?'Hapus':'Berhenti'}</button>`}</div></article>`;
  }).join(''):'<div class="ua-empty"><strong>Belum ada data</strong><p>Aktivitas mengikuti akun akan tampil di sini.</p></div>'}</section>`;
 }
 async function postDetailPage(id){
@@ -544,6 +546,7 @@ async function mountAccount(section='profile',parameter=''){
  if(!user){authScreen(section==='register'?'register':'login');return;}
  try{
   await loadProfile();accountContext=await loadAccountContext(supabase,user);
+  if(section==='profile')updateSEO({title:profile.display_name+' (@'+profile.username+') — Pluits',description:(profile.bio||'Profil komunitas '+profile.display_name+' di Pluits.').slice(0,160),path:'#/@'+encodeURIComponent(profile.username)});
   const page=section==='explore'?await feedPage():section==='activity'?await notificationPage():section==='reels'?await reelsPage():section==='compose'?await composePage():section==='addresses'?await addressPage():section==='wallet'?await walletPage():section==='post'?await postDetailPage(parameter||location.hash.split('/')[3]||''):section==='user'?await publicProfilePage(parameter):section==='followers'?await followListPage('followers'):section==='following'?await followListPage('following'):section==='requests'?await followListPage('followers'):section==='preview'?await profilePage(true):section==='professional'?professionalPage(accountContext,profile):section==='professional-create'?professionalFormPage(accountContext,profile):section==='settings'?settingsHubPage():section==='blocked'?await blockedAccountsPage():section==='content-settings'?await accountSettingsPage(supabase,user):await profilePage();
   const headerAvatar=await signed(profile.avatar_path);document.querySelector('#app').innerHTML=frame(page,section==='explore'||section==='reels'?'explore':section==='activity'?'activity':section==='addresses'?'addresses':section==='compose'?'compose':section==='preview'?'profile':'profile',headerAvatar);
   document.querySelector('#ua-logout')?.addEventListener('click',async()=>{await supabase.auth.signOut();user=null;profile=null;authScreen('login');});
@@ -816,7 +819,7 @@ async function loadComments(postId,box){
  const render=(c,depth=0)=>{
   const person=people.get(c.user_id),username=person?.username||'pengguna',liked=likes.some(x=>x.comment_id===c.id&&x.user_id===user.id),count=likes.filter(x=>x.comment_id===c.id).length;
   const replies=(children.get(c.id)||[]).map(x=>render(x,Math.min(depth+1,3))).join('');
-  return '<article class="ua-comment-item" data-comment-id="'+c.id+'" style="--comment-depth:'+Math.min(depth,3)+'"><div class="ua-comment-copy"><a href="#/account/user/'+encodeURIComponent(username)+'" class="ua-comment-author">'+esc(person?.display_name||'Pengguna Pluits')+'</a><p>'+esc(c.body)+'</p><small>'+fmtDate(c.created_at)+'</small><div class="ua-comment-actions"><button type="button" data-comment-like="'+c.id+'" class="'+(liked?'is-liked':'')+'">♥ '+(liked?'Disukai':'Suka')+' <b>'+count+'</b></button><button type="button" data-comment-reply="'+c.id+'">Balas</button></div><form class="ua-reply-form" data-reply-form="'+c.id+'" hidden><input name="body" maxlength="1200" required placeholder="Balas komentar…"><button type="submit">Kirim</button></form></div>'+replies+'</article>';
+  return '<article class="ua-comment-item" data-comment-id="'+c.id+'" style="--comment-depth:'+Math.min(depth,3)+'"><div class="ua-comment-copy"><a href="#/@'+encodeURIComponent(username)+'" class="ua-comment-author">'+esc(person?.display_name||'Pengguna Pluits')+'</a><p>'+esc(c.body)+'</p><small>'+fmtDate(c.created_at)+'</small><div class="ua-comment-actions"><button type="button" data-comment-like="'+c.id+'" class="'+(liked?'is-liked':'')+'">♥ '+(liked?'Disukai':'Suka')+' <b>'+count+'</b></button><button type="button" data-comment-reply="'+c.id+'">Balas</button></div><form class="ua-reply-form" data-reply-form="'+c.id+'" hidden><input name="body" maxlength="1200" required placeholder="Balas komentar…"><button type="submit">Kirim</button></form></div>'+replies+'</article>';
  };
  box.innerHTML='<div class="ua-comment-thread">'+(children.get('root')||[]).map(c=>render(c)).join('')+'</div>'+'<form class="ua-comment-form"><input name="body" maxlength="1200" required placeholder="Tulis komentar…"><button type="submit">Kirim</button></form>';
  box.querySelectorAll('[data-comment-like]').forEach(button=>button.addEventListener('click',async()=>{
