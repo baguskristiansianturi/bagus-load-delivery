@@ -1,4 +1,5 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { Upload as TusUpload } from 'https://esm.sh/tus-js-client@4.3.1';
 import './user-account.css';
 import {loadAccountContext,contextHeader,professionalPage,professionalFormPage,accountSettingsPage,bindAccountContext} from './account-context.js';
 
@@ -6,7 +7,7 @@ const SUPABASE_URL='https://ytndswhqxayqpftszwfh.supabase.co';
 const SUPABASE_KEY='sb_publishable_kOUbKBYg88nXgz8FQRSnvA_k0hvKY65';
 const supabase=createClient(SUPABASE_URL,SUPABASE_KEY);
 const BUCKET='pluits-user-media';
-const uploadMime=file=>{const declared=String(file?.type||'').toLowerCase();const allowed=['image/jpeg','image/png','image/webp','image/gif','video/mp4','video/webm'];if(allowed.includes(declared))return declared;if(declared)return '';const ext=String(file?.name||'').split('.').pop().toLowerCase();return ({jpg:'image/jpeg',jpeg:'image/jpeg',png:'image/png',webp:'image/webp',gif:'image/gif',mp4:'video/mp4',webm:'video/webm'})[ext]||'';};
+const uploadMime=file=>{const declared=String(file?.type||'').toLowerCase();const allowed=['image/jpeg','image/png','image/webp','image/gif','video/mp4','video/webm'];if(allowed.includes(declared))return declared;if(declared)return '';const ext=String(file?.name||'').split('.').pop().toLowerCase();return ({jpg:'image/jpeg',jpeg:'image/jpeg',png:'image/png',webp:'image/webp',gif:'image/gif',mp4:'video/mp4',m4v:'video/mp4',webm:'video/webm'})[ext]||'';};
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmtDate=v=>new Date(v).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'});
 const initials=v=>String(v||'P').trim().slice(0,1).toUpperCase();
@@ -190,7 +191,7 @@ async function profilePage(preview=false){
   supabase.from('stores').select('id,name,username,public_city,public_area,store_status').eq('owner_user_id',user.id)
  ]);
  if(postsResult.error)throw postsResult.error;
- const ownPosts=await hydratePosts(postsResult.data||[]);
+ const ownPosts=await hydratePosts(postsResult.data||[]);\n  const ownReels=ownPosts.filter(p=>p.media?.length===1&&p.media[0].media_type==='video'&&Number(p.media[0].duration_ms||0)>0&&Number(p.media[0].duration_ms||0)<=60000);
  const [followersCount,followingCount,pendingCount]=await Promise.all([
   supabase.from('user_follows').select('*',{count:'exact',head:true}).eq('following_id',user.id).eq('status','accepted'),
   supabase.from('user_follows').select('*',{count:'exact',head:true}).eq('follower_id',user.id).eq('status','accepted'),
@@ -220,7 +221,7 @@ async function profilePage(preview=false){
   </div>
  </section>
  <nav class="ua-profile-tabs" role="tablist" aria-label="Konten profil">
-  <button class="active" type="button" role="tab" aria-selected="true" data-profile-tab="posts">▦ <span>Postingan</span></button><button type="button" role="tab" aria-selected="false" data-profile-tab="trips">⌖ <span>Trip</span></button><button type="button" role="tab" aria-selected="false" data-profile-tab="labels">▤ <span>Label</span></button>
+  <button class="active" type="button" role="tab" aria-selected="true" data-profile-tab="posts">▦ <span>Postingan</span></button><button type="button" role="tab" aria-selected="false" data-profile-tab="reels">▣ <span>Reels</span></button><button type="button" role="tab" aria-selected="false" data-profile-tab="tagged">♙ <span>Ditandai</span></button>
  </nav>
  <section id="ua-profile-tab-content" class="ua-profile-tab-content" role="tabpanel">
   <div class="ua-section-title"><strong>Postingan</strong><a class="ua-outline" href="#/account/compose">＋ Buat</a></div>
@@ -339,7 +340,7 @@ async function composePage(){
  const defaultAudience=accountContext.active==='professional'?(contentPrefs?.professional_default_visibility==='unlisted'?'private':'public'):accountContext.active==='business'?(contentPrefs?.business_default_visibility==='unlisted'?'private':'public'):(contentPrefs?.personal_default_visibility||'public');
  return `<div class="ua-page-heading"><div><span class="ua-eyebrow">CERITAKAN SESUATU</span><h1>Buat postingan</h1><p>Bagikan tulisan, foto, atau video dari perangkat Anda.</p></div><a class="ua-outline" href="#/account/profile">Kembali ke profil</a></div>
  <section class="ua-panel ua-compose-panel"><form id="ua-post-form" class="ua-compose-form">
-  <label class="ua-upload-zone" for="ua-post-file"><span class="ua-upload-icon">＋</span><strong>Tambahkan foto atau video (opsional)</strong><small>Campur foto dan video · Maksimal 15 media · Maksimal 50 MB per file</small><input id="ua-post-file" type="file" multiple accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm"></label>
+  <label class="ua-upload-zone" for="ua-post-file"><span class="ua-upload-icon">＋</span><strong>Tambahkan foto atau video (opsional)</strong><small>Campur foto dan video · Maksimal 15 media · Video hingga 50 MB per file</small><input id="ua-post-file" type="file" multiple accept="image/jpeg,image/png,image/webp,image/gif,video/*"></label>
   <div id="ua-media-preview" class="ua-media-preview"></div>
   <label>Caption<textarea name="caption" rows="4" maxlength="2200" placeholder="Apa yang ingin Anda bagikan?"></textarea></label>
   <label>Tag / kata kunci<input name="tags" placeholder="contoh: proyek, inspirasi, pluits (pisahkan dengan koma)"></label>
@@ -535,10 +536,34 @@ function bindImageUpload(inputId,column,label){
   }catch(err){notify(err.message||'Upload gagal.','error');}
  });
 }
-function bindCompose(){
+
+async function uploadMediaFile(file,path,mime,onProgress=()=>{}){
+ if(file.size<=6*1024*1024){
+  const result=await supabase.storage.from(BUCKET).upload(path,file,{contentType:mime,upsert:false});
+  if(result.error)throw result.error;
+  onProgress(100);return result;
+ }
+ const {data:{session},error:sessionError}=await supabase.auth.getSession();
+ if(sessionError)throw sessionError;
+ if(!session?.access_token)throw new Error('Sesi login berakhir. Silakan masuk kembali.');
+ return new Promise((resolve,reject)=>{
+  const upload=new TusUpload(file,{
+   endpoint:'https://ytndswhqxayqpftszwfh.storage.supabase.co/storage/v1/upload/resumable',
+   retryDelays:[0,3000,5000,10000,20000],
+   headers:{authorization:'Bearer '+session.access_token,apikey:SUPABASE_KEY,'x-upsert':'false'},
+   uploadDataDuringCreation:true,removeFingerprintOnSuccess:true,chunkSize:6*1024*1024,
+   metadata:{bucketName:BUCKET,objectName:path,contentType:mime,cacheControl:'3600'},
+   onProgress:(sent,total)=>onProgress(total?sent/total*100:0),
+   onError:error=>reject(error),
+   onSuccess:()=>resolve({data:{path},error:null})
+  });
+  upload.findPreviousUploads().then(previous=>{if(previous.length)upload.resumeFromPreviousUpload(previous[0]);upload.start();}).catch(reject);
+ });
+}
+\nfunction bindCompose(){
  const input=document.querySelector('#ua-post-file'),preview=document.querySelector('#ua-media-preview'),note=msg=>{const n=document.querySelector('#ua-compose-note');if(n)n.textContent=msg;};
  input?.addEventListener('change',()=>{(JSON.parse(preview.dataset.urls||'[]')).forEach(URL.revokeObjectURL);preview.dataset.urls='';preview.innerHTML='';const files=[...(input.files||[])];if(!files.length)return;if(files.length>15){note('Maksimal 15 media.');input.value='';return;}const bad=files.find(f=>!uploadMime(f)||f.size>50*1024*1024);if(bad){note(!uploadMime(bad)?'Format tidak didukung.':'Maksimal 50 MB per file.');input.value='';return;}const urls=files.map(URL.createObjectURL);preview.dataset.urls=JSON.stringify(urls);preview.innerHTML=files.map((f,i)=>uploadMime(f).startsWith('video/')?'<video controls playsinline preload="metadata" src="'+urls[i]+'"></video>':'<img src="'+urls[i]+'" alt="Media '+(i+1)+'">').join('');});
- document.querySelector('#ua-post-form')?.addEventListener('submit',async e=>{e.preventDefault();const form=e.currentTarget,files=[...(input?.files||[])],d=new FormData(form),caption=String(d.get('caption')||'').trim(),button=form.querySelector('button[type=submit]'),progress=document.querySelector('#ua-upload-progress');if(!files.length&&!caption){note('Tulis caption atau pilih media.');return;}if(files.length>15){note('Maksimal 15 media.');return;}const bad=files.find(f=>!uploadMime(f)||f.size>50*1024*1024);if(bad){note(!uploadMime(bad)?'Format tidak didukung.':'Maksimal 50 MB per file.');return;}button.disabled=true;button.textContent='Mengunggah…';const uploaded=[];try{for(let i=0;i<files.length;i++){const f=files[i],mime=uploadMime(f),ext=f.name.split('.').pop().toLowerCase(),token=crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random().toString(36).slice(2),path=user.id+'/'+token+'.'+ext,up=await supabase.storage.from(BUCKET).upload(path,f,{contentType:mime,upsert:false});if(up.error)throw up.error;let duration=null;if(mime.startsWith('video/'))duration=await new Promise(resolve=>{const v=document.createElement('video');v.preload='metadata';v.onloadedmetadata=()=>{const n=Number.isFinite(v.duration)?Math.round(v.duration*1000):null;URL.revokeObjectURL(v.src);resolve(n);};v.onerror=()=>resolve(null);v.src=URL.createObjectURL(f);});uploaded.push({media_path:path,media_type:mime.startsWith('video/')?'video':'image',position:i,duration_ms:duration});progress.hidden=false;progress.querySelector('span').style.width=Math.round(65*uploaded.length/files.length)+'%';}const tags=String(d.get('tags')||'').split(',').map(v=>v.trim().replace(/^#/,'').toLowerCase()).filter(Boolean).slice(0,12),ctx={profile_context:accountContext.active,professional_profile_id:accountContext.active==='professional'?accountContext.professional?.id||null:null,business_store_id:accountContext.active==='business'?(accountContext.prefs?.active_store_id||accountContext.stores[0]?.id||null):null},first=uploaded[0],ins=await supabase.from('user_posts').insert({user_id:user.id,...ctx,caption,tags,media_path:first?.media_path||null,media_type:uploaded.length?(uploaded.length===1?first.media_type:'mixed'):'text',visibility:String(d.get('visibility'))}).select('id').single();if(ins.error)throw ins.error;if(uploaded.length){const link=await supabase.from('post_media').insert(uploaded.map(x=>({...x,post_id:ins.data.id,user_id:user.id})));if(link.error){await supabase.from('user_posts').delete().eq('id',ins.data.id);throw link.error;}}progress.querySelector('span').style.width='100%';JSON.parse(preview.dataset.urls||'[]').forEach(URL.revokeObjectURL);notify('Postingan berhasil diterbitkan.');await mountAccount('explore');}catch(err){if(uploaded.length)await supabase.storage.from(BUCKET).remove(uploaded.map(x=>x.media_path));note(err.message||'Upload gagal.');button.disabled=false;button.textContent='Coba lagi';progress.hidden=true;}});
+ document.querySelector('#ua-post-form')?.addEventListener('submit',async e=>{e.preventDefault();const form=e.currentTarget,files=[...(input?.files||[])],d=new FormData(form),caption=String(d.get('caption')||'').trim(),button=form.querySelector('button[type=submit]'),progress=document.querySelector('#ua-upload-progress');if(!files.length&&!caption){note('Tulis caption atau pilih media.');return;}if(files.length>15){note('Maksimal 15 media.');return;}const bad=files.find(f=>!uploadMime(f)||f.size>50*1024*1024);if(bad){note(!uploadMime(bad)?'Format tidak didukung.':'Maksimal 50 MB per file.');return;}button.disabled=true;button.textContent='Mengunggah…';const uploaded=[];try{for(let i=0;i<files.length;i++){const f=files[i],mime=uploadMime(f),ext=f.name.split('.').pop().toLowerCase(),token=crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random().toString(36).slice(2),path=user.id+'/'+token+'.'+ext,up=await uploadMediaFile(f,path,mime,pct=>{progress.hidden=false;progress.querySelector('span').style.width=Math.round((i+pct/100)/files.length*65)+'%';});if(up.error)throw up.error;let duration=null;if(mime.startsWith('video/'))duration=await new Promise(resolve=>{const v=document.createElement('video');v.preload='metadata';v.onloadedmetadata=()=>{const n=Number.isFinite(v.duration)?Math.round(v.duration*1000):null;URL.revokeObjectURL(v.src);resolve(n);};v.onerror=()=>resolve(null);v.src=URL.createObjectURL(f);});uploaded.push({media_path:path,media_type:mime.startsWith('video/')?'video':'image',position:i,duration_ms:duration});progress.hidden=false;progress.querySelector('span').style.width=Math.round(65*uploaded.length/files.length)+'%';}const tags=String(d.get('tags')||'').split(',').map(v=>v.trim().replace(/^#/,'').toLowerCase()).filter(Boolean).slice(0,12),ctx={profile_context:accountContext.active,professional_profile_id:accountContext.active==='professional'?accountContext.professional?.id||null:null,business_store_id:accountContext.active==='business'?(accountContext.prefs?.active_store_id||accountContext.stores[0]?.id||null):null},first=uploaded[0],ins=await supabase.from('user_posts').insert({user_id:user.id,...ctx,caption,tags,media_path:first?.media_path||null,media_type:uploaded.length?(uploaded.length===1?first.media_type:'mixed'):'text',visibility:String(d.get('visibility'))}).select('id').single();if(ins.error)throw ins.error;if(uploaded.length){const link=await supabase.from('post_media').insert(uploaded.map(x=>({...x,post_id:ins.data.id,user_id:user.id})));if(link.error){await supabase.from('user_posts').delete().eq('id',ins.data.id);throw link.error;}}progress.querySelector('span').style.width='100%';JSON.parse(preview.dataset.urls||'[]').forEach(URL.revokeObjectURL);notify('Postingan berhasil diterbitkan.');await mountAccount('explore');}catch(err){if(uploaded.length)await supabase.storage.from(BUCKET).remove(uploaded.map(x=>x.media_path));note(err.message||'Upload gagal.');button.disabled=false;button.textContent='Coba lagi';progress.hidden=true;}});
 }
 function bindStories(){
  document.querySelectorAll('.ua-story-item').forEach(button=>{
