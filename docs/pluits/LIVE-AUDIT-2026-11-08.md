@@ -152,3 +152,7 @@ These are limited smoke tests, not a substitute for signed-in two-account and fu
 - GitHub Pages run #506 succeeded on commit 2432e4a. Latest SQL/docs-only commits require a final workflow status check.
 - Remaining: four-place seed only; admin claim/media review, licensed import/dedup/correction workflow, media Storage upload, store/social authoring integration, Trip link, commerce cart migration, Android UAT and performance/load tests.
 - Security Advisor still flags two legacy SECURITY DEFINER store RPCs and disabled leaked-password protection. Function definitions include auth.uid checks; update_store_profile also checks private.is_store_owner. These were not rewritten without seller regression tests.
+
+- Migration terakhir pada audit ini: `20261108041216_pluits_directory_fk_indexes`; FK GeoDirectory telah diberi indeks pendukung.
+- Performance Advisor tersisa 14 temuan unindexed FK yang semuanya pada tabel legacy Social/Marketplace; 43 unused-index advisory masih perlu diamati setelah trafik. Tidak ada indeks GeoDirectory yang dihapus.
+- Security Advisor kini hanya menampilkan dua RPC toko lama SECURITY DEFINER dan leaked-password protection disabled; RLS no-policy warning untuk source provenance telah ditutup dengan explicit deny policy dan revoke grants.
