@@ -323,3 +323,6 @@
  .ua-follow-actions button{padding:7px 9px}
  .ua-public-profile .ua-profile-stats{display:flex;gap:18px;flex-wrap:wrap}
 }
+
+.ua-login-action{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:8px 12px;border:1px solid #d8e1e9;border-radius:999px;color:#304b66;font-size:12px;font-weight:700;text-decoration:none;background:#fff}
+.ua-login-action:focus-visible,.ua-follow-actions button:focus-visible,.ua-follow-person:focus-visible{outline:2px solid #4c7795;outline-offset:2px}
