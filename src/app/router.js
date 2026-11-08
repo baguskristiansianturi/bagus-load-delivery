@@ -5,7 +5,6 @@ import {cart} from '../pages/cart/index.js';
 import {checkout} from '../pages/checkout/index.js';
 import {orders,order} from '../pages/orders/index.js';
 import {wishlist} from '../pages/wishlist/index.js';
-import {login} from '../pages/auth/index.js';
 import {misc} from '../pages/misc/index.js';
 import {blog} from '../pages/blog/index.js';
 import {supplierPage} from '../pages/provider/index.js';
@@ -43,7 +42,7 @@ export function route(homeFn=home){
  else if(r==='orders')h=orders();
  else if(r==='order')h=order(v);
  else if(r==='wishlist')h=wishlist();
- else if(r==='login'||r==='register')h=login();
+ else if(r==='login'||r==='register'){h='<div class="pluits-loading">Membuka akun Pluits…</div>';queueMicrotask(()=>mountUserAccount(r));}
  else if(r==='blog'||r==='guides'||r==='article')h=blog(r==='article'||r==='guides'?v:'');
  else if(r==='provider'||r==='suppliers')h=supplierPage(v||'');
  else if(r==='proyek'||r==='projects')h=projectsPage(v||'');
