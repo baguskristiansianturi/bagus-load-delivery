@@ -352,6 +352,7 @@ async function publicProfilePage(username){
   if(pe)throw pe;posts=await hydratePosts(rows||[]);
  }
  const followLabel=isOwner?'Edit profil':relation?.status==='accepted'?'Mengikuti':relation?.status==='pending'?'Permintaan terkirim':target.visibility==='private'?'Minta mengikuti':'Ikuti';
+ const canSeeCounts=target.visibility==='public'||isOwner;
  return `<div class="ua-page-heading"><div><span class="ua-eyebrow">PROFIL PENGGUNA</span><h1>@${esc(target.username)}</h1></div><a class="ua-outline" href="#/account/explore">Kembali ke Explore</a></div>
  <section class="ua-profile-card ua-public-profile">
   <div class="ua-cover" ${coverUrl?`style="background-image:url('${coverUrl}')"`:''}><span>PLUITS PROFILE</span></div>
@@ -359,7 +360,7 @@ async function publicProfilePage(username){
    <div class="ua-profile-identity"><h2>${esc(target.display_name)}</h2><div class="ua-username">@${esc(target.username)}</div>
    <div class="ua-location">${target.public_city&&target.public_province?'⌖ '+esc(target.public_city)+', '+esc(target.public_province):''}</div>
    <p>${esc(target.bio||'')}</p>
-   <div class="ua-profile-stats"><span><strong>${posts.length}</strong><span>Postingan</span></span><span><strong>${followers.count||0}</strong><span>Pengikut</span></span><span><strong>${following.count||0}</strong><span>Mengikuti</span></span></div>
+   <div class="ua-profile-stats"><span><strong>${posts.length}</strong><span>Postingan</span></span><span><strong>${canSeeCounts?(followers.count||0):'—'}</strong><span>Pengikut</span></span><span><strong>${canSeeCounts?(following.count||0):'—'}</strong><span>Mengikuti</span></span></div>
    ${isOwner?`<a class="ua-primary ua-inline" href="#/account/profile">Edit profil</a>`:user?`<button type="button" class="ua-primary ua-inline" data-follow-target="${target.id}" data-follow-state="${relation?.status||''}" data-follow-username="${esc(target.username)}" ${relation?.status==='pending'&&relation.follower_id!==user.id?'disabled':''}>${followLabel}</button>`:`<a class="ua-primary ua-inline" href="#/account/login">Masuk untuk mengikuti</a>`}
    </div>
   </div>
@@ -623,7 +624,7 @@ function bindFollowActions(){
   if(error){notify(error.message,'error');button.disabled=false;}else{notify('Permintaan mengikuti diterima.');await mountAccount('followers');}
  }));
  document.querySelectorAll('[data-follow-remove]').forEach(button=>button.addEventListener('click',async()=>{
-  const other=button.dataset.followRemove, incoming=location.hash.includes('/followers');
+  const other=button.dataset.followRemove, incoming=location.hash.includes('/followers')||location.hash.includes('/requests');
   const {error}=await supabase.from('user_follows').delete().eq('follower_id',incoming?other:user.id).eq('following_id',incoming?user.id:other);
   if(error)notify(error.message,'error');else{notify(incoming?'Pengikut dihapus.':'Anda berhenti mengikuti akun ini.');await mountAccount(incoming?'followers':'following');}
  }));
