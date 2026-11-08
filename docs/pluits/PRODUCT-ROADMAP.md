@@ -245,3 +245,12 @@ No implementation status is asserted by this planning document. Repository and a
 - Security Advisor still reports 20 authenticated-callable SECURITY DEFINER RPCs and leaked-password protection disabled. The reviewed RPCs deny anon execution; their SECURITY DEFINER use is intentional for controlled workflows. The `public` schema CREATE privilege is denied to anon/authenticated/public, and the reviewed functions pin search_path. Do not remove required authenticated execution without replacing the workflows with a safe alternative.
 - Remaining external configuration: leaked-password protection must be enabled in Supabase Auth dashboard; this is not exposed by the connected database migration workflow.
 - Release validation still required: two-account buyer/seller tests, unauthorized cross-store read/write negative tests, real Android media upload/playback, store verification/admin role provisioning, and end-to-end order/payment/fulfilment tests.
+
+
+### CP-037 release verification addendum
+- GitHub Pages workflow #670 completed successfully for the RLS migration commit `f379083fccaec8a18aaed616be25c646f4fc779e`; production Vite build and Pages deploy steps all passed.
+- Documentation follow-up commit `1f91ce945968c20b288aac853e2f083fe3d53ec9` was deployed successfully by workflow #671.
+- Live catalog policy inventory confirms separate anon/authenticated SELECT policies and explicit member INSERT/UPDATE/DELETE policies on products, variants, and product images. Stores have separate anon and authenticated SELECT policies.
+- RLS remains enabled on all 17 inspected core tables spanning social posts/media/interactions, messaging, Marketplace orders/payments/catalog, stores, GeoDirectory and Trip.
+- Performance Advisor: 0 WARN findings; Health Advisor: 0 findings.
+- Deployment verification is from GitHub Actions; direct runtime/browser interaction and live user transaction tests are still pending and must not be represented as passed.
