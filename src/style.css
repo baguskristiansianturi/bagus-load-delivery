@@ -5152,3 +5152,23 @@ body{font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.45;-web
  .checkout-standalone .checkout-summary .summary-total strong{font-size:15px}
  .checkout-standalone .checkout-summary .wide-button{grid-column:2;grid-row:1;align-self:center;padding:12px 15px;font-size:11px}
 }
+
+/* PLUITS media integrity: never crop or stretch original social uploads.
+   Profile-grid thumbnails remain square by design; feed media preserves its own ratio. */
+.pl-social-home .pl-public-post-media{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  height:auto;
+  max-height:none;
+  overflow:hidden;
+}
+.pl-social-home .pl-public-post-media img,
+.pl-social-home .pl-public-post-media video{
+  display:block;
+  width:100%;
+  height:auto;
+  max-height:72vh;
+  object-fit:contain!important;
+  object-position:center;
+}
