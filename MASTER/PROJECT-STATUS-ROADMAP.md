@@ -827,3 +827,14 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - GitHub Actions run #968 / `42490137616` — SUCCESS. Regression checks, Vite build, output verification, Pages artifact upload and deploy succeeded.
 - Live URL: `https://baguskristiansianturi.github.io/pluits/?v=281c2fbc`.
 - This CI guard verifies responsive CSS contracts; it does not replace real rendering tests on Android, iOS, tablet or desktop. Those device checks and measured speed remain NOT TESTED.
+
+
+## CP-047 — Repository change-control, decision log, and SOP system (8 November 2026)
+
+- **Gap found:** the short new-chat prompt required a Decision Log and SOP, but neither `MASTER/DECISION-LOG.md` nor a `SOP/` directory existed in the repository.
+- **Implemented:** created an append-only founder Decision Log with the currently documented active decisions; created SOP index plus Product Change Control, Engineering Delivery, and Release/UAT procedures.
+- **Governance synchronized:** updated `AGENTS.md`, `MASTER/AI-START-HERE.md`, `MASTER/PLUITS-AI-GOVERNANCE.md`, and `MASTER/DOCUMENTATION-MAP-AND-CHECKLIST.md` so new sessions must read and use these documents.
+- **Process rule:** new founder sharing/ideas are recorded in the Idea Backlog; only explicit approval creates a Decision Log entry; approved business changes update Business Model Master and downstream specifications/roadmap. Decision history is append-only.
+- **Baseline deployment before documentation changes:** commit `6ef528980dc8ba62c6eeb72b01f603cc4a5a6672`; GitHub Actions run #969 / `42490201110` — SUCCESS, all 10 steps including Pages deployment passed.
+- **Founder UAT:** Social Media remains NOT ACCEPTED. Android real-media upload/playback, two-account social/DM, offline reconnect, notification recipient tests, SMS/TOTP and real-device matrix remain open.
+- **Next:** add automated checks that protect post edit/delete/double-tap interactions and verify the new governance documents are present; then run the exact commit through CI/Pages.
