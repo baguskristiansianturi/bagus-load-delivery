@@ -270,43 +270,67 @@ async function hydratePosts(rows){
  }));
 }
 async function feedPage(){
- const {data,error}=await supabase.from('user_posts').select('*').eq('visibility','public').eq('moderation_status','published').order('created_at',{ascending:false}).limit(100);
- if(error)throw error;
- let source=data||[],followingIds=[],blockedIds=[];
- if(user?.id){
-  const {data:blocks,error:blockError}=await supabase.from('user_blocks').select('blocker_id,blocked_id').or('blocker_id.eq.'+user.id+',blocked_id.eq.'+user.id);
-  if(blockError)throw blockError;
-  blockedIds=(blocks||[]).map(x=>x.blocker_id===user.id?x.blocked_id:x.blocker_id);
-  source=source.filter(post=>!blockedIds.includes(post.user_id));
- }
- if(exploreFilter==='following'){
-  if(user?.id){
-   const {data:follows,error:followError}=await supabase.from('user_follows').select('following_id').eq('follower_id',user.id).eq('status','accepted');
-   if(followError)throw followError;
-   followingIds=(follows||[]).map(x=>x.following_id);
-   const visibleIds=new Set([...followingIds,user.id]);source=source.filter(post=>visibleIds.has(post.user_id));
-  }else source=[];
+ // Beranda adalah feed akun yang diikuti. Akun sendiri hanya menjadi fallback
+ // ketika belum ada postingan dari jaringan yang diikuti.
+ const {data:follows,error:followError}=await supabase.from('user_follows')
+  .select('following_id').eq('follower_id',user.id).eq('status','accepted');
+ if(followError)throw followError;
+ const followingIds=[...new Set((follows||[]).map(x=>x.following_id).filter(Boolean))];
+ const {data:blocks,error:blockError}=await supabase.from('user_blocks').select('blocker_id,blocked_id')
+  .or('blocker_id.eq.'+user.id+',blocked_id.eq.'+user.id);
+ if(blockError)throw blockError;
+ const blockedIds=(blocks||[]).map(x=>x.blocker_id===user.id?x.blocked_id:x.blocker_id);
+ const loadPosts=async ids=>{
+  if(!ids.length)return [];
+  const {data,error}=await supabase.from('user_posts').select('*').in('user_id',ids)
+   .eq('visibility','public').eq('moderation_status','published')
+   .order('created_at',{ascending:false}).limit(100);
+  if(error)throw error;
+  return (data||[]).filter(p=>!blockedIds.includes(p.user_id));
+ };
+ let source=await loadPosts(followingIds);
+ let usingOwnFallback=false;
+ if(!source.length){
+  source=await loadPosts([user.id]);
+  usingOwnFallback=source.length>0;
  }
  const posts=await hydratePosts(source);
+ // Prioritaskan kebaruan; engagement hanya menjadi pemecah urutan untuk waktu yang berdekatan.
  const sorted=posts.sort((a,b)=>{
-  if(exploreFilter==='latest')return new Date(b.created_at)-new Date(a.created_at);
-  if(exploreFilter==='popular')return (b.likes*3+b.comments)-(a.likes*3+a.comments)||new Date(b.created_at)-new Date(a.created_at);
-  const af=followingIds.includes(a.user_id)?1:0,bf=followingIds.includes(b.user_id)?1:0;
-  return (bf-af)||new Date(b.created_at)-new Date(a.created_at);
+  const delta=new Date(b.created_at)-new Date(a.created_at);
+  if(Math.abs(delta)>6*60*60*1000)return delta;
+  return (b.likes*2+b.comments)-(a.likes*2+a.comments)||delta;
  });
- const {data:storyRows,error:storyError}=await supabase.from('user_stories').select('id,user_id,media_path,media_type,caption,visibility,created_at,expires_at').gt('expires_at',new Date().toISOString()).eq('visibility','public').order('created_at',{ascending:false}).limit(30);
- if(storyError)throw storyError;
- const visibleStories=(storyRows||[]).filter(s=>!blockedIds.includes(s.user_id)),ownerIds=[...new Set(visibleStories.map(s=>s.user_id))];
+ const storyIds=[...followingIds,user.id];
+ let storyRows=[];
+ if(storyIds.length){
+  const {data,error}=await supabase.from('user_stories').select('id,user_id,media_path,media_type,caption,visibility,created_at,expires_at')
+   .in('user_id',storyIds).gt('expires_at',new Date().toISOString()).eq('visibility','public')
+   .order('created_at',{ascending:false}).limit(30);
+  if(error)throw error;
+  storyRows=data||[];
+ }
+ const ownerIds=[...new Set(storyRows.map(s=>s.user_id))];
  let storyProfiles=[];
- if(ownerIds.length){const r=await supabase.from('user_profiles').select('id,display_name,username,avatar_path').in('id',ownerIds);if(r.error)throw r.error;storyProfiles=r.data||[];}
+ if(ownerIds.length){
+  const r=await supabase.from('user_profiles').select('id,display_name,username,avatar_path').in('id',ownerIds);
+  if(r.error)throw r.error;storyProfiles=r.data||[];
+ }
  const pmap=new Map(storyProfiles.map(p=>[p.id,p]));
- const stories=await Promise.all(visibleStories.map(async s=>{const owner=pmap.get(s.user_id)||{};return {...s,owner,mediaUrl:await signed(s.media_path),avatarUrl:owner.avatar_path?await signed(owner.avatar_path):''};}));
+ const stories=await Promise.all(storyRows.filter(s=>!blockedIds.includes(s.user_id)).map(async s=>{
+  const owner=pmap.get(s.user_id)||{};
+  return {...s,owner,mediaUrl:await signed(s.media_path),avatarUrl:owner.avatar_path?await signed(owner.avatar_path):''};
+ }));
  const storyCards=stories.map(s=>"<button type='button' class='ua-story-item' data-story-url='"+esc(s.mediaUrl||'')+"' data-story-type='"+esc(s.media_type)+"' data-story-owner='"+esc(s.owner.display_name||'Pengguna Pluits')+"' data-story-caption='"+esc(s.caption||"")+"'><span class='ua-story-ring'>"+(s.avatarUrl?"<img src='"+esc(s.avatarUrl)+"' alt=''>":"<b>PL</b>")+"</span><small>"+esc(s.owner.display_name||'Pluits')+"</small></button>").join('');
- const filters=[['recommended','Untuk Anda'],['following','Mengikuti'],['latest','Terbaru']];
- const filterBar="<nav class='ua-explore-filters' aria-label='Feed'>"+filters.map(([k,v])=>"<button type='button' data-explore-filter='"+k+"' class='"+(exploreFilter===k?'active':'')+"' aria-pressed='"+(exploreFilter===k?'true':'false')+"'>"+v+"</button>").join('')+"</nav>";
- const empty=exploreFilter==='following'?'Belum ada postingan dari akun yang Anda ikuti.':'Belum ada postingan publik. Bagikan foto atau video pertama Anda.';
  const storySection="<section class='ua-stories-block'><div class='ua-stories-head'><strong>Stories</strong><a href='#/account/compose' aria-label='Buat postingan'>＋</a></div><div class='ua-story-strip'><a class='ua-story-item ua-story-own' href='#/account/compose'><span class='ua-story-ring'>"+avatar(await signed(profile?.avatar_path),profile?.display_name||'Anda')+"<i>＋</i></span><small>Cerita Anda</small></a>"+(storyCards||"<span class='ua-story-empty'>Belum ada cerita baru</span>")+"</div></section>";
- return "<div class='ua-social-home'><header class='ua-feed-top'><a class='ua-feed-wordmark' href='#/account/explore'>pluits</a><div><a href='#/account/activity' aria-label='Aktivitas'>♡</a><a href='#/messages' aria-label='Pesan'>↗</a></div></header>"+storySection+filterBar+"<section class='ua-feed'>"+(sorted.length?sorted.map(postCard).join(''):"<div class='ua-feed-empty'><strong>"+empty+"</strong><a href='#/account/compose'>Bagikan foto atau video</a></div>")+"</section></div>";
+ const empty=followingIds.length
+  ?"Belum ada postingan dari akun yang Anda ikuti. Coba jelajahi akun lain."
+  :"Belum ada postingan di jaringan Anda. Bagikan foto atau video pertama untuk mengisi Beranda.";
+ const emptyAction=followingIds.length
+  ?"<a href='#/search'>Jelajahi akun</a>"
+  :"<a href='#/account/compose'>Bagikan foto atau video</a>";
+ const feedNote=usingOwnFallback?"<div class='ua-feed-fallback-note'>Belum ada postingan dari akun yang diikuti · Menampilkan postingan Anda untuk pengujian</div>":"";
+ return "<div class='ua-social-home'><header class='ua-feed-top'><a class='ua-feed-wordmark' href='#/account/explore'>pluits</a><a class='ua-feed-search' href='#/search' aria-label='Cari di Pluits'><span>⌕</span><span>Cari teman, tempat, dan postingan</span></a><div><a href='#/account/activity' aria-label='Aktivitas'>♡</a><a href='#/messages' aria-label='Pesan'>↗</a></div></header>"+storySection+feedNote+"<section class='ua-feed'>"+(sorted.length?sorted.map(postCard).join(''):"<div class='ua-feed-empty'><strong>"+empty+"</strong>"+emptyAction+"</div>")+"</section></div>";
 }
 
 async function reelsPage(){
