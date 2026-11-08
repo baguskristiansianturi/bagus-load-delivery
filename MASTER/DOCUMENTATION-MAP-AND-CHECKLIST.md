@@ -13,20 +13,24 @@ Dokumen ini memetakan satu sumber kebenaran per area. Semua dokumen turunan waji
 7. `supabase/README.md`
 8. Audit live terbaru di `docs/pluits/`
 9. Spesifikasi arsitektur modul yang relevan.
-10. `IDEAS/IDEA-BACKLOG.md` — terakhir, agar ide tidak dianggap keputusan.
+10. `MASTER/DECISION-LOG.md` — indeks keputusan founder yang sudah disetujui.
+11. `SOP/README.md` dan SOP yang relevan.
+12. `IDEAS/IDEA-BACKLOG.md` — terakhir, agar ide tidak dianggap keputusan.
 
 ## Sumber kebenaran tunggal
 | Area | Sumber kanonis | Batas |
 |---|---|---|
 | Visi, model bisnis, keputusan produk, aturan bisnis | `MASTER/BUSINESS-MODEL-MASTER.md` | Satu-satunya otoritas keputusan bisnis |
 | Ide dan hipotesis belum disetujui | `IDEAS/IDEA-BACKLOG.md` | Tidak otomatis boleh dibangun |
+| Indeks keputusan founder | `MASTER/DECISION-LOG.md` | Append-only; tidak menggantikan Business Model Master |
+| Prosedur operasional | `SOP/README.md` dan SOP terkait | Proses kerja; tidak mengubah keputusan bisnis |
 | Checkpoint, prioritas, implementasi, deploy, UAT | `MASTER/PROJECT-STATUS-ROADMAP.md` | Satu-satunya roadmap delivery |
 | Tata kelola AI dan alur perubahan | `MASTER/PLUITS-AI-GOVERNANCE.md` | Wajib setiap sesi AI |
 | Arsitektur dan kontrak teknis | Spesifikasi di `MASTER/`, `docs/`, dan `supabase/` | Menjelaskan implementasi, bukan mengubah keputusan bisnis |
 | Kondisi aktual dan risiko | Audit/security review terbaru | Harus bertanggal dan berbukti |
 | Uji pengguna | `MASTER/PLUITS-USER-TESTING.md` | Hanya hasil nyata |
 
-Dokumen Master Product Vision dan Product Roadmap lama telah digabungkan lalu dihapus. Riwayat model bisnis awal disimpan di docs/pluits/archive/BUSINESS-MODEL-HISTORY-LEGACY.md sebagai arsip non-authoritative; AI tidak membacanya sebagai instruksi aktif. Riwayat model bisnis awal dipindahkan ke docs/pluits/archive/BUSINESS-MODEL-HISTORY-LEGACY.md; arsip ini bukan sumber aktif dan tidak dibaca sebagai instruksi implementasi. Dokumen arsitektur UX/IA, GeoDirectory, keamanan, help/legal, dan UAT tetap dipakai sesuai fungsi teknisnya.
+Dokumen Master Product Vision dan Product Roadmap lama telah digabungkan lalu dihapus. Riwayat model bisnis awal disimpan di docs/pluits/archive/BUSINESS-MODEL-HISTORY-LEGACY.md sebagai arsip non-authoritative; AI tidak membacanya sebagai instruksi aktif. Riwayat model bisnis awal dipindahkan ke `docs/pluits/archive/BUSINESS-MODEL-HISTORY-LEGACY.md`; arsip ini bukan sumber aktif dan tidak dibaca sebagai instruksi implementasi. Dokumen arsitektur UX/IA, GeoDirectory, keamanan, help/legal, dan UAT tetap dipakai sesuai fungsi teknisnya.
 
 ## Alur temuan → ide → keputusan → implementasi
 1. Temuan dari percakapan, UAT, analisis kompetitor, atau eksplorasi desain → catat di Backlog Ide dengan tanggal/sumber.
