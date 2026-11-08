@@ -114,3 +114,15 @@ No implementation status is asserted by this planning document. Repository and a
 - `#/account/settings` menjadi pusat pengaturan; `#/account/content-settings` mempertahankan form preferensi konten yang tersimpan ke `account_content_preferences`.
 - Panduan pengguna: `docs/pluits/help/ACCOUNT-SETTINGS.md`.
 - Status UAT Android: menunggu pengujian pengguna.
+
+## CP-027 — Responsive experience across phone, tablet and desktop (8 November 2026)
+
+- Founder direction: Pluits is a social platform, not a phone-only app stretched to desktop. Mobile is the primary design target, while tablet and laptop/desktop need intentional layouts for users who prefer a larger screen.
+- **Product rule:** one account, one feature set, and consistent data/permissions across devices; layout, navigation density, columns, and interaction affordances adapt to viewport and input mode.
+- **Phone (primary):** single-column feed and settings, bottom navigation, compact top bar, touch-first controls, media keeps its natural aspect ratio, horizontal content rails become swipeable carousels.
+- **Tablet:** adaptive navigation with more visible destinations, two-column settings/discovery where content benefits, feed remains readable and media is not stretched.
+- **Desktop/laptop:** persistent top/side navigation as appropriate, centered readable feed with optional contextual side rail, multi-column account/settings workspace, hover/focus states plus keyboard navigation; do not simply scale the mobile screen.
+- **Responsive QA viewports:** 360×800 and 390×844 phone; 768×1024 tablet portrait; 1024×768 tablet landscape/small laptop; 1366×768 and 1440×900 desktop. Also test zoom 200%, long Indonesian labels, empty/loading/error states, and keyboard-only navigation.
+- **Current implementation delta:** Account Center CSS now uses a one-column phone layout and two-column tablet/desktop layout, with width and spacing adjustments at 380px, 760px, 1024px, and 1200px breakpoints. This is a targeted first pass, not proof that every Pluits screen is fully responsive.
+- **Status:** DESIGN DECIDED; Account Center responsive CSS IMPLEMENTED; deploy and device QA NOT YET VERIFIED. Other screens remain subject to the same responsive audit.
+- **Acceptance:** no horizontal overflow at supported widths; all controls reachable; no content clipped; readable line lengths; touch targets comfortable on mobile; keyboard and focus usable on desktop; same backend state across device classes.
