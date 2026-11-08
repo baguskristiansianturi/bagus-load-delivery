@@ -1,71 +1,62 @@
-# PLUITS DOCUMENTATION MAP & ENGINEERING CHECKLIST
+# PLUITS — DOCUMENTATION MAP & ENGINEERING CHECKLIST
+**Pembaruan:** 8 November 2026
 
-Dokumen ini adalah peta agar founder dan AI memahami sumber kebenaran, struktur dokumentasi, serta status pekerjaan sebelum menyentuh kode.
+Dokumen ini memetakan satu sumber kebenaran per area. Semua dokumen turunan wajib konsisten dengan Business Model Master.
 
-## Urutan baca wajib untuk AI
-1. MASTER/AI-START-HERE.md — aturan proyek, identitas, dan alur kerja.
-2. MASTER/DOCUMENTATION-MAP-AND-CHECKLIST.md — peta dokumen dan checklist.
-3. MASTER/BUSINESS-MODEL-MASTER.md — baca keseluruhan model bisnis aktif dan keputusan yang disetujui.
-4. MASTER/PROJECT-STATUS-ROADMAP.md — seluruh checkpoint, status deploy/test, blocker, dan pekerjaan tersisa.
-5. MASTER/PLUITS-USER-TESTING.md — hasil/daftar UAT founder.
-6. MASTER/PLUITS-SECURITY-REVIEW.md — security review dan temuan terbuka.
-7. docs/pluits/LIVE-AUDIT-2026-11-08.md — baseline audit; cek apakah ada audit lebih baru.
-8. Spesifikasi arsitektur dan laporan implementasi yang dirujuk checkpoint relevan.
-9. IDEAS/IDEA-BACKLOG.md — ide masa depan saja; jangan anggap sebagai keputusan atau instruksi implementasi.
+## Urutan baca AI
+1. `MASTER/AI-START-HERE.md`
+2. `MASTER/PLUITS-AI-GOVERNANCE.md`
+3. `MASTER/BUSINESS-MODEL-MASTER.md` — baca keseluruhan.
+4. `MASTER/PROJECT-STATUS-ROADMAP.md`
+5. `MASTER/PLUITS-USER-TESTING.md`
+6. `MASTER/PLUITS-SECURITY-REVIEW.md` dan `MASTER/BACKEND-FOUNDATION-SPEC.md`
+7. `supabase/README.md`
+8. Audit live terbaru di `docs/pluits/`
+9. Spesifikasi arsitektur modul yang relevan.
+10. `IDEAS/IDEA-BACKLOG.md` — terakhir, agar ide tidak dianggap keputusan.
 
-Jika dokumen panjang, baca per bagian sampai seluruh bagian relevan tercakup. Jangan mengandalkan memory percakapan sebagai pengganti repository.
-
-## Sumber kebenaran
-| Area | Dokumen utama | Aturan |
+## Sumber kebenaran tunggal
+| Area | Sumber kanonis | Batas |
 |---|---|---|
-| Model bisnis aktif | MASTER/BUSINESS-MODEL-MASTER.md | Hanya keputusan founder yang disetujui |
-| Ide masa depan | IDEAS/IDEA-BACKLOG.md | Tidak otomatis menjadi roadmap |
-| Status pekerjaan | MASTER/PROJECT-STATUS-ROADMAP.md | Status harus punya bukti |
-| Hasil uji pengguna | MASTER/PLUITS-USER-TESTING.md | Catat perangkat, akun, tanggal, hasil nyata |
-| Security | MASTER/PLUITS-SECURITY-REVIEW.md | Temuan, mitigasi, residual risk |
-| Arsitektur | docs/pluits/ dan dokumentasi modul | Kontrak/dependency konsisten |
-| Orientasi AI | MASTER/AI-START-HERE.md | Wajib dibaca setiap sesi kerja baru |
+| Visi, model bisnis, keputusan produk, aturan bisnis | `MASTER/BUSINESS-MODEL-MASTER.md` | Satu-satunya otoritas keputusan bisnis |
+| Ide dan hipotesis belum disetujui | `IDEAS/IDEA-BACKLOG.md` | Tidak otomatis boleh dibangun |
+| Checkpoint, prioritas, implementasi, deploy, UAT | `MASTER/PROJECT-STATUS-ROADMAP.md` | Satu-satunya roadmap delivery |
+| Tata kelola AI dan alur perubahan | `MASTER/PLUITS-AI-GOVERNANCE.md` | Wajib setiap sesi AI |
+| Arsitektur dan kontrak teknis | Spesifikasi di `MASTER/`, `docs/`, dan `supabase/` | Menjelaskan implementasi, bukan mengubah keputusan bisnis |
+| Kondisi aktual dan risiko | Audit/security review terbaru | Harus bertanggal dan berbukti |
+| Uji pengguna | `MASTER/PLUITS-USER-TESTING.md` | Hanya hasil nyata |
 
-## Status checklist
-- DONE / VERIFIED — bukti dan cara verifikasi dicantumkan.
-- IMPLEMENTED, NOT VERIFIED — kode/schema ada, tetapi belum diuji.
-- DEPLOYED — workflow/hosting sukses pada commit yang tepat.
-- TESTED — test otomatis/manual punya hasil yang dicatat.
-- ACCEPTED — founder telah menguji dan menerima.
-- TODO — belum dikerjakan.
-- FAILED — uji gagal, sertakan error dan reproduksi.
-- BLOCKED — terhalang dependency/akses/keputusan.
-- NOT TESTED / UNKNOWN — jangan diasumsikan berhasil.
+Dokumen Master Product Vision dan Product Roadmap lama telah digabungkan dan tidak lagi menjadi sumber aktif. Dokumen arsitektur UX/IA, GeoDirectory, keamanan, help/legal, dan UAT tetap dipakai sesuai fungsi teknisnya.
 
-Setiap checkpoint:
-- [ ] Scope dan alasan perubahan.
-- [ ] Modul/file/schema terdampak.
-- [ ] Dependency dan kontrak antar-modul.
-- [ ] Migration dan rollback plan jika database berubah.
-- [ ] Build/test result dan error output.
-- [ ] Commit SHA serta workflow/deployment run.
-- [ ] Security/RLS/privacy impact.
+## Alur temuan → ide → keputusan → implementasi
+1. Temuan dari percakapan, UAT, analisis kompetitor, atau eksplorasi desain → catat di Backlog Ide dengan tanggal/sumber.
+2. Klasifikasikan UX/UI, journey, model bisnis, harga/revenue, strategi, trust/safety, arsitektur, operasi, legal, atau riset.
+3. Bedakan fakta, observasi, asumsi, hipotesis, dan keputusan.
+4. Evaluasi masalah, manfaat, alternatif, biaya, risiko, privasi, keamanan, skala, dependency, dan alasan tidak membangun.
+5. Founder memutuskan lanjut/tunda/tolak/riset.
+6. Jika disetujui: update Business Model Master, tandai ide PROMOTED/MERGED, dan catat alasan/dampak.
+7. Turunkan ke spesifikasi backend/frontend, lalu tambahkan pekerjaan ke roadmap.
+8. Uji, deploy, dan catat bukti/status.
+
+## Engineering checklist
+- [ ] Keputusan bisnis dan rujukannya jelas.
+- [ ] Persona, journey, acceptance criteria, edge cases.
+- [ ] Modul, dependency, kontrak, ownership data, route/komponen kanonis.
+- [ ] Permission matrix, RLS, Storage, privacy, abuse cases.
+- [ ] Migration kompatibel dan rollback jika ada perubahan DB.
+- [ ] Loading, empty, success, error, retry, offline, accessibility.
+- [ ] Automated/integration/negative authorization/regression tests.
+- [ ] Build, commit SHA, workflow/deployment run.
 - [ ] Android/mobile UAT dan hasil founder.
-- [ ] Dokumentasi/help/legal yang perlu diperbarui.
-- [ ] TODO, FAILED, BLOCKED, dan risiko terbuka.
+- [ ] Dokumentasi, help, security review, backlog diperbarui.
 
-## Prinsip modular dan perlindungan pengguna aktif
-- Jangan mengubah banyak domain sekaligus tanpa kebutuhan.
-- Petakan modul, public interfaces, database ownership, shared components, dan dependency sebelum refactor.
-- Pertahankan API/DB contract atau sediakan compatibility layer dan migration bertahap.
-- Gunakan tests untuk mencegah regresi pada modul live.
-- Rilis perubahan berisiko bertahap; gunakan feature flag/canary bila sesuai.
-- Siapkan rollback, backup/restore, monitoring, dan incident notes.
-- Jangan menambah dependency/framework/bahasa hanya karena populer; dokumentasikan alasan, biaya, risiko, dan kemampuan maintenance.
+## Status
+PROPOSED → DECIDED → SPECIFIED → IMPLEMENTED → DEPLOYED → TESTED → ACCEPTED.
+BLOCKED, FAILED, NOT TESTED, dan NOT VERIFIED wajib dicatat. Satu status tidak membuktikan status berikutnya.
 
-## Operasi dan keamanan masa depan — checklist, bukan klaim aktif
-- [ ] Centralized structured logs dengan correlation/request ID.
-- [ ] Error tracking dan alert frontend, API, database, Storage, deploy.
-- [ ] Availability/latency/performance monitoring.
-- [ ] Dependency scanning, secret scanning, vulnerability review.
-- [ ] RLS/access-control regression tests dan abuse/rate-limit tests.
-- [ ] Backup, restore drill, disaster recovery, incident response.
-- [ ] AI-agent roles, least privilege, human approval gates, audit logs, evaluasi false positive/negative.
-- [ ] Daily/weekly/monthly report dengan bukti, severity, tren, rekomendasi, dan status.
-
-Semua item harus diverifikasi sebelum dicentang. Dokumen ini tidak menyatakan sistem telah memenuhi checklist.
+## Perlindungan
+- Satu fungsi/route/komponen = satu sumber kanonis.
+- Jangan hapus migration terapan, data pengguna, atau histori keputusan.
+- Tidak ada secret/data pribadi/data uji privat di repository publik.
+- Backend menegakkan akses; frontend merefleksikan izin/status.
+- Terapkan least privilege, audit trail, observability, backup/restore, rate limits, dan human approval untuk tindakan AI berisiko.
