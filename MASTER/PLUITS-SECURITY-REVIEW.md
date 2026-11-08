@@ -178,4 +178,5 @@ The active GitHub migration directory contains 19 files, matching all 19 live Su
 - Migration CP-023: 10 file baru cocok dengan 10 statements live; baseline 19 sebelumnya tetap dipertahankan. Jangan reset/replay database.
 - Advisor security tetap: dua SECURITY DEFINER RPC toko lama (`create_store`, `update_store_profile`) dan leaked-password protection nonaktif. Tidak ada peringatan baru untuk helper private CP-023.
 - Advisor performance masih melaporkan 14 foreign key tanpa covering index dan sejumlah unused-index notices. Jangan menghapus index hanya karena belum terpakai pada database dengan trafik rendah.
-- Frontend follow/profile dan responsive CSS telah diubah; Pages deployment, build CI, dua akun nyata, dan Android UAT setelah CP-023 belum dinyatakan lulus.
+- Frontend follow/profile dan responsive CSS telah diubah. GitHub Pages run #465 pada commit `fc2314e81f21d5edd55d99108da8777198d7d6f4` sukses build dan deploy. Dua akun nyata dan Android UAT setelah CP-023 masih pending.
+- Build bundle: JS 172.94 kB (gzip 49.59 kB), CSS 258.32 kB (gzip 44.57 kB). Lighthouse/runtime performance belum diukur.
