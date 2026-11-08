@@ -522,3 +522,5 @@ Build dari commit `642a24bdbed4a85931271e7481f9880a04cc9fc3` berhasil. GitHub Pa
 - Security Advisor: policy sumber GeoDirectory sudah eksplisit deny dan tidak mendapat grants anon; peringatan tersisa berasal dari dua RPC toko SECURITY DEFINER lama serta leaked-password protection yang belum aktif.
 
 - Ranking adaptive diperhalus dengan decay 90 hari dan batas skor per kategori. Bottom navigation mobile kini menyediakan pintasan GeoDirectory.
+
+- Claim lifecycle diperketat: membership yang dibuat dari klaim memiliki `source_claim_id`; pencabutan/penolakan/sengketa setelah approval mencabut akses membership yang bersumber dari klaim tersebut.
