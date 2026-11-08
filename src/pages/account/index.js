@@ -18,25 +18,30 @@ function notify(message,type='success'){
 }
 function frame(content,active='explore',avatarUrl=''){
  const userAvatar=avatar(avatarUrl,profile?.display_name||user?.email||'P');
+ const profileView=active==='profile'||active==='preview';
  return `<div class="ua-app ua-social-app">
-  ${active==='profile'||active==='preview'?'':`  <header class="ua-header">
-   <a class="ua-mobile-profile" href="#/account/profile" aria-label="Profil saya">${userAvatar}</a>
+  <header class="ua-header">
    <a class="ua-brand" href="#/account/explore">PLUITS<span>INDONESIA</span></a>
-   <nav><a class="${active==='explore'?'active':''}" href="#/account/explore">Beranda</a><a class="${active==='profile'?'active':''}" href="#/account/profile">Profil</a><a class="${active==='addresses'?'active':''}" href="#/account/addresses">Alamat</a><a href="#/account/activity">Aktivitas</a></nav>
+   <nav>
+    <a class="${active==='explore'?'active':''}" href="#/account/explore">Beranda</a>
+    <a class="${active==='reels'?'active':''}" href="#/account/reels">Reels</a>
+    <a class="${active==='activity'?'active':''}" href="#/account/activity">Aktivitas</a>
+    <a class="${profileView?'active':''}" href="#/account/profile">Profil</a>
+    <a class="${active==='addresses'?'active':''}" href="#/account/addresses">Alamat</a>
+   </nav>
+   <a class="ua-header-profile" href="#/account/profile" aria-label="Buka profil saya">${userAvatar}</a>
    <a class="ua-header-create" href="#/account/compose" aria-label="Buat postingan">＋</a>
   </header>
-  <main class="ua-main">${content}</main>
+  <main class="ua-main ${profileView?'ua-profile-main':''}">${content}</main>
   <nav class="ua-mobile-nav" aria-label="Navigasi utama">
    <a class="${active==='explore'?'active':''}" href="#/account/explore"><span>⌂</span><small>Beranda</small></a>
    <a href="#/account/explore"><span>⌕</span><small>Jelajah</small></a>
    <a class="ua-mobile-create" href="#/account/compose" aria-label="Buat postingan"><span>＋</span></a>
-   <a href="#/account/activity"><span>♡</span><small>Aktivitas</small></a>
-   <a class="${active==='profile'?'active':''}" href="#/account/profile">${userAvatar}<small>Profil</small></a>
+   <a class="${active==='activity'?'active':''}" href="#/account/activity"><span>♡</span><small>Aktivitas</small></a>
+   <a class="${profileView?'active':''}" href="#/account/profile">${userAvatar}<small>Profil</small></a>
   </nav>
   <div id="ua-toast" class="ua-toast" role="status"></div>
-  <footer class="ua-footer">PLUITS · Identitas pengguna dan aktivitas komunitas</footer>`}
-  ${active==='profile'||active==='preview'?'<main class="ua-main ua-profile-main">'+content+'</main>':''}
-  <div id="ua-toast" class="ua-toast" role="status"></div>
+  <footer class="ua-footer">PLUITS · Identitas pengguna dan aktivitas komunitas</footer>
  </div>`;
 }
 function authScreen(mode='login'){
