@@ -30,12 +30,12 @@ The data is a starter set, not a complete Bali directory. It is not a Google Map
 - `#/place/:slug/claim`: claim form for owners/authorized managers/staff/representatives.
 - Map loads Leaflet and OpenStreetMap tiles on demand with attribution.
 - Directory places are added to the existing Wishlist and Baru Dilihat pages.
-- Mobile layout collapses to a single-column card list and horizontal category chips.
+- Mobile layout collapses to a single-column card list and horizontal category chips; bottom navigation includes a direct GeoDirectory entry.
 
 ### Recommendation model
 MVP uses deterministic ranking, not paid AI/ML:
 - Explicit user category interests.
-- Recent activity signals (view, click, save, follow, share, check-in, hide, report) over a rolling 90-day window.
+- Recent activity signals (view, click, save, follow, share, check-in, hide, report) over a rolling 90-day window, with recency decay and score caps. Current UI records view/click/save/hide; other event types are schema-ready for later integrations.
 - Nearby distance.
 - User feedback to reduce unwanted recommendations.
 - Users can turn personalization off and choose another area.
@@ -74,7 +74,7 @@ The exact live migration history is authoritative; the timestamp above for the f
 ### Frontend deployment
 - GitHub Actions Pages workflow run #506 succeeded on commit `2432e4a81d8588eb46c62c9e3a10b18fafd00a03`.
 - This confirms the Vite production build and Pages deploy job succeeded for that commit.
-- Subsequent database-only migrations do not change frontend source. The latest database-only migration and documentation commits are being checked by the next Pages workflow; verify that run before closing this report.
+- Subsequent database-only migrations do not change frontend source. The latest database-only migrations and documentation commits are being checked by the current Pages workflow; verify that run before closing this report.
 - GitHub Pages URL remains `https://baguskristiansianturi.github.io/bagus-load-delivery/`; repository has not been renamed to `pluits`.
 
 ## 4. Not yet complete
