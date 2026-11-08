@@ -942,3 +942,14 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - **Business alignment blocker:** PT/CV/UD-only store form/RPC/constraint still conflicts with the active model for UMKM/individual providers.
 - **Not tested:** Android, real store creation, media upload, two-account permissions, verification review, and public storefront.
 - **Next:** staging approval → RLS remediation tests → business-type migration and owner-guarded online-sales RPC → founder UAT.
+
+
+### CP-057 — Universal store onboarding, Seller Center lifecycle and URL specification (9 November 2026)
+- **Status:** BUSINESS DECISION RECORDED; TECHNICAL SPECIFICATION PREPARED; implementation NOT STARTED.
+- **Decision:** D-005 — PT/CV/UD are not mandatory. Individuals, UMKM, family/home businesses, cooperatives and companies may register. A responsible owner and real physical/operational location must be verifiable; legal form is optional and distinct from operational type.
+- **Specification:** `docs/pluits/SELLER-CENTER-STORE-LIFECYCLE-AND-URL-SPEC-2026-11-09.md`.
+- **Live schema confirmation:** stores CHECK and create_store RPC still PT/CV/UD only; submit_store_for_verification still requires legal_name, phone, email and full_address. Frontend profile still forces legal_name. Do not test a non-PT/CV/UD store until migration is staged.
+- **URL facts:** current storefront `#/shop/{username}`; current product route `#/market-product/{variant_id}` (not product UUID). Target stable IDs/slugs and branch/product/category routes are specified; custom domain is not live.
+- **Dashboard target:** overview, profile/storefront, locations/branches, verification, catalog, inventory, orders, fulfillment/zones, operating hours, payments/reconciliation, reviews, staff/permissions, notifications, settings/security.
+- **Database:** read-only inspection only. No production DDL or migration applied.
+- **Next:** stage schema/RPC alignment (separate operational type from optional legal form; require verifiable physical location while preserving address privacy), reconcile directory_locations and store memberships, add owner-guarded online-sales RPC, then build branch/store/product URLs and Seller Center modules; test on staging and Android.
