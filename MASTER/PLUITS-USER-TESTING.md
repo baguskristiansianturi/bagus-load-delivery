@@ -59,7 +59,20 @@
 
 **Batas MVP:** foto/video maksimal 50 MB per file. Video yang sangat besar atau format lain belum didukung pada tahap ini.
 
-### 5. Uji interaksi pada postingan
+
+### 5. Uji Stories 24 jam
+1. Pastikan profil Publik bila ingin menguji Story publik.
+2. Buka Explore. Di bagian Stories, pilih Buat Story.
+3. Unggah satu foto, tambahkan caption singkat, pilih Publik, lalu Bagikan Story.
+4. Pastikan Story muncul di strip horizontal; ketuk untuk membuka viewer.
+5. Ulangi dengan video MP4/WebM dan pastikan video dapat diputar serta tidak dipotong/diregangkan.
+6. Ubah profil menjadi Privat, buka kembali Explore, lalu pastikan pilihan Publik dinonaktifkan. Bagikan Story sebagai Hanya saya.
+7. Buka Pluits dari browser privat/perangkat lain tanpa login. Story publik dari profil publik boleh terlihat; Story privat tidak boleh terlihat.
+8. Setelah 24 jam, Story harus hilang dari daftar aktif. Penghapusan permanen/arsip media otomatis belum tersedia pada build ini.
+
+**Lulus jika:** unggah, tampil, buka, rasio media, audience, dan batas 24 jam sesuai. Tes ini masih harus dilakukan dengan akun nyata; uji database rollback saja bukan pengganti UAT.
+
+### 6. Uji interaksi pada postingan
 - Suka dan batalkan suka.
 - Buka komentar dan kirim komentar.
 - Bagikan tautan postingan.
@@ -67,13 +80,13 @@
 - Pada postingan milik sendiri, pilih Tag dan masukkan username akun lain yang sudah terdaftar.
 - Refresh halaman dan pastikan hasil interaksi tetap tersimpan.
 
-### 6. Uji privasi dasar
+### 7. Uji privasi dasar
 - Ubah profil menjadi Privat dan simpan.
 - Masuk dengan akun lain untuk memastikan postingan akun privat tidak muncul pada Explore.
 - Kembali ke akun pertama dan ubah lagi menjadi Publik bila ingin melanjutkan tes feed.
 
 ## Catatan batas fitur pada build ini
-- Chat pribadi, Story/Reels terpisah, followers/following, notifikasi tag, moderasi/report/block, edit/hapus postingan, halaman profil publik yang dapat dibuka lewat username, dan tampilan toko di profil masih menjadi PR.
+- Chat pribadi, Reels khusus, followers/following, notifikasi tag, moderasi/report/block, edit/hapus postingan, halaman profil publik yang dapat dibuka lewat username, dan tampilan toko di profil masih menjadi PR. UI Stories sudah tersedia di Explore; upload/view nyata dan uji perangkat masih menunggu.
 - Share menggunakan native share sheet Android bila tersedia; browser lain menggunakan salin tautan.
 - Peta menggunakan OpenStreetMap/Leaflet dan membutuhkan koneksi internet. Jika peta gagal dimuat, koordinat tetap dapat dimasukkan manual.
 - Saldo/wallet dan transaksi uang sungguhan tidak diaktifkan.
@@ -85,6 +98,6 @@ Catat halaman, langkah, pesan error persis, tipe file/ukuran file, dan waktu kej
 
 ## Status akses feed publik
 - Pengunjung tanpa login dapat membaca profil publik dan postingan publik yang berstatus published.
-- Alamat, profil privat, postingan privat, dan media yang tidak direferensikan oleh konten publik tetap dilindungi RLS.
+- Alamat, profil privat, postingan privat, Story privat, dan media yang tidak direferensikan oleh konten publik tetap dilindungi RLS. Story publik hanya dapat dibaca jika profil pemilik juga publik dan Story belum kedaluwarsa.
 - Explore dengan interaksi (suka, komentar, simpan, tag, dan membuat postingan) tetap membutuhkan login.
 - Media disimpan pada bucket privat; signed URL anonim hanya dapat dibuat untuk media yang terhubung dengan postingan publik yang diterbitkan atau avatar/sampul profil publik.
