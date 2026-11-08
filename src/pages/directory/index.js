@@ -240,9 +240,9 @@ export async function bindDirectoryPage() {
 }
 export function bindHomeNearby() {
   const target=document.querySelector('#pl-home-nearby');if(!target)return;
-  getNearby({limit:4,radius:15000}).then(async rows=>{
+  loadDiscoveryPreferences().then(()=>loadCategories()).then(()=>getNearby({lat:state.lat,lon:state.lon,limit:4,radius:state.radius})).then(async rows=>{
     const interests=await getInterestMap(),items=ranked(rows,interests);
-    if(!items.length){target.innerHTML='<div class="pl-directory-empty">Belum ada tempat yang tercatat di area ini. <a href="#/places">Jelajahi direktori →</a></div>';return;}
+    if(!items.length){target.innerHTML='<div class="pl-directory-empty">Belum ada tempat yang tercatat di area pilihanmu. <a href="#/places">Jelajahi direktori →</a></div>';return;}
     target.innerHTML=items.map(row=>`<a class="pl-home-place" href="${placeUrl(row.slug)}"><span>⌖</span><div><b>${esc(row.name)}</b><small>${esc([row.locality,row.city].filter(Boolean).join(', ')||'Bali')} · ${distance(Number(row.distance_m)||0)}</small></div><i>→</i></a>`).join('');
   }).catch(()=>{target.innerHTML='<div class="pl-directory-empty">Direktori sedang tidak dapat dimuat.</div>';});
 }
