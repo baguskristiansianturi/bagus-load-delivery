@@ -179,7 +179,7 @@ Laporan harus mendukung filter periode bulanan, triwulan/3 bulan, 8 bulan, tahun
 ## 8. Fase 3 — Gagasan layanan logistik terpisah (historis, tidak aktif)
 Setiap toko pada dasarnya dapat memiliki kendaraan dan mengatur pengirimannya sendiri. Karena itu, pengiriman toko sendiri adalah alur normal marketplace, bukan alasan untuk memaksa semua pesanan memakai armada platform.
 
-Bagus Load & Delivery diposisikan sebagai alternatif yang perlu diuji, terutama ketika pembeli membutuhkan barang dalam jumlah kecil dari beberapa toko berbeda dan memerlukan satu driver untuk mengambil serta mengantarkan beberapa pesanan. Pengembangan layanan ini dilakukan setelah marketplace toko berjalan dan data kebutuhan nyata tersedia. Jangan membangun sistem logistik kompleks atau menetapkan tarif sebelum uji kebutuhan, jenis kendaraan, kapasitas, rute, biaya, dan tanggung jawab operasional.
+Konsep penggabungan pesanan lintas toko dengan satu armada pernah tercatat sebagai opsi historis. Opsi ini telah dihentikan sebagai produk atau identitas terpisah dan tidak menjadi roadmap aktif. Pengiriman mandiri toko tetap alur normal Marketplace; integrasi fulfillment pihak ketiga hanya boleh ditambahkan setelah ada keputusan founder dan kontrak backend yang jelas.
 
 Detail armada, tarif, skema mitra, pembagian pendapatan, SLA, asuransi, dan tanggung jawab kerusakan/kehilangan belum diputuskan.
 
@@ -271,7 +271,7 @@ Peluncuran dan pendaftaran toko pada tahap uji coba dibatasi ke Bali. Pembatasan
 6. Dokumen ini menjelaskan arah dan keputusan bisnis; bukan pengganti spesifikasi teknis atau implementasi kode.
 
 ---
-**Status berikutnya:** Versi 0.6 menambahkan struktur owner/staff, kontrol keuangan owner, histori transaksi lintas tahun, laporan PDF, username unik, dan website katalog otomatis untuk setiap toko. Tahap berikutnya adalah menyelaraskan skema backend dan menguji otorisasi owner/staff sebelum menghubungkan UI. Bagus Load & Delivery tetap menunggu validasi kebutuhan.
+**Status berikutnya:** Versi 0.6 menambahkan struktur owner/staff, kontrol keuangan owner, histori transaksi lintas tahun, laporan PDF, username unik, dan website katalog otomatis untuk setiap toko. Tahap berikutnya adalah menyelaraskan skema backend dan menguji otorisasi owner/staff sebelum menghubungkan UI. Gagasan layanan logistik terpisah tidak lagi menjadi bagian dari roadmap aktif.
 
 
 ## 18. Akun universal pengguna, komunikasi, saldo, dan jejaring sosial
@@ -714,7 +714,7 @@ Pengguna dapat membagikan pengalaman atau menawarkan jasa, misalnya rental mobil
 Toko resmi pada marketplace tidak diperuntukkan bagi jual-beli barang bekas sesuai kebijakan yang sedang diuji. Barang bekas mungkin dapat disebut atau ditampilkan sebagai konten sosial pribadi, tetapi bukan otomatis listing katalog toko. Batas antara konten sosial, iklan, dan listing komersial harus diuji agar tidak menjadi celah spam atau perdagangan terselubung.
 
 ### 24.11 Pickup dan pengiriman
-Halaman merchant dan checkout menjelaskan pilihan pemenuhan yang benar-benar tersedia: ambil sendiri/pickup, pengiriman oleh toko, atau pengiriman melalui mitra yang terintegrasi dan tersedia di wilayah tersebut. Bagus Load & Delivery dapat dipertimbangkan sebagai mitra jika benar-benar dibangun; integrasi Maxim atau penyedia lain juga kemungkinan masa depan, bukan fitur yang sudah tersedia. Biaya, estimasi, cakupan, dan tanggung jawab harus transparan.
+Halaman merchant dan checkout menjelaskan pilihan pemenuhan yang benar-benar tersedia: ambil sendiri/pickup, pengiriman oleh toko, atau pengiriman melalui mitra yang terintegrasi dan tersedia di wilayah tersebut. Layanan pengiriman pihak ketiga hanya dapat dipertimbangkan jika ada keputusan founder, integrasi resmi, dan kontrak backend yang jelas; penyedia lain tetap merupakan kemungkinan masa depan, bukan fitur yang sudah tersedia. Biaya, estimasi, cakupan, dan tanggung jawab harus transparan.
 
 ### 24.12 Trip Story
 Trip menghubungkan perpindahan wilayah, itinerary, booking, aktivitas, dan pengalaman. Deteksi perjalanan lintas kota/negara dapat memicu draft Trip Story atau permintaan konfirmasi. Sistem membedakan perjalanan direncanakan, dipesan, dikunjungi, dan diselesaikan. Pengguna memilih apakah entri hanya tersimpan di Trip, dibagikan ke feed, atau keduanya. Deteksi lokasi latar belakang memerlukan izin eksplisit. Lokasi real-time, waktu persis, penginapan, teman perjalanan, dan rute privat tidak boleh otomatis dipublikasikan. Itinerary hanya dapat dibagikan/disalin sesuai pengaturan pemilik. Pilihan final draft, prompt, auto-share dan feed/Trip masih terbuka.
