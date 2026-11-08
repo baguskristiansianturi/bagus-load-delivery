@@ -40,7 +40,7 @@ Backend menegakkan aturan dan akses. Frontend mencerminkan izin/status backend. 
 Gunakan PROPOSED, DECIDED, SPECIFIED, IMPLEMENTED, DEPLOYED, TESTED, ACCEPTED, BLOCKED, FAILED, NOT TESTED, NOT VERIFIED. Commit bukan bukti deploy; build bukan bukti runtime; deploy bukan bukti UAT. Founder hanya dapat menerima fitur setelah menguji dan menyatakan menerima.
 
 ## 7. Identitas dan keamanan
-- Produk/repository/backend bernama Pluits. Bagus Load & Delivery / Baguslot and Delivery bukan identitas proyek aktif.
+- Produk/repository/backend bernama Pluits. Tidak boleh ada identitas produk atau repository kedua untuk proyek yang sama.
 - Bagusin dan Bali Trans adalah proyek terpisah.
 - Jangan mengekspos secret, data pribadi, akun uji, atau data privat.
 - Jangan mengubah repository visibility, domain, hosting, Supabase project, atau credential tanpa persetujuan dan rencana transisi.
