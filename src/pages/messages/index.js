@@ -77,6 +77,8 @@ export async function bindMessagesPage() {
   if(!user) { app.querySelector('#pl-msg-conversations').innerHTML='<div class="pl-msg-empty">Masuk ke akun Pluits untuk menggunakan pesan. <a href="#/account/login">Masuk →</a></div>'; return; }
   if(realtimeChannel) { await db.removeChannel(realtimeChannel); realtimeChannel=null; }
   await Promise.all([loadContacts(),loadConversations()]);
+  const requestedConversation=new URLSearchParams((location.hash.split('?')[1]||'')).get('conversation');
+  if(requestedConversation&&conversationCache.some(item=>item.id===requestedConversation)) await openConversation(requestedConversation);
   const search=app.querySelector('#pl-msg-search');
   search.onsubmit=async event=>{
     event.preventDefault();
