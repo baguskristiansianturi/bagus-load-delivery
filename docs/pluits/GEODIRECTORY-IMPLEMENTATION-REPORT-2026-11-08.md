@@ -52,6 +52,7 @@ MVP uses deterministic ranking, not paid AI/ML:
 - `20261108040926_pluits_geodirectory_domain_links`
 - `20261108040936_pluits_geodirectory_media_policy`
 - `20261108041053_pluits_directory_sources_deny_client`
+- `20261108041216_pluits_directory_fk_indexes`
 
 The exact live migration history is authoritative; the timestamp above for the final policy migration is provisional in this report.
 
@@ -73,7 +74,7 @@ The exact live migration history is authoritative; the timestamp above for the f
 ### Frontend deployment
 - GitHub Actions Pages workflow run #506 succeeded on commit `2432e4a81d8588eb46c62c9e3a10b18fafd00a03`.
 - This confirms the Vite production build and Pages deploy job succeeded for that commit.
-- Subsequent database-only migrations do not change frontend source. A fresh workflow for the latest commit should still be checked before closing this report.
+- Subsequent database-only migrations do not change frontend source. The latest database-only migration and documentation commits are being checked by the next Pages workflow; verify that run before closing this report.
 - GitHub Pages URL remains `https://baguskristiansianturi.github.io/bagus-load-delivery/`; repository has not been renamed to `pluits`.
 
 ## 4. Not yet complete
@@ -93,7 +94,7 @@ The exact live migration history is authoritative; the timestamp above for the f
 
 - Existing `public.create_store` and `public.update_store_profile` remain SECURITY DEFINER functions. Their current definitions require `auth.uid()`; the update function also checks `private.is_store_owner`. They were not rewritten because doing so without end-to-end seller regression tests could break store onboarding/profile updates. Supabase Security Advisor continues to flag authenticated execution; perform a dedicated authorization test and consider moving privileged routines to a non-exposed schema with explicit grants.
 - Supabase Auth leaked-password protection remains disabled. Enable it in Supabase Authentication password/security settings and test signup/password-change UX.
-- Existing performance advisor findings for legacy tables/foreign keys remain outside this GeoDirectory change. Add indexes only after workload-specific review.
+- The remaining 14 unindexed foreign-key findings are all on legacy tables (`inventory_movements`, social interactions/tags, product categories/products, store audit/delivery/member tables, and `stores` owner/region). GeoDirectory foreign-key indexes were added. The advisor also reports 43 unused indexes, which is expected before real traffic; do not drop planned indexes solely because early usage is zero.
 
 ## 6. Product impact and recommendations
 
