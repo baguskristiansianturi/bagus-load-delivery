@@ -180,3 +180,16 @@ The active GitHub migration directory contains 19 files, matching all 19 live Su
 - Advisor performance masih melaporkan 14 foreign key tanpa covering index dan sejumlah unused-index notices. Jangan menghapus index hanya karena belum terpakai pada database dengan trafik rendah.
 - Frontend follow/profile dan responsive CSS telah diubah. GitHub Pages run #465 pada commit `fc2314e81f21d5edd55d99108da8777198d7d6f4` sukses build dan deploy. Dua akun nyata dan Android UAT setelah CP-023 masih pending.
 - Build bundle: JS 172.94 kB (gzip 49.59 kB), CSS 258.32 kB (gzip 44.57 kB). Lighthouse/runtime performance belum diukur.
+
+
+## 2026-11-08 — Live security/schema snapshot refreshed (12:37 UTC)
+This snapshot supersedes earlier live counts in this document.
+- Supabase project: ytndswhqxayqpftszwfh, PostgreSQL 17, ACTIVE_HEALTHY.
+- Public schema: 60 base tables; all 60 have RLS enabled.
+- Migration history: 73 entries (the repository currently contains 73 migration SQL files; exact SQL equivalence must be verified by version/name and content, not count alone).
+- No public base table with a name matching cart exists. Marketplace cart is currently localStorage-only; this is a known product/backend alignment gap.
+- Security Advisor: 20 authenticated-callable SECURITY DEFINER function warnings and 1 leaked-password-protection warning. A warning is not by itself proof of exploitability; each function requires body, grants, authorization and negative-test review.
+- Performance Advisor: 84 unused-index notices (informational; do not drop indexes without workload evidence).
+- Health Advisor: 0 lints.
+- Store staff granular permission enforcement remains a release blocker until policies and privileged functions enforce permission grants and negative cross-store tests pass.
+- No schema, permission, Auth setting, or production data was changed by this read-only snapshot.
