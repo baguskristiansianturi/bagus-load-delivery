@@ -30,14 +30,14 @@ Pintu masuk wajib untuk setiap chat/sesi AI baru yang mengerjakan Pluits. AI har
 Pluits sudah dipublikasikan dan memiliki pengguna terdaftar. Perlakukan akun/data yang ada sebagai production. Fokus delivery saat ini adalah Social Media sampai founder menyatakan lulus UAT; jangan lanjut Café, Resto, Marketplace expansion, atau vertical pengalaman lain sebelum gate Social First Release terpenuhi. Baca `MASTER/PLUITS-SOCIAL-FIRST-RELEASE-SPEC.md`.
 
 ## Hierarki sumber kebenaran
-1. Business Model Master: apa yang Pluits bangun dan aturan bisnis.
-2. Idea Backlog: ide/hipotesis belum disetujui.
-3. Project Status & Roadmap: apa yang disetujui untuk dikerjakan dan bukti statusnya.
-4. Spesifikasi teknis: bagaimana keputusan diwujudkan.
-5. Source code/schema/runtime: kondisi aktual, bukan otoritas untuk mengubah model bisnis.
-6. SOP: cara menjalankan proses perubahan dan delivery.
-7. Audit dan UAT: bukti hasil serta keterbatasan.
-
+1. Business Model Master: keputusan dan aturan bisnis aktif.
+2. Decision Log: jejak append-only keputusan founder; bukan pengganti Business Model Master.
+3. Idea Backlog: ide/hipotesis belum diputuskan.
+4. Project Status & Roadmap: pekerjaan yang disetujui dan bukti delivery.
+5. Spesifikasi teknis: cara mewujudkan keputusan.
+6. Source code/schema/runtime: kondisi aktual, bukan otoritas untuk mengubah model bisnis.
+7. SOP: cara menjalankan proses perubahan dan delivery.
+8. Audit dan UAT: bukti hasil serta keterbatasan.
 Jika dokumen bertentangan, jangan menebak. Ikuti keputusan aktif terbaru di Business Model Master, catat konflik, perbaiki dokumen turunan, dan jangan mengubah keputusan bisnis tanpa persetujuan founder.
 
 ## Aturan kerja
