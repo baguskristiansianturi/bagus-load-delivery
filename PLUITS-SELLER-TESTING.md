@@ -40,3 +40,14 @@ Important current blockers:
 - Android responsive and upload testing has not been performed. CSS inspection is not runtime UAT.
 
 Safe founder UAT scope after blockers are fixed: same Auth account → create store → verify owner membership → complete store profile → submit verification → moderator review → enable online sales only after verified/active → create category and draft product. Do not use staff, real payments, payouts, or claim operational same-day delivery before their gates pass.
+
+
+## Frontend patch deployed — 9 November 2026
+- Commit `e1a9d558bf9e3e6906e3b4837dfb9e8b6621b97c`; GitHub Actions run #1043 SUCCESS.
+- Existing Auth identity can enter Seller Center. If the account already owns a store, use **+ Buat toko baru** to register another store; after creation the new store is selected. A selector appears when multiple stores exist.
+- Store profile fields now load phone, public area, and description. Verification submission calls the owner-guarded RPC.
+- Product publish/archive and payment/order actions are connected to their backend permission-checked paths.
+- Online-sales status is read-only in the current screen; no browser-side UPDATE is attempted. A dedicated owner-guarded activation RPC is still required.
+- Mobile Seller Center navigation uses a two-row layout at narrow widths.
+
+**Testing limit:** workflow build and deploy passed, but Android interaction, actual store creation, upload, and two-account authorization are still NOT TESTED. Current business type remains PT/CV/UD only; do not misrepresent an UMKM/individual business to bypass this limitation.
