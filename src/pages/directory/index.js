@@ -1,5 +1,5 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-import '../directory/directory.css';
+import './directory.css';
 
 const supabase = createClient(
   'https://ytndswhqxayqpftszwfh.supabase.co',
