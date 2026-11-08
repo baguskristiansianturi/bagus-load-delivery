@@ -490,3 +490,13 @@
 .ua-header-profile .ua-avatar{width:36px;height:36px;border:1px solid #dce4e9}
 .ua-header-profile:focus-visible{outline:2px solid #477b8b;outline-offset:3px}
 @media(max-width:760px){.ua-header-profile{display:none}.ua-social-app .ua-header nav{display:none}}
+
+
+/* Explore discovery filters: touch-first segmented horizontal rail */
+.ua-explore-filters{display:flex;gap:8px;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none;padding:3px 1px 10px;margin:14px 0 4px;white-space:nowrap;-webkit-overflow-scrolling:touch}
+.ua-explore-filters::-webkit-scrollbar{display:none}
+.ua-explore-filters button{flex:0 0 auto;min-height:40px;border:1px solid #dce4e8;border-radius:999px;background:#fff;color:#52636b;padding:0 17px;font:inherit;font-size:12px;font-weight:750;cursor:pointer;touch-action:manipulation}
+.ua-explore-filters button.active{background:#172f3a;border-color:#172f3a;color:#fff}
+.ua-explore-filters button:focus-visible{outline:2px solid #477b8b;outline-offset:3px}
+@media(min-width:761px){.ua-explore-filters{margin-top:20px}.ua-explore-filters button{min-height:42px;padding:0 20px}}
+@media(max-width:380px){.ua-explore-filters{gap:6px}.ua-explore-filters button{min-height:38px;padding:0 13px;font-size:11px}}

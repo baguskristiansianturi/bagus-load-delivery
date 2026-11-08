@@ -10,7 +10,7 @@ const uploadMime=file=>{const declared=String(file?.type||'').toLowerCase();cons
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmtDate=v=>new Date(v).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'});
 const initials=v=>String(v||'P').trim().slice(0,1).toUpperCase();
-let user=null,profile=null,addresses=[],noticeTimer=null,leafletMap=null,leafletMarker=null,accountContext={active:'personal',professional:null,stores:[],prefs:{}};
+let user=null,profile=null,addresses=[],noticeTimer=null,leafletMap=null,leafletMarker=null,exploreFilter='recommended',accountContext={active:'personal',professional:null,stores:[],prefs:{}};
 
 function notify(message,type='success'){
  const el=document.querySelector('#ua-toast');if(!el)return;
@@ -257,31 +257,47 @@ async function hydratePosts(rows){
  }));
 }
 async function feedPage(){
- const {data,error}=await supabase.from('user_posts').select('*').order('created_at',{ascending:false}).limit(60);
- if(error)throw error;
- const posts=await hydratePosts(data||[]);
- const sorted=posts.sort((a,b)=>(b.likes*3+b.comments)-(a.likes*3+a.comments)||new Date(b.created_at)-new Date(a.created_at));
- const {data:storyRows,error:storyError}=await supabase.from('user_stories').select('id,user_id,media_path,media_type,caption,visibility,created_at,expires_at').gt('expires_at',new Date().toISOString()).order('created_at',{ascending:false}).limit(30);
- if(storyError)throw storyError;
- const ownerIds=[...new Set((storyRows||[]).map(s=>s.user_id))];
- let storyProfiles=[];
- if(ownerIds.length){
-  const profileResult=await supabase.from('user_profiles').select('id,display_name,username,avatar_path').in('id',ownerIds);
-  if(profileResult.error)throw profileResult.error;
-  storyProfiles=profileResult.data||[];
+  const {data,error}=await supabase.from('user_posts').select('*').eq('visibility','public').eq('moderation_status','published').order('created_at',{ascending:false}).limit(100);
+  if(error)throw error;
+  let source=data||[],followingIds=[];
+  if(exploreFilter==='following'){
+   const {data:follows,error:followError}=await supabase.from('user_follows').select('following_id').eq('follower_id',user.id).eq('status','accepted');
+   if(followError)throw followError;
+   followingIds=(follows||[]).map(x=>x.following_id);
+   const visibleIds=new Set([...followingIds,user.id]);
+   source=source.filter(post=>visibleIds.has(post.user_id));
+  }
+  const posts=await hydratePosts(source);
+  const sorted=posts.sort((a,b)=>{
+   if(exploreFilter==='latest')return new Date(b.created_at)-new Date(a.created_at);
+   if(exploreFilter==='popular')return (b.likes*3+b.comments)-(a.likes*3+a.comments)||new Date(b.created_at)-new Date(a.created_at);
+   const aFollow=followingIds.includes(a.user_id)?1:0,bFollow=followingIds.includes(b.user_id)?1:0;
+   return (bFollow-aFollow)||((b.likes*3+b.comments)-(a.likes*3+a.comments))||new Date(b.created_at)-new Date(a.created_at);
+  });
+  const {data:storyRows,error:storyError}=await supabase.from('user_stories').select('id,user_id,media_path,media_type,caption,visibility,created_at,expires_at').gt('expires_at',new Date().toISOString()).eq('visibility','public').order('created_at',{ascending:false}).limit(30);
+  if(storyError)throw storyError;
+  const ownerIds=[...new Set((storyRows||[]).map(s=>s.user_id))];
+  let storyProfiles=[];
+  if(ownerIds.length){
+   const profileResult=await supabase.from('user_profiles').select('id,display_name,username,avatar_path').in('id',ownerIds);
+   if(profileResult.error)throw profileResult.error;
+   storyProfiles=profileResult.data||[];
+  }
+  const profileMap=new Map(storyProfiles.map(p=>[p.id,p]));
+  const stories=await Promise.all((storyRows||[]).map(async story=>{
+   const owner=profileMap.get(story.user_id)||{};
+   return {...story,owner,mediaUrl:await signed(story.media_path),avatarUrl:owner.avatar_path?await signed(owner.avatar_path):''};
+  }));
+  const storyCards=stories.map(story=>"<button type='button' class='ua-story-item' data-story-url='"+esc(story.mediaUrl||'')+"' data-story-type='"+esc(story.media_type)+"' data-story-owner='"+esc(story.owner.display_name||'Pengguna Pluits')+"' data-story-caption='"+esc(story.caption||"")+"'><span class='ua-story-ring'>"+(story.avatarUrl?"<img src='"+esc(story.avatarUrl)+"' alt=''>":"<b>PL</b>")+"</span><small>"+esc(story.owner.display_name||'Pluits')+"</small></button>").join('');
+  const defaultStoryVisibility=profile.visibility==='public'?'public':'private';
+  const storySection="<section class='ua-stories-block'><div class='ua-stories-head'><div><strong>Stories</strong><small>Foto atau video singkat yang hilang setelah 24 jam</small></div><details class='ua-story-create'><summary>＋ Buat Story</summary><form id='ua-story-form' class='ua-story-form'><label class='ua-story-upload'>Pilih foto atau video<input type='file' accept='image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm' required></label><div id='ua-story-preview' class='ua-story-preview'></div><label>Caption (opsional)<textarea name='caption' rows='2' maxlength='220' placeholder='Tambahkan cerita singkat...'></textarea></label><label>Siapa yang dapat melihat?<select name='visibility'><option value='private' "+(defaultStoryVisibility==='private'?'selected':'')+">Hanya saya</option><option value='public' "+(defaultStoryVisibility==='public'?'selected':'')+(defaultStoryVisibility==='private'?' disabled':'')+">Publik</option></select></label><p id='ua-story-note' class='ua-story-note'></p><button class='ua-primary' type='submit'>Bagikan Story</button></form></details></div><div class='ua-story-strip'>"+(storyCards||"<div class='ua-story-empty'>Belum ada Story publik yang aktif. Bagikan momen pertama Anda.</div>")+"</div></section>";
+  const filters=[['recommended','Untuk Anda'],['following','Mengikuti'],['latest','Terbaru'],['popular','Populer']];
+  const filterBar="<nav class='ua-explore-filters' aria-label='Urutan konten'>"+filters.map(([key,label])=>"<button type='button' data-explore-filter='"+key+"' class='"+(exploreFilter===key?'active':'')+"' aria-pressed='"+(exploreFilter===key?"true":"false")+"'>"+label+"</button>").join('')+"</nav>";
+  const empty=exploreFilter==='following'?"Belum ada postingan dari akun yang Anda ikuti. Ikuti beberapa akun untuk membangun beranda Anda.":"Belum ada konten publik di sini. Jadilah salah satu yang pertama berbagi cerita.";
+  return "<div class='ua-page-heading'><div><span class='ua-eyebrow'>TEMUKAN KOMUNITAS</span><h1>Explore</h1><p>Temukan cerita dan video dari komunitas Pluits.</p></div><div class='ua-heading-actions'><a class='ua-outline' href='#/account/reels'>Lihat Reels</a><a class='ua-primary ua-inline' href='#/account/compose'>＋ Buat postingan</a></div></div>"+storySection+filterBar+
+  "<div class='ua-explore-note'>Pilih aliran yang ingin Anda lihat. Rekomendasi mengutamakan kebaruan dan interaksi, tanpa mengunci konten baru di belakang angka popularitas.</div>"+
+  "<section class='ua-feed'>"+(sorted.length?sorted.map(postCard).join(''):"<div class='ua-panel ua-empty'><strong>"+empty+"</strong><p>Anda dapat mengganti pilihan aliran kapan saja.</p><a class='ua-primary ua-inline' href='#/account/compose'>Unggah foto atau video</a></div>")+"</section>";
  }
- const profileMap=new Map(storyProfiles.map(p=>[p.id,p]));
- const stories=await Promise.all((storyRows||[]).map(async s=>{
-  const owner=profileMap.get(s.user_id)||{};
-  return {...s,owner,mediaUrl:await signed(s.media_path),avatarUrl:owner.avatar_path?await signed(owner.avatar_path):''};
- }));
- const storyCards=stories.map(s=>"<button type='button' class='ua-story-item' data-story-url='"+esc(s.mediaUrl||'')+"' data-story-type='"+esc(s.media_type)+"' data-story-owner='"+esc(s.owner.display_name||'Pengguna Pluits')+"' data-story-caption='"+esc(s.caption||"")+"'><span class='ua-story-ring'>"+(s.avatarUrl?"<img src='"+esc(s.avatarUrl)+"' alt=''>":"<b>PL</b>")+"</span><small>"+esc(s.owner.display_name||'Pluits')+"</small></button>").join('');
- const defaultStoryVisibility=profile.visibility==='public'?'public':'private';
- const storySection="<section class='ua-stories-block'><div class='ua-stories-head'><div><strong>Stories</strong><small>Foto atau video singkat yang hilang setelah 24 jam</small></div><details class='ua-story-create'><summary>＋ Buat Story</summary><form id='ua-story-form' class='ua-story-form'><label class='ua-story-upload'>Pilih foto atau video<input type='file' accept='image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm' required></label><div id='ua-story-preview' class='ua-story-preview'></div><label>Caption (opsional)<textarea name='caption' rows='2' maxlength='220' placeholder='Tambahkan cerita singkat...'></textarea></label><label>Siapa yang dapat melihat?<select name='visibility'><option value='private' "+(defaultStoryVisibility==='private'?'selected':'')+">Hanya saya</option><option value='public' "+(defaultStoryVisibility==='public'?'selected':'')+(defaultStoryVisibility==='private'?' disabled':'')+">Publik</option></select></label><p id='ua-story-note' class='ua-story-note'></p><button class='ua-primary' type='submit'>Bagikan Story</button></form></details></div><div class='ua-story-strip'>"+(storyCards||"<div class='ua-story-empty'>Belum ada Story aktif. Bagikan momen pertama Anda.</div>")+"</div></section>";
- return "<div class='ua-page-heading'><div><span class='ua-eyebrow'>TEMUKAN KOMUNITAS</span><h1>Explore</h1><p>Foto dan video dari komunitas Pluits, dalam satu aliran.</p></div><div class='ua-heading-actions'><a class='ua-outline' href='#/account/reels'>Lihat Reels</a><a class='ua-primary ua-inline' href='#/account/compose'>＋ Buat postingan</a></div></div>"+storySection+
- "<div class='ua-explore-note'>Konten baru juga mendapat kesempatan ditemukan. Urutan Explore mempertimbangkan interaksi nyata dan kebaruan, bukan angka viral buatan.</div>"+
- "<section class='ua-feed'>"+(sorted.length?sorted.map(postCard).join(''):"<div class='ua-panel ua-empty'><strong>Explore masih menunggu cerita pertama.</strong><p>Jadilah pengguna pertama yang mengunggah foto atau video. Konten publik Anda akan muncul di sini setelah tersimpan.</p><a class='ua-primary ua-inline' href='#/account/compose'>Unggah foto atau video</a></div>")+"</section>";
-}
 
 async function reelsPage(){
  const {data,error}=await supabase.from('user_posts').select('*').eq('media_type','video').order('created_at',{ascending:false}).limit(40);
@@ -459,7 +475,7 @@ async function mountAccount(section='profile',parameter=''){
   document.querySelector('#ua-menu-logout')?.addEventListener('click',async()=>{await supabase.auth.signOut();user=null;profile=null;location.hash='/';});
   bindProfileTabs();
   bindNotificationActions();
-  bindProfile();bindCompose();bindStoryCompose();bindStories();bindAddresses();bindWallet();bindPostActions();bindFollowActions();if(section==='addresses')initMap();
+  bindProfile();bindCompose();bindStoryCompose();bindStories();bindExploreFilters();bindAddresses();bindWallet();bindPostActions();bindFollowActions();if(section==='addresses')initMap();
  }catch(err){document.querySelector('#app').innerHTML=frame('<div class="ua-panel ua-error"><h1>Ada kendala memuat akun</h1><p>'+esc(err.message)+'</p><button class="ua-primary" onclick="location.reload()">Coba lagi</button></div>');document.querySelector('#ua-logout')?.addEventListener('click',()=>supabase.auth.signOut());}
 }
 function bindWallet(){
@@ -671,6 +687,12 @@ function bindFollowActions(){
   const other=button.dataset.followRemove, incoming=location.hash.includes('/followers')||location.hash.includes('/requests');
   const {error}=await supabase.from('user_follows').delete().eq('follower_id',incoming?other:user.id).eq('following_id',incoming?user.id:other);
   if(error)notify(error.message,'error');else{notify(incoming?'Pengikut dihapus.':'Anda berhenti mengikuti akun ini.');await mountAccount(incoming?'followers':'following');}
+ }));
+}
+function bindExploreFilters(){
+ document.querySelectorAll('[data-explore-filter]').forEach(button=>button.addEventListener('click',async()=>{
+  const next=button.dataset.exploreFilter;if(!['recommended','following','latest','popular'].includes(next)||next===exploreFilter)return;
+  exploreFilter=next;await mountAccount('explore');
  }));
 }
 function bindPostActions(){

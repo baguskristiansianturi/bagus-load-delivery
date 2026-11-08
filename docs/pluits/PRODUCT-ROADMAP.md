@@ -152,3 +152,14 @@ No implementation status is asserted by this planning document. Repository and a
 - Batas ukuran tetap 50 MB untuk postingan dan Story. Belum dilakukan tes upload/playback Android; founder melakukan UAT perangkat nyata. Progress UI masih indikator tahap, bukan persentase byte upload yang akurat.
 - Status: CODE UPDATED; BUILD/DEPLOY MENUNGGU workflow commit; ANDROID UAT MENUNGGU founder.
 - Acceptance test founder: upload JPG/PNG/WebP, MP4, dan WebM; ganti file saat preview aktif; batalkan/gagal submit; cek postingan dan Story tampil setelah refresh; cek playback; lakukan pada jaringan seluler dan Wi-Fi.
+
+
+## CP-030 — Explore discovery controls (8 November 2026)
+
+- Explore kini menyediakan empat aliran: Untuk Anda, Mengikuti, Terbaru, dan Populer.
+- Mengikuti hanya menampilkan postingan publik yang diterbitkan akun yang diikuti dengan status accepted, serta postingan pemilik akun sendiri. Permintaan follow yang masih pending tidak dianggap sebagai hubungan mengikuti.
+- Semua aliran Explore hanya mengambil postingan dengan visibility public dan moderation_status published; konten privat atau belum dipublikasikan tidak sengaja dimasukkan ke discovery feed.
+- Story strip Explore hanya menampilkan Story publik yang belum kedaluwarsa. Story privat tetap tidak dipromosikan di Explore.
+- Filter berupa segmented horizontal rail yang dapat digeser pada layar sempit; pilihan filter dipertahankan saat halaman Explore dirender ulang dalam sesi aplikasi.
+- Status: FRONTEND CODE UPDATED; build/deploy menunggu workflow; UAT perangkat Android dan pengujian dua akun menunggu founder. Filter Mengikuti memerlukan relasi follow berstatus accepted.
+- Acceptance test: (1) akun A mengikuti akun B dan B menerima; posting publik B muncul di filter Mengikuti A; (2) akun C yang tidak diikuti tidak muncul; (3) pending follow tidak muncul; (4) posting private tidak muncul di aliran publik; (5) Terbaru dan Populer mengubah urutan; (6) tab dapat digeser dan ditekan pada HP.
