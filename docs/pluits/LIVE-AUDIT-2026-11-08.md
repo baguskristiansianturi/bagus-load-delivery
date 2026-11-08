@@ -139,3 +139,5 @@ These are limited smoke tests, not a substitute for signed-in two-account and fu
 - Sepuluh migration CP-023 dibandingkan dengan statement live; seluruh file ada dan SQL cocok. Total live history sekarang 29 migration.
 - Frontend: public profile by username, follower/following/request list, accept/decline/cancel/unfollow/remove, guest public profile/post view, dan mobile CSS. Real account/device UAT masih pending.
 - Belum ada notification inbox/push/email, report/block/mute/moderation/appeal, DM, atau anti-spam workflow.
+- GitHub Pages run #465 (42435951991) pada commit `fc2314e81f21d5edd55d99108da8777198d7d6f4` sukses build dan deploy. Bundle: JS 172.94 kB (gzip 49.59 kB), CSS 258.32 kB (gzip 44.57 kB), HTML 1.09 kB.
+- Ukuran bundle merupakan indikator awal saja; belum ada Lighthouse/Core Web Vitals, pengukuran kecepatan jaringan mobile, atau pengujian Android langsung.
