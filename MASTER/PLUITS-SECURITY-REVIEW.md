@@ -259,3 +259,31 @@ This snapshot supersedes earlier live counts in this document.
 - Centralized the app_metadata moderator role check in `private.is_pluits_moderator()` and wrapped RLS helper calls in scalar SELECT to avoid per-row auth function evaluation.
 - Re-ran Supabase Performance Advisor: the new announcement FK and 4 RLS initplan notices are cleared. Remaining notices are 87 unused-index INFO only; do not drop indexes without workload evidence.
 - Health Advisor remains 0 lints. Security Advisor still reports 20 authenticated-callable SECURITY DEFINER warnings and leaked-password protection disabled; these are separate remaining review items.
+
+
+## 2026-11-09 — Live audit snapshot (read-only)
+**Waktu audit:** 9 November 2026, sekitar 03:13 WITA / 19:13 UTC (advisor observation time).  
+**Project:** ytndswhqxayqpftszwfh · ACTIVE_HEALTHY · PostgreSQL 17.11.0.018 · ap-southeast-1.
+
+### Verified live counts
+- Public base tables: 62.
+- Tables with RLS enabled: 62/62.
+- Live migration history: 81 entries.
+- Supabase Edge Functions deployed: 0.
+- Security Advisor: 20 warnings for SECURITY DEFINER functions callable by authenticated users; 1 warning for leaked-password protection disabled.
+- Performance Advisor: 84 unused-index INFO notices.
+- Health Advisor: 0 lints.
+
+### Interpretation
+- RLS enabled is a baseline, not proof that every policy is correct. Continue role-based positive and negative tests.
+- The 20 SECURITY DEFINER warnings require function-by-function review of body, search_path, grants, auth checks, authorization, validation, idempotency, and negative tests. The warning alone is not proof of exploitability.
+- Leaked-password protection is currently disabled; review and enable through a controlled Auth security change.
+- Unused-index notices are informational. Do not drop indexes without workload evidence and regression testing.
+- Migration history count must be reconciled by exact version/name/content against repository files before future DDL.
+- No Edge Functions are deployed. Do not assume server-side external integrations exist.
+
+### Domain observations
+The public schema includes Social, GeoDirectory, Professional, Marketplace, Trip, messaging, moderation, and wallet scaffold tables. No public cart table was found in the prior schema inspection; Marketplace cart remains browser localStorage. Wallet has accounts/requests but not a complete production ledger/payout/reconciliation system. Affiliate attribution, organization donation ledger, and full hiring workflows are not evidenced as complete modules.
+
+### Evidence boundaries
+This was a read-only metadata/advisor audit. No schema, migration, Auth setting, user data, or deployment was changed. Android UAT, two-account REST tests, full privileged-function review, and current Pages deployment evidence remain NOT VERIFIED.
