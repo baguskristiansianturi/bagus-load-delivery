@@ -167,3 +167,12 @@ Founder reports that Pluits is already published and has at least one registered
 - Preserved a sanitized, non-executable text snapshot at `docs/pluits/archive/legacy-master-data.snapshot.txt` for taxonomy/history review only. It is explicitly non-authoritative and must never be imported or used as active business rules.
 - Deleted `src/data/master-data.js` from runtime and added it to the CI forbidden-file/import list.
 - This preserves potentially useful category ideas without allowing the old taxonomy, old payment rules, or demo locations to drive Pluits.
+
+
+## 11. Social homepage/feed parity correction — 8 November 2026
+- **Gap confirmed:** the root homepage (`#/`) rendered a separate public-feed implementation. Authenticated visitors could like/save/share but did not receive the canonical post owner menu (edit/delete), full comment controls, or double-tap like behavior from the account feed.
+- **Correction:** `src/pages/home/index.js` now routes authenticated sessions into `mountUserAccount('explore')`; logged-out visitors retain the public read-only feed. This removes the split authenticated feed experience and reuses the canonical social interaction implementation.
+- **Regression protection:** `scripts/verify-production-surface.mjs` asserts the signed-in homepage routes to the canonical feed and that post menu/edit/delete/save/double-tap contracts remain present.
+- **Commit:** `23ccf6504b4ac426eaa91be8cdb63859d4d5d18f`.
+- **GitHub Actions:** run #983 / `42492769040` — SUCCESS; regression test, Vite build, artifact upload, and Pages deploy all passed for this exact commit.
+- **Founder UAT:** not yet performed on Android; the corrected signed-in homepage still requires founder verification.
