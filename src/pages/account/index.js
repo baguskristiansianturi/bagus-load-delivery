@@ -120,12 +120,26 @@ function navProfile(){
 const rupiah=v=>new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(Number(v||0));
 function settingsHubPage(){
  const groups=[
-  ['Akun dan identitas',[['◎','Pusat Akun Pluits','Kelola profil pribadi dan konteks akun','/account/profile'],['♙','Profil Professional','Kelola identitas dan layanan profesional','/account/professional'],['▣','Toko dan organisasi','Kelola toko melalui Seller Center','/seller'],['⌖','Alamat dan lokasi','Kelola alamat pribadi dan lokasi tersimpan','/account/addresses']]],
-  ['Privasi dan keamanan',[['⬡','Privasi dan audiens','Atur visibilitas postingan, Story, dan interaksi','/account/content-settings'],['◉','Aktivitas akun','Lihat notifikasi dan aktivitas sosial','/account/activity'],['♡','Pengikut dan permintaan','Kelola hubungan dan permintaan mengikuti','/account/followers']]],
-  ['Pluits untuk kebutuhan Anda',[['⌕','Jelajah dan GeoDirectory','Temukan tempat, layanan, komunitas, dan penyedia','/places'],['▤','Marketplace','Produk, layanan, toko, dan pesanan','/'],['⌁','Trip dan perjalanan','Jelajahi tempat dan pengalaman perjalanan','/places'],['▱','Wallet','Lihat dan ajukan permintaan transaksi akun','/account/wallet']]],
-  ['Bantuan dan informasi',[['?','Pusat Bantuan','Panduan penggunaan dan dukungan Pluits','/help'],['⚑','Pedoman Komunitas','Prinsip keamanan dan perilaku komunitas','/guides'],['§','Ketentuan Penggunaan','Ketentuan layanan Pluits','/terms'],['ⓘ','Kebijakan Privasi','Informasi data dan privasi pengguna','/privacy'],['ⓘ','Tentang Pluits','Informasi mengenai Pluits','/about']]]
+  ['Akun Anda','Kelola identitas dan peran di Pluits',[
+   ['◎','Pusat Akun','Informasi profil, username, dan identitas personal','/account/profile','ready'],
+   ['♙','Profil profesional','Keahlian, portofolio, dan area layanan','/account/professional','ready'],
+   ['▣','Toko dan organisasi','Kelola toko, tim, dan identitas organisasi','/seller','ready'],
+   ['⌖','Alamat dan lokasi','Alamat pengiriman dan lokasi tersimpan','/account/addresses','ready']]],
+  ['Cara Anda menggunakan Pluits','Atur pengalaman komunitas dan penemuan lokal',[
+   ['◉','Privasi dan audiens','Siapa yang dapat melihat postingan dan berinteraksi','/account/content-settings','ready'],
+   ['♡','Pengikut dan permintaan','Kelola hubungan dan permintaan mengikuti','/account/followers','ready'],
+   ['⌕','Jelajah dan GeoDirectory','Tempat, layanan, komunitas, dan penyedia lokal','/places','ready'],
+   ['▤','Marketplace','Toko, produk, layanan, dan pesanan','/','ready'],
+   ['⌁','Trip dan perjalanan','Temukan tempat dan rencanakan pengalaman','/places','staged'],
+   ['▱','Wallet','Permintaan dan informasi saldo akun','/account/wallet','ready']]],
+  ['Interaksi dan dukungan','Aktivitas akun, panduan, dan informasi layanan',[
+   ['◷','Aktivitas dan notifikasi','Pemberitahuan suka, komentar, dan pengikut','/account/activity','ready'],
+   ['?','Pusat Bantuan','Panduan dan jawaban penggunaan Pluits','/help','staged'],
+   ['⚑','Pedoman Komunitas','Aturan konten dan interaksi yang aman','/guides','staged'],
+   ['§','Ketentuan dan Privasi','Ketentuan layanan dan penggunaan data','/privacy','staged']]]
  ];
- return '<div class="ua-settings-hub"><div class="ua-settings-top"><a href="#/account/profile" aria-label="Kembali ke profil">←</a><h1>Pengaturan dan aktivitas</h1></div>'+groups.map(g=>'<section class="ua-settings-group"><h2>'+g[0]+'</h2>'+g[1].map(x=>'<a class="ua-setting-row" href="#'+x[3]+'"><span class="ua-setting-icon">'+x[0]+'</span><span class="ua-setting-copy"><strong>'+x[1]+'</strong><small>'+x[2]+'</small></span><span class="ua-setting-chevron">›</span></a>').join('')+'</section>').join('')+'<section class="ua-settings-login"><h2>Login</h2><a href="#/account/login">Tambahkan akun</a><button id="ua-settings-logout" type="button">Keluar</button></section></div>';
+ const rows=groups.map(g=>'<section class="ua-ac-group"><div class="ua-ac-group-head"><h2>'+g[0]+'</h2><p>'+g[1]+'</p></div><div class="ua-ac-list">'+g[2].map(x=>'<a class="ua-ac-row" href="#'+x[3]+'"><span class="ua-ac-icon">'+x[0]+'</span><span class="ua-ac-copy"><strong>'+x[1]+'</strong><small>'+x[2]+'</small></span>'+(x[4]==='staged'?'<span class="ua-ac-stage">Bertahap</span>':'')+'<span class="ua-ac-arrow">›</span></a>').join('')+'</div></section>').join('');
+ return '<div class="ua-account-center"><header class="ua-ac-header"><a class="ua-ac-back" href="#/account/profile" aria-label="Kembali ke profil">‹</a><div><span>PLUITS ACCOUNT</span><h1>Pusat Pengaturan</h1></div></header><section class="ua-ac-identity">'+avatar(profile?.avatar_url,profile?.display_name||user?.email||'P','large')+'<div class="ua-ac-identity-copy"><strong>'+esc(profile?.display_name||'Pengguna Pluits')+'</strong><span>@'+esc(profile?.username||'')+'</span><small>'+esc(user?.email||'')+'</small></div><a href="#/account/profile" aria-label="Edit profil">Edit</a></section><div class="ua-ac-intro"><strong>Semua kendali akun Anda dalam satu tempat.</strong><p>Atur identitas, privasi, aktivitas sosial, dan layanan Pluits sesuai kebutuhan.</p></div>'+rows+'<section class="ua-ac-logout"><div><strong>Login dan keamanan</strong><small>Kelola sesi akun dan keluar dari Pluits.</small></div><button id="ua-settings-logout" type="button">Keluar dari akun</button></section><p class="ua-ac-version">PLUITS INDONESIA · Pusat Akun</p></div>';
 }
 async function walletPage(){
  const [a,r]=await Promise.all([
