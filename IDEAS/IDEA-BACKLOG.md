@@ -1,6 +1,6 @@
 # IDEAS — Future Product & Engineering Backlog
 
-Repository/product saat ini: Pluits. Nama/domain masa depan yang disebut founder: fluids.com; hubungan brand perlu dikonfirmasi.
+Identitas produk dan repository aktif: Pluits. Belum ada nama alternatif atau domain khusus yang disetujui founder; jangan menyimpulkan nama dari salah dengar/transkripsi.
 Terakhir diperbarui: 8 November 2026.
 Status: wadah ide dan hipotesis, bukan keputusan produk atau daftar pekerjaan yang disetujui.
 
@@ -20,6 +20,33 @@ Status: wadah ide dan hipotesis, bukan keputusan produk atau daftar pekerjaan ya
 - [ ] Risiko penyalahgunaan dan mitigasi dinilai.
 - [ ] Keputusan founder dicatat: lanjut / tunda / tolak.
 - [ ] Jika disetujui: spesifikasi, acceptance criteria, dependency, rollback, dan UAT dibuat.
+
+
+## Template pencatatan ide/temuan baru
+Salin blok ini untuk setiap temuan baru. Satu temuan dapat berasal dari percakapan founder, pengujian aplikasi, screenshot, analisis kompetitor, riset, atau audit.
+
+### IDEA-XXX — [Judul singkat]
+- **Tanggal ditemukan:**
+- **Sumber/konteks:** chat, UAT, screenshot, kompetitor, audit, riset, atau lainnya.
+- **Kategori:** UX/UI | User Journey | Business Model | Pricing/Revenue | Strategy/Growth | Trust/Safety | Technical Architecture | Operations | Legal/Compliance | Research.
+- **Jenis:** FACT | OBSERVATION | ASSUMPTION | HYPOTHESIS | OPINION.
+- **Status:** PROPOSED | NEEDS RESEARCH | PARKED | APPROVED | REJECTED | PROMOTED | MERGED.
+- **Masalah yang ditemukan:**
+- **Pengguna/pihak terdampak:**
+- **Alur atau kondisi saat ini:**
+- **Usulan/hipotesis solusi:**
+- **Nilai/manfaat yang diharapkan:**
+- **Alternatif dan alasan tidak membangun:**
+- **Dampak ke Social / Marketplace / Trip / GeoDirectory:**
+- **Dampak backend, data, permission, privasi, keamanan:**
+- **Risiko, biaya, kompleksitas, dan dependency:**
+- **Pertanyaan riset/validasi:**
+- **Keputusan founder dan tanggal:**
+- **Jika disetujui, bagian Business Model Master yang diperbarui:**
+- **Spesifikasi/PR/checkpoint roadmap:**
+- **Bukti UAT/hasil setelah dijalankan:**
+
+Aturan: AI boleh membantu menyusun dan menganalisis ide. AI tidak boleh menandai APPROVED, mengubah Business Model Master, atau memasukkan ide ke roadmap tanpa keputusan eksplisit founder.
 
 ## IDEA-001 — Identitas resmi platform dan pengumuman kepada pengguna
 Status: PARKED / NEEDS PRODUCT RESEARCH
@@ -80,10 +107,10 @@ Setiap temuan menyertakan waktu, komponen terdampak, severity, bukti/log/error I
 Status: IDEA / FUTURE DEPLOYMENT & SECURITY PLANNING
 
 ### Masukan founder
-Founder menyebut target domain masa depan fluids.com dan menginginkan pengguna mengakses domain produk secara langsung, tanpa mudah menemukan repository GitHub atau akar implementasi.
+Founder mempertimbangkan domain milik sendiri pada masa depan dan menginginkan pengguna mengakses alamat produk secara langsung, tanpa mudah menemukan repository GitHub atau akar implementasi. Nama domain belum dipilih.
 
 ### Klarifikasi wajib
-Nama produk/repository saat ini adalah Pluits. Hubungan Pluits dengan fluids.com belum dikonfirmasi. Jangan rename repo, brand, app metadata, atau URL sebelum keputusan eksplisit.
+Nama produk/repository saat ini adalah Pluits. Belum ada domain khusus yang disetujui. Jangan menebak domain, rename repo, brand, app metadata, atau URL sebelum keputusan eksplisit.
 
 ### Fakta dan risiko
 - Custom domain hanya mengubah alamat yang digunakan pengguna; custom domain tidak menyembunyikan repository, source map, bundle JavaScript, asset, endpoint, metadata, atau riwayat commit yang memang publik.
