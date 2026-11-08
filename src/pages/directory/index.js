@@ -212,7 +212,7 @@ export async function placePage(slug) {
   const {data:entity,error}=await supabase.from('directory_entities').select('id,entity_type,slug,name,summary,description,status,verification_status,created_at').eq('slug',slug).eq('status','published').maybeSingle();
   if(error||!entity)return '<div class="pl-directory-page"><main class="pl-directory-main"><a href="#/places">← Kembali ke direktori</a><h1>Tempat tidak ditemukan</h1><p>Tempat ini tidak tersedia di direktori publik.</p></main></div>';
   const [{data:locations},{data:cats}] = await Promise.all([
-    supabase.from('directory_locations').select('address,locality,district,city,region,country_code,geom,is_primary').eq('entity_id',entity.id).eq('is_public',true).order('is_primary',{ascending:false}),
+    supabase.from('directory_locations').select('address,locality,district,city,region,country_code,is_primary').eq('entity_id',entity.id).eq('is_public',true).order('is_primary',{ascending:false}),
     supabase.from('directory_entity_categories').select('directory_categories(name,slug)').eq('entity_id',entity.id)
   ]);
   const loc=locations?.[0],cat=(cats||[]).map(x=>x.directory_categories?.name).filter(Boolean);
@@ -228,6 +228,7 @@ export async function placePage(slug) {
 export async function claimPage(slug) {
   const {data:entity}=await supabase.from('directory_entities').select('id,name,slug,verification_status').eq('slug',slug).eq('status','published').maybeSingle();
   if(!entity)return '<div class="pl-directory-page"><main class="pl-directory-main"><h1>Tempat tidak ditemukan</h1><a href="#/places">Kembali ke direktori</a></main></div>';
+  if(entity.verification_status==='verified'||entity.verification_status==='pending')return '<div class="pl-directory-page"><main class="pl-directory-main pl-claim-page"><a href="'+placeUrl(slug)+'">← '+esc(entity.name)+'</a><h1>'+(entity.verification_status==='verified'?'Tempat sudah terverifikasi':'Klaim sedang ditinjau')+'</h1><p>Permohonan pengelolaan baru tidak dapat dibuat pada status ini. Hubungi dukungan Pluits jika Anda memiliki informasi tambahan.</p></main></div>';
   return `<div class="pl-directory-page"><main class="pl-directory-main pl-claim-page"><a href="${placeUrl(slug)}">← ${esc(entity.name)}</a><span class="pl-directory-eyebrow">PENGELOLA TEMPAT</span><h1>Klaim tempat ini</h1><p>Ajukan permintaan sebagai pemilik atau pengelola yang berwenang. Akses tidak aktif sebelum bukti ditinjau dan disetujui.</p><form id="pl-claim-form" data-entity="${entity.id}"><label>Peran<select name="applicant_role" required><option value="owner">Pemilik</option><option value="authorized_manager">Pengelola resmi</option><option value="staff">Staf yang diberi wewenang</option><option value="representative">Perwakilan organisasi</option></select></label><label>Jelaskan kewenangan dan bukti Anda<textarea name="evidence_note" minlength="20" maxlength="3000" required placeholder="Contoh: jabatan, hubungan dengan tempat, dan jenis bukti yang dapat diverifikasi."></textarea></label><button class="pl-directory-primary" type="submit">Kirim permohonan</button><p id="pl-claim-status" role="status"></p></form></main></div>`;
 }
 export function bindPlacePage() {
