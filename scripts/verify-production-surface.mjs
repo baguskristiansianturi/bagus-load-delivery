@@ -132,6 +132,7 @@ for (const path of [
   'src/pages/admin/moderation.js',
   'src/pages/home/index.js',
   'src/pages/search/discovery.js',
+  'src/pages/misc/index.js',
 ]) {
   const content = read(path);
   assert.doesNotMatch(content, /createClient\(|@supabase\/supabase-js@2/, `Page must use the shared Supabase client: ${path}`);
