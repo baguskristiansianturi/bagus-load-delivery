@@ -110,3 +110,10 @@ The repository also contains `202611070001_initial_marketplace.sql`, which is no
 - Current data consistency query: 2 user posts; 0 posts currently reference a media path whose first folder differs from the post owner's UUID. This is a snapshot, not proof the policy prevents future attempts.
 - Stories table currently contains 0 rows.
 - Android device UAT and signed-in two-account tests remain NOT TESTED.
+
+## 12. Migration reconciliation verification
+- Active migration files: 17.
+- Live migration history entries: 17.
+- Exact version/name match: yes.
+- Missing or extra active migrations: none.
+- Superseded/unapplied drafts: preserved outside `supabase/migrations/`.
