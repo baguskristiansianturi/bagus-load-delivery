@@ -472,7 +472,8 @@ async function notificationPage(){
 }
 function bindNotificationActions(){
  if(activityNotificationChannel){supabase.removeChannel(activityNotificationChannel);activityNotificationChannel=null;}
- if(user){activityNotificationChannel=supabase.channel('pluits-activity-'+user.id).on('postgres_changes',{event:'INSERT',schema:'public',table:'user_notifications',filter:'recipient_user_id=eq.'+user.id},()=>{if(location.hash.includes('/account/activity'))mountAccount('activity');}).subscribe();}
+ if(user){activityNotificationChannel=supabase.channel('pluits-activity-'+user.id).on('postgres_changes',{event:'INSERT',schema:'public',table:'user_notifications',filter:'recipient_user_id=eq.'+user.id},()=>{if(location.hash.includes('/account/activity'))mountAccount('activity');})
+  .on('postgres_changes',{event:'*',schema:'public',table:'pluits_system_announcements'},()=>{if(location.hash.includes('/account/activity'))mountAccount('activity');}).subscribe();}
  document.querySelectorAll('[data-notification-id]').forEach(link=>link.addEventListener('click',async e=>{e.preventDefault();const id=link.dataset.notificationId,href=link.dataset.notificationHref;if(link.classList.contains('is-unread')){const {error}=await supabase.from('user_notifications').update({read_at:new Date().toISOString()}).eq('id',id);if(error){notify('Status pemberitahuan belum dapat diperbarui.','error');return;}}location.hash=href;}));
  document.querySelectorAll('[data-announcement-id]').forEach(button=>button.addEventListener('click',async()=>{
   const {error}=await supabase.from('pluits_system_announcement_reads').upsert({announcement_id:button.dataset.announcementId,user_id:user.id,read_at:new Date().toISOString()},{onConflict:'announcement_id,user_id'});
