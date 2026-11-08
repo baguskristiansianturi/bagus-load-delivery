@@ -36,6 +36,10 @@ export function renderSocialHeader({ active = 'explore', profileView = false, us
         <a class="${active === 'activity' ? 'active' : ''} pl-nav-activity" href="#/account/activity">Aktivitas${notificationCount ? '<i class="pl-nav-unread">'+(notificationCount>99?'99+':notificationCount)+'</i>' : ''}</a>
         <a class="${profileView ? 'active' : ''}" href="#/account/profile">Profil</a>
       </nav>
+      <div class='pl-social-mobile-actions'>
+        <a href='#/messages' aria-label='Pesan'>${socialIcon('message', { size: 21 })}</a>
+        <a href='#/account/activity' aria-label='Aktivitas'>${socialIcon('bell', { size: 21 })}</a>
+      </div>
       <a class="ua-header-profile" href="${profileHref}" aria-label="Buka profil saya">${userAvatar || socialIcon('user', { size: 22 })}</a>
       <a class="ua-header-create" href="#/account/compose" aria-label="Buat postingan">＋</a>
     </header>`;
@@ -83,8 +87,6 @@ export function renderSocialMobileNav({ active = 'explore', profileView = false,
           ${socialIcon(item.icon, { size: 22 })}
           <small>${item.label}</small>
         </a>`).join('')}
-      <a href='#/messages' aria-label='Pesan'>${socialIcon('message', { size: 22 })}<small>Pesan</small></a>
-      <a class='${active === 'activity' ? 'active' : ''} pl-mobile-activity' href='#/account/activity' aria-label='Aktivitas'>${socialIcon('bell', { size: 22 })}<small>Aktivitas</small>${notificationCount ? '<i class="pl-nav-unread">'+(notificationCount>99?'99+':notificationCount)+'</i>' : ''}</a>
       <a class="${profileView ? 'active' : ''}" href="${profileHref}" aria-label="Profil">
         ${userAvatar || socialIcon('user', { size: 22 })}
         <small>Profil</small>
