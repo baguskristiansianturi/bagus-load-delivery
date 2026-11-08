@@ -104,3 +104,13 @@ Nama produk/repository saat ini adalah Pluits. Hubungan Pluits dengan fluids.com
 
 ## Log keputusan
 Belum ada ide dalam dokumen ini yang disetujui sebagai fitur implementasi.
+
+
+## IDEA-005 — Governance capture for new founder discoveries
+Status: IDEA / PROCESS ENHANCEMENT — NOT A PRODUCT FEATURE
+- Temuan dari percakapan, UAT, analisis kompetitor, bug report, atau eksplorasi desain dapat dicatat dengan tanggal, konteks, dan sumber.
+- Klasifikasikan: UX/UI, user journey, business model, pricing/revenue, strategy/growth, trust/safety, technical architecture, operations, legal/compliance, research.
+- Bedakan observasi, asumsi, hipotesis, dan keputusan founder.
+- Catat masalah, pengguna terdampak, hipotesis nilai, contoh, alternatif, alasan tidak membangun, risiko, biaya/kompleksitas, dependency, dan pertanyaan terbuka.
+- Ide yang disetujui dipromosikan secara eksplisit ke Business Model Master (bila mengubah keputusan bisnis), spesifikasi domain, lalu Project Status & Roadmap. Tandai ide PROMOTED dan tautkan checkpoint/keputusan.
+- Ide yang belum cocok tetap PARKED, REJECTED, atau MERGED; jangan hapus jejak pembelajaran.
