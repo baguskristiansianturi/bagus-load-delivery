@@ -250,3 +250,12 @@ This snapshot supersedes earlier live counts in this document.
 - Health Advisor returned 0 lints at the latest check.
 - Two-account REST/Realtime tests, real Android offline/reconnect, MFA enrollment, SMS OTP, moderator announcement publishing and read receipts remain NOT TESTED.
 - No user accounts, posts, media, messages, orders, or existing notifications were deleted or rewritten by these migrations.
+
+
+### 2026-11-08 14:17 UTC — System announcement policy performance refinement
+
+- Applied migrations `20261108141720_optimize_system_announcement_rls_and_indexes` and `20261108141753_centralize_system_moderator_rls_check`; matching SQL files are committed.
+- Added the missing `created_by` foreign-key index.
+- Centralized the app_metadata moderator role check in `private.is_pluits_moderator()` and wrapped RLS helper calls in scalar SELECT to avoid per-row auth function evaluation.
+- Re-ran Supabase Performance Advisor: the new announcement FK and 4 RLS initplan notices are cleared. Remaining notices are 87 unused-index INFO only; do not drop indexes without workload evidence.
+- Health Advisor remains 0 lints. Security Advisor still reports 20 authenticated-callable SECURITY DEFINER warnings and leaked-password protection disabled; these are separate remaining review items.
