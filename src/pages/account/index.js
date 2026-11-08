@@ -115,7 +115,7 @@ function avatar(url,name,size=''){
  return url?`<img class="ua-avatar ${size}" src="${url}" alt="Foto profil">`:`<span class="ua-avatar ua-avatar-fallback ${size}">${esc(initials(name))}</span>`;
 }
 function navProfile(){
- return `<div class="ua-subnav"><a href="#/account/profile">Personal</a><a href="#/account/followers">Pengikut</a><a href="#/account/following">Mengikuti</a><a href="#/account/settings">Pengaturan</a><a href="#/account/wallet">Wallet</a><a href="#/account/addresses">Alamat</a><a href="#/account/explore">Explore</a></div>`;
+ return `<div class="ua-subnav"><a href="#/account/profile">Personal</a><a href="#/account/followers">Pengikut</a><a href="#/account/following">Mengikuti</a><a href="#/account/requests">Permintaan</a><a href="#/account/settings">Pengaturan</a><a href="#/account/wallet">Wallet</a><a href="#/account/addresses">Alamat</a><a href="#/account/explore">Explore</a></div>`;
 }
 const rupiah=v=>new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(Number(v||0));
 async function walletPage(){
@@ -218,13 +218,13 @@ async function hydratePosts(rows){
   supabase.from('user_profiles').select('id,display_name,username,avatar_path,public_city,public_province,visibility').in('id',ids),
   supabase.from('post_likes').select('post_id,user_id').in('post_id',postIds),
   supabase.from('post_comments').select('post_id').in('post_id',postIds),
-  supabase.from('post_saves').select('post_id,user_id').in('post_id',postIds).eq('user_id',user.id)
+  user?.id?supabase.from('post_saves').select('post_id,user_id').in('post_id',postIds).eq('user_id',user.id):Promise.resolve({data:[]})
  ]);
  const pmap=new Map((profilesRes.data||[]).map(x=>[x.id,x]));
  const likeRows=likesRes.data||[],commentRows=commentsRes.data||[],saved=new Set((savesRes.data||[]).map(x=>x.post_id));
  return Promise.all(rows.map(async p=>{
   const owner=pmap.get(p.user_id)||{display_name:'Pengguna Pluits',username:'pengguna',visibility:'private'};
-  return {...p,owner,tagged:taggedRows.filter(t=>t.post_id===p.id).map(t=>pmap.get(t.tagged_user_id)).filter(Boolean),mediaUrl:await signed(p.media_path),avatarUrl:await signed(owner.avatar_path),likes:likeRows.filter(x=>x.post_id===p.id).length,liked:likeRows.some(x=>x.post_id===p.id&&x.user_id===user.id),comments:commentRows.filter(x=>x.post_id===p.id).length,saved:saved.has(p.id)};
+  return {...p,owner,tagged:taggedRows.filter(t=>t.post_id===p.id).map(t=>pmap.get(t.tagged_user_id)).filter(Boolean),mediaUrl:await signed(p.media_path),avatarUrl:await signed(owner.avatar_path),likes:likeRows.filter(x=>x.post_id===p.id).length,liked:!!user&&likeRows.some(x=>x.post_id===p.id&&x.user_id===user.id),comments:commentRows.filter(x=>x.post_id===p.id).length,saved:saved.has(p.id)};
  }));
 }
 async function feedPage(){
@@ -266,7 +266,7 @@ function postCard(p){
  return `<article class="ua-post-card" data-post-id="${p.id}"><div class="ua-post-head">${avatar(p.avatarUrl,p.owner.display_name)}<div><a class="ua-author-link" href="#/account/user/${encodeURIComponent(p.owner.username)}"><strong>${esc(p.owner.display_name)}</strong></a><small>@${esc(p.owner.username)} ${p.owner.public_city&&p.owner.public_province?'· ⌖ '+esc(p.owner.public_city)+', '+esc(p.owner.public_province):''}</small></div><time>${fmtDate(p.created_at)}</time></div>
  <p class="ua-caption">${esc(p.caption)}</p>${(p.tags?.length||p.tagged?.length)?'<div class="ua-tags">'+(p.tags||[]).map(t=>'<span>#'+esc(t)+'</span>').join(' ')+(p.tagged||[]).map(t=>'<span>＠'+esc(t.username)+'</span>').join(' ')+'</div>':''}
  ${p.media_path?'<div class="ua-media">'+(p.media_type==='video'?'<video src="'+p.mediaUrl+'" controls playsinline preload="metadata"></video>':'<img src="'+p.mediaUrl+'" alt="'+esc(p.caption||'Foto postingan')+'">')+'</div>':'<div class="ua-text-post-mark">PLUITS</div>'}
- <div class="ua-post-actions"><button data-action="like" class="${p.liked?'is-liked':''}">♥ <span>${p.liked?'Disukai':'Suka'}</span> <b>${p.likes}</b></button><button data-action="comments">◯ Komentar <b>${p.comments}</b></button><button data-action="share">↗ Bagikan</button><button data-action="save" class="${p.saved?'is-saved':''}">▱ ${p.saved?'Tersimpan':'Tandai'}</button><button data-action="tag" ${p.user_id===user.id?'':'disabled title="Hanya pemilik postingan dapat menandai akun"'}>＠ Tag</button></div><div class="ua-comments" hidden></div>
+ <div class="ua-post-actions"><button data-action="like" class="${p.liked?'is-liked':''}">♥ <span>${p.liked?'Disukai':'Suka'}</span> <b>${p.likes}</b></button><button data-action="comments">◯ Komentar <b>${p.comments}</b></button><button data-action="share">↗ Bagikan</button><button data-action="save" class="${p.saved?'is-saved':''}">▱ ${p.saved?'Tersimpan':'Tandai'}</button><button data-action="tag" ${p.user_id===user?.id?'':'disabled title="Hanya pemilik postingan dapat menandai akun"'}>＠ Tag</button></div><div class="ua-comments" hidden></div>
  </article>`;
 }
 async function composePage(){
@@ -669,4 +669,4 @@ async function loadComments(postId,box){
  '<form class="ua-comment-form"><input name="body" maxlength="1200" required placeholder="Tulis komentar…"><button>kirim</button></form>';
  box.querySelector('form').addEventListener('submit',async e=>{e.preventDefault();const body=new FormData(e.currentTarget).get('body');const {error}=await supabase.from('post_comments').insert({post_id:postId,user_id:user.id,body:String(body).trim()});if(error)notify(error.message,'error');else{const counter=document.querySelector('[data-post-id="'+postId+'"] [data-action="comments"] b');if(counter)counter.textContent=String(Number(counter.textContent||0)+1);await loadComments(postId,box);}});
 }
-export function mountUserAccount(section='profile'){mountAccount(section);}
+export function mountUserAccount(section='profile',parameter=''){mountAccount(section,parameter);}
