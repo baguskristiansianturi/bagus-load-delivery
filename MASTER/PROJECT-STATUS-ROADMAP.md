@@ -431,3 +431,14 @@ Build dari commit `642a24bdbed4a85931271e7481f9880a04cc9fc3` berhasil. GitHub Pa
 - GitHub Pages workflow run 423: **SUCCESS**, Vite build, output check, artifact upload dan deploy berhasil.
 - **Belum diuji:** upload Story dari akun nyata, viewer di perangkat Android, upload video besar, serta perilaku kedaluwarsa 24 jam secara langsung.
 - **Status:** Stories UI implemented and deployed; UAT pending. Reels khusus, DM, follow graph, notifications, reporting/moderation, and public homepage engagement metrics remain incomplete.
+
+
+## CP-022 — Dedicated Reels feed (8 November 2026)
+
+- Explore now links to a dedicated `#/account/reels` route.
+- Reels page loads video posts from the same `user_posts` table and uses the existing likes/comments/share/save actions.
+- Video player keeps the original source ratio with `height:auto` and `object-fit:contain`; portrait, landscape and square sources are not forced into one crop.
+- Mobile Reels cards use a tall vertical layout; playback remains user-controlled (no autoplay) to reduce surprise data/battery use.
+- GitHub Pages workflow run 432: **SUCCESS**, Vite build, artifact upload and Deploy to GitHub Pages passed.
+- **Not tested:** real video upload, Android playback, network/battery behavior, and interaction persistence on real accounts.
+- **Status:** basic Reels feed implemented and deployed; UAT pending. Full-screen swipe/autoplay remains a future enhancement.
