@@ -667,3 +667,15 @@ Build dari commit `642a24bdbed4a85931271e7481f9880a04cc9fc3` berhasil. GitHub Pa
 
 ## Sumber tunggal roadmap
 Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, checkpoint, deployment, dan UAT Pluits. Dokumen `docs/pluits/PRODUCT-ROADMAP.md` telah digabungkan dan tidak lagi menjadi roadmap aktif.
+
+
+## CP-038 — Konsolidasi dokumen dan sinkronisasi jalur produk (8 November 2026)
+- **Status:** DOCUMENTATION + ROUTER CLEANUP IMPLEMENTED; BUILD/DEPLOY MENUNGGU workflow terbaru; Android UAT NOT TESTED.
+- Menyatukan Business Model Master sebagai satu-satunya sumber keputusan bisnis; menggabungkan dan menghapus dokumen Master Product Vision serta Product Roadmap duplikat setelah isi relevan dipindahkan.
+- Menambahkan AI Governance, memperbaiki AI Start Here dan Documentation Map, menambahkan alur penangkapan temuan ke Idea Backlog, serta memindahkan CP-036/037 ke roadmap kanonis.
+- Mengoreksi URL Pages dan repository references pada dokumen uji/audit/backend.
+- Router diputus dari halaman demo procurement/operations lama; route pencarian memakai social discovery; cart/checkout/orders legacy paths diarahkan ke Marketplace; shortcut Jasa/Penyedia diarahkan ke GeoDirectory dan Pengiriman tidak lagi dipasarkan sebagai produk terpisah.
+- Menandai wallet sebagai staged dan seller backend spec sebagai historical baseline.
+- **Gap P1 yang masih terbuka:** Marketplace cart masih localStorage, belum server-side/cross-device; staff granular permissions belum terverifikasi; legacy source modules belum dihapus secara fisik karena import graph harus dituntaskan.
+- Laporan audit: docs/pluits/BUSINESS-FRONTEND-BACKEND-ALIGNMENT-AUDIT-2026-11-08.md.
+- Jangan menyatakan fitur production-ready atau ACCEPTED sebelum build/deploy dan UAT nyata berhasil.
