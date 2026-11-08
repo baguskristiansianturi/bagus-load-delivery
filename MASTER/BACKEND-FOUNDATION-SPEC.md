@@ -1,6 +1,6 @@
-# Backend Foundation — Owner, Staff, Storefront & Finance
+# Pluits Backend Foundation — Owner, Staff, Storefront & Finance
 
-**Project:** Bagus Load & Delivery  
+**Project:** Pluits  
 **Stage:** Foundation v1 + Access & Storefront design  
 **Date:** 7 November 2026
 
