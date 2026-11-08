@@ -36,16 +36,16 @@ function frame(content,active='explore',avatarUrl=''){
     <a class="${active==='activity'?'active':''}" href="#/account/activity">Aktivitas</a>
     <a class="${profileView?'active':''}" href="#/account/profile">Profil</a>
    </nav>
-   <a class="ua-header-profile" href="#/@${encodeURIComponent(profile.username)}" aria-label="Buka profil saya">${userAvatar}</a>
+   <a class="ua-header-profile" href="${user?'#/@'+encodeURIComponent(profile?.username||''):'#/account/login'}" aria-label="Buka profil saya">${userAvatar}</a>
    <a class="ua-header-create" href="#/account/compose" aria-label="Buat postingan">＋</a>
   </header>
   <main class="ua-main ${profileView?'ua-profile-main':''}">${content}</main>
   <nav class="ua-mobile-nav" aria-label="Navigasi utama">
-   <a class="${active==='explore'?'active':''}" href="#/account/explore" aria-label="Beranda"><span>⌂</span><small>Beranda</small></a>
-   <a class="${active==='discover'?'active':''}" href="#/search" aria-label="Jelajah"><span>⌕</span><small>Jelajah</small></a>
-   <a class="ua-mobile-create" href="#/account/compose" aria-label="Buat postingan"><span>＋</span><small>Buat</small></a>
-   <a class="${active==='reels'?'active':''}" href="#/account/reels" aria-label="Reels"><span>▣</span><small>Reels</small></a>
-   <a class="${profileView?'active':''}" href="#/@${encodeURIComponent(profile.username)}" aria-label="Profil">${userAvatar}<small>Profil</small></a>
+   <a class="${active==='explore'?'active':''}" href="#/account/explore" aria-label="Beranda">${socialIcon('home',{size:22})}<small>Beranda</small></a>
+   <a class="${active==='discover'?'active':''}" href="#/search" aria-label="Jelajah">${socialIcon('compass',{size:22})}<small>Jelajah</small></a>
+   <a class="ua-mobile-create" href="#/account/compose" aria-label="Buat postingan">${socialIcon('plus',{size:22})}<small>Buat</small></a>
+   <a class="${active==='reels'?'active':''}" href="#/account/reels" aria-label="Reels">${socialIcon('reels',{size:22})}<small>Reels</small></a>
+   <a class="${profileView?'active':''}" href="${user?'#/@'+encodeURIComponent(profile?.username||''):'#/account/login'}" aria-label="Profil">${userAvatar}<small>Profil</small></a>
   </nav>
   <div id="ua-toast" class="ua-toast" role="status"></div>
   <footer class="ua-footer">PLUITS · Identitas pengguna dan aktivitas komunitas</footer>
@@ -221,7 +221,7 @@ async function profilePage(preview=false){
  return ` <section class="ua-profile-card">
   <div class="ua-cover" ${coverUrl?`style="background-image:url('${coverUrl}')"`:''}><label class="ua-cover-edit"><span>Ubah foto sampul</span><input id="ua-cover-file" type="file" accept="image/jpeg,image/png,image/webp"></label></div>
   <div class="ua-profile-content"><div class="ua-profile-avatar">${avatar(avatarUrl,profile.display_name,'large')}<label class="ua-avatar-edit" aria-label="Ubah foto profil" title="Ubah foto profil"><span>Ubah foto</span><input id="ua-avatar-file" type="file" accept="image/jpeg,image/png,image/webp"></label></div>
-   <div class="ua-profile-identity"><div class="ua-profile-name-row"><div><h2>${esc(profile.display_name)}</h2><div class="ua-username">@${esc(profile.username)}</div></div><details class="ua-profile-menu"><summary aria-label="Menu profil">•••</summary><div class="ua-profile-menu-pop"><a href="#/account/settings">Pengaturan & privasi</a><a href="#/account/settings">Pengaturan postingan</a><a href="#/account/professional">Profil Professional</a><a href="#/account/wallet">Wallet</a><a href="#/account/addresses">Alamat</a><button id="ua-menu-logout" type="button">Keluar dari akun</button></div></details></div><p>${esc(profile.bio||'Bio belum ditambahkan.')}</p><div class="ua-location">${profile.public_city&&profile.public_province?'⌖ '+esc(profile.public_city)+', '+esc(profile.public_province):''}</div><div class="ua-profile-stats"><a href="#profile-posts"><strong>${ownPosts.length}</strong><span>Postingan</span></a><a href="#/account/followers"><strong>${followersCount.count||0}</strong><span>Pengikut</span></a><a href="#/account/following"><strong>${followingCount.count||0}</strong><span>Mengikuti</span></a></div></div>
+   <div class="ua-profile-identity"><div class="ua-profile-name-row"><div><h2>${esc(profile.display_name)}</h2><div class="ua-username">@${esc(profile.username)}</div></div><details class="ua-profile-menu"><summary aria-label="Menu profil">${socialIcon('more',{size:20})}</summary><div class="ua-profile-menu-pop"><a href="#/account/settings">Pengaturan & privasi</a><a href="#/account/settings">Pengaturan postingan</a><a href="#/account/professional">Profil Professional</a><a href="#/account/wallet">Wallet</a><a href="#/account/addresses">Alamat</a><button id="ua-menu-logout" type="button">Keluar dari akun</button></div></details></div><p>${esc(profile.bio||'Bio belum ditambahkan.')}</p><div class="ua-location">${profile.public_city&&profile.public_province?'⌖ '+esc(profile.public_city)+', '+esc(profile.public_province):''}</div><div class="ua-profile-stats"><a href="#profile-posts"><strong>${ownPosts.length}</strong><span>Postingan</span></a><a href="#/account/followers"><strong>${followersCount.count||0}</strong><span>Pengikut</span></a><a href="#/account/following"><strong>${followingCount.count||0}</strong><span>Mengikuti</span></a></div></div>
   </div>
  </section>
  <nav class="ua-profile-tabs" role="tablist" aria-label="Konten profil">
