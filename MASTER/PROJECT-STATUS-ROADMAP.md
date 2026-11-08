@@ -682,3 +682,18 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - Laporan audit: docs/pluits/BUSINESS-FRONTEND-BACKEND-ALIGNMENT-AUDIT-2026-11-08.md.
 - **Deployment evidence:** GitHub Actions run #855, commit `f17da4e5e5321d67049ae3fa4516e706538328ad` — Vite production build, output verification, Pages artifact upload, dan Deploy to GitHub Pages seluruhnya SUCCESS. [Workflow #855](https://github.com/baguskristiansianturi/pluits/actions/runs/42481508462).
 - Jangan menyatakan fitur production-ready atau ACCEPTED sebelum UAT nyata berhasil.
+
+
+## CP-039 — Live production hardening and regression gate (8 November 2026)
+
+- **Status:** BACKEND PERMISSION MIGRATION APPLIED + MIGRATION FILE COMMITTED + CI REGRESSION GUARD ADDED; Pages deploy pending verification; Android UAT NOT TESTED.
+- Founder confirmed Pluits is published and has a registered account. Treat all existing user/account data as production data. No account data was inspected or altered.
+- Applied Supabase migration `20261108132935_enforce_store_member_permission_grants`; committed matching migration SQL.
+- Owner permissions remain intact. Non-owner staff write access to catalog/media and store settings/operating hours/delivery zones now requires explicit `permission_grants` JSON booleans. Active members retain read access.
+- Rollback-only helper tests: owner allowed; non-member denied; explicit catalog grant allowed; missing settings grant denied. No test mutations were committed.
+- Live RLS policy inspection confirms permission-aware write checks. Full authenticated REST/Storage negative tests with separate accounts remain NOT TESTED. Staff invitation UI remains blocked.
+- Added `scripts/verify-production-surface.mjs`, `npm test`, `npm run verify:production`, and a CI step before Vite build to prevent retired demo modules from re-entering and to check Marketplace/Trip backend contracts.
+- Marketplace cart remains localStorage-only; server persistence/guest merge remains P1. No cart data was touched.
+- Latest live advisors: 20 SECURITY DEFINER warnings, 1 leaked-password-protection warning, 84 informational unused-index notices, 0 health lints.
+- **Release gates:** verify latest Pages workflow including test step; implement server cart with merge and live price/stock refresh; review SECURITY DEFINER RPCs; enable leaked-password protection; run owner/staff and two-account API tests; complete Android UAT.
+- **Deployment URL:** `https://baguskristiansianturi.github.io/pluits/` (use latest successful workflow commit once confirmed).
