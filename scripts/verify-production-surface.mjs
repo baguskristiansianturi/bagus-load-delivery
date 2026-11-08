@@ -8,6 +8,7 @@ const retiredFiles = [
   'src/app/store.js',
   'src/data/catalog.js',
   'src/data/marketplace.js',
+  'src/data/master-data.js',
   'src/counter.js',
   'src/assets/vite.svg',
   'src/assets/javascript.svg',
@@ -29,7 +30,7 @@ for (const path of retiredFiles) {
 }
 
 const router = read('src/app/router.js');
-for (const retiredImport of ['page-factory.js', '../app/services.js', '../app/store.js', '../data/catalog.js', '../data/marketplace.js', '../pages/auth/index.js']) {
+for (const retiredImport of ['page-factory.js', '../app/services.js', '../app/store.js', '../data/catalog.js', '../data/marketplace.js', '../data/master-data.js', '../pages/auth/index.js']) {
   assert.equal(router.includes(retiredImport), false, `Router references retired module: ${retiredImport}`);
 }
 
