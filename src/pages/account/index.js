@@ -341,15 +341,13 @@ function postCard(p){
 async function composePage(){
  const {data:contentPrefs}=await supabase.from('account_content_preferences').select('*').eq('user_id',user.id).maybeSingle();
  const defaultAudience=accountContext.active==='professional'?(contentPrefs?.professional_default_visibility==='unlisted'?'private':'public'):accountContext.active==='business'?(contentPrefs?.business_default_visibility==='unlisted'?'private':'public'):(contentPrefs?.personal_default_visibility||'public');
- return `<div class="ua-page-heading"><div><span class="ua-eyebrow">CERITAKAN SESUATU</span><h1>Buat postingan</h1><p>Bagikan tulisan, foto, atau video dari perangkat Anda.</p></div><a class="ua-outline" href="#/account/profile">Kembali ke profil</a></div>
+ return `<div class="ua-page-heading"><div><span class="ua-eyebrow">BAGIKAN MOMEN</span><h1>Buat postingan</h1></div><a class="ua-outline" href="#/account/explore">Batal</a></div>
  <section class="ua-panel ua-compose-panel"><form id="ua-post-form" class="ua-compose-form">
-  <label class="ua-upload-zone" for="ua-post-file"><span class="ua-upload-icon">＋</span><strong>Tambahkan foto atau video (opsional)</strong><small>Campur foto dan video · Maksimal 15 media · Video hingga 50 MB per file</small><input id="ua-post-file" type="file" multiple accept="image/jpeg,image/png,image/webp,image/gif,video/*"></label>
+  <label class="ua-upload-zone" for="ua-post-file"><span class="ua-upload-icon">＋</span><strong>Pilih foto atau video</strong><small>Pilih satu atau beberapa media dari galeri</small><input id="ua-post-file" type="file" multiple accept="image/jpeg,image/png,image/webp,image/gif,video/*"></label>
   <div id="ua-media-preview" class="ua-media-preview"></div>
-  <label>Caption<textarea name="caption" rows="4" maxlength="2200" placeholder="Apa yang ingin Anda bagikan?"></textarea></label>
-  <label>Tag / kata kunci<input name="tags" placeholder="contoh: proyek, inspirasi, pluits (pisahkan dengan koma)"></label>
-  <label>Siapa yang dapat melihat?<select name="visibility"><option value="public" ${defaultAudience==='public'?'selected':''}>Publik — dapat tampil di Explore</option><option value="private" ${defaultAudience==='private'?'selected':''}>Hanya saya</option></select></label>
+  <label class="ua-compose-caption-label"><textarea name="caption" rows="4" maxlength="2200" placeholder="Tulis caption..." aria-label="Tulis caption"></textarea></label>
   <div class="ua-progress" id="ua-upload-progress" hidden><span></span></div>
-  <button class="ua-primary" type="submit">Terbitkan postingan</button><p class="ua-form-note" id="ua-compose-note">Postingan baru akan tampil pada profil Anda. Postingan publik dapat muncul di Explore.</p>
+  <button class="ua-primary" type="submit">Bagikan</button><p class="ua-form-note" id="ua-compose-note"></p>
  </form></section>`;
 }
 async function addressPage(){
