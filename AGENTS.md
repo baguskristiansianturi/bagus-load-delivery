@@ -4,8 +4,9 @@
 1. Read MASTER/AI-START-HERE.md.
 2. Read the entire MASTER/BUSINESS-MODEL-MASTER.md before any analysis, product recommendation, UX proposal, architecture proposal, or code change.
 3. Read MASTER/PLUITS-AI-GOVERNANCE.md.
-4. Read MASTER/PROJECT-STATUS-ROADMAP.md and the relevant technical/security/UAT specifications.
-5. Read IDEAS/IDEA-BACKLOG.md only to understand unapproved ideas. Do not implement an idea merely because it is written there.
+4. Read MASTER/PROJECT-STATUS-ROADMAP.md and MASTER/PLUITS-SOCIAL-FIRST-RELEASE-SPEC.md before working on Social Media; the social release gate must pass before experience verticals expand.
+5. Read relevant technical/security/UAT specifications.
+6. Read IDEAS/IDEA-BACKLOG.md only to understand unapproved ideas. Do not implement an idea merely because it is written there.
 
 ## Authority
 - Business Model Master is the single authority for approved business and product decisions.
@@ -19,6 +20,8 @@ Business decision → user journey and acceptance criteria → backend data/secu
 If a mismatch is discovered, document it and propose the smallest safe correction. Do not fake functionality.
 
 ## Safety and repository rules
+- Pluits is live/published and has registered users; treat all current accounts, posts, media, messages and settings as production data.
+- Social Media is the current P0 focus; do not start Café, Resto or additional experience verticals before founder UAT acceptance.
 - Keep the project identity Pluits. Bagusin and Bali Trans are separate projects.
 - Do not introduce another brand/repository/backend identity for this product.
 - Do not expose secrets, personal data, test credentials, or private testing records.
