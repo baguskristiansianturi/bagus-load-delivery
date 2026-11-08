@@ -13,7 +13,7 @@ const AREAS = {
   tabanan: { label: 'Tabanan', lat: -8.54, lon: 115.125 },
   singaraja: { label: 'Buleleng', lat: -8.112, lon: 115.088 }
 };
-const state = { lat: AREAS.denpasar.lat, lon: AREAS.denpasar.lon, area: 'denpasar', radius: 15000, category: '', query: '', rows: [], categories: [], map: null, markers: [], mode: 'list' };
+const state = { lat: AREAS.denpasar.lat, lon: AREAS.denpasar.lon, area: 'denpasar', radius: 15000, category: '', query: '', rows: [], categories: [], map: null, markers: [], mode: 'list', personalization: true };
 const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const distance = value => value < 1000 ? Math.round(value) + ' m' : (value / 1000).toFixed(1).replace('.', ',') + ' km';
 const placeUrl = slug => '#/place/' + encodeURIComponent(slug);
@@ -36,7 +36,7 @@ async function getNearby({lat=state.lat,lon=state.lon,category=state.category,qu
 }
 async function getInterestMap() {
   const {data:userData}=await supabase.auth.getUser();
-  if(!userData?.user) return new Map();
+  if(!userData?.user || !state.personalization) return new Map();
   const userId=userData.user.id;
   const [explicit,events]=await Promise.all([
     supabase.from('user_interest_preferences').select('category_id,preference,directory_categories(slug)').eq('user_id',userId).eq('source','explicit'),
@@ -141,9 +141,11 @@ async function refreshDirectory() {
   }
 }
 function setArea(value) {
+  if(value==='current'){requestLocation();return;}
   const selected=AREAS[value];if(!selected)return;
   state.area=value;state.lat=selected.lat;state.lon=selected.lon;
   const label=document.querySelector('#pl-directory-area-label');if(label)label.textContent=selected.label;
+  saveDiscoveryPreferences({preferred_city:selected.label,preferred_region:'Bali',country_code:'ID',search_radius_m:state.radius,allow_nearby_location:false});
   refreshDirectory();
 }
 function setMode(mode) {
@@ -158,6 +160,8 @@ async function requestLocation() {
   navigator.geolocation.getCurrentPosition(position=>{
     state.lat=position.coords.latitude;state.lon=position.coords.longitude;state.area='';
     const label=document.querySelector('#pl-directory-area-label');if(label)label.textContent='Lokasi saya';
+    const areaSelect=document.querySelector('#pl-directory-area');if(areaSelect)areaSelect.value='current';
+    saveDiscoveryPreferences({allow_nearby_location:true,search_radius_m:state.radius});
     refreshDirectory();
   },()=>alert('Izin lokasi tidak diberikan. Direktori tetap dapat digunakan dengan memilih area.'),{enableHighAccuracy:false,timeout:10000,maximumAge:300000});
 }
@@ -165,14 +169,28 @@ export function directoryPage() {
   return `<div class="pl-directory-page">
     <header class="pl-directory-top"><a href="#/" class="pl-directory-brand">PLUITS</a><nav><a href="#/">Beranda</a><a class="active" href="#/places">Direktori</a><a href="#/account/explore">Komunitas</a><a href="#/material">Marketplace</a></nav><a class="pl-directory-profile" href="#/account/profile">Akun</a></header>
     <main class="pl-directory-main">
-      <section class="pl-directory-intro"><div><span>GEODIRECTORY PLUITS</span><h1>Temukan tempat di sekitarmu.</h1><p>Jelajahi tempat, usaha, layanan, komunitas, dan kegiatan dalam satu direktori.</p></div><div class="pl-directory-intro-actions"><button id="pl-use-location" type="button">⌖ Gunakan lokasi saya</button><label>Area<select id="pl-directory-area"><option value="denpasar">Denpasar</option><option value="badung">Badung</option><option value="gianyar">Gianyar</option><option value="tabanan">Tabanan</option><option value="singaraja">Buleleng</option></select></label></div></section>
+      <section class="pl-directory-intro"><div><span>GEODIRECTORY PLUITS</span><h1>Temukan tempat di sekitarmu.</h1><p>Jelajahi tempat, usaha, layanan, komunitas, dan kegiatan dalam satu direktori.</p></div><div class="pl-directory-intro-actions"><button id="pl-use-location" type="button">⌖ Gunakan lokasi saya</button><label>Area<select id="pl-directory-area"><option value="denpasar">Denpasar</option><option value="current">Lokasi saya</option><option value="badung">Badung</option><option value="gianyar">Gianyar</option><option value="tabanan">Tabanan</option><option value="singaraja">Buleleng</option></select></label></div></section>
       <section class="pl-directory-search"><form id="pl-directory-search-form"><input id="pl-directory-query" type="search" placeholder="Cari pantai, masjid, restoran, sekolah, toko…" aria-label="Cari direktori"><button type="submit">Cari</button></form><div class="pl-directory-categories" id="pl-directory-categories"></div></section>
-      <details class="pl-interest-settings"><summary>Atur minat rekomendasi</summary><div id="pl-interest-options" class="pl-interest-options">Masuk untuk menyimpan minat.</div></details><section class="pl-directory-toolbar"><div><h2>Jelajahi sekitar <span id="pl-directory-area-label">Denpasar</span></h2><p id="pl-directory-count">Memuat direktori…</p></div><div class="pl-directory-view"><button type="button" class="active" data-view="list">Daftar</button><button type="button" data-view="map">Peta</button><select id="pl-directory-radius" aria-label="Jangkauan pencarian"><option value="5000">5 km</option><option value="10000">10 km</option><option value="15000" selected>15 km</option><option value="25000">25 km</option><option value="50000">50 km</option></select></div></section>
+      <details class="pl-interest-settings"><summary>Atur minat rekomendasi</summary><label class="pl-personalization-toggle"><input id="pl-personalization-toggle" type="checkbox" checked> Gunakan personalisasi adaptif</label><div id="pl-interest-options" class="pl-interest-options">Masuk untuk menyimpan minat.</div></details><section class="pl-directory-toolbar"><div><h2>Jelajahi sekitar <span id="pl-directory-area-label">Denpasar</span></h2><p id="pl-directory-count">Memuat direktori…</p></div><div class="pl-directory-view"><button type="button" class="active" data-view="list">Daftar</button><button type="button" data-view="map">Peta</button><select id="pl-directory-radius" aria-label="Jangkauan pencarian"><option value="5000">5 km</option><option value="10000">10 km</option><option value="15000" selected>15 km</option><option value="25000">25 km</option><option value="50000">50 km</option></select></div></section>
       <section id="pl-directory-results" class="pl-directory-results"></section><div id="pl-directory-map" class="pl-directory-map" hidden></div>
       <p class="pl-directory-attribution">Data lokasi ditampilkan berdasarkan sumber dan status verifikasinya. Peta &copy; OpenStreetMap contributors.</p>
     </main>
     <footer class="pl-directory-footer">PLUITS · Social · Local Marketplace · Trip · GeoDirectory</footer>
   </div>`;
+}
+async function saveDiscoveryPreferences(patch){
+ const {data:auth}=await supabase.auth.getUser();if(!auth?.user)return;
+ await supabase.from('user_discovery_preferences').upsert({user_id:auth.user.id,...patch},{onConflict:'user_id'});
+}
+async function loadDiscoveryPreferences(){
+ const {data:auth}=await supabase.auth.getUser();if(!auth?.user)return;
+ const {data}=await supabase.from('user_discovery_preferences').select('preferred_city,search_radius_m,use_personalization').eq('user_id',auth.user.id).maybeSingle();
+ if(!data)return;
+ state.radius=data.search_radius_m||state.radius;state.personalization=data.use_personalization!==false;
+ const match=Object.entries(AREAS).find(([,area])=>area.label.toLowerCase()===String(data.preferred_city||'').toLowerCase());
+ if(match){state.area=match[0];state.lat=match[1].lat;state.lon=match[1].lon;const select=document.querySelector('#pl-directory-area');if(select)select.value=match[0];const label=document.querySelector('#pl-directory-area-label');if(label)label.textContent=match[1].label;}
+ const radius=document.querySelector('#pl-directory-radius');if(radius)radius.value=String(state.radius);
+ const toggle=document.querySelector('#pl-personalization-toggle');if(toggle)toggle.checked=state.personalization;
 }
 async function bindInterestSettings(){
  const target=document.querySelector('#pl-interest-options');if(!target)return;
@@ -195,7 +213,7 @@ export async function bindDirectoryPage() {
   catch(error){console.error('Pluits directory categories',error);}
   area.addEventListener('change',event=>setArea(event.target.value));
   document.querySelector('#pl-use-location')?.addEventListener('click',requestLocation);
-  document.querySelector('#pl-directory-radius')?.addEventListener('change',event=>{state.radius=Number(event.target.value)||15000;refreshDirectory();});
+  document.querySelector('#pl-directory-radius')?.addEventListener('change',event=>{state.radius=Number(event.target.value)||15000;saveDiscoveryPreferences({search_radius_m:state.radius});refreshDirectory();});
   document.querySelector('#pl-directory-categories')?.addEventListener('click',event=>{
     const button=event.target.closest('[data-category]');if(!button)return;
     state.category=button.dataset.category;document.querySelector('#pl-directory-categories').innerHTML=categoryChips();refreshDirectory();
@@ -215,7 +233,9 @@ export async function bindDirectoryPage() {
     const link=event.target.closest('a[href^="#/place/"]');if(!link)return;
     const row=state.rows.find(item=>placeUrl(item.slug)===link.getAttribute('href'));if(row)logActivity('click',row.id);
   });
+  await loadDiscoveryPreferences();
   await bindInterestSettings();
+  document.querySelector('#pl-personalization-toggle')?.addEventListener('change',event=>{state.personalization=event.target.checked;saveDiscoveryPreferences({use_personalization:state.personalization});refreshDirectory();});
   await refreshDirectory();
 }
 export function bindHomeNearby() {
