@@ -923,3 +923,24 @@
 .ua-post-actions button.is-liked svg{fill:#e63d58;stroke:#e63d58}
 .ua-post-actions button:disabled{opacity:.65;cursor:wait}
 @keyframes ua-heart-pop{0%{opacity:0;transform:translate(-50%,-50%) scale(.35)}35%{opacity:1;transform:translate(-50%,-50%) scale(1.15)}65%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-50%) scale(.9)}}
+
+/* Modular account security and device settings */
+.ua-security-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+.ua-security-card{padding:20px;min-width:0}
+.ua-security-card h2{margin:7px 0 12px;font-size:18px;letter-spacing:-.025em}
+.ua-security-copy{font-size:12px;line-height:1.65;color:#718096}
+.ua-security-form{display:grid;gap:12px}
+.ua-security-form label,.ua-security-file{display:grid;gap:7px;font-size:11px;font-weight:750;color:#46546a}
+.ua-security-form input,.ua-security-form select{width:100%;min-width:0;border:1px solid #dce2e9;border-radius:8px;padding:11px 12px;font:inherit;font-size:13px;color:#1e293b;background:#fff}
+.ua-security-form small,.ua-security-file small{font-size:10px;line-height:1.5;color:#8994a3;font-weight:450}
+.ua-security-card .ua-form-note{min-height:16px}
+.ua-security-success{font-size:12px;color:#24734e}
+.ua-security-stage{display:inline-flex;padding:7px 10px;border-radius:7px;background:#f1f3f6;color:#667387;font-size:10px;font-weight:700}
+.ua-security-file{margin-top:14px}
+.ua-security-file input{font-size:11px;font-weight:450}
+.ua-mfa-qr{display:block;width:min(220px,100%);height:auto;margin:12px auto;border:1px solid #e5e8ed;border-radius:10px}
+.ua-mfa-enroll code{display:block;overflow-wrap:anywhere;background:#f4f6f8;padding:10px;border-radius:8px;font-size:11px}
+.ua-mfa-enroll form{display:grid;gap:10px;margin-top:12px}
+.ua-mfa-enroll input{width:100%;border:1px solid #dce2e9;border-radius:8px;padding:11px;font:inherit}
+.ua-mfa-remove{margin-top:10px}
+@media(max-width:680px){.ua-security-grid{grid-template-columns:1fr}.ua-security-card{padding:16px}}
