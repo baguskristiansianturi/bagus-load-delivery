@@ -859,3 +859,15 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - **Process sync:** `IDEAS/IDEA-BACKLOG.md` now requires every approved idea to reference its D-XXX Decision Log entry and to update Business Model Master before roadmap delivery.
 - **Verification:** GitHub Actions run #989 / `42493030423` — SUCCESS for commit `ac0f9f92a0b2b036deaa4d19b39da89baea54a31`; regression checks, Vite build, output verification, artifact upload, and GitHub Pages deployment all passed using the unique artifact name.
 - **Status:** workflow retry-artifact collision fix IMPLEMENTED and DEPLOYED. This does not change the separate founder Android UAT status.
+
+
+## CP-027 — Narrative-first business model, investor proposal, and technology blueprint (9 November 2026)
+- **Status:** DOCUMENTED; audit read-only dilakukan; bukan checkpoint implementasi produk.
+- **Founder direction:** cerita Ibu Nia dan masalah manusia menjadi fondasi model bisnis; familiar social UX menurunkan hambatan adopsi; GeoDirectory menghubungkan entitas nyata dan kehidupan lokal; dampak menjangkau personal, bisnis, profesional, organisasi, komunitas, dan lembaga publik; rollout dimulai dari Bali.
+- **Deliverables:** Business Model Master Bagian 32; D-004; IDEA-010 untuk workflow organisasi/kontribusi/hiring/operasi yang perlu riset; investor proposal; business/product/technology blueprint; audit live; enam visual SVG.
+- **Live audit snapshot:** 62 public tables dengan RLS aktif pada 62; 81 migration entries; 20 authenticated-callable SECURITY DEFINER warnings; leaked-password protection disabled; 84 unused-index INFO notices; Health Advisor 0 lints; 0 Edge Functions deployed. Supabase PostgreSQL 17.11 di ap-southeast-1.
+- **Repository evidence:** head yang diperiksa 7831da1d3f3bb44d12c718a7d92dcf305709cf0a; frontend Vite/JavaScript; Supabase; Leaflet/OpenStreetMap; GitHub Pages workflow.
+- **Product gate:** Social First Release tetap P0 sampai founder UAT diterima. Tidak ada persetujuan untuk membangun seluruh domain masa depan sekaligus.
+- **Belum selesai:** budget, headcount, CAC/LTV, market sizing, unit economics, payment/legal, ROI, kantor regional, SLA sengketa, Android UAT, two-account UAT, dan bukti deploy terbaru.
+- **Perubahan produksi:** tidak ada database, Auth, user data, frontend, atau payment changes. Dokumentasi saja.
+- **Langkah berikutnya:** review isi model/proposal oleh founder; setelah disetujui, turunkan P0 Social UAT dan P1 GeoDirectory trust backlog ke spesifikasi acceptance dan delivery terpisah.
