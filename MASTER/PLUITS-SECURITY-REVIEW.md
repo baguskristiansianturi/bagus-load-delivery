@@ -207,3 +207,13 @@ This snapshot supersedes earlier live counts in this document.
 - **Still open:** staff invitation/grant management UI is not implemented; do not invite staff or claim end-to-end staff authorization acceptance until two-account REST tests cover read, write, storage, and RPC paths.
 - **Advisor snapshot after migration:** 20 authenticated-callable SECURITY DEFINER warnings remain and require per-function review; leaked-password protection remains disabled. Performance advisor reports 84 unused-index notices (informational); Health advisor reports 0 lints. The new helper is in the private schema and does not add another exposed public RPC warning.
 - **No existing store, product, order, payment, or user rows were deleted or rewritten.**
+
+
+### 2026-11-08 13:33 UTC — Privileged Marketplace RPC alignment
+
+- Applied migration `20261108133221_align_marketplace_rpcs_with_store_permission_grants`; matching SQL is committed in `supabase/migrations/20261108133221_align_marketplace_rpcs_with_store_permission_grants.sql`.
+- Permission matrix now preserves legacy role capabilities while making them explicit: owner all; manager catalog/settings/orders/payments; catalog role catalog only; orders role order fulfilment only; accounting role payment review only; staff receives only explicit JSON grants.
+- Updated `publish_marketplace_product`, `update_marketplace_fulfillment`, and `review_marketplace_payment` to call the same private permission helper used by RLS.
+- **Rollback-only matrix test passed:** owner, manager, catalog, orders, accounting, and explicit staff grant; cross-permission denials also passed. All temporary changes to the existing owner membership row were rolled back.
+- RPC definitions inspected after the migration; anonymous execution remains false for the reviewed functions and authenticated execution remains intentional with in-function authorization.
+- This does not close the 20 SECURITY DEFINER advisor findings as a group. Each remaining function still needs individual review and adversarial tests. Full browser/API tests with separate accounts remain NOT TESTED.
