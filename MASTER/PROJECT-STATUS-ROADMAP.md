@@ -670,7 +670,7 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 
 
 ## CP-038 — Konsolidasi model bisnis dan penghapusan alur legacy (8 November 2026)
-- **Status:** DOCUMENTATION + ROUTER + LEGACY MODULE CLEANUP IMPLEMENTED; final build/deploy verification follows the latest workflow; Android UAT NOT TESTED.
+- **Status:** DOCUMENTATION + ROUTER + LEGACY MODULE CLEANUP IMPLEMENTED + DEPLOYED; Android UAT NOT TESTED.
 - Business Model Master kini satu-satunya sumber keputusan aktif. Bagian aktif adalah 1 dan 23–30; bagian 2–22 dipindahkan utuh ke arsip non-authoritative agar sejarah tetap ada tanpa menjadi instruksi aktif.
 - Dokumen Master Product Vision dan Product Roadmap duplikat telah digabungkan ke sumber kanonis, lalu dihapus. CP-036 dan CP-037 dipindahkan ke roadmap kanonis.
 - Menambahkan AI Governance & Change Control, memperbaiki urutan AI Start Here agar AI membaca Business Model Master sebelum spesifikasi lain, memperbarui Documentation Map, dan menambahkan alur penangkapan temuan ke Idea Backlog.
@@ -680,4 +680,5 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - Menghapus shortcut pengiriman sebagai produk mandiri; pengiriman tetap opsi fulfillment toko/Marketplace. Wallet ditandai staged, bukan layanan uang operasional.
 - **Gap P1:** cart Marketplace masih localStorage dan belum sinkron lintas perangkat; granular staff permission enforcement belum terverifikasi. **Gap P2:** Supabase client belum dipusatkan/dipin; tidak ada automated test/lint script; repository masih PUBLIC; Android UAT dan full end-to-end masih harus dilakukan.
 - Laporan audit: docs/pluits/BUSINESS-FRONTEND-BACKEND-ALIGNMENT-AUDIT-2026-11-08.md.
-- Jangan menyatakan fitur production-ready atau ACCEPTED sebelum build/deploy dan UAT nyata berhasil.
+- **Deployment evidence:** GitHub Actions run #855, commit `f17da4e5e5321d67049ae3fa4516e706538328ad` — Vite production build, output verification, Pages artifact upload, dan Deploy to GitHub Pages seluruhnya SUCCESS. [Workflow #855](https://github.com/baguskristiansianturi/pluits/actions/runs/42481508462).
+- Jangan menyatakan fitur production-ready atau ACCEPTED sebelum UAT nyata berhasil.
