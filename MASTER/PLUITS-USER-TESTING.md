@@ -149,7 +149,7 @@ Gunakan dua akun nyata berbeda (A dan B). Jangan memakai akun orang lain tanpa i
 2. Like/unlike, comment, reply, and like a comment. Refresh both accounts and compare state/counts.
 3. Follow a public account, unfollow it, then follow a private account and verify pending/accept flow.
 4. Check follower/following lists and profile privacy. A private account must not expose private posts/media to an unapproved viewer.
-5. Verify notifications for follow request, accepted follow, new follower, unfollow, like, and comment.
+5. Verify notifications for follow request, accepted follow, new follower, unfollow, like, and comment. Confirm the unread count appears in the mobile header and desktop navigation, then decreases after marking items read.
 
 ### C. DM and offline outbox
 1. Open Messages while online and allow Pluits to load contacts/inbox metadata once.
