@@ -43,6 +43,7 @@ Acceptance: Android photo/video upload, MP4/WebM playback, refresh, logout/login
 
 ### 3.2 Feed, like, comments and follow
 - Feed prioritizes relevant people/content and preserves a coherent visual rhythm.
+- Homepage behavior: logged-out visitors read the public feed; authenticated users enter the same canonical interactive feed as `/account/explore`, including owner post actions and double-tap likes. Do not maintain a second, reduced signed-in feed implementation.
 - Like/unlike state and counts are consistent after refresh.
 - Double-tap on a photo triggers one like action and a short heart animation; double-tap must not accidentally navigate or zoom.
 - Comments support reply and comment-like; counts are not incremented twice.
