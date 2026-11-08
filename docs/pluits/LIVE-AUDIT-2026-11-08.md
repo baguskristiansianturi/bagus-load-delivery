@@ -117,3 +117,10 @@ The repository also contains `202611070001_initial_marketplace.sql`, which is no
 - Exact version/name match: yes.
 - Missing or extra active migrations: none.
 - Superseded/unapplied drafts: preserved outside `supabase/migrations/`.
+
+## 13. Media ownership and policy optimization verification
+- Before the fix, a rollback-only authenticated insert probe proved a post could reference a foreign UUID folder path.
+- After migration `20261108011806`, foreign-folder paths are rejected for both `user_posts` and `user_stories`; same-user folder paths pass. Probe inserts were rolled back.
+- Migration `20261108011838` splits Stories read policies by role and changes wallet RLS calls to `(select auth.uid())`.
+- Latest advisors: 2 SECURITY DEFINER warnings remain, leaked-password protection remains disabled; performance warnings are 14 unindexed foreign keys and 12 unused indexes. No wallet RLS initplan or duplicate Stories policy warning remains.
+- Active migration files: 19; live history: 19; exact version/name match.
