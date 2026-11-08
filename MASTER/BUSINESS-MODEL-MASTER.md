@@ -649,3 +649,32 @@ Jika UI meminta tindakan yang tidak didukung backend, jangan membuat simulasi se
 
 ### 30.7 Status keputusan
 Bagian 30 adalah prinsip dan kontrak kerja yang disetujui sebagai aturan arah. Ia tidak menyatakan semua fitur telah diimplementasikan, dideploy, diuji, atau diterima. Status aktual hanya boleh diambil dari Project Status & Roadmap, Security Review, Live Audit, test evidence, dan UAT terbaru.
+
+## 31. Prioritas Social Media sebagai release utama (keputusan founder, 8 November 2026)
+
+### 31.1 Urutan produk
+- Pluits sudah dipublikasikan dan telah memiliki akun pengguna terdaftar. Seluruh akun, profil, postingan, media, pesan, pengaturan, dan data aktif wajib diperlakukan sebagai data production.
+- **Social Media adalah fokus P0 saat ini.** Penyempurnaan, audit, keamanan, kualitas UX, dan UAT Social Media harus diselesaikan dan diterima founder terlebih dahulu.
+- Café, Resto, toko, dan vertikal pengalaman lainnya tidak menjadi fokus delivery sampai Social Media mencapai release gate dan dinyatakan diterima founder.
+- Urutan ini mengatur prioritas delivery; tidak menghapus atau membatalkan empat ruang produk kanonis pada bagian 30.1.
+
+### 31.2 Kemampuan Social Media yang menjadi sasaran
+1. Unggah foto/video dari perangkat, preview, caption, edit, hapus, galeri, feed, Stories dan Reels.
+2. Like/unlike (termasuk double-tap foto), komentar, balasan komentar, follow/unfollow, permintaan follow untuk akun privat, daftar follower/following.
+3. DM, inbox, kontak dari jaringan sosial, realtime message updates, dan antrean pesan lokal ketika offline. Status terkirim hanya setelah server mengonfirmasi; offline tidak berarti pesan dapat mencapai pengguna lain tanpa jaringan.
+4. Notifikasi follower baru, unfollow, permintaan/diterima follow, like, komentar, inbox, serta pengumuman dan informasi resmi sistem Pluits.
+5. Pengaturan akun publik/privat, username, password, nomor HP dan verifikasi OTP, verifikasi dua langkah, preferensi bahasa, serta izin perangkat sesuai konteks.
+6. Musik/video dan rekomendasi/FYP hanya dengan perlindungan hak cipta. Audio harus original atau memiliki lisensi yang sah untuk penggunaan platform dan distribusi video. Tidak boleh menyalin, mengunduh, atau mengunggah ulang musik komersial tanpa izin.
+7. Pengalaman rekomendasi tidak boleh menjanjikan viral. Ranking harus diuji dengan relevansi, freshness, meaningful engagement, keselamatan, keragaman kreator, feedback negatif, dan anti-spam; bukan like count saja.
+
+### 31.3 Aturan desain dan pengembangan
+- Pengaturan harus dikelompokkan berdasarkan domain dan modular agar kategori baru dapat ditambah/diubah tanpa merusak navigasi.
+- Font, ikon SVG, ukuran kontrol, jarak/spacing, warna, state, dan pola responsif harus konsisten di seluruh Social Media.
+- Izin lokasi hanya diminta saat fitur lokasi digunakan. Foto/video memakai native picker setelah aksi pengguna; website tidak boleh mengklaim dapat memberi izin galeri sebelum browser/Android menampilkan pemilih/permission prompt.
+- Fitur harus nyata end-to-end. Tidak boleh ada script placeholder/demo, tombol palsu, mock data, engagement palsu, atau status sukses yang tidak berasal dari backend.
+- Pengujian wajib mencakup Android/mobile, tablet, desktop, kecepatan, aksesibilitas, media, permission, privacy/RLS, realtime, offline/reconnect, dan semua aksi utama.
+
+### 31.4 Batas status dan penerimaan
+- Keberadaan tabel, route, tombol, atau file kode bukan bukti fitur sudah selesai.
+- Pisahkan IMPLEMENTED, DEPLOYED, TESTED, dan ACCEPTED. UAT founder adalah gerbang penerimaan.
+- Spesifikasi rinci, matriks tes, dan release gate berada di MASTER/PLUITS-SOCIAL-FIRST-RELEASE-SPEC.md.
