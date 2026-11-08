@@ -37,8 +37,15 @@ async function getNearby({lat=state.lat,lon=state.lon,category=state.category,qu
 async function getInterestMap() {
   const {data:userData}=await supabase.auth.getUser();
   if(!userData?.user) return new Map();
-  const {data}=await supabase.from('user_interest_preferences').select('category_id,preference,directory_categories(slug)').eq('user_id',userData.user.id).eq('source','explicit');
-  return new Map((data||[]).filter(x=>x.directory_categories?.slug).map(x=>[x.directory_categories.slug,x.preference]));
+  const userId=userData.user.id;
+  const [explicit,events]=await Promise.all([
+    supabase.from('user_interest_preferences').select('category_id,preference,directory_categories(slug)').eq('user_id',userId).eq('source','explicit'),
+    supabase.from('user_activity_events').select('category_id,action,created_at').eq('user_id',userId).gte('created_at',new Date(Date.now()-90*86400000).toISOString()).not('category_id','is',null).limit(500)
+  ]);
+  const scores=new Map();
+  (events.data||[]).forEach(event=>{const slug=state.categories.find(x=>x.id===event.category_id)?.slug;if(!slug)return;const weight={view:.15,search:.2,click:.35,save:1.1,follow:1,share:.7,check_in:1.2,hide:-1.2,report:-2}[event.action]||0;scores.set(slug,(scores.get(slug)||0)+weight);});
+  (explicit.data||[]).forEach(item=>{const slug=item.directory_categories?.slug;if(slug)scores.set(slug,item.preference*3);});
+  return scores;
 }
 function ranked(rows, interests=new Map()) {
   return rows.map(row=>{
@@ -54,7 +61,7 @@ function card(row) {
       <div class="pl-directory-card-icon" aria-hidden="true">${row.entity_type==='place'?'⌖':row.entity_type==='organization'?'◎':row.entity_type==='provider'?'▦':row.entity_type==='event'?'◷':'◇'}</div>
       <div class="pl-directory-card-copy"><div class="pl-directory-card-meta">${category||'Direktori Pluits'} · ${distance(Number(row.distance_m)||0)}</div><h3>${esc(row.name)}</h3><p>${esc([row.locality,row.district,row.city,row.region].filter(Boolean).join(', ')||'Lokasi terdaftar')}</p></div>
     </a>
-    <div class="pl-directory-card-foot"><span>${row.verification_status==='verified'?'✓ Terverifikasi':row.verification_status==='pending'?'Klaim ditinjau':'Belum diklaim'}</span><a href="${placeUrl(row.slug)}">Lihat detail →</a></div>
+    <div class="pl-directory-card-foot"><span>${row.verification_status==='verified'?'✓ Terverifikasi':row.verification_status==='pending'?'Klaim ditinjau':'Belum diklaim'}</span><button type="button" class="pl-directory-feedback" data-feedback="${row.id}">Kurangi</button><a href="${placeUrl(row.slug)}">Lihat detail →</a></div>
   </article>`;
 }
 function renderCards(target, rows) {
@@ -78,7 +85,9 @@ function categoryChips() {
 async function logActivity(action,entityId=null) {
   const {data}=await supabase.auth.getUser();
   if(!data?.user)return;
-  await supabase.from('user_activity_events').insert({user_id:data.user.id,entity_id:entityId,action});
+  let categoryId=null;
+  if(entityId){const {data:category}=await supabase.from('directory_entity_categories').select('category_id').eq('entity_id',entityId).limit(1).maybeSingle();categoryId=category?.category_id||null;}
+  await supabase.from('user_activity_events').insert({user_id:data.user.id,entity_id:entityId,category_id:categoryId,action});
 }
 async function loadLeaflet() {
   if(window.L)return window.L;
@@ -193,7 +202,16 @@ export async function bindDirectoryPage() {
   });
   document.querySelector('#pl-directory-search-form')?.addEventListener('submit',event=>{event.preventDefault();state.query=document.querySelector('#pl-directory-query').value.trim().slice(0,80);logActivity('search');refreshDirectory();});
   document.querySelectorAll('[data-view]').forEach(button=>button.addEventListener('click',()=>setMode(button.dataset.view)));
-  document.querySelector('#pl-directory-results')?.addEventListener('click',event=>{
+  document.querySelector('#pl-directory-results')?.addEventListener('click',async event=>{
+    const feedback=event.target.closest('[data-feedback]');
+    if(feedback){
+      const {data:auth}=await supabase.auth.getUser();
+      if(!auth?.user){location.hash='#/account/login';return;}
+      const entityId=feedback.dataset.feedback;
+      const {error}=await supabase.from('user_recommendation_feedback').insert({user_id:auth.user.id,entity_id:entityId,feedback:'not_interested'});
+      if(!error){await logActivity('hide',entityId);state.rows=state.rows.filter(row=>row.id!==entityId);renderCards(document.querySelector('#pl-directory-results'),state.rows);}
+      return;
+    }
     const link=event.target.closest('a[href^="#/place/"]');if(!link)return;
     const row=state.rows.find(item=>placeUrl(item.slug)===link.getAttribute('href'));if(row)logActivity('click',row.id);
   });
