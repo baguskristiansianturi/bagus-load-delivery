@@ -96,7 +96,7 @@ async function dashboard(user,stores){
  if(activeTab==='profile')body=profilePanel();
  if(activeTab==='settings')body=await settingsPanel();
  document.querySelector('#app').innerHTML=shell(`
- <section class="pluits-dashboard-head"><div><span class="pluits-eyebrow">SELLER WORKSPACE</span><h1>${esc(activeStore.name)}</h1><p>@${esc(activeStore.username)} · ${esc(activeStore.business_type)} · ${esc(activeStore.public_city)}</p></div><span class="pluits-owner-pill">OWNER ACCOUNT</span></section>
+ <section class="pluits-dashboard-head"><div><span class="pluits-eyebrow">SELLER WORKSPACE</span><h1>${esc(activeStore.name)}</h1><p>@${esc(activeStore.username)} · ${esc(activeStore.business_type)} · ${esc(activeStore.public_city)}</p></div><span class="pluits-owner-pill">OWNER ACCOUNT</span></section><p id="pluits-notice" class="pluits-notice" role="status" aria-live="polite"></p>
  <div class="pluits-dashboard"><aside class="pluits-sidebar"><div class="pluits-user"><b>${esc(user.user_metadata?.full_name||user.email)}</b><small>${esc(user.email)}</small></div><nav>${nav}</nav><div class="pluits-sidebar-foot">PLUITS INDONESIA<br><small>Seller Center v0.1</small></div></aside><section class="pluits-content">${body}</section></div><nav class="pluits-mobile-tabs" aria-label="Menu Seller Center">${nav}</nav>`,user);
  document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>{activeTab=b.dataset.tab;dashboard(user,stores)}));
  document.querySelector('#pluits-signout')?.addEventListener('click',async()=>{await supabase.auth.signOut();location.hash='/seller/login';renderSeller();});
@@ -140,6 +140,16 @@ async function ordersPanel(){
  return '<div class="pluits-section-head"><div><span class="pluits-eyebrow">ORDER MANAGEMENT</span><h2>Pesanan masuk</h2><p>Periksa referensi transfer sebelum mengesahkan pembayaran. Stok baru dikurangi setelah verifikasi berhasil.</p></div></div><div class="pluits-order-list">'+(rows||'<div class="pluits-empty">Belum ada pesanan masuk.</div>')+'</div>';
 }
 async function bindPanel(user,stores){
+ const verifyButton=document.querySelector('#pluits-submit-verification');
+ if(verifyButton)verifyButton.addEventListener('click',async()=>{
+  verifyButton.disabled=true;verifyButton.textContent='Mengirim permohonan…';
+  try{
+   const {error}=await supabase.rpc('submit_store_for_verification',{p_store_id:activeStore.id});
+   if(error)throw error;
+   await renderSeller();
+   notice('Permohonan verifikasi berhasil dikirim. Toko menunggu pemeriksaan Pluits.','success');
+  }catch(err){notice(err.message||'Permohonan verifikasi belum dapat dikirim.','error');verifyButton.disabled=false;verifyButton.textContent='Ajukan verifikasi toko';}
+ });
  const categorySelect=document.querySelector('#pluits-category-select');
  if(categorySelect){const {data}=await supabase.from('product_categories').select('id,name').eq('store_id',activeStore.id);(data||[]).forEach(c=>categorySelect.insertAdjacentHTML('beforeend',`<option value="${c.id}">${esc(c.name)}</option>`));}
  const form=document.querySelector('#pluits-product-form');
