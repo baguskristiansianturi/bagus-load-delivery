@@ -55,10 +55,10 @@ Acceptance: at least two real accounts exercise all paths, including private acc
 ### 3.3 DM and offline behavior
 - Contacts are sourced from accepted follow relationships and searchable by username.
 - Inbox and message stream are backed by Supabase; realtime subscription updates open conversations.
-- Offline cache may preserve contact metadata and thread metadata on the current device.
+- Offline cache may preserve contact metadata and thread metadata on the current device. A new DM can be drafted offline from a previously cached contact; the server conversation is created and delivery occurs only after reconnect.
 - A message typed offline is explicitly marked "saved on this device / waiting for connection"; never label it sent/delivered.
 - On reconnect, queued messages are retried with an idempotency key to prevent duplicates.
-- Starting a brand-new conversation requires network access. Remote history cannot be fetched while offline.
+- Starting a brand-new conversation offline creates a local draft tied to a cached recipient; the actual conversation is created after reconnect. Remote history cannot be fetched while offline.
 - Do not store auth tokens or private message history in an unprotected local cache.
 
 Acceptance: owner/recipient two-account send/read, reconnect, duplicate retry, browser reload while offline, storage quota failure, blocked/private messaging, and message permission tests.
