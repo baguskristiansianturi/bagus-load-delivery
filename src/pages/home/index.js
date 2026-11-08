@@ -1,6 +1,7 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import {renderSocialHeader,renderSocialMobileNav} from '../../components/social/navigation.js';
 import {homeNearbySection,bindHomeNearby} from '../directory/index.js';
+import {mountUserAccount} from '../account/index.js';
 const db=createClient('https://ytndswhqxayqpftszwfh.supabase.co','sb_publishable_kOUbKBYg88nXgz8FQRSnvA_k0hvKY65');
 const safe=v=>String(v??'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
 async function mediaUrl(path){if(!path)return '';const {data}=await db.storage.from('pluits-user-media').createSignedUrl(path,1800);return data?.signedUrl||'';}
@@ -12,6 +13,8 @@ export async function bindHome(){
  bindHomeNearby();
  try{
   const {data:{user:viewer}}=await db.auth.getUser();
+  // Authenticated users must use the canonical interactive feed, not the guest-only duplicate.
+  if(viewer){mountUserAccount('explore');return;}
   const headerActions=document.querySelector('.pl-social-header>div');
   if(viewer&&headerActions){
    const {data:me}=await db.from('user_profiles').select('display_name,username,avatar_path').eq('id',viewer.id).maybeSingle();
