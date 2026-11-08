@@ -907,3 +907,15 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - **Prioritas:** Social First Release tetap P0. Android real-media, two-account, DM reconnect, notification, settings, privacy, dan founder UAT tetap NOT TESTED/NOT ACCEPTED.
 - **Tidak dilakukan:** tidak ada migration, policy change, data edit, atau deployment.
 - **Next action:** susun remediation SQL dan test matrix untuk SOC-01–SOC-04; minta persetujuan sebelum menerapkan perubahan RLS production.
+
+
+## CP-054 — RLS remediation candidate prepared
+- **Tanggal:** 9 November 2026.
+- **Status:** PREPARED / NOT APPLIED; staging validation and production remediation remain pending.
+- **Dokumen:** `docs/pluits/RLS-REMEDIATION-PLAN-AND-SQL-2026-11-09.md`.
+- **Scope:** SOC-01–SOC-04 (post visibility, child rows, block behavior, media/Storage) dan GDT-01 (directory media membership row binding).
+- **Perubahan yang dirancang:** predicate canonical `private.can_view_post`, helper untuk legacy/gallery media path, RLS comments/likes/comment-likes/saves/media, Storage read, serta perbaikan empat policy directory_media.
+- **Data impact:** candidate hanya mengubah fungsi/policy; tidak mengubah row, akun, post, komentar, pesan, atau file media.
+- **Belum dilakukan:** tidak ada migration file yang dihasilkan melalui Supabase CLI, tidak ada staging branch karena Supabase meminta konfirmasi biaya untuk membuat branch, tidak ada DDL production, tidak ada deploy.
+- **Gate berikutnya:** siapkan environment staging/disposable; review SQL + policy names/ACL; uji dua akun founder-controlled dan anon; jalankan Supabase advisors. Production hanya setelah test lulus dan rollback siap.
+- **Prioritas:** Social P0 tetap. Jangan mulai ekspansi fitur sebelum privacy gate lulus.
