@@ -474,7 +474,27 @@ async function postDetailPage(id){
  const [p]=await hydratePosts([data]);if(!p)throw new Error('Postingan tidak tersedia.');
  return `<div class="ua-page-heading"><div><span class="ua-eyebrow">POSTINGAN</span><h1>Detail postingan</h1></div><a class="ua-outline" href="#/account/explore">Kembali ke Explore</a></div>${postCard(p)}`;
 }
-async function mountAccount(section='profile',parameter=''){
+async function normalizeFeedMediaFrames(root=document){
+ const mediaNodes=root.querySelectorAll('.ua-social-home .ua-media img,.ua-social-home .ua-media video,.ua-social-home .ua-gallery-item img,.ua-social-home .ua-gallery-item video');
+ const apply=el=>{
+  const w=el.naturalWidth||el.videoWidth,h=el.naturalHeight||el.videoHeight;
+  if(!w||!h)return;
+  const sourceRatio=w/h;
+  const displayRatio=Math.min(1.25,Math.max(1/1.91,sourceRatio));
+  const frame=el.closest('.ua-media,.ua-gallery-item');
+  if(!frame)return;
+  frame.style.aspectRatio=String(displayRatio);
+  frame.dataset.mediaRatio=sourceRatio.toFixed(4);
+ };
+ mediaNodes.forEach(el=>{
+  if(el.tagName==='VIDEO'){
+   if(el.readyState>=1)apply(el);else el.addEventListener('loadedmetadata',()=>apply(el),{once:true});
+  }else{
+   if(el.complete)apply(el);else el.addEventListener('load',()=>apply(el),{once:true});
+  }
+ });
+}
+function mountAccount(section='profile',parameter=''){
  const {data:{session}}=await supabase.auth.getSession();user=session?.user||null;
  if(!user&&(section==='user'||section==='post')){
   try{
@@ -492,6 +512,7 @@ async function mountAccount(section='profile',parameter=''){
   document.querySelector('#ua-settings-logout')?.addEventListener('click',async()=>{await supabase.auth.signOut();user=null;profile=null;location.hash='/account/login';});
   document.querySelector('#ua-edit-profile-link')?.addEventListener('click',e=>{e.preventDefault();document.querySelector('#edit-profile')?.scrollIntoView({behavior:'smooth',block:'start'});});
   document.querySelector('#ua-menu-logout')?.addEventListener('click',async()=>{await supabase.auth.signOut();user=null;profile=null;location.hash='/';});
+  normalizeFeedMediaFrames(document);
   bindProfileTabs();
   bindNotificationActions();
   bindProfile();bindCompose();bindStoryCompose();bindStories();bindExploreFilters();bindAddresses();bindWallet();bindPostActions();bindFollowActions();if(section==='blocked')bindBlockedAccounts();if(section==='reels')bindReelsPlayback();if(section==='addresses')initMap();
