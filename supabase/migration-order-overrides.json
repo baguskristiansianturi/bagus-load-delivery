@@ -1,0 +1,157 @@
+{
+  "source": "Read-only Supabase migration history snapshot, 2026-11-09",
+  "overrides": {
+    "20261108090000_pluits_geodirectory_core.sql": [
+      "20261108040323",
+      "pluits_geodirectory_core"
+    ],
+    "20261108090100_seed_bali_geodirectory_starter.sql": [
+      "20261108040459",
+      "seed_bali_geodirectory_starter"
+    ],
+    "20261108090200_pluits_directory_claim_review_sync.sql": [
+      "20261108040647",
+      "pluits_directory_claim_review_sync"
+    ],
+    "20261108090300_pluits_directory_claim_single_open.sql": [
+      "20261108040806",
+      "pluits_directory_claim_single_open"
+    ],
+    "20261108090400_pluits_directory_api_privileges.sql": [
+      "20261108040842",
+      "pluits_directory_api_privileges"
+    ],
+    "20261108090500_pluits_directory_user_policy_hardening.sql": [
+      "20261108040850",
+      "pluits_directory_user_policy_hardening"
+    ],
+    "20261108090600_pluits_geodirectory_domain_links.sql": [
+      "20261108040926",
+      "pluits_geodirectory_domain_links"
+    ],
+    "20261108090700_pluits_geodirectory_media_policy.sql": [
+      "20261108040936",
+      "pluits_geodirectory_media_policy"
+    ],
+    "20261108090800_pluits_directory_sources_deny_client.sql": [
+      "20261108041053",
+      "pluits_directory_sources_deny_client"
+    ],
+    "20261108041100_pluits_directory_fk_indexes.sql": [
+      "20261108041216",
+      "pluits_directory_fk_indexes"
+    ],
+    "20261108041300_pluits_directory_claim_revocation.sql": [
+      "20261108041421",
+      "pluits_directory_claim_revocation"
+    ],
+    "20261108052000_pluits_post_media_gallery_rules.sql": [
+      "20261108054800",
+      "pluits_post_media_gallery_rules"
+    ],
+    "20261108052100_pluits_post_media_public_read_limits.sql": [
+      "20261108054953",
+      "pluits_post_media_public_read_and_limits"
+    ],
+    "20261108052200_pluits_user_posts_mixed_media_type.sql": [
+      "20261108055702",
+      "pluits_user_posts_mixed_media_type"
+    ],
+    "20261108065012_grant_public_storefront_filter_column.sql": [
+      "20261108065013",
+      "grant_public_storefront_filter_column"
+    ],
+    "20261108070000_marketplace_orders_and_payment_records.sql": [
+      "20261108065655",
+      "marketplace_order_payment_lifecycle_foundation"
+    ],
+    "20261108070020_marketplace_order_rpc_lifecycle.sql": [
+      "20261108065727",
+      "marketplace_payment_review_and_fulfillment_rpcs"
+    ],
+    "20261108070100_marketplace_online_sales_and_publish_guard.sql": [
+      "20261108065912",
+      "tighten_marketplace_manual_payment_and_cart_validation"
+    ],
+    "20261108070120_marketplace_review_fulfillment_cancellation_rpcs.sql": [
+      "20261108070145",
+      "require_online_store_for_public_catalog_and_product_publish"
+    ],
+    "20261108070130_marketplace_cancel_guard.sql": [
+      "20261108070215",
+      "restrict_order_cancellation_after_payment_submission"
+    ],
+    "20261108070200_trip_service_request_lifecycle.sql": [
+      "20261108070327",
+      "trip_provider_service_request_lifecycle"
+    ],
+    "20261108070300_marketplace_delivery_fee_and_reservation_validation.sql": [
+      "20261108070441",
+      "marketplace_delivery_zone_fees_and_stock_reservation_expiry"
+    ],
+    "20261108070400_social_direct_messaging.sql": [
+      "20261108070626",
+      "social_direct_messaging_foundation"
+    ],
+    "20261108070420_fix_direct_message_membership_rls.sql": [
+      "20261108070637",
+      "fix_direct_message_membership_rls"
+    ],
+    "20261108070440_touch_conversation_updated_at.sql": [
+      "20261108070718",
+      "touch_conversation_updated_at_on_message"
+    ],
+    "20261108070500_social_blocking_and_reporting.sql": [
+      "20261108070750",
+      "social_blocking_and_content_reporting"
+    ],
+    "20261108070530_moderation_review_queue.sql": [
+      "20261108070837",
+      "moderation_review_queue_and_actions"
+    ],
+    "20261108070545_fix_report_content_owner_lookup.sql": [
+      "20261108070931",
+      "fix_report_content_owner_lookup"
+    ],
+    "20261108070600_private_messaging_block_and_follow_guards.sql": [
+      "20261108071047",
+      "enforce_private_and_blocked_account_messaging_rules"
+    ],
+    "20261108070620_store_verification_submission_and_admin_review.sql": [
+      "20261108071129",
+      "store_verification_submission_and_admin_review"
+    ],
+    "20261108070630_fix_store_verification_audit_log.sql": [
+      "20261108071139",
+      "fix_store_verification_audit_log_fields"
+    ],
+    "20261108070645_store_verification_details_rpc.sql": [
+      "20261108071148",
+      "store_verification_details_owner_update_rpc"
+    ],
+    "20261108070700_public_trip_itinerary_access.sql": [
+      "20261108071230",
+      "public_trip_itinerary_read_access"
+    ],
+    "20261108070730_enforce_store_minimum_order.sql": [
+      "20261108071425",
+      "enforce_store_minimum_order_amount"
+    ],
+    "20261108070800_public_published_product_images.sql": [
+      "20261108071511",
+      "public_read_access_for_published_product_images"
+    ],
+    "20261108155000_pluits_social_marketplace_fk_indexes.sql": [
+      "20261108074605",
+      "20261108155000_pluits_social_marketplace_fk_indexes"
+    ],
+    "20261108155500_pluits_rls_initplan_optimization.sql": [
+      "20261108074629",
+      "20261108155500_pluits_rls_initplan_optimization"
+    ],
+    "20261108161000_pluits_marketplace_rls_policy_consolidation.sql": [
+      "20261108075347",
+      "20261108161000_pluits_marketplace_rls_policy_consolidation"
+    ]
+  }
+}
