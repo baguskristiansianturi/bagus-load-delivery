@@ -931,3 +931,14 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - **Database changes:** none. RLS remediation candidate remains NOT APPLIED TO PRODUCTION; no Supabase dev branch exists.
 - **Tests:** static source/live policy inspection only. Android, two-account, store creation RPC, upload and end-to-end UAT remain NOT TESTED.
 - **Next:** secure staging/cost approval → validate and test RLS remediation → align store business type across schema/RPC/UI → fix Seller Center → build/deploy exact SHA → founder UAT.
+
+
+### CP-056 — Seller Center UAT usability and action wiring (9 November 2026)
+- **Status:** Frontend patch IMPLEMENTED and DEPLOYED; Android UAT NOT TESTED.
+- **Commit:** `e1a9d558bf9e3e6906e3b4837dfb9e8b6621b97c`.
+- **GitHub Actions:** run #1043 (`42533355048`) SUCCESS; guard, Vite build, output verification, and Pages deploy passed.
+- **Changes:** complete store profile fields loaded; store verification submit wired; product publish/archive and order/payment actions wired to guarded backend paths; direct online-sales UPDATE removed; multiple-store create/select flow added; Seller Center mobile navigation changed to two-row layout.
+- **Database:** unchanged. SOC-01–04 and GDT-01 remain open; no staging branch.
+- **Business alignment blocker:** PT/CV/UD-only store form/RPC/constraint still conflicts with the active model for UMKM/individual providers.
+- **Not tested:** Android, real store creation, media upload, two-account permissions, verification review, and public storefront.
+- **Next:** staging approval → RLS remediation tests → business-type migration and owner-guarded online-sales RPC → founder UAT.
