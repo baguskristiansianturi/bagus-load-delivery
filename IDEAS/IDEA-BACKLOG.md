@@ -167,3 +167,10 @@ Pluits is already published and has a registered account. Production code and ex
 - Do not migrate localStorage values without a documented merge and recovery path.
 - Do not enable staff invitations before grant administration and RLS/API tests are complete.
 - This idea does not authorize changes to the Business Model Master or a payment gateway.
+
+
+### IDEA-006 update — Store permissions are now one backend contract
+- Two live migrations now align table RLS and privileged Marketplace RPCs to one private permission helper.
+- Role presets are owner / manager / catalog / orders / accounting, while staff can receive explicit grants.
+- Matrix was verified using rollback-only SQL tests. Real-account API and Storage tests remain outstanding.
+- The remaining product/UX question is how an owner should safely invite, suspend, revoke, and audit staff access. Keep staff invitations unavailable until the management flow and two-account tests are ready.
