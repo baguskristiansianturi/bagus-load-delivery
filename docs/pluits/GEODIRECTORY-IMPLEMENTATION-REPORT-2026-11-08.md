@@ -12,7 +12,7 @@
 - Added GiST spatial index and public `directory_nearby` RPC using geography distance/radius filtering.
 - Added relationships, directory media metadata, a Marketplace store-to-entity link, and Social post-to-entity tags.
 - Enabled RLS on every new public table. Explicit grants restrict private tables to authenticated users; source provenance has an explicit deny policy and no API grants.
-- Claim submission changes the entity to pending. Approval creates a role membership and marks the entity verified. Only one open claim is allowed per entity.
+- Claim submission changes the entity to pending. Approval creates a role membership and marks the entity verified. Only one open claim is allowed per entity. If an approved claim is later revoked/rejected/disputed/withdrawn, the membership granted by that claim is revoked.
 
 ### Initial Bali directory data
 Four curated place records were inserted with OSM provenance:
@@ -53,6 +53,7 @@ MVP uses deterministic ranking, not paid AI/ML:
 - `20261108040936_pluits_geodirectory_media_policy`
 - `20261108041053_pluits_directory_sources_deny_client`
 - `20261108041216_pluits_directory_fk_indexes`
+- `20261108041421_pluits_directory_claim_revocation`
 
 The exact live migration history is authoritative; the timestamp above for the final policy migration is provisional in this report.
 
@@ -69,7 +70,7 @@ The exact live migration history is authoritative; the timestamp above for the f
 - All 16 new public tables checked have RLS enabled.
 - Source, claim, and personal preference tables are not readable by `anon`.
 - Authenticated user has insert permission on saved items, subject to RLS.
-- Private claim trigger function is not executable by anon or authenticated roles.
+- Private claim trigger function is not executable by anon or authenticated roles. Memberships now retain source_claim_id so approval revocation can remove only the access granted by that claim.
 
 ### Frontend deployment
 - GitHub Actions Pages workflow run #506 succeeded on commit `2432e4a81d8588eb46c62c9e3a10b18fafd00a03`.
