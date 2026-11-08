@@ -676,6 +676,6 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - Mengoreksi URL Pages dan repository references pada dokumen uji/audit/backend.
 - Router diputus dari halaman demo procurement/operations lama; route pencarian memakai social discovery; cart/checkout/orders legacy paths diarahkan ke Marketplace; shortcut Jasa/Penyedia diarahkan ke GeoDirectory dan Pengiriman tidak lagi dipasarkan sebagai produk terpisah.
 - Menandai wallet sebagai staged dan seller backend spec sebagai historical baseline.
-- **Gap P1 yang masih terbuka:** Marketplace cart masih localStorage, belum server-side/cross-device; staff granular permissions belum terverifikasi; legacy source modules sedang dibersihkan setelah route imports diputus; physical deletion harus diverifikasi dengan build.
+- **Gap P1 yang masih terbuka:** Marketplace cart masih localStorage, belum server-side/cross-device; staff granular permissions belum terverifikasi; demo-only page/service/data modules telah dihapus setelah route imports diputus; final build verification masih menunggu workflow.
 - Laporan audit: docs/pluits/BUSINESS-FRONTEND-BACKEND-ALIGNMENT-AUDIT-2026-11-08.md.
 - Jangan menyatakan fitur production-ready atau ACCEPTED sebelum build/deploy dan UAT nyata berhasil.
