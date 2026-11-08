@@ -944,3 +944,11 @@
 .ua-mfa-enroll input{width:100%;border:1px solid #dce2e9;border-radius:8px;padding:11px;font:inherit}
 .ua-mfa-remove{margin-top:10px}
 @media(max-width:680px){.ua-security-grid{grid-template-columns:1fr}.ua-security-card{padding:16px}}
+
+/* System announcements are action buttons, not decorative demo cards. */
+.ua-system-list{margin-bottom:18px}
+.ua-system-notice{width:100%;text-align:left;font:inherit;cursor:pointer;background:#fff}
+.ua-system-notice .ua-notification-copy p{font-size:11px;line-height:1.6;color:#68778b;margin:7px 0 0;white-space:pre-wrap}
+.ua-system-notice:focus-visible{outline:2px solid #34577d;outline-offset:2px}
+.ua-ac-icon{display:grid;place-items:center;flex:none}
+.ua-ac-icon .pl-icon{width:19px;height:19px}
