@@ -15,7 +15,7 @@ Baca dokumen ini sebelum melanjutkan pekerjaan Pluits di chat/sesi baru. Dokumen
 2. MASTER/BUSINESS-MODEL-MASTER.md — sumber kebenaran model bisnis. Baca visi/prinsip dan terutama bagian 23–24. Bagian 24 adalah arah terbaru untuk social experience commerce; pertanyaan terbuka di 24.17 belum menjadi keputusan final.
 3. MASTER/PROJECT-STATUS-ROADMAP.md — checkpoint, PR, dependensi, tes, deployment.
 4. MASTER/PLUITS-USER-TESTING.md — panduan UAT mobile.
-5. supabase/README.md dan MASTER/PLUITS-SECURITY-REVIEW.md — backend, RLS, Storage, keamanan, temuan yang perlu diverifikasi.
+5. supabase/README.md dan MASTER/PLUITS-SECURITY-REVIEW.md — backend, RLS, Storage, keamanan, temuan yang perlu diverifikasi.\n6. docs/pluits/LIVE-AUDIT-2026-11-08.md — audit live repository/database, migration reconciliation, dan status tes terbaru.\n7. docs/pluits/MASTER-PRODUCT-VISION.md dan PRODUCT-ROADMAP.md — arah produk dan inovasi sebagai dokumen pendamping, bukan pengganti Business Model Master.
 
 Jika ada konflik, ikuti keputusan terbaru di Business Model Master. Jangan menghapus sejarah lama; tandai bagian lama sebagai superseded bila perlu.
 
@@ -67,9 +67,10 @@ Satu status tidak otomatis membuktikan status berikutnya. Dokumen bukan bukti im
 ## Fokus saat ini
 Checkpoint model bisnis terbaru adalah CP-011 — Pluits Social Experience Commerce. Checkpoint implementasi terbaru adalah CP-012 — Real user registration & public social feed foundation. Model bisnis v1.0 mencatat transaksi menjadi konten, review dan respons merchant, kartu internal, username/mini-website, aturan toko/barang bekas, fulfillment, Trip Story, privasi, moderasi, dan hipotesis pendapatan.
 
-Fondasi registrasi pengguna nyata dan akses feed publik sudah disiapkan. Langkah berikutnya: founder mendaftar sendiri melalui GitHub Pages, mengonfirmasi email, melengkapi profil, mengunggah postingan publik, lalu memeriksa Explore dan Beranda publik. Catat semua error nyata. Jangan membuat akun atau postingan atas nama founder. Setelah UAT akun pertama, lakukan tes privasi menggunakan akun kedua sebelum mengundang lebih banyak tester. Fitur transaksi, review merchant, notifikasi owner, Trip, dan wallet belum dibuat.
+Fondasi registrasi dan akses feed publik sudah disiapkan. Langkah berikutnya: founder mendaftar sendiri melalui GitHub Pages, mengonfirmasi email, melengkapi profil, mengunggah postingan publik, lalu memeriksa Explore dan Beranda publik. Catat semua error nyata. Jangan membuat akun atau postingan atas nama founder. Setelah UAT akun pertama, lakukan tes privasi menggunakan akun kedua sebelum mengundang lebih banyak tester.\n\nStatus yang belum selesai: leaked-password protection masih nonaktif; tes Android dan dua akun belum dilakukan; Story UI, follow graph, DM, notifikasi, report/block/moderasi, transaksi merchant, payment, dan wallet operasional belum lengkap. Security advisor masih melaporkan dua SECURITY DEFINER RPC yang perlu tes batas akses dan satu peringatan password bocor. Jangan klaim production-ready.
 
 ## Tautan utama
 - Business Model Master: https://github.com/baguskristiansianturi/bagus-load-delivery/blob/main/MASTER/BUSINESS-MODEL-MASTER.md
 - Project Status & Roadmap: https://github.com/baguskristiansianturi/bagus-load-delivery/blob/main/MASTER/PROJECT-STATUS-ROADMAP.md
 - GitHub Pages: https://baguskristiansianturi.github.io/bagus-load-delivery/
+\n\n## Audit dan status terbaru\n- Live audit: https://github.com/baguskristiansianturi/bagus-load-delivery/blob/main/docs/pluits/LIVE-AUDIT-2026-11-08.md\n- Master Product Vision: https://github.com/baguskristiansianturi/bagus-load-delivery/blob/main/docs/pluits/MASTER-PRODUCT-VISION.md\n- Product Roadmap: https://github.com/baguskristiansianturi/bagus-load-delivery/blob/main/docs/pluits/PRODUCT-ROADMAP.md\n
