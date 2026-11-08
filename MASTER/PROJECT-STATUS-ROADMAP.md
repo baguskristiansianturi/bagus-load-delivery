@@ -497,3 +497,13 @@ Build dari commit `642a24bdbed4a85931271e7481f9880a04cc9fc3` berhasil. GitHub Pa
 - Penegakan akun harus berdasarkan perilaku/pelanggaran yang terbukti, bukan identitas atau penampilan; sediakan alasan, banding, dan peninjauan.
 - Direktori tempat/organisasi dapat menyediakan dukungan atau donasi hanya dengan transparansi penerima dan mekanisme pembayaran/penyaluran yang patuh hukum.
 - Status: keputusan model bisnis terdokumentasi; fitur-fitur tersebut belum dinyatakan selesai di kode, backend, deployment, atau pengujian.
+
+
+## GeoDirectory — keputusan dan arsitektur (8 November 2026)
+- Keputusan pengguna: nearby; Beranda hybrid; cakupan local-first mulai Bali/Denpasar; personalisasi adaptive dengan kontrol privasi.
+- GeoDirectory adalah lapisan entitas/lokasi kanonis lintas Social, Trip, Marketplace, dan event.
+- Model target: entities, categories, locations, sources/provenance, claims, memberships/roles, media, relationships, user interests, minimal activity events, recommendation feedback, saved, recent.
+- MVP memakai ranking deterministik yang dapat dijelaskan; ML/vector tidak dibutuhkan pada tahap pertama.
+- Audit Supabase: fondasi social/profile/follow dan store/product tersedia; GeoDirectory universal belum ditemukan. PostGIS belum terpasang walau tersedia. Wishlist/cart/recent frontend masih localStorage.
+- Tahap berikutnya: audit RLS/RPC/storage; finalisasi taxonomy Bali; migration PostGIS + entity/location/source core + GiST + nearby RPC + RLS; UI map/list/detail; claims; integrasi lintas modul.
+- Belum ada perubahan schema, kode aplikasi, atau deployment dari analisis ini.
