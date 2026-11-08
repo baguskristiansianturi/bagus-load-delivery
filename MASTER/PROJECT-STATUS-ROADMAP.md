@@ -883,3 +883,15 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - **Prioritas delivery:** P0 Social First Release tetap tidak berubah. Isu RLS GDT-01 adalah security review terpisah yang harus ditangani sebelum ekspansi GeoDirectory.
 - **Tes:** pemeriksaan SQL read-only dan source review. Tidak ada migration, perubahan RLS, upload, atau Android UAT. Claim review, report flow, cross-entity negative tests: NOT TESTED.
 - **Next action:** lakukan security remediation plan untuk GDT-01, kemudian selesaikan P0 Social UAT tanpa memperluas scope vertikal.
+
+
+## CP-052 — Business, product & technology blueprint
+- **Tanggal:** 9 November 2026.
+- **Status:** DOCUMENTED / SPECIFIED AT CONCEPT LEVEL; implementation remains governed by existing release gates.
+- **Dokumen:** `docs/pluits/PLUITS-BUSINESS-PRODUCT-TECH-BLUEPRINT.md`.
+- **Dasar:** Business Model Master Bagian 1, 23–32; Decision Log D-004. Narasi Ibu Nia menjadi awal, lalu diturunkan menjadi nilai stakeholder, journey, GeoDirectory, identitas, Business Center, algoritma, frontend/backend, teknologi, dan tahapan delivery.
+- **Prinsip UX:** bawa kebiasaan media sosial visual yang familier; jangan memaksa pengguna seperti Ibu Nia belajar pola baru. Nilai tambah PLUITS adalah konteks dunia nyata dan ekosistem lokal, bukan salinan merek/aset Instagram.
+- **Stack yang didokumentasikan:** Vite/JavaScript ES modules, GitHub Pages, Supabase PostgreSQL/Auth/Storage/Realtime, Leaflet/OpenStreetMap, PWA. Tidak ada penggantian stack yang disetujui.
+- **Tahapan:** Social P0; security hotfix track 0S; GeoDirectory Trust Bali; Identity & Organizations; Business Center; Local Commerce; Trip; Creator/contribution finance; community/public services; regional expansion.
+- **Batas:** dokumen ini bukan bukti fitur selesai. GDT-01 RLS issue masih memerlukan persetujuan untuk perubahan production dan negative tests. Social First Release tetap menunggu founder UAT.
+- **Next action:** jalankan P0 Social audit/UAT dan susun remediation plan terisolasi untuk GDT-01; jangan mulai vertical expansion.
