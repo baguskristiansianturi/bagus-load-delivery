@@ -70,3 +70,16 @@ Salin untuk keputusan berikutnya:
   7. Algoritma sosial, discovery/search, economic attribution, dan trust/integrity memiliki tujuan serta aturan terpisah.
 - **Batas:** D-004 tidak menetapkan tarif komisi, biaya SaaS, fitur wallet/donasi, legal/payment provider, jumlah kantor/staf, target ROI, market size, atau tanggal ekspansi. Tidak mengubah Social First Release P0 dan tidak menyetujui implementasi semua domain secara paralel.
 - **Sinkronisasi:** Business Model Master Bagian 32; investor proposal; business/product/technology blueprint; roadmap dan audit terkait.
+
+
+## D-005 — Pendaftaran toko terbuka untuk berbagai bentuk usaha dengan lokasi fisik
+- **Tanggal keputusan:** 9 November 2026
+- **Status:** DECIDED
+- **Founder approval:** eksplisit dalam arahan founder: toko tidak harus PT/CV; yang penting memiliki keberadaan fisik.
+- **Konteks:** onboarding Seller Center membatasi PT/CV/UD dan meminta data legal seolah wajib, sehingga menutup akses individu, UMKM, usaha keluarga/rumahan dan usaha lokal lainnya.
+- **Keputusan final:** PLUITS menerima berbagai bentuk usaha. Jenis/profil operasional dipisahkan dari bentuk hukum opsional. Penanggung jawab dan lokasi fisik/operasional harus dapat diverifikasi. Alamat privat dapat diverifikasi tanpa otomatis diekspos ke publik. Pendaftaran tidak otomatis berarti verified, active, atau online sales enabled.
+- **Dampak user journey:** satu akun personal dapat membuat beberapa toko/cabang, melengkapi lokasi dan profil, mengajukan verifikasi, lalu mengatur katalog/operasional sesuai status.
+- **Dampak frontend/backend/data/security/operasi:** perluasan CHECK constraint dan create_store RPC melalui migration baru; revisi verifikasi agar tidak mewajibkan nama legal bagi semua usaha; model privasi alamat; relasi lokasi/cabang; dashboard per store/location; URL publik berbasis slug + ID kanonis; uji RLS/owner permissions.
+- **Dokumen otoritatif:** Business Model Master Bagian 32.14 dan `docs/pluits/SELLER-CENTER-STORE-LIFECYCLE-AND-URL-SPEC-2026-11-09.md`.
+- **Supersedes:** tidak ada; mengoreksi pembatasan teknis lama PT/CV/UD.
+- **Status implementasi:** DECIDED; schema/RPC migration NOT STARTED; frontend full flow NOT IMPLEMENTED; production DDL NOT APPLIED.
