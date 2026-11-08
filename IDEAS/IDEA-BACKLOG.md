@@ -289,3 +289,55 @@ The founder describes this as a social "bubble" or network effect previously dis
 
 ### Next step
 Continue founder discussion to clarify entity/account relationships, professional location exceptions, and consent-based transaction activity sharing. Keep this idea in the backlog until the founder explicitly approves any business rule. Do not update the Business Model Master, Decision Log, product specification, or implementation roadmap solely on the basis of this discussion.
+
+
+### IDEA-008 update — Verified affiliations, organization stewards, and local dispute accountability
+Source: continued founder sharing, 9 November 2026. This is an expansion of the same concept, not a new approval or implementation instruction.
+
+#### Founder narrative: professional identity is linked to real organizations
+The founder clarifies that a professional should not merely type a workplace name into their profile and have that claim treated as true. A doctor may have their own professional account and specialty, while also practicing at several hospitals or clinics. Each hospital or clinic should have its own organization profile on Pluits, including its company/profile information and the ability to manage its institutional information. The institution can maintain the doctors associated with it, their specialties, and their practice schedules.
+
+A doctor would submit an affiliation request to each institution where they claim to practice. The relevant institution receives a notification and an authorized manager checks whether the person is actually known and affiliated there. If the claim is valid, the institution accepts it and the relationship becomes synchronized: the doctor's profile can show the approved practice locations, and the institution's profile can show its approved doctors and relevant schedules. The founder's example includes a doctor practicing at multiple hospitals; the relationship must support multiple approved affiliations rather than assuming one professional works at only one place.
+
+The same pattern applies to ordinary employment. The founder gives the example of Henky, who has a personal account and says he works at Toko Besi Murah. Henky submits a workplace affiliation request. The store receives a notification identifying the requesting account/username. Its authorized manager can accept if the person is known and the employment claim is valid, or reject if not. The purpose is to prevent an unverified self-declared workplace from appearing as an established fact.
+
+The founder extends the model to religious and community organizations: for example, a pastor may be associated with and manage a church profile, but the church itself is the organization/place and the pastor's authority must be established by the people entitled to represent that institution. Similar representation questions apply to banjar, businesses, hospitals, and other organizations.
+
+#### Organization profile stewardship
+The founder wants each organization/place profile to have one clearly accountable primary account or steward responsible for its management. This is intended to prevent arbitrary people from claiming, changing, or controlling an institution's profile. The precise governance model remains open: one accountable primary steward may need to appoint additional authorized administrators, maintain succession/transfer procedures, and operate under auditable permissions. Do not interpret "one account manages it" as a requirement that only one human can ever perform every administrative task.
+
+#### Local Pluits presence and dispute handling
+The founder connects this trust model to the idea that Pluits may eventually need a local office or accountable local representatives in different regions. Their purpose would include helping resolve disputes when someone improperly claims an organization, place, business, or institutional identity, and reducing the risk that bad actors take over legitimate profiles. This is a proposed operational footprint, not a confirmed office rollout, staffing plan, or cost commitment.
+
+The founder expresses a strong preference for decisive enforcement when someone falsely claims to be a doctor or employee of a named institution and the institution rejects or reports the claim as fraudulent. The founder imagines the platform detecting the abuse and blocking/removing the account to keep Pluits clean. This is recorded as the founder's proposed enforcement intent, not an approved automatic-deletion rule. Product and safety design must distinguish a clearly malicious impersonation from mistaken selection, stale employment, an honest dispute, compromised organization access, or an institution's mistaken rejection. Evidence, severity, temporary restrictions, human review for severe outcomes, audit trail, notification, and appeal/recovery safeguards need to be designed before permanent deletion is considered.
+
+#### Data and workflow implications to investigate
+- Model affiliation as a relationship between a person/account and an organization entity, with status, role/title, specialty or department where relevant, start/end dates if appropriate, evidence, requestor, reviewer, timestamps, and audit history.
+- Support multiple simultaneous affiliations for a professional, and potentially multiple employment affiliations for a personal account, subject to clear display and verification rules.
+- Separate "claimed", "pending", "verified/accepted", "rejected", "ended", and "disputed" states. Never display a pending or rejected affiliation as verified.
+- Organization-side notifications must reach an authorized steward or delegated manager, not an arbitrary user who merely follows or is associated with the organization.
+- Provide safe acceptance, rejection, report, revoke, and correction flows. Rejection alone should not automatically prove fraud.
+- Organization profile control needs claim verification, primary steward assignment, delegated roles, access revocation, succession/ownership transfer, and a tamper-evident audit trail.
+- Public profile presentation should distinguish professional specialty from employer affiliations, and show only institution-approved relationships and schedules.
+- Define how an institution verifies professional credentials and scope of practice; an employer confirming affiliation is not automatically proof of a regulated professional license or specialty.
+- Define how employees' privacy and safety are protected when employment is disputed, ended, or not intended to be public.
+- Establish local dispute escalation and support procedures before promising a Pluits office in every region.
+
+#### Risks and unresolved questions
+1. What evidence establishes that a person is a legitimate doctor, pastor, employee, store owner, or institutional representative? Different roles require different verification standards.
+2. Is organization acceptance enough to verify workplace affiliation, while professional credentials require a separate authoritative verification?
+3. Who is allowed to receive and act on affiliation requests, and how is that authority itself verified?
+4. How does Pluits prevent a malicious first claimant from becoming the sole organization steward?
+5. How are disputes handled if the current steward is corrupt, unavailable, impersonated, or in conflict with the rightful organization?
+6. Can an organization have one primary accountable steward plus several role-limited managers? What happens when the primary steward leaves?
+7. Which affiliation details are public, private, or visible only to the organization and the account holder?
+8. How does an individual remove an outdated affiliation or challenge a false rejection?
+9. What safeguards prevent an institution from using affiliation controls to harass, retaliate against, or expose a worker?
+10. What local support model is viable economically and operationally, and which disputes can be resolved remotely with evidence versus requiring local intervention?
+11. What enforcement ladder is appropriate for false claims: reject request, warn, limit affiliation requests, suspend, investigate, or permanently remove? What evidence and appeal path apply at each level?
+
+#### Classification and decision boundary
+- Founder statements: affiliation must be confirmed by the organization; the organization receives a request notification; the authorized manager accepts or rejects; multiple workplace affiliations may be displayed; each organization needs an accountable manager; local Pluits presence may help with profile/claim disputes; fraudulent impersonation should face decisive action.
+- Strategic hypotheses: verified affiliations may improve identity credibility, organization profile accuracy, user accountability, and the value of personal profiles as professional portfolios.
+- Open design proposals: relationship schema, role model, verification evidence, organization stewardship, regional dispute operations, and enforcement ladder.
+- Decisions: none. No automatic account deletion, local office expansion, verification standard, or affiliation feature is approved for implementation by this discussion alone.
