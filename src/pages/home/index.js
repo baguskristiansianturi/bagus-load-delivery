@@ -6,7 +6,7 @@ async function mediaUrl(path){if(!path)return '';const {data}=await db.storage.f
 export function home(){return `<div class="pl-social-home"><header class="pl-social-header"><a class="pl-social-brand" href="#/">PLUITS</a><div class="pl-home-head-actions"><a href="#/account/login">Masuk</a><a class="pl-social-signup" href="#/account/register">Daftar</a></div></header><main class="pl-social-layout"><section class="pl-social-feed"><div class="pl-feed-topline"><strong>Beranda</strong><a href="#/account/compose" aria-label="Buat postingan">＋</a></div><div id="pl-public-feed"><div class="pl-feed-loading">Memuat postingan…</div></div></section></main><nav class="pl-home-mobile-nav" aria-label="Navigasi utama"><a class="active" href="#/">⌂<small>Beranda</small></a><a href="#/places">⌖<small>Tempat</small></a><a href="#/account/compose" class="pl-home-create">＋<small>Posting</small></a><a href="#/marketplace">▦<small>Toko</small></a><a href="#/account/profile">◎<small>Profil</small></a></nav></div>`;}
 export async function bindHome(){
  const target=document.querySelector('#pl-public-feed');if(!target)return;
- bindHomeNearby();
+
  try{
   const {data:{user:viewer}}=await db.auth.getUser();
   const headerActions=document.querySelector('.pl-social-header>div');
