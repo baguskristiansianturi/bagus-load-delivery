@@ -191,7 +191,8 @@ async function profilePage(preview=false){
   supabase.from('stores').select('id,name,username,public_city,public_area,store_status').eq('owner_user_id',user.id)
  ]);
  if(postsResult.error)throw postsResult.error;
- const ownPosts=await hydratePosts(postsResult.data||[]);\n  const ownReels=ownPosts.filter(p=>p.media?.length===1&&p.media[0].media_type==='video'&&Number(p.media[0].duration_ms||0)>0&&Number(p.media[0].duration_ms||0)<=60000);
+ const ownPosts=await hydratePosts(postsResult.data||[]);
+  const ownReels=ownPosts.filter(p=>p.media?.length===1&&p.media[0].media_type==='video'&&Number(p.media[0].duration_ms||0)>0&&Number(p.media[0].duration_ms||0)<=60000);
  const [followersCount,followingCount,pendingCount]=await Promise.all([
   supabase.from('user_follows').select('*',{count:'exact',head:true}).eq('following_id',user.id).eq('status','accepted'),
   supabase.from('user_follows').select('*',{count:'exact',head:true}).eq('follower_id',user.id).eq('status','accepted'),
@@ -234,10 +235,11 @@ function bindProfileTabs(){
  const nav=document.querySelector('.ua-profile-tabs'),panel=document.querySelector('#ua-profile-tab-content');
  if(!nav||!panel)return;
  const postsMarkup=panel.innerHTML;
+ const reelsMarkup='<div class="ua-section-title"><strong>Reels</strong><a class="ua-outline" href="#/account/compose">＋ Buat Reel</a></div>'+(ownReels.length?postGrid(ownReels):'<div class="ua-empty"><strong>Belum ada Reels</strong><p>Video tunggal berdurasi hingga 60 detik akan muncul di sini.</p><a class="ua-primary ua-inline" href="#/account/compose">Unggah video</a></div>');
  const views={
   posts:postsMarkup,
-  trips:'<div class="ua-profile-tab-empty"><span>⌖</span><strong>Trip</strong><p>Catatan perjalanan dan trip yang Anda bagikan akan tampil di sini.</p></div>',
-  labels:'<div class="ua-profile-tab-empty"><span>▤</span><strong>Label</strong><p>Koleksi label dan topik yang Anda buat akan tampil di sini.</p></div>'
+  reels:reelsMarkup,
+  tagged:'<div class="ua-profile-tab-empty"><span>♙</span><strong>Foto dan video bersama Anda</strong><p>Konten yang menandai akun Anda akan tampil di sini.</p></div>'
  };
  nav.addEventListener('click',e=>{
   const button=e.target.closest('[data-profile-tab]');if(!button)return;
@@ -247,6 +249,7 @@ function bindProfileTabs(){
   panel.dataset.activeTab=tab;
  });
 }
+
 function postGrid(posts){return `<div class="ua-post-grid">${posts.map(p=>`<a class="ua-post-thumb" href="#/account/post/${p.id}">${p.media?.length?(p.media[0].media_type==='video'?'<span class="ua-video-mark">▶ VIDEO</span><video src="'+p.media[0].url+'" muted playsinline preload="metadata"></video>':'<img src="'+p.media[0].url+'" alt="'+esc(p.caption||'Postingan Pluits')+'">'):'<span class="ua-text-thumb">PLUITS</span>'}<span class="ua-thumb-caption">${esc(p.caption||'')}</span></a>`).join('')}</div>`;}
 async function hydratePosts(rows){
  if(!rows.length)return [];
