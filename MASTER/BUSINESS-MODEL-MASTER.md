@@ -193,7 +193,7 @@ Profil dapat memuat keahlian, area layanan, pengalaman, portofolio, ketersediaan
 |---|---|---|
 | 1 | Backend dan pengalaman pemilik toko | Akun multi-peran, pendaftaran/aktivasi toko, verifikasi, alamat toko, dashboard, katalog kosong, produk/variasi, atribut fisik, stok, harga, diskon |
 | 2 | Pengalaman pembeli dan marketplace | Pencarian, halaman toko/produk, variasi, harga mulai dari, lokasi relevan, perbandingan, keranjang/pesanan, label promosi yang memenuhi syarat |
-| 3 | Validasi Bagus Load & Delivery | Uji kebutuhan penggabungan belanja lintas toko, driver, kendaraan, ongkir/rute, pickup, dan status |
+| 3 | Evaluasi gagasan fulfillment lintas toko (historis, tidak aktif) | Uji kebutuhan penggabungan belanja lintas toko, driver, kendaraan, ongkir/rute, pickup, dan status |
 | 4 | Ekosistem jasa | Profil pekerja/tenaga ahli, penyedia jasa, arsitek, permintaan, penawaran, ulasan |
 
 Bangun dan validasi bertahap. Fokus implementasi saat ini adalah backend marketplace toko material, bukan sistem armada. Fitur logistik lintas toko tidak boleh menghambat pengujian katalog, toko, pencarian, perbandingan, dan pesanan.
@@ -239,7 +239,7 @@ Peluncuran dan pendaftaran toko pada tahap uji coba dibatasi ke Bali. Pembatasan
 7. Uji alur pesanan sesuai jam operasional, batas waktu order, waktu persiapan, antrean, dan prioritas pesanan terjadwal.
 8. Setelah pengalaman penjual stabil, akun pembeli menguji pencarian lokal, detail produk, keranjang, checkout, total biaya, dan jadwal.
 9. Pastikan toko belum diverifikasi ditandai jelas dan tidak ditampilkan seolah telah diverifikasi. Uji pembatasan pendaftaran toko di luar Bali.
-10. Setelah alur toko dan pembeli stabil, rekrut toko lain untuk menguji marketplace multi-toko. Uji Bagus Load & Delivery dilakukan terpisah berdasarkan kebutuhan nyata.
+10. Setelah alur toko dan pembeli stabil, rekrut toko lain untuk menguji marketplace multi-toko. Gagasan fulfillment lintas toko tidak menjadi produk aktif dan hanya dapat dipertimbangkan kembali melalui keputusan founder.
 
 ## 16. Keputusan terbuka
 - Daftar dokumen dan tahapan verifikasi toko PT/CV/UD, serta batas fitur untuk toko belum diverifikasi.
@@ -263,7 +263,7 @@ Peluncuran dan pendaftaran toko pada tahap uji coba dibatasi ke Bali. Pembatasan
 - Kebijakan retensi, backup, pemulihan, dan akses histori lintas tahun.
 
 ## 17. Aturan dokumen master
-1. Dokumen ini menjadi acuan utama diskusi bisnis dan penyusunan paket Bagus Load & Delivery.
+1. Dokumen ini menjadi acuan utama diskusi bisnis dan penyusunan paket Pluits.
 2. Keputusan terbuka tidak boleh dianggap final tanpa persetujuan dan pencatatan.
 3. Perubahan visi, prinsip anti-calo, syarat toko PT/CV/UD, atau urutan fase harus dicatat di sini.
 4. Spesifikasi teknis, SOP, kebijakan legal, dan rincian paket dibuat sebagai dokumen turunan di folder MASTER atau folder dokumentasi terkait.
@@ -751,7 +751,7 @@ Ini rekomendasi produk; prioritas sprint aktual mengikuti audit kode/backend dan
 - Apa bukti kunjungan terkonfirmasi tanpa transaksi?
 - Bagaimana reserved username, verified identity, impersonasi, public figures, dan brand claims ditangani?
 - Apa kebijakan final barang bekas, promosi jasa, tautan, spam, konten berbayar, dan iklan?
-- Apa cakupan pickup, pengiriman merchant, Bagus Load & Delivery, dan integrasi pihak ketiga?
+- Apa cakupan pickup, pengiriman merchant, layanan logistik terpisah yang pernah dipertimbangkan, dan integrasi pihak ketiga?
 - Apa model monetisasi, komisi, biaya, dan mekanisme saldo/pembayaran?
 - Apa persetujuan, retensi, dan batas pemrosesan lokasi serta data transaksi?
 
@@ -895,7 +895,7 @@ Satu akun manusia tetap berlaku lintas Social, Marketplace, Trip, dan GeoDirecto
 Feed sosial mengambil fondasi pengalaman sosial My Bali, tetapi Pluits memakai identitas, nama, dan desain produknya sendiri. Postingan biasa tetap diperbolehkan. Tag lokasi atau pin tidak otomatis membuktikan kunjungan; booking tidak otomatis membuktikan kehadiran; pembayaran tidak otomatis memublikasikan konten.
 
 ### 26.6 Prioritas audit dan perubahan implementasi
-Sebelum mengubah struktur aplikasi secara luas, audit repo/backend untuk menemukan nama Bagus Load & Delivery, asumsi khusus konstruksi, kategori lama, model toko, navigasi, route, database, storage, auth redirect, environment, workflow, dan konfigurasi Pages. Buat migrasi bertahap agar data historis dan URL yang masih dipakai tidak rusak.
+Sebelum mengubah struktur aplikasi secara luas, audit repo/backend untuk menemukan identitas dan asumsi produk lama, asumsi khusus konstruksi, kategori lama, model toko, navigasi, route, database, storage, auth redirect, environment, workflow, dan konfigurasi Pages. Buat migrasi bertahap agar data historis dan URL yang masih dipakai tidak rusak.
 
 Urutan kerja: (1) tetapkan Pluits sebagai nama produk di UI dan dokumentasi; (2) petakan taxonomy My Bali ke GeoDirectory, Trip, dan Marketplace; (3) pisahkan siklus transaksi Marketplace dari siklus itinerary/booking/kunjungan Trip; (4) rancang GeoDirectory universal dengan pin dan filter; (5) pertahankan fondasi sosial My Bali sebagai pengalaman utama; (6) audit dan migrasikan backend/frontend berdasarkan dependensi; (7) rename repository menjadi `pluits` saat dapat dilakukan, lalu perbarui Pages dan integrasi; (8) uji di perangkat mobile dan akun nyata.
 
