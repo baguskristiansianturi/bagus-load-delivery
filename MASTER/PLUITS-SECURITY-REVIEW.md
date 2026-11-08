@@ -136,7 +136,7 @@ This section supersedes the stale empty-database snapshot above for current stat
 
 ### Advisor snapshot
 - Security: 2 SECURITY DEFINER warnings; 1 leaked-password-protection warning.
-- Performance: 14 unindexed foreign keys; 3 auth RLS init-plan warnings in wallet policies; 14 unused-index notices; 1 multiple-permissive-Policies warning on Stories.
+- Performance after hardening: 14 unindexed foreign keys; 12 unused-index notices. Wallet RLS init-plan warnings and multiple-permissive Stories warning are cleared.
 - Health: no lints.
 - Unused-index notices should not trigger immediate index deletion; the database is new and query usage is still low.
 
@@ -166,3 +166,10 @@ The tracked file `202611070001_initial_marketplace.sql` is not listed in the liv
 - Active files not represented in live history: 0.
 - SQL recovered from live migration history: exact statements were used; prior divergent drafts were archived.
 - Unapplied legacy migration `202611070001_initial_marketplace.sql` is archived and excluded from active migration discovery.
+
+## 2026-11-08 — Media ownership and RLS performance hardening
+- Applied migration `20261108011806_enforce_social_media_owner_paths`; validated CHECK constraints now require social post/story media paths to start with the owning user's UUID folder.
+- A controlled rollback test demonstrated the old foreign-path insert was accepted before the constraint. After the migration, foreign-folder paths were rejected for both `user_posts` and `user_stories`; valid same-user paths were accepted. No probe rows were committed.
+- Applied migration `20261108011838_optimize_story_and_wallet_rls_policies`; Stories read policies are now split by role and wallet policies use `(select auth.uid())`.
+- Advisors after changes: 2 authenticated-callable SECURITY DEFINER warnings remain; leaked-password protection remains disabled. Performance: 14 unindexed FK notices and 12 unused-index notices; the three wallet init-plan warnings and duplicate Stories policy warning are cleared. Health: no lints.
+- Live migration history and active GitHub migration directory now both contain 19 exact version/name entries.
