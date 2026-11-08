@@ -58,7 +58,7 @@ Marketplace is a separate shopping/merchant workflow, not a renamed construction
 - **Business Center:** owner onboarding, verification, catalog, variations, stock, pricing, schedules, delivery zones, orders, staff roles, analytics and financial history.
 - **Public mini-website:** stable business username/URL; public catalog and service information without exposing private address, staff, customer or financial data.
 
-The current legacy material/procurement catalog may be reused as data only after its categories, units, variants and workflows are reconciled with the universal Marketplace taxonomy. Do not make construction the default identity of Pluits.
+The former static/demo construction catalog has been removed. Any future Marketplace catalog data must originate from real, authorized Pluits backend records and use the universal Marketplace taxonomy. Do not seed demo products or make construction the default identity of Pluits.
 
 ## 5. Trip hierarchy
 
@@ -109,8 +109,8 @@ Do not reuse Marketplace cart/order statuses for restaurant reservations, accomm
 The following are structural gaps, not just styling issues:
 
 1. The signed-in account shell still exposes a Social-only header/bottom bar; GeoDirectory, Marketplace and Trip are not coherently represented in the shared app navigation.
-2. The public home has links to a legacy material catalog, provider, services and logistics, but no Trip destination/itinerary space and no explicit three-space product switcher.
-3. Router still contains legacy material/procurement routes and has no dedicated Trip route hierarchy.
+2. Historical baseline before CP-038: the public home still linked to legacy material/provider/services/logistics pages. This finding is superseded; current shortcuts now route to Social, GeoDirectory, Marketplace and Trip.
+3. Historical baseline before CP-038: the router exposed legacy material/procurement routes. This finding is superseded; old demo route imports and modules have been removed and Trip routes are active.
 4. `src/app/services.js` still contains in-memory catalog/search, hard-coded procurement/delivery estimates and payment placeholders. These are not production Marketplace/Trip transaction services.
 5. GeoDirectory is the most advanced cross-module discovery layer, but current audit records only four starter places; admin review, broader licensed data ingestion, merchant links and Trip lifecycle integration remain incomplete.
 6. Marketplace seller/catalog scaffolding exists, but the live audit says checkout is disabled; cart/wishlist are not yet fully synchronized server-side, and there is no verified payment/refund/fulfillment lifecycle.
@@ -148,4 +148,4 @@ The following are structural gaps, not just styling issues:
 
 
 ## 13. Alignment audit update — 8 November 2026
-See docs/pluits/BUSINESS-FRONTEND-BACKEND-ALIGNMENT-AUDIT-2026-11-08.md for the code-level route/service/backend audit. The active router has been disconnected from the former static/demo procurement and operations pages. Remaining legacy source files are pending import-graph verification before physical deletion. Marketplace cart is still local-only and must be migrated to server-owned state; order creation is server-validated. Trip service requests are inquiries, not confirmed bookings. Wallet is non-operational and staged. Seller staff permission enforcement remains a security gate.
+See docs/pluits/BUSINESS-FRONTEND-BACKEND-ALIGNMENT-AUDIT-2026-11-08.md for the code-level route/service/backend audit. The active router has been disconnected from former static/demo procurement and operations pages. Demo-only modules, data files, localStorage order state, and legacy page modules have been physically removed after route imports were disconnected. Marketplace cart is still local-only and must be migrated to server-owned state; order creation is server-validated. Trip service requests are inquiries, not confirmed bookings. Wallet is non-operational and staged. Seller staff permission enforcement remains a security gate.
