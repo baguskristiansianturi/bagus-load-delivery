@@ -286,7 +286,8 @@ async function feedPage(){
   });
   const {data:storyRows,error:storyError}=await supabase.from('user_stories').select('id,user_id,media_path,media_type,caption,visibility,created_at,expires_at').gt('expires_at',new Date().toISOString()).eq('visibility','public').order('created_at',{ascending:false}).limit(30);
   if(storyError)throw storyError;
-  const ownerIds=[...new Set((storyRows||[]).map(s=>s.user_id))];
+  const visibleStories=(storyRows||[]).filter(s=>!blockedIds.includes(s.user_id));
+   const ownerIds=[...new Set(visibleStories.map(s=>s.user_id))];
   let storyProfiles=[];
   if(ownerIds.length){
    const profileResult=await supabase.from('user_profiles').select('id,display_name,username,avatar_path').in('id',ownerIds);
@@ -294,7 +295,7 @@ async function feedPage(){
    storyProfiles=profileResult.data||[];
   }
   const profileMap=new Map(storyProfiles.map(p=>[p.id,p]));
-  const stories=await Promise.all((storyRows||[]).map(async story=>{
+  const stories=await Promise.all(visibleStories.map(async story=>{
    const owner=profileMap.get(story.user_id)||{};
    return {...story,owner,mediaUrl:await signed(story.media_path),avatarUrl:owner.avatar_path?await signed(owner.avatar_path):''};
   }));
