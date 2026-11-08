@@ -136,7 +136,7 @@ function settingsHubPage(){
    ['⌕','Jelajah dan GeoDirectory','Tempat, layanan, komunitas, dan penyedia lokal','/places','ready'],
    ['▤','Marketplace','Toko, produk, layanan, dan pesanan','/marketplace','ready'],
    ['⌁','Trip dan perjalanan','Temukan tempat dan rencanakan pengalaman','/trip','ready'],
-   ['▱','Wallet','Permintaan dan informasi saldo akun','/account/wallet','ready']]],
+   ['▱','Wallet','Fondasi saldo; belum menjadi layanan uang operasional','/account/wallet','staged']]],
   ['Interaksi dan dukungan','Aktivitas akun, panduan, dan informasi layanan',[
    ['◷','Aktivitas dan notifikasi','Pemberitahuan suka, komentar, dan pengikut','/account/activity','ready'],
    ['?','Pusat Bantuan','Panduan dan jawaban penggunaan Pluits','/help','staged'],
