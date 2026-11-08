@@ -595,3 +595,10 @@ Build dari commit `642a24bdbed4a85931271e7481f9880a04cc9fc3` berhasil. GitHub Pa
 - Filter berupa segmented horizontal rail yang dapat digeser pada layar sempit; pilihan filter dipertahankan saat halaman Explore dirender ulang dalam sesi aplikasi.
 - Status: FRONTEND CODE UPDATED; build/deploy menunggu workflow; UAT perangkat Android dan pengujian dua akun menunggu founder. Filter Mengikuti memerlukan relasi follow berstatus accepted.
 - Acceptance test: (1) akun A mengikuti akun B dan B menerima; posting publik B muncul di filter Mengikuti A; (2) akun C yang tidak diikuti tidak muncul; (3) pending follow tidak muncul; (4) posting private tidak muncul di aliran publik; (5) Terbaru dan Populer mengubah urutan; (6) tab dapat digeser dan ditekan pada HP.
+
+
+## CP-031 — Media campuran, editor postingan, dan Reels (8 November 2026)
+- Maksimal 15 foto/video campuran per postingan. Caption, tag, dan audiens dapat diedit. Media yang sudah terbit tidak dapat diganti; hanya bisa dihapus satu per satu. Tidak ada penambahan media setelah terbit.
+- Reels untuk video tunggal maksimal 60.000 ms; video lebih dari 60.000 ms tidak masuk Reels. Video dalam carousel campuran tetap bagian postingan, bukan Reels terpisah.
+- Tabel `post_media` menyimpan urutan, tipe, path, durasi, pemilik; RLS, backfill media lama, dan trigger batas 15. Frontend: multi-upload, preview, carousel, editor, hapus media, Reels vertikal dan satu video aktif.
+- Belum UAT Android: batas 15/16, edit/hapus, video 60 detik dan >60 detik, privasi, autoplay.
