@@ -1,4 +1,5 @@
 import './style.css';
+import './styles/home-layout.css';
 import {route} from './app/router.js';
 import {getItem} from './data/catalog.js';
 import {home,bindHome} from './pages/home/index.js';
