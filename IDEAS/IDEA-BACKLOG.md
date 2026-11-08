@@ -181,3 +181,9 @@ Pluits is already published and has a registered account. Production code and ex
 - Removed an orphaned fake Bagus login page and wrappers pointing at deleted demo modules.
 - Added CI assertions so those specific modules/markers cannot silently return.
 - This cleanup does not remove legitimate empty-state/form placeholder text and does not relabel unclaimed directory places as verified.
+
+
+### IDEA-006 update — Legacy category taxonomy preserved safely
+- The old static master-data module was not used by active Pluits routes and contained obsolete category, fulfilment, payment, commission, and location assumptions.
+- A sanitized plain-text snapshot is retained only as a historical taxonomy reference; the executable module was deleted and CI now blocks its return.
+- Any useful category idea must be re-evaluated against the active Pluits Marketplace/GeoDirectory model before implementation.
