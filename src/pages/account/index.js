@@ -4,6 +4,7 @@ import {renderSocialHeader,renderSocialMobileNav} from '../../components/social/
 import {updateSEO} from '../seo.js';
 import { Upload as TusUpload } from 'https://esm.sh/tus-js-client@4.3.1';
 import './user-account.css';
+import {accountSecurityPage,bindAccountSecurity} from './security-settings.js';
 import '../../styles/social-components.css';
 import '../../styles/social-navigation.css';
 import {loadAccountContext,contextHeader,professionalPage,professionalFormPage,accountSettingsPage,bindAccountContext} from './account-context.js';
@@ -125,6 +126,7 @@ function settingsHubPage(){
  const groups=[
   ['Akun Anda','Kelola identitas dan peran di Pluits',[
    ['◎','Pusat Akun','Informasi profil, username, dan identitas personal','/account/profile','ready'],
+   ['♧','Keamanan & perangkat','Password, nomor HP, 2FA, bahasa, dan izin perangkat','/account/security','ready'],
    ['♙','Profil profesional','Keahlian, portofolio, dan area layanan','/account/professional','ready'],
    ['▣','Toko dan organisasi','Kelola toko, tim, dan identitas organisasi','/seller','ready'],
    ['⌖','Alamat dan lokasi','Alamat pengiriman dan lokasi tersimpan','/account/addresses','ready']]],
@@ -531,10 +533,11 @@ async function mountAccount(section='profile',parameter=''){
  try{
   await loadProfile();accountContext=await loadAccountContext(supabase,user);
   if(section==='profile')updateSEO({title:profile.display_name+' (@'+profile.username+') — Pluits',description:(profile.bio||'Profil komunitas '+profile.display_name+' di Pluits.').slice(0,160),path:'#/@'+encodeURIComponent(profile.username)});
-  const page=section==='explore'?await feedPage():section==='activity'?await notificationPage():section==='reels'?await reelsPage():section==='compose'?await composePage():section==='addresses'?await addressPage():section==='wallet'?await walletPage():section==='post'?await postDetailPage(parameter||location.hash.split('/')[3]||''):section==='user'?await publicProfilePage(parameter):section==='followers'?await followListPage('followers'):section==='following'?await followListPage('following'):section==='requests'?await followListPage('followers'):section==='preview'?await profilePage(true):section==='professional'?professionalPage(accountContext,profile):section==='professional-create'?professionalFormPage(accountContext,profile):section==='settings'?settingsHubPage():section==='blocked'?await blockedAccountsPage():section==='content-settings'?await accountSettingsPage(supabase,user):await profilePage();
+  const page=section==='explore'?await feedPage():section==='activity'?await notificationPage():section==='reels'?await reelsPage():section==='compose'?await composePage():section==='addresses'?await addressPage():section==='wallet'?await walletPage():section==='post'?await postDetailPage(parameter||location.hash.split('/')[3]||''):section==='user'?await publicProfilePage(parameter):section==='followers'?await followListPage('followers'):section==='following'?await followListPage('following'):section==='requests'?await followListPage('followers'):section==='preview'?await profilePage(true):section==='professional'?professionalPage(accountContext,profile):section==='professional-create'?professionalFormPage(accountContext,profile):section==='settings'?settingsHubPage():section==='security'?await accountSecurityPage(supabase,user):section==='blocked'?await blockedAccountsPage():section==='content-settings'?await accountSettingsPage(supabase,user):await profilePage();
   const headerAvatar=await signed(profile.avatar_path);document.querySelector('#app').innerHTML=frame(page,section==='explore'||section==='reels'?'explore':section==='activity'?'activity':section==='addresses'?'addresses':section==='compose'?'compose':section==='preview'?'profile':'profile',headerAvatar);
   document.querySelector('#ua-logout')?.addEventListener('click',async()=>{await supabase.auth.signOut();user=null;profile=null;authScreen('login');});
   bindAccountContext({db:supabase,user,ctx:accountContext,profile,refresh:mountAccount});
+  if(section==='security')bindAccountSecurity(supabase,user);
   document.querySelector('#ua-settings-logout')?.addEventListener('click',async()=>{await supabase.auth.signOut();user=null;profile=null;location.hash='/account/login';});
   document.querySelector('#ua-edit-profile-link')?.addEventListener('click',e=>{e.preventDefault();document.querySelector('#edit-profile')?.scrollIntoView({behavior:'smooth',block:'start'});});
   document.querySelector('#ua-menu-logout')?.addEventListener('click',async()=>{await supabase.auth.signOut();user=null;profile=null;location.hash='/';});
