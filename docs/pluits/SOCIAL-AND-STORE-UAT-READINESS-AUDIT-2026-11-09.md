@@ -178,3 +178,27 @@ Static layout review must be followed by Android browser testing at 320, 360, 39
 - Store business-type alignment: **BLOCKED pending coordinated migration and frontend change**.
 - Android responsive UAT: **NOT TESTED**.
 - Production database: **UNCHANGED by this audit**.
+
+
+## 11. Frontend remediation increment — 9 November 2026
+**Commit:** `e1a9d558bf9e3e6906e3b4837dfb9e8b6621b97c`  
+**GitHub Actions:** run #1043 (`42533355048`) SUCCESS; production-surface guard, Vite build, build-output verification, artifact upload, and Pages deployment all passed.  
+**Production database:** unchanged.
+
+Implemented in this increment:
+- Seller store query now loads `phone`, `public_area`, `description`, and store logo/banner path fields used by the profile UI.
+- Store verification submission button now calls `submit_store_for_verification`.
+- Product publish uses `publish_marketplace_product`; product archive uses a permission-checked product update.
+- Payment review and order fulfillment controls now call the existing guarded RPCs.
+- Online-sales state is no longer updated directly from the browser. The settings screen shows the state; an owner-guarded activation RPC remains a backend task.
+- A signed-in owner can start creating another store; the new store is selected after creation, and a store selector appears when multiple stores exist.
+- Seller Center mobile bottom navigation now uses a two-row/four-column layout on narrow viewports.
+
+Remaining blockers:
+- Business type is still PT/CV/UD in frontend, CHECK constraint, and `create_store` RPC. This conflicts with the active business model for UMKM/individual providers.
+- Store logo/banner upload UI and public-safe storefront rendering are not implemented.
+- Store profile update still uses two RPC calls; partial success needs an atomic RPC or explicit recovery UX.
+- Online-sales activation requires a dedicated owner-guarded RPC.
+- Delivery zones remain text-based and do not validate real geometry, operating hours, cutoff, capacity, or instant/same-day feasibility.
+- Android runtime testing, two-account authorization testing, and real media upload tests remain NOT TESTED.
+- The successful workflow is build/deploy evidence only, not founder acceptance.
