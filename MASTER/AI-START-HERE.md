@@ -15,7 +15,7 @@ Pintu masuk wajib untuk setiap chat/sesi AI baru yang mengerjakan Pluits. AI har
 5. `MASTER/DOCUMENTATION-MAP-AND-CHECKLIST.md`.
 6. `MASTER/PLUITS-USER-TESTING.md`.
 7. `MASTER/PLUITS-SECURITY-REVIEW.md`, `MASTER/BACKEND-FOUNDATION-SPEC.md`, `supabase/README.md`, dan `docs/pluits/TECHNICAL-ARCHITECTURE-SECURITY.md`.
-8. Audit live terbaru dan spesifikasi arsitektur modul yang relevan.
+8. Audit live terbaru dan docs/pluits/BUSINESS-FRONTEND-BACKEND-ALIGNMENT-AUDIT-2026-11-08.md, lalu spesifikasi arsitektur modul yang relevan.
 9. `IDEAS/IDEA-BACKLOG.md` — ide belum disetujui, bukan instruksi implementasi.
 
 ## Identitas proyek
