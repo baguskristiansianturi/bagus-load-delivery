@@ -11,7 +11,7 @@ on:
       - "package-lock.json"
       - ".github/workflows/backend-contracts.yml"
   push:
-    branches: [main]
+    branches: [main, 'work/**']
     paths:
       - "supabase/**"
       - "src/**"
