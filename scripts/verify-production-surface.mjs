@@ -103,6 +103,10 @@ for (const path of [
   assert.ok(existsSync(path), 'Required project governance document missing: ' + path);
 }
 
+const publicHome = read('src/pages/home/index.js');
+assert.match(publicHome, /mountUserAccount\('explore'\)/, 'Signed-in homepage must use the canonical interactive social feed.');
+assert.match(publicHome, /if\(viewer\)\{mountUserAccount\('explore'\);return;\}/, 'Guest feed must not render a duplicate interactive experience for signed-in users.');
+
 const navigationCss = read('src/styles/social-navigation.css');
 assert.match(navigationCss, /max-width:\s*760px/, 'Social navigation must retain its mobile layout breakpoint.');
 assert.match(navigationCss, /min-width:\s*761px/, 'Social navigation must retain its desktop layout breakpoint.');
