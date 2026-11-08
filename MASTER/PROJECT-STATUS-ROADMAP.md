@@ -322,3 +322,12 @@ Build dari commit `642a24bdbed4a85931271e7481f9880a04cc9fc3` berhasil. GitHub Pa
 - **UX acceptance:** app-first mobile layout; categories and filter controls swipe horizontally; cards fit two columns; detail gallery/add-to-cart is thumb-friendly; cart has persistent total/checkout action; checkout is a clean standalone flow without site header/footer; Seller Center is manageable by phone and product image selection is swipeable.
 - **Known security warnings from live Supabase advisor:** create_store and update_store_profile SECURITY DEFINER functions are callable by authenticated users and require review; leaked-password protection is disabled. Do not ignore these before production.
 - **Important truth label:** mobile CSS is IMPLEMENTED in repository; deployment and real-device appearance are NOT TESTED. Commerce backend integration is NOT IMPLEMENTED. The current demo/localStorage checkout must not be described as a working real transaction.
+
+
+## CP-015 — Checkout safety gate (8 November 2026)
+
+- Checkout no longer fabricates a local order, clears the user's cart, or shows a made-up delivery fee/service fee.
+- The checkout form can still retain a local draft, but the submit action is intentionally disabled until the backend order, stock validation, delivery pricing, and payment flow are implemented.
+- Subtotal is displayed as provisional only; delivery and service fee are explicitly marked as not yet calculated.
+- This is a safety improvement, not completion of checkout. Do not enable the button until a server-side order transaction and RLS tests exist.
+- Commit: 29a79b4fc246f829d888414f961cf017f0d0ce0a. Deployment workflow was in progress at checkpoint creation.
