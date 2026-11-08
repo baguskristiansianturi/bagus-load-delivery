@@ -678,3 +678,78 @@ Bagian 30 adalah prinsip dan kontrak kerja yang disetujui sebagai aturan arah. I
 - Keberadaan tabel, route, tombol, atau file kode bukan bukti fitur sudah selesai.
 - Pisahkan IMPLEMENTED, DEPLOYED, TESTED, dan ACCEPTED. UAT founder adalah gerbang penerimaan.
 - Spesifikasi rinci, matriks tes, dan release gate berada di MASTER/PLUITS-SOCIAL-FIRST-RELEASE-SPEC.md.
+
+## 32. Fondasi founder: cerita manusia, pengalaman familiar, dan kehidupan lokal sebagai alasan PLUITS dibuat
+**Tanggal konsolidasi:** 9 November 2026  
+**Status:** Prinsip produk dan model bisnis berdasarkan arahan founder. Detail tarif, alur uang, klaim, organisasi, kantor wilayah, dan integrasi publik tetap memiliki gate riset/keamanan tersendiri.
+
+### 32.1 Cerita pengguna adalah fondasi, bukan hiasan proposal
+PLUITS harus dijelaskan mulai dari masalah dan kebutuhan manusia, bukan dimulai dari daftar fitur atau tabel database. Cerita Ibu Nia menjadi contoh utama untuk menjelaskan mengapa PLUITS dibuat: ia sudah terbiasa menggunakan media sosial visual, ingin melihat dan membagikan pengalaman, menemukan tempat/produk/layanan, serta mendapatkan manfaat lebih dari cerita yang dibagikan. Cerita ini menjadi benang merah proposal investor, model bisnis, product blueprint, algoritma, backend, frontend, dan roadmap.
+
+Ibu Nia mewakili pengguna yang tidak ingin belajar sistem rumit. Persona ini bukan pembatas demografi atau klaim bahwa semua orang memiliki kebiasaan identik. Validasi dilakukan kepada pengguna nyata dengan tingkat literasi digital yang beragam.
+
+### 32.2 Familiar first, more value second
+**Arah founder:** pola interaksi sosial yang telah dikenal dari Instagram dibawa ke PLUITS agar pengguna tidak perlu memulai kebiasaan baru. Feed, Story, Reels/video, profil, Like, komentar, follow, dan pembuatan konten harus mudah dikenali dan digunakan. PLUITS bukan salinan identitas visual atau detail proprietary Instagram. Nilai tambahnya berada pada hubungan konten dengan tempat nyata, GeoDirectory, katalog, transaksi, Trip, identitas profesional, bisnis, dan organisasi.
+
+Prinsip desain:
+- pengguna dapat menikmati Social Media tanpa membeli, menjual, atau bepergian;
+- tindakan umum sederhana dan tidak membutuhkan pemahaman teknis;
+- fitur kompleks muncul secara kontekstual;
+- satu akun memiliki konteks personal/profesional/bisnis sesuai izin;
+- privasi dan pilihan berbagi tetap dikendalikan pengguna;
+- UI diuji dengan persona seperti Ibu Nia sebelum dinyatakan mudah digunakan.
+
+### 32.3 Dampak ekosistem berangkat dari cerita Ibu Nia
+1. Pengguna membuat/menonton cerita.
+2. Cerita dapat terhubung ke tempat, penyedia, katalog, transaksi, dan pengalaman.
+3. Penonton mendapatkan referensi nyata dan pilihan untuk bertindak.
+4. Bisnis mendapat penjualan, promosi, katalog, profil, dan alat pengelolaan.
+5. Profesional mendapat identitas, portofolio, dan hubungan kerja yang dapat diverifikasi.
+6. Organisasi/komunitas mendapat kanal informasi, kegiatan, pengelola, dan potensi partisipasi.
+7. Lembaga publik berpotensi menghubungkan informasi dan layanan kepada masyarakat melalui profil resmi.
+8. PLUITS mendapat peluang retensi, transaksi, dan pendapatan yang transparan.
+
+Ini adalah rantai nilai dan hipotesis network effect yang perlu diuji; bukan jaminan hasil otomatis.
+
+### 32.4 GeoDirectory sebagai peta kehidupan nyata
+GeoDirectory merupakan lapisan identitas entitas dan lokasi universal. Peta dapat digeser untuk menemukan usaha, sekolah, kampus, rumah ibadah, fasilitas publik, banjar, yayasan, organisasi, kantor polisi, pemadam kebakaran, dan tempat lain.
+
+Tempat dapat muncul sebelum pengelolanya mendaftar. Status berikut harus dibedakan: tercatat dari sumber, belum diklaim, klaim diajukan, klaim dalam pemeriksaan, dikelola, dan terverifikasi. Tempat yang belum diklaim bukan bisnis aktif dan bukan otomatis penyedia yang dapat menerima transaksi.
+
+Lokasi fisik/area layanan mendukung kepercayaan dan pilihan pemenuhan: pengantaran lokal atau pickup bila tersedia. Lokasi palsu dapat dilaporkan. Laporan adalah sinyal investigasi, bukan vonis otomatis. Pemeriksaan manusia, bukti, audit, banding, dan perlindungan terhadap laporan jahat diperlukan.
+
+Data direktori wajib memiliki provenance dan lisensi. Tidak boleh menganggap data yang tampak di Google Maps bebas disalin. Seller type dan otoritas penyedia harus transparan; reseller tidak otomatis dilarang jika relasi dan kewenangannya sah.
+
+### 32.5 Organisasi, komunitas, kontribusi, dan layanan publik
+Organisasi dapat mencakup masjid, gereja, sekolah, banjar, yayasan, komunitas, kantor pemerintah, kantor polisi, pemadam kebakaran, dan lembaga lainnya. Organisasi memerlukan profil dan pengelola yang berwenang, role/staff, pengumuman, kegiatan, dan informasi publik.
+
+Contoh founder: pengurus tempat ibadah mengumumkan kegiatan atau kebutuhan. Masyarakat dapat melihat, berpartisipasi, atau berkontribusi. Pengguna dapat memilih membagikan kontribusinya atau merahasiakannya. Pengelola membutuhkan catatan dan pertanggungjawaban. Wallet/donasi tidak boleh mengaktifkan uang sungguhan sebelum ledger, pemisahan dana, kewenangan pengelola, payment, reconciliation, legal, audit, dan refund readiness.
+
+Perusahaan/lembaga juga dapat menerbitkan lowongan atau kebutuhan tenaga. Pengguna dapat menampilkan portofolio dan afiliasi profesional yang diverifikasi, bukan klaim sepihak. Detail workflow hiring dan integrasi layanan publik masih membutuhkan riset dan keputusan lanjutan.
+
+### 32.6 Operasi lokal dan ekspansi
+Bali adalah wilayah awal untuk menguji kelancaran platform. Founder mengarahkan agar pendaftaran awal sebelum peluncuran Play Store dibatasi pada Bali; penerapan gate harus dibuktikan dalam kode/backend. Ekspansi ke kota lain dilakukan bertahap setelah fondasi, supply, support, verifikasi, dan kualitas operasi siap.
+
+Kantor fisik dan staf lokal adalah mekanisme yang dipertimbangkan untuk membantu layanan, verifikasi, dan sengketa ketika volume serta risiko wilayah membutuhkan. Persentase 50–60% yang pernah disebut adalah gagasan awal, bukan formula operasional final. Pemicu pembukaan kantor harus dihitung dari volume kasus, SLA, kepadatan entitas, risiko, dan kemampuan biaya.
+
+Struktur URL wilayah perlu mencerminkan struktur geografis kanonis dan dapat berkembang lintas negara. URL bukan sumber otorisasi atau pembatas wilayah.
+
+### 32.7 Konsekuensi terhadap algoritma
+Algoritma dipisah menurut tujuan:
+1. Social ranking: relevansi orang dan konten bagi pengguna.
+2. GeoDirectory/local discovery: entitas nyata, relevansi area, kualitas/provenance, ketersediaan, dan trust.
+3. Search ranking: relevansi permintaan dan persaingan penyedia yang transparan.
+4. Economic attribution: referral dan komisi atas transaksi yang memenuhi syarat.
+5. Trust/integrity: laporan, klaim, bukti, moderasi, sengketa, dan banding.
+
+Jangan menyatukan seluruhnya ke satu skor. Paid placement harus dilabeli. Sinyal sensitif tidak boleh disimpulkan dari aktivitas pengguna.
+
+### 32.8 Turunan backend dan frontend
+Backend menyiapkan identitas, roles, canonical entities, provenance, claims, permissions, transaction lifecycle, event timestamps, privacy, audit, ranking inputs, dan regional configuration. Frontend menerjemahkannya menjadi pengalaman sederhana: Feed yang familiar, Explore/Search, Map/List, profil, Business/Organization Center, Trip, dan kontribusi sesuai kesiapan.
+
+Setiap fitur wajib dapat ditelusuri dari cerita/masalah → journey → aturan bisnis → data/authorization → UI/UX → tests → release/UAT. Jangan membangun tabel atau layar tanpa tujuan pengguna dan owner domain yang jelas.
+
+### 32.9 Batas keputusan dan pertanyaan terbuka
+Prinsip narrative-first, familiar-first, social-first, GeoDirectory sebagai peta entitas lokal, serta Bali-first rollout menjadi arah founder. Hal-hal berikut belum otomatis menjadi spesifikasi implementasi final: komisi, paket SaaS, donasi dan wallet, bukti kehadiran, seller verification, sumber data lengkap, kantor lokal, SLA sengketa, lowongan kerja, kemitraan pemerintah, URL regional final, dan jadwal ekspansi.
+
+Semua angka finansial, ROI, kebutuhan kantor, headcount, dan biaya harus dihitung dari data operasional. Jangan mengarang angka untuk proposal investor.
