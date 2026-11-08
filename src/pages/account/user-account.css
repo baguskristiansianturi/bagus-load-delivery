@@ -507,3 +507,64 @@
 @media(max-width:760px){.ua-gallery-item img,.ua-gallery-item video{max-height:58vh}.ua-reels-feed{width:calc(100% + 36px);max-width:none;margin:0 -18px;gap:0}.ua-reels-feed .ua-post-card{min-height:calc(100svh - 74px);padding:12px 13px 16px;border-radius:0;border-left:0;border-right:0}.ua-reels-feed .ua-media{flex:1;max-height:none;min-height:45svh;margin:8px -13px}.ua-reels-feed .ua-media video{max-height:calc(100svh - 240px)}}
 
 .ua-reels-filters{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:4px 0 12px;margin-bottom:10px}.ua-reels-filters::-webkit-scrollbar{display:none}.ua-reels-filters button{flex:0 0 auto;border:1px solid #d9e1e7;background:#fff;color:#43576a;border-radius:999px;padding:9px 15px;font:inherit;font-size:12px;font-weight:750}.ua-reels-filters button.is-active{background:#20384d;border-color:#20384d;color:#fff}
+
+/* PLUITS PROFILE REDESIGN — replace legacy profile-card composition */
+.ua-profile-main{max-width:935px!important;margin:18px auto 42px!important;padding:0!important}
+.ua-profile-main .ua-profile-card{border:0!important;border-radius:0!important;box-shadow:none!important;background:transparent!important;overflow:visible!important;margin:0 0 18px!important}
+.ua-profile-main .ua-cover{height:250px!important;border-radius:5px!important;background-color:#e9edf2!important;background-size:cover!important;background-position:center!important;overflow:hidden}
+.ua-profile-main .ua-cover:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.12),transparent 45%)}
+.ua-profile-main .ua-cover>span{display:none!important}
+.ua-profile-main .ua-cover-edit{right:14px!important;bottom:14px!important;top:auto!important;z-index:2;background:rgba(255,255,255,.96)!important;color:#20242a!important;border:1px solid rgba(0,0,0,.08)!important;border-radius:7px!important;padding:9px 12px!important;font-size:12px!important;font-weight:700!important}
+.ua-profile-main .ua-profile-content{display:grid!important;grid-template-columns:minmax(150px,1fr) 2fr!important;align-items:start!important;gap:22px!important;padding:0 5.5% 20px!important;min-height:0!important;border-bottom:1px solid #e8eaed!important;background:#fff!important}
+.ua-profile-main .ua-profile-avatar{margin:-54px auto 0!important;position:relative!important;z-index:3!important}
+.ua-profile-main .ua-avatar.large{width:142px!important;height:142px!important;border:4px solid #fff!important;box-shadow:0 1px 5px rgba(0,0,0,.12)!important}
+.ua-profile-main .ua-avatar-edit{position:absolute!important;right:3px!important;bottom:7px!important;width:auto!important;height:30px!important;min-width:30px!important;padding:0 9px!important;border-radius:16px!important;background:#fff!important;color:#20242a!important;border:1px solid #dfe3e8!important;box-shadow:0 1px 4px rgba(0,0,0,.12)!important;display:flex!important;align-items:center!important;justify-content:center!important;cursor:pointer!important}
+.ua-profile-main .ua-avatar-edit span{font-size:10px!important;font-weight:750!important;white-space:nowrap!important}
+.ua-profile-main .ua-profile-identity{padding:18px 0 0!important;min-width:0!important}
+.ua-profile-main .ua-profile-name-row{align-items:center!important;margin-bottom:12px!important}
+.ua-profile-main .ua-profile-name-row h2{font-size:23px!important;font-weight:450!important;letter-spacing:-.035em!important;color:#20242a!important}
+.ua-profile-main .ua-profile-name-row .ua-username{font-size:13px!important}
+.ua-profile-main .ua-profile-menu summary{width:34px;height:34px;display:grid;place-items:center;border:1px solid #dfe3e8;border-radius:50%;cursor:pointer;color:#30343a}
+.ua-profile-main .ua-profile-identity>p{font-size:13px!important;line-height:1.55!important;color:#30343a!important;margin:10px 0 4px!important}
+.ua-profile-main .ua-location{font-size:12px!important;color:#667085!important}
+.ua-profile-main .ua-profile-stats{display:flex!important;gap:34px!important;margin:15px 0 0!important}
+.ua-profile-main .ua-profile-stats a{display:flex!important;gap:5px!important;align-items:baseline!important;color:#30343a!important}
+.ua-profile-main .ua-profile-stats strong{font-size:14px!important;font-weight:750!important}
+.ua-profile-main .ua-profile-stats span{font-size:13px!important;color:#515761!important}
+.ua-profile-main .ua-profile-tabs{position:static!important;display:flex!important;justify-content:center!important;gap:54px!important;margin:0!important;border-bottom:1px solid #e8eaed!important;background:transparent!important}
+.ua-profile-main .ua-profile-tabs button{display:flex!important;align-items:center!important;gap:7px!important;padding:14px 2px!important;border:0!important;border-top:1px solid transparent!important;border-bottom:1px solid transparent!important;background:transparent!important;color:#737982!important;font-size:11px!important;font-weight:750!important;letter-spacing:.08em!important;text-transform:uppercase!important;cursor:pointer!important}
+.ua-profile-main .ua-profile-tabs button.active{color:#20242a!important;border-top-color:#20242a!important}
+.ua-profile-main .ua-profile-tab-content{padding-top:12px!important}
+.ua-profile-main .ua-profile-tab-content>.ua-section-title{padding:0 4px!important}
+.ua-profile-main .ua-post-grid{gap:4px!important}
+.ua-profile-main .ua-post-thumb{border-radius:0!important}
+.ua-profile-main .ua-posts-panel{border:0!important;box-shadow:none!important;background:transparent!important}
+@media(max-width:760px){
+ .ua-profile-main{margin:0!important;padding:0!important}
+ .ua-profile-main .ua-profile-card{margin:0 0 12px!important}
+ .ua-profile-main .ua-cover{height:180px!important;border-radius:0!important}
+ .ua-profile-main .ua-cover-edit{right:10px!important;bottom:10px!important;padding:8px 10px!important;font-size:11px!important}
+ .ua-profile-main .ua-profile-content{grid-template-columns:92px minmax(0,1fr)!important;gap:12px!important;padding:0 14px 15px!important}
+ .ua-profile-main .ua-profile-avatar{margin:-35px 0 0!important}
+ .ua-profile-main .ua-avatar.large{width:86px!important;height:86px!important;border-width:3px!important}
+ .ua-profile-main .ua-avatar-edit{right:-2px!important;bottom:1px!important;height:25px!important;min-width:25px!important;padding:0 7px!important}
+ .ua-profile-main .ua-avatar-edit span{font-size:9px!important}
+ .ua-profile-main .ua-profile-identity{padding:9px 0 0!important}
+ .ua-profile-main .ua-profile-name-row{margin-bottom:7px!important}
+ .ua-profile-main .ua-profile-name-row h2{font-size:19px!important}
+ .ua-profile-main .ua-profile-identity>p{font-size:12px!important;margin-top:8px!important}
+ .ua-profile-main .ua-profile-stats{gap:18px!important;flex-wrap:wrap;margin-top:12px!important}
+ .ua-profile-main .ua-profile-stats a{display:grid!important;gap:1px!important;text-align:center!important}
+ .ua-profile-main .ua-profile-stats strong{font-size:13px!important}
+ .ua-profile-main .ua-profile-stats span{font-size:11px!important}
+ .ua-profile-main .ua-profile-tabs{gap:0!important;justify-content:space-around!important}
+ .ua-profile-main .ua-profile-tabs button{flex:1;justify-content:center!important;padding:13px 3px!important;font-size:10px!important}
+ .ua-profile-main .ua-profile-tab-content{padding:10px 0 0!important}
+ .ua-profile-main .ua-profile-tab-content>.ua-section-title{padding:0 12px!important}
+ .ua-profile-main .ua-post-grid{gap:2px!important}
+}
+@media(max-width:360px){
+ .ua-profile-main .ua-profile-content{grid-template-columns:78px minmax(0,1fr)!important;gap:9px!important}
+ .ua-profile-main .ua-avatar.large{width:74px!important;height:74px!important}
+ .ua-profile-main .ua-profile-stats{gap:12px!important}
+}
