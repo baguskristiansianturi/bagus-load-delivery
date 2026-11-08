@@ -80,6 +80,6 @@ Fondasi registrasi dan akses feed publik sudah disiapkan. Langkah berikutnya: fo
 - Akun publik langsung menerima follow; akun privat membutuhkan persetujuan. Permintaan yang belum disetujui tidak membuka bio/avatar/media.
 - Sepuluh migration CP-023 sudah disimpan dan cocok dengan live migration statements. Jangan menghapus migration yang sudah diterapkan atau mereset database.
 - Pengujian database rollback lintas dua akun berhasil untuk public follow, private request, acceptance, private media access, dan self-follow rejection.
-- UI profil publik, daftar pengikut/mengikuti/permintaan, dan guest profile/post view sudah diimplementasikan; tunggu bukti CI/Pages dan UAT Android sebelum menyebut deployed/tested.
+- UI profil publik, daftar pengikut/mengikuti/permintaan, dan guest profile/post view sudah diimplementasikan. GitHub Pages run #465 sukses build/deploy; UAT Android dan dua akun nyata masih pending. Bundle build: JS 172.94 kB gzip, CSS 44.57 kB gzip; Lighthouse/runtime speed belum diukur.
 - Tahap lanjutan yang masih terbuka: notifikasi, report/block/mute/moderasi/banding, DM, dan penyempurnaan public feed actions. Jangan menambahkan ide produk baru di luar Business Model Master tanpa membahasnya dengan founder.
 - Security gate belum selesai: leaked-password protection masih nonaktif; dua SECURITY DEFINER RPC toko lama masih perlu review; dua akun nyata dan Android UAT masih diperlukan.
