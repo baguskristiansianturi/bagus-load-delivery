@@ -868,3 +868,37 @@
  .ua-social-app .ua-compose-panel{padding:14px;border-radius:0}
  .ua-social-app .ua-profile-card,.ua-social-app .ua-panel{max-width:100%;min-width:0}
 }
+
+
+/* PLUITS HOME — compact search-first navigation */
+.ua-social-home .ua-feed-top{
+ display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:40;
+ height:58px;padding:0 12px;background:rgba(255,255,255,.97);
+ border-bottom:1px solid #edf0f2;backdrop-filter:blur(12px);
+}
+.ua-social-home .ua-feed-wordmark{flex:0 0 auto;font-size:19px;font-weight:900;letter-spacing:-.06em;color:#172b45;text-decoration:none}
+.ua-social-home .ua-feed-search{
+ display:flex;align-items:center;gap:8px;min-width:0;flex:1;height:37px;
+ padding:0 11px;border:1px solid #e6e9ec;border-radius:11px;
+ background:#f5f6f7;color:#858d95;text-decoration:none;font-size:12px;
+}
+.ua-social-home .ua-feed-search span:first-child{font-size:20px;line-height:1;color:#59636c}
+.ua-social-home .ua-feed-search span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ua-social-home .ua-feed-top>div{display:flex;align-items:center;gap:12px;flex:0 0 auto}
+.ua-social-home .ua-feed-top>div a{font-size:22px;color:#27313a;text-decoration:none;line-height:1}
+.ua-social-home .ua-feed-fallback-note{
+ padding:9px 13px;background:#f7f8f9;border-bottom:1px solid #edf0f1;
+ color:#747d85;font-size:10px;line-height:1.45;
+}
+.ua-social-home .ua-feed-empty{margin:18px 12px;padding:32px 18px;text-align:center;border:1px solid #eceff1;border-radius:12px;background:#fff}
+.ua-social-home .ua-feed-empty strong{display:block;color:#39434b;font-size:13px;line-height:1.5}
+.ua-social-home .ua-feed-empty a{display:inline-flex;margin-top:14px;padding:9px 14px;border-radius:9px;background:#172b45;color:#fff;text-decoration:none;font-size:11px;font-weight:700}
+@media(min-width:761px){
+ .ua-social-home .ua-feed-top{max-width:690px;margin:0 auto;padding:0 4px}
+}
+@media(max-width:360px){
+ .ua-social-home .ua-feed-top{gap:7px;padding:0 9px}
+ .ua-social-home .ua-feed-wordmark{font-size:17px}
+ .ua-social-home .ua-feed-search{font-size:11px;padding:0 8px}
+ .ua-social-home .ua-feed-top>div{gap:8px}
+}
