@@ -18,6 +18,7 @@ Before analysing, designing, or changing Pluits, read the complete Business Mode
 - [Business, product & technology blueprint](docs/pluits/PLUITS-BUSINESS-AND-PRODUCT-BLUEPRINT.md)
 - [Repository/backend audit and roadmap](docs/pluits/PLUITS-TECHNOLOGY-ROADMAP-AND-AUDIT-2026-11-09.md)
 - [Visual diagrams and mobile mockup](docs/pluits/visuals/)
+- [Investor package reading guide](docs/pluits/INVESTOR-PACKAGE-README.md)
 
 ## Product spaces
 
