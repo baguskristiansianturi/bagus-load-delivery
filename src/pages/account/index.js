@@ -476,15 +476,27 @@ async function postDetailPage(id){
 }
 async function normalizeFeedMediaFrames(root=document){
  const mediaNodes=root.querySelectorAll('.ua-social-home .ua-media img,.ua-social-home .ua-media video,.ua-social-home .ua-gallery-item img,.ua-social-home .ua-gallery-item video');
+ const dimensions=el=>({w:el.naturalWidth||el.videoWidth,h:el.naturalHeight||el.videoHeight});
+ const boundedRatio=(w,h)=>Math.min(3/4,Math.max(1/1.91,w/h));
  const apply=el=>{
-  const w=el.naturalWidth||el.videoWidth,h=el.naturalHeight||el.videoHeight;
-  if(!w||!h)return;
-  const sourceRatio=w/h;
-  const displayRatio=Math.min(1.25,Math.max(1/1.91,sourceRatio));
-  const frame=el.closest('.ua-media,.ua-gallery-item');
+  const gallery=el.closest('.ua-media-gallery');
+  if(gallery){
+   const first=gallery.querySelector('.ua-gallery-item img,.ua-gallery-item video');
+   if(!first)return;
+   const {w,h}=dimensions(first);if(!w||!h)return;
+   const ratio=boundedRatio(w,h);
+   gallery.querySelectorAll('.ua-gallery-item').forEach(frame=>{
+    frame.style.aspectRatio=String(ratio);
+    frame.dataset.mediaRatio=ratio.toFixed(4);
+   });
+   return;
+  }
+  const {w,h}=dimensions(el);if(!w||!h)return;
+  const ratio=boundedRatio(w,h);
+  const frame=el.closest('.ua-media');
   if(!frame)return;
-  frame.style.aspectRatio=String(displayRatio);
-  frame.dataset.mediaRatio=sourceRatio.toFixed(4);
+  frame.style.aspectRatio=String(ratio);
+  frame.dataset.mediaRatio=ratio.toFixed(4);
  };
  mediaNodes.forEach(el=>{
   if(el.tagName==='VIDEO'){
