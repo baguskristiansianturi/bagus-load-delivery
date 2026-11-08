@@ -16,6 +16,7 @@ import {tracking} from '../pages/tracking/index.js';
 import {sellerPage} from '../pages/seller/index.js';
 import {mountUserAccount} from '../pages/account/index.js';
 import {updateSEO} from '../pages/seo.js';
+import {directoryPage,bindDirectoryPage,placePage,claimPage,bindPlacePage} from '../pages/directory/index.js';
 
 export function route(homeFn=home){
  const raw=(location.hash||'#/').replace(/^#\/?/,'');
@@ -23,6 +24,14 @@ export function route(homeFn=home){
  const s=path.split('/').filter(Boolean),r=s[0],v=s[1],p=new URLSearchParams(q);
  let h;
  if(!r)h=homeFn();
+ else if(r==='places'){h=directoryPage();queueMicrotask(()=>bindDirectoryPage());}
+ else if(r==='place'){
+  h='<div class="pl-directory-loading">Membuka tempat…</div>';
+  queueMicrotask(async()=>{
+   const content=s[2]==='claim'?await claimPage(v||''):await placePage(v||'');
+   const app=document.querySelector('#app');if(app){app.innerHTML=content;if(s[2]!=='claim')bindPlacePage();}
+  });
+ }
  else if(r==='search')h=search(p.get('q')||'');
  else if(r==='material'||r==='materials')h=v?categoryPage(v):listing('material','');
  else if(r==='jasa')h=v?categoryPage(v==='plumbing'?'plumbing-service':v):listing('service','');
@@ -45,6 +54,6 @@ export function route(homeFn=home){
  else if(r==='track'||r==='track-order')h=tracking(v||p.get('id')||'');
  else h='<div class="empty-state large"><h1>Halaman tidak ditemukan</h1><p>Rute belum tersedia pada frontend ini.</p><a class="primary-button" href="#/">Kembali ke beranda</a></div>';
  document.querySelector('#app').innerHTML=h;
- updateSEO({title:document.querySelector('h1')?.textContent?document.querySelector('h1').textContent+' — Pluits Indonesia':'Pluits — Pluits Indonesia',description:'Jelajahi material konstruksi, toko, supplier, jasa, dan layanan pengiriman di Pluits Indonesia. Tidak perlu login untuk mulai menjelajah.',path:path});
+ updateSEO({title:document.querySelector('h1')?.textContent?document.querySelector('h1').textContent+' — Pluits Indonesia':'Pluits — Pluits Indonesia',description:'Jelajahi direktori tempat, layanan, komunitas, pengalaman, dan produk lokal di Pluits.',path:path});
  window.scrollTo(0,0);
 }
