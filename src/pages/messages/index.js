@@ -56,7 +56,7 @@ async function loadContacts() {
   const {data:rows,error} = await db.from('user_follows').select('follower_id,following_id,status')
     .eq('status','accepted').or('follower_id.eq.'+currentUser.id+',following_id.eq.'+currentUser.id);
   if (error) {
-    try { const cached=JSON.parse(localStorage.getItem(contactsKey())||'[]'); box.innerHTML=cached.length?cached.map(person=>'<button class="pl-msg-contact" data-start-chat="'+person.id+'"><b>'+esc(person.display_name||person.username)+'</b><small>@'+esc(person.username)+'</small><span>Kontak tersimpan · mulai saat online</span></button>').join(''):'<p class="pl-msg-empty">Kontak belum tersimpan di perangkat ini. Hubungkan internet untuk memuat kontak pertama kali.</p>'; }
+    try { const cached=JSON.parse(localStorage.getItem(contactsKey())||'[]'); box.innerHTML=cached.length?cached.map(person=>'<button class="pl-msg-contact" data-start-chat="'+person.id+'"><b>'+esc(person.display_name||person.username)+'</b><small>@'+esc(person.username)+'</small><span>Kontak tersimpan · mulai saat online</span></button>').join(''):'<p class="pl-msg-empty">Kontak belum tersimpan di perangkat ini. Hubungkan internet untuk memuat kontak pertama kali.</p>'; bindStartChat(box); }
     catch { box.textContent='Kontak offline belum tersedia.'; }
     return;
   }
