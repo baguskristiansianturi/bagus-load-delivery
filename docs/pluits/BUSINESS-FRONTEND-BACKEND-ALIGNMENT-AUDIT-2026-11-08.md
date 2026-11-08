@@ -30,7 +30,7 @@
 ### P1 — Legacy demo procurement flow still existed in the router
 Before this audit increment, src/app/router.js exposed demo material/category/product/cart/checkout/order/provider/project/driver/partner/tracking routes. Those routes depended on src/app/page-factory.js, src/app/services.js, src/app/store.js, src/data/catalog.js, and src/data/marketplace.js, which contain static/demo catalogue data, localStorage-only order state, fabricated ratings/reviews, and placeholder payment/delivery estimates. The old operations console also used sample BLD order IDs and fake rows.
 
-**Action in this increment:** disconnected the legacy procurement/demo pages from the active router; search now calls the Supabase-backed social discovery page; legacy cart/checkout/orders routes redirect to the Pluits Marketplace routes; material aliases open the Pluits Marketplace; provider aliases open GeoDirectory. The former page files and data modules are now being removed after their route imports were disconnected; shared account and recent-directory behavior is retained through backend-backed Pluits pages. Do not reintroduce their demo data.
+**Action in this increment:** disconnected the legacy procurement/demo pages from the active router; search now calls the Supabase-backed social discovery page; legacy cart/checkout/orders routes redirect to the Pluits Marketplace routes; material aliases open the Pluits Marketplace; provider aliases open GeoDirectory. Former page files and data modules were removed after their route imports were disconnected; shared account and recent-directory behavior is retained through backend-backed Pluits pages. Do not reintroduce their demo data.
 
 ### P1 — Marketplace cart remains local-only
 src/pages/marketplace/index.js stores the cart in browser localStorage (pluits_market_cart_v1). Checkout calls place_marketplace_order, and the backend revalidates item variants, price, stock, seller, minimum order and delivery rules. This protects order creation, but the cart is not yet server-side/cross-device as required by Business Model Master section 28.8. Treat local cart as a temporary draft/cache, not a canonical cart.
@@ -63,10 +63,10 @@ The seller foundation spec is now explicitly labeled as a historical baseline an
 - Backend foundation spec identifies Pluits and its historical status.
 
 ## 5. Physical deletion still gated
-Demo-only procurement modules and localStorage order state are not a canonical business database. Their route imports are disconnected. Physical deletion follows the dependency inventory in this cleanup; no real order history is migrated from demo keys.
+Demo-only procurement modules and localStorage order state were not a canonical business database. The modules were deleted; no real order history was migrated from demo keys.
 
 ## 6. Required next gates
-1. Verify the final import graph and ensure no demo-only modules/data files remain.
+1. Maintain a regression check that prevents demo-only catalog/store modules from returning to the active import graph.
 2. Implement server-side Marketplace cart and guest-to-account merge.
 3. Complete granular seller permission enforcement and negative authorization tests.
 4. Centralize/pin Supabase JS client and standardize error handling.
