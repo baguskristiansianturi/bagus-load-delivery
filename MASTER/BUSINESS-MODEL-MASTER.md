@@ -845,3 +845,48 @@ Dukungan QRIS atau metode pembayaran tertentu harus melalui penyedia/mitra beriz
 **Arah yang dicatat:** pengalaman sosial dari transaksi nyata; pembayar yang sah dapat memulai postingan; teman dapat ditandai dengan persetujuan; kartu feed terhubung ke merchant dan item; pengalaman/review tersinkron ke halaman merchant; merchant dapat merespons; entitas mempunyai profil resmi yang dikelola identitas manusia; GeoDirectory lokal; pembayaran merchant melalui QR/barcode dan mitra pembayaran; fakta transaksi tidak dapat diedit melalui editor postingan.
 
 **Masih perlu diputuskan/desain:** apakah satu atau beberapa pembayar dapat menjadi co-author; bagaimana membagi item/menu di antara peserta; apakah teman yang ditandai perlu QR/konfirmasi merchant; kapan review memenuhi syarat (paid, fulfilled, atau setelah masa komplain); aturan edit/hapus postingan dan review; model rating minimum tiga bintang (masih usulan); apakah review buruk diarahkan ke komplain privat atau tetap ada rating rendah yang jujur; cara menghitung rating merchant; verifikasi lokasi dan kewenangan pengelola; skema QR/payment provider, settlement, refund, biaya, pajak, dan regulasi; serta retensi data transaksi dan persetujuan berbagi.
+
+
+## 26. Konsolidasi final identitas produk, Local Marketplace, Trip, dan GeoDirectory — 8 November 2026
+
+**Status:** Keputusan founder terbaru. Bagian ini memperjelas dan menggantikan bagian terdahulu yang masih membatasi Pluits pada konstruksi atau memisahkan kategori My Bali dari cakupan Pluits. Sejarah keputusan lama tetap dipertahankan; jika ada pertentangan, Bagian 26 menjadi acuan terbaru.
+
+### 26.1 Identitas produk
+Nama produk dan ekosistem adalah **Pluits**. Pluits tidak lagi diposisikan sebagai Bagus Load & Delivery atau marketplace khusus konstruksi. Bagus Load & Delivery sebagai nama produk/brand untuk aplikasi ini dihentikan dan digantikan oleh Pluits. Fungsi logistik/delivery, jika kelak dibutuhkan, menjadi salah satu kemampuan/layanan dalam ekosistem Pluits, bukan identitas utama produk.
+
+Repository saat ini masih bernama `bagus-load-delivery`. Nama repository tersebut merupakan nama teknis historis dan harus diganti menjadi `pluits` melalui pengaturan GitHub ketika tindakan rename repository tersedia. Sampai rename berhasil dilakukan, dokumentasi dan UI baru harus menggunakan nama Pluits; jangan mengklaim repository sudah berganti nama. Setelah rename, perbarui referensi remote, GitHub Pages, workflow, badge, dokumentasi, dan integrasi yang masih memakai nama/path lama, lalu verifikasi URL deploy.
+
+### 26.2 Tiga ruang produk dengan siklus yang berbeda
+Pluits mempunyai tiga ruang utama yang terhubung melalui satu identitas dan ekosistem, tetapi masing-masing memiliki tujuan, model data, siklus pengguna, serta alur operasional sendiri:
+
+1. **Social Media / Community:** pengalaman sosial yang diadopsi dari konsep My Bali menjadi fondasi utama Pluits. Meliputi feed, profil, Stories/Status, Reels/video, Explore, follow/pertemanan, like, komentar, share, save, chat, notifikasi, privasi, dan moderasi. Konten umum tetap menjadi inti; tidak harus berasal dari transaksi atau perjalanan.
+2. **Local Marketplace:** ruang jual-beli berbagai produk dan layanan lokal. Kategori bisnis, kategori produk, serta pola discovery lokal yang dikembangkan dalam My Bali tetap menjadi referensi dan diadopsi sesuai kebutuhan. Marketplace bukan khusus konstruksi. Namun siklusnya berdiri sendiri: onboarding seller/provider, katalog, kategori, harga, variasi, stok/ketersediaan, area layanan, cart/checkout, pembayaran, order, fulfillment/pickup/delivery, refund, sengketa, dan review. Kebijakan pemenuhan lokal/same-day berlaku sesuai keputusan dan konfigurasi kategori; jangan menyamakan siklus Marketplace dengan Trip.
+3. **Trip:** ruang untuk menemukan, merencanakan, memesan, dan mendokumentasikan perjalanan/kunjungan. Cakupannya termasuk restoran, kafe, destinasi wisata, monumen, gereja, sekolah, tempat budaya, fasilitas publik, akomodasi, event, aktivitas, rental, dan transportasi. Trip berpusat pada tujuan kunjungan, itinerary, tanggal, booking/reservasi bila relevan, ketersediaan, check-in/kunjungan, dan Trip Experience. Tidak semua tempat yang tercantum harus dapat dipesan; sebagian hanya merupakan tujuan/informasi yang dapat dikunjungi.
+
+Ketiga ruang tersebut tidak boleh dilebur menjadi satu siklus transaksi generik. Produk barang Marketplace, layanan lokal, reservasi restoran, tiket/aktivitas, akomodasi, dan kunjungan tanpa booking dapat memiliki entitas, status, persyaratan, pembayaran, dan fulfillment yang berbeda.
+
+### 26.3 GeoDirectory sebagai direktori universal dan lapisan peta bersama
+**GeoDirectory adalah direktori lokasi universal**, bukan hanya fitur Trip dan bukan hanya daftar merchant Marketplace. Satu sistem direktori menyatukan entitas/tempat yang memiliki lokasi atau area relevan, termasuk toko, restoran, kafe, tempat wisata, monumen, gereja, sekolah, hotel, fasilitas, alamat, penyedia layanan, komunitas, event, dan kategori lain yang disetujui.
+
+Setiap entri yang memenuhi syarat dapat ditampilkan sebagai pin pada peta. Pin dapat dibedakan melalui kategori/jenis entitas, ikon, filter, status, dan tingkat verifikasi. Pengguna dapat mencari, memfilter, membuka detail, melihat informasi publik, dan berpindah ke tindakan yang sesuai: membuka katalog Marketplace, melihat informasi Trip, membuat itinerary, meminta reservasi, menghubungi penyedia, atau sekadar melihat lokasi.
+
+GeoDirectory menjadi lapisan discovery bersama yang menghubungkan Social, Marketplace, dan Trip, tetapi tidak menggantikan ketiganya. Satu entitas dapat muncul di beberapa konteks tanpa membuat data tempat duplikat. Contoh: restoran yang sama memiliki satu profil entitas dan satu lokasi kanonis; ia dapat ditemukan melalui GeoDirectory, menjadi tujuan Trip, dan menyediakan katalog/order melalui Marketplace jika merchant mengaktifkan fungsi tersebut.
+
+Model data harus membedakan entitas, kategori, lokasi fisik, area layanan, alamat publik, koordinat/pin, jam operasional, status verifikasi, dan kapabilitas yang tersedia. Tidak semua alamat otomatis menjadi bisnis, tidak semua tempat menyediakan transaksi, dan tidak semua entitas harus mempunyai katalog.
+
+### 26.4 Adopsi kategori dan konsep My Bali
+Kategori bisnis, tempat, aktivitas, dan layanan dari My Bali tetap digunakan sebagai bahan dasar taxonomy Pluits. Kategori tersebut harus disusun ulang menjadi taxonomy universal yang dapat dipakai oleh GeoDirectory, Trip, dan Local Marketplace dengan pemetaan yang sesuai. Satu kategori dapat digunakan lintas modul, tetapi tindakan dan siklusnya ditentukan oleh modul yang bersangkutan.
+
+Contoh: restoran dapat menjadi tempat pada GeoDirectory, tujuan kunjungan/reservasi pada Trip, dan merchant katalog makanan pada Marketplace. Gereja, sekolah, atau monumen dapat menjadi lokasi dan tujuan Trip/GeoDirectory tanpa harus diperlakukan sebagai toko. Toko dapat memiliki pin GeoDirectory dan katalog Marketplace, tanpa otomatis menjadi destinasi Trip berfitur booking.
+
+### 26.5 Prinsip identitas, data, dan pengalaman terpadu
+Satu akun manusia tetap berlaku lintas Social, Marketplace, Trip, dan GeoDirectory. Entitas resmi mempunyai profil terpisah yang dikelola owner/staff dengan izin. Satu lokasi/entitas kanonis dapat ditautkan ke konten sosial, listing Marketplace, itinerary, booking, review, dan pengalaman kunjungan melalui relasi data yang konsisten.
+
+Feed sosial mengambil fondasi pengalaman sosial My Bali, tetapi Pluits memakai identitas, nama, dan desain produknya sendiri. Postingan biasa tetap diperbolehkan. Tag lokasi atau pin tidak otomatis membuktikan kunjungan; booking tidak otomatis membuktikan kehadiran; pembayaran tidak otomatis memublikasikan konten.
+
+### 26.6 Prioritas audit dan perubahan implementasi
+Sebelum mengubah struktur aplikasi secara luas, audit repo/backend untuk menemukan nama Bagus Load & Delivery, asumsi khusus konstruksi, kategori lama, model toko, navigasi, route, database, storage, auth redirect, environment, workflow, dan konfigurasi Pages. Buat migrasi bertahap agar data historis dan URL yang masih dipakai tidak rusak.
+
+Urutan kerja: (1) tetapkan Pluits sebagai nama produk di UI dan dokumentasi; (2) petakan taxonomy My Bali ke GeoDirectory, Trip, dan Marketplace; (3) pisahkan siklus transaksi Marketplace dari siklus itinerary/booking/kunjungan Trip; (4) rancang GeoDirectory universal dengan pin dan filter; (5) pertahankan fondasi sosial My Bali sebagai pengalaman utama; (6) audit dan migrasikan backend/frontend berdasarkan dependensi; (7) rename repository menjadi `pluits` saat dapat dilakukan, lalu perbarui Pages dan integrasi; (8) uji di perangkat mobile dan akun nyata.
+
+Tidak ada fitur yang boleh ditandai selesai hanya karena arah bisnis telah diputuskan. DECIDED, DESIGNED, IMPLEMENTED, DEPLOYED, TESTED, dan ACCEPTED tetap merupakan status yang berbeda.
