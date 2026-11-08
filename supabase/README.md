@@ -49,7 +49,7 @@ Private bucket: `pluits-user-media`.
 - Exact address and coordinates must never be returned in public profile/feed queries.
 - Wallet tables and a user request screen are scaffolded, but no payment provider, verified settlement, withdrawal processing, or complete financial ledger is implemented. This is not an operational real-money wallet; do not advertise balance/top-up/withdrawal as available.
 - Storage upload for video is currently standard upload with a 50 MB cap; resumable/TUS upload remains future work.
-- Run security/performance advisors after each schema change. The live 8 Nov 2026 audit reports two authenticated-callable SECURITY DEFINER store RPCs, leaked-password protection disabled, 14 unindexed foreign keys, three RLS init-plan warnings, and one duplicate permissive Stories SELECT policy. See MASTER/PLUITS-SECURITY-REVIEW.md.
+- Run security/performance advisors after each schema change. The latest 8 Nov 2026 audit reports two authenticated-callable SECURITY DEFINER store RPCs and leaked-password protection disabled. Performance notices: 14 unindexed foreign keys and 12 unused-index notices; wallet RLS init-plan and duplicate Stories SELECT warnings have been cleared. See MASTER/PLUITS-SECURITY-REVIEW.md.
 
 ## Project handoff
 - [Business model master](../MASTER/BUSINESS-MODEL-MASTER.md)
