@@ -10,6 +10,15 @@ export async function bindHome(){
  const target=document.querySelector('#pl-public-feed');if(!target)return;
  bindHomeNearby();
  try{
+  const {data:{user:viewer}}=await db.auth.getUser();
+  const headerActions=document.querySelector('.pl-social-header>div');
+  if(viewer&&headerActions){
+   const {data:me}=await db.from('user_profiles').select('display_name,username,avatar_path').eq('id',viewer.id).maybeSingle();
+   const photo=await mediaUrl(me?.avatar_path);
+   const label=safe(me?.display_name||viewer.email||'Profil');
+   headerActions.innerHTML='<a class="pl-header-profile" href="#/account/profile" aria-label="Buka profil saya">' +(photo?'<img src="'+photo+'" alt="">':'<b>'+label.slice(0,1).toUpperCase()+'</b>')+'</a><a href="#/account/activity" aria-label="Aktivitas">♡</a><a class="pl-social-signup" href="#/account/settings">Pengaturan</a>';
+  }
+
   const {data:rows,error}=await db.from('user_posts').select('id,user_id,caption,media_path,media_type,tags,created_at,profile_context,professional_profile_id,business_store_id').eq('visibility','public').order('created_at',{ascending:false}).limit(30);
   if(error)throw error;
   if(!rows?.length){target.innerHTML='<div class="pl-feed-empty"><div>▧</div><h3>Pluits sedang membuka ruang untuk cerita pertamamu</h3><p>Di sini kamu akan menemukan foto, video, cerita, dan pengalaman dari komunitas. Jelajahi Pluits sebagai pengunjung, lalu buat akun jika ingin ikut berbagi dan berinteraksi.</p><a href="#/account/register">Buat akun Pluits</a></div>';return;}
@@ -29,7 +38,7 @@ export async function bindHome(){
    const city=author.public_city||author.service_city||'',province=author.public_province||author.service_province||'';
    const [avatar,media]=await Promise.all([mediaUrl(personal.avatar_path),post.media_path?mediaUrl(post.media_path):Promise.resolve('')]);if(post.media_path&&!media)return '';
    const initials=safe((name||'P').slice(0,1).toUpperCase()),kind=post.profile_context==='business'?'Business':post.profile_context==='professional'?'Professional':'';
-   return `<article class="pl-public-post"><div class="pl-public-post-head">${avatar?`<img src="${avatar}" alt="">`:`<b>${initials}</b>`}<div><strong>${safe(name)} ${kind?`<em class="pl-post-context">${kind}</em>`:''}</strong><small>@${safe(handle)}${city?' · '+safe(city)+(province?', '+safe(province):''):''}</small></div><time>${new Date(post.created_at).toLocaleDateString('id-ID',{day:'numeric',month:'short'})}</time></div>${post.caption?`<p>${safe(post.caption)}</p>`:''}${post.media_path?`<div class="pl-public-post-media">${post.media_type==='video'?`<video src="${media}" controls playsinline preload="metadata"></video>`:`<img src="${media}" alt="Postingan komunitas Pluits" loading="lazy">`}</div>`:'<div class="pl-public-text-post">PLUITS</div>'}${post.tags?.length?`<div class="pl-public-post-tags">${post.tags.map(t=>'#'+safe(t)).join(' ')}</div>`:''}<div class="pl-public-post-actions"><a href="#/account/explore">♡ Suka</a><a href="#/account/explore">Komentar</a><a href="#/account/explore">↗ Bagikan</a><a href="#/account/explore">Simpan</a></div></article>`;
+   return `<article class="pl-public-post"><div class="pl-public-post-head">${avatar?`<img src="${avatar}" alt="">`:`<b>${initials}</b>`}<div><strong>${safe(name)} ${kind?`<em class="pl-post-context">${kind}</em>`:''}</strong><small>@${safe(handle)}${city?' · '+safe(city)+(province?', '+safe(province):''):''}</small></div><time>${new Date(post.created_at).toLocaleDateString('id-ID',{day:'numeric',month:'short'})}</time></div>${post.caption?`<p>${safe(post.caption)}</p>`:''}${post.media_path?`<div class="pl-public-post-media">${post.media_type==='video'?`<video src="${media}" controls playsinline preload="metadata"></video>`:`<img src="${media}" alt="Postingan komunitas Pluits" loading="lazy">`}</div>`:'<div class="pl-public-text-post">PLUITS</div>'}${post.tags?.length?`<div class="pl-public-post-tags">${post.tags.map(t=>'#'+safe(t)).join(' ')}</div>`:''}<div class="pl-public-post-actions"><a href="#/account/post/${post.id}">♡ Suka</a><a href="#/account/post/${post.id}">Komentar</a><a href="#/account/post/${post.id}">↗ Bagikan</a><a href="#/account/post/${post.id}">Simpan</a></div></article>`;
   }));
   const visible=cards.filter(Boolean);target.innerHTML=visible.length?visible.join(''):'<div class="pl-feed-empty"><h3>Belum ada cerita publik untuk ditampilkan</h3><p>Feed ini akan menampilkan postingan publik komunitas Pluits. Kamu tetap bisa menjelajahi bagian lain tanpa mendaftar.</p><a href="#/account/register">Buat akun Pluits</a></div>';
  }catch(err){target.innerHTML='<div class="pl-feed-empty"><h3>Feed belum dapat dimuat</h3><p>Silakan muat ulang halaman beberapa saat lagi.</p><a href="#/account/explore">Buka Explore setelah masuk</a></div>';}
