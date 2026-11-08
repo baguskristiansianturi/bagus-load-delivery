@@ -871,3 +871,15 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - **Belum selesai:** budget, headcount, CAC/LTV, market sizing, unit economics, payment/legal, ROI, kantor regional, SLA sengketa, Android UAT, two-account UAT, dan bukti deploy terbaru.
 - **Perubahan produksi:** tidak ada database, Auth, user data, frontend, atau payment changes. Dokumentasi saja.
 - **Langkah berikutnya:** review isi model/proposal oleh founder; setelah disetujui, turunkan P0 Social UAT dan P1 GeoDirectory trust backlog ke spesifikasi acceptance dan delivery terpisah.
+
+
+## CP-051 — Audit GeoDirectory trust, claims, and physical-presence integrity
+- **Tanggal:** 9 November 2026.
+- **Status:** AUDIT COMPLETE (read-only); remediation NOT STARTED.
+- **Dasar model bisnis:** Business Model Master Bagian 32.4–32.6 dan 32.10–32.13. GeoDirectory harus menghubungkan peta dengan entitas/lokasi nyata, transparansi penyedia, klaim berotoritas, pelaporan lokasi salah, dan dukungan lokal.
+- **Bukti live:** 9 tabel GeoDirectory; 4 entitas published (semuanya place/unclaimed); 0 claim rows. Detail: `docs/pluits/GEODIRECTORY-TRUST-AND-CLAIM-AUDIT-2026-11-09.md`.
+- **Temuan utama:** GDT-01 RLS `directory_media` memakai kondisi tautologis `m.entity_id = m.entity_id` dan berpotensi melemahkan isolasi antar-entitas; GDT-02 klaim belum memiliki evidence upload/reviewer workflow yang terbukti; GDT-03 belum ada report-location UI; GDT-04 alamat/geometri belum membuktikan operasi fisik/pickup; GDT-05 data live belum cukup untuk menguji kepadatan direktori.
+- **Tindakan:** jangan gunakan media GeoDirectory secara luas sebelum GDT-01 ditinjau dan diuji. Migration security baru memerlukan approval founder dan rollback plan; migration terapan tidak boleh diubah. Claim/review, report/dispute, dan field verification tetap berada pada tahap spesifikasi setelah Social First Release gate.
+- **Prioritas delivery:** P0 Social First Release tetap tidak berubah. Isu RLS GDT-01 adalah security review terpisah yang harus ditangani sebelum ekspansi GeoDirectory.
+- **Tes:** pemeriksaan SQL read-only dan source review. Tidak ada migration, perubahan RLS, upload, atau Android UAT. Claim review, report flow, cross-entity negative tests: NOT TESTED.
+- **Next action:** lakukan security remediation plan untuk GDT-01, kemudian selesaikan P0 Social UAT tanpa memperluas scope vertikal.
