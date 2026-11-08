@@ -1086,3 +1086,12 @@ Empat entitas awal yang dimasukkan: Museum Bali, Lapangan Puputan Badung, Pantai
 - Migration live `20261108041421_pluits_directory_claim_revocation` menautkan membership ke `source_claim_id`.
 - Jika klaim yang sudah disetujui kemudian ditolak, disengketakan, atau ditarik, membership yang berasal dari klaim tersebut dicabut. Status verifikasi entitas tetap mempertimbangkan klaim lain yang masih disetujui.
 - Trigger tetap berada di schema private, SECURITY DEFINER internal, tanpa EXECUTE untuk anon/authenticated.
+
+## CP-026 — Pusat Pengaturan dan Aktivitas Pluits (8 November 2026)
+
+- **Keputusan produk:** pusat pengaturan menjadi satu hub mobile-first yang terinspirasi pola navigasi Instagram, tetapi domain menu mengikuti model bisnis Pluits: identitas personal/profesional/bisnis, privasi, aktivitas sosial, GeoDirectory, Marketplace, Trip, Wallet, bantuan, dan kebijakan.
+- **UI:** daftar menu berkelompok, deskripsi singkat, ikon monokrom, chevron, pembatas antarbagian, serta aksi Tambahkan akun/Keluar.
+- **Rute:** `#/account/settings` menjadi hub; `#/account/content-settings` menjadi halaman pengaturan audiens yang sudah terhubung ke `account_content_preferences`.
+- **Batas kemampuan:** kontrol sesi/perangkat, MFA, ekspor/penghapusan akun, dan status verifikasi tidak ditampilkan sebagai fitur aktif sebelum backend dan pengujian tersedia. Trip sementara mengarah ke GeoDirectory; bukan klaim modul Trip telah selesai.
+- **Dokumentasi:** `docs/pluits/help/ACCOUNT-SETTINGS.md` menjadi panduan awal dan wajib diperbarui saat menu/fitur berubah.
+- **Status:** kode di-commit; deployment dan Android UAT harus diverifikasi dari workflow serta perangkat pengguna.
