@@ -697,3 +697,12 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - Latest live advisors: 20 SECURITY DEFINER warnings, 1 leaked-password-protection warning, 84 informational unused-index notices, 0 health lints.
 - **Release gates:** verify latest Pages workflow including test step; implement server cart with merge and live price/stock refresh; review SECURITY DEFINER RPCs; enable leaked-password protection; run owner/staff and two-account API tests; complete Android UAT.
 - **Deployment URL:** `https://baguskristiansianturi.github.io/pluits/` (use latest successful workflow commit once confirmed).
+
+
+### CP-039 addendum — Permission matrix completed at SQL helper/RPC layer
+
+- Applied `20261108133221_align_marketplace_rpcs_with_store_permission_grants` and committed matching migration SQL.
+- `private.has_store_permission` now maps roles consistently: owner all; manager catalog/settings/orders/payments; catalog only catalog; orders only orders; accounting only payments; staff explicit grants only.
+- Product publishing, order fulfilment and payment review RPCs now use that same helper as table RLS.
+- Rollback-only permission matrix tests passed for all role presets and cross-permission denial cases.
+- Real-account REST/Storage authorization tests and staff grant UI remain NOT TESTED / NOT IMPLEMENTED. Existing owner data was restored by transaction rollback.
