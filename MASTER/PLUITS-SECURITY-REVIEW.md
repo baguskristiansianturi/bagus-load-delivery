@@ -118,7 +118,7 @@ The initial migration must be revised and reviewed before application. After sch
 
 ## 2026-11-08 — Live security and schema reconciliation
 
-This section supersedes the stale empty-database snapshot above for current status.
+This section records an earlier live snapshot and is superseded by the timestamped live snapshot at the end of this document.
 
 ### Verified live environment
 - Supabase project `ytndswhqxayqpftszwfh` (`pluits`) is ACTIVE_HEALTHY, Singapore region, PostgreSQL 17.
