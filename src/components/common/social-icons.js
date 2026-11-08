@@ -12,7 +12,19 @@ const paths={
  reels:'<rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="m10 9 5 3-5 3Z"></path>',
  user:'<circle cx="12" cy="8" r="3.5"></circle><path d="M5 20c.8-3.3 3.2-5 7-5s6.2 1.7 7 5"></path>',
  bell:'<path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M10 21h4"></path>',
- message:'<path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5H5l1.2-3.5A7.5 7.5 0 1 1 20 11.5Z"></path>'
+ message:'<path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5H5l1.2-3.5A7.5 7.5 0 1 1 20 11.5Z"></path>',
+ settings:'<circle cx="12" cy="12" r="3"></circle><path d="m19.4 15 .1.1 1.4 1.1-1.4 2.4-1.7-.7a8 8 0 0 1-1.7 1l-.3 1.8h-2.8l-.3-1.8a8 8 0 0 1-1.7-1l-1.7.7-1.4-2.4 1.4-1.1a8 8 0 0 1 0-2l-1.4-1.1 1.4-2.4 1.7.7a8 8 0 0 1 1.7-1l.3-1.8h2.8l.3 1.8a8 8 0 0 1 1.7 1l1.7-.7 1.4 2.4-1.4 1.1a8 8 0 0 1 0 2Z"></path>',
+ shield:'<path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"></path><path d="m9 12 2 2 4-4"></path>',
+ globe:'<circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"></path>',
+ 'map-pin':'<path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"></path><circle cx="12" cy="10" r="2.5"></circle>',
+ store:'<path d="M4 10v10h16V10M3 4h18l-1 6H4Z"></path><path d="M9 20v-6h6v6M4 10a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 5 0"></path>',
+ briefcase:'<rect x="3" y="7" width="18" height="14" rx="2"></rect><path d="M8 7V4h8v3M3 12h18M10 12v2h4v-2"></path>',
+ users:'<path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M10 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM20 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"></path>',
+ wallet:'<rect x="3" y="5" width="18" height="15" rx="2"></rect><path d="M3 9h18M16 14h2"></path>',
+ help:'<circle cx="12" cy="12" r="9"></circle><path d="M9.6 9a2.5 2.5 0 1 1 4.6 1.3c-.8 1.1-2.2 1.3-2.2 3M12 17h.01"></path>',
+ book:'<path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v18H6.5A2.5 2.5 0 0 0 4 22Z"></path><path d="M4 4.5v15A2.5 2.5 0 0 1 6.5 17H20"></path>',
+ lock:'<rect x="4" y="10" width="16" height="11" rx="2"></rect><path d="M8 10V7a4 4 0 1 1 8 0v3"></path>',
+ logout:'<path d="M10 17l5-5-5-5M15 12H3M12 3h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6"></path>'
 };
 export function socialIcon(name,{size=20,className=''}={}){
  const body=paths[name];if(!body)return '';
