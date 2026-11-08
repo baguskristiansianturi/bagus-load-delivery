@@ -90,7 +90,10 @@ Nama produk/repository saat ini adalah Pluits. Hubungan Pluits dengan fluids.com
 - Repository public tetap dapat ditelusuri meskipun website memakai domain sendiri.
 - Repository private membatasi akses source di GitHub, tetapi tidak membuat kode frontend yang dikirim ke browser menjadi rahasia.
 - API keys client-side, endpoint, dan schema yang terekspos harus dianggap dapat ditemukan. Secret server-side harus disimpan di secret manager/environment dan dilindungi policy backend.
-- Kelayakan private repository pada GitHub Pages bergantung pada paket dan batasan layanan saat migrasi dilakukan. Hosting produksi dapat dipindah ke layanan yang sesuai sebelum menutup atau memindahkan repository.
+- Repository Pluits saat pemeriksaan 8 November 2026 masih PUBLIC. Ini berarti source dan riwayat yang tersimpan di repository dapat dilihat publik.
+- Menurut dokumentasi GitHub saat ini, GitHub Pages tersedia untuk repository publik pada GitHub Free; penggunaan repository private untuk Pages memerlukan paket berbayar yang mendukungnya. Pada GitHub Free personal, mengubah repository menjadi private akan membuat site Pages yang dipublikasikan otomatis tidak tersedia. Periksa ulang ketentuan sebelum migrasi.
+- Jika repository public diubah menjadi private, public forks yang sudah dibuat tidak otomatis menjadi private dan akan dipisahkan dari jaringan repository asal.
+- Hosting produksi dapat dipindah ke layanan yang sesuai sebelum menutup atau memindahkan repository.
 
 ### Sebelum migrasi
 - Audit visibility, secrets, Actions permissions, logs, source maps, frontend bundles, Supabase RLS, public buckets, API exposure, DNS, TLS, backup, rollback, dan vendor lock-in.
