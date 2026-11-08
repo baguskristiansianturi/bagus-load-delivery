@@ -83,3 +83,10 @@ Fondasi registrasi dan akses feed publik sudah disiapkan. Langkah berikutnya: fo
 - UI profil publik, daftar pengikut/mengikuti/permintaan, dan guest profile/post view sudah diimplementasikan. GitHub Pages run #465 sukses build/deploy; UAT Android dan dua akun nyata masih pending. Bundle build: JS 172.94 kB gzip, CSS 44.57 kB gzip; Lighthouse/runtime speed belum diukur.
 - Tahap lanjutan yang masih terbuka: notifikasi, report/block/mute/moderasi/banding, DM, dan penyempurnaan public feed actions. Jangan menambahkan ide produk baru di luar Business Model Master tanpa membahasnya dengan founder.
 - Security gate belum selesai: leaked-password protection masih nonaktif; dua SECURITY DEFINER RPC toko lama masih perlu review; dua akun nyata dan Android UAT masih diperlukan.
+
+
+## Ide terbaru — Pluits Official (CP-033)
+- Founder mengusulkan identitas resmi platform bernama Pluits Official untuk menerbitkan pembaruan fitur, pengumuman layanan, panduan, dan kebijakan.
+- Distribusi pengumuman yang ditujukan ke semua pengguna tidak bergantung pada follower atau ranking feed organik.
+- Gagasan dicatat sebagai PROPOSED di Bagian 30 Business Model Master dan CP-033 Project Status & Roadmap. Belum ada implementasi atau keputusan final.
+- Saat melanjutkan, baca bagian tersebut sebelum merancang akun sistem, slot Beranda, notifikasi, arsip pembaruan, role/capability, dan RLS.
