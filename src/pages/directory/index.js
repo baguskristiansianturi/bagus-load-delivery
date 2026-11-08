@@ -40,10 +40,10 @@ async function getInterestMap() {
   const userId=userData.user.id;
   const [explicit,events]=await Promise.all([
     supabase.from('user_interest_preferences').select('category_id,preference,directory_categories(slug)').eq('user_id',userId).eq('source','explicit'),
-    supabase.from('user_activity_events').select('category_id,action,created_at').eq('user_id',userId).gte('created_at',new Date(Date.now()-90*86400000).toISOString()).not('category_id','is',null).limit(500)
+    supabase.from('user_activity_events').select('category_id,action,created_at').eq('user_id',userId).gte('created_at',new Date(Date.now()-90*86400000).toISOString()).not('category_id','is',null).order('created_at',{ascending:false}).limit(500)
   ]);
   const scores=new Map();
-  (events.data||[]).forEach(event=>{const slug=state.categories.find(x=>x.id===event.category_id)?.slug;if(!slug)return;const weight={view:.15,search:.2,click:.35,save:1.1,follow:1,share:.7,check_in:1.2,hide:-1.2,report:-2}[event.action]||0;scores.set(slug,(scores.get(slug)||0)+weight);});
+  (events.data||[]).forEach(event=>{const slug=state.categories.find(x=>x.id===event.category_id)?.slug;if(!slug)return;const weight={view:.15,search:.2,click:.35,save:1.1,follow:1,share:.7,check_in:1.2,hide:-1.2,report:-2}[event.action]||0;const ageDays=Math.max(0,(Date.now()-new Date(event.created_at).getTime())/86400000);const decay=Math.max(.1,1-ageDays/90);const next=Math.max(-3,Math.min(3,(scores.get(slug)||0)+weight*decay));scores.set(slug,next);});
   (explicit.data||[]).forEach(item=>{const slug=item.directory_categories?.slug;if(slug)scores.set(slug,item.preference*3);});
   return scores;
 }
