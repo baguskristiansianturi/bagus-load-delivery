@@ -88,3 +88,14 @@ RLS pada tabel exposed. Preferensi/activity/saved/recent hanya dapat diakses pem
 - Saved/recent/preferences tidak bocor lintas akun.
 - Rekomendasi dapat dijelaskan dan dikendalikan.
 - Sumber eksternal memiliki provenance dan dasar penggunaan sah.
+
+
+## 14. Implementasi tahap pertama (8 November 2026)
+- PostGIS/pg_trgm aktif di schema `extensions`; tabel inti, RLS, grants, nearby RPC, GiST, claims, memberships, preferences, activity, feedback, saved/recent, relationships, media metadata, social post tags, dan store-to-entity link telah diterapkan.
+- 27 kategori dan 4 starter records Bali telah dimasukkan dengan provenance/attribution. Data bukan hasil scraping Google Maps.
+- Frontend memiliki Home nearby, list/map, filter, area/radius, GPS opt-in, detail, claim, adaptive interest, feedback, Wishlist dan Baru Dilihat untuk entitas direktori.
+- Ranking menggunakan minat eksplisit + sinyal aktivitas 90 hari, jarak, dan feedback. Bukan model AI/ML.
+- SQL verification: anon 15 km=2, 50 km=4, beach filter=1, invalid latitude=0; RLS aktif untuk semua 16 tabel publik baru; source/claim/preferences tidak dapat dibaca anon; GiST tersedia.
+- Build Pages run #506 sukses pada commit `2432e4a`. UAT perangkat Android belum dilakukan.
+- Batasan: cakupan data hanya empat tempat; tidak ada import/dedup pipeline, admin claims/media dashboard, Storage upload, UI pengaitan store/social, Trip link, atau migrasi commerce cart/product wishlist.
+- Lihat `docs/pluits/GEODIRECTORY-IMPLEMENTATION-REPORT-2026-11-08.md` untuk detail, hasil evaluasi, risiko, dan UAT checklist.
