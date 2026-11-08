@@ -51,7 +51,7 @@ MVP uses deterministic ranking, not paid AI/ML:
 - `20261108040850_pluits_directory_user_policy_hardening`
 - `20261108040926_pluits_geodirectory_domain_links`
 - `20261108040936_pluits_geodirectory_media_policy`
-- `202611080410xx_pluits_directory_sources_deny_client` (migration version should be confirmed from live history)
+- `20261108041053_pluits_directory_sources_deny_client`
 
 The exact live migration history is authoritative; the timestamp above for the final policy migration is provisional in this report.
 
