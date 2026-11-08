@@ -953,3 +953,14 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - **Dashboard target:** overview, profile/storefront, locations/branches, verification, catalog, inventory, orders, fulfillment/zones, operating hours, payments/reconciliation, reviews, staff/permissions, notifications, settings/security.
 - **Database:** read-only inspection only. No production DDL or migration applied.
 - **Next:** stage schema/RPC alignment (separate operational type from optional legal form; require verifiable physical location while preserving address privacy), reconcile directory_locations and store memberships, add owner-guarded online-sales RPC, then build branch/store/product URLs and Seller Center modules; test on staging and Android.
+
+
+### CP-058 — Seller Center UX/UI source audit (9 November 2026)
+- **Status:** source audit COMPLETE; implementation remediation NOT STARTED; browser/Android UAT NOT TESTED.
+- **Dokumen:** `docs/pluits/SELLER-CENTER-UX-UI-STATIC-AUDIT-2026-11-09.md`.
+- **Temuan P0:** PT/CV/UD-only constraint + RPC masih menolak UMKM/individu; legal name masih diwajibkan pada profil/verifikasi; alamat verifikasi belum dijelaskan terpisah dari area publik.
+- **Temuan UX:** URL helper menunjuk ke `pluits.id/t/{username}` yang belum aktif; footer masih menyebut kebutuhan konstruksi; mobile nav touch target 36 px (<44 px); profil disimpan melalui dua RPC non-atomik; beberapa query belum membedakan error dari empty.
+- **Responsive source review:** form one-column, dashboard responsive, content min-width dan safe-area bottom nav ditemukan; 320/360/390/430 px browser rendering dan Android keyboard/picker tetap NOT TESTED.
+- **Live database:** read-only inspection mengonfirmasi constraint, RPC, dan verification requirements masih belum sesuai D-005. Tidak ada DDL/data/Auth changes.
+- **Tidak dilakukan:** tidak ada perubahan frontend, browser rendering, Android test, staging branch, atau deployment fitur. GitHub clone lokal gagal karena runtime tidak dapat menjangkau GitHub; tool browser/device automation tidak tersedia.
+- **Next:** staging approval → schema/RPC alignment dan negative tests → onboarding UX + location/privacy → dashboard modules → automated build → Android founder UAT.
