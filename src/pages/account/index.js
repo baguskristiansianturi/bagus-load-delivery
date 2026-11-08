@@ -471,10 +471,18 @@ async function notificationPage(){
  const systemItems=announcements.map(a=>'<button type="button" class="ua-notification-row ua-system-notice '+(readAnnouncements.has(a.id)?'':'is-unread')+'" data-announcement-id="'+a.id+'"><span class="ua-notification-avatar">P</span><span class="ua-notification-copy"><strong>Pluits</strong><span>'+esc(a.title)+'</span><small>'+esc(a.severity==='critical'?'Penting':a.severity==='important'?'Pembaruan':'Informasi')+' · '+fmtDate(a.published_at)+'</small><p>'+esc(a.body)+'</p></span>'+(readAnnouncements.has(a.id)?'':'<i aria-label="Belum dibaca"></i>')+'</button>').join('');
  return '<div class="ua-page-heading"><div><span class="ua-eyebrow">AKTIVITAS AKUN</span><h1>Aktivitas</h1><p>'+(unread?unread+' pemberitahuan belum dibaca':'Semua aktivitas sudah dibaca')+'</p></div>'+(unread?'<button type="button" class="ua-outline" data-notifications-read-all>Tandai semua dibaca</button>':'')+'</div>'+(systemItems?'<section class="ua-panel ua-notification-list ua-system-list"><div class="ua-section-title"><strong>Informasi Pluits</strong></div>'+systemItems+'</section>':'')+'<section class="ua-panel ua-notification-list">'+(items||'<div class="ua-empty"><strong>Belum ada aktivitas</strong><p>Permintaan mengikuti, suka, komentar, dan pesan akan muncul di sini.</p></div>')+'</section>';
 }
+async function countUnreadActivity(){
+ const language=profile?.preferred_language||'id',now=new Date().toISOString();
+ const [notifications,announcements,reads]=await Promise.all([
+  supabase.from('user_notifications').select('id',{count:'exact',head:true}).is('read_at',null),
+  supabase.from('pluits_system_announcements').select('id').eq('status','published').in('language',language==='en'?['en','id']:['id']).lte('published_at',now).or('expires_at.is.null,expires_at.gt.'+now).limit(100),
+  supabase.from('pluits_system_announcement_reads').select('announcement_id').eq('user_id',user.id)
+ ]);
+ const readIds=new Set((reads.data||[]).map(item=>item.announcement_id));
+ return (notifications.error?0:(notifications.count||0))+(announcements.error?0:(announcements.data||[]).filter(item=>!readIds.has(item.id)).length);
+}
 async function refreshUnreadBadge(){
- const {count,error}=await supabase.from('user_notifications').select('id',{count:'exact',head:true}).is('read_at',null);
- if(error)return;
- unreadNotificationCount=count||0;
+ unreadNotificationCount=await countUnreadActivity();
  document.querySelectorAll('.pl-nav-activity,.pl-mobile-notice').forEach(link=>{
   let badge=link.querySelector('.pl-nav-unread');
   if(unreadNotificationCount>0){
@@ -568,8 +576,7 @@ async function mountAccount(section='profile',parameter=''){
  if(!user){authScreen(section==='register'?'register':'login');return;}
  try{
   await loadProfile();accountContext=await loadAccountContext(supabase,user);
-  const unreadResult=await supabase.from('user_notifications').select('id',{count:'exact',head:true}).is('read_at',null);
-  unreadNotificationCount=unreadResult.error?0:(unreadResult.count||0);
+  unreadNotificationCount=await countUnreadActivity();
   if(section==='profile')updateSEO({title:profile.display_name+' (@'+profile.username+') — Pluits',description:(profile.bio||'Profil komunitas '+profile.display_name+' di Pluits.').slice(0,160),path:'#/@'+encodeURIComponent(profile.username)});
   const page=section==='explore'?await feedPage():section==='activity'?await notificationPage():section==='reels'?await reelsPage():section==='compose'?await composePage():section==='addresses'?await addressPage():section==='wallet'?await walletPage():section==='post'?await postDetailPage(parameter||location.hash.split('/')[3]||''):section==='user'?await publicProfilePage(parameter):section==='followers'?await followListPage('followers'):section==='following'?await followListPage('following'):section==='requests'?await followListPage('followers'):section==='preview'?await profilePage(true):section==='professional'?professionalPage(accountContext,profile):section==='professional-create'?professionalFormPage(accountContext,profile):section==='settings'?settingsHubPage():section==='security'?await accountSecurityPage(supabase,user):section==='blocked'?await blockedAccountsPage():section==='content-settings'?await accountSettingsPage(supabase,user):await profilePage();
   const headerAvatar=await signed(profile.avatar_path);document.querySelector('#app').innerHTML=frame(page,section==='explore'||section==='reels'?'explore':section==='activity'?'activity':section==='addresses'?'addresses':section==='compose'?'compose':section==='preview'?'profile':'profile',headerAvatar);
