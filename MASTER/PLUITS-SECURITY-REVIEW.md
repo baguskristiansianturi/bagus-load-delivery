@@ -193,3 +193,17 @@ This snapshot supersedes earlier live counts in this document.
 - Health Advisor: 0 lints.
 - Store staff granular permission enforcement remains a release blocker until policies and privileged functions enforce permission grants and negative cross-store tests pass.
 - No schema, permission, Auth setting, or production data was changed by this read-only snapshot.
+
+
+## 2026-11-08 13:30 UTC — Store permission grant enforcement (live migration)
+
+- **Applied migration:** `20261108132935_enforce_store_member_permission_grants`.
+- **Repository migration file:** `supabase/migrations/20261108132935_enforce_store_member_permission_grants.sql`.
+- Added `private.has_store_permission(store_id, permission)`. Active owners retain full store access; non-owner members must have an explicit JSON boolean grant for the requested permission.
+- Replaced membership-only write policies for store settings, operating hours, delivery zones, product categories, products, product variants, product images, and store-media insert/update/delete with permission-aware policies.
+- Read access for active store members remains separate from write permission. Existing owner behavior was verified against the live helper.
+- **Rollback-only helper tests:** owner → catalog/settings allowed; non-member → both denied; temporary staff-role test → explicit `catalog.manage=true` allowed while missing `store.settings.manage` remained denied. Temporary role/grant mutation was rolled back; no test row or account change was committed.
+- **Policy inspection:** live `pg_policies` confirms the new write policies reference `private.has_store_permission`. This is not yet a full authenticated REST/RLS negative test.
+- **Still open:** staff invitation/grant management UI is not implemented; do not invite staff or claim end-to-end staff authorization acceptance until two-account REST tests cover read, write, storage, and RPC paths.
+- **Advisor snapshot after migration:** 20 authenticated-callable SECURITY DEFINER warnings remain and require per-function review; leaked-password protection remains disabled. Performance advisor reports 84 unused-index notices (informational); Health advisor reports 0 lints. The new helper is in the private schema and does not add another exposed public RPC warning.
+- **No existing store, product, order, payment, or user rows were deleted or rewritten.**
