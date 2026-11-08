@@ -126,3 +126,16 @@ These are limited smoke tests, not a substitute for signed-in two-account and fu
 - Mobile layout is vertically oriented; autoplay/full-screen swipe are intentionally not enabled in this first iteration.
 - GitHub Pages workflow run 432 succeeded, including build and deploy.
 - Real account video upload/playback and Android UAT remain NOT TESTED.
+
+## Follow graph & private-profile audit — 8 November 2026
+
+- Live schema: `user_follows` ditambahkan dengan primary key follower/following, self-follow CHECK, status pending/accepted, dua indeks relasi, dan RLS.
+- Insert follow tidak menerima status dari client sebagai otoritas; trigger menetapkan accepted untuk profil publik dan pending untuk profil privat.
+- Update status dibatasi pada kolom `status` dan policy hanya mengizinkan target menerima request pending. Kedua pihak dapat menghapus relasi.
+- Private profile directory memakai RPC yang hanya mengungkap username/display name/visibility sebelum persetujuan. Bio/avatar/cover/wilayah dikembalikan hanya untuk profil publik, pemilik, atau relasi accepted.
+- RLS untuk profile/posts/stories/storage menerapkan accepted follow. Storage tetap memeriksa object yang benar-benar direferensikan konten yang diizinkan.
+- Pengujian rollback lintas dua akun database berhasil: public follow, private request, acceptance, private media boundary, self-follow rejection, dan akses post oleh follower accepted.
+- RLS recursion sempat terdeteksi saat uji awal dan sudah diperbaiki memakai helper private yang tidak terekspos melalui Data API.
+- Sepuluh migration CP-023 dibandingkan dengan statement live; seluruh file ada dan SQL cocok. Total live history sekarang 29 migration.
+- Frontend: public profile by username, follower/following/request list, accept/decline/cancel/unfollow/remove, guest public profile/post view, dan mobile CSS. Real account/device UAT masih pending.
+- Belum ada notification inbox/push/email, report/block/mute/moderation/appeal, DM, atau anti-spam workflow.
