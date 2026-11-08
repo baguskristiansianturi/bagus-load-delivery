@@ -862,9 +862,9 @@ Dukungan QRIS atau metode pembayaran tertentu harus melalui penyedia/mitra beriz
 **Status:** Keputusan founder terbaru. Bagian ini memperjelas dan menggantikan bagian terdahulu yang masih membatasi Pluits pada konstruksi atau memisahkan kategori My Bali dari cakupan Pluits. Sejarah keputusan lama tetap dipertahankan; jika ada pertentangan, Bagian 26 menjadi acuan terbaru.
 
 ### 26.1 Identitas produk
-Nama produk dan ekosistem adalah **Pluits**. Pluits tidak lagi diposisikan sebagai Bagus Load & Delivery atau marketplace khusus konstruksi. Bagus Load & Delivery sebagai nama produk/brand untuk aplikasi ini dihentikan dan digantikan oleh Pluits. Fungsi logistik/delivery, jika kelak dibutuhkan, menjadi salah satu kemampuan/layanan dalam ekosistem Pluits, bukan identitas utama produk.
+Nama produk dan ekosistem adalah **Pluits**. Arah marketplace khusus konstruksi telah digantikan oleh ekosistem Pluits yang mencakup Social Media, Local Marketplace, Trip, dan GeoDirectory. Fungsi logistik/delivery, jika kelak dibutuhkan, menjadi salah satu kemampuan layanan di dalam Pluits, bukan identitas atau produk terpisah.
 
-Repository saat ini masih bernama `bagus-load-delivery`. Nama repository tersebut merupakan nama teknis historis dan harus diganti menjadi `pluits` melalui pengaturan GitHub ketika tindakan rename repository tersedia. Sampai rename berhasil dilakukan, dokumentasi dan UI baru harus menggunakan nama Pluits; jangan mengklaim repository sudah berganti nama. Setelah rename, perbarui referensi remote, GitHub Pages, workflow, badge, dokumentasi, dan integrasi yang masih memakai nama/path lama, lalu verifikasi URL deploy.
+Repository kanonis telah menggunakan nama `baguskristiansianturi/pluits`. Referensi repository dan URL lama telah dipensiunkan; seluruh dokumentasi, workflow, dan integrasi aktif harus memakai repository dan Pages Pluits.
 
 ### 26.2 Tiga ruang produk dengan siklus yang berbeda
 Pluits mempunyai tiga ruang utama yang terhubung melalui satu identitas dan ekosistem, tetapi masing-masing memiliki tujuan, model data, siklus pengguna, serta alur operasional sendiri:
