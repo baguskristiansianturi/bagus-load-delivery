@@ -611,13 +611,7 @@ Build dari commit `642a24bdbed4a85931271e7481f9880a04cc9fc3` berhasil. GitHub Pa
 - Deleting media synchronizes the parent post's primary path and media type so stale references are not left behind.
 - UAT still required on Android for autoplay, filters, mixed media carousel, edit/delete and duration boundaries.
 
-
-## CP-033 — Pluits Official: identitas platform dan pengumuman universal (8 November 2026)
-- **Status: PROPOSED.** Gagasan founder: Pluits memiliki identitas resmi platform sendiri yang menerbitkan pembaruan fitur, pengumuman layanan, panduan, dan informasi kebijakan.
-- Identitas ini tidak bergantung pada follower. Pengguna tidak perlu mengikuti akun untuk menerima informasi resmi yang memang ditujukan kepada mereka.
-- Arah distribusi: slot/kartu khusus Dari Pluits di Beranda dan arsip Pembaruan Pluits; pengumuman penting tidak boleh bergantung pada ranking organik atau engagement.
-- Konten resmi dipisahkan dari postingan pengguna/merchant, memiliki penanda resmi yang tidak dapat ditiru, dan hanya dapat diterbitkan oleh operator dengan izin backend serta audit log.
-- Rekomendasi UX awal: tampilkan pengumuman universal secara konsisten tetapi tidak memenuhi feed; status belum dibaca dapat dipertahankan/diprioritaskan, lalu turun prioritas setelah dibaca. Peringatan kritis dapat memakai kanal sistem; preferensi notifikasi rutin dibahas terpisah.
-- Rekomendasi teknis awal: platform identity/capability khusus, entitas pengumuman terpisah, audience/severity/locale/publish/expiry, RLS server-side, read state, dan arsip. Hindari membuat salinan post per pengguna.
-- Belum ada schema, UI, notifikasi, atau implementasi yang dibuat oleh checkpoint ini. Pertanyaan terbuka: posisi slot Beranda, preferensi notifikasi rutin vs kritis, komentar/feedback, dan halaman arsip.
-- **Next gate:** bahas dan putuskan perilaku produk; setelah disetujui, buat product spec + acceptance tests sebelum implementasi backend/frontend.
+## Catatan tata kelola ide — 8 November 2026
+- Ide Pluits Official dan distribusi pengumuman universal dipindahkan ke IDEAS/IDEA-BACKLOG.md; bukan keputusan produk, bukan checkpoint implementasi, dan tidak masuk model bisnis aktif.
+- Jangan membuat fitur, schema, UI, notifikasi, atau akun sistem dari ide backlog tanpa evaluasi dan persetujuan eksplisit founder.
+- Model bisnis aktif hanya memuat keputusan yang sudah disetujui. Perubahan keputusan dicatat dengan tanggal, alasan, dampak, dan status.
