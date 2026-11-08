@@ -25,10 +25,12 @@ function frame(content,active='explore',avatarUrl=''){
    <a class="ua-brand" href="#/account/explore">PLUITS<span>INDONESIA</span></a>
    <nav>
     <a class="${active==='explore'?'active':''}" href="#/account/explore">Beranda</a>
+    <a href="#/places">Tempat</a>
+    <a href="#/marketplace">Marketplace</a>
+    <a href="#/trip">Trip</a>
     <a class="${active==='reels'?'active':''}" href="#/account/reels">Reels</a>
     <a class="${active==='activity'?'active':''}" href="#/account/activity">Aktivitas</a>
     <a class="${profileView?'active':''}" href="#/account/profile">Profil</a>
-    <a class="${active==='addresses'?'active':''}" href="#/account/addresses">Alamat</a>
    </nav>
    <a class="ua-header-profile" href="#/account/profile" aria-label="Buka profil saya">${userAvatar}</a>
    <a class="ua-header-create" href="#/account/compose" aria-label="Buat postingan">＋</a>
@@ -36,9 +38,9 @@ function frame(content,active='explore',avatarUrl=''){
   <main class="ua-main ${profileView?'ua-profile-main':''}">${content}</main>
   <nav class="ua-mobile-nav" aria-label="Navigasi utama">
    <a class="${active==='explore'?'active':''}" href="#/account/explore"><span>⌂</span><small>Beranda</small></a>
-   <a href="#/account/explore"><span>⌕</span><small>Jelajah</small></a>
-   <a class="ua-mobile-create" href="#/account/compose" aria-label="Buat postingan"><span>＋</span></a>
-   <a class="${active==='activity'?'active':''}" href="#/account/activity"><span>♡</span><small>Aktivitas</small></a>
+   <a href="#/places"><span>⌖</span><small>Jelajah</small></a>
+   <a class="ua-mobile-create" href="#/account/compose" aria-label="Buat postingan"><span>＋</span><small>Buat</small></a>
+   <a href="#/trip"><span>✦</span><small>Trip</small></a>
    <a class="${profileView?'active':''}" href="#/account/profile">${userAvatar}<small>Profil</small></a>
   </nav>
   <div id="ua-toast" class="ua-toast" role="status"></div>
