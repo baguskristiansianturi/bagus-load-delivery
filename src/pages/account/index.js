@@ -22,13 +22,13 @@ function frame(content,active='explore',avatarUrl=''){
   ${active==='profile'||active==='preview'?'':`  <header class="ua-header">
    <a class="ua-mobile-profile" href="#/account/profile" aria-label="Profil saya">${userAvatar}</a>
    <a class="ua-brand" href="#/account/explore">PLUITS<span>INDONESIA</span></a>
-   <nav><a class="${active==='explore'?'active':''}" href="#/account/explore">Beranda</a><a class="${active==='profile'?'active':''}" href="#/account/profile">Profil</a><a class="${active==='addresses'?'active':''}" href="#/account/addresses">Alamat</a></nav>
+   <nav><a class="${active==='explore'?'active':''}" href="#/account/explore">Beranda</a><a class="${active==='profile'?'active':''}" href="#/account/profile">Profil</a><a class="${active==='addresses'?'active':''}" href="#/account/addresses">Alamat</a><a href="#/account/activity">Aktivitas</a></nav>
    <a class="ua-header-create" href="#/account/compose" aria-label="Buat postingan">＋</a>
   </header>
   <main class="ua-main">${content}</main>
   <nav class="ua-mobile-nav" aria-label="Navigasi utama">
    <a class="${active==='explore'?'active':''}" href="#/account/explore"><span>⌂</span><small>Beranda</small></a>
-   <a href="#/account/explore"><span>⌕</span><small>Jelajah</small></a>
+   <a href="#/account/activity"><span>♡</span><small>Aktivitas</small></a>
    <a class="ua-mobile-create" href="#/account/compose" aria-label="Buat postingan"><span>＋</span></a>
    <a href="#/material"><span>▦</span><small>Marketplace</small></a>
    <a class="${active==='profile'?'active':''}" href="#/account/profile">${userAvatar}<small>Profil</small></a>
@@ -369,6 +369,22 @@ async function publicProfilePage(username){
  ${target.visibility==='private'&&!isOwner&&relation?.status!=='accepted'?'<div class="ua-empty"><strong>Akun ini privat</strong><p>Ajukan permintaan mengikuti untuk melihat postingan publik akun ini setelah disetujui.</p></div>':posts.length?postGrid(posts):'<div class="ua-empty"><strong>Belum ada postingan publik</strong><p>Postingan publik akan tampil di sini.</p></div>'}
  </section>`;
 }
+async function notificationPage(){
+ const {data,error}=await supabase.from('user_notifications').select('id,actor_user_id,notification_type,entity_type,entity_id,message,created_at,read_at').order('created_at',{ascending:false}).limit(60);
+ if(error)throw error;
+ const rows=data||[],ids=[...new Set(rows.map(n=>n.actor_user_id).filter(Boolean))];
+ const profiles=ids.length?await supabase.rpc('get_user_profile_directory_by_ids',{p_ids:ids}):{data:[],error:null};
+ if(profiles.error)throw profiles.error;
+ const people=new Map((profiles.data||[]).map(p=>[p.id,p]));
+ const unread=rows.filter(n=>!n.read_at).length;
+ const labels={follow_request:'Permintaan mengikuti',new_follower:'Pengikut baru',follow_accepted:'Permintaan diterima',post_like:'Suka postingan',post_comment:'Komentar'};
+ const items=rows.map(n=>{const actor=people.get(n.actor_user_id),name=actor?.display_name||'Pengguna Pluits';const href=n.entity_type==='post'&&n.entity_id?'#/account/post/'+n.entity_id:actor?.username?'#/account/user/'+encodeURIComponent(actor.username):'#/account/profile';return '<a class="ua-notification-row '+(n.read_at?'':'is-unread')+'" href="'+href+'" data-notification-id="'+n.id+'" data-notification-href="'+href+'"><span class="ua-notification-avatar">'+esc(name.slice(0,1).toUpperCase())+'</span><span class="ua-notification-copy"><strong>'+esc(name)+'</strong><span>'+esc(n.message||labels[n.notification_type]||'Aktivitas baru')+'</span><small>'+esc(labels[n.notification_type]||'Aktivitas')+' · '+fmtDate(n.created_at)+'</small></span>'+(n.read_at?'':'<i aria-label="Belum dibaca"></i>')+'</a>';}).join('');
+ return '<div class="ua-page-heading"><div><span class="ua-eyebrow">AKTIVITAS AKUN</span><h1>Aktivitas</h1><p>'+(unread?unread+' pemberitahuan belum dibaca':'Semua aktivitas sudah dibaca')+'</p></div>'+(unread?'<button type="button" class="ua-outline" data-notifications-read-all>Tandai semua dibaca</button>':'')+'</div><section class="ua-panel ua-notification-list">'+(items||'<div class="ua-empty"><strong>Belum ada aktivitas</strong><p>Permintaan mengikuti, suka, dan komentar akan muncul di sini.</p></div>')+'</section>';
+}
+function bindNotificationActions(){
+ document.querySelectorAll('[data-notification-id]').forEach(link=>link.addEventListener('click',async e=>{e.preventDefault();const id=link.dataset.notificationId,href=link.dataset.notificationHref;if(link.classList.contains('is-unread')){const {error}=await supabase.from('user_notifications').update({read_at:new Date().toISOString()}).eq('id',id);if(error){notify('Status pemberitahuan belum dapat diperbarui.','error');return;}}location.hash=href;}));
+ document.querySelector('[data-notifications-read-all]')?.addEventListener('click',async()=>{const {error}=await supabase.from('user_notifications').update({read_at:new Date().toISOString()}).is('read_at',null);if(error)notify(error.message,'error');else await mountAccount('activity');});
+}
 async function followListPage(kind='followers'){
  const incoming=kind==='followers';
  const {data,error}=await supabase.from('user_follows').select('follower_id,following_id,status,created_at')
@@ -404,13 +420,14 @@ async function mountAccount(section='profile',parameter=''){
  if(!user){authScreen(section==='register'?'register':'login');return;}
  try{
   await loadProfile();accountContext=await loadAccountContext(supabase,user);
-  const page=section==='explore'?await feedPage():section==='reels'?await reelsPage():section==='compose'?await composePage():section==='addresses'?await addressPage():section==='wallet'?await walletPage():section==='post'?await postDetailPage(parameter||location.hash.split('/')[3]||''):section==='user'?await publicProfilePage(parameter):section==='followers'?await followListPage('followers'):section==='following'?await followListPage('following'):section==='requests'?await followListPage('followers'):section==='preview'?await profilePage(true):section==='professional'?professionalPage(accountContext,profile):section==='professional-create'?professionalFormPage(accountContext,profile):section==='settings'?await accountSettingsPage(supabase,user):await profilePage();
-  const headerAvatar=await signed(profile.avatar_path);document.querySelector('#app').innerHTML=frame(page,section==='explore'||section==='reels'?'explore':section==='addresses'?'addresses':section==='compose'?'compose':section==='preview'?'profile':'profile',headerAvatar);
+  const page=section==='explore'?await feedPage():section==='activity'?await notificationPage():section==='reels'?await reelsPage():section==='compose'?await composePage():section==='addresses'?await addressPage():section==='wallet'?await walletPage():section==='post'?await postDetailPage(parameter||location.hash.split('/')[3]||''):section==='user'?await publicProfilePage(parameter):section==='followers'?await followListPage('followers'):section==='following'?await followListPage('following'):section==='requests'?await followListPage('followers'):section==='preview'?await profilePage(true):section==='professional'?professionalPage(accountContext,profile):section==='professional-create'?professionalFormPage(accountContext,profile):section==='settings'?await accountSettingsPage(supabase,user):await profilePage();
+  const headerAvatar=await signed(profile.avatar_path);document.querySelector('#app').innerHTML=frame(page,section==='explore'||section==='reels'?'explore':section==='activity'?'activity':section==='addresses'?'addresses':section==='compose'?'compose':section==='preview'?'profile':'profile',headerAvatar);
   document.querySelector('#ua-logout')?.addEventListener('click',async()=>{await supabase.auth.signOut();user=null;profile=null;authScreen('login');});
   bindAccountContext({db:supabase,user,ctx:accountContext,profile,refresh:mountAccount});
   document.querySelector('#ua-edit-profile-link')?.addEventListener('click',e=>{e.preventDefault();document.querySelector('#edit-profile')?.scrollIntoView({behavior:'smooth',block:'start'});});
   document.querySelector('#ua-menu-logout')?.addEventListener('click',async()=>{await supabase.auth.signOut();user=null;profile=null;location.hash='/';});
   bindProfileTabs();
+  bindNotificationActions();
   bindProfile();bindCompose();bindStoryCompose();bindStories();bindAddresses();bindWallet();bindPostActions();bindFollowActions();if(section==='addresses')initMap();
  }catch(err){document.querySelector('#app').innerHTML=frame('<div class="ua-panel ua-error"><h1>Ada kendala memuat akun</h1><p>'+esc(err.message)+'</p><button class="ua-primary" onclick="location.reload()">Coba lagi</button></div>');document.querySelector('#ua-logout')?.addEventListener('click',()=>supabase.auth.signOut());}
 }
