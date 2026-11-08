@@ -635,3 +635,16 @@ Build dari commit `642a24bdbed4a85931271e7481f9880a04cc9fc3` berhasil. GitHub Pa
 - Removed the unused legacy Bagus Load & Delivery stylesheet `src/style.backup.css` and backup icon module `src/components-backup/common/icons.js`. Neither file was imported by the active application entry chain.
 - Canonical route remains `index.html` → `src/main.js` → `src/pages/home/index.js`; account navigation retains its existing rendering path.
 - **Status:** IMPLEMENTED + DEPLOYED. GitHub Actions run `42476646765` for commit `f0e176e926b57bee05b9784e4b4c5836db4d2e5a` completed successfully; Vite build, output verification, artifact upload, and Deploy to GitHub Pages all succeeded. The deployed Pages artifact contains the modular navigation bundle `assets/index-YeGyxrWa.js` and the SVG navigation component markers. Android visual UAT remains NOT TESTED until the founder checks the live site.
+
+
+## CP-035 — Perbaikan fungsi postingan: edit, hapus, like, dan double-tap (8 November 2026)
+
+- **Masalah yang dilaporkan founder:** menu edit postingan tidak bekerja dengan semestinya; interaksi gambar belum memiliki double-tap untuk memberi Love/Like.
+- Memperbaiki alur editor agar menu ditutup, panel editor langsung terlihat dengan status memuat, error ditampilkan di dalam panel, dan pengguna dapat mencoba ulang jika pemuatan gagal.
+- Form edit kini memuat caption, hashtag, visibilitas publik/privat, media saat ini, hapus media, tambah media, dan simpan perubahan. Update tetap dibatasi pada pemilik postingan melalui filter user ID dan RLS.
+- Menambahkan tindakan hapus postingan pada menu titik tiga untuk pemilik. Penghapusan meminta konfirmasi, menghapus record postingan, lalu membersihkan file media terkait dari Storage.
+- Tombol Like diperbarui tanpa memuat ulang seluruh halaman; status hati dan jumlah suka diperbarui setelah operasi database berhasil.
+- Menambahkan double-tap pada gambar di feed dan galeri foto untuk memberi Like, disertai animasi hati. Double-tap tidak membatalkan Like yang sudah aktif.
+- Mempertahankan komentar, bagikan, simpan, dan penandaan akun yang sudah ada.
+- File utama: `src/pages/account/index.js`, `src/pages/account/user-account.css`. Kebijakan RLS yang ada mengizinkan pemilik memperbarui/menghapus postingan dan menghapus media miliknya; tidak ada migration database baru pada checkpoint ini.
+- **Status:** IMPLEMENTED; menunggu hasil build/deploy untuk commit final. Pengujian klik nyata, double-tap di Android, serta uji dua akun belum dilakukan. Jangan tandai TESTED/ACCEPTED sebelum UAT founder.
