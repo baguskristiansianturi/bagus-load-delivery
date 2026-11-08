@@ -127,7 +127,7 @@ A social release is ready for founder testing only after:
 1. Android real-media upload and playback UAT.
 2. Two-account RLS and end-to-end social tests.
 3. DM realtime, offline queue, cached contacts and reconnect UAT.
-4. Notification realtime badge/refresh and Pluits system announcement publishing surface.
+4. Notification unread badge in global navigation; audience targeting and dedicated audit log for system announcements; admin-role and multi-account UAT.
 5. SMS provider/configuration for phone verification.
 6. TOTP MFA verification in the actual Supabase Auth project.
 7. Full English translation and language switch across the app.
