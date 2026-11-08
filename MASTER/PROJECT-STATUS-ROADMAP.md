@@ -442,3 +442,35 @@ Build dari commit `642a24bdbed4a85931271e7481f9880a04cc9fc3` berhasil. GitHub Pa
 - GitHub Pages workflow run 432: **SUCCESS**, Vite build, artifact upload and Deploy to GitHub Pages passed.
 - **Not tested:** real video upload, Android playback, network/battery behavior, and interaction persistence on real accounts.
 - **Status:** basic Reels feed implemented and deployed; UAT pending. Full-screen swipe/autoplay remains a future enhancement.
+
+
+## CP-023 — Follow graph, profil publik, dan privasi akun (8 November 2026)
+
+### Implementasi
+- Backend menambahkan `public.user_follows` dengan pasangan follower/following unik, larangan follow diri sendiri, status `pending` atau `accepted`, indeks untuk daftar pengikut/mengikuti, dan RLS aktif.
+- Trigger database menetapkan status berdasarkan visibilitas profil target: akun publik langsung `accepted`; akun privat menjadi `pending`. Klien tidak dapat memaksakan status accepted pada akun privat.
+- Pemilik akun privat dapat menerima permintaan; follower dapat membatalkan permintaan atau berhenti mengikuti; pemilik dapat menolak/menghapus follower.
+- Profil publik dapat dibuka melalui `#/account/user/<username>`. Nama pemilik postingan pada feed kini mengarah ke profil.
+- Halaman profil sendiri menampilkan jumlah pengikut/mengikuti; daftar Pengikut, Mengikuti, dan Permintaan dapat dikelola dari UI.
+- Pengunjung tanpa login dapat membuka profil dan postingan publik; tindakan follow memerlukan login.
+- RPC directory dan follow-count menggunakan wrapper `SECURITY INVOKER` pada schema public dan helper terbatas di schema private. Profil privat hanya mengungkap username, nama tampilan, dan status privasi kepada pihak yang belum disetujui; bio, avatar, cover, dan wilayah baru diberikan sesuai aturan akses.
+- Akses profil, postingan, Story publik, avatar/cover, dan media postingan privat diperluas hanya kepada follower yang sudah diterima. Story dengan audience "Hanya saya" tetap hanya untuk pemilik.
+- UI daftar follow dibuat ringkas dan responsif untuk mobile.
+
+### Pengujian backend yang berhasil
+- Follow akun publik menghasilkan `accepted`.
+- Follow akun privat menghasilkan `pending`; pemilik target dapat menerima dan mengubah status menjadi `accepted`.
+- Akun yang mengirim permintaan belum dapat membaca baris profil privat secara langsung; directory RPC hanya mengembalikan identitas dasar tanpa bio/avatar.
+- Pengunjung anonim tidak dapat membaca avatar media akun privat (0 object); follower yang sudah diterima dapat membaca avatar yang diizinkan (1 object).
+- Follower yang sudah diterima dapat membaca postingan publik milik profil privat sesuai kebijakan; pengujian terkontrol menemukan 1 postingan terlihat.
+- Follow diri sendiri ditolak oleh RLS.
+- Seluruh probe lintas akun dijalankan dalam transaksi rollback; tidak ada data follow uji yang disimpan.
+- Migration SQL CP-023 telah dibandingkan dengan `supabase_migrations.schema_migrations.statements`: 10/10 migration baru memiliki file dan SQL yang cocok dengan live history. Bersama baseline 19 migration sebelumnya, target parity adalah 29/29.
+
+### Temuan dan batas
+- Saat audit awal, policy recursion ditemukan pada hubungan antara RLS `user_profiles` dan `user_follows`; diperbaiki dengan helper relasi terbatas di schema private. Pengujian ulang tidak lagi memunculkan recursion.
+- Riwayat migrasi CP-023 memuat beberapa pembaruan policy yang berulang akibat iterasi hardening. Jangan menghapus atau mengubah migration yang sudah diterapkan; rapikan hanya melalui migration baru bila benar-benar diperlukan.
+- Notifikasi follow/request belum dibuat. UI menampilkan daftar permintaan secara langsung, tetapi belum ada inbox notifikasi, push, atau email.
+- Blokir, mute, report, moderasi, banding, DM, dan kontrol anti-spam masih belum tersedia.
+- GitHub Pages build/deploy dan pengujian Android setelah perubahan CP-023 masih harus diverifikasi; jangan menganggap commit sebagai bukti deploy.
+- **Status:** backend follow + privacy rules implemented and rollback-tested; frontend follow/profile implemented in repository; deployment and real-account UAT pending.
