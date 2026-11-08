@@ -1,7 +1,7 @@
 const BASE='https://baguskristiansianturi.github.io/pluits/';
 export function updateSEO({title='Pluits — Komunitas Indonesia',description='Temukan komunitas, pengalaman, tempat, dan usaha lokal di Pluits.',path=''}={}){
  const suffix=String(path||'').replace(/^\//,'');
- const href=BASE+suffix;
+ const href=BASE+(suffix?(suffix.startsWith('#')?suffix:'#/'+suffix):'');
  document.title=title;
  const set=(selector,attrs)=>{let el=document.head.querySelector(selector);if(!el){el=document.createElement('meta');document.head.appendChild(el)}Object.entries(attrs).forEach(([k,v])=>el.setAttribute(k,v))};
  set('meta[name="description"]',{name:'description',content:description});
