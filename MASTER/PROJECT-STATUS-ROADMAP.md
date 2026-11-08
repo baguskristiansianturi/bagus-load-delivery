@@ -783,3 +783,12 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - **Live Supabase:** Health Advisor 0 lints. Realtime publication includes `user_follows`, `user_messages`, `user_notifications`, and `pluits_system_announcements`.
 - **Not accepted yet:** deployment success is not founder UAT. Android real-media upload/playback, two-account social/DM, offline reconnect, MFA/SMS, admin announcements, mobile/tablet/desktop rendering, accessibility and measured performance remain NOT TESTED.
 - **Next work order:** founder tests the social build and reports UI/UX findings; fix all P0 regressions; add global unread notification indicator; complete media and two-account authorization tests; implement licensed/original audio and evaluated FYP only after rights and ranking requirements are satisfied. Café/Resto/experience verticals remain paused until Social Media is accepted.
+
+
+## CP-043 — System announcement security/performance refinement (8 November 2026)
+
+- Applied and committed migrations `20261108141720_optimize_system_announcement_rls_and_indexes` and `20261108141753_centralize_system_moderator_rls_check`.
+- Added the missing announcement creator FK index and centralized admin/moderator authorization in a private invoker helper.
+- Supabase Performance Advisor now clears the announcement FK and four announcement RLS initplan warnings. Remaining 87 unused-index INFO notices are informational; no indexes were dropped.
+- Health Advisor: 0 lints. Security Advisor: 20 authenticated-callable SECURITY DEFINER warnings and leaked-password protection warning remain.
+- Database-only hardening does not change frontend behavior. The previous frontend deploy remains valid; repository CI/deploy is triggered by the matching migration/docs commits.
