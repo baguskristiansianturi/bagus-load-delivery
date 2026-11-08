@@ -49,7 +49,7 @@ function authView(mode='login'){
 async function renderSeller(){
  const {data:{session}}=await supabase.auth.getSession();
  if(!session){authView(location.hash.includes('register')?'register':'login');return;}
- const {data:stores,error}=await supabase.from('stores').select('id,name,username,business_type,store_status,verification_status,online_sales_enabled,legal_name,email,full_address,public_city,created_at').order('created_at',{ascending:true});
+ const {data:stores,error}=await supabase.from('stores').select('id,name,username,business_type,store_status,verification_status,online_sales_enabled,legal_name,email,full_address,public_city,public_area,phone,description,store_logo_path,store_banner_path,created_at').order('created_at',{ascending:true});
  if(error){document.querySelector('#app').innerHTML=shell('<div class="pluits-panel"><h2>Dashboard belum dapat dimuat</h2><p>'+esc(error.message)+'</p></div>',session.user);return;}
  if(!stores?.length){storeOnboarding(session.user);return;}
  activeStore=stores[0];
