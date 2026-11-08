@@ -1,4 +1,4 @@
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { supabase } from '../../lib/supabase/client.js';
 import {socialIcon} from '../../components/common/social-icons.js';
 import {renderSocialHeader,renderSocialMobileNav} from '../../components/social/navigation.js';
 import {updateSEO} from '../seo.js';
@@ -9,9 +9,6 @@ import '../../styles/social-components.css';
 import '../../styles/social-navigation.css';
 import {loadAccountContext,contextHeader,professionalPage,professionalFormPage,accountSettingsPage,bindAccountContext} from './account-context.js';
 
-const SUPABASE_URL='https://ytndswhqxayqpftszwfh.supabase.co';
-const SUPABASE_KEY='sb_publishable_kOUbKBYg88nXgz8FQRSnvA_k0hvKY65';
-const supabase=createClient(SUPABASE_URL,SUPABASE_KEY);
 const BUCKET='pluits-user-media';
 const uploadMime=file=>{const declared=String(file?.type||'').toLowerCase();const ext=String(file?.name||'').split('.').pop().toLowerCase();const byExt=({jpg:'image/jpeg',jpeg:'image/jpeg',png:'image/png',webp:'image/webp',gif:'image/gif',mp4:'video/mp4',m4v:'video/mp4',webm:'video/webm','3gp':'video/3gpp','3gpp':'video/3gpp',mov:'video/quicktime'})[ext]||'';const mime=declared||byExt;const allowed=['image/jpeg','image/png','image/webp','image/gif','video/mp4','video/webm','video/3gpp','video/quicktime'];return allowed.includes(mime)?mime:'';};
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
