@@ -9,6 +9,7 @@ Status: wadah ide dan hipotesis, bukan keputusan produk atau daftar pekerjaan ya
 - Diskusi dan contoh platform lain bukan persetujuan untuk membangun.
 - Setiap ide ditinjau dari kebutuhan pengguna, model bisnis aktif, alasan platform besar mengambil keputusan berbeda, biaya, risiko, privasi, keamanan, skalabilitas, dan alternatif.
 - Promosi ide ke model bisnis/roadmap memerlukan keputusan eksplisit founder. Catat tanggal, alasan, dampak, dan dokumen yang diperbarui.
+- Setelah disetujui, catat nomor keputusan D-XXX di `MASTER/DECISION-LOG.md`; perubahan model bisnis harus diperbarui di Business Model Master sebelum diturunkan ke roadmap sesuai `SOP/PRODUCT-CHANGE-CONTROL.md`.
 - Jangan hapus ide lama; tandai PARKED, REJECTED, MERGED, atau PROMOTED dengan alasan.
 
 ## Checklist evaluasi ide
