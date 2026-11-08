@@ -98,3 +98,10 @@ This is a limited anonymous smoke test only. It does not replace signed-in owner
 - Adversarial tests after fix: foreign-folder media paths for posts and Stories were rejected; same-user folder paths were accepted. All probe rows were rolled back.
 - Migration `20261108011838_optimize_story_and_wallet_rls_policies` consolidates Stories SELECT policies and changes wallet RLS identity calls to init-plan-safe `(select auth.uid())`.
 - Re-run advisors: the Stories multiple-permissive warning and three wallet RLS init-plan warnings are no longer reported.
+
+### Stories UI status — 8 November 2026
+- Explore includes a responsive Stories strip, photo/video upload composer, audience selector, and viewer.
+- Public Story visibility requires a public profile; private Story is owner-only.
+- RLS smoke test confirmed public Story visible to anon and private Story hidden from anon.
+- GitHub Pages workflow run 423 passed build and deploy. Real account and Android UAT still required.
+- Story records expire from active reads after 24 hours; scheduled media cleanup/archive is not implemented.
