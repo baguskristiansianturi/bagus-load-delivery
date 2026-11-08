@@ -6,6 +6,7 @@ const SUPABASE_URL='https://ytndswhqxayqpftszwfh.supabase.co';
 const SUPABASE_KEY='sb_publishable_kOUbKBYg88nXgz8FQRSnvA_k0hvKY65';
 const supabase=createClient(SUPABASE_URL,SUPABASE_KEY);
 const BUCKET='pluits-user-media';
+const uploadMime=file=>{const declared=String(file?.type||'').toLowerCase();const allowed=['image/jpeg','image/png','image/webp','image/gif','video/mp4','video/webm'];if(allowed.includes(declared))return declared;if(declared)return '';const ext=String(file?.name||'').split('.').pop().toLowerCase();return ({jpg:'image/jpeg',jpeg:'image/jpeg',png:'image/png',webp:'image/webp',gif:'image/gif',mp4:'video/mp4',webm:'video/webm'})[ext]||'';};
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmtDate=v=>new Date(v).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'});
 const initials=v=>String(v||'P').trim().slice(0,1).toUpperCase();
@@ -501,40 +502,50 @@ function bindImageUpload(inputId,column,label){
 }
 function bindCompose(){
  const fileInput=document.querySelector('#ua-post-file'),preview=document.querySelector('#ua-media-preview');
+ const noteCompose=message=>{const note=document.querySelector('#ua-compose-note');if(note)note.textContent=message;};
  fileInput?.addEventListener('change',()=>{
-  const f=fileInput.files?.[0];preview.innerHTML='';if(!f)return;
-  const url=URL.createObjectURL(f);preview.innerHTML=f.type.startsWith('video/')?'<video controls playsinline src="'+url+'"></video>':'<img src="'+url+'" alt="Pratinjau foto">';
+  if(preview.dataset.objectUrl)URL.revokeObjectURL(preview.dataset.objectUrl);
+  preview.dataset.objectUrl='';preview.innerHTML='';
+  const file=fileInput.files?.[0];if(!file)return;
+  const mime=uploadMime(file);
+  if(!mime){noteCompose('Format file tidak didukung. Gunakan JPG, PNG, WebP, GIF, MP4, atau WebM.');fileInput.value='';return;}
+  const url=URL.createObjectURL(file);preview.dataset.objectUrl=url;
+  preview.innerHTML=mime.startsWith('video/')?'<video controls playsinline preload="metadata" src="'+url+'"></video>':'<img src="'+url+'" alt="Pratinjau foto">';
  });
- document.querySelector('#ua-post-form')?.addEventListener('submit',async e=>{
-  e.preventDefault();
-  const form=e.currentTarget,file=fileInput?.files?.[0]||null,note=document.querySelector('#ua-compose-note'),btn=form.querySelector('button[type=submit]'),progress=document.querySelector('#ua-upload-progress');
+ document.querySelector('#ua-post-form')?.addEventListener('submit',async event=>{
+  event.preventDefault();
+  const form=event.currentTarget,file=fileInput?.files?.[0]||null,note=document.querySelector('#ua-compose-note'),button=form.querySelector('button[type=submit]'),progress=document.querySelector('#ua-upload-progress');
   const data=new FormData(form),caption=String(data.get('caption')||'').trim();
   if(!file&&!caption){note.textContent='Tulis caption atau pilih foto/video sebelum menerbitkan postingan.';return;}
-  const isVideo=!!file&&file.type.startsWith('video/'),allowed=['image/jpeg','image/png','image/webp','image/gif','video/mp4','video/webm'];
-  if(file&&!allowed.includes(file.type)){note.textContent='Format file tidak didukung. Gunakan JPG, PNG, WebP, GIF, MP4, atau WebM.';return;}
+  const mime=file?uploadMime(file):'',isVideo=!!file&&mime.startsWith('video/');
+  if(file&&!mime){note.textContent='Format file tidak didukung. Gunakan JPG, PNG, WebP, GIF, MP4, atau WebM.';return;}
   if(file&&file.size>50*1024*1024){note.textContent='Ukuran file maksimal 50 MB.';return;}
-  btn.disabled=true;btn.textContent=file?'Mengunggah media…':'Menerbitkan tulisan…';note.textContent=file?'Mengunggah media ke penyimpanan Pluits…':'Menyimpan postingan teks…';
-  if(file){progress.hidden=false;progress.querySelector('span').style.width='25%';}
+  button.disabled=true;button.textContent=file?'Mengunggah media…':'Menerbitkan tulisan…';note.textContent=file?'Mengunggah media ke penyimpanan Pluits…':'Menyimpan postingan teks…';
+  if(file){progress.hidden=false;progress.querySelector('span').style.width='10%';}
   let uploadedPath=null;
-  let storyInserted=false;
   try{
    if(file){
-    const ext=file.name.split('.').pop().toLowerCase(),path=user.id+'/'+(crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random().toString(36).slice(2))+'.'+ext;
-    const {error:uploadError}=await supabase.storage.from(BUCKET).upload(path,file,{contentType:file.type,upsert:false});
-    if(uploadError)throw new Error('Upload media gagal: '+uploadError.message);
-    uploadedPath=path;progress.querySelector('span').style.width='75%';
+    const extension=file.name.split('.').pop().toLowerCase(),unique=crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random().toString(36).slice(2),path=user.id+'/'+unique+'.'+extension;
+    const upload=await supabase.storage.from(BUCKET).upload(path,file,{contentType:mime,upsert:false});
+    if(upload.error)throw new Error('Upload media gagal: '+upload.error.message);
+    uploadedPath=path;progress.querySelector('span').style.width='70%';
    }
-   const tags=String(data.get('tags')||'').split(',').map(x=>x.trim().replace(/^#/,'').toLowerCase()).filter(Boolean).slice(0,12);
+   const tags=String(data.get('tags')||'').split(',').map(value=>value.trim().replace(/^#/,'').toLowerCase()).filter(Boolean).slice(0,12);
    const postContext={profile_context:accountContext.active,professional_profile_id:accountContext.active==='professional'?accountContext.professional?.id||null:null,business_store_id:accountContext.active==='business'?(accountContext.prefs?.active_store_id||accountContext.stores[0]?.id||null):null};
-   const {error:insertError}=await supabase.from('user_posts').insert({user_id:user.id,...postContext,caption,tags,media_path:uploadedPath,media_type:file?(isVideo?'video':'image'):'text',visibility:String(data.get('visibility'))});
-   if(insertError)throw new Error('Media tersimpan tetapi postingan gagal dibuat: '+insertError.message);
+   const insert=await supabase.from('user_posts').insert({user_id:user.id,...postContext,caption,tags,media_path:uploadedPath,media_type:file?(isVideo?'video':'image'):'text',visibility:String(data.get('visibility'))});
+   if(insert.error)throw new Error('Postingan gagal dibuat: '+insert.error.message);
+   uploadedPath=null;
    if(file)progress.querySelector('span').style.width='100%';
+   if(preview.dataset.objectUrl)URL.revokeObjectURL(preview.dataset.objectUrl);
    notify(file?'Postingan dengan media berhasil diterbitkan.':'Postingan teks berhasil diterbitkan.');
    await mountAccount('explore');
-  }catch(err){
-   note.textContent=err.message||'Tidak dapat menerbitkan postingan.';
-   btn.disabled=false;btn.textContent='Coba lagi';progress.hidden=true;
-   if(uploadedPath)note.textContent+=' File media sudah terunggah; coba terbitkan ulang tanpa mengunggah file yang sama jika perlu.';
+  }catch(error){
+   if(uploadedPath){
+    const cleanup=await supabase.storage.from(BUCKET).remove([uploadedPath]);
+    if(cleanup.error)note.textContent='Postingan gagal dan file sementara tidak dapat dibersihkan: '+cleanup.error.message;
+   }
+   note.textContent=error.message||'Tidak dapat menerbitkan postingan.';
+   button.disabled=false;button.textContent='Coba lagi';progress.hidden=true;
   }
  });
 }
@@ -561,61 +572,45 @@ function bindStories(){
  });
 }
 function bindStoryCompose(){
- const form=document.querySelector('#ua-story-form');
- if(!form)return;
- const fileInput=form.querySelector("input[type='file']");
- const preview=document.querySelector('#ua-story-preview');
- const note=document.querySelector('#ua-story-note');
+ const form=document.querySelector('#ua-story-form');if(!form)return;
+ const fileInput=form.querySelector("input[type='file']"),preview=document.querySelector('#ua-story-preview'),note=document.querySelector('#ua-story-note');
  fileInput?.addEventListener('change',()=>{
-  const file=fileInput.files?.[0];
   if(preview.dataset.objectUrl)URL.revokeObjectURL(preview.dataset.objectUrl);
-  preview.dataset.objectUrl='';
-  preview.innerHTML='';
-  if(!file)return;
-  const url=URL.createObjectURL(file);
-  preview.dataset.objectUrl=url;
-  preview.innerHTML=file.type.startsWith('video/')
-   ?"<video controls playsinline src='"+url+"'></video>"
-   :"<img src='"+url+"' alt='Pratinjau Story'>";
+  preview.dataset.objectUrl='';preview.innerHTML='';
+  const file=fileInput.files?.[0];if(!file)return;
+  const mime=uploadMime(file);
+  if(!mime){note.textContent='Format tidak didukung. Gunakan JPG, PNG, WebP, GIF, MP4, atau WebM.';fileInput.value='';return;}
+  const url=URL.createObjectURL(file);preview.dataset.objectUrl=url;
+  preview.innerHTML=mime.startsWith('video/')?"<video controls playsinline preload='metadata' src='"+url+"'></video>":"<img src='"+url+"' alt='Pratinjau Story'>";
  });
  form.addEventListener('submit',async event=>{
   event.preventDefault();
   const file=fileInput?.files?.[0];
   if(!file){note.textContent='Pilih foto atau video terlebih dahulu.';return;}
-  const allowed=['image/jpeg','image/png','image/webp','image/gif','video/mp4','video/webm'];
-  if(!allowed.includes(file.type)){note.textContent='Format tidak didukung. Gunakan JPG, PNG, WebP, GIF, MP4, atau WebM.';return;}
+  const mime=uploadMime(file);
+  if(!mime){note.textContent='Format tidak didukung. Gunakan JPG, PNG, WebP, GIF, MP4, atau WebM.';return;}
   if(file.size>50*1024*1024){note.textContent='Ukuran file maksimal 50 MB.';return;}
-  const button=form.querySelector("button[type='submit']");
-  const data=new FormData(form);
-  const caption=String(data.get('caption')||'').trim();
-  const visibility=String(data.get('visibility')||'private');
-  button.disabled=true;
-  button.textContent='Mengunggah Story…';
-  note.textContent='Mengunggah media ke Pluits…';
-  let uploadedPath=null;
+  const button=form.querySelector("button[type='submit']"),data=new FormData(form),caption=String(data.get('caption')||'').trim(),visibility=String(data.get('visibility')||'private');
+  button.disabled=true;button.textContent='Mengunggah Story…';note.textContent='Mengunggah media ke Pluits…';
+  let uploadedPath=null,storyInserted=false;
   try{
-   const extension=file.name.split('.').pop().toLowerCase();
-   const unique=crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random().toString(36).slice(2);
-   const path=user.id+'/'+unique+'.'+extension;
-   const upload=await supabase.storage.from(BUCKET).upload(path,file,{contentType:file.type,upsert:false});
+   const extension=file.name.split('.').pop().toLowerCase(),unique=crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random().toString(36).slice(2),path=user.id+'/'+unique+'.'+extension;
+   const upload=await supabase.storage.from(BUCKET).upload(path,file,{contentType:mime,upsert:false});
    if(upload.error)throw new Error('Upload gagal: '+upload.error.message);
    uploadedPath=path;
-   const insert=await supabase.from('user_stories').insert({
-    user_id:user.id,
-    media_path:uploadedPath,
-    media_type:file.type.startsWith('video/')?'video':'image',
-    caption,
-    visibility
-   });
+   const insert=await supabase.from('user_stories').insert({user_id:user.id,media_path:uploadedPath,media_type:mime.startsWith('video/')?'video':'image',caption,visibility});
    if(insert.error)throw new Error('Story gagal disimpan: '+insert.error.message);
-   storyInserted=true;
+   storyInserted=true;uploadedPath=null;
+   if(preview.dataset.objectUrl)URL.revokeObjectURL(preview.dataset.objectUrl);
    notify('Story berhasil dibagikan dan akan hilang setelah 24 jam.');
    await mountAccount('explore');
   }catch(error){
-   if(uploadedPath&&!storyInserted)await supabase.storage.from(BUCKET).remove([uploadedPath]);
-   note.textContent=storyInserted?'Story sudah tersimpan. Buka ulang Explore jika belum terlihat.':(error.message||'Tidak dapat membagikan Story.');
-   button.disabled=false;
-   button.textContent='Coba lagi';
+   if(uploadedPath&&!storyInserted){
+    const cleanup=await supabase.storage.from(BUCKET).remove([uploadedPath]);
+    if(cleanup.error)note.textContent='Story gagal disimpan dan file sementara tidak dapat dibersihkan: '+cleanup.error.message;
+   }
+   note.textContent=error.message||'Tidak dapat membagikan Story.';
+   button.disabled=false;button.textContent='Coba lagi';
   }
  });
 }

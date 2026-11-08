@@ -573,3 +573,14 @@ Build dari commit `642a24bdbed4a85931271e7481f9880a04cc9fc3` berhasil. GitHub Pa
 - Masih terbuka: validasi dua akun, like/komentar/balasan setelah refresh, private-profile access, laporan/moderasi, alur Stories/Reels, Explore discovery dan pemeriksaan responsif lintas perangkat.
 - Acceptance test wajib: owner like dan komentar pada postingan sendiri; akun kedua like/komentar; balas komentar dan balas balasan; like komentar; refresh mempertahankan thread/counter; klik avatar/nama membuka profil yang benar; uji Home/Explore/Reels/Detail/Profile pada ponsel, tablet, desktop.
 - Next: uji upload video nyata di Android dan dua akun; lengkapi discovery Explore serta report/block/moderasi dan pengalaman Stories/Reels sebelum menyatakan Social Core siap UAT penuh.
+
+
+## CP-029 — Media upload reliability pass (8 November 2026)
+
+- Perbaikan lanjutan setelah review kode upload sosial: Story composer sebelumnya menggunakan variabel `storyInserted` tanpa deklarasi lokal. Setelah insert Story berhasil, strict-mode JavaScript dapat melempar ReferenceError dan masuk ke jalur error. Variabel kini dideklarasikan pada scope submit yang benar.
+- Upload Story dan postingan kini menentukan MIME dari ekstensi file hanya bila browser Android tidak mengirim `file.type`; MIME yang terisi tetapi tidak diizinkan tetap ditolak. Format yang didukung: JPG, JPEG, PNG, WebP, GIF, MP4, WebM.
+- URL pratinjau lokal direvoke saat file diganti dan setelah berhasil diterbitkan, untuk mengurangi penggunaan memori pada perangkat dengan RAM terbatas.
+- Jika upload media berhasil tetapi penyimpanan record postingan/Story gagal, aplikasi mencoba menghapus file sementara agar tidak meninggalkan objek yatim di Storage.
+- Batas ukuran tetap 50 MB untuk postingan dan Story. Belum dilakukan tes upload/playback Android; founder melakukan UAT perangkat nyata. Progress UI masih indikator tahap, bukan persentase byte upload yang akurat.
+- Status: CODE UPDATED; BUILD/DEPLOY MENUNGGU workflow commit; ANDROID UAT MENUNGGU founder.
+- Acceptance test founder: upload JPG/PNG/WebP, MP4, dan WebM; ganti file saat preview aktif; batalkan/gagal submit; cek postingan dan Story tampil setelah refresh; cek playback; lakukan pada jaringan seluler dan Wi-Fi.

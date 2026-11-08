@@ -141,3 +141,14 @@ No implementation status is asserted by this planning document. Repository and a
 - **Not yet accepted as complete:** video upload/playback on a real Android device, two-account interactions, comment/reply/like counters after refresh, private-profile visibility, moderation and report flows, and cross-device responsive checks. Existing video upload implementation accepts MP4/WebM up to 50 MB; that code path is not proof of successful real-device upload.
 - **Acceptance tests:** (1) owner likes own post; (2) owner comments on own post; (3) another user likes/comments; (4) reply to a comment and reply to a reply; (5) like/unlike a comment; (6) refresh preserves counts and thread; (7) author avatar/name opens correct profile; (8) Home, Explore, Reels, post detail and Profile navigation work on phone/tablet/desktop.
 - **Next:** complete real-device media upload test and two-account interaction test; then finish Explore discovery controls, report/block/moderation affordances, and story/reel viewing interactions before marking the social core UAT-ready.
+
+
+## CP-029 — Media upload reliability pass (8 November 2026)
+
+- Perbaikan lanjutan setelah review kode upload sosial: Story composer sebelumnya menggunakan variabel `storyInserted` tanpa deklarasi lokal. Setelah insert Story berhasil, strict-mode JavaScript dapat melempar ReferenceError dan masuk ke jalur error. Variabel kini dideklarasikan pada scope submit yang benar.
+- Upload Story dan postingan kini menentukan MIME dari ekstensi file hanya bila browser Android tidak mengirim `file.type`; MIME yang terisi tetapi tidak diizinkan tetap ditolak. Format yang didukung: JPG, JPEG, PNG, WebP, GIF, MP4, WebM.
+- URL pratinjau lokal direvoke saat file diganti dan setelah berhasil diterbitkan, untuk mengurangi penggunaan memori pada perangkat dengan RAM terbatas.
+- Jika upload media berhasil tetapi penyimpanan record postingan/Story gagal, aplikasi mencoba menghapus file sementara agar tidak meninggalkan objek yatim di Storage.
+- Batas ukuran tetap 50 MB untuk postingan dan Story. Belum dilakukan tes upload/playback Android; founder melakukan UAT perangkat nyata. Progress UI masih indikator tahap, bukan persentase byte upload yang akurat.
+- Status: CODE UPDATED; BUILD/DEPLOY MENUNGGU workflow commit; ANDROID UAT MENUNGGU founder.
+- Acceptance test founder: upload JPG/PNG/WebP, MP4, dan WebM; ganti file saat preview aktif; batalkan/gagal submit; cek postingan dan Story tampil setelah refresh; cek playback; lakukan pada jaringan seluler dan Wi-Fi.
