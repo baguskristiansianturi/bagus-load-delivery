@@ -158,8 +158,9 @@ Gunakan dua akun nyata berbeda (A dan B). Jangan memakai akun orang lain tanpa i
 4. Confirm the message is labeled as saved on this device / waiting for connection, not sent or delivered.
 5. Re-enable internet. Wait for the outbox to sync and confirm the recipient sees exactly one copy.
 6. Reload Messages and verify the queue is empty. If the message remains pending, do not repeatedly submit the same text; report the error/time.
-7. While offline, confirm previously cached contacts and thread metadata remain visible. Starting a brand-new conversation and fetching remote history are expected to require a network.
-8. Offline outbox is stored in browser localStorage on this device; do not test with confidential messages or shared/public devices.
+7. While offline, confirm previously cached contacts and thread metadata remain visible. Select a cached contact not yet messaged, draft a short test message, and confirm it is labeled as a local draft. Reconnect and confirm Pluits creates the conversation and sends exactly one copy.
+8. Remote history cannot be fetched while offline.
+9. Offline outbox is stored in browser localStorage on this device; do not test with confidential messages or shared/public devices.
 
 ### D. Account and device settings
 1. Open Pusat Pengaturan → Keamanan & perangkat.
