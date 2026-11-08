@@ -30,6 +30,6 @@ create policy post_comment_likes_delete_self on public.post_comment_likes for de
 drop policy if exists post_comments_insert_self on public.post_comments;
 create policy post_comments_insert_self on public.post_comments for insert to authenticated with check (
  user_id=(select auth.uid())
- and exists(select 1 from public.user_posts p where p.id=post_comments.post_id and coalesce((select pref.allow_comments from public.account_content_preferences pref where pref.user_id=p.user_id),true)=true)
+ and exists(select 1 from public.user_posts p where p.id=post_comments.post_id and (p.user_id=(select auth.uid()) or coalesce((select pref.allow_comments from public.account_content_preferences pref where pref.user_id=p.user_id),true)=true))
  and (parent_comment_id is null or exists(select 1 from public.post_comments parent where parent.id=post_comments.parent_comment_id and parent.post_id=post_comments.post_id))
 );
