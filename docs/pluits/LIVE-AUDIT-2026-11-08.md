@@ -28,7 +28,7 @@ Inspected the GitHub main branch, Vite frontend source, live Supabase project me
 | Public homepage feed | Read-only public feed |
 | Public homepage interaction metrics/actions | Not implemented; links lead to Explore rather than recording likes/comments |
 | Stories | Explore strip, photo/video composer, audience control and viewer implemented; real-account UAT pending |
-| Reels-specific full-screen feed | Not implemented; video posts play in the normal feed |
+| Reels | Dedicated vertical video feed from video posts implemented; full-screen swipe/autoplay not implemented; UAT pending |
 | Follow/friends graph | Not implemented |
 | Direct/group messaging | Not implemented |
 | Notifications | Not implemented |
@@ -40,7 +40,7 @@ Inspected the GitHub main branch, Vite frontend source, live Supabase project me
 - Account feed media uses intrinsic proportions; profile-grid thumbnails remain square previews by design.
 - Public homepage had mobile CSS overrides forcing `object-fit: cover`; this was corrected to intrinsic height and `object-fit: contain` so photos/videos are not destructively cropped.
 - GitHub Pages workflow run 369 succeeded for the media-ratio fix.
-- Stories viewer also uses contain/intrinsic media sizing.
+- Stories viewer and dedicated Reels feed also use contain/intrinsic media sizing.
 - Real handset testing on Android remains outstanding.
 
 ## 4. Supabase live state
@@ -113,8 +113,16 @@ These are limited smoke tests, not a substitute for signed-in two-account and fu
 2. Complete real-account registration, email confirmation, profile, post, Story and Android UAT.
 3. Run two-account owner/unrelated-user tests for private content, addresses, Stories, store data and wallet requests.
 4. Review store staff permissions, audit writes and SECURITY DEFINER RPC grants.
-5. Implement public homepage engagement metrics/actions, follow graph, notifications, messaging, reporting/blocking/moderation and Reels-specific experience.
+5. UAT Stories and Reels on Android; implement public homepage engagement metrics/actions, follow graph, notifications, messaging, reporting/blocking and moderation.
 6. Keep checkout and wallet disabled until server-side transaction/ledger paths and UAT are complete.
 
 ## 12. Production readiness
 **NOT APPROVED yet.** Repository migration history is reconciled; two backend hardening migrations are applied; Stories UI and media-ratio changes are deployed. Remaining launch gates are Auth leaked-password protection, real-account/Android UAT, two-account privacy tests, and the remaining social safety/commerce work.
+
+## 13. Reels delivery
+- Dedicated account route `#/account/reels` lists video posts from the same social post domain.
+- Reuses the post interaction controls and signed media delivery.
+- Video display preserves intrinsic source ratio; no forced cover crop or stretch.
+- Mobile layout is vertically oriented; autoplay/full-screen swipe are intentionally not enabled in this first iteration.
+- GitHub Pages workflow run 432 succeeded, including build and deploy.
+- Real account video upload/playback and Android UAT remain NOT TESTED.
