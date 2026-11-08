@@ -134,12 +134,12 @@
 /* PLUITS HOME — remove legacy entry-point ambiguity and mobile end-gap */
 @media (max-width: 760px) {
   .pl-social-home {
-    padding-bottom: 0 !important;
+    padding-bottom: calc(60px + env(safe-area-inset-bottom)) !important;
   }
 
   .pl-social-home .pl-home-mobile-nav {
-    position: sticky !important;
-    inset: auto !important;
+    position: fixed !important;
+    inset: auto 0 0 !important;
     bottom: 0 !important;
     flex: 0 0 auto;
     width: 100%;
