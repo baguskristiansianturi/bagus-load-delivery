@@ -857,4 +857,5 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - **Root cause:** the workflow used the same fixed Pages artifact name across workflow attempts; retrying only the failed deploy job uploaded a second artifact with the same name.
 - **Correction:** `.github/workflows/deploy.yml` now names the Pages artifact with both `github.run_id` and `github.run_attempt`, and passes the matching name to `actions/deploy-pages@v4`.
 - **Process sync:** `IDEAS/IDEA-BACKLOG.md` now requires every approved idea to reference its D-XXX Decision Log entry and to update Business Model Master before roadmap delivery.
-- **Status:** workflow fix committed; a fresh push-triggered run is required to verify the new artifact naming and Pages deployment. Do not mark the latest docs/workflow commit deployed until that run succeeds.
+- **Verification:** GitHub Actions run #989 / `42493030423` — SUCCESS for commit `ac0f9f92a0b2b036deaa4d19b39da89baea54a31`; regression checks, Vite build, output verification, artifact upload, and GitHub Pages deployment all passed using the unique artifact name.
+- **Status:** workflow retry-artifact collision fix IMPLEMENTED and DEPLOYED. This does not change the separate founder Android UAT status.
