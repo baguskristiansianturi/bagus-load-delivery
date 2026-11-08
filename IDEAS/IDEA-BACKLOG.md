@@ -141,3 +141,29 @@ Status: IDEA / PROCESS ENHANCEMENT — NOT A PRODUCT FEATURE
 - Catat masalah, pengguna terdampak, hipotesis nilai, contoh, alternatif, alasan tidak membangun, risiko, biaya/kompleksitas, dependency, dan pertanyaan terbuka.
 - Ide yang disetujui dipromosikan secara eksplisit ke Business Model Master (bila mengubah keputusan bisnis), spesifikasi domain, lalu Project Status & Roadmap. Tandai ide PROMOTED dan tautkan checkpoint/keputusan.
 - Ide yang belum cocok tetap PARKED, REJECTED, atau MERGED; jangan hapus jejak pembelajaran.
+
+
+## IDEA-006 — Production release guard and live cart continuity
+Status: NEEDS RESEARCH / PARTLY IMPLEMENTED ENGINEERING CONTROL — NOT A BUSINESS-MODEL CHANGE
+
+### Observation
+Pluits is already published and has a registered account. Production code and existing user data must be treated as live, even while features remain incomplete.
+
+### Engineering controls started
+- A CI regression guard now checks retired demo procurement modules do not return and confirms the active Marketplace/Trip source still calls backend contracts.
+- The Pages workflow runs this guard before building.
+- Seller write permissions now require owner status or explicit permission grants at the database policy layer.
+
+### Remaining proposal
+- Persist Marketplace carts server-side for signed-in users and merge guest carts safely after login.
+- Keep a local guest draft only as an offline/temporary cache; backend cart is canonical for signed-in accounts.
+- Re-fetch current price, discount, stock, active status, and store availability before displaying a restored cart and again at checkout.
+- Define one-store-per-cart behavior, conflict handling when guest and account carts refer to different stores, expiry/cleanup, and multi-device concurrency.
+- Add authenticated API negative tests and a staff permission management surface before any staff invitation.
+
+### Risks and boundaries
+- Do not discard or overwrite a guest cart silently.
+- Do not trust client-submitted price or stock.
+- Do not migrate localStorage values without a documented merge and recovery path.
+- Do not enable staff invitations before grant administration and RLS/API tests are complete.
+- This idea does not authorize changes to the Business Model Master or a payment gateway.
