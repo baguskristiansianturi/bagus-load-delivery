@@ -10,7 +10,9 @@ const paths={
  home:'<path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7h-6v7H4a1 1 0 0 1-1-1Z"></path>',
  compass:'<circle cx="12" cy="12" r="9"></circle><path d="m15.5 8.5-2.2 5-4.8 2 2-4.8Z"></path>',
  reels:'<rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="m10 9 5 3-5 3Z"></path>',
- user:'<circle cx="12" cy="8" r="3.5"></circle><path d="M5 20c.8-3.3 3.2-5 7-5s6.2 1.7 7 5"></path>'
+ user:'<circle cx="12" cy="8" r="3.5"></circle><path d="M5 20c.8-3.3 3.2-5 7-5s6.2 1.7 7 5"></path>',
+ bell:'<path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M10 21h4"></path>',
+ message:'<path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5H5l1.2-3.5A7.5 7.5 0 1 1 20 11.5Z"></path>'
 };
 export function socialIcon(name,{size=20,className=''}={}){
  const body=paths[name];if(!body)return '';
