@@ -70,6 +70,6 @@ Snapshot live 9 November 2026, sekitar 03:13 WITA:
 - Wallet hanya scaffold account/request; belum ada ledger/payout/reconciliation siap uang sungguhan.
 - Social First Release tetap P0 sampai founder UAT diterima.
 
-Rincian dan batas bukti: docs/pluits/PLUITS-TECHNOLOGY-ROADMAP-AND-AUDIT-2026-11-09.md dan MASTER/PLUITS-SECURITY-REVIEW.md.
+Rincian dan batas bukti: docs/pluits/PLUITS-TECHNOLOGY-ROADMAP-AND-AUDIT-2026-11-09.md, docs/pluits/GEODIRECTORY-TRUST-AND-CLAIM-AUDIT-2026-11-09.md, dan MASTER/PLUITS-SECURITY-REVIEW.md.
 
 **Prinsip wajib:** cerita founder dan masalah manusia—terutama perjalanan Ibu Nia—adalah alasan PLUITS dibuat. UX harus familiar bagi pengguna media sosial visual; GeoDirectory menghubungkan kehidupan lokal. Turunkan keputusan teknis dari model bisnis, bukan sebaliknya.
