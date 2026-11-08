@@ -38,7 +38,7 @@ Inspected the GitHub main branch tree and key frontend files, live Supabase proj
 ### Media ratio
 - Account feed uses intrinsic media proportions; profile grid thumbnails are square by design.
 - Public homepage feed had later mobile rules forcing `object-fit: cover`, which could crop uploaded images/videos.
-- Fixed by commit `07d81f76b8c46c9e81f53104263b1d91320daa5a`: public feed media now uses intrinsic height and `object-fit: contain`. Deployment workflow 369 was pending when this report was written; verify success before claiming live.
+- Fixed by commit `07d81f76b8c46c9e81f53104263b1d91320daa5a`: public feed media now uses intrinsic height and `object-fit: contain`. Deployment workflow run 369 completed successfully. A later full Pages workflow run 374 also completed successfully, including Vite production build, artifact upload and Deploy to GitHub Pages.
 
 ## 4. Supabase live state
 - Project status: ACTIVE_HEALTHY.
@@ -102,3 +102,11 @@ The repository also contains `202611070001_initial_marketplace.sql`, which is no
 - Security fixes: not applied in this audit; require settings or migration workflow plus verification.
 - Android UAT and two-account privacy tests: not performed.
 - Production readiness: NOT APPROVED by this report.
+
+## 11. Additional verification completed after the initial snapshot
+- GitHub Pages workflow run 374: **SUCCESS**. Confirmed all steps passed: `npm ci`, `npm run build`, `test -f dist/index.html`, artifact upload and Deploy to GitHub Pages.
+- Anonymous database test (transaction rolled back): 2 public profiles visible; 1 public post visible; 0 private address rows visible; 0 active story rows visible.
+- Anonymous Storage test (transaction rolled back): 2 objects in `pluits-user-media` visible under current public-media policies, versus 4 total objects; 0 `pluits-store-media` objects visible, versus 1 total object.
+- Current data consistency query: 2 user posts; 0 posts currently reference a media path whose first folder differs from the post owner's UUID. This is a snapshot, not proof the policy prevents future attempts.
+- Stories table currently contains 0 rows.
+- Android device UAT and signed-in two-account tests remain NOT TESTED.
