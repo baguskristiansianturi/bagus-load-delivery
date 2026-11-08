@@ -81,3 +81,5 @@ BLOCKED, FAILED, NOT TESTED, dan NOT VERIFIED wajib dicatat. Satu status tidak m
 - `docs/pluits/FRONTEND-BACKEND-ALIGNMENT-PLAN-2026-11-09.md` — route-to-domain contract map and frontend service refactor sequence.
 - `supabase/config.toml` — local-only Supabase config. Never link this local workspace to production.
 - `.github/workflows/backend-contracts.yml` — isolated migration replay followed by frontend contract/build checks.
+
+- `docs/pluits/FRONTEND-EXPERIENCE-COMPLETION-MATRIX-2026-11-09.md` — route coverage, frontend completion criteria, async UI states, and parallel backend integration rules.
