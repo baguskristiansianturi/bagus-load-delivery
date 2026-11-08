@@ -187,3 +187,28 @@ Pluits is already published and has a registered account. Production code and ex
 - The old static master-data module was not used by active Pluits routes and contained obsolete category, fulfilment, payment, commission, and location assumptions.
 - A sanitized plain-text snapshot is retained only as a historical taxonomy reference; the executable module was deleted and CI now blocks its return.
 - Any useful category idea must be re-evaluated against the active Pluits Marketplace/GeoDirectory model before implementation.
+
+
+## IDEA-007 — Licensed audio library and responsible short-video discovery
+Status: NEEDS RESEARCH / NOT IMPLEMENTED  
+Source: founder's Social Media priority, 8 November 2026.
+
+### User intent
+- Users want music/audio on videos, short-video discovery, viral reach and a useful "For You" experience.
+- Pluits must not copy or use copyrighted tracks without permission.
+
+### Product direction to validate
+- Start with original user-created sounds and a curated catalog of royalty-free/Creative Commons tracks whose terms explicitly permit the intended commercial social-platform use.
+- Preserve creator, source, license/version, attribution, permitted use, territory, expiry/revocation and evidence for every track.
+- Offer "Following" and "Latest" as deterministic feed choices; treat "For You" as a recommendation system requiring evaluation, not a promise of virality.
+- Ranking must balance relevance, freshness, completion/replay, meaningful engagement, creator diversity, negative feedback, safety and spam resistance; do not optimize likes alone.
+- Add audio reporting, takedown, rights dispute, mute/remove and track availability controls.
+
+### Research and validation
+- Determine whether licenses permit user-generated video sync, platform hosting, public playback, monetization, territory, and sublicensing.
+- Assess storage/transcoding/bandwidth costs and rights-holder takedown workflow.
+- Benchmark ranking against Following/Latest and measure retention, hides, reports, creator exposure concentration and feedback quality.
+- Never seed the library with commercial music or claim a track is copyright-free without documented license proof.
+
+### Release boundary
+This idea is part of the Social Media product direction, but it is not approved for implementation as a full music marketplace or an algorithm promising viral reach. Define legal, technical and moderation requirements first.
