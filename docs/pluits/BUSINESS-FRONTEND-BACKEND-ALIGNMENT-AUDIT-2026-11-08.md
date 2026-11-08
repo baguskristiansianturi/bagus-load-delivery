@@ -148,3 +148,13 @@ Founder reports that Pluits is already published and has at least one registered
 - Write policies are now operation-specific (INSERT/UPDATE/DELETE), avoiding accidental extra SELECT policies from a permissive `FOR ALL` policy.
 - Re-ran advisors: no multiple-permissive-policy warnings remain; 20 SECURITY DEFINER warnings, 1 leaked-password warning, 84 informational unused-index notices, and 0 Health lints remain.
 - The 84 unused-index notices are not grounds for deletion while query traffic is low. Preserve the indexes until real workload evidence exists.
+
+
+## 13. Vite starter and orphaned legacy modules removed — 8 November 2026
+
+- Removed unused Vite counter script `src/counter.js`.
+- Removed unused Vite starter assets `src/assets/vite.svg` and `src/assets/javascript.svg` after checking the active JS/CSS/HTML references.
+- Removed orphaned legacy modules that were not imported by the active router or main entry: old localStorage-only `src/pages/auth/index.js` (which displayed “AKUN BAGUS” and claimed OTP/backend would be connected later), stale logistics/material/property/service wrappers pointing to deleted `page-factory.js` or missing product detail modules, and redundant promo/not-found/search wrappers.
+- Confirmed the active entry and router use Pluits Auth/account, Seller Center, Marketplace, Trip, GeoDirectory, Social, messages and moderation modules; no active route imports the deleted legacy files.
+- Expanded `scripts/verify-production-surface.mjs` to fail CI if these retired files return or old Bagus/BLD account/cart markers appear in key runtime files.
+- This is source-level cleanup and regression protection. It does not certify every external integration or all Android behavior.
