@@ -27,7 +27,7 @@ export function route(homeFn=home){
  if(!r)h=homeFn();
  else if(r==='places'){h=directoryPage();queueMicrotask(()=>bindDirectoryPage());}
  else if(r==='marketplace'){h=marketplacePage();queueMicrotask(()=>bindMarketplacePage());}
- else if(r==='trip'){h=s[1]==='itinerary'?await tripItineraryPage(s[2]||''):tripPage();queueMicrotask(()=>s[1]==='itinerary'?bindTripItineraryPage(s[2]||''):bindTripPage());}
+ else if(r==='trip'){h=s[1]==='itinerary'?tripItineraryPage(s[2]||''):tripPage();queueMicrotask(()=>s[1]==='itinerary'?bindTripItineraryPage(s[2]||''):bindTripPage());}
  else if(r==='place'){
   h='<div class="pl-directory-loading">Membuka tempat…</div>';
   queueMicrotask(async()=>{
