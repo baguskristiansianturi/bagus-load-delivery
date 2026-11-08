@@ -226,9 +226,26 @@ async function feedPage(){
  if(error)throw error;
  const posts=await hydratePosts(data||[]);
  const sorted=posts.sort((a,b)=>(b.likes*3+b.comments)-(a.likes*3+a.comments)||new Date(b.created_at)-new Date(a.created_at));
- return `<div class="ua-page-heading"><div><span class="ua-eyebrow">TEMUKAN KOMUNITAS</span><h1>Explore</h1><p>Foto dan video dari komunitas Pluits, dalam satu aliran.</p></div><a class="ua-primary ua-inline" href="#/account/compose">＋ Buat postingan</a></div>
- <div class="ua-explore-note">Konten baru juga mendapat kesempatan ditemukan. Urutan Explore mempertimbangkan interaksi nyata dan kebaruan, bukan angka viral buatan.</div>
- <section class="ua-feed">${sorted.length?sorted.map(postCard).join(''):'<div class="ua-panel ua-empty"><strong>Explore masih menunggu cerita pertama.</strong><p>Jadilah pengguna pertama yang mengunggah foto atau video. Konten publik Anda akan muncul di sini setelah tersimpan.</p><a class="ua-primary ua-inline" href="#/account/compose">Unggah foto atau video</a></div>'}</section>`;
+ const {data:storyRows,error:storyError}=await supabase.from('user_stories').select('id,user_id,media_path,media_type,caption,visibility,created_at,expires_at').gt('expires_at',new Date().toISOString()).order('created_at',{ascending:false}).limit(30);
+ if(storyError)throw storyError;
+ const ownerIds=[...new Set((storyRows||[]).map(s=>s.user_id))];
+ let storyProfiles=[];
+ if(ownerIds.length){
+  const profileResult=await supabase.from('user_profiles').select('id,display_name,username,avatar_path').in('id',ownerIds);
+  if(profileResult.error)throw profileResult.error;
+  storyProfiles=profileResult.data||[];
+ }
+ const profileMap=new Map(storyProfiles.map(p=>[p.id,p]));
+ const stories=await Promise.all((storyRows||[]).map(async s=>{
+  const owner=profileMap.get(s.user_id)||{};
+  return {...s,owner,mediaUrl:await signed(s.media_path),avatarUrl:owner.avatar_path?await signed(owner.avatar_path):''};
+ }));
+ const storyCards=stories.map(s=>"<button type='button' class='ua-story-item' data-story-url='"+esc(s.mediaUrl||'')+"' data-story-type='"+esc(s.media_type)+"' data-story-owner='"+esc(s.owner.display_name||'Pengguna Pluits')+"' data-story-caption='"+esc(s.caption||"")+"'><span class='ua-story-ring'>"+(s.avatarUrl?"<img src='"+esc(s.avatarUrl)+"' alt=''>":"<b>PL</b>")+"</span><small>"+esc(s.owner.display_name||'Pluits')+"</small></button>").join('');
+ const defaultStoryVisibility=profile.visibility==='public'?'public':'private';
+ const storySection="<section class='ua-stories-block'><div class='ua-stories-head'><div><strong>Stories</strong><small>Foto atau video singkat yang hilang setelah 24 jam</small></div><details class='ua-story-create'><summary>＋ Buat Story</summary><form id='ua-story-form' class='ua-story-form'><label class='ua-story-upload'>Pilih foto atau video<input type='file' accept='image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm' required></label><div id='ua-story-preview' class='ua-story-preview'></div><label>Caption (opsional)<textarea name='caption' rows='2' maxlength='220' placeholder='Tambahkan cerita singkat...'></textarea></label><label>Siapa yang dapat melihat?<select name='visibility'><option value='private' "+(defaultStoryVisibility==='private'?'selected':'')+">Hanya saya</option><option value='public' "+(defaultStoryVisibility==='public'?'selected':'')+">Publik</option></select></label><p id='ua-story-note' class='ua-story-note'></p><button class='ua-primary' type='submit'>Bagikan Story</button></form></details></div><div class='ua-story-strip'>"+(storyCards||"<div class='ua-story-empty'>Belum ada Story aktif. Bagikan momen pertama Anda.</div>")+"</div></section>";
+ return "<div class='ua-page-heading'><div><span class='ua-eyebrow'>TEMUKAN KOMUNITAS</span><h1>Explore</h1><p>Foto dan video dari komunitas Pluits, dalam satu aliran.</p></div><a class='ua-primary ua-inline' href='#/account/compose'>＋ Buat postingan</a></div>"+storySection+
+ "<div class='ua-explore-note'>Konten baru juga mendapat kesempatan ditemukan. Urutan Explore mempertimbangkan interaksi nyata dan kebaruan, bukan angka viral buatan.</div>"+
+ "<section class='ua-feed'>"+(sorted.length?sorted.map(postCard).join(''):"<div class='ua-panel ua-empty'><strong>Explore masih menunggu cerita pertama.</strong><p>Jadilah pengguna pertama yang mengunggah foto atau video. Konten publik Anda akan muncul di sini setelah tersimpan.</p><a class='ua-primary ua-inline' href='#/account/compose'>Unggah foto atau video</a></div>")+"</section>";
 }
 function postCard(p){
  return `<article class="ua-post-card" data-post-id="${p.id}"><div class="ua-post-head">${avatar(p.avatarUrl,p.owner.display_name)}<div><strong>${esc(p.owner.display_name)}</strong><small>@${esc(p.owner.username)} ${p.owner.public_city&&p.owner.public_province?'· ⌖ '+esc(p.owner.public_city)+', '+esc(p.owner.public_province):''}</small></div><time>${fmtDate(p.created_at)}</time></div>
@@ -315,7 +332,7 @@ async function mountAccount(section='profile'){
   document.querySelector('#ua-edit-profile-link')?.addEventListener('click',e=>{e.preventDefault();document.querySelector('#edit-profile')?.scrollIntoView({behavior:'smooth',block:'start'});});
   document.querySelector('#ua-menu-logout')?.addEventListener('click',async()=>{await supabase.auth.signOut();user=null;profile=null;location.hash='/';});
   bindProfileTabs();
-  bindProfile();bindCompose();bindAddresses();bindWallet();bindPostActions();if(section==='addresses')initMap();
+  bindProfile();bindCompose();bindStoryCompose();bindStories();bindAddresses();bindWallet();bindPostActions();if(section==='addresses')initMap();
  }catch(err){document.querySelector('#app').innerHTML=frame('<div class="ua-panel ua-error"><h1>Ada kendala memuat akun</h1><p>'+esc(err.message)+'</p><button class="ua-primary" onclick="location.reload()">Coba lagi</button></div>');document.querySelector('#ua-logout')?.addEventListener('click',()=>supabase.auth.signOut());}
 }
 function bindWallet(){
@@ -394,6 +411,87 @@ function bindCompose(){
   }
  });
 }
+
+function bindStories(){
+ document.querySelectorAll('.ua-story-item').forEach(button=>{
+  button.addEventListener('click',()=>{
+   const url=button.dataset.storyUrl||'';
+   if(!url)return;
+   const type=button.dataset.storyType||'image';
+   const owner=button.dataset.storyOwner||'Pengguna Pluits';
+   const caption=button.dataset.storyCaption||'';
+   const media=type==='video'
+    ?"<video src='"+esc(url)+"' controls playsinline preload='metadata'></video>"
+    :"<img src='"+esc(url)+"' alt='Story dari "+esc(owner)+"'>";
+   const overlay=document.createElement('div');
+   overlay.className='ua-story-viewer';
+   overlay.innerHTML="<div class='ua-story-viewer-card'><button type='button' class='ua-story-viewer-close' data-story-close aria-label='Tutup Story'>×</button><div class='ua-story-viewer-media'>"+media+"</div><div class='ua-story-viewer-caption'><strong>"+esc(owner)+"</strong>"+(caption?"<p>"+esc(caption)+"</p>":"")+"</div></div>";
+   document.body.appendChild(overlay);
+   overlay.addEventListener('click',event=>{
+    if(event.target===overlay||event.target.closest('[data-story-close]'))overlay.remove();
+   });
+  });
+ });
+}
+function bindStoryCompose(){
+ const form=document.querySelector('#ua-story-form');
+ if(!form)return;
+ const fileInput=form.querySelector("input[type='file']");
+ const preview=document.querySelector('#ua-story-preview');
+ const note=document.querySelector('#ua-story-note');
+ fileInput?.addEventListener('change',()=>{
+  const file=fileInput.files?.[0];
+  if(preview.dataset.objectUrl)URL.revokeObjectURL(preview.dataset.objectUrl);
+  preview.dataset.objectUrl='';
+  preview.innerHTML='';
+  if(!file)return;
+  const url=URL.createObjectURL(file);
+  preview.dataset.objectUrl=url;
+  preview.innerHTML=file.type.startsWith('video/')
+   ?"<video controls playsinline src='"+url+"'></video>"
+   :"<img src='"+url+"' alt='Pratinjau Story'>";
+ });
+ form.addEventListener('submit',async event=>{
+  event.preventDefault();
+  const file=fileInput?.files?.[0];
+  if(!file){note.textContent='Pilih foto atau video terlebih dahulu.';return;}
+  const allowed=['image/jpeg','image/png','image/webp','image/gif','video/mp4','video/webm'];
+  if(!allowed.includes(file.type)){note.textContent='Format tidak didukung. Gunakan JPG, PNG, WebP, GIF, MP4, atau WebM.';return;}
+  if(file.size>50*1024*1024){note.textContent='Ukuran file maksimal 50 MB.';return;}
+  const button=form.querySelector("button[type='submit']");
+  const data=new FormData(form);
+  const caption=String(data.get('caption')||'').trim();
+  const visibility=String(data.get('visibility')||'private');
+  button.disabled=true;
+  button.textContent='Mengunggah Story…';
+  note.textContent='Mengunggah media ke Pluits…';
+  let uploadedPath=null;
+  try{
+   const extension=file.name.split('.').pop().toLowerCase();
+   const unique=crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random().toString(36).slice(2);
+   const path=user.id+'/'+unique+'.'+extension;
+   const upload=await supabase.storage.from(BUCKET).upload(path,file,{contentType:file.type,upsert:false});
+   if(upload.error)throw new Error('Upload gagal: '+upload.error.message);
+   uploadedPath=path;
+   const insert=await supabase.from('user_stories').insert({
+    user_id:user.id,
+    media_path:uploadedPath,
+    media_type:file.type.startsWith('video/')?'video':'image',
+    caption,
+    visibility
+   });
+   if(insert.error)throw new Error('Story gagal disimpan: '+insert.error.message);
+   notify('Story berhasil dibagikan dan akan hilang setelah 24 jam.');
+   await mountAccount('explore');
+  }catch(error){
+   if(uploadedPath)await supabase.storage.from(BUCKET).remove([uploadedPath]);
+   note.textContent=error.message||'Tidak dapat membagikan Story.';
+   button.disabled=false;
+   button.textContent='Coba lagi';
+  }
+ });
+}
+
 function bindAddresses(){
  const form=document.querySelector('#ua-address-form');if(!form)return;
  form.addEventListener('submit',async e=>{
