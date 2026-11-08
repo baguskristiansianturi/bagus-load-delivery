@@ -1,0 +1,110 @@
+/* Isolated social navigation layer. Keep changes here to avoid side effects on page modules. */
+.pl-social-header,
+.pl-social-mobile-nav {
+  box-sizing: border-box;
+}
+
+.pl-social-header nav a,
+.pl-social-mobile-nav a {
+  text-decoration: none;
+}
+
+.pl-social-header nav a:focus-visible,
+.pl-social-header > a:focus-visible,
+.pl-social-mobile-nav a:focus-visible {
+  outline: 2px solid #315d7b;
+  outline-offset: 3px;
+}
+
+.pl-social-mobile-nav .pl-icon {
+  display: block;
+  width: 22px;
+  height: 22px;
+  flex: 0 0 22px;
+}
+
+.pl-social-mobile-nav > a {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.pl-social-mobile-nav > a small {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 760px) {
+  .ua-social-app .pl-social-header {
+    display: none;
+  }
+
+  .ua-social-app .pl-social-mobile-nav {
+    display: flex;
+    position: fixed;
+    z-index: 220;
+    inset: auto 0 0;
+    width: 100%;
+    min-height: calc(58px + env(safe-area-inset-bottom));
+    padding: 4px 8px env(safe-area-inset-bottom);
+    margin: 0;
+    border: 0;
+    border-top: 1px solid #e7eaf0;
+    background: rgba(255,255,255,.98);
+    align-items: center;
+    justify-content: space-around;
+    gap: 0;
+  }
+
+  .ua-social-app .pl-social-mobile-nav > a {
+    display: flex;
+    flex: 1 1 20%;
+    height: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    color: #647184;
+    font-size: 18px;
+    line-height: 1;
+  }
+
+  .ua-social-app .pl-social-mobile-nav > a.active {
+    color: #172b45;
+    font-weight: 800;
+  }
+
+  .ua-social-app .pl-social-mobile-nav > a small {
+    font-size: 9px;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+
+  .ua-social-app .pl-social-mobile-nav .ua-mobile-create .pl-icon {
+    width: 30px;
+    height: 30px;
+    padding: 5px;
+    border: 1.5px solid currentColor;
+    border-radius: 9px;
+  }
+
+  .ua-social-app {
+    padding-bottom: calc(64px + env(safe-area-inset-bottom));
+  }
+}
+
+@media (min-width: 761px) {
+  .ua-social-app .pl-social-mobile-nav {
+    display: none !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .ua-social-app .pl-social-mobile-nav {
+    padding-inline: 4px;
+  }
+  .ua-social-app .pl-social-mobile-nav > a small {
+    font-size: 8px;
+  }
+}

@@ -1,9 +1,11 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import {socialIcon} from '../../components/common/social-icons.js';
+import {renderSocialHeader,renderSocialMobileNav} from '../../components/social/navigation.js';
 import {updateSEO} from '../seo.js';
 import { Upload as TusUpload } from 'https://esm.sh/tus-js-client@4.3.1';
 import './user-account.css';
 import '../../styles/social-components.css';
+import '../../styles/social-navigation.css';
 import {loadAccountContext,contextHeader,professionalPage,professionalFormPage,accountSettingsPage,bindAccountContext} from './account-context.js';
 
 const SUPABASE_URL='https://ytndswhqxayqpftszwfh.supabase.co';
@@ -25,29 +27,10 @@ function frame(content,active='explore',avatarUrl=''){
  const userAvatar=avatar(avatarUrl,profile?.display_name||user?.email||'P');
  const profileView=active==='profile'||active==='preview';
  return `<div class="ua-app ua-social-app">
-  <header class="ua-header">
-   <a class="ua-brand" href="#/account/explore">PLUITS<span>INDONESIA</span></a>
-   <nav>
-    <a class="${active==='explore'?'active':''}" href="#/account/explore">Beranda</a>
-    <a href="#/places">Tempat</a>
-    <a href="#/marketplace">Marketplace</a>
-    <a href="#/trip">Trip</a>
-    <a class="${active==='reels'?'active':''}" href="#/account/reels">Reels</a>
-    <a class="${active==='activity'?'active':''}" href="#/account/activity">Aktivitas</a>
-    <a class="${profileView?'active':''}" href="#/account/profile">Profil</a>
-   </nav>
-   <a class="ua-header-profile" href="${user?'#/@'+encodeURIComponent(profile?.username||''):'#/account/login'}" aria-label="Buka profil saya">${userAvatar}</a>
-   <a class="ua-header-create" href="#/account/compose" aria-label="Buat postingan">＋</a>
-  </header>
-  <main class="ua-main ${profileView?'ua-profile-main':''}">${content}</main>
-  <nav class="ua-mobile-nav" aria-label="Navigasi utama">
-   <a class="${active==='explore'?'active':''}" href="#/account/explore" aria-label="Beranda">${socialIcon('home',{size:22})}<small>Beranda</small></a>
-   <a class="${active==='discover'?'active':''}" href="#/search" aria-label="Jelajah">${socialIcon('compass',{size:22})}<small>Jelajah</small></a>
-   <a class="ua-mobile-create" href="#/account/compose" aria-label="Buat postingan">${socialIcon('plus',{size:22})}<small>Buat</small></a>
-   <a class="${active==='reels'?'active':''}" href="#/account/reels" aria-label="Reels">${socialIcon('reels',{size:22})}<small>Reels</small></a>
-   <a class="${profileView?'active':''}" href="${user?'#/@'+encodeURIComponent(profile?.username||''):'#/account/login'}" aria-label="Profil">${userAvatar}<small>Profil</small></a>
-  </nav>
-  <div id="ua-toast" class="ua-toast" role="status"></div>
+  ${renderSocialHeader({active,profileView,user,profile,userAvatar})}
+   <main class="ua-main ${profileView?'ua-profile-main':''}">${content}</main>
+  ${renderSocialMobileNav({active,profileView,user,profile,userAvatar})}
+     <div id="ua-toast" class="ua-toast" role="status"></div>
   <footer class="ua-footer">PLUITS · Identitas pengguna dan aktivitas komunitas</footer>
  </div>`;
 }
