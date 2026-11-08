@@ -1,0 +1,1 @@
+alter table public.user_posts alter column media_path drop not null; alter table public.user_posts alter column media_type set default 'text';
