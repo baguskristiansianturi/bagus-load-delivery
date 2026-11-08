@@ -615,3 +615,13 @@ Build dari commit `642a24bdbed4a85931271e7481f9880a04cc9fc3` berhasil. GitHub Pa
 - Ide Pluits Official dan distribusi pengumuman universal dipindahkan ke IDEAS/IDEA-BACKLOG.md; bukan keputusan produk, bukan checkpoint implementasi, dan tidak masuk model bisnis aktif.
 - Jangan membuat fitur, schema, UI, notifikasi, atau akun sistem dari ide backlog tanpa evaluasi dan persetujuan eksplisit founder.
 - Model bisnis aktif hanya memuat keputusan yang sudah disetujui. Perubahan keputusan dicatat dengan tanggal, alasan, dampak, dan status.
+
+## CP-033 — Homepage source cleanup, navbar icon, and mobile feed spacing (8 November 2026)
+
+- Retired duplicate root entry point `main.js` and obsolete Bagus Load & Delivery homepage backup `src/main.backup.js`. The canonical entry remains `index.html` → `src/main.js` → `src/pages/home/index.js`.
+- Fixed the literal navbar search-icon interpolation in `src/app/ui.js` so SVG markup is rendered instead of the raw `${icon.search}` text.
+- Bumped the service-worker shell cache from `pluits-shell-v1` to `pluits-shell-v2` so installed clients discard the previous shell cache during activation.
+- Adjusted mobile home bottom padding to match the fixed navigation height and safe-area inset, removing the extra visible gap while preserving scroll clearance for the final feed content.
+- Evidence: code commits `35e53b7`, `d5483b4`, `2ebb5a6`, `29939c2`, `558ecf7`, and final mobile-spacing correction `3b18a76`.
+- GitHub Pages workflow run `42475956080` for commit `3b18a76e0444919693430c6dcd262612d6764905`: **SUCCESS**; Vite build, output verification, artifact upload, and Deploy to GitHub Pages all completed successfully.
+- **Status:** IMPLEMENTED + DEPLOYED. Android visual UAT remains pending; founder should verify the navbar icon and the end-of-feed/bottom-navigation spacing on the live Pages link.
