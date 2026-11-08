@@ -948,3 +948,77 @@ Marketplace tetap memiliki siklus onboarding penyedia, katalog, pesanan, pembaya
 Keputusan produk di bagian ini berstatus DECIDED sebagai arah model bisnis. Belum berarti fitur direktori pra-pendaftaran, klaim tempat, verifikasi role, donasi, moderasi, atau perlindungan transaksi telah IMPLEMENTED, DEPLOYED, TESTED, atau ACCEPTED.
 
 Prioritas desain/implementasi: (1) model canonical place/entity dan sumber/provenance data; (2) alur klaim tempat dan verifikasi pengelola; (3) identitas personal dan role organisasi; (4) label akun personal versus penyedia resmi; (5) bukti transaksi on-platform; (6) kebijakan moderasi kontekstual dan banding; (7) kebijakan donasi dan mitra pembayaran; (8) integrasi pengalaman kamera/sosial My Bali ke Pluits. Semua perubahan harus diuji pada perangkat mobile.
+
+
+## 28. Spesifikasi final GeoDirectory lokal-first dan personalisasi adaptif
+**Tanggal keputusan: 8 November 2026**
+
+### 28.1 Keputusan produk
+- Prioritas lokasi **nearby**: rekomendasi mengutamakan tempat dekat pengguna jika izin lokasi diberikan; fallback ke area pilihan atau area profil yang memang dipilih pengguna.
+- Beranda **hybrid**: gabungan feed sosial, rekomendasi tempat, aktivitas lokal, produk, layanan, komunitas, dan event. Feed akun yang diikuti tetap mendapat ruang.
+- Cakupan **local-first**: peluncuran data dimulai dari Bali/Denpasar, lalu diperluas bertahap. Skema tetap global-ready, tidak dikunci pada struktur wilayah Indonesia.
+- Personalisasi **adaptive**: sistem belajar dari minat dan interaksi yang wajar dengan kontrol, transparansi, dan opsi reset/nonaktif.
+Keputusan ini DECIDED, bukan bukti fitur telah dibangun.
+
+### 28.2 Prinsip GeoDirectory
+GeoDirectory adalah lapisan identitas entitas dan lokasi universal, bukan direktori Trip saja atau Marketplace saja. Satu entitas kanonis dapat muncul di peta, pencarian, Beranda, Trip, profil komunitas, dan Marketplace tanpa menggandakan identitas.
+
+Jenis entitas: tempat fisik (pantai, destinasi, monumen, rumah ibadah, sekolah, fasilitas, taman, alamat); organisasi/pengelola (yayasan, komunitas, lembaga, badan usaha); penyedia (toko, restoran, produsen, distributor, jasa); serta kegiatan (event, aktivitas, pengalaman). Tidak semua tempat adalah bisnis atau dapat dipesan.
+
+### 28.3 Wilayah dan fallback lokasi
+Area uji pertama Denpasar, lalu Bali secara bertahap. Setiap permintaan nearby menggunakan urutan fallback: (1) koordinat perangkat dengan izin, (2) area pilihan manual, (3) kota/provinsi profil yang dipilih untuk personalisasi, (4) jelajah tanpa personalisasi lokasi. GPS bukan kewajiban. Jangan menyimpan tracking lokasi presisi terus-menerus atau mengekspos koordinat rumah/pengguna.
+
+### 28.4 Model data target
+Nama tabel adalah rancangan dan wajib direkonsiliasi dengan schema aktif sebelum migration:
+- `directory_entities`: ID kanonis, slug, entity_type, nama, deskripsi, status publikasi/verifikasi.
+- `directory_entity_categories`: banyak kategori per entitas.
+- `directory_locations`: entity_id, alamat terstruktur, country_code, area administratif, koordinat geography(Point,4326), akurasi dan sumber.
+- `directory_entity_sources`: external source ID, provenance, lisensi/ketentuan, waktu impor/pembaruan, confidence.
+- `directory_claims`: applicant, bukti, status pending/approved/rejected/disputed, reviewer, alasan, timestamps.
+- `directory_memberships`: entity, user, role, permission, status, masa berlaku, pemberi akses.
+- `directory_media`: foto/video, hak penggunaan, atribusi, moderasi, pemilik upload.
+- `directory_relationships`: cabang dari, dikelola oleh, berada di dalam, terkait event.
+- `user_interest_preferences`: minat eksplisit, kategori diikuti/disembunyikan, area, jarak, personalisasi on/off.
+- `user_activity_events`: sinyal minimum seperti view, search, save, follow, click, hide, check-in.
+- `user_recommendation_feedback`: not interested, show less, relevant, report.
+- `user_saved_items` dan `user_recent_items`: wishlist/tersimpan dan baru dilihat lintas domain.
+Keranjang/pesanan tetap berada di domain transaksi Marketplace; Trip memiliki lifecycle booking tersendiri. Jangan menggandakan tabel stores/products/posts yang telah ada.
+
+### 28.5 Relasi lintas modul
+Social post dapat menautkan entity; Trip destination mengacu ke entity GeoDirectory tetapi itinerary/booking/visit tetap domain Trip; Marketplace menghubungkan store/provider dan lokasi/cabang ke entity, sementara produk/offers/orders tetap domain Marketplace; event dapat menghubungkan organizer dan place. View bukan bukti kunjungan; posting di lokasi bukan bukti transaksi. Gunakan foreign key/ID kanonis.
+
+### 28.6 Pencarian spasial
+Gunakan PostGIS dengan geography(Point,4326), jarak meter, radius filter, dan GiST index. Query: filter publikasi/kategori/area → radius → deduplikasi → ranking. Map dan list memakai sumber hasil yang sama. Jarak boleh ditampilkan secara pembulatan tanpa membocorkan koordinat pengguna. Radius awal perlu diuji dan dapat diubah pengguna. PostGIS tersedia sebagai extension tetapi pada audit 8 November 2026 belum terpasang di database proyek; instalasi dan migration belum dilakukan.
+
+### 28.7 Rekomendasi hybrid/adaptive
+MVP tidak membutuhkan machine learning atau AI berbiaya tinggi. Gunakan ranking deterministik yang dapat dijelaskan dan diuji. Candidate pool: posting publik, akun diikuti, entitas direktori, produk/layanan, event, komunitas. Sinyal ranking: minat eksplisit, jarak/area, interaksi disengaja (follow/save/detail/click), freshness/jadwal, kualitas data/status verifikasi yang relevan, diversity kreator/kategori, serta penalti untuk konten disembunyikan/dilaporkan/bermasalah. Bobot awal harus diuji, bukan dianggap final. Hindari popularitas mentah sebagai satu-satunya ranking, engagement bait, kemarahan, dan polarisasi. Konten promosi harus diberi label.
+
+Sediakan mode Untuk Anda dan Mengikuti. Pengguna dapat mengatur minat/area, menyembunyikan kategori, memberi feedback, reset rekomendasi, dan mematikan personalisasi. Jangan menyimpulkan agama, pandangan politik, kesehatan, orientasi, atau atribut sensitif dari aktivitas. Jangan membuat profil sensitif tanpa pilihan eksplisit pengguna.
+
+### 28.8 Wishlist, recent, dan cart
+Wishlist/tersimpan dan baru dilihat harus tersinkron lintas perangkat dengan RLS per pemilik. Guest state boleh lokal sementara dan digabung aman setelah login. Cart Marketplace harus memiliki state server-side; harga, stok, ongkir, pajak, dan ketersediaan divalidasi ulang server saat checkout. LocalStorage hanya cache UI, bukan sumber kebenaran transaksi. Cart Trip dipisah bila lifecycle booking berbeda.
+
+### 28.9 Keamanan dan kualitas data
+Semua tabel exposed memakai RLS. Preferensi, activity, saved, recent hanya dapat diakses pemilik sesuai kebijakan. Claim/membership memiliki authorization terpisah. Jangan gunakan user_metadata sebagai otorisasi; jangan ekspos service_role. Media memerlukan pemeriksaan kepemilikan/hak penggunaan dan moderasi. Deduplikasi memakai source ID yang sah, kemiripan nama/alamat/koordinat dan review; jangan otomatis menggabungkan entitas hanya karena berdekatan. Sediakan koreksi, laporan, audit, soft-delete, dan banding klaim.
+
+### 28.10 Sumber data
+Gunakan data sendiri, kontribusi komunitas termoderasi, sumber terbuka berlisensi, dan API resmi yang mengizinkan penggunaan. Jangan scraping atau menyalin Google Maps data/foto/reviews tanpa hak/izin. Simpan provenance dan ketentuan setiap sumber. Data impor bukan bukti klaim atau verifikasi.
+
+### 28.11 Tahapan implementasi
+1. Audit schema, RLS, RPC, bucket, frontend, dan taxonomy My Bali.
+2. Finalisasi entity/category/area model dan strategi deduplikasi.
+3. Pasang PostGIS melalui migration yang direview; buat entity/location/source core, GiST index, nearby RPC, RLS.
+4. Bangun UI map/list/detail dan search/filter.
+5. Bangun claims/memberships/roles/audit.
+6. Hubungkan entitas ke Trip, Marketplace, event, social posts.
+7. Bangun preferences/activity/feedback dan deterministic ranking.
+8. Migrasikan wishlist/recent/cart ke backend dengan guest merge dan validasi server.
+9. Uji mobile, RLS lintas akun, GPS granted/denied, duplikasi/klaim palsu, koneksi lambat, dan performa radius.
+
+### 28.12 Audit baseline 8 November 2026
+- Frontend memakai Vite/JavaScript modular dan hash routing; Beranda aktif masih berupa feed sosial dan shortcut Marketplace, belum nearby directory.
+- `src/app/services.js` masih memakai katalog lokal untuk pencarian; `categoryService.list()` mengembalikan array kosong.
+- `src/app/store.js` menyimpan cart, wishlist, recent, orders, dan user cache di localStorage; belum sinkron lintas perangkat atau menjadi sumber kebenaran transaksi.
+- Supabase memiliki fondasi social/profile/follow, store/product, operating_regions, dan account preferences; belum ditemukan tabel GeoDirectory universal, entity locations/sources, claims, atau manager memberships.
+- PostGIS dan pgvector tersedia sebagai extension tetapi belum terpasang pada database. PostGIS prioritas untuk nearby; vector/AI tidak diperlukan untuk MVP.
+- Audit ini tidak mengubah schema, extension, frontend, atau deployment.
