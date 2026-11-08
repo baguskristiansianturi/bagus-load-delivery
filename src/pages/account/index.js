@@ -17,7 +17,7 @@ const uploadMime=file=>{const declared=String(file?.type||'').toLowerCase();cons
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmtDate=v=>new Date(v).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'});
 const initials=v=>String(v||'P').trim().slice(0,1).toUpperCase();
-let user=null,profile=null,profileReels=[],addresses=[],noticeTimer=null,leafletMap=null,leafletMarker=null,exploreFilter='recommended',reelsFilter='recommended',activityNotificationChannel=null,accountContext={active:'personal',professional:null,stores:[],prefs:{}};
+let user=null,profile=null,profileReels=[],addresses=[],noticeTimer=null,leafletMap=null,leafletMarker=null,exploreFilter='recommended',reelsFilter='recommended',activityNotificationChannel=null,unreadNotificationCount=0,accountContext={active:'personal',professional:null,stores:[],prefs:{}};
 
 function notify(message,type='success'){
  const el=document.querySelector('#ua-toast');if(!el)return;
@@ -28,9 +28,9 @@ function frame(content,active='explore',avatarUrl=''){
  const userAvatar=avatar(avatarUrl,profile?.display_name||user?.email||'P');
  const profileView=active==='profile'||active==='preview';
  return `<div class="ua-app ua-social-app">
-  ${renderSocialHeader({active,profileView,user,profile,userAvatar})}
+  ${renderSocialHeader({active,profileView,user,profile,userAvatar,notificationCount:unreadNotificationCount})}
    <main class="ua-main ${profileView?'ua-profile-main':''}">${content}</main>
-  ${renderSocialMobileNav({active,profileView,user,profile,userAvatar})}
+  ${renderSocialMobileNav({active,profileView,user,profile,userAvatar,notificationCount:unreadNotificationCount})}
      <div id="ua-toast" class="ua-toast" role="status"></div>
   <footer class="ua-footer">PLUITS · Identitas pengguna dan aktivitas komunitas</footer>
  </div>`;
@@ -555,6 +555,8 @@ async function mountAccount(section='profile',parameter=''){
  if(!user){authScreen(section==='register'?'register':'login');return;}
  try{
   await loadProfile();accountContext=await loadAccountContext(supabase,user);
+  const unreadResult=await supabase.from('user_notifications').select('id',{count:'exact',head:true}).is('read_at',null);
+  unreadNotificationCount=unreadResult.error?0:(unreadResult.count||0);
   if(section==='profile')updateSEO({title:profile.display_name+' (@'+profile.username+') — Pluits',description:(profile.bio||'Profil komunitas '+profile.display_name+' di Pluits.').slice(0,160),path:'#/@'+encodeURIComponent(profile.username)});
   const page=section==='explore'?await feedPage():section==='activity'?await notificationPage():section==='reels'?await reelsPage():section==='compose'?await composePage():section==='addresses'?await addressPage():section==='wallet'?await walletPage():section==='post'?await postDetailPage(parameter||location.hash.split('/')[3]||''):section==='user'?await publicProfilePage(parameter):section==='followers'?await followListPage('followers'):section==='following'?await followListPage('following'):section==='requests'?await followListPage('followers'):section==='preview'?await profilePage(true):section==='professional'?professionalPage(accountContext,profile):section==='professional-create'?professionalFormPage(accountContext,profile):section==='settings'?settingsHubPage():section==='security'?await accountSecurityPage(supabase,user):section==='blocked'?await blockedAccountsPage():section==='content-settings'?await accountSettingsPage(supabase,user):await profilePage();
   const headerAvatar=await signed(profile.avatar_path);document.querySelector('#app').innerHTML=frame(page,section==='explore'||section==='reels'?'explore':section==='activity'?'activity':section==='addresses'?'addresses':section==='compose'?'compose':section==='preview'?'profile':'profile',headerAvatar);
