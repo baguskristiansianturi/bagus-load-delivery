@@ -84,4 +84,14 @@ const moderator = read('src/pages/admin/moderation.js');
 assert.match(moderator, /pluits_system_announcements/, 'Moderators must be able to publish Pluits system announcements.');
 assert.match(account, /pluits_system_announcement_reads/, 'Users must be able to read and mark system announcements.');
 
+
+const navigationCss = read('src/styles/social-navigation.css');
+assert.match(navigationCss, /max-width:\s*760px/, 'Social navigation must retain its mobile layout breakpoint.');
+assert.match(navigationCss, /min-width:\s*761px/, 'Social navigation must retain its desktop layout breakpoint.');
+assert.match(navigationCss, /safe-area-inset-bottom/, 'Mobile navigation must respect device safe areas.');
+assert.match(navigationCss, /:focus-visible/, 'Navigation controls must expose keyboard focus.');
+const sharedDesign = read('src/styles/social-components.css');
+assert.match(sharedDesign, /--pl-color-ink/, 'Social UI must use shared design tokens.');
+assert.match(sharedDesign, /--pl-color-line/, 'Social UI must use shared spacing/line tokens.');
+
 console.log('Production surface verification passed: legacy modules absent; Marketplace, Trip, social DM, account security and notification contracts present.');
