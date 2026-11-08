@@ -189,3 +189,12 @@
 @media(max-width:390px){
  .pluits-mobile-tabs button{min-width:0;font-size:9px;padding:6px 2px}
 }
+
+
+.pluits-dashboard-tools{display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:wrap}
+.pluits-dashboard-tools select{max-width:210px;min-width:0;border:1px solid #dce1e7;border-radius:9px;padding:9px 11px;background:#fff;color:#263445;font:inherit;font-size:11px}
+@media(max-width:800px){
+ .pluits-dashboard-tools{width:100%;justify-content:flex-start}
+ .pluits-dashboard-tools select{flex:1;max-width:none}
+ .pluits-dashboard-tools .pluits-ghost{font-size:10px}
+}
