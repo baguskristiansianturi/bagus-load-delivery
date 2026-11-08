@@ -7,7 +7,7 @@
 
 > Dokumen ini adalah acuan utama seluruh analisis dan pengembangan Pluits. Frontend, backend, database, API, kebijakan, desain UX, dan roadmap wajib diturunkan dari keputusan di sini. Dokumen teknis boleh menjelaskan cara implementasi, tetapi tidak boleh menciptakan atau mengubah keputusan bisnis secara diam-diam.
 >
-> **Arah aktif:** Pluits adalah platform social-first yang menghubungkan Social Media, Local Marketplace, Trip/Travel, dan GeoDirectory melalui satu identitas pengguna dan data entitas kanonis. Bagian 23–30 merupakan arah aktif terkonsolidasi. Bagian 1–22 dipertahankan sebagai riwayat keputusan/operasional terdahulu dan tidak boleh dipakai untuk menghidupkan kembali arah atau brand yang sudah ditinggalkan. Jika ada konflik, bagian aktif terbaru dan keputusan bertanggal paling baru yang berlaku.
+> **Arah aktif:** Pluits adalah platform social-first yang menghubungkan Social Media, Local Marketplace, Trip/Travel, dan GeoDirectory melalui satu identitas pengguna dan data entitas kanonis. Bagian 1 dan 23–30 merupakan arah aktif terkonsolidasi. Bagian 2–22 dipertahankan sebagai riwayat keputusan/operasional terdahulu dan tidak boleh dipakai untuk menghidupkan kembali arah yang sudah ditinggalkan. Jika ada konflik, bagian aktif terbaru dan keputusan bertanggal paling baru yang berlaku.
 >
  > **Larangan identitas ganda:** Pluits adalah satu-satunya identitas aktif proyek ini. Jangan membuat brand, repository, backend, atau roadmap kedua untuk produk yang sama. Artefak historis yang tidak lagi dipakai hanya boleh dipertahankan sebagai catatan migrasi yang tidak aktif.
 
