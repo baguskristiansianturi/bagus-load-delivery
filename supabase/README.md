@@ -47,9 +47,9 @@ Private bucket: `pluits-user-media`.
 - Profile display name is not unique.
 - The public profile location contains only city/regency and province.
 - Exact address and coordinates must never be returned in public profile/feed queries.
-- Wallet and real money operations are not enabled.
+- Wallet tables and a user request screen are scaffolded, but no payment provider, verified settlement, withdrawal processing, or complete financial ledger is implemented. This is not an operational real-money wallet; do not advertise balance/top-up/withdrawal as available.
 - Storage upload for video is currently standard upload with a 50 MB cap; resumable/TUS upload remains future work.
-- Run security/performance advisors after each schema change. Current known advisor warnings from earlier seller migrations include authenticated SECURITY DEFINER store RPCs and missing FK indexes; review before production.
+- Run security/performance advisors after each schema change. The live 8 Nov 2026 audit reports two authenticated-callable SECURITY DEFINER store RPCs, leaked-password protection disabled, 14 unindexed foreign keys, three RLS init-plan warnings, and one duplicate permissive Stories SELECT policy. See MASTER/PLUITS-SECURITY-REVIEW.md.
 
 ## Project handoff
 - [Business model master](../MASTER/BUSINESS-MODEL-MASTER.md)
@@ -70,3 +70,13 @@ Private bucket: `pluits-user-media`.
 Set the GitHub Pages base URL as an allowed redirect URL in Supabase Authentication → URL Configuration:
 `https://baguskristiansianturi.github.io/bagus-load-delivery/`
 The registration flow uses the current GitHub Pages base path as `emailRedirectTo`. When a custom domain is purchased, add the new domain to Redirect URLs before switching the frontend callback target. Keep the GitHub Pages URL during transition until the custom domain is verified.
+
+## Live audit snapshot — 8 November 2026
+
+- Supabase project `pluits` is ACTIVE_HEALTHY in `ap-southeast-1`, PostgreSQL 17.
+- All 28 tables in the public schema have RLS enabled.
+- No Supabase Edge Functions are deployed.
+- Security advisor: two warnings for authenticated execution of `public.create_store` and `public.update_store_profile` (both check `auth.uid()` and use an empty fixed search_path; anonymous execution is denied, but authorization tests and grant review remain required); leaked-password protection is disabled.
+- Performance advisor: 14 unindexed foreign keys, three auth RLS init-plan warnings on wallet policies, 14 unused-index notices, and one multiple-permissive-policy notice on Stories. No health lints were returned.
+- The live store/product seed state remains one draft unverified store and one draft product; do not present them as active public listings.
+- Public feed media display was corrected in commit `07d81f76b8c46c9e81f53104263b1d91320daa5a` so mobile feed images/videos use intrinsic proportions rather than forced cover-cropping. Deployment run must be checked before claiming it is live.
