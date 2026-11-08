@@ -202,3 +202,20 @@ Remaining blockers:
 - Delivery zones remain text-based and do not validate real geometry, operating hours, cutoff, capacity, or instant/same-day feasibility.
 - Android runtime testing, two-account authorization testing, and real media upload tests remain NOT TESTED.
 - The successful workflow is build/deploy evidence only, not founder acceptance.
+
+
+## 12. Founder decision D-005 — universal store onboarding and physical presence (9 Nov 2026)
+**Decision:** store registration must not be restricted to PT/CV/UD. Individuals, UMKM, family/home businesses, cooperatives and companies can register. Legal form is optional/separate from operational business type. A responsible owner and real verifiable physical/operational location are required; a private/home address may be verified without publishing its exact address.
+
+**Read-only live evidence:**
+- `stores.business_type` CHECK = PT/CV/UD only.
+- `public.create_store` validates exactly PT/CV/UD.
+- `stores.legal_name` is nullable in DB, but Seller Center profile form requires it.
+- `stores.full_address` is nullable at table level and onboarding currently does not require it; `submit_store_for_verification` requires legal_name, phone, email and full_address.
+- `stores.directory_entity_id` exists. `directory_locations` supports multiple locations per entity, but no complete store-to-branch UI/authorization lifecycle has been proven.
+- Store URL route currently resolves `#/shop/{username}`. Product detail route currently uses variant UUID (`#/market-product/{variant_id}`), not product UUID.
+- Current dashboard has eight tabs and multi-store selector; branch/location management, branch-specific hours, branding upload, full verification checklist/appeal, public URL preview, product URL normalization, and owner-guarded online-sales activation are not complete.
+
+**Specification:** `docs/pluits/SELLER-CENTER-STORE-LIFECYCLE-AND-URL-SPEC-2026-11-09.md`.
+
+**Not changed:** no production DDL, no RPC, no data, no Storage, no migration history, no frontend deployment in this decision checkpoint. Existing onboarding remains limited until a new migration and coordinated UI release are staged and tested.
