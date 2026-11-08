@@ -133,3 +133,59 @@ Gunakan dua akun nyata berbeda (A dan B). Jangan memakai akun orang lain tanpa i
 
 **Lulus jika:** semua status relasi konsisten setelah refresh; profil privat tidak membocorkan bio/media sebelum persetujuan; hanya target yang dapat menyetujui; penghapusan hubungan berlaku dua arah; profil publik dan postingan publik tetap dapat dijelajahi sebagai tamu.
 
+## 10. Social-first founder UAT — build 8 November 2026
+
+### A. Media and feed
+1. Login with an existing account. Do not register repeatedly if email confirmation/rate limiting is active.
+2. Open Create and select a real photo from the Android gallery. Check preview, publish, refresh, and open the post.
+3. Repeat with a short MP4 or WebM video. Confirm it plays, preserves the original aspect ratio, and remains available after refresh.
+4. Try a carousel with mixed images/video. Check swipe, media order, and layout on narrow screens.
+5. Open the post menu, edit caption/visibility, add/remove media, save, then reopen the post. Confirm changes persist.
+6. Double-tap a photo once; expect one like and one heart animation. Tap again only after the like state changes to unlike.
+7. Delete only a test post you created and confirm media is no longer displayed. Never test destructive actions on important user content.
+
+### B. Social interactions
+1. Use a second account you control for cross-account tests.
+2. Like/unlike, comment, reply, and like a comment. Refresh both accounts and compare state/counts.
+3. Follow a public account, unfollow it, then follow a private account and verify pending/accept flow.
+4. Check follower/following lists and profile privacy. A private account must not expose private posts/media to an unapproved viewer.
+5. Verify notifications for follow request, accepted follow, new follower, unfollow, like, and comment.
+
+### C. DM and offline outbox
+1. Open Messages while online and allow Pluits to load contacts/inbox metadata once.
+2. Start a DM with the second account and send a short message. Verify the recipient receives it without manual refresh while the chat is open.
+3. With an existing conversation open, enable Airplane Mode. Send a clearly non-sensitive test message.
+4. Confirm the message is labeled as saved on this device / waiting for connection, not sent or delivered.
+5. Re-enable internet. Wait for the outbox to sync and confirm the recipient sees exactly one copy.
+6. Reload Messages and verify the queue is empty. If the message remains pending, do not repeatedly submit the same text; report the error/time.
+7. While offline, confirm previously cached contacts and thread metadata remain visible. Starting a brand-new conversation and fetching remote history are expected to require a network.
+8. Offline outbox is stored in browser localStorage on this device; do not test with confidential messages or shared/public devices.
+
+### D. Account and device settings
+1. Open Pusat Pengaturan → Keamanan & perangkat.
+2. Test public/private visibility only with a second account; confirm private content remains private.
+3. Change username only if you intend to keep the new username; verify duplicate username is rejected.
+4. Test password change only when you can securely retain the new password.
+5. Phone OTP depends on configured SMS provider. If SMS fails, capture the visible error without sharing the OTP.
+6. TOTP test: enroll an authenticator, verify a six-digit code, then verify the factor status. Do not share QR/secret/OTP.
+7. Change language preference. Current build stores the preference; the entire interface is not yet translated to English.
+8. Test location permission through the user-initiated button. Confirm denial is handled and no coordinates are saved by this permission check.
+9. Open the photo/video picker. Selecting a file in this settings check does not upload it.
+
+### E. System notices
+1. Moderator/admin role is required to open #/admin/moderation and publish a system notice.
+2. Publish a non-sensitive test announcement with a short expiry; verify it appears in Activity → Informasi Pluits for a regular account.
+3. Mark it read and confirm it stays read after refresh. Archive the test announcement after the check.
+4. Do not create fake system notices or impersonate official external organizations.
+
+### F. Responsive and performance matrix
+Check the same core flows at viewport widths 320, 360, 390, 430, 768, 1024, and 1440 px:
+- No horizontal page overflow or clipped action menus.
+- Buttons and inputs remain thumb-friendly on mobile.
+- Image/video ratio remains correct.
+- Inbox composer remains visible and usable on mobile.
+- Settings cards and groups reflow to one column on narrow screens.
+- Browser back/forward and route changes do not duplicate event listeners or messages.
+- Record load time, image/video size, upload duration, errors, device model, Android version, and browser version. Do not report performance as passed without measurements.
+
+**Important:** A successful GitHub Pages deployment is not an acceptance test. Record exact device/browser, steps, observed result, and screenshot/error text. Never share passwords, OTP, MFA QR/secret, auth tokens, or private message content.
