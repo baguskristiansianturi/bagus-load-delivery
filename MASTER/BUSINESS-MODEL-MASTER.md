@@ -890,3 +890,61 @@ Sebelum mengubah struktur aplikasi secara luas, audit repo/backend untuk menemuk
 Urutan kerja: (1) tetapkan Pluits sebagai nama produk di UI dan dokumentasi; (2) petakan taxonomy My Bali ke GeoDirectory, Trip, dan Marketplace; (3) pisahkan siklus transaksi Marketplace dari siklus itinerary/booking/kunjungan Trip; (4) rancang GeoDirectory universal dengan pin dan filter; (5) pertahankan fondasi sosial My Bali sebagai pengalaman utama; (6) audit dan migrasikan backend/frontend berdasarkan dependensi; (7) rename repository menjadi `pluits` saat dapat dilakukan, lalu perbarui Pages dan integrasi; (8) uji di perangkat mobile dan akun nyata.
 
 Tidak ada fitur yang boleh ditandai selesai hanya karena arah bisnis telah diputuskan. DECIDED, DESIGNED, IMPLEMENTED, DEPLOYED, TESTED, dan ACCEPTED tetap merupakan status yang berbeda.
+
+
+## 27. Identitas manusia, klaim direktori, penyedia resmi, dan moderasi seimbang
+**Tanggal keputusan: 8 November 2026**
+
+Bagian ini memperjelas dan melengkapi Bagian 23–26. Pluits bukan sekadar media sosial dengan direktori dan toko tambahan. Pluits dibangun sebagai ekosistem identitas yang menghubungkan manusia, tempat, organisasi, penyelenggara, komunitas, dan penyedia barang/jasa dalam satu platform global dengan pengalaman lokal.
+
+### 27.1 Direktori tersedia sebelum pengelola mendaftar
+GeoDirectory harus dapat menampilkan entitas tempat sebelum pemilik atau pengelolanya memiliki akun Pluits. Pengguna dapat menemukan tempat berdasarkan lokasi, kategori, dan kebutuhan: pantai, destinasi, restoran, hotel, masjid, gereja, sekolah, yayasan, fasilitas umum, monumen, komunitas, penyelenggara acara, dan entitas lain yang relevan.
+
+Data awal dapat berasal dari sumber peta/direktori pihak ketiga atau sumber terbuka yang sah. Pengambilan data, scraping, penyimpanan, penayangan, atribusi, dan pembaruan wajib mematuhi lisensi, API terms, hak basis data, privasi, dan ketentuan sumber. Jangan mengasumsikan data Google Maps bebas di-scrape atau disalin. Prioritaskan integrasi resmi atau sumber dengan izin yang jelas. Data impor harus memiliki provenance/sumber, waktu pembaruan, status verifikasi, dan mekanisme koreksi/penghapusan.
+
+Direktori awal bukan bukti kepemilikan, keaslian, kualitas, atau dukungan resmi terhadap suatu tempat. Profil yang belum diklaim harus diberi status yang jujur, dan pengguna dapat mengusulkan koreksi atau melaporkan duplikasi.
+
+### 27.2 Klaim tempat dan pengelola terverifikasi
+Pada halaman tempat tersedia tindakan **Klaim tempat ini**. Pemohon masuk menggunakan identitas personal, lalu mengajukan bukti hubungan dan kewenangan atas tempat/organisasi tersebut. Proses klaim dapat meminta dokumen, email/domain resmi, bukti operasional, surat kuasa, atau verifikasi lain sesuai kategori dan risiko.
+
+Klaim tidak otomatis disetujui hanya karena pemohon membuat akun atau mengklik tombol. Pluits memeriksa duplikasi klaim, konflik pengelola, bukti kewenangan, dan risiko pengambilalihan akun. Setelah disetujui, identitas personal pemohon memperoleh role pengelola pada entitas terkait dengan permission yang terbatas dan dapat dicabut. Riwayat perubahan dan pergantian pengelola harus tercatat.
+
+Tidak semua tempat memiliki pemilik komersial. Tempat ibadah, fasilitas publik, monumen, sekolah, komunitas, yayasan, dan lokasi alam dapat memiliki pengelola, badan penanggung jawab, otoritas, atau kontributor informasi yang berbeda. Label role harus akurat: pemilik, pengelola resmi, admin yang diberi kuasa, kontributor, atau pihak yang belum diverifikasi tidak boleh disamakan.
+
+### 27.3 Satu identitas manusia, banyak peran
+Satu manusia menggunakan satu identitas personal utama. Dari identitas itu ia dapat memiliki atau memperoleh peran berbeda: individu, pendiri/pemilik usaha, staf toko, pengelola tempat, pengurus yayasan, penyelenggara acara, penyedia layanan, kreator, atau anggota komunitas. Peran tidak memerlukan pembuatan akun manusia terpisah, tetapi akses organisasi harus memakai role-based permissions, persetujuan, audit log, dan mekanisme pencabutan.
+
+Pluits dapat membangun reputasi dan kepercayaan berbasis bukti, tetapi bukan memberi cap bahwa seseorang selalu baik atau buruk. Identitas terverifikasi, kewenangan pengelola, kepatuhan komunitas, dan rekam transaksi adalah sinyal berbeda yang harus dijelaskan terpisah.
+
+### 27.4 Donasi dan dukungan untuk tempat/organisasi
+Halaman tempat atau organisasi dapat menyediakan informasi cara mendukung, berdonasi, menjadi relawan, atau mengikuti kegiatan. Untuk donasi uang, penerima, tujuan, biaya, bukti penerimaan, status penyaluran, dan pihak pemroses harus transparan. Pemrosesan dana perlu menggunakan penyedia pembayaran/mitra yang sesuai ketentuan hukum; Pluits tidak boleh mengklaim menampung atau mengelola dana sebagai lembaga berizin jika model dan izinnya belum tersedia. Donasi tidak boleh diaktifkan sebagai fitur pembayaran langsung sebelum due diligence penerima, perlindungan donor, dan kepatuhan diselesaikan.
+
+### 27.5 Akun personal versus penyedia/toko resmi
+Akun personal boleh membagikan, mempromosikan, menawarkan, atau menjual barang dan jasa sebagai aktivitas individu sesuai kebijakan kategori. Namun, UI harus menjelaskan bahwa akun tersebut adalah akun personal, bukan otomatis toko resmi, pemilik merek, produsen, distributor, atau penyedia langsung. Pengguna harus dapat melihat siapa pihak yang menawarkan dan apa status verifikasinya.
+
+Toko/penyedia resmi memiliki profil entitas dan proses verifikasi sesuai jenis usaha serta risiko. Konsep inti Marketplace adalah membantu pengguna menemukan sumber yang benar-benar bertanggung jawab atas produk atau layanan—bukan rantai perantara yang menyamarkan asal barang. Klaim produsen, pemilik, distributor resmi, atau penyedia langsung harus dibuktikan dan tidak boleh diberikan hanya karena akun membayar biaya atau mengisi profil.
+
+### 27.6 Perlindungan transaksi di dalam dan di luar Pluits
+Transaksi yang dibuat dan diproses melalui alur Pluits harus memiliki catatan yang dapat diaudit: pihak, item/layanan, harga, persetujuan, status pembayaran melalui mitra, pemenuhan, komunikasi relevan, dan bukti sengketa sesuai kebijakan privasi/retensi. Perlindungan yang dijanjikan harus dibatasi pada cakupan program dan proses yang benar-benar tersedia.
+
+Jika pengguna bertransaksi di luar Pluits, transaksi itu tidak otomatis tercatat, diverifikasi, atau dilindungi oleh sistem Pluits. UI wajib menyampaikan hal ini secara jelas dan tidak menjanjikan penanganan sengketa untuk transaksi yang tidak memiliki bukti di platform. Pluits juga tidak boleh menyimpulkan bahwa semua transaksi di luar platform pasti penipuan.
+
+### 27.7 Moderasi konten yang proporsional dan kontekstual
+Pluits mempertahankan pengalaman sosial dan alat pembuatan konten yang ringkas dari konsep My Bali: kamera, unggah foto/video, Stories/Status, Reels, feed, profil, interaksi, privasi, dan pengaturan distribusi konten. Pengalaman ini menjadi bagian inti Pluits, bukan modul terpisah.
+
+Moderasi harus membedakan ketelanjangan/eksploitasi seksual, konten seksual eksplisit, kekerasan grafis, pelecehan, eksploitasi, dan konten berbahaya dari konten non-eksplisit yang sah dalam konteks sosial, budaya, olahraga, kesehatan, atau wisata. Contoh: foto orang berbikini di pantai tidak otomatis diklasifikasikan sebagai konten seksual terlarang. Konten tertentu dapat diberi label/peringatan sensitif dan interstitial “Apakah Anda ingin melihat?” dengan pengaturan pengguna dan pembatasan usia yang sesuai. Label sensitif bukan pengganti penghapusan untuk konten yang memang dilarang.
+
+Konten seksual yang melibatkan anak, eksploitasi seksual, kekerasan seksual, dan kategori ilegal/berbahaya harus ditangani dengan standar perlindungan tertinggi. Penilaian mempertimbangkan konteks, bukan semata-mata deteksi kulit atau bentuk tubuh. Sistem perlu menyediakan pelaporan, moderasi manusia untuk kasus penting, penjelasan tindakan, banding, dan audit kesalahan.
+
+### 27.8 Penegakan perilaku, bukan diskriminasi identitas
+Pembatasan akun harus didasarkan pada perilaku dan pelanggaran kebijakan yang dapat dibuktikan—misalnya penipuan, pelecehan, ancaman, spam terkoordinasi, eksploitasi, atau pelanggaran keselamatan—bukan penampilan fisik, agama, etnis, kebangsaan, status sosial, atau pandangan pribadi yang dilindungi. Gunakan tindakan bertingkat: peringatan, pembatasan fitur/jangkauan, penghapusan konten, suspensi sementara, hingga penghentian akun untuk pelanggaran berat atau berulang. Sediakan alasan yang jelas, jalur banding, peninjauan manusia, dan perlindungan dari laporan palsu/serangan massal. Hindari skor “manusia baik/buruk” yang tidak transparan atau keputusan otomatis tanpa akuntabilitas.
+
+### 27.9 Prinsip lintas modul
+GeoDirectory adalah lapisan entitas dan lokasi universal. Sebuah tempat dapat ditemukan di peta, menjadi destinasi Trip, memiliki profil komunitas, mengadakan event, menerima dukungan/donasi yang sah, atau menghubungkan katalog Marketplace jika memang menawarkan barang/jasa. Tidak semua tempat adalah toko, tidak semua organisasi menerima donasi, dan tidak semua lokasi dapat dipesan.
+
+Marketplace tetap memiliki siklus onboarding penyedia, katalog, pesanan, pembayaran, pemenuhan, pengembalian, dan sengketa. Trip tetap memiliki siklus penemuan destinasi, itinerary, jadwal, reservasi bila relevan, kunjungan, dan pengalaman. Social Media tetap dapat memuat ekspresi personal biasa yang tidak harus berasal dari transaksi atau perjalanan.
+
+### 27.10 Status keputusan dan pekerjaan lanjutan
+Keputusan produk di bagian ini berstatus DECIDED sebagai arah model bisnis. Belum berarti fitur direktori pra-pendaftaran, klaim tempat, verifikasi role, donasi, moderasi, atau perlindungan transaksi telah IMPLEMENTED, DEPLOYED, TESTED, atau ACCEPTED.
+
+Prioritas desain/implementasi: (1) model canonical place/entity dan sumber/provenance data; (2) alur klaim tempat dan verifikasi pengelola; (3) identitas personal dan role organisasi; (4) label akun personal versus penyedia resmi; (5) bukti transaksi on-platform; (6) kebijakan moderasi kontekstual dan banding; (7) kebijakan donasi dan mitra pembayaran; (8) integrasi pengalaman kamera/sosial My Bali ke Pluits. Semua perubahan harus diuji pada perangkat mobile.
