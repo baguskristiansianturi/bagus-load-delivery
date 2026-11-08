@@ -158,3 +158,11 @@ The tracked file `202611070001_initial_marketplace.sql` is not listed in the liv
 - Review staff permission boundaries and audit-log write path.
 - Re-run advisors after fixes.
 - Confirm GitHub Pages deployment and Android UAT. No claim of production readiness until these pass.
+
+### 2026-11-08 — Migration reconciliation completed
+- Active migration files: 17.
+- Live migration history records: 17.
+- Missing version/name pairs: 0.
+- Active files not represented in live history: 0.
+- SQL recovered from live migration history: exact statements were used; prior divergent drafts were archived.
+- Unapplied legacy migration `202611070001_initial_marketplace.sql` is archived and excluded from active migration discovery.
