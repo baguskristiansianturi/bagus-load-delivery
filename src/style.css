@@ -5172,3 +5172,52 @@ body{font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.45;-web
   object-fit:contain!important;
   object-position:center;
 }
+
+
+/* Pluits responsive layout pass — shared phone, tablet and desktop rules */
+.pl-social-home,.ua-app{width:100%;min-width:0;box-sizing:border-box}
+.pl-social-home *,.ua-app *{box-sizing:border-box}
+.pl-social-layout{width:100%;min-width:0}
+.pl-social-feed,.pl-social-sidebar,.pl-social-right{min-width:0}
+.pl-public-post,.pl-right-card,.pl-side-market{min-width:0;overflow-wrap:anywhere}
+.pl-public-post-media img,.pl-public-post-media video{max-width:100%}
+.ua-main{width:min(100%,1240px);margin-left:auto;margin-right:auto;min-width:0}
+.ua-main>*{min-width:0}
+.ua-panel,.ua-profile-card,.ua-post-card,.ua-section-card{min-width:0;max-width:100%}
+.ua-post-card img,.ua-post-card video,.ua-profile-card img{max-width:100%}
+.ua-form-grid,.ua-grid,.ua-profile-content{min-width:0}
+.ua-form-grid>*,.ua-grid>*{min-width:0}
+@media(min-width:1200px){
+ .pl-social-layout{grid-template-columns:205px minmax(0,650px) 290px;gap:26px;padding:28px 28px 0}
+ .pl-social-feed{width:100%;max-width:650px}
+ .pl-social-right{display:block}
+ .pl-public-post{margin-bottom:18px}
+ .pl-public-post-media img,.pl-public-post-media video{max-height:78vh}
+ .ua-main{margin-top:34px;margin-bottom:44px}
+ .ua-profile-main{max-width:1120px}
+ .ua-post-card{border-radius:15px}
+}
+@media(min-width:761px) and (max-width:1199px){
+ .pl-social-layout{grid-template-columns:190px minmax(0,650px);gap:20px;padding:22px 20px 0;justify-content:center}
+ .pl-social-right{display:none}
+ .pl-social-feed{width:100%;max-width:650px}
+ .pl-social-header{padding-left:22px;padding-right:22px}
+ .ua-main{padding-left:12px;padding-right:12px;margin-top:24px}
+ .ua-profile-main{max-width:1000px}
+}
+@media(max-width:760px){
+ .pl-social-layout,.pl-social-feed{width:100%;max-width:100%;min-width:0}
+ .pl-public-post-media{width:100%;max-width:100%}
+ .pl-public-post-media img,.pl-public-post-media video{width:100%;height:auto;max-height:72vh;object-fit:contain!important}
+ .ua-main{padding-left:0;padding-right:0}
+ .ua-profile-main{width:100%;max-width:100%;overflow-x:clip}
+ .ua-panel,.ua-profile-card,.ua-post-card{border-radius:0}
+}
+@media(max-width:380px){
+ .pl-feed-intro{gap:6px}
+ .pl-feed-intro>a{padding:8px;font-size:9px}
+ .pl-public-post-head{gap:8px}
+ .pl-public-post-actions{gap:4px}
+ .pl-public-post-actions a{font-size:9px}
+ .ua-main{margin-top:12px}
+}
