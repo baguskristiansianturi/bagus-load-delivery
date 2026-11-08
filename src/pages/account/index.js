@@ -266,7 +266,7 @@ function postCard(p){
  return `<article class="ua-post-card" data-post-id="${p.id}"><div class="ua-post-head">${avatar(p.avatarUrl,p.owner.display_name)}<div><a class="ua-author-link" href="#/account/user/${encodeURIComponent(p.owner.username)}"><strong>${esc(p.owner.display_name)}</strong></a><small>@${esc(p.owner.username)} ${p.owner.public_city&&p.owner.public_province?'· ⌖ '+esc(p.owner.public_city)+', '+esc(p.owner.public_province):''}</small></div><time>${fmtDate(p.created_at)}</time></div>
  <p class="ua-caption">${esc(p.caption)}</p>${(p.tags?.length||p.tagged?.length)?'<div class="ua-tags">'+(p.tags||[]).map(t=>'<span>#'+esc(t)+'</span>').join(' ')+(p.tagged||[]).map(t=>'<span>＠'+esc(t.username)+'</span>').join(' ')+'</div>':''}
  ${p.media_path?'<div class="ua-media">'+(p.media_type==='video'?'<video src="'+p.mediaUrl+'" controls playsinline preload="metadata"></video>':'<img src="'+p.mediaUrl+'" alt="'+esc(p.caption||'Foto postingan')+'">')+'</div>':'<div class="ua-text-post-mark">PLUITS</div>'}
- <div class="ua-post-actions"><button data-action="like" class="${p.liked?'is-liked':''}">♥ <span>${p.liked?'Disukai':'Suka'}</span> <b>${p.likes}</b></button><button data-action="comments">◯ Komentar <b>${p.comments}</b></button><button data-action="share">↗ Bagikan</button><button data-action="save" class="${p.saved?'is-saved':''}">▱ ${p.saved?'Tersimpan':'Tandai'}</button><button data-action="tag" ${p.user_id===user?.id?'':'disabled title="Hanya pemilik postingan dapat menandai akun"'}>＠ Tag</button></div><div class="ua-comments" hidden></div>
+ ${user?`<div class="ua-post-actions"><button data-action="like" class="${p.liked?'is-liked':''}">♥ <span>${p.liked?'Disukai':'Suka'}</span> <b>${p.likes}</b></button><button data-action="comments">◯ Komentar <b>${p.comments}</b></button><button data-action="share">↗ Bagikan</button><button data-action="save" class="${p.saved?'is-saved':''}">▱ ${p.saved?'Tersimpan':'Tandai'}</button><button data-action="tag" ${p.user_id===user.id?'':'disabled title="Hanya pemilik postingan dapat menandai akun"'}>＠ Tag</button></div><div class="ua-comments" hidden></div>`:`<div class="ua-post-actions"><a class="ua-login-action" href="#/account/login">Masuk untuk menyukai, berkomentar, atau menyimpan</a></div>`}
  </article>`;
 }
 async function composePage(){
@@ -395,9 +395,11 @@ async function postDetailPage(id){
 }
 async function mountAccount(section='profile',parameter=''){
  const {data:{session}}=await supabase.auth.getSession();user=session?.user||null;
- if(!user&&section==='user'){
-  try{const page=await publicProfilePage(parameter);document.querySelector('#app').innerHTML=frame(page,'explore');return;}
-  catch(err){document.querySelector('#app').innerHTML='<div class="ua-panel ua-error"><h1>Profil tidak tersedia</h1><p>'+esc(err.message)+'</p><a href="#/">Kembali</a></div>';return;}
+ if(!user&&(section==='user'||section==='post')){
+  try{
+   const page=section==='user'?await publicProfilePage(parameter):await postDetailPage(parameter||location.hash.split('/')[3]||'');
+   document.querySelector('#app').innerHTML=frame(page,'explore');return;
+  }catch(err){document.querySelector('#app').innerHTML='<div class="ua-panel ua-error"><h1>Konten tidak tersedia</h1><p>'+esc(err.message)+'</p><a href="#/">Kembali</a></div>';return;}
  }
  if(!user){authScreen(section==='register'?'register':'login');return;}
  try{
