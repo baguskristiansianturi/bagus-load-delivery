@@ -7,6 +7,7 @@ let currentConversation = null;
 let conversationCache = [];
 let realtimeChannel = null;
 let sendingQueue = false;
+let networkListenersBound = false;
 
 const queueKey = () => 'pluits:dm:outbox:v1:' + currentUser.id;
 const contactsKey = () => 'pluits:dm:contacts:v1:' + currentUser.id;
@@ -98,8 +99,7 @@ export async function bindMessagesPage() {
     bindStartChat(box);
   };
   updateNetworkStatus();
-  window.addEventListener('online',onOnline);
-  window.addEventListener('offline',updateNetworkStatus);
+  if(!networkListenersBound){window.addEventListener('online',onOnline);window.addEventListener('offline',updateNetworkStatus);networkListenersBound=true;}
   realtimeChannel=db.channel('pluits-dm-'+user.id)
     .on('postgres_changes',{event:'INSERT',schema:'public',table:'user_messages'},payload=>{
       if(payload.new?.conversation_id===currentConversation) openConversation(currentConversation);
@@ -111,7 +111,11 @@ function onOnline() { updateNetworkStatus(); flushOutbox(); }
 async function loadConversations() {
   const list=document.querySelector('#pl-msg-conversations'); if(!list)return;
   const {data:members,error}=await db.from('user_conversation_members').select('conversation_id,last_read_at').eq('user_id',currentUser.id);
-  if(error){list.textContent=error.message;return;}
+  if(error){
+    try { const cached=JSON.parse(localStorage.getItem(threadsKey())||'[]'); conversationCache=cached; list.innerHTML=cached.length?cached.map(item=>'<button class="pl-msg-thread" data-open-chat="'+item.id+'"><b>'+esc(item.other.display_name||item.other.username)+'</b><small>@'+esc(item.other.username)+'</small><p>Riwayat tersedia saat online</p></button>').join(''):'<div class="pl-msg-empty">Inbox offline belum tersimpan. Hubungkan internet untuk memuat percakapan.</div>'; list.querySelectorAll('[data-open-chat]').forEach(button=>button.onclick=()=>openConversation(button.dataset.openChat)); }
+    catch { list.textContent='Inbox offline belum tersedia.'; }
+    return;
+  }
   const ids=(members||[]).map(row=>row.conversation_id);
   if(!ids.length){list.innerHTML='<div class="pl-msg-empty">Belum ada percakapan. Pilih kontak atau cari username untuk memulai.</div>';conversationCache=[];return;}
   const [convs,memberRows,msgRows]=await Promise.all([
