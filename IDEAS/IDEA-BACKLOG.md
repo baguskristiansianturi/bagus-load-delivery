@@ -494,3 +494,51 @@ Rantai ini adalah hipotesis network effect dua sisi/berlapis. Ia tidak otomatis 
 ### 14. Next step
 Lanjutkan founder sharing untuk melengkapi sisi pengguna, merchant, transaksi, dan ekonomi platform. Setelah pembahasan cukup, lakukan evaluasi unit economics, proof model, privasi, supply/demand acquisition, dan kompetitor. Hanya setelah founder menyatakan persetujuan secara eksplisit, buat D-XXX, promosikan bagian yang disetujui ke Business Model Master, lalu turunkan spesifikasi dan roadmap sesuai SOP Product Change Control.
 
+
+
+## IDEA-010 — Organisasi lokal, kontribusi komunitas, layanan publik, dan operasi wilayah
+- **Tanggal ditemukan:** 9 November 2026.
+- **Sumber:** sharing founder tentang masjid, gereja, banjar, yayasan, sekolah, kantor polisi, pemadam kebakaran, pengumuman, kontribusi melalui wallet, kebutuhan hiring, klaim pengelola, kantor lokal, dan ekspansi Bali-first.
+- **Kategori:** Business Model | GeoDirectory | Organization | Community | Finance | Trust/Safety | Operations | Regional Expansion.
+- **Jenis:** OBSERVATION | HYPOTHESIS | PROPOSAL.
+- **Status:** NEEDS RESEARCH untuk workflow dan implementasi. Prinsip arah besarnya telah dirangkum dalam D-004 dan Business Model Master Bagian 32; detail teknis/operasional belum otomatis disetujui.
+
+### Narasi founder
+GeoDirectory tidak hanya menampilkan toko. Peta harus menggambarkan tempat dan entitas yang hadir di kehidupan masyarakat: sekolah, rumah ibadah, banjar, yayasan, komunitas, kantor pemerintah, kantor polisi, pemadam kebakaran, dan fasilitas lain. Masing-masing dapat memiliki pengelola dan aktivitas.
+
+Contoh tempat ibadah: pengelola mengumumkan kegiatan atau kebutuhan. Masyarakat dapat melihat dan berpartisipasi. Jika kontribusi dana diaktifkan, pengguna dapat memilih untuk membagikan kontribusinya atau menyimpannya secara privat. Pengelola membutuhkan identitas kewenangan, pencatatan dana, dan pertanggungjawaban.
+
+Contoh banjar: pengurus mengumumkan rapat, kegiatan, kebutuhan warga, atau informasi wilayah. Profil organisasi menjadi tempat informasi yang lebih mudah ditemukan dan dikelola.
+
+Perusahaan/organisasi dapat menerbitkan kebutuhan tenaga kerja. Pengguna memiliki profil personal dan profesional yang dapat menampilkan keahlian, portofolio, dan afiliasi yang diverifikasi.
+
+### Hipotesis manfaat
+- Masyarakat lebih mudah menemukan organisasi dan kegiatan lokal.
+- Organisasi memiliki kanal informasi dan pengelolaan digital.
+- Pengelola dapat membangun transparansi kegiatan dan kontribusi.
+- Profesional dapat menemukan peluang kerja dan membangun portofolio.
+- Pemerintah/lembaga publik berpotensi tertarik pada peta entitas dan kanal informasi yang terstruktur, tetapi adopsi/kemitraan resmi tidak boleh diasumsikan.
+- Kantor dan staf lokal dapat membantu klaim, verifikasi, dukungan, dan sengketa ketika volume kasus membutuhkannya.
+
+### Pertanyaan riset
+1. Bagaimana mengonfirmasi bahwa pemohon klaim benar-benar pengurus/pegawai/kuasa yang sah?
+2. Bagaimana organisasi memiliki banyak pengelola, pergantian pengurus, cabang, dan masa jabatan?
+3. Bagaimana dana kontribusi dipisahkan dari wallet personal dan bagaimana laporan pertanggungjawabannya?
+4. Apa perbedaan donasi, iuran, pembayaran layanan, sponsorship, dan pembelian?
+5. Siapa yang bertanggung jawab terhadap informasi darurat dan bagaimana mencegah PLUITS dianggap kanal resmi tanpa kerja sama?
+6. Bagaimana lowongan kerja, aplikasi, dokumen, dan komunikasi dilindungi?
+7. Bagaimana laporan lokasi palsu diperiksa, banding, dan mencegah laporan jahat?
+8. Apa metrik dan threshold yang membenarkan kantor lokal/staf?
+9. Bagaimana region gate Bali diterapkan tanpa memblokir wisatawan atau akun yang sah?
+10. Struktur URL wilayah mana yang tepat untuk SEO, tenant isolation, dan administrasi?
+
+### Risiko dan batas
+- Tidak ada pengelolaan organisasi hanya berdasarkan klaim sepihak.
+- Tidak ada dana sungguhan sebelum ledger, payment, reconciliation, legal, refund, dan audit siap.
+- Laporan pengguna bukan vonis otomatis.
+- Informasi polisi/pemadam/layanan publik harus berasal dari entitas resmi atau sumber berlisensi dan diberi status yang benar.
+- Data agama/afiliasi pribadi tidak boleh disimpulkan dari lokasi rumah ibadah yang dikunjungi.
+- Jumlah kantor, persentase coverage, biaya, dan ROI belum ditentukan.
+
+### Next step
+Riset legal/operasional organisasi, desain role/stewardship, model kontribusi, hiring workflow, dan regional service desk. Setelah founder memutuskan detailnya, promosikan bagian yang disetujui melalui Product Change Control.
