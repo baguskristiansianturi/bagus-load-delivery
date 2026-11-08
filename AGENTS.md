@@ -1,12 +1,12 @@
 # Agent instructions — Pluits
 
 ## Mandatory first read
-1. Read MASTER/AI-START-HERE.md.
-2. Read the entire MASTER/BUSINESS-MODEL-MASTER.md before any analysis, product recommendation, UX proposal, architecture proposal, or code change.
-3. Read MASTER/PLUITS-AI-GOVERNANCE.md.
-4. Read MASTER/PROJECT-STATUS-ROADMAP.md and MASTER/PLUITS-SOCIAL-FIRST-RELEASE-SPEC.md before working on Social Media; the social release gate must pass before experience verticals expand.
-5. Read relevant technical/security/UAT specifications.
-6. Read IDEAS/IDEA-BACKLOG.md only to understand unapproved ideas. Do not implement an idea merely because it is written there.
+1. Read MASTER/AI-START-HERE.md and the entire MASTER/BUSINESS-MODEL-MASTER.md before analysis or changes.
+2. Read MASTER/PLUITS-AI-GOVERNANCE.md, MASTER/DECISION-LOG.md, and MASTER/PROJECT-STATUS-ROADMAP.md.
+3. Read SOP/README.md and the SOPs relevant to the task.
+4. For Social Media, read MASTER/PLUITS-SOCIAL-FIRST-RELEASE-SPEC.md and MASTER/PLUITS-USER-TESTING.md.
+5. Read relevant technical/security/UAT specifications and inspect the latest code/runtime evidence.
+6. Read IDEAS/IDEA-BACKLOG.md to understand unapproved ideas. Never implement an idea merely because it is recorded there.
 
 ## Authority
 - Business Model Master is the single authority for approved business and product decisions.
