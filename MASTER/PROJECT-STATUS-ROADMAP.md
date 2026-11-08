@@ -2,7 +2,7 @@
 
 **Perusahaan:** Pluits Indonesia  
 **Produk:** Pluits  
-**Repository:** https://github.com/baguskristiansianturi/bagus-load-delivery  
+**Repository:** https://github.com/baguskristiansianturi/pluits  
 **Branch:** `main`  
 **Dokumen model bisnis:** [BUSINESS-MODEL-MASTER.md](./BUSINESS-MODEL-MASTER.md)  
 **Dokumen ini:** sumber status implementasi, checkpoint, dan PR; bukan pengganti model bisnis.
@@ -14,7 +14,7 @@
 | Area | Status terakhir yang diketahui | Catatan |
 |---|---|---|
 | Identitas Pluits | Ditetapkan | Produk Pluits, perusahaan Pluits Indonesia; terpisah dari Bagusin dan Bali Trans |
-| Repository dan branch | Ada | `baguskristiansianturi/bagus-load-delivery`, `main` |
+| Repository dan branch | Ada | `baguskristiansianturi/pluits`, `main` |
 | Supabase Pluits | Project tersedia | Project ref `ytndswhqxayqpftszwfh`, region Singapore |
 | Fondasi seller/backend | Pernah diimplementasikan | Ada migrasi seller workspace dan hardening; wajib diverifikasi ulang sebelum mengandalkan status database |
 | Seller Center frontend | Ada | Pendaftaran/login dan workspace owner pernah dibuat; belum ada bukti end-to-end test lengkap |
@@ -336,7 +336,7 @@ Build dari commit `642a24bdbed4a85931271e7481f9880a04cc9fc3` berhasil. GitHub Pa
 ## CP-016 — Live Pluits audit + media-ratio correction (8 November 2026)
 
 ### Repository and deployment baseline
-- Confirmed the application repository is `baguskristiansianturi/bagus-load-delivery`, Vite frontend, branch `main`.
+- Confirmed the application repository is `baguskristiansianturi/pluits`, Vite frontend, branch `main`.
 - Confirmed Supabase project `pluits` / `ytndswhqxayqpftszwfh` is ACTIVE_HEALTHY in Singapore.
 - The docs commit `104594df3946c054012354a6570aabfea4268f14` passed GitHub Pages workflow run 368.
 - A direct CSS correction was committed as `07d81f76b8c46c9e81f53104263b1d91320daa5a`: mobile public social feed images and videos now use intrinsic height and `object-fit: contain`, avoiding the previous mobile `object-fit: cover` overrides. Workflow run 369 was in progress at the time of this checkpoint; do not mark deployed until it succeeds.
@@ -648,3 +648,22 @@ Build dari commit `642a24bdbed4a85931271e7481f9880a04cc9fc3` berhasil. GitHub Pa
 - Mempertahankan komentar, bagikan, simpan, dan penandaan akun yang sudah ada.
 - File utama: `src/pages/account/index.js`, `src/pages/account/user-account.css`. Kebijakan RLS yang ada mengizinkan pemilik memperbarui/menghapus postingan dan menghapus media miliknya; tidak ada migration database baru pada checkpoint ini.
 - **Status:** IMPLEMENTED + DEPLOYED. GitHub Actions run `42477511469` untuk commit `146111aa97857094159cbe92aada8e15340a5384` berhasil pada seluruh langkah: install, build Vite, verify build output, upload artifact, dan deploy Pages. Artefak produksi `assets/index-CdQidmbD.js` dan `assets/index-CJBTnwHt.css` diperiksa dan memuat kode editor, hapus postingan, pointer double-tap, serta animasi hati. Pengujian klik nyata, double-tap di Android, dan uji dua akun belum dilakukan; status TESTED/ACCEPTED tetap terbuka.
+
+
+## CP-036 — Database performance dan RLS initialization pass (8 November 2026)
+- **Status:** IMPLEMENTED + DEPLOYED; verifikasi advisor tercatat.
+- Menambahkan 30 covering indexes untuk foreign keys Social, Marketplace, Store, Messaging, dan Moderation; mengoptimalkan tiga RLS policies tanpa mengubah predicate otorisasi.
+- Verifikasi saat checkpoint: seluruh 30 indeks ada; Performance Advisor tidak melaporkan unindexed_foreign_keys atau auth_rls_initplan; Health Advisor tanpa lint.
+- GitHub Pages run #668 sukses pada commit `4a878b88d3c9805921d7a51f23515e91bdd8c642`.
+- Snapshot warning saat itu: 20 SECURITY DEFINER advisor warnings dan leaked-password protection nonaktif. Periksa audit terbaru sebelum bertindak.
+
+## CP-037 — Marketplace RLS policy consolidation (8 November 2026)
+- **Status:** IMPLEMENTED + DEPLOYED; direct runtime/UAT belum lengkap.
+- Migration live `20261108161000_pluits_marketplace_rls_policy_consolidation` mengganti overlapping SELECT policies pada products, product_variants, product_images, stores; memisahkan INSERT/UPDATE/DELETE member policies.
+- Verifikasi pascamigrasi: empat multiple_permissive_policies warnings hilang; Performance Advisor tidak melaporkan WARN; Health Advisor tanpa findings.
+- Security Advisor saat itu masih melaporkan 20 authenticated-callable SECURITY DEFINER RPCs dan leaked-password protection nonaktif. Ini bukan sertifikasi keamanan.
+- Workflow #670 sukses untuk commit `f379083fccaec8a18aaed616be25c646f4fc779e`; dokumentasi lanjutan workflow #671 sukses.
+- Masih wajib: buyer/seller dua akun, negative cross-store read/write, Android upload/playback, seller verification, end-to-end order/payment/fulfilment.
+
+## Sumber tunggal roadmap
+Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, checkpoint, deployment, dan UAT Pluits. Dokumen `docs/pluits/PRODUCT-ROADMAP.md` telah digabungkan dan tidak lagi menjadi roadmap aktif.
