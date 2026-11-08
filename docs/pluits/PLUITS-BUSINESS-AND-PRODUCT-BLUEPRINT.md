@@ -84,6 +84,8 @@ Cerita Ibu Nia bukan contoh pemasaran yang ditempel di depan dokumen. Ia adalah 
 
 ## 4. Pengalaman frontend — familiar first, more value second
 
+![Mobile social feed mockup](./visuals/04-mobile-social-feed-mockup.svg)
+
 ### Pola interaksi
 - Feed visual sebagai layar awal.
 - Stories horizontal dan akses video/Reels yang mudah ditemukan.
@@ -155,6 +157,8 @@ Organization, Affiliate, Hiring, donation ledger, dan sebagian booking lifecycle
 - Alamat privat, identitas, perjalanan privat, chat, dan dokumen legal tidak boleh masuk ke public feed/query.
 
 ## 8. Teknologi — kondisi sekarang vs target
+
+![System architecture](./visuals/05-system-architecture.svg)
 
 **Kondisi terverifikasi**
 - Frontend: Vite + JavaScript ES modules + CSS.
