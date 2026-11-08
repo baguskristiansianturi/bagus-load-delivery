@@ -326,3 +326,17 @@
 
 .ua-login-action{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:8px 12px;border:1px solid #d8e1e9;border-radius:999px;color:#304b66;font-size:12px;font-weight:700;text-decoration:none;background:#fff}
 .ua-login-action:focus-visible,.ua-follow-actions button:focus-visible,.ua-follow-person:focus-visible{outline:2px solid #4c7795;outline-offset:2px}
+
+
+/* Activity inbox — concise notifications with clear unread state */
+.ua-notification-list{padding:4px 14px}
+.ua-notification-row{display:flex;align-items:center;gap:12px;min-width:0;padding:13px 2px;border-bottom:1px solid #edf0f3;color:#34465b;text-decoration:none}
+.ua-notification-row:last-child{border-bottom:0}
+.ua-notification-row.is-unread{background:#f7fafc}
+.ua-notification-avatar{width:42px;height:42px;flex:0 0 42px;display:grid;place-items:center;border-radius:50%;background:#e8eef4;color:#29445f;font-weight:800}
+.ua-notification-copy{display:grid;gap:3px;min-width:0;flex:1}
+.ua-notification-copy strong{font-size:13px;color:#23384f}
+.ua-notification-copy>span{font-size:12px;line-height:1.4;color:#526277}
+.ua-notification-copy small{font-size:10px;color:#8290a0}
+.ua-notification-row>i{width:8px;height:8px;flex:0 0 8px;border-radius:50%;background:#315d7b}
+@media(max-width:760px){.ua-notification-list{padding:3px 12px;border-radius:0;border-left:0;border-right:0}.ua-notification-row{padding:12px 2px}.ua-notification-avatar{width:38px;height:38px;flex-basis:38px}}
