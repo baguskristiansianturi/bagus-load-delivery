@@ -9,6 +9,8 @@ let realtimeChannel = null;
 let sendingQueue = false;
 
 const queueKey = () => 'pluits:dm:outbox:v1:' + currentUser.id;
+const contactsKey = () => 'pluits:dm:contacts:v1:' + currentUser.id;
+const threadsKey = () => 'pluits:dm:threads:v1:' + currentUser.id;
 function readQueue() {
   try { const rows = JSON.parse(localStorage.getItem(queueKey()) || '[]'); return Array.isArray(rows) ? rows : []; }
   catch { return []; }
@@ -53,7 +55,11 @@ async function loadContacts() {
   const box = document.querySelector('#pl-msg-contacts');
   const {data:rows,error} = await db.from('user_follows').select('follower_id,following_id,status')
     .eq('status','accepted').or('follower_id.eq.'+currentUser.id+',following_id.eq.'+currentUser.id);
-  if (error) { box.textContent = error.message; return; }
+  if (error) {
+    try { const cached=JSON.parse(localStorage.getItem(contactsKey())||'[]'); box.innerHTML=cached.length?cached.map(person=>'<button class="pl-msg-contact" data-start-chat="'+person.id+'"><b>'+esc(person.display_name||person.username)+'</b><small>@'+esc(person.username)+'</small><span>Kontak tersimpan · mulai saat online</span></button>').join(''):'<p class="pl-msg-empty">Kontak belum tersimpan di perangkat ini. Hubungkan internet untuk memuat kontak pertama kali.</p>'; }
+    catch { box.textContent='Kontak offline belum tersedia.'; }
+    return;
+  }
   const ids = [...new Set((rows||[]).map(row => row.follower_id===currentUser.id?row.following_id:row.follower_id).filter(id=>id!==currentUser.id))];
   if (!ids.length) { box.innerHTML='<p class="pl-msg-empty">Kontak akan muncul dari akun yang saling terhubung. Anda juga dapat mencari username di atas.</p>'; return; }
   const {data:profiles,error:profileError} = await db.rpc('get_user_profile_directory_by_ids',{p_ids:ids});
@@ -63,6 +69,7 @@ async function loadContacts() {
 }
 function bindStartChat(box) {
   box.querySelectorAll('[data-start-chat]').forEach(button=>button.onclick=async()=>{
+    if(!navigator.onLine){alert('Anda sedang offline. Kontak tersimpan, tetapi percakapan baru perlu dibuat saat online.');return;}
     button.disabled=true;
     const {data:id,error}=await db.rpc('start_direct_conversation',{p_other_user_id:button.dataset.startChat});
     if(error){alert(error.message);button.disabled=false;return;}
@@ -112,7 +119,11 @@ async function loadConversations() {
     db.from('user_conversation_members').select('conversation_id,user_id').in('conversation_id',ids),
     db.from('user_messages').select('conversation_id,body,sender_id,created_at').in('conversation_id',ids).order('created_at',{ascending:false}).limit(200)
   ]);
-  if(convs.error||memberRows.error||msgRows.error){list.textContent=(convs.error||memberRows.error||msgRows.error).message;return;}
+  if(convs.error||memberRows.error||msgRows.error){
+    try { const cached=JSON.parse(localStorage.getItem(threadsKey())||'[]'); conversationCache=cached; list.innerHTML=cached.length?cached.map(item=>'<button class="pl-msg-thread" data-open-chat="'+item.id+'"><b>'+esc(item.other.display_name||item.other.username)+'</b><small>@'+esc(item.other.username)+'</small><p>Riwayat tersedia saat online</p></button>').join(''):'<div class="pl-msg-empty">Inbox offline belum tersimpan. Hubungkan internet untuk memuat percakapan.</div>'; list.querySelectorAll('[data-open-chat]').forEach(button=>button.onclick=()=>openConversation(button.dataset.openChat)); }
+    catch { list.textContent='Inbox offline belum tersedia.'; }
+    return;
+  }
   const otherIds=[...new Set((memberRows.data||[]).map(row=>row.user_id).filter(id=>id!==currentUser.id))];
   const profiles=otherIds.length?await db.rpc('get_user_profile_directory_by_ids',{p_ids:otherIds}):{data:[],error:null};
   if(profiles.error){list.textContent=profiles.error.message;return;}
@@ -122,6 +133,7 @@ async function loadConversations() {
     const other=(memberRows.data||[]).find(row=>row.conversation_id===conversation.id&&row.user_id!==currentUser.id);
     return {...conversation,other:pmap.get(other?.user_id)||{display_name:'Akun Pluits',username:'akun'},last:latest.get(conversation.id)};
   });
+  try { localStorage.setItem(threadsKey(),JSON.stringify(conversationCache.map(item=>({id:item.id,updated_at:item.updated_at,other:item.other})))); } catch {}
   list.innerHTML=conversationCache.length?conversationCache.map(conversation=>{
     const pending=queueFor(conversation.id).length;
     return '<button class="pl-msg-thread '+(currentConversation===conversation.id?'active':'')+'" data-open-chat="'+conversation.id+'"><b>'+esc(conversation.other.display_name||conversation.other.username)+'</b><small>@'+esc(conversation.other.username)+'</small><p>'+esc(conversation.last?.body||'Belum ada pesan')+(pending?' · '+pending+' menunggu':'')+'</p></button>';
@@ -137,14 +149,14 @@ async function openConversation(id) {
     db.from('user_messages').select('id,sender_id,body,created_at,deleted_at').eq('conversation_id',id).order('created_at',{ascending:true}).limit(150),
     db.from('user_conversation_members').select('last_read_at').eq('conversation_id',id).eq('user_id',currentUser.id).maybeSingle()
   ]);
-  if(messages.error||members.error){chat.textContent=(messages.error||members.error).message;return;}
+  if((messages.error||members.error)&&navigator.onLine){chat.textContent=(messages.error||members.error).message;return;}
   const queued=queueFor(id);
   chat.innerHTML='<header class="pl-msg-chat-head"><div><b>'+esc(thread?.other.display_name||thread?.other.username||'Percakapan')+'</b><small>@'+esc(thread?.other.username||'')+'</small></div><span>'+ (navigator.onLine?'Terhubung':'Offline · pesan antrean')+'</span></header>'+
     '<div class="pl-msg-stream">'+(messages.data||[]).map(message=>messageMarkup({...message,body:message.deleted_at?'Pesan dihapus':message.body})).join('')+queued.map(row=>messageMarkup(row,true)).join('')+'</div>'+
     '<form id="pl-msg-compose"><textarea name="body" rows="2" maxlength="5000" placeholder="Tulis pesan…" required></textarea><button type="submit">Kirim</button></form>'+
     '<p class="pl-msg-chat-status" role="status">'+(queued.length?queued.length+' pesan menunggu koneksi.':'Pesan tersinkron dengan server.')+'</p>';
   const readAt=members.data?.last_read_at;
-  if(!readAt||new Date(readAt)<new Date()) await db.rpc('mark_conversation_read',{p_conversation_id:id});
+  if(navigator.onLine&&(!readAt||new Date(readAt)<new Date())) await db.rpc('mark_conversation_read',{p_conversation_id:id});
   const form=chat.querySelector('#pl-msg-compose');
   form.onsubmit=async event=>{
     event.preventDefault();
