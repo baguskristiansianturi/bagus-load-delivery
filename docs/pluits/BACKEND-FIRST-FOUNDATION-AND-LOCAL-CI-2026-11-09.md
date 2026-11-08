@@ -164,7 +164,8 @@ Rules:
 - [ ] Do not apply remediation migrations to production without explicit release authorization and rollback evidence.
 
 ### Phase C — Frontend/backend alignment
-- [ ] Establish a single Supabase client/session module.
+- [x] Establish one shared Supabase browser client module and move eight page modules to it.
+- [ ] Establish one auth-session subscription owner and prove listener deduplication.
 - [ ] Extract domain service modules in priority order: account/session, social posts/interactions/follows, messaging/activity, then supporting modules.
 - [ ] Replace duplicate page-level query logic with service calls without changing unrelated design.
 - [ ] Align every action to real backend response and state transition.
