@@ -21,7 +21,7 @@ const placeUrl = slug => '#/place/' + encodeURIComponent(slug);
 export function homeNearbySection() {
   return `<section class="pl-nearby-home">
     <div class="pl-nearby-heading"><div><span>GEODIRECTORY</span><h2>Temukan di sekitar</h2><p>Tempat, layanan, komunitas, dan aktivitas di wilayah pilihanmu.</p></div><a href="#/places">Jelajahi direktori <b>→</b></a></div>
-    <div class="pl-nearby-toolbar"><span class="pl-nearby-area">⌖ Denpasar</span><a href="#/places">Ubah area & kategori</a></div>
+    <div class="pl-nearby-toolbar"><span class="pl-nearby-area" id="pl-home-nearby-area">⌖ Denpasar</span><a href="#/places">Ubah area & kategori</a></div>
     <div id="pl-home-nearby" class="pl-home-nearby-grid"><div class="pl-directory-loading">Memuat tempat di sekitar…</div></div>
   </section>`;
 }
@@ -188,7 +188,7 @@ async function loadDiscoveryPreferences(){
  if(!data)return;
  state.radius=data.search_radius_m||state.radius;state.personalization=data.use_personalization!==false;
  const match=Object.entries(AREAS).find(([,area])=>area.label.toLowerCase()===String(data.preferred_city||'').toLowerCase());
- if(match){state.area=match[0];state.lat=match[1].lat;state.lon=match[1].lon;const select=document.querySelector('#pl-directory-area');if(select)select.value=match[0];const label=document.querySelector('#pl-directory-area-label');if(label)label.textContent=match[1].label;}
+ if(match){state.area=match[0];state.lat=match[1].lat;state.lon=match[1].lon;const select=document.querySelector('#pl-directory-area');if(select)select.value=match[0];const label=document.querySelector('#pl-directory-area-label');if(label)label.textContent=match[1].label;const homeLabel=document.querySelector('#pl-home-nearby-area');if(homeLabel)homeLabel.textContent='⌖ '+match[1].label;}
  const radius=document.querySelector('#pl-directory-radius');if(radius)radius.value=String(state.radius);
  const toggle=document.querySelector('#pl-personalization-toggle');if(toggle)toggle.checked=state.personalization;
 }
