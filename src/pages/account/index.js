@@ -1,4 +1,5 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import {socialIcon} from '../../components/common/social-icons.js';
 import { Upload as TusUpload } from 'https://esm.sh/tus-js-client@4.3.1';
 import './user-account.css';
 import {loadAccountContext,contextHeader,professionalPage,professionalFormPage,accountSettingsPage,bindAccountContext} from './account-context.js';
@@ -349,12 +350,12 @@ async function reelsPage(){
 }
 
 function postCard(p){
- const profileHref='#/account/user/'+encodeURIComponent(p.owner.username);
+ const profileHref='#/@'+encodeURIComponent(p.owner.username);
  const mediaMarkup=(p.media||[]).length>1?`<div class="ua-media-gallery" data-gallery><div class="ua-gallery-track">${p.media.map((m,i)=>`<div class="ua-gallery-item">${m.media_type==='video'?`<video src="${m.url}" controls playsinline preload="metadata"></video>`:`<img src="${m.url}" alt="Media ${i+1}">`}</div>`).join('')}</div><span class="ua-gallery-count">1/${p.media.length}</span></div>`:(p.media?.length?`<div class="ua-media">${p.media[0].media_type==='video'?`<video src="${p.media[0].url}" controls playsinline preload="metadata"></video>`:`<img src="${p.media[0].url}" alt="${esc(p.caption||'Foto postingan')}">`}</div>`:'<div class="ua-text-post-mark">PLUITS</div>');
  return `<article class="ua-post-card" data-post-id="${p.id}" data-owner-id="${p.user_id}">
- <div class="ua-post-head"><a class="ua-post-avatar-link" href="${profileHref}">${avatar(p.avatarUrl,p.owner.display_name)}</a><div><a class="ua-author-link" href="${profileHref}"><strong>${esc(p.owner.display_name)}</strong></a><small>@${esc(p.owner.username)} ${p.owner.public_city&&p.owner.public_province?'· '+esc(p.owner.public_city):''}</small></div><button class="ua-post-more" type="button" aria-label="Opsi postingan">•••</button></div>
+ <div class="ua-post-head"><a class="ua-post-avatar-link" href="${profileHref}">${avatar(p.avatarUrl,p.owner.display_name)}</a><div><a class="ua-author-link" href="${profileHref}"><strong>${esc(p.owner.display_name)}</strong></a><small>@${esc(p.owner.username)} ${p.owner.public_city&&p.owner.public_province?'· '+esc(p.owner.public_city):''}</small></div><div class="ua-post-menu-wrap"><button class="ua-post-more" type="button" aria-label="Menu postingan" aria-expanded="false" data-post-menu>${socialIcon("more",{size:21})}</button><div class="ua-post-menu" hidden>${p.user_id===user?.id?`<button type="button" data-action="edit">${socialIcon("edit",{size:16})}<span>Edit postingan</span></button>`:`<button type="button" data-action="share">${socialIcon("send",{size:16})}<span>Bagikan postingan</span></button>`}</div></div></div>
  ${mediaMarkup}
- ${user?`<div class="ua-post-actions"><button data-action="like" class="${p.liked?'is-liked':''}" aria-label="Suka">♥ <b>${p.likes}</b></button><button data-action="comments" aria-label="Komentar">◯ <b>${p.comments}</b></button><button data-action="share" aria-label="Bagikan">↗</button><button data-action="save" class="${p.saved?'is-saved':''}" aria-label="Simpan">▱</button></div>`:`<div class="ua-post-actions"><a class="ua-login-action" href="#/account/login">Masuk untuk berinteraksi</a></div>`}
+ ${user?`<div class="ua-post-actions"><button data-action="like" class="${p.liked?'is-liked':''}" aria-label="Suka">${socialIcon("heart",{size:21})}<b>${p.likes}</b></button><button data-action="comments" aria-label="Komentar">${socialIcon("comment",{size:21})}<b>${p.comments}</b></button><button data-action="share" aria-label="Bagikan">${socialIcon("send",{size:20})}</button><button data-action="save" class="${p.saved?'is-saved':''}" aria-label="Simpan">${socialIcon("bookmark",{size:20})}</button></div>`:`<div class="ua-post-actions"><a class="ua-login-action" href="#/account/login">Masuk untuk berinteraksi</a></div>`}
  <div class="ua-post-caption">${p.likes?'<strong>'+p.likes+' suka</strong>':''}<p><a href="${profileHref}"><b>${esc(p.owner.username)}</b></a> ${esc(p.caption||'')}</p>${p.comments?'<button data-action="comments" class="ua-view-comments">Lihat semua '+p.comments+' komentar</button>':''}</div>
  ${user?(p.user_id===user.id?'<section class="ua-post-editor" hidden></section>':'')+'<div class="ua-comments" hidden></div>':''}
  </article>`;
