@@ -5434,3 +5434,22 @@ body{font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.45;-web
 .ua-header nav{gap:clamp(9px,1.5vw,20px);overflow-x:auto;white-space:nowrap}
 .ua-header nav a{font-size:12px}
 @media(max-width:760px){.ua-header nav{max-width:100%;padding:0 4px}.ua-header nav a{font-size:11px}.ua-header .ua-brand{font-size:15px}.ua-mobile-nav{grid-template-columns:repeat(5,minmax(0,1fr))}.ua-mobile-nav>a{gap:3px}.ua-mobile-nav>a small{font-size:9px}}
+
+
+.pl-market-add{width:100%;margin-top:9px;border:0;border-radius:999px;padding:10px 12px;background:#172f52;color:#fff;font-size:11px;font-weight:750}
+.pl-market-cart-list,.pl-market-order-summary{background:white;border:1px solid #e5e9ef;border-radius:18px;padding:18px;max-width:820px}
+.pl-market-cart-store{padding-bottom:12px;border-bottom:1px solid #edf0f4;font-size:13px}
+.pl-market-cart-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto auto;align-items:center;gap:14px;padding:15px 0;border-bottom:1px solid #edf0f4}
+.pl-market-cart-row>div:first-child{display:grid;gap:5px;font-size:13px}.pl-market-cart-row small{font-size:11px;color:#78869a}
+.pl-market-qty{display:flex;align-items:center;gap:9px}.pl-market-qty button{width:28px;height:28px;border:1px solid #dce3ec;border-radius:50%;background:white;color:#233d5d}
+.pl-market-remove{border:0;background:none;color:#9a4d4d;font-size:11px}
+.pl-market-cart-total{display:flex;justify-content:space-between;padding:18px 0;font-size:14px}
+.pl-market-primary{display:block;text-align:center;padding:14px;background:#172f52;color:white;border-radius:999px;text-decoration:none;font-size:13px;font-weight:750}
+.pl-market-checkout-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(240px,.8fr);gap:18px;align-items:start}
+.pl-market-checkout-grid .pl-trip-create{margin:0;max-width:none}
+.pl-market-order-summary{max-width:none;position:sticky;top:120px}
+.pl-market-order-summary p{display:flex;justify-content:space-between;gap:12px;font-size:12px;color:#526078}
+.pl-market-order-summary p strong{white-space:nowrap;color:#172033}
+.pl-market-order-row{display:grid;grid-template-columns:1fr auto auto;gap:18px;align-items:center;padding:17px;background:white;border:1px solid #e5e9ef;border-radius:14px;margin-bottom:9px;text-decoration:none;color:#172033}
+.pl-market-order-row>div{display:grid;gap:5px}.pl-market-order-row small{font-size:11px;color:#78869a}.pl-market-order-row span{font-size:11px;color:#526a87;text-transform:capitalize}
+@media(max-width:700px){.pl-market-cart-row{grid-template-columns:minmax(0,1fr) auto;gap:9px}.pl-market-cart-row>strong{grid-column:1}.pl-market-remove{grid-column:2;grid-row:2}.pl-market-checkout-grid{grid-template-columns:1fr}.pl-market-order-summary{position:static}.pl-market-order-row{grid-template-columns:1fr auto;gap:8px}.pl-market-order-row strong{grid-column:1}.pl-market-order-row span{grid-column:2;grid-row:1/3}}
