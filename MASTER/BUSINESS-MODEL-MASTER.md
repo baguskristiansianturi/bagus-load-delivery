@@ -1076,3 +1076,8 @@ Empat entitas awal yang dimasukkan: Museum Bali, Lapangan Puputan Badung, Pantai
 - Supabase Performance Advisor masih menunjukkan 14 foreign key tidak terindeks, semuanya berada pada tabel legacy Social/Marketplace (bukan tabel GeoDirectory baru). Perbaikannya perlu regresi dan review beban kerja terpisah.
 - Advisor menampilkan 43 indeks belum digunakan; ini wajar pada tahap awal sebelum trafik nyata. Jangan menghapus indeks yang disiapkan untuk query/rencana fitur hanya berdasarkan statistik awal.
 - Security Advisor tidak lagi melaporkan tabel sumber GeoDirectory tanpa policy. Dua peringatan SECURITY DEFINER lama (create_store/update_store_profile) dan leaked-password protection tetap ada; lihat laporan implementasi.
+
+### 29.8 Penyempurnaan rekomendasi dan navigasi mobile
+- Sinyal perilaku 90 hari memakai decay berdasarkan recency dan batas skor kategori agar satu kategori tidak mendominasi tanpa batas.
+- UI mobile memiliki akses langsung ke GeoDirectory dari bottom navigation.
+- Event follow/share/check-in/report sudah disiapkan pada schema tetapi integrasinya ke seluruh modul belum selesai; sinyal aktif saat ini terutama view/click/save/hide.
