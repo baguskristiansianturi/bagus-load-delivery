@@ -976,3 +976,12 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - **Repository baseline:** `8bb79e378c112f4713abbdd3ad1468210d169ac8`; 81 migration files terdeteksi.
 - **Belum terbukti:** local stack berhasil start, semua migration replay berhasil, RLS role-context tests, service extraction, frontend refactor, deploy, Android UAT.
 - **Langkah berikutnya:** jalankan CI pada PR; perbaiki error replay tanpa menyentuh production; tambahkan structural/RLS tests; setelah backend contract stabil, refactor frontend bertahap dimulai dari account/session dan Social P0.
+
+
+### CP-059 update — Shared Supabase client boundary
+- **Tanggal:** 9 November 2026
+- **Status:** IMPLEMENTED ON WORK BRANCH; automated test NOT RUN; runtime/build NOT VERIFIED.
+- **Perubahan:** menambah `src/lib/supabase/client.js`; delapan page modules (account, seller, marketplace, trip, messages, directory, admin moderation, home) menggunakan client yang sama; production-surface verifier menegakkan batas ini.
+- **Tujuan:** mencegah setiap page membuat instance client dan konfigurasi URL/publishable key yang terpisah.
+- **Batas:** belum menggabungkan auth-state listeners, belum mengekstrak domain services, belum mengubah business logic/RPC, belum menjalankan Android UAT.
+- **Commit terakhir pada branch:** `9b3ede386875387e7e00b956807a3aaba3835809` (cek ulang PR head sebelum memakai sebagai checkpoint final).
