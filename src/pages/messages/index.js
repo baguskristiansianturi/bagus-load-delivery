@@ -17,7 +17,7 @@ function readQueue() {
   catch { return []; }
 }
 function writeQueue(rows) {
-  try { localStorage.setItem(queueKey(), JSON.stringify(rows.slice(-50))); return true; }
+  try { if(rows.length>50)return false; localStorage.setItem(queueKey(), JSON.stringify(rows)); return true; }
   catch { return false; }
 }
 function queueFor(conversationId) { return readQueue().filter(row => row.conversation_id === conversationId); }
@@ -172,7 +172,8 @@ async function openConversation(id) {
       if(!writeQueue(queue)){alert('Penyimpanan offline di perangkat tidak tersedia. Pesan belum disimpan.');button.disabled=false;return;}
       form.reset(); await openConversation(id); await loadConversations(); updateNetworkStatus(); return;
     }
-    const {error}=await db.from('user_messages').upsert(item,{onConflict:'sender_id,client_message_id',ignoreDuplicates:true});
+    const {created_at,...messagePayload}=item;
+    const {error}=await db.from('user_messages').upsert(messagePayload,{onConflict:'sender_id,client_message_id',ignoreDuplicates:true});
     if(error) {
       if(!navigator.onLine) {
         const queue=readQueue();queue.push(item);
@@ -191,7 +192,8 @@ async function flushOutbox() {
     const queue=readQueue(),remaining=[];
     for(const item of queue) {
       if(!navigator.onLine){remaining.push(item,...queue.slice(queue.indexOf(item)+1));break;}
-      const {error}=await db.from('user_messages').upsert(item,{onConflict:'sender_id,client_message_id',ignoreDuplicates:true});
+      const {created_at,...messagePayload}=item;
+      const {error}=await db.from('user_messages').upsert(messagePayload,{onConflict:'sender_id,client_message_id',ignoreDuplicates:true});
       if(error) remaining.push(item);
     }
     writeQueue(remaining);
