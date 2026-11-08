@@ -981,7 +981,18 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 ### CP-059 update — Shared Supabase client boundary
 - **Tanggal:** 9 November 2026
 - **Status:** IMPLEMENTED ON WORK BRANCH; automated test NOT RUN; runtime/build NOT VERIFIED.
-- **Perubahan:** menambah `src/lib/supabase/client.js`; delapan page modules (account, seller, marketplace, trip, messages, directory, admin moderation, home) menggunakan client yang sama; production-surface verifier menegakkan batas ini.
+- **Perubahan:** menambah `src/lib/supabase/client.js`; sepuluh page modules (account, seller, marketplace, trip, messages, directory, admin moderation, home, discovery, misc) menggunakan client yang sama; production-surface verifier menegakkan batas ini.
 - **Tujuan:** mencegah setiap page membuat instance client dan konfigurasi URL/publishable key yang terpisah.
 - **Batas:** belum menggabungkan auth-state listeners, belum mengekstrak domain services, belum mengubah business logic/RPC, belum menjalankan Android UAT.
 - **Commit terakhir pada branch:** `9b3ede386875387e7e00b956807a3aaba3835809` (cek ulang PR head sebelum memakai sebagai checkpoint final).
+
+
+## CP-060 — Frontend experience berjalan paralel dengan backend
+- **Tanggal:** 9 November 2026
+- **Arah founder:** seluruh frontend harus dibangun sampai lengkap dari sisi UI/UX dan alur pengguna; backend yang belum siap menjadi dependency integrasi, bukan penghambat pembangunan frontend.
+- **Dokumen kontrak:** `docs/pluits/FRONTEND-EXPERIENCE-COMPLETION-MATRIX-2026-11-09.md`.
+- **Cakupan:** route map untuk Social, Account, Messaging, Seller Center, GeoDirectory, Marketplace, Checkout, Trip, Moderation, Help/Legal/Editorial; setiap async surface wajib memiliki idle/loading/success/empty/validation/auth/forbidden/offline/retry/conflict/not-implemented states.
+- **Perbaikan kode pada branch:** Discovery dan Misc dialihkan ke shared Supabase client; account resumable upload menggunakan shared publishable key; production-surface verifier sekarang mengawasi kedua modul tersebut.
+- **Status:** IMPLEMENTED ON WORK BRANCH; test/build/workflow NOT VERIFIED; NOT DEPLOYED; Android UAT NOT TESTED.
+- **Aturan integrasi:** backend readiness tidak boleh menjadi alasan untuk meninggalkan halaman, alur, formulir, atau kontrol UI. Tidak boleh menampilkan keberhasilan palsu; fitur yang belum didukung harus menjelaskan statusnya dan mempertahankan input dengan aman.
+- **Commit terakhir:** akan dicatat setelah verifikasi head PR.
