@@ -44,6 +44,8 @@ Kemiripan pengalaman adalah strategi mengurangi hambatan adopsi, bukan izin meny
 
 ## 4. Cara kerja ekosistem: cerita Ibu Nia
 
+![Ibu Nia journey](./visuals/02-ibu-nia-journey.svg)
+
 1. Ibu Nia membuka Feed dan melihat konten teman.
 2. Ia mengunggah foto/video atau Story seperti kebiasaannya.
 3. Jika ia ingin, ia menautkan pengalaman ke hotel, restoran, toko, tempat, layanan, atau transaksi yang sesuai.
@@ -55,6 +57,8 @@ Kemiripan pengalaman adalah strategi mengurangi hambatan adopsi, bukan izin meny
 Satu transaksi tidak otomatis membuktikan kunjungan, check-in, kualitas layanan, atau kehadiran semua orang yang ditandai. Bukti harus diberi label sesuai hal yang benar-benar dapat dibuktikan.
 
 ## 5. Produk dan dampak bagi setiap pihak
+
+![PLUITS ecosystem](./visuals/01-pluits-ecosystem.svg)
 
 ### Social Media — pintu masuk utama
 Feed, Story, Reels, foto/video, profil, follow, komentar, Like, chat, notifikasi, dan komunitas. Konten personal biasa tetap menjadi bagian utama; Feed bukan katalog iklan.
@@ -75,6 +79,8 @@ Satu akun dapat memiliki identitas personal, konteks profesional, dan keanggotaa
 Bisnis memperoleh profil publik, katalog, penjualan, stok/jadwal, laporan, ekspor data, dan pengelolaan staf sesuai kategori. Organisasi memperoleh profil, pengumuman, kegiatan, pengelola, dan alur kontribusi yang akuntabel.
 
 ## 6. GeoDirectory dan kepercayaan lokal
+
+![GeoDirectory trust flow](./visuals/03-geodirectory-trust-flow.svg)
 
 GeoDirectory menjadi fondasi identitas tempat dan entitas, bukan sekadar pin peta. Pengguna dapat menemukan tempat yang bisa didatangi. Toko yang menerima pesanan harus memiliki lokasi operasional atau cakupan layanan yang dapat diperiksa.
 
