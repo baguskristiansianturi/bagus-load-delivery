@@ -52,4 +52,4 @@ Jika dokumen bertentangan, jangan menebak. Ikuti keputusan aktif terbaru di Busi
 - Founder bekerja mobile-first; laporan harus mudah diuji dari Android.
 
 ## Baseline audit
-Snapshot audit sebelumnya: 60 public tables dengan RLS aktif, 73 migration history entries, 20 SECURITY DEFINER advisor warnings, leaked-password protection nonaktif, dan 84 unused-index notices. Angka ini bukan kondisi permanen; verifikasi ulang sebelum perubahan backend/security. Temuan authorization staff granular tetap prioritas sampai terbukti ditutup.
+Snapshot audit live 8 November 2026, 12:37 UTC: 60 public tables dengan RLS aktif, 73 migration history entries, 20 SECURITY DEFINER advisor warnings, leaked-password protection nonaktif, 84 unused-index notices, dan 0 Health Advisor lints. Tidak ditemukan tabel cart pada schema public. Angka ini bukan kondisi permanen; verifikasi ulang sebelum perubahan backend/security. Temuan authorization staff granular tetap prioritas sampai terbukti ditutup.
