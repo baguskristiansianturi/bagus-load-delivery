@@ -106,3 +106,11 @@ No implementation status is asserted by this planning document. Repository and a
 - **Status:** BLUEPRINT CREATED / COMMITTED. Belum ada halaman Help/Legal publik dan belum ada Terms/Privacy final yang diterbitkan. Draft legal memerlukan inventaris data dan review profesional sebelum diberlakukan.
 - **Delivery gates:** H0 blueprint; H1 data map + account/social help and community baseline; H2 GeoDirectory/location; H3 Marketplace; H4 Trip; H5 Trust/Safety/Operations.
 - **Aturan kerja ke depan:** setiap checkpoint fitur harus mengecek dampak ke bantuan, disclosure, Terms, Privacy, dan Guidelines. Konten yang menjelaskan perilaku pengguna harus diperbarui sebelum/bersamaan dengan rilis fitur terkait.
+
+## CP-026 — Account Settings Hub (8 November 2026)
+
+- Pusat Pengaturan Pluits disusun sebagai hub mobile-first dengan kelompok Akun & Identitas; Privasi & Keamanan; Layanan Pluits; Bantuan & Informasi.
+- Hub menautkan kemampuan/rute yang tersedia. Kontrol keamanan lanjutan yang belum dibangun tidak ditampilkan sebagai toggle aktif.
+- `#/account/settings` menjadi pusat pengaturan; `#/account/content-settings` mempertahankan form preferensi konten yang tersimpan ke `account_content_preferences`.
+- Panduan pengguna: `docs/pluits/help/ACCOUNT-SETTINGS.md`.
+- Status UAT Android: menunggu pengujian pengguna.
