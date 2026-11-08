@@ -46,18 +46,18 @@ function authView(mode='login'){
   finally{btn.disabled=false;btn.textContent=signup?'Buat akun':'Masuk';}
  });
 }
-async function renderSeller(){
+async function renderSeller(preferredStoreId=null){
  const {data:{session}}=await supabase.auth.getSession();
  if(!session){authView(location.hash.includes('register')?'register':'login');return;}
  const {data:stores,error}=await supabase.from('stores').select('id,name,username,business_type,store_status,verification_status,online_sales_enabled,legal_name,email,full_address,public_city,public_area,phone,description,store_logo_path,store_banner_path,created_at').order('created_at',{ascending:true});
  if(error){document.querySelector('#app').innerHTML=shell('<div class="pluits-panel"><h2>Dashboard belum dapat dimuat</h2><p>'+esc(error.message)+'</p></div>',session.user);return;}
  if(!stores?.length){storeOnboarding(session.user);return;}
- activeStore=stores[0];
+ activeStore=stores.find(store=>store.id===preferredStoreId)||stores[0];
  await dashboard(session.user,stores);
 }
-function storeOnboarding(user){
+function storeOnboarding(user,isAdditional=false){
  document.querySelector('#app').innerHTML=shell(`
- <section class="pluits-pagehead"><span class="pluits-eyebrow">LANGKAH 1 · PROFIL BISNIS</span><h1>Buat toko pertama Anda</h1><p>Akun ini otomatis menjadi pemilik toko. Anda dapat menambahkan staf setelah tahap pengujian awal.</p></section>
+ <section class="pluits-pagehead"><span class="pluits-eyebrow">LANGKAH 1 · PROFIL BISNIS</span><h1>${isAdditional?'Daftarkan toko baru':'Buat toko pertama Anda'}</h1><p>Akun ini otomatis menjadi pemilik toko. Anda dapat menambahkan staf setelah tahap pengujian awal.</p></section>
  <form id="pluits-store-form" class="pluits-panel pluits-store-form">
   <div class="pluits-form-grid">
    <label>Nama toko / nama dagang<input name="name" required placeholder="Contoh: Sinar Bangunan"></label>
@@ -76,7 +76,7 @@ function storeOnboarding(user){
   e.preventDefault();const f=new FormData(e.currentTarget),btn=e.currentTarget.querySelector('button');btn.disabled=true;btn.textContent='Membuat toko…';
   try{
    const {data,error}=await supabase.rpc('create_store',{p_name:f.get('name'),p_username:f.get('username').toLowerCase(),p_business_type:f.get('business_type'),p_phone:f.get('phone'),p_city:f.get('city'),p_area:f.get('area')||null,p_legal_name:f.get('legal_name')||null,p_email:f.get('email')||null,p_full_address:f.get('address')||null});
-   if(error)throw error;notice('Toko berhasil dibuat.','success');await renderSeller();
+   if(error)throw error;await renderSeller(data);
   }catch(err){notice(err.message||'Toko belum dapat dibuat.','error');}
   finally{btn.disabled=false;btn.innerHTML='Buat toko dan buka dashboard <span>→</span>';}
  });
@@ -99,6 +99,18 @@ async function dashboard(user,stores){
  <section class="pluits-dashboard-head"><div><span class="pluits-eyebrow">SELLER WORKSPACE</span><h1>${esc(activeStore.name)}</h1><p>@${esc(activeStore.username)} · ${esc(activeStore.business_type)} · ${esc(activeStore.public_city)}</p></div><span class="pluits-owner-pill">OWNER ACCOUNT</span></section><p id="pluits-notice" class="pluits-notice" role="status" aria-live="polite"></p>
  <div class="pluits-dashboard"><aside class="pluits-sidebar"><div class="pluits-user"><b>${esc(user.user_metadata?.full_name||user.email)}</b><small>${esc(user.email)}</small></div><nav>${nav}</nav><div class="pluits-sidebar-foot">PLUITS INDONESIA<br><small>Seller Center v0.1</small></div></aside><section class="pluits-content">${body}</section></div><nav class="pluits-mobile-tabs" aria-label="Menu Seller Center">${nav}</nav>`,user);
  document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>{activeTab=b.dataset.tab;dashboard(user,stores)}));
+ const storeHead=document.querySelector('.pluits-dashboard-head');
+ if(storeHead){
+  const tools=document.createElement('div');tools.className='pluits-dashboard-tools';
+  if(stores.length>1){
+   const select=document.createElement('select');select.setAttribute('aria-label','Pilih toko');
+   stores.forEach(store=>{const option=document.createElement('option');option.value=store.id;option.textContent=store.name;option.selected=store.id===activeStore.id;select.append(option);});
+   select.addEventListener('change',()=>{const nextStore=stores.find(store=>store.id===select.value);if(nextStore){activeStore=nextStore;activeTab='overview';dashboard(user,stores);}});
+   tools.append(select);
+  }
+  const addStore=document.createElement('button');addStore.type='button';addStore.className='pluits-ghost';addStore.textContent='+ Buat toko baru';
+  addStore.addEventListener('click',()=>storeOnboarding(user,true));tools.append(addStore);storeHead.append(tools);
+ }
  document.querySelector('#pluits-signout')?.addEventListener('click',async()=>{await supabase.auth.signOut();location.hash='/seller/login';renderSeller();});
  bindPanel(user,stores);
 }
