@@ -82,13 +82,14 @@ function storeOnboarding(user){
  });
 }
 async function dashboard(user,stores){
- const tabs=[['overview','Ringkasan'],['products','Produk & gambar'],['categories','Kategori'],['inventory','Persediaan'],['delivery','Pengiriman'],['profile','Profil toko'],['settings','Pengaturan']];
+ const tabs=[['overview','Ringkasan'],['orders','Pesanan'],['products','Produk & gambar'],['categories','Kategori'],['inventory','Persediaan'],['delivery','Pengiriman'],['profile','Profil toko'],['settings','Pengaturan']];
  const nav=tabs.map(([id,label])=>`<button data-tab="${id}" class="${activeTab===id?'active':''}">${label}</button>`).join('');
  const {count:productCount}=await supabase.from('products').select('*',{count:'exact',head:true}).eq('store_id',activeStore.id);
  const {count:categoryCount}=await supabase.from('product_categories').select('*',{count:'exact',head:true}).eq('store_id',activeStore.id);
  let body='';
  if(activeTab==='overview')body=`<div class="pluits-stat-grid"><article><span>Produk</span><strong>${productCount||0}</strong><small>Data katalog toko</small></article><article><span>Kategori</span><strong>${categoryCount||0}</strong><small>Pengelompokan produk</small></article><article><span>Status toko</span><strong class="pluits-status">${esc(activeStore.store_status)}</strong><small>Verifikasi: ${esc(activeStore.verification_status)}</small></article></div><div class="pluits-panel pluits-welcome"><span class="pluits-eyebrow">WORKSPACE TOKO</span><h2>${esc(activeStore.name)}</h2><p>Kelola data bisnis dari satu dashboard. Mulai dengan melengkapi profil, kategori, produk, harga, stok, dan foto produk.</p><div class="pluits-shortcuts"><button data-tab="profile">Lengkapi profil →</button><button data-tab="categories">Buat kategori →</button><button data-tab="products">Tambah produk →</button></div></div>`;
- if(activeTab==='products')body=await productsPanel();
+ if(activeTab==='orders')body=await ordersPanel();
+  if(activeTab==='products')body=await productsPanel();
  if(activeTab==='categories')body=await categoriesPanel();
  if(activeTab==='inventory')body=await inventoryPanel();
  if(activeTab==='delivery')body=await deliveryPanel();
@@ -131,7 +132,13 @@ async function settingsPanel(){
  const {data}=await supabase.from('store_settings').select('*').eq('store_id',activeStore.id).single();
  return `<div class="pluits-section-head"><div><span class="pluits-eyebrow">STORE SETTINGS</span><h2>Pengaturan toko</h2><p>Atur preferensi operasional dasar.</p></div></div><form id="pluits-settings-form" class="pluits-panel pluits-form"><div class="pluits-form-grid"><label>Mata uang<input value="IDR — Rupiah Indonesia" disabled></label><label>Zona waktu<input value="Asia/Makassar" disabled></label><label>Minimum transaksi (Rp)<input name="minimum" type="number" min="0" value="${data?.minimum_order_amount||0}"></label><label class="pluits-check"><input name="pickup" type="checkbox" ${data?.allow_pickup?'checked':''}> Melayani pengambilan langsung</label><label class="pluits-check"><input name="delivery" type="checkbox" ${data?.allow_delivery?'checked':''}> Melayani pengiriman</label></div><div class="pluits-form-actions"><p id="pluits-notice" class="pluits-notice"></p><button class="pluits-primary">Simpan pengaturan</button></div></form><div class="pluits-panel pluits-note"><b>Fitur tahap berikutnya</b><p>Pengelolaan staf, jam operasional terperinci, rekening pencairan, laporan keuangan, dan pesanan akan ditambahkan setelah pengujian awal.</p></div>`;
 }
-async function bindPanel(user,stores){
+async async function ordersPanel(){
+ const {data,error}=await supabase.from('marketplace_orders').select('id,order_number,status,payment_status,total_amount,buyer_name,buyer_phone,delivery_method,delivery_address,created_at,marketplace_order_items(product_name,variant_name,quantity,line_total),marketplace_payment_records(id,payment_method,payer_reference,status,created_at)').eq('store_id',activeStore.id).order('created_at',{ascending:false}).limit(50);
+ if(error)return '<div class="pluits-panel"><h2>Pesanan belum dapat dimuat</h2><p>'+esc(error.message)+'</p></div>';
+ const rows=(data||[]).map(o=>{const pay=o.marketplace_payment_records?.[0];let actions='';if(o.status==='payment_review'&&pay?.status==='submitted')actions='<button data-payment-verify="'+pay.id+'">Verifikasi pembayaran</button><button data-payment-reject="'+pay.id+'">Tolak pembayaran</button>';if(o.status==='paid')actions='<button data-order-next="'+o.id+'" data-next="processing">Proses pesanan</button>';if(o.status==='processing')actions='<button data-order-next="'+o.id+'" data-next="'+(o.delivery_method==='pickup'?'ready_for_pickup':'shipped')+'">'+(o.delivery_method==='pickup'?'Siap diambil':'Kirim pesanan')+'</button>';if(['ready_for_pickup','shipped'].includes(o.status))actions='<button data-order-next="'+o.id+'" data-next="completed">Tandai selesai</button>';return '<article class="pluits-order-card"><header><b>'+esc(o.order_number)+'</b><span>'+esc(o.status.replaceAll('_',' '))+'</span></header><p>'+esc(o.buyer_name)+' · '+esc(o.buyer_phone)+'</p><small>'+esc(o.delivery_method)+' · '+new Date(o.created_at).toLocaleString('id-ID')+'</small><div>'+o.marketplace_order_items.map(i=>'<p>'+esc(i.product_name)+' × '+esc(i.quantity)+' <b>'+money(i.line_total)+'</b></p>').join('')+'</div><strong>'+money(o.total_amount)+'</strong>'+(pay?'<p class="pluits-order-payment">Pembayaran: '+esc(pay.payment_method)+' · '+esc(pay.payer_reference||'Tanpa referensi')+'</p>':'')+'<footer>'+actions+'</footer></article>';}).join('');
+ return '<div class="pluits-section-head"><div><span class="pluits-eyebrow">ORDER MANAGEMENT</span><h2>Pesanan masuk</h2><p>Periksa referensi transfer sebelum mengesahkan pembayaran. Stok baru dikurangi setelah verifikasi berhasil.</p></div></div><div class="pluits-order-list">'+(rows||'<div class="pluits-empty">Belum ada pesanan masuk.</div>')+'</div>';
+}
+function bindPanel(user,stores){
  const categorySelect=document.querySelector('#pluits-category-select');
  if(categorySelect){const {data}=await supabase.from('product_categories').select('id,name').eq('store_id',activeStore.id);(data||[]).forEach(c=>categorySelect.insertAdjacentHTML('beforeend',`<option value="${c.id}">${esc(c.name)}</option>`));}
  const form=document.querySelector('#pluits-product-form');
