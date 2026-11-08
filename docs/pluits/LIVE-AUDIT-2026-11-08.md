@@ -4,132 +4,117 @@ Repository: https://github.com/baguskristiansianturi/bagus-load-delivery
 Supabase project: `pluits` / `ytndswhqxayqpftszwfh`
 
 ## 1. Scope and evidence
-Inspected the GitHub main branch tree and key frontend files, live Supabase project metadata, public-schema table inventory, live migration history, RLS policies, security/performance/health advisors, function definitions/grants and triggers. This is a technical snapshot, not a penetration test or production certification.
+Inspected the GitHub main branch, Vite frontend source, live Supabase project metadata, public-schema tables, migration history, RLS policies, storage access, function definitions/grants and Supabase security/performance/health advisors. Ran read-only anonymous tests and rollback-only authenticated authorization probes. This is not a full penetration test or final production certification.
 
 ## 2. Application structure
 - Vite application with vanilla JavaScript modules.
 - Social homepage: `src/pages/home/index.js`.
 - Account/social application: `src/pages/account/index.js` and `src/pages/account/user-account.css`.
-- Marketplace and Seller Center: `src/pages/seller/index.js`, catalog, product, cart and checkout modules.
-- Supabase client uses a publishable key in the frontend; no service-role key was observed in inspected source files.
-- GitHub Pages deploy workflow builds with Node 22 and `npm ci`.
+- Marketplace and Seller Center: `src/pages/seller/index.js` and related catalog/product/cart modules.
+- Frontend uses a publishable Supabase key; no service-role key was observed in inspected frontend files.
+- GitHub Pages workflow builds with Node 22 and `npm ci`.
 
 ## 3. Social feature audit
-| Capability | Observed status |
+| Capability | Current status |
 |---|---|
-| Registration/login with Supabase Auth | Implemented in frontend; email delivery and real account UAT still required |
-| Personal profile and privacy | Implemented baseline |
-| Text/photo/video post | Implemented baseline |
-| Photo/video upload | Implemented, 50 MB cap, private bucket |
+| Registration/login | Supabase Auth flow exists; real email confirmation and founder UAT still pending |
+| Profile and privacy | Baseline implemented |
+| Text/photo/video posts | Implemented |
+| Photo/video upload | Implemented; 50 MB cap; private bucket |
 | Account Explore feed | Implemented |
-| Likes and count | Implemented in signed-in account feed |
-| Comments and count | Implemented as flat comments; no threaded replies |
+| Likes and counts | Implemented in signed-in account feed |
+| Comments and counts | Implemented as flat comments; no threaded replies |
 | Share/save/tag | Implemented baseline |
-| Public homepage social feed | Implemented read-only |
-| Public homepage like/comment/share actions | Links only; not real actions or live counts |
-| Stories | Explore strip, photo/video composer, audience control and viewer implemented; UAT pending |
-| Follow/friends graph | Not implemented in inspected routes/schema |
-| Direct messages/group chat | Not implemented |
-| Notification center | Not implemented |
-| Block/report/appeal/moderation | Not implemented as a complete flow |
+| Public homepage feed | Read-only public feed |
+| Public homepage interaction metrics/actions | Not implemented; links lead to Explore rather than recording likes/comments |
+| Stories | Explore strip, photo/video composer, audience control and viewer implemented; real-account UAT pending |
+| Reels-specific full-screen feed | Not implemented; video posts play in the normal feed |
+| Follow/friends graph | Not implemented |
+| Direct/group messaging | Not implemented |
+| Notifications | Not implemented |
+| Block/report/appeal/moderation | Not implemented as a complete workflow |
 | Communities/events | Not implemented |
 | Collaborative posts/polls/Q&A | Not implemented |
 
-### Media ratio
-- Account feed uses intrinsic media proportions; profile grid thumbnails are square by design.
-- Public homepage feed had later mobile rules forcing `object-fit: cover`, which could crop uploaded images/videos.
-- Fixed by commit `07d81f76b8c46c9e81f53104263b1d91320daa5a`: public feed media now uses intrinsic height and `object-fit: contain`. Deployment workflow run 369 completed successfully. A later full Pages workflow run 374 also completed successfully, including Vite production build, artifact upload and Deploy to GitHub Pages.
+### Media integrity
+- Account feed media uses intrinsic proportions; profile-grid thumbnails remain square previews by design.
+- Public homepage had mobile CSS overrides forcing `object-fit: cover`; this was corrected to intrinsic height and `object-fit: contain` so photos/videos are not destructively cropped.
+- GitHub Pages workflow run 369 succeeded for the media-ratio fix.
+- Stories viewer also uses contain/intrinsic media sizing.
+- Real handset testing on Android remains outstanding.
 
 ## 4. Supabase live state
 - Project status: ACTIVE_HEALTHY.
 - Region: `ap-southeast-1` (Singapore).
 - PostgreSQL 17.
 - 28 tables in `public`; all 28 have RLS enabled.
-- 19 migration history records.
+- 19 live migration history records.
 - 0 Edge Functions deployed.
-- One draft, unverified store and one draft product exist. They are not public active listings.
+- One draft, unverified store and one draft product exist; neither is a public active listing.
 
-## 5. Migration history reconciliation — resolved
-
+## 5. Migration history — reconciled
 The active `supabase/migrations/` directory contains 19 files and the live database has 19 migration history records. Version/name comparison confirms an exact match: zero missing records and zero extra active files.
 
-Five missing SQL definitions were recovered from the authoritative `supabase_migrations.schema_migrations.statements` records. Four early file names were corrected; five divergent drafts were replaced with exact applied SQL and archived. The unapplied legacy `202611070001_initial_marketplace.sql` is archived outside the active migration directory.
+Five missing SQL definitions were recovered from authoritative `supabase_migrations.schema_migrations.statements`. Four early filenames were corrected; five divergent drafts were replaced with exact applied SQL and preserved under `supabase/archive/`. The unapplied legacy `202611070001_initial_marketplace.sql` was also archived outside the active migration directory because it is absent from live history and conflicts with the later applied seller workspace migration.
 
-Two additional migrations were applied and committed: `20261108011806_enforce_social_media_owner_paths` and `20261108011838_optimize_story_and_wallet_rls_policies`. No production reset or migration replay was performed.
+Two further hardening migrations are applied and committed:
+- `20261108011806_enforce_social_media_owner_paths`
+- `20261108011838_optimize_story_and_wallet_rls_policies`
 
-## 6. Security findings
-### Positive
-- RLS is enabled on all 28 public tables.
-- Private user addresses are owner-only.
-- User media bucket is private and access is policy-scoped.
-- Store owner and staff roles are represented separately.
-- Anonymous public social reads are limited by public visibility and published status.
+No production reset or migration replay was performed.
 
-### Fixed in live database
-- Validated media-path owner constraints on `user_posts` and `user_stories`. Foreign UUID-folder paths are rejected; same-user paths pass. Tests ran in rollback transactions.
-- Stories SELECT policies are now separated by role; the multiple-permissive-policy warning is cleared.
-- Wallet RLS policies use `(select auth.uid())`; three RLS init-plan warnings are cleared.
+## 6. Security findings and fixes
+### Fixed and verified
+- **Social media path ownership:** before the fix, a rollback-only authenticated insert probe proved a public post could reference another UUID's media folder. The validated CHECK constraints on `user_posts` and `user_stories` now require media paths to begin with the matching owner's UUID folder and include a non-empty object name. Foreign-folder paths are rejected; same-user paths pass. All probes were rolled back.
+- **Stories audience RLS:** public Stories are readable by anon only when active, marked public, and owned by a public profile. Authenticated users can read their own Stories plus active public Stories. A rollback-only test confirmed anon could read the public Story and could not read the private Story.
+- **Wallet RLS evaluation:** wallet policies now use `(select auth.uid())`, removing three RLS init-plan warnings.
+- **Stories policy overlap:** role-specific SELECT policies removed the multiple-permissive-policy warning.
+- **Store RPC boundary:** anonymous execution is denied. A rollback-only probe confirmed a non-owner call to `public.update_store_profile` is rejected.
 
 ### Remaining security work
-- Two SECURITY DEFINER store RPCs remain callable by authenticated users. Both check `auth.uid()` and anonymous execution is denied; unrelated-user RPC probe was rejected. Keep owner-boundary tests and review staff permissions.
-- Leaked-password protection remains disabled and must be enabled in Supabase Auth settings before public launch.
-- RLS being enabled is not equivalent to policy correctness. Two-account owner/unrelated-user tests remain outstanding.
+- **Two SECURITY DEFINER RPC warnings:** `public.create_store` and `public.update_store_profile` remain callable by authenticated users. Both check `auth.uid()`, use a fixed search_path, and anon execution is denied. The non-owner update probe was rejected. Keep these privileged boundaries under test and review store staff/owner permissions before launch.
+- **Leaked-password protection disabled:** enable Supabase Auth's leaked-password protection before public launch. This setting was not changed because the connected Supabase actions do not expose Auth security settings.
+- **Two-account privacy UAT:** still required for private profiles/posts, media, addresses, Stories, store memberships and revoked staff.
 
-## 7. Performance advisor
+## 7. Performance and health advisors after hardening
 - 14 foreign keys without covering indexes.
-- 3 auth RLS init-plan warnings on wallet policies.
-- 14 unused-index notices (do not remove them just because the database is new).
-- 1 multiple-permissive-policy warning on Stories.
+- 12 unused-index notices; do not remove indexes solely because the new database has low usage.
+- Wallet RLS init-plan warnings: 0 (previously 3).
+- Multiple-permissive Stories SELECT warning: 0 (previously 1).
 - Health advisor returned no lints.
 
 ## 8. Commerce and wallet boundaries
-- Existing seller workspace and product catalog are present.
+- Seller workspace and product catalog exist.
 - Current live store/product data remains draft/unverified.
-- The prior project checkpoint records cart/order demo behavior as local-only and checkout as deliberately disabled until real backend order, stock, delivery and payment handling exists.
-- Wallet tables and a user request screen exist, but no payment provider, verified settlement, withdrawal processing or complete financial ledger is operational. Do not describe it as a live money wallet.
+- Checkout remains disabled pending real server-side orders, stock validation, delivery calculation, payment processing, refund handling and UAT.
+- Wallet tables and request UI are scaffolding only. No payment provider, verified settlement, withdrawal processing or complete financial ledger is operational. Do not describe it as a live money wallet.
 
-## 9. Delivery priorities
-1. Reconcile migration history without resetting production.
-2. Enable leaked-password protection.
-3. Test storage object ownership, private content and store RPC boundaries with multiple accounts.
-4. Review store staff permissions, audit write path and RPC grants.
-5. UAT Stories UI; then implement public feed metrics/actions.
-6. Build follow graph, notifications, report/block/moderation and messaging with privacy controls.
-7. Keep commerce checkout and wallet disabled until server-side transaction/ledger paths and UAT are complete.
-
-## 10. Verification status
-- Repository and database audit: completed for this snapshot.
-- Media-ratio correction: committed and deployed by successful GitHub Pages workflows 369 and 374.
-- Security fixes: media ownership constraints and RLS policy optimizations applied and verified; leaked-password protection still requires Auth settings.
-- Android UAT and two-account privacy tests: not performed.
-- Production readiness: NOT APPROVED by this report.
-
-## 11. Additional verification completed after the initial snapshot
-- GitHub Pages workflow run 374: **SUCCESS**. Confirmed all steps passed: `npm ci`, `npm run build`, `test -f dist/index.html`, artifact upload and Deploy to GitHub Pages.
-- Anonymous database test (transaction rolled back): 2 public profiles visible; 1 public post visible; 0 private address rows visible; 0 active story rows visible.
-- Anonymous Storage test (transaction rolled back): 2 objects in `pluits-user-media` visible under current public-media policies, versus 4 total objects; 0 `pluits-store-media` objects visible, versus 1 total object.
-- Current data consistency query: 2 user posts; 0 posts currently reference a media path whose first folder differs from the post owner's UUID. This is a snapshot, not proof the policy prevents future attempts.
-- Stories table currently contains 0 rows.
-- Android device UAT and signed-in two-account tests remain NOT TESTED.
-
-## 12. Migration reconciliation verification
-- Active migration files: 17.
-- Live migration history entries: 17.
-- Exact version/name match: yes.
-- Missing or extra active migrations: none.
-- Superseded/unapplied drafts: preserved outside `supabase/migrations/`.
-
-## 13. Media ownership and policy optimization verification
-- Before the fix, a rollback-only authenticated insert probe proved a post could reference a foreign UUID folder path.
-- After migration `20261108011806`, foreign-folder paths are rejected for both `user_posts` and `user_stories`; same-user folder paths pass. Probe inserts were rolled back.
-- Migration `20261108011838` splits Stories read policies by role and changes wallet RLS calls to `(select auth.uid())`.
-- Latest advisors: 2 SECURITY DEFINER warnings remain, leaked-password protection remains disabled; performance warnings are 14 unindexed foreign keys and 12 unused indexes. No wallet RLS initplan or duplicate Stories policy warning remains.
-- Active migration files: 19; live history: 19; exact version/name match.
-
-## 14. Stories UI delivery
-- Explore Stories strip, compact photo/video composer, audience control, and viewer are implemented.
-- Private profiles cannot select public Story visibility in the UI.
-- Public Story vs private Story RLS smoke test passed inside a rolled-back transaction: anon can read the public Story of a public profile, but cannot read the private Story.
-- GitHub Pages workflow run 423 succeeded, including Vite build and Deploy to GitHub Pages.
+## 9. Stories delivery
+- Explore includes a horizontal Stories strip, photo/video composer, caption, audience control and viewer.
+- Public visibility is disabled in the composer when the account profile is private.
+- Story records are excluded from active reads after 24 hours. Automated permanent deletion/archive of expired media is not implemented.
+- GitHub Pages workflow run 423 succeeded, including Vite production build, artifact upload and Deploy to GitHub Pages.
+- Public/private Story RLS smoke test passed in a rolled-back transaction.
 - Real account upload/view and Android handset UAT remain NOT TESTED.
-- Stories are hidden from active reads after 24 hours; automated object deletion/archive is not implemented yet.
+
+## 10. Anonymous access smoke test
+Executed as the PostgreSQL `anon` role inside rolled-back transactions:
+- Public profiles visible: 2.
+- Public posts visible: 1.
+- Private addresses visible: 0.
+- Active Stories visible outside the temporary probe: 0.
+- `pluits-user-media` objects visible: 2 of 4 total.
+- `pluits-store-media` objects visible: 0 of 1 total.
+
+These are limited smoke tests, not a substitute for signed-in two-account and full Storage upload/delete tests.
+
+## 11. Release priorities
+1. Enable leaked-password protection in Supabase Auth settings.
+2. Complete real-account registration, email confirmation, profile, post, Story and Android UAT.
+3. Run two-account owner/unrelated-user tests for private content, addresses, Stories, store data and wallet requests.
+4. Review store staff permissions, audit writes and SECURITY DEFINER RPC grants.
+5. Implement public homepage engagement metrics/actions, follow graph, notifications, messaging, reporting/blocking/moderation and Reels-specific experience.
+6. Keep checkout and wallet disabled until server-side transaction/ledger paths and UAT are complete.
+
+## 12. Production readiness
+**NOT APPROVED yet.** Repository migration history is reconciled; two backend hardening migrations are applied; Stories UI and media-ratio changes are deployed. Remaining launch gates are Auth leaked-password protection, real-account/Android UAT, two-account privacy tests, and the remaining social safety/commerce work.
