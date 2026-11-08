@@ -409,30 +409,32 @@ async function publicProfilePage(username){
  const {data:countsData,error:countsError}=await supabase.rpc('get_user_follow_counts',{p_user_id:target.id});
  if(countsError)throw countsError;
  const counts=Array.isArray(countsData)?countsData[0]:(countsData||{});
-
- const avatarUrl=await signed(target.avatar_path),coverUrl=await signed(target.cover_path);
+ const [avatarUrl,coverUrl]=await Promise.all([signed(target.avatar_path),signed(target.cover_path)]);
  let posts=[];
  if(target.visibility==='public'||isOwner||relation?.status==='accepted'){
   const {data:rows,error:pe}=await supabase.from('user_posts').select('*').eq('user_id',target.id).eq('visibility','public').eq('moderation_status','published').order('created_at',{ascending:false}).limit(60);
   if(pe)throw pe;posts=await hydratePosts(rows||[]);
  }
- const followLabel=isOwner?'Edit profil':relation?.status==='accepted'?'Mengikuti':relation?.status==='pending'?'Permintaan terkirim':target.visibility==='private'?'Minta mengikuti':'Ikuti';
  const canSeeCounts=target.visibility==='public'||isOwner||relation?.status==='accepted';
- return `<div class="ua-page-heading"><div><span class="ua-eyebrow">PROFIL PENGGUNA</span><h1>@${esc(target.username)}</h1></div><a class="ua-outline" href="#/account/explore">Kembali ke Explore</a></div>
- <section class="ua-profile-card ua-public-profile">
+ const reels=posts.filter(p=>p.media?.length===1&&p.media[0].media_type==='video'&&Number(p.media[0].duration_ms||0)>0&&Number(p.media[0].duration_ms||0)<=60000);
+ profileReels=reels;
+ const followLabel=isOwner?'Edit profil':relation?.status==='accepted'?'Mengikuti':relation?.status==='pending'?'Permintaan terkirim':target.visibility==='private'?'Minta mengikuti':'Ikuti';
+ const action=isOwner?'<a class="ua-primary ua-inline" href="#/account/profile">Edit profil</a>':user?`<button type="button" class="ua-primary ua-inline" data-follow-target="${target.id}" data-follow-state="${relation?.status||''}" data-follow-username="${esc(target.username)}" ${relation?.status==='pending'&&relation.follower_id!==user.id?'disabled':''}>${followLabel}</button>`:'<a class="ua-primary ua-inline" href="#/account/login">Masuk untuk mengikuti</a>';
+ const postsMarkup=target.visibility==='private'&&!isOwner&&relation?.status!=='accepted'?'<div class="ua-empty"><strong>Akun ini privat</strong><p>Ajukan permintaan mengikuti untuk melihat postingan akun ini.</p></div>':posts.length?postGrid(posts):'<div class="ua-empty"><strong>Belum ada postingan</strong><p>Postingan publik akan tampil di sini.</p></div>';
+ return `<section class="ua-profile-card ua-public-profile">
   <div class="ua-cover" ${coverUrl?`style="background-image:url('${coverUrl}')"`:''}><span>PLUITS PROFILE</span></div>
   <div class="ua-profile-content"><div class="ua-profile-avatar">${avatar(avatarUrl,target.display_name,'large')}</div>
-   <div class="ua-profile-identity"><h2>${esc(target.display_name)}</h2><div class="ua-username">@${esc(target.username)}</div>
-   <div class="ua-location">${target.public_city&&target.public_province?'⌖ '+esc(target.public_city)+', '+esc(target.public_province):''}</div>
-   <p>${esc(target.bio||'')}</p>
-   <div class="ua-profile-stats"><span><strong>${posts.length}</strong><span>Postingan</span></span><span><strong>${canSeeCounts?(counts.followers_count??0):'—'}</strong><span>Pengikut</span></span><span><strong>${canSeeCounts?(counts.following_count??0):'—'}</strong><span>Mengikuti</span></span></div>
-   ${isOwner?`<a class="ua-primary ua-inline" href="#/account/profile">Edit profil</a>`:user?`<button type="button" class="ua-primary ua-inline" data-follow-target="${target.id}" data-follow-state="${relation?.status||''}" data-follow-username="${esc(target.username)}" ${relation?.status==='pending'&&relation.follower_id!==user.id?'disabled':''}>${followLabel}</button>`:`<a class="ua-primary ua-inline" href="#/account/login">Masuk untuk mengikuti</a>`}
+   <div class="ua-profile-identity"><div class="ua-profile-name-row"><div><h2>${esc(target.display_name)}</h2><div class="ua-username">@${esc(target.username)}</div></div></div>
+    <p>${esc(target.bio||'')}</p><div class="ua-location">${target.public_city&&target.public_province?'⌖ '+esc(target.public_city)+', '+esc(target.public_province):''}</div>
+    <div class="ua-profile-stats"><span><strong>${canSeeCounts?posts.length:'—'}</strong><span>Postingan</span></span><span><strong>${canSeeCounts?(counts.followers_count??0):'—'}</strong><span>Pengikut</span></span><span><strong>${canSeeCounts?(counts.following_count??0):'—'}</strong><span>Mengikuti</span></span></div>
+    ${action}
    </div>
   </div>
  </section>
- <section class="ua-panel ua-posts-panel"><div class="ua-section-title"><div><span class="ua-eyebrow">KONTEN PROFIL</span><h2>Postingan</h2></div></div>
- ${target.visibility==='private'&&!isOwner&&relation?.status!=='accepted'?'<div class="ua-empty"><strong>Akun ini privat</strong><p>Ajukan permintaan mengikuti untuk melihat postingan publik akun ini setelah disetujui.</p></div>':posts.length?postGrid(posts):'<div class="ua-empty"><strong>Belum ada postingan publik</strong><p>Postingan publik akan tampil di sini.</p></div>'}
- </section>`;
+ <nav class="ua-profile-tabs" role="tablist" aria-label="Konten profil">
+  <button class="active" type="button" role="tab" aria-selected="true" data-profile-tab="posts">▦ <span>Postingan</span></button><button type="button" role="tab" aria-selected="false" data-profile-tab="reels">▣ <span>Reels</span></button><button type="button" role="tab" aria-selected="false" data-profile-tab="tagged">♙ <span>Ditandai</span></button>
+ </nav>
+ <section id="ua-profile-tab-content" class="ua-profile-tab-content" role="tabpanel">${postsMarkup}</section>`;
 }
 async function notificationPage(){
  const {data,error}=await supabase.from('user_notifications').select('id,actor_user_id,notification_type,entity_type,entity_id,message,created_at,read_at').order('created_at',{ascending:false}).limit(60);
