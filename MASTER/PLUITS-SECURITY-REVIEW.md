@@ -226,3 +226,27 @@ This snapshot supersedes earlier live counts in this document.
 - Re-ran Supabase advisors: the 7 multiple-permissive-policy warnings introduced by the initial split are now cleared.
 - Final snapshot: 20 authenticated-callable SECURITY DEFINER warnings remain; leaked-password protection remains disabled; 84 unused-index INFO notices remain; Health Advisor has 0 lints.
 - Live policy inspection shows one policy per write operation on the affected tables. Products/images/variants retain separate public/authenticated SELECT policies as intended.
+
+
+## 2026-11-08 — Social messaging, account preference and system announcement hardening
+
+### Applied live migrations
+- `20261108135647_pluits_social_realtime_offline_message_queue`: nullable idempotency key `user_messages.client_message_id` with unique sender/key constraint; notification types expanded for unfollow, inbox and system updates; private trigger functions create unfollow and direct-message notifications; realtime publication includes user_messages, user_follows and user_notifications.
+- `20261108140017_pluits_account_language_preference`: adds constrained `user_profiles.preferred_language` (id/en).
+- `20261108140823_pluits_system_announcements`: announcement/read-receipt tables, RLS, admin/moderator publishing policy, per-user read receipts, and realtime publication.
+- Repository migration files match the applied versions.
+
+### Security boundaries
+- DM inserts remain authenticated-only and require sender identity plus `private.can_send_conversation_message`; reads remain conversation-member-only.
+- Idempotency is per sender/client message ID. The browser removes its local created_at from the server insert so the database owns canonical send time.
+- Offline outbox stores at most 50 pending message records per signed-in user in browser localStorage; it is device-local and is not encrypted by Pluits. Users must not treat it as delivered until the server confirms. Offline history is not fetched and new conversations cannot be created offline.
+- System announcements are visible only when published and within their active date window; drafts/management are restricted to admin/moderator claims in app_metadata. Read receipts are owner-only.
+- Announcement language supports id/en selection, but complete UI translation is not implemented.
+- SMS phone verification depends on Supabase Auth SMS provider configuration. TOTP MFA uses Supabase Auth MFA; actual enrollment/verification remains untested.
+- Personal identity verification is not implemented; current verification case model supports professional/store targets only.
+
+### Verification still required
+- Live schema and realtime publication membership verified after migrations.
+- Health Advisor returned 0 lints at the latest check.
+- Two-account REST/Realtime tests, real Android offline/reconnect, MFA enrollment, SMS OTP, moderator announcement publishing and read receipts remain NOT TESTED.
+- No user accounts, posts, media, messages, orders, or existing notifications were deleted or rewritten by these migrations.
