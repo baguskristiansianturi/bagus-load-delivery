@@ -74,3 +74,10 @@ BLOCKED, FAILED, NOT TESTED, dan NOT VERIFIED wajib dicatat. Satu status tidak m
 - Tidak ada secret/data pribadi/data uji privat di repository publik.
 - Backend menegakkan akses; frontend merefleksikan izin/status.
 - Terapkan least privilege, audit trail, observability, backup/restore, rate limits, dan human approval untuk tindakan AI berisiko.
+
+
+## Backend-first / local CI references — 9 November 2026
+- `docs/pluits/BACKEND-FIRST-FOUNDATION-AND-LOCAL-CI-2026-11-09.md` — environment boundaries, domain/backend layers, request lifecycle, phases and gates.
+- `docs/pluits/FRONTEND-BACKEND-ALIGNMENT-PLAN-2026-11-09.md` — route-to-domain contract map and frontend service refactor sequence.
+- `supabase/config.toml` — local-only Supabase config. Never link this local workspace to production.
+- `.github/workflows/backend-contracts.yml` — isolated migration replay followed by frontend contract/build checks.
