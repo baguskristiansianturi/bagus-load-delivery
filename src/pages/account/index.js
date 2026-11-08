@@ -471,10 +471,22 @@ async function notificationPage(){
  const systemItems=announcements.map(a=>'<button type="button" class="ua-notification-row ua-system-notice '+(readAnnouncements.has(a.id)?'':'is-unread')+'" data-announcement-id="'+a.id+'"><span class="ua-notification-avatar">P</span><span class="ua-notification-copy"><strong>Pluits</strong><span>'+esc(a.title)+'</span><small>'+esc(a.severity==='critical'?'Penting':a.severity==='important'?'Pembaruan':'Informasi')+' · '+fmtDate(a.published_at)+'</small><p>'+esc(a.body)+'</p></span>'+(readAnnouncements.has(a.id)?'':'<i aria-label="Belum dibaca"></i>')+'</button>').join('');
  return '<div class="ua-page-heading"><div><span class="ua-eyebrow">AKTIVITAS AKUN</span><h1>Aktivitas</h1><p>'+(unread?unread+' pemberitahuan belum dibaca':'Semua aktivitas sudah dibaca')+'</p></div>'+(unread?'<button type="button" class="ua-outline" data-notifications-read-all>Tandai semua dibaca</button>':'')+'</div>'+(systemItems?'<section class="ua-panel ua-notification-list ua-system-list"><div class="ua-section-title"><strong>Informasi Pluits</strong></div>'+systemItems+'</section>':'')+'<section class="ua-panel ua-notification-list">'+(items||'<div class="ua-empty"><strong>Belum ada aktivitas</strong><p>Permintaan mengikuti, suka, komentar, dan pesan akan muncul di sini.</p></div>')+'</section>';
 }
+async function refreshUnreadBadge(){
+ const {count,error}=await supabase.from('user_notifications').select('id',{count:'exact',head:true}).is('read_at',null);
+ if(error)return;
+ unreadNotificationCount=count||0;
+ document.querySelectorAll('.pl-nav-activity,.pl-mobile-notice').forEach(link=>{
+  let badge=link.querySelector('.pl-nav-unread');
+  if(unreadNotificationCount>0){
+   if(!badge){badge=document.createElement('i');badge.className='pl-nav-unread';link.appendChild(badge);}
+   badge.textContent=unreadNotificationCount>99?'99+':String(unreadNotificationCount);
+  }else badge?.remove();
+ });
+}
 function bindNotificationActions(){
  if(activityNotificationChannel){supabase.removeChannel(activityNotificationChannel);activityNotificationChannel=null;}
- if(user){activityNotificationChannel=supabase.channel('pluits-activity-'+user.id).on('postgres_changes',{event:'INSERT',schema:'public',table:'user_notifications',filter:'recipient_user_id=eq.'+user.id},()=>{if(location.hash.includes('/account/activity'))mountAccount('activity');})
-  .on('postgres_changes',{event:'*',schema:'public',table:'pluits_system_announcements'},()=>{if(location.hash.includes('/account/activity'))mountAccount('activity');}).subscribe();}
+ if(user){activityNotificationChannel=supabase.channel('pluits-activity-'+user.id).on('postgres_changes',{event:'INSERT',schema:'public',table:'user_notifications',filter:'recipient_user_id=eq.'+user.id},async()=>{await refreshUnreadBadge();if(location.hash.includes('/account/activity'))mountAccount('activity');})
+  .on('postgres_changes',{event:'*',schema:'public',table:'pluits_system_announcements'},async()=>{await refreshUnreadBadge();if(location.hash.includes('/account/activity'))mountAccount('activity');}).subscribe();}
  document.querySelectorAll('[data-notification-id]').forEach(link=>link.addEventListener('click',async e=>{e.preventDefault();const id=link.dataset.notificationId,href=link.dataset.notificationHref;if(link.classList.contains('is-unread')){const {error}=await supabase.from('user_notifications').update({read_at:new Date().toISOString()}).eq('id',id);if(error){notify('Status pemberitahuan belum dapat diperbarui.','error');return;}}location.hash=href;}));
  document.querySelectorAll('[data-announcement-id]').forEach(button=>button.addEventListener('click',async()=>{
   const {error}=await supabase.from('pluits_system_announcement_reads').upsert({announcement_id:button.dataset.announcementId,user_id:user.id,read_at:new Date().toISOString()},{onConflict:'announcement_id,user_id'});
