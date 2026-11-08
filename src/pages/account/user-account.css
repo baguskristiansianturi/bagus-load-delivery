@@ -485,3 +485,8 @@
  .ua-comment-copy{padding:9px 10px}
  .ua-comment-form input,.ua-reply-form input{font-size:13px}
 }
+
+.ua-header-profile{display:inline-flex;align-items:center;justify-content:center;flex:none;border-radius:50%;text-decoration:none}
+.ua-header-profile .ua-avatar{width:36px;height:36px;border:1px solid #dce4e9}
+.ua-header-profile:focus-visible{outline:2px solid #477b8b;outline-offset:3px}
+@media(max-width:760px){.ua-header-profile{display:none}.ua-social-app .ua-header nav{display:none}}
