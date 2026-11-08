@@ -72,6 +72,7 @@ assert.match(navigation, /#\/account\/activity/, 'Social navigation must expose 
 
 const account = read('src/pages/account/index.js');
 assert.match(account, /unreadNotificationCount/, 'Social navigation must receive unread notification count.');
+assert.match(account, /refreshUnreadBadge/, 'Realtime social events must refresh the unread badge.');
 for (const type of ['new_message', 'unfollow', 'system_update']) {
   assert.ok(account.includes(type), `Activity center missing notification type: ${type}`);
 }
