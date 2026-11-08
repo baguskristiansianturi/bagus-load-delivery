@@ -520,3 +520,5 @@ Build dari commit `642a24bdbed4a85931271e7481f9880a04cc9fc3` berhasil. GitHub Pa
 
 - Migration tambahan `20261108041216_pluits_directory_fk_indexes` menutup temuan indeks foreign key pada tabel GeoDirectory. Performance Advisor tersisa 14 FK legacy tanpa indeks dan 43 indeks belum digunakan pada fase tanpa trafik; evaluasi legacy terpisah, jangan hapus indeks terencana secara prematur.
 - Security Advisor: policy sumber GeoDirectory sudah eksplisit deny dan tidak mendapat grants anon; peringatan tersisa berasal dari dua RPC toko SECURITY DEFINER lama serta leaked-password protection yang belum aktif.
+
+- Ranking adaptive diperhalus dengan decay 90 hari dan batas skor per kategori. Bottom navigation mobile kini menyediakan pintasan GeoDirectory.
