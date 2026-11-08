@@ -270,49 +270,44 @@ async function hydratePosts(rows){
  }));
 }
 async function feedPage(){
-  const {data,error}=await supabase.from('user_posts').select('*').eq('visibility','public').eq('moderation_status','published').order('created_at',{ascending:false}).limit(100);
-  if(error)throw error;
-  let source=data||[],followingIds=[],blockedIds=[];
-   if(user?.id){const {data:blocks,error:blockError}=await supabase.from('user_blocks').select('blocker_id,blocked_id').or('blocker_id.eq.'+user.id+',blocked_id.eq.'+user.id);if(blockError)throw blockError;blockedIds=(blocks||[]).map(x=>x.blocker_id===user.id?x.blocked_id:x.blocker_id);source=source.filter(post=>!blockedIds.includes(post.user_id));}
-  if(exploreFilter==='following'){
+ const {data,error}=await supabase.from('user_posts').select('*').eq('visibility','public').eq('moderation_status','published').order('created_at',{ascending:false}).limit(100);
+ if(error)throw error;
+ let source=data||[],followingIds=[],blockedIds=[];
+ if(user?.id){
+  const {data:blocks,error:blockError}=await supabase.from('user_blocks').select('blocker_id,blocked_id').or('blocker_id.eq.'+user.id+',blocked_id.eq.'+user.id);
+  if(blockError)throw blockError;
+  blockedIds=(blocks||[]).map(x=>x.blocker_id===user.id?x.blocked_id:x.blocker_id);
+  source=source.filter(post=>!blockedIds.includes(post.user_id));
+ }
+ if(exploreFilter==='following'){
+  if(user?.id){
    const {data:follows,error:followError}=await supabase.from('user_follows').select('following_id').eq('follower_id',user.id).eq('status','accepted');
    if(followError)throw followError;
    followingIds=(follows||[]).map(x=>x.following_id);
-   const visibleIds=new Set([...followingIds,user.id]);
-   source=source.filter(post=>visibleIds.has(post.user_id));
-  }
-  const posts=await hydratePosts(source);
-  const sorted=posts.sort((a,b)=>{
-   if(exploreFilter==='latest')return new Date(b.created_at)-new Date(a.created_at);
-   if(exploreFilter==='popular')return (b.likes*3+b.comments)-(a.likes*3+a.comments)||new Date(b.created_at)-new Date(a.created_at);
-   const aFollow=followingIds.includes(a.user_id)?1:0,bFollow=followingIds.includes(b.user_id)?1:0;
-   return (bFollow-aFollow)||((b.likes*3+b.comments)-(a.likes*3+a.comments))||new Date(b.created_at)-new Date(a.created_at);
-  });
-  const {data:storyRows,error:storyError}=await supabase.from('user_stories').select('id,user_id,media_path,media_type,caption,visibility,created_at,expires_at').gt('expires_at',new Date().toISOString()).eq('visibility','public').order('created_at',{ascending:false}).limit(30);
-  if(storyError)throw storyError;
-  const visibleStories=(storyRows||[]).filter(s=>!blockedIds.includes(s.user_id));
-   const ownerIds=[...new Set(visibleStories.map(s=>s.user_id))];
-  let storyProfiles=[];
-  if(ownerIds.length){
-   const profileResult=await supabase.from('user_profiles').select('id,display_name,username,avatar_path').in('id',ownerIds);
-   if(profileResult.error)throw profileResult.error;
-   storyProfiles=profileResult.data||[];
-  }
-  const profileMap=new Map(storyProfiles.map(p=>[p.id,p]));
-  const stories=await Promise.all(visibleStories.map(async story=>{
-   const owner=profileMap.get(story.user_id)||{};
-   return {...story,owner,mediaUrl:await signed(story.media_path),avatarUrl:owner.avatar_path?await signed(owner.avatar_path):''};
-  }));
-  const storyCards=stories.map(story=>"<button type='button' class='ua-story-item' data-story-url='"+esc(story.mediaUrl||'')+"' data-story-type='"+esc(story.media_type)+"' data-story-owner='"+esc(story.owner.display_name||'Pengguna Pluits')+"' data-story-caption='"+esc(story.caption||"")+"'><span class='ua-story-ring'>"+(story.avatarUrl?"<img src='"+esc(story.avatarUrl)+"' alt=''>":"<b>PL</b>")+"</span><small>"+esc(story.owner.display_name||'Pluits')+"</small></button>").join('');
-  const defaultStoryVisibility=profile.visibility==='public'?'public':'private';
-  const storySection="<section class='ua-stories-block'><div class='ua-stories-head'><div><strong>Stories</strong><small>Foto atau video singkat yang hilang setelah 24 jam</small></div><details class='ua-story-create'><summary>＋ Buat Story</summary><form id='ua-story-form' class='ua-story-form'><label class='ua-story-upload'>Pilih foto atau video<input type='file' accept='image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm' required></label><div id='ua-story-preview' class='ua-story-preview'></div><label>Caption (opsional)<textarea name='caption' rows='2' maxlength='220' placeholder='Tambahkan cerita singkat...'></textarea></label><label>Siapa yang dapat melihat?<select name='visibility'><option value='private' "+(defaultStoryVisibility==='private'?'selected':'')+">Hanya saya</option><option value='public' "+(defaultStoryVisibility==='public'?'selected':'')+(defaultStoryVisibility==='private'?' disabled':'')+">Publik</option></select></label><p id='ua-story-note' class='ua-story-note'></p><button class='ua-primary' type='submit'>Bagikan Story</button></form></details></div><div class='ua-story-strip'>"+(storyCards||"<div class='ua-story-empty'>Belum ada Story publik yang aktif. Bagikan momen pertama Anda.</div>")+"</div></section>";
-  const filters=[['recommended','Untuk Anda'],['following','Mengikuti'],['latest','Terbaru'],['popular','Populer']];
-  const filterBar="<nav class='ua-explore-filters' aria-label='Urutan konten'>"+filters.map(([key,label])=>"<button type='button' data-explore-filter='"+key+"' class='"+(exploreFilter===key?'active':'')+"' aria-pressed='"+(exploreFilter===key?"true":"false")+"'>"+label+"</button>").join('')+"</nav>";
-  const empty=exploreFilter==='following'?"Belum ada postingan dari akun yang Anda ikuti. Ikuti beberapa akun untuk membangun beranda Anda.":"Belum ada konten publik di sini. Jadilah salah satu yang pertama berbagi cerita.";
-  return "<div class='ua-page-heading'><div><span class='ua-eyebrow'>TEMUKAN KOMUNITAS</span><h1>Explore</h1><p>Temukan cerita dan video dari komunitas Pluits.</p></div><div class='ua-heading-actions'><a class='ua-outline' href='#/account/reels'>Lihat Reels</a><a class='ua-primary ua-inline' href='#/account/compose'>＋ Buat postingan</a></div></div>"+storySection+filterBar+
-  "<div class='ua-explore-note'>Pilih aliran yang ingin Anda lihat. Rekomendasi mengutamakan kebaruan dan interaksi, tanpa mengunci konten baru di belakang angka popularitas.</div>"+
-  "<section class='ua-feed'>"+(sorted.length?sorted.map(postCard).join(''):"<div class='ua-panel ua-empty'><strong>"+empty+"</strong><p>Anda dapat mengganti pilihan aliran kapan saja.</p><a class='ua-primary ua-inline' href='#/account/compose'>Unggah foto atau video</a></div>")+"</section>";
+   const visibleIds=new Set([...followingIds,user.id]);source=source.filter(post=>visibleIds.has(post.user_id));
+  }else source=[];
  }
+ const posts=await hydratePosts(source);
+ const sorted=posts.sort((a,b)=>{
+  if(exploreFilter==='latest')return new Date(b.created_at)-new Date(a.created_at);
+  if(exploreFilter==='popular')return (b.likes*3+b.comments)-(a.likes*3+a.comments)||new Date(b.created_at)-new Date(a.created_at);
+  const af=followingIds.includes(a.user_id)?1:0,bf=followingIds.includes(b.user_id)?1:0;
+  return (bf-af)||new Date(b.created_at)-new Date(a.created_at);
+ });
+ const {data:storyRows,error:storyError}=await supabase.from('user_stories').select('id,user_id,media_path,media_type,caption,visibility,created_at,expires_at').gt('expires_at',new Date().toISOString()).eq('visibility','public').order('created_at',{ascending:false}).limit(30);
+ if(storyError)throw storyError;
+ const visibleStories=(storyRows||[]).filter(s=>!blockedIds.includes(s.user_id)),ownerIds=[...new Set(visibleStories.map(s=>s.user_id))];
+ let storyProfiles=[];
+ if(ownerIds.length){const r=await supabase.from('user_profiles').select('id,display_name,username,avatar_path').in('id',ownerIds);if(r.error)throw r.error;storyProfiles=r.data||[];}
+ const pmap=new Map(storyProfiles.map(p=>[p.id,p]));
+ const stories=await Promise.all(visibleStories.map(async s=>{const owner=pmap.get(s.user_id)||{};return {...s,owner,mediaUrl:await signed(s.media_path),avatarUrl:owner.avatar_path?await signed(owner.avatar_path):''};}));
+ const storyCards=stories.map(s=>"<button type='button' class='ua-story-item' data-story-url='"+esc(s.mediaUrl||'')+"' data-story-type='"+esc(s.media_type)+"' data-story-owner='"+esc(s.owner.display_name||'Pengguna Pluits')+"' data-story-caption='"+esc(s.caption||"")+"'><span class='ua-story-ring'>"+(s.avatarUrl?"<img src='"+esc(s.avatarUrl)+"' alt=''>":"<b>PL</b>")+"</span><small>"+esc(s.owner.display_name||'Pluits')+"</small></button>").join('');
+ const filters=[['recommended','Untuk Anda'],['following','Mengikuti'],['latest','Terbaru']];
+ const filterBar="<nav class='ua-explore-filters' aria-label='Feed'>"+filters.map(([k,v])=>"<button type='button' data-explore-filter='"+k+"' class='"+(exploreFilter===k?'active':'')+"' aria-pressed='"+(exploreFilter===k?'true':'false')+"'>"+v+"</button>").join('')+"</nav>";
+ const empty=exploreFilter==='following'?'Belum ada postingan dari akun yang Anda ikuti.':'Belum ada postingan publik. Bagikan foto atau video pertama Anda.';
+ const storySection="<section class='ua-stories-block'><div class='ua-stories-head'><strong>Stories</strong><a href='#/account/compose' aria-label='Buat postingan'>＋</a></div><div class='ua-story-strip'><a class='ua-story-item ua-story-own' href='#/account/compose'><span class='ua-story-ring'>"+avatar(await signed(profile?.avatar_path),profile?.display_name||'Anda')+"<i>＋</i></span><small>Cerita Anda</small></a>"+(storyCards||"<span class='ua-story-empty'>Belum ada cerita baru</span>")+"</div></section>";
+ return "<div class='ua-social-home'><header class='ua-feed-top'><a class='ua-feed-wordmark' href='#/account/explore'>pluits</a><div><a href='#/account/activity' aria-label='Aktivitas'>♡</a><a href='#/messages' aria-label='Pesan'>↗</a></div></header>"+storySection+filterBar+"<section class='ua-feed'>"+(sorted.length?sorted.map(postCard).join(''):"<div class='ua-feed-empty'><strong>"+empty+"</strong><a href='#/account/compose'>Bagikan foto atau video</a></div>")+"</section></div>";
+}
 
 async function reelsPage(){
  const {data:vm,error:me}=await supabase.from('post_media').select('post_id,duration_ms').eq('media_type','video').lte('duration_ms',60000).order('created_at',{ascending:false}).limit(160);if(me)throw me;
@@ -331,13 +326,16 @@ async function reelsPage(){
 
 function postCard(p){
  const profileHref='#/account/user/'+encodeURIComponent(p.owner.username);
- const mediaMarkup=(p.media||[]).length>1?`<div class="ua-media-gallery">${p.media.map((m,i)=>`<div class="ua-gallery-item">${m.media_type==='video'?`<video src="${m.url}" controls playsinline preload="metadata"></video>`:`<img src="${m.url}" alt="Media ${i+1}">`}</div>`).join('')}</div>`:(p.media?.length?`<div class="ua-media">${p.media[0].media_type==='video'?`<video src="${p.media[0].url}" controls playsinline preload="metadata"></video>`:`<img src="${p.media[0].url}" alt="${esc(p.caption||'Foto postingan')}">`}</div>`:'<div class="ua-text-post-mark">PLUITS</div>');
- return `<article class="ua-post-card" data-post-id="${p.id}" data-owner-id="${p.user_id}"><div class="ua-post-head"><a class="ua-post-avatar-link" href="${profileHref}" aria-label="Buka profil ${esc(p.owner.display_name)}">${avatar(p.avatarUrl,p.owner.display_name)}</a><div><a class="ua-author-link" href="${profileHref}"><strong>${esc(p.owner.display_name)}</strong></a><small>@${esc(p.owner.username)} ${p.owner.public_city&&p.owner.public_province?'· ⌖ '+esc(p.owner.public_city)+', '+esc(p.owner.public_province):''}</small></div><time>${fmtDate(p.created_at)}</time></div>
- <p class="ua-caption">${esc(p.caption)}</p>${(p.tags?.length||p.tagged?.length)?'<div class="ua-tags">'+(p.tags||[]).map(t=>'<span>#'+esc(t)+'</span>').join(' ')+(p.tagged||[]).map(t=>'<span>＠'+esc(t.username)+'</span>').join(' ')+'</div>':''}
+ const mediaMarkup=(p.media||[]).length>1?`<div class="ua-media-gallery" data-gallery><div class="ua-gallery-track">${p.media.map((m,i)=>`<div class="ua-gallery-item">${m.media_type==='video'?`<video src="${m.url}" controls playsinline preload="metadata"></video>`:`<img src="${m.url}" alt="Media ${i+1}">`}</div>`).join('')}</div><span class="ua-gallery-count">1/${p.media.length}</span></div>`:(p.media?.length?`<div class="ua-media">${p.media[0].media_type==='video'?`<video src="${p.media[0].url}" controls playsinline preload="metadata"></video>`:`<img src="${p.media[0].url}" alt="${esc(p.caption||'Foto postingan')}">`}</div>`:'<div class="ua-text-post-mark">PLUITS</div>');
+ return `<article class="ua-post-card" data-post-id="${p.id}" data-owner-id="${p.user_id}">
+ <div class="ua-post-head"><a class="ua-post-avatar-link" href="${profileHref}">${avatar(p.avatarUrl,p.owner.display_name)}</a><div><a class="ua-author-link" href="${profileHref}"><strong>${esc(p.owner.display_name)}</strong></a><small>@${esc(p.owner.username)} ${p.owner.public_city&&p.owner.public_province?'· '+esc(p.owner.public_city):''}</small></div><button class="ua-post-more" type="button" aria-label="Opsi postingan">•••</button></div>
  ${mediaMarkup}
- ${user?`<div class="ua-post-actions"><button data-action="like" class="${p.liked?'is-liked':''}">♥ <span>${p.liked?'Disukai':'Suka'}</span> <b>${p.likes}</b></button><button data-action="comments">◯ Komentar <b>${p.comments}</b></button><button data-action="share">↗ Bagikan</button><button data-action="save" class="${p.saved?'is-saved':''}">▱ ${p.saved?'Tersimpan':'Tandai'}</button><button data-action="tag" ${p.user_id===user.id?'':'disabled title="Hanya pemilik postingan dapat menandai akun"'}>＠ Tag</button>${p.user_id===user.id?'<button data-action="edit">Edit postingan</button>':'<button data-action="report">Laporkan</button><button data-action="block">Blokir akun</button>'}</div>${p.user_id===user.id?'<section class="ua-post-editor" hidden></section>':''}<div class="ua-comments" hidden></div>`:`<div class="ua-post-actions"><a class="ua-login-action" href="#/account/login">Masuk untuk menyukai, berkomentar, atau menyimpan</a></div>`}
+ ${user?`<div class="ua-post-actions"><button data-action="like" class="${p.liked?'is-liked':''}" aria-label="Suka">♥ <b>${p.likes}</b></button><button data-action="comments" aria-label="Komentar">◯ <b>${p.comments}</b></button><button data-action="share" aria-label="Bagikan">↗</button><button data-action="save" class="${p.saved?'is-saved':''}" aria-label="Simpan">▱</button></div>`:`<div class="ua-post-actions"><a class="ua-login-action" href="#/account/login">Masuk untuk berinteraksi</a></div>`}
+ <div class="ua-post-caption">${p.likes?'<strong>'+p.likes+' suka</strong>':''}<p><a href="${profileHref}"><b>${esc(p.owner.username)}</b></a> ${esc(p.caption||'')}</p>${p.comments?'<button data-action="comments" class="ua-view-comments">Lihat semua '+p.comments+' komentar</button>':''}</div>
+ ${user?(p.user_id===user.id?'<section class="ua-post-editor" hidden></section>':'')+'<div class="ua-comments" hidden></div>':''}
  </article>`;
 }
+
 async function composePage(){
  const {data:contentPrefs}=await supabase.from('account_content_preferences').select('*').eq('user_id',user.id).maybeSingle();
  const defaultAudience=accountContext.active==='professional'?(contentPrefs?.professional_default_visibility==='unlisted'?'private':'public'):accountContext.active==='business'?(contentPrefs?.business_default_visibility==='unlisted'?'private':'public'):(contentPrefs?.personal_default_visibility||'public');
