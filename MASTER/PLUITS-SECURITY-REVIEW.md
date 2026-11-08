@@ -122,7 +122,7 @@ This section supersedes the stale empty-database snapshot above for current stat
 
 ### Verified live environment
 - Supabase project `ytndswhqxayqpftszwfh` (`pluits`) is ACTIVE_HEALTHY, Singapore region, PostgreSQL 17.
-- Live migration history contains 17 entries.
+- Live migration history contains 19 entries.
 - All 28 tables in the exposed `public` schema have RLS enabled.
 - No Edge Functions are deployed.
 - Security and performance advisors were run on 8 November 2026; health advisor returned no lints.
@@ -140,28 +140,22 @@ This section supersedes the stale empty-database snapshot above for current stat
 - Health: no lints.
 - Unused-index notices should not trigger immediate index deletion; the database is new and query usage is still low.
 
-### Migration history drift — blocking for future DDL
-Live Supabase has 17 migration history entries. GitHub currently contains 13 migration files. Five applied migrations are absent from GitHub:
-- `20261107160447_allow_text_only_social_posts`
-- `20261107161245_secure_pluits_user_media_owner_upload_and_public_post_read`
-- `20261107163224_allow_legacy_photo_media_type`
-- `20261107165743_add_pluits_24h_user_stories`
-- `20261107170245_add_pluits_wallet_accounts_and_requests`
+### Migration history reconciliation — resolved 8 November 2026
 
-The tracked file `202611070001_initial_marketplace.sql` is not listed in the live migration history. Reconcile exact SQL before any reset, branch clone, or migration replay. Do not reset production or fabricate missing SQL.
+The active GitHub migration directory contains 19 files, matching all 19 live Supabase migration records by version and name. Five missing SQL definitions were recovered from `supabase_migrations.schema_migrations.statements`; early filenames and divergent drafts were corrected. The unapplied legacy `202611070001_initial_marketplace.sql` is archived outside the active migration directory. Two additional hardening migrations were applied and committed. No production reset or migration replay was performed.
 
 ### Release gate
 - Enable leaked-password protection.
-- Complete migration reconciliation.
+- Maintain exact migration parity; do not reset or replay the live project.
 - Run two-account and anonymous tests for private profiles/posts, media, Stories, addresses, store membership, owner-only RPCs and wallet requests.
-- Verify media object ownership against post references.
+- Keep the media-path ownership CHECK constraints in place and retain their negative/positive regression tests.
 - Review staff permission boundaries and audit-log write path.
 - Re-run advisors after fixes.
 - Confirm GitHub Pages deployment and Android UAT. No claim of production readiness until these pass.
 
 ### 2026-11-08 — Migration reconciliation completed
-- Active migration files: 17.
-- Live migration history records: 17.
+- Active migration files: 19.
+- Live migration history records: 19.
 - Missing version/name pairs: 0.
 - Active files not represented in live history: 0.
 - SQL recovered from live migration history: exact statements were used; prior divergent drafts were archived.
