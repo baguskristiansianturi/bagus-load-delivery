@@ -417,3 +417,17 @@ Build dari commit `642a24bdbed4a85931271e7481f9880a04cc9fc3` berhasil. GitHub Pa
 - Security warnings still remaining: 2 authenticated-callable SECURITY DEFINER RPCs and leaked-password protection disabled.
 - Live migrations and active GitHub migration files: 19 / 19, exact version/name match.
 - **Status:** two backend hardening migrations applied and verified; production readiness remains NOT APPROVED pending Auth leaked-password setting, full account-level tests and remaining security review.
+
+
+## CP-021 — Stories UI dan viewer (8 November 2026)
+
+- Explore sekarang memuat strip Stories horizontal yang responsif untuk mobile.
+- Pengguna login dapat membuat Story foto/video, menulis caption singkat, dan memilih audience.
+- Profil privat tidak dapat memilih audience Publik; default mengikuti privasi profil.
+- Viewer Story menampilkan foto/video dengan rasio intrinsik, tombol tutup, dan caption.
+- Story rows memakai masa aktif 24 jam yang sudah ditentukan di database; UI hanya menampilkan Story yang belum kedaluwarsa.
+- Upload memakai bucket privat `pluits-user-media` dan path folder UUID pemilik; constraint media owner dari CP-019 tetap berlaku.
+- Database smoke test (transaksi rollback): Story publik dari profil publik terlihat oleh anon; Story privat tidak terlihat oleh anon.
+- GitHub Pages workflow run 423: **SUCCESS**, Vite build, output check, artifact upload dan deploy berhasil.
+- **Belum diuji:** upload Story dari akun nyata, viewer di perangkat Android, upload video besar, serta perilaku kedaluwarsa 24 jam secara langsung.
+- **Status:** Stories UI implemented and deployed; UAT pending. Reels khusus, DM, follow graph, notifications, reporting/moderation, and public homepage engagement metrics remain incomplete.
