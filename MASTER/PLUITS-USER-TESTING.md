@@ -113,3 +113,23 @@ Catat halaman, langkah, pesan error persis, tipe file/ukuran file, dan waktu kej
 - Alamat, profil privat, postingan privat, Story privat, dan media yang tidak direferensikan oleh konten publik tetap dilindungi RLS. Story publik hanya dapat dibaca jika profil pemilik juga publik dan Story belum kedaluwarsa.
 - Explore dengan interaksi (suka, komentar, simpan, tag, dan membuat postingan) tetap membutuhkan login.
 - Media disimpan pada bucket privat; signed URL anonim hanya dapat dibuat untuk media yang terhubung dengan postingan publik yang diterbitkan atau avatar/sampul profil publik.
+
+## 9. Uji profil publik dan follow
+
+Gunakan dua akun nyata berbeda (A dan B). Jangan memakai akun orang lain tanpa izin.
+
+1. Login akun A dan buka postingan publik akun B.
+2. Ketuk nama/username B. Pastikan profil publik B terbuka melalui URL hash username.
+3. Dari A, tekan **Ikuti**. Pastikan tombol berubah menjadi **Mengikuti** dan jumlah mengikuti/pengikut berubah setelah halaman dimuat ulang.
+4. Buka profil A dan pastikan daftar Pengikut memuat A/B sesuai hubungan yang benar.
+5. Ubah akun B menjadi privat. Pastikan pengunjung anonim hanya melihat username, nama tampilan, dan status privat; bio, avatar, cover, wilayah, Story, serta postingan tidak terbuka.
+6. Dari A, tekan **Minta mengikuti**. Pastikan status menjadi **Permintaan terkirim** dan konten privat tetap terkunci.
+7. Login B, buka **Profil → Permintaan**, lalu pilih **Terima**. Pastikan hubungan menjadi diterima.
+8. Login A kembali. Pastikan konten publik pada profil privat B dapat dibuka setelah persetujuan; konten ber-audience **Hanya saya** tetap tidak terlihat.
+9. Uji **Tolak**, **Batalkan**, **Berhenti mengikuti**, dan **Hapus pengikut**. Refresh setelah setiap tindakan.
+10. Pastikan akun tidak dapat mengikuti dirinya sendiri dan pengguna yang tidak terkait tidak dapat menyetujui permintaan orang lain.
+11. Uji profil/post publik sebagai pengunjung tanpa login. Tombol interaksi harus mengarahkan ke login, bukan terlihat aktif tetapi tidak bekerja.
+12. Ulangi seluruh alur di Android: lebar layar kecil, keyboard terbuka, tombol tidak terpotong, daftar dapat discroll, dan tidak ada horizontal overflow.
+
+**Lulus jika:** semua status relasi konsisten setelah refresh; profil privat tidak membocorkan bio/media sebelum persetujuan; hanya target yang dapat menyetujui; penghapusan hubungan berlaku dua arah; profil publik dan postingan publik tetap dapat dijelajahi sebagai tamu.
+
