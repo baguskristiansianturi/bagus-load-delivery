@@ -141,3 +141,14 @@ These are limited smoke tests, not a substitute for signed-in two-account and fu
 - Belum ada notification inbox/push/email, report/block/mute/moderation/appeal, DM, atau anti-spam workflow.
 - GitHub Pages run #465 (42435951991) pada commit `fc2314e81f21d5edd55d99108da8777198d7d6f4` sukses build dan deploy. Bundle: JS 172.94 kB (gzip 49.59 kB), CSS 258.32 kB (gzip 44.57 kB), HTML 1.09 kB.
 - Ukuran bundle merupakan indikator awal saja; belum ada Lighthouse/Core Web Vitals, pengukuran kecepatan jaringan mobile, atau pengujian Android langsung.
+
+
+## GeoDirectory implementation update — 8 November 2026
+- Supabase migrations 20261108040323 through 20261108041053 applied for PostGIS, directory core, starter Bali entities, claims, grants/RLS hardening, domain links, media policy, and explicit deny policy for source provenance.
+- 27 categories; 4 published places; 4 public locations.
+- Nearby RPC tested under anon: 15 km = 2 results, 50 km = 4 results; beach category = 1; invalid latitude = 0.
+- RLS check: 0 of 16 new public tables missing RLS. Anon cannot read entity sources, claims, or personal discovery preferences. The private claim trigger cannot be executed directly by anon/authenticated.
+- GeoDirectory frontend pages and home preview added; list/map, filters, area/radius, opt-in GPS, place detail/claim, interest controls, recommendation feedback, saved/recent are implemented.
+- GitHub Pages run #506 succeeded on commit 2432e4a. Latest SQL/docs-only commits require a final workflow status check.
+- Remaining: four-place seed only; admin claim/media review, licensed import/dedup/correction workflow, media Storage upload, store/social authoring integration, Trip link, commerce cart migration, Android UAT and performance/load tests.
+- Security Advisor still flags two legacy SECURITY DEFINER store RPCs and disabled leaked-password protection. Function definitions include auth.uid checks; update_store_profile also checks private.is_store_owner. These were not rewritten without seller regression tests.
