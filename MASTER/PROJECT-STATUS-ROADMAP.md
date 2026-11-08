@@ -723,3 +723,11 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - Deleted unreferenced logistics/material/property/service wrappers that depended on already-retired demo modules, plus redundant promo/not-found/search wrappers.
 - Expanded the CI production-surface guard to block these files and old BLD/Bagus runtime markers from returning.
 - Active router/main entry were inspected before deletion; no active route imports these files.
+
+
+### CP-039 addendum — Legacy master-data module archived and removed
+
+- Verified no active imports of `src/data/master-data.js`.
+- Preserved its historical category/taxonomy reference as sanitized plain text in `docs/pluits/archive/legacy-master-data.snapshot.txt`; this archive is non-runtime and non-authoritative.
+- Removed the old JavaScript module from `src/data`; CI now fails if it is reintroduced or imported.
+- Old fulfillment/payment/commission/order rules and demo location data in the archive are not Pluits requirements and must not be revived without explicit founder approval.
