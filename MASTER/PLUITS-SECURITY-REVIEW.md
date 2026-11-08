@@ -114,3 +114,47 @@ The initial migration must be revised and reviewed before application. After sch
 - Explore interactions and all write operations remain authenticated-only.
 - This policy requires UAT from a logged-out browser: public post and media should load; private content and addresses must not load.
 - Existing advisor warning about authenticated SECURITY DEFINER store RPCs is unchanged; it relates to seller functions, not this public feed migration. Existing FK index performance notices also remain.
+
+
+## 2026-11-08 — Live security and schema reconciliation
+
+This section supersedes the stale empty-database snapshot above for current status.
+
+### Verified live environment
+- Supabase project `ytndswhqxayqpftszwfh` (`pluits`) is ACTIVE_HEALTHY, Singapore region, PostgreSQL 17.
+- Live migration history contains 17 entries.
+- All 28 tables in the exposed `public` schema have RLS enabled.
+- No Edge Functions are deployed.
+- Security and performance advisors were run on 8 November 2026; health advisor returned no lints.
+
+### Current security findings
+1. **Authenticated SECURITY DEFINER RPCs (WARN):** `public.create_store` and `public.update_store_profile` are executable by authenticated users. Both functions check `auth.uid()`, use a fixed empty search_path, and `update_store_profile` checks store-owner membership. Anonymous execution is denied. These are privileged boundaries and must receive negative tests for unauthenticated, unrelated user, store member, and owner before production. Do not blindly convert to SECURITY INVOKER because the current store write policies and helper functions have deliberate privilege boundaries.
+2. **Leaked-password protection disabled (WARN):** enable Supabase Auth's leaked-password protection in the Auth security settings before public launch. This setting was not changed during this audit.
+3. **Storage ownership invariant:** upload policies bind object paths to the authenticated user's UUID. The social post insert/update policies and media path relationship still need dedicated adversarial tests to prove a user cannot attach another user's private object path to a public post.
+4. **Story policy overlap:** two permissive authenticated SELECT policies exist on `user_stories` (owner and public active). This is a performance warning, not by itself proof of a privacy leak; simplify after regression tests.
+5. **RLS coverage:** all 28 public tables have RLS enabled. This is a positive baseline, not proof that each policy is correct. Policies still need actor-by-actor tests.
+
+### Advisor snapshot
+- Security: 2 SECURITY DEFINER warnings; 1 leaked-password-protection warning.
+- Performance: 14 unindexed foreign keys; 3 auth RLS init-plan warnings in wallet policies; 14 unused-index notices; 1 multiple-permissive-Policies warning on Stories.
+- Health: no lints.
+- Unused-index notices should not trigger immediate index deletion; the database is new and query usage is still low.
+
+### Migration history drift — blocking for future DDL
+Live Supabase has 17 migration history entries. GitHub currently contains 13 migration files. Five applied migrations are absent from GitHub:
+- `20261107160447_allow_text_only_social_posts`
+- `20261107161245_secure_pluits_user_media_owner_upload_and_public_post_read`
+- `20261107163224_allow_legacy_photo_media_type`
+- `20261107165743_add_pluits_24h_user_stories`
+- `20261107170245_add_pluits_wallet_accounts_and_requests`
+
+The tracked file `202611070001_initial_marketplace.sql` is not listed in the live migration history. Reconcile exact SQL before any reset, branch clone, or migration replay. Do not reset production or fabricate missing SQL.
+
+### Release gate
+- Enable leaked-password protection.
+- Complete migration reconciliation.
+- Run two-account and anonymous tests for private profiles/posts, media, Stories, addresses, store membership, owner-only RPCs and wallet requests.
+- Verify media object ownership against post references.
+- Review staff permission boundaries and audit-log write path.
+- Re-run advisors after fixes.
+- Confirm GitHub Pages deployment and Android UAT. No claim of production readiness until these pass.
