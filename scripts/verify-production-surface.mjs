@@ -70,5 +70,9 @@ for (const type of ['new_message', 'unfollow', 'system_update']) {
 }
 assert.ok(existsSync('supabase/migrations/20261108135647_pluits_social_realtime_offline_message_queue.sql'));
 assert.ok(existsSync('supabase/migrations/20261108140017_pluits_account_language_preference.sql'));
+assert.ok(existsSync('supabase/migrations/20261108140823_pluits_system_announcements.sql'));
+const moderator = read('src/pages/admin/moderation.js');
+assert.match(moderator, /pluits_system_announcements/, 'Moderators must be able to publish Pluits system announcements.');
+assert.match(account, /pluits_system_announcement_reads/, 'Users must be able to read and mark system announcements.');
 
 console.log('Production surface verification passed: legacy modules absent; Marketplace, Trip, social DM, account security and notification contracts present.');
