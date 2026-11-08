@@ -26,7 +26,7 @@ Dokumen ini memetakan satu sumber kebenaran per area. Semua dokumen turunan waji
 | Kondisi aktual dan risiko | Audit/security review terbaru | Harus bertanggal dan berbukti |
 | Uji pengguna | `MASTER/PLUITS-USER-TESTING.md` | Hanya hasil nyata |
 
-Dokumen Master Product Vision dan Product Roadmap lama telah digabungkan dan tidak lagi menjadi sumber aktif. Dokumen arsitektur UX/IA, GeoDirectory, keamanan, help/legal, dan UAT tetap dipakai sesuai fungsi teknisnya.
+Dokumen Master Product Vision dan Product Roadmap lama telah digabungkan lalu dihapus. Riwayat model bisnis awal dipindahkan ke docs/pluits/archive/BUSINESS-MODEL-HISTORY-LEGACY.md; arsip ini bukan sumber aktif dan tidak dibaca sebagai instruksi implementasi. Dokumen arsitektur UX/IA, GeoDirectory, keamanan, help/legal, dan UAT tetap dipakai sesuai fungsi teknisnya.
 
 ## Alur temuan → ide → keputusan → implementasi
 1. Temuan dari percakapan, UAT, analisis kompetitor, atau eksplorasi desain → catat di Backlog Ide dengan tanggal/sumber.
