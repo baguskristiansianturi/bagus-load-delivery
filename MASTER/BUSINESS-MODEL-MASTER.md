@@ -796,3 +796,24 @@ Bali menjadi wilayah operasional awal untuk menguji pengalaman pengguna, kepadat
 Kantor dan staf lokal dipertimbangkan ketika volume verifikasi, sengketa, kunjungan lapangan, moderasi, atau permintaan dukungan melampaui kapasitas operasi jarak jauh. Gagasan awal founder tentang cakupan 50–60% bukan ambang baku. Pemicu harus ditetapkan dari metrik aktual seperti kasus per wilayah, waktu penyelesaian, kasus yang memerlukan kunjungan, jumlah entitas aktif, dan biaya dukungan.
 
 Ekspansi ke Surabaya, Yogyakarta, Bandung, Jakarta, wilayah lain di Indonesia, dan kemudian negara lain dilakukan satu per satu. Setiap wilayah memerlukan data geografi, bahasa/mata uang, kebijakan lokal, sumber data berlisensi, verifikator/mitra, dukungan, serta kesiapan sengketa. URL dapat mengikuti struktur negara/wilayah/kota yang kanonis, tetapi URL tidak menggantikan kontrol akses atau konfigurasi region backend.
+
+
+### 32.14 Pendaftaran toko universal, lokasi fisik, Seller Center, dan URL
+**Keputusan founder: 9 November 2026.** Pendaftaran toko tidak dibatasi PT/CV/UD. Perorangan, UMKM, usaha keluarga/rumahan, koperasi, badan usaha, dan jenis usaha lain dapat mendaftar. Bentuk hukum menjadi informasi opsional yang dipisahkan dari jenis/profil operasional; jangan meminta pengguna mengarang badan hukum hanya agar formulir dapat disubmit.
+
+Syarat inti:
+- Ada penanggung jawab manusia/organisasi yang dapat diperiksa.
+- Ada lokasi fisik atau lokasi operasional nyata yang dapat diverifikasi. Usaha rumahan boleh mendaftar.
+- Alamat lengkap dapat digunakan untuk verifikasi tanpa otomatis ditampilkan presisi kepada publik. Area publik dan alamat privat harus dipisahkan.
+- Alamat/lokasi fisik berbeda dari area pengiriman/layanan. Lokasi fisik tidak boleh dibuat fiktif.
+- Verifikasi PLUITS adalah pemeriksaan platform, bukan pengganti izin pemerintah atau sertifikasi produk.
+- Pembuatan toko tidak otomatis memublikasikan profil atau mengaktifkan online sales.
+
+Satu akun personal dapat memiliki beberapa toko dan cabang. Dashboard harus memisahkan profil, lokasi/cabang, verifikasi, katalog, stok, order, pembayaran, fulfillment, jam, staf, ulasan, notifikasi, dan pengaturan. Setiap data harus diotorisasi berdasarkan store/location membership di backend.
+
+Status pendaftaran, verifikasi, operasional, dan online sales adalah empat state machine berbeda. Aktivasi online sales hanya melalui RPC owner-guarded setelah lokasi, profil, jam, kapasitas, area pemenuhan, pembayaran, dan aturan kategori siap.
+
+URL publik menggunakan slug/username yang dapat dibaca, terhubung ke UUID kanonis yang stabil. Rute saat ini adalah `#/shop/{store_username}`; product route saat ini menggunakan variant UUID dan perlu diperbaiki agar identitas URL produk menggunakan product UUID. Cabang/lokasi, kategori, produk, dan toko masing-masing memiliki ID serta URL yang tepat. URL tidak memberikan hak akses. GitHub Pages hash routes tetap dipakai sampai ada perubahan hosting/domain yang disetujui.
+
+Spesifikasi lengkap, user journey, dashboard, status, URL, acceptance criteria dan tahapan implementasi: `docs/pluits/SELLER-CENTER-STORE-LIFECYCLE-AND-URL-SPEC-2026-11-09.md`.
+**Status implementasi:** aturan bisnis DECIDED; schema/RPC/frontend lengkap belum diimplementasikan; live production belum diubah.
