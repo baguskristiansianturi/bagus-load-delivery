@@ -21,7 +21,7 @@ The next founder UAT release focuses on the Social Media experience. Do not star
 | Follow | Follow/unfollow, private follow request, accept/remove, follower/following lists | IMPLEMENTED base; cross-account UAT NOT TESTED |
 | DM/inbox | Start direct conversation, contacts, inbox, send/read messages | IMPLEMENTED base; new contacts/inbox UI and realtime path added; real two-account UAT NOT TESTED |
 | Offline DM | Cached contacts/inbox metadata and queued outgoing messages; automatically retry when online | IMPLEMENTED as device-local outbox; cannot send or fetch remote history without network; browser storage and reconnect UAT NOT TESTED |
-| Notifications | Follow request, new follower, accepted request, unfollow, likes, comments, new message, system update | Existing event triggers plus new unfollow/message triggers; UI labels added. System announcement publisher and live badge/real-time activity refresh remain NOT IMPLEMENTED |
+| Notifications | Follow request, new follower, accepted request, unfollow, likes, comments, new message, system update | Existing event triggers plus new unfollow/message triggers; UI labels added. System announcement publisher, read receipts and realtime activity refresh are IMPLEMENTED; live admin-role publishing and UAT NOT TESTED |
 | Music/audio | Use original or properly licensed tracks only; show source/license and attribution requirements | NOT IMPLEMENTED |
 | Reels/FYP | Short-video player, relevant recommendation feed, safe moderation and feedback controls | Reels base exists; current ranking is a simple engagement/recency heuristic, NOT a validated viral/FYP recommender |
 | Account settings | Public/private, username, password, phone verification, TOTP 2FA, language preference | New modular account settings UI added; Auth provider configuration and live account UAT NOT TESTED |
@@ -70,7 +70,7 @@ User notification categories:
 - New inbox message.
 - Pluits system updates, release notes, service notices and security notices.
 
-System announcements need an admin-authorized publishing surface, audience/scope, publish/expiry timestamps, language, and audit trail. A database enum/allowed type alone is not a functioning announcement center. Do not fabricate announcement rows.
+System announcements now have an admin/moderator-authorized publishing surface, language, severity, publish/expiry timestamps, RLS and per-user read receipts. Audience targeting and a dedicated audit log remain future hardening. Do not fabricate announcement rows.
 
 Acceptance: each event is generated once, appears only to the intended recipient, can be marked read, and routes to the correct post/profile/conversation/announcement. Test with multiple accounts.
 
