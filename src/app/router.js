@@ -18,6 +18,7 @@ import {updateSEO} from '../pages/seo.js';
 import {marketplacePage,bindMarketplacePage,storePage,bindStorePage,marketCartPage,bindMarketCartPage,marketCheckoutPage,bindMarketCheckoutPage,marketOrderPage,bindMarketOrderPage,marketOrdersPage,bindMarketOrdersPage} from '../pages/marketplace/index.js';
 import {tripPage,bindTripPage,tripItineraryPage,bindTripItineraryPage} from '../pages/trip/index.js';
 import {messagesPage,bindMessagesPage} from '../pages/messages/index.js';
+import {moderationPage,bindModerationPage} from '../pages/admin/moderation.js';
 import {directoryPage,bindDirectoryPage,placePage,claimPage,bindPlacePage} from '../pages/directory/index.js';
 
 export function route(homeFn=home){
@@ -35,6 +36,7 @@ export function route(homeFn=home){
  else if(r==='market-order'){h=marketOrderPage(v||'');queueMicrotask(()=>bindMarketOrderPage(v||''));}
  else if(r==='trip'){h=s[1]==='itinerary'?tripItineraryPage(s[2]||''):tripPage();queueMicrotask(()=>s[1]==='itinerary'?bindTripItineraryPage(s[2]||''):bindTripPage());}
  else if(r==='messages'){h=messagesPage();queueMicrotask(()=>bindMessagesPage());}
+ else if(r==='admin'&&v==='moderation'){h=moderationPage();queueMicrotask(()=>bindModerationPage());}
  else if(r==='place'){
   h='<div class="pl-directory-loading">Membuka tempat…</div>';
   queueMicrotask(async()=>{
