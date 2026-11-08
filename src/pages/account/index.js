@@ -474,7 +474,7 @@ async function postDetailPage(id){
  const [p]=await hydratePosts([data]);if(!p)throw new Error('Postingan tidak tersedia.');
  return `<div class="ua-page-heading"><div><span class="ua-eyebrow">POSTINGAN</span><h1>Detail postingan</h1></div><a class="ua-outline" href="#/account/explore">Kembali ke Explore</a></div>${postCard(p)}`;
 }
-async function normalizeFeedMediaFrames(root=document){
+function normalizeFeedMediaFrames(root=document){
  const mediaNodes=root.querySelectorAll('.ua-social-home .ua-media img,.ua-social-home .ua-media video,.ua-social-home .ua-gallery-item img,.ua-social-home .ua-gallery-item video');
  const dimensions=el=>({w:el.naturalWidth||el.videoWidth,h:el.naturalHeight||el.videoHeight});
  const boundedRatio=(w,h)=>Math.min(3/4,Math.max(1/1.91,w/h));
@@ -506,7 +506,7 @@ async function normalizeFeedMediaFrames(root=document){
   }
  });
 }
-function mountAccount(section='profile',parameter=''){
+async function mountAccount(section='profile',parameter=''){
  const {data:{session}}=await supabase.auth.getSession();user=session?.user||null;
  if(!user&&(section==='user'||section==='post')){
   try{
