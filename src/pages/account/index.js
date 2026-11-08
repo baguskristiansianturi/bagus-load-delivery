@@ -1,4 +1,4 @@
-import { supabase } from '../../lib/supabase/client.js';
+import { supabase, SUPABASE_PUBLISHABLE_KEY as SUPABASE_KEY } from '../../lib/supabase/client.js';
 import {socialIcon} from '../../components/common/social-icons.js';
 import {renderSocialHeader,renderSocialMobileNav} from '../../components/social/navigation.js';
 import {updateSEO} from '../seo.js';
