@@ -11,7 +11,7 @@ const uploadMime=file=>{const declared=String(file?.type||'').toLowerCase();cons
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmtDate=v=>new Date(v).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'});
 const initials=v=>String(v||'P').trim().slice(0,1).toUpperCase();
-let user=null,profile=null,addresses=[],noticeTimer=null,leafletMap=null,leafletMarker=null,exploreFilter='recommended',reelsFilter='recommended',accountContext={active:'personal',professional:null,stores:[],prefs:{}};
+let user=null,profile=null,profileReels=[],addresses=[],noticeTimer=null,leafletMap=null,leafletMarker=null,exploreFilter='recommended',reelsFilter='recommended',accountContext={active:'personal',professional:null,stores:[],prefs:{}};
 
 function notify(message,type='success'){
  const el=document.querySelector('#ua-toast');if(!el)return;
@@ -192,7 +192,7 @@ async function profilePage(preview=false){
  ]);
  if(postsResult.error)throw postsResult.error;
  const ownPosts=await hydratePosts(postsResult.data||[]);
-  const ownReels=ownPosts.filter(p=>p.media?.length===1&&p.media[0].media_type==='video'&&Number(p.media[0].duration_ms||0)>0&&Number(p.media[0].duration_ms||0)<=60000);
+  profileReels=ownPosts.filter(p=>p.media?.length===1&&p.media[0].media_type==='video'&&Number(p.media[0].duration_ms||0)>0&&Number(p.media[0].duration_ms||0)<=60000);
  const [followersCount,followingCount,pendingCount]=await Promise.all([
   supabase.from('user_follows').select('*',{count:'exact',head:true}).eq('following_id',user.id).eq('status','accepted'),
   supabase.from('user_follows').select('*',{count:'exact',head:true}).eq('follower_id',user.id).eq('status','accepted'),
@@ -235,7 +235,7 @@ function bindProfileTabs(){
  const nav=document.querySelector('.ua-profile-tabs'),panel=document.querySelector('#ua-profile-tab-content');
  if(!nav||!panel)return;
  const postsMarkup=panel.innerHTML;
- const reelsMarkup='<div class="ua-section-title"><strong>Reels</strong><a class="ua-outline" href="#/account/compose">＋ Buat Reel</a></div>'+(ownReels.length?postGrid(ownReels):'<div class="ua-empty"><strong>Belum ada Reels</strong><p>Video tunggal berdurasi hingga 60 detik akan muncul di sini.</p><a class="ua-primary ua-inline" href="#/account/compose">Unggah video</a></div>');
+ const reelsMarkup='<div class="ua-section-title"><strong>Reels</strong><a class="ua-outline" href="#/account/compose">＋ Buat Reel</a></div>'+(profileReels.length?postGrid(profileReels):'<div class="ua-empty"><strong>Belum ada Reels</strong><p>Video tunggal berdurasi hingga 60 detik akan muncul di sini.</p><a class="ua-primary ua-inline" href="#/account/compose">Unggah video</a></div>');
  const views={
   posts:postsMarkup,
   reels:reelsMarkup,
