@@ -15,6 +15,8 @@ import {tracking} from '../pages/tracking/index.js';
 import {sellerPage} from '../pages/seller/index.js';
 import {mountUserAccount} from '../pages/account/index.js';
 import {updateSEO} from '../pages/seo.js';
+import {marketplacePage,bindMarketplacePage} from '../pages/marketplace/index.js';
+import {tripPage,bindTripPage,tripItineraryPage,bindTripItineraryPage} from '../pages/trip/index.js';
 import {directoryPage,bindDirectoryPage,placePage,claimPage,bindPlacePage} from '../pages/directory/index.js';
 
 export function route(homeFn=home){
@@ -24,6 +26,8 @@ export function route(homeFn=home){
  let h;
  if(!r)h=homeFn();
  else if(r==='places'){h=directoryPage();queueMicrotask(()=>bindDirectoryPage());}
+ else if(r==='marketplace'){h=marketplacePage();queueMicrotask(()=>bindMarketplacePage());}
+ else if(r==='trip'){h=s[1]==='itinerary'?await tripItineraryPage(s[2]||''):tripPage();queueMicrotask(()=>s[1]==='itinerary'?bindTripItineraryPage(s[2]||''):bindTripPage());}
  else if(r==='place'){
   h='<div class="pl-directory-loading">Membuka tempat…</div>';
   queueMicrotask(async()=>{
