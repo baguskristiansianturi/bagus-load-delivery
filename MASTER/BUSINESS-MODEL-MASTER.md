@@ -1,15 +1,25 @@
 # MASTER MODEL BISNIS — PLUITS
-**Versi:** 1.0 | **Pembaruan:** 7 November 2026
-**Status:** Dokumen induk model bisnis; acuan sebelum penyusunan paket dan spesifikasi teknis.
+**Versi:** 2.0 | **Pembaruan:** 8 November 2026
+**Status:** SATU-SATUNYA SUMBER KEBENARAN untuk visi, model bisnis, keputusan produk, prinsip pengalaman, dan aturan bisnis Pluits.
+**Produk:** Pluits | **Perusahaan yang direncanakan:** Pluits Indonesia
+**Repository:** https://github.com/baguskristiansianturi/pluits
+**Aplikasi:** https://baguskristiansianturi.github.io/pluits/
 
-> Dokumen ini menjadi sumber acuan utama. Hal yang belum diputuskan ditandai sebagai terbuka dan bukan kebijakan final.
+> Dokumen ini adalah acuan utama seluruh analisis dan pengembangan Pluits. Frontend, backend, database, API, kebijakan, desain UX, dan roadmap wajib diturunkan dari keputusan di sini. Dokumen teknis boleh menjelaskan cara implementasi, tetapi tidak boleh menciptakan atau mengubah keputusan bisnis secara diam-diam.
 >
-> **Catatan arah terbaru:** Pluits berkembang dari konsep marketplace konstruksi menjadi platform universal social media + marketplace lokal berbasis wilayah + Trip/Travel. Bagian 24 adalah arah produk terbaru dan menjadi acuan jika ada pertentangan dengan bagian sebelumnya. Bagian 23 adalah keputusan konsolidasi sebelumnya; bagian lama tetap dipertahankan sebagai riwayat dan detail operasional yang masih relevan. Bagian lama tetap dipertahankan sebagai riwayat dan detail operasional yang masih relevan.
+> **Arah aktif:** Pluits adalah platform social-first yang menghubungkan Social Media, Local Marketplace, Trip/Travel, dan GeoDirectory melalui satu identitas pengguna dan data entitas kanonis. Bagian 23–30 merupakan arah aktif terkonsolidasi. Bagian 1–22 dipertahankan sebagai riwayat keputusan/operasional terdahulu dan tidak boleh dipakai untuk menghidupkan kembali arah atau brand yang sudah ditinggalkan. Jika ada konflik, bagian aktif terbaru dan keputusan bertanggal paling baru yang berlaku.
+>
+> **Larangan identitas ganda:** Bagus Load & Delivery / Baguslot and Delivery bukan lagi nama produk, layanan, repository, backend, atau roadmap Pluits. Jangan membuat, merujuk, menghidupkan, atau menggabungkannya sebagai brand aktif. Riwayat teknis hanya dipertahankan bila diperlukan untuk menjelaskan migrasi atau kompatibilitas.
 
-## 1. Visi
-Prioritas utama adalah mendigitalkan toko material bangunan menjadi marketplace multi-toko: toko bangunan, toko besi, toko cat, toko semen, dan pemasok material lainnya dapat menampilkan katalog dan melayani pembeli secara digital. Platform membantu pembeli melihat toko dan membandingkan produk/harga tanpa harus mendatangi toko satu per satu. Dalam jangka panjang ekosistem dapat diperluas ke pekerja, jasa konstruksi, dan logistik. Bagus Load & Delivery sebagai layanan pengiriman tersendiri bukan fokus awal dan baru dipertimbangkan setelah kebutuhan serta modelnya diuji.
+## 1. Visi Pluits — arah aktif
+Pluits adalah ekosistem digital mobile-first yang menghubungkan manusia, komunitas, konten, tempat, pelaku usaha, perdagangan lokal, dan perjalanan. Social Media menjadi pintu masuk utama; Local Marketplace dan Trip/Travel menjadi ruang produk dengan alur transaksi/layanan masing-masing; GeoDirectory menjadi lapisan identitas tempat dan entitas bersama. Keunggulan Pluits adalah kesinambungan dari menemukan, mengenal, mengambil tindakan, hingga membagikan pengalaman nyata—dengan identitas terpadu, bukti yang jelas, dan kendali privasi pengguna.
 
-## 2. Masalah yang diselesaikan
+Pluits bukan tiruan satu platform tertentu. Produk harus sederhana untuk tindakan umum, kuat pada pengalaman media, relevan secara lokal, dapat berkembang secara internasional, serta menjaga keamanan dan kualitas data.
+
+## 2. Riwayat model awal — tidak lagi menjadi visi aktif
+Bagian 2–22 berisi rincian model awal marketplace material, operasional toko, jasa konstruksi, akun universal, dan keputusan konsolidasi terdahulu. Rincian yang masih kompatibel dapat menjadi referensi historis/operasional, tetapi tidak boleh mengesampingkan arah aktif bagian 23–30. Fase atau layanan logistik lama yang pernah disebut bukan produk/brand aktif Pluits.
+
+## 2. Masalah yang diselesaikan (historis; detail aktif mengikuti bagian 23–30)
 - Harga material dan jasa tersebar dan sulit dibandingkan secara setara.
 - Pembeli harus menghubungi banyak toko untuk mengetahui stok, MOQ, ongkir, dan jadwal.
 - Harga barang terendah belum tentu menghasilkan biaya akhir terendah setelah pengiriman.
@@ -1095,3 +1105,51 @@ Empat entitas awal yang dimasukkan: Museum Bali, Lapangan Puputan Badung, Pantai
 - **Batas kemampuan:** kontrol sesi/perangkat, MFA, ekspor/penghapusan akun, dan status verifikasi tidak ditampilkan sebagai fitur aktif sebelum backend dan pengujian tersedia. Trip sementara mengarah ke GeoDirectory; bukan klaim modul Trip telah selesai.
 - **Dokumentasi:** `docs/pluits/help/ACCOUNT-SETTINGS.md` menjadi panduan awal dan wajib diperbarui saat menu/fitur berubah.
 - **Status:** kode di-commit; deployment dan Android UAT harus diverifikasi dari workflow serta perangkat pengguna.
+
+
+## 30. Model bisnis Pluits terkonsolidasi — sumber acuan aktif (8 November 2026)
+
+Bagian ini menyatukan visi produk dan prinsip lintas modul yang sebelumnya tersebar di Business Model Master, Master Product Vision, keputusan Social Experience Commerce, GeoDirectory, dan UX architecture. Rincian keputusan aktif pada bagian 23–29 tetap berlaku sebagai detail normatif.
+
+### 30.1 Proposisi nilai dan ruang produk
+1. **Social Media — ruang utama:** pengguna membuat dan menemukan konten foto, video, carousel, Stories, Reels, percakapan, komunitas, profil, dan interaksi. Konten personal biasa tetap diperbolehkan; feed bukan katalog iklan.
+2. **Local Marketplace — ruang perdagangan:** pengguna menemukan penyedia, toko, produk, jasa, membandingkan penawaran, memesan, membayar melalui mekanisme yang didukung, dan memantau pemenuhan. Marketplace memiliki lifecycle katalog, cart, order, payment, fulfilment, cancellation/refund/dispute yang terpisah dari Social.
+3. **Trip / Travel — ruang perjalanan:** pengguna menemukan destinasi, aktivitas, pengalaman, penyedia, membuat itinerary, mengajukan layanan, dan kelak melakukan reservasi/booking sesuai tipe produk. Permintaan layanan bukan booking terkonfirmasi.
+4. **GeoDirectory — lapisan bersama:** identitas kanonis untuk tempat, organisasi, penyedia, dan kegiatan. Satu entitas dapat dihubungkan ke Social, Marketplace, Trip, peta, pencarian, dan profil tanpa menggandakan identitas. GeoDirectory bukan pengganti lifecycle transaksi atau Trip.
+
+### 30.2 Identitas, peran, dan trust
+- Satu akun Auth dan satu identitas manusia lintas modul. Peran pengguna (personal, owner, staff, creator, provider, organizer, moderator) bersifat kontekstual, terverifikasi sesuai risiko, dan tidak otomatis diberikan hanya karena memiliki akun.
+- Profil personal dan profil toko/organisasi/penyedia adalah entitas berbeda yang dapat saling ditautkan secara eksplisit.
+- Status imported, claimed, submitted, verified, published, suspended, atau rejected harus berbeda dan tidak boleh disamarkan.
+- Tidak boleh ada toko, produk, review, transaksi, saldo, engagement, kunjungan, atau verifikasi palsu untuk menciptakan kesan ramai.
+- Transaksi/kunjungan hanya boleh disebut terverifikasi jika ada bukti backend yang sah. Foto, caption, geotag, GPS, check-in, atau kedekatan lokasi sendiri bukan bukti pembayaran.
+
+### 30.3 Prinsip pengalaman dan desain
+- Mobile-first, responsif, installable web experience, dan hemat sumber daya untuk perangkat Android kelas rendah serta jaringan tidak stabil.
+- Navigasi dan arsitektur informasi harus mengikuti ruang produk Pluits, bukan menyalin struktur platform lain secara membabi buta.
+- UI konsisten, sederhana, aksesibel, kontras jelas, target sentuh memadai, status loading/empty/error/offline jelas, dan kontrol lanjutan ditempatkan secara kontekstual.
+- Media asli tidak boleh diubah/crop destruktif. Pertahankan rasio/aspek dan komposisi; optimasi turunan boleh dibuat untuk delivery.
+- Komponen, halaman, service, dan domain frontend harus modular dengan satu implementasi kanonis per fungsi. Hindari duplikasi komponen, route, source of truth, dan CSS yang saling menimpa.
+- Setiap elemen interaktif harus terhubung ke aksi nyata; tombol dekoratif, mock data, dan link yang tidak menyelesaikan tugas tidak boleh dianggap selesai.
+
+### 30.4 Prinsip backend dan data
+- Backend adalah penjaga aturan bisnis dan sumber kebenaran data. Frontend tidak boleh menjadi otoritas harga, stok, saldo, hak akses, status transaksi, verifikasi, lokasi privat, atau keputusan moderasi.
+- Setiap domain memiliki ownership data dan lifecycle yang jelas. Integrasi lintas domain menggunakan ID/foreign key kanonis dan kontrak terdokumentasi; jangan menggandakan data hanya untuk memudahkan UI.
+- RLS, server-side authorization, validasi input, ownership checks, audit trail, rate limits, privacy boundaries, dan least privilege wajib diterapkan pada jalur yang relevan.
+- Data pribadi, alamat lengkap, koordinat privat, transaksi, nominal, dan aktivitas sensitif hanya dibuka sesuai consent dan kebutuhan sah.
+- Satu aturan bisnis harus didefinisikan sekali dan ditegakkan di backend; frontend menampilkan affordance dan state yang sesuai. Menyembunyikan tombol bukan kontrol keamanan.
+- Perubahan schema harus melalui migration bertahap, kompatibel, dapat diuji, dan memiliki rencana rollback. Migration yang sudah diterapkan tidak dihapus atau ditulis ulang.
+
+### 30.5 Kontrak sinkronisasi bisnis → backend → frontend
+Setiap fitur/perubahan wajib mencatat: (1) bagian model bisnis dan status keputusan; (2) persona, masalah, user journey, aturan bisnis, edge cases, acceptance criteria; (3) entitas/data domain, state transitions, permission matrix, API/RPC contract, error semantics; (4) rute/halaman/komponen frontend serta loading, empty, success, error, retry, offline, accessibility; (5) test matrix untuk anon/roles, ownership, invalid state, privacy, concurrency, abuse, mobile, regression; (6) bukti implementasi, migration, commit, CI/deploy, test, UAT.
+Jika UI meminta tindakan yang tidak didukung backend, jangan membuat simulasi seolah berhasil. Tandai belum tersedia/blocked dan masukkan ke roadmap setelah keputusan produk.
+
+### 30.6 Prinsip keamanan, privasi, dan kualitas
+- Privacy by design; lokasi presisi hanya jika dibutuhkan dan diizinkan, tanpa tracking terus-menerus secara default.
+- Jangan menyimpulkan atau membuat profil atribut sensitif dari perilaku pengguna.
+- Moderasi proporsional, berbasis perilaku/bukti/kebijakan, menyediakan alasan dan jalur banding; hindari diskriminasi identitas.
+- External source harus memiliki provenance, lisensi, dan atribusi yang sah.
+- Agent AI boleh menganalisis dan mengusulkan, tetapi tindakan production, permission, penghapusan data, credential, dan perubahan berisiko memerlukan persetujuan manusia serta audit trail.
+
+### 30.7 Status keputusan
+Bagian 30 adalah prinsip dan kontrak kerja yang disetujui sebagai aturan arah. Ia tidak menyatakan semua fitur telah diimplementasikan, dideploy, diuji, atau diterima. Status aktual hanya boleh diambil dari Project Status & Roadmap, Security Review, Live Audit, test evidence, dan UAT terbaru.
