@@ -804,3 +804,17 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - **GitHub Actions:** run #958 / `42489770125` — SUCCESS; regression checks, Vite build, output verification, artifact upload and Pages deployment all succeeded.
 - **Live test URL:** `https://baguskristiansianturi.github.io/pluits/?v=a3d37290`.
 - **Not yet accepted:** real Android interaction, two-account realtime delivery, offline new-conversation flow, and 320–1440 px device matrix remain NOT TESTED by founder. Do not call the Social Media release complete.
+
+
+## CP-045 — Social navigation, live unread badges, and final deployment (8 November 2026)
+
+- **Navigation UX:** mobile now uses a compact sticky header with direct Inbox and Activity actions, plus a five-item bottom navigation. Desktop exposes Inbox and Activity in the primary header.
+- **Unread state:** global Activity badge updates from realtime social notifications and system announcements; the count includes both unread notification rows and unread active system notices.
+- **Offline DM:** users can select a previously cached contact while offline and draft a new DM locally. Reconnect creates the conversation and sends with idempotent client ID. This is not actual delivery without internet; remote history cannot be fetched offline. Outbox is device-local localStorage and not encrypted by Pluits.
+- **Regression tests:** added checks for offline new-conversation drafts, Inbox/Activity navigation, live unread badge refresh, and announcement counts.
+- **Latest deployed commit:** `b556b1102764133a39f43155b0005480b1fc8121`.
+- **GitHub Actions:** run #966 / `42490027415` — SUCCESS. Dependency install, production regression checks, Vite build, build-output verification, Pages artifact upload and deploy all succeeded.
+- **Live URL:** `https://baguskristiansianturi.github.io/pluits/?v=b556b110`.
+- **Remaining P0 UAT:** Android photo/video upload/playback; two-account likes/comments/follow/privacy/DM; new-DM offline draft/reconnect; notification recipients and system notice; SMS/TOTP; device widths 320–1440 px, accessibility and measured performance.
+- **Not implemented yet:** licensed/original audio library and FYP ranking; full English localization; personal identity verification. These remain clearly identified as open work, not simulated features.
+- **Founder acceptance:** NOT TESTED / NOT ACCEPTED. Keep Café/Resto/other experience verticals paused until Social Media is accepted.
