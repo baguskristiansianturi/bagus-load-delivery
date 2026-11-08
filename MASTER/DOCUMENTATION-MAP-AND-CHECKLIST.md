@@ -17,6 +17,16 @@ Dokumen ini memetakan satu sumber kebenaran per area. Semua dokumen turunan waji
 11. `SOP/README.md` dan SOP yang relevan.
 12. `IDEAS/IDEA-BACKLOG.md` — terakhir, agar ide tidak dianggap keputusan.
 
+## Dokumen strategi dan paket investor (9 November 2026)
+| Dokumen | Fungsi |
+|---|---|
+| docs/pluits/PLUITS-INVESTOR-PROPOSAL.md | Narasi bisnis dan proposal investor |
+| docs/pluits/PLUITS-BUSINESS-AND-PRODUCT-BLUEPRINT.md | Journey, algoritma, backend/frontend, security dan acceptance |
+| docs/pluits/PLUITS-TECHNOLOGY-ROADMAP-AND-AUDIT-2026-11-09.md | Audit repo/live backend, status, gap, roadmap dan estimasi indikatif |
+| docs/pluits/visuals/ | Diagram ekosistem, journey, trust, mobile mockup, arsitektur, roadmap |
+
+Proposal investor adalah dokumen komunikasi; Business Model Master tetap sumber keputusan aktif. Blueprint dan audit menjelaskan implementasi/kondisi, bukan mengubah keputusan secara diam-diam.
+
 ## Sumber kebenaran tunggal
 | Area | Sumber kanonis | Batas |
 |---|---|---|
