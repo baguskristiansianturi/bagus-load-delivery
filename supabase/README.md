@@ -80,3 +80,14 @@ The registration flow uses the current GitHub Pages base path as `emailRedirectT
 - Performance advisor: 14 unindexed foreign keys, three auth RLS init-plan warnings on wallet policies, 14 unused-index notices, and one multiple-permissive-policy notice on Stories. No health lints were returned.
 - The live store/product seed state remains one draft unverified store and one draft product; do not present them as active public listings.
 - Public feed media display was corrected in commit `07d81f76b8c46c9e81f53104263b1d91320daa5a` so mobile feed images/videos use intrinsic proportions rather than forced cover-cropping. Deployment run must be checked before claiming it is live.
+
+### Anonymous access smoke test — 8 November 2026
+Executed read-only queries as the PostgreSQL `anon` role inside a rolled-back transaction:
+- Public profiles visible: 2.
+- Public posts visible: 1.
+- Private addresses visible: 0.
+- Active Stories visible: 0.
+- `pluits-user-media` objects visible: 2 of 4 total.
+- `pluits-store-media` objects visible: 0 of 1 total.
+
+This is a limited anonymous smoke test only. It does not replace signed-in owner/second-user tests, Storage upload/delete tests, or adversarial media-path tests.
