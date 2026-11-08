@@ -849,3 +849,12 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - **Implementation commit:** `23ccf6504b4ac426eaa91be8cdb63859d4d5d18f`.
 - **GitHub Actions:** run #983 / `42492769040` — SUCCESS; production regression checks, Vite build, output verification, artifact upload, and GitHub Pages deployment passed for the exact implementation commit.
 - **Founder UAT:** NOT TESTED on Android; founder verification of logged-in homepage, edit menu, media interactions and double-tap remains open. Social release remains NOT ACCEPTED.
+
+
+## CP-049 — GitHub Pages retry artifact collision hardening (8 November 2026)
+
+- **Incident:** GitHub Actions run #986 (`42492867706`) passed regression checks, Vite build, output verification, and artifact upload, but the Pages deploy step failed because a failed-job retry left two artifacts named `github-pages` in the same workflow run.
+- **Root cause:** the workflow used the same fixed Pages artifact name across workflow attempts; retrying only the failed deploy job uploaded a second artifact with the same name.
+- **Correction:** `.github/workflows/deploy.yml` now names the Pages artifact with both `github.run_id` and `github.run_attempt`, and passes the matching name to `actions/deploy-pages@v4`.
+- **Process sync:** `IDEAS/IDEA-BACKLOG.md` now requires every approved idea to reference its D-XXX Decision Log entry and to update Business Model Master before roadmap delivery.
+- **Status:** workflow fix committed; a fresh push-triggered run is required to verify the new artifact naming and Pages deployment. Do not mark the latest docs/workflow commit deployed until that run succeeds.
