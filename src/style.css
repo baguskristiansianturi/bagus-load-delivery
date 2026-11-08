@@ -3798,7 +3798,7 @@ body{font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.45;-web
     width:min(820px,80%)!important;
   }
 
-  /* Balanced section rhythm: Explore cards and Why Bali Bagus never touch. */
+  /* Balanced section rhythm: Explore cards and supporting content remain separated. */
   .category-section{
     padding-bottom:56px!important;
   }
@@ -3867,7 +3867,7 @@ body{font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.45;-web
     margin-right:auto!important;
   }
 
-  /* Footer content follows the exact same left/right edge as the Bali Bagus logo. */
+  /* Footer content follows the same alignment as the Pluits wordmark. */
   .footer-main .footer-grid,
   .footer-main .footer-bottom-inner{
     width:100%!important;
@@ -4662,7 +4662,7 @@ body{font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.45;-web
 }
 @media (prefers-reduced-motion:reduce){.market-card,.catalog-card,.product-card,.order-card,.secondary-button{transition:none!important}}
 
-/* Keep the Bali Bagus wordmark consistent on mobile: brand + LOAD & DELIVERY stay together. */
+/* Keep the Pluits wordmark consistent on mobile. */
 @media(max-width:680px){
   .app-market-header .brand-copy{display:flex!important;flex-direction:column!important;min-width:0!important}
   .app-market-header .brand-copy strong{font-size:12px!important;line-height:1!important;white-space:nowrap!important}
