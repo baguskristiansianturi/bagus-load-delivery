@@ -86,3 +86,10 @@ This audit inspected source and docs. It does not prove that browser flows work 
 - Performance Advisor: 84 unused-index notices (informational); Health Advisor: 0 lints.
 - These counts are a timestamped snapshot. The SECURITY DEFINER notices require individual review; they are not automatically confirmed vulnerabilities.
 - No database schema, permissions, Auth settings, or user data were changed in this documentation/router cleanup.
+
+
+## 9. Additional repository and engineering governance findings
+- GitHub repository visibility is currently PUBLIC. Source code, documentation, commit history, and browser-delivered frontend assets are publicly inspectable. No visibility change was made because GitHub Pages availability and plan constraints must be checked before any private-repository migration.
+- This task did not perform a full credential/secret-scanning certification. A publishable Supabase client key is expected in a browser app; service-role/secret keys must never be committed or bundled. Run GitHub secret scanning and review the complete history before claiming the repository contains no leaked secrets.
+- package.json currently has dev/build/preview scripts but no automated test or lint script. CI verifies production build output and deploy; it does not prove route behavior, authorization, checkout, media upload, or Android UX.
+- src/style.css remains a large shared stylesheet with historical selectors. Legacy pages are removed from routing and source, but unused CSS cleanup should be a separate measured task to avoid breaking active layouts.
