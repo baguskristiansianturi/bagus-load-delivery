@@ -2,7 +2,7 @@
 **Versi:** 1.0 | **Tanggal:** 8 November 2026 | **Status:** Aturan kerja wajib
 
 ## 1. Tujuan dan urutan otoritas
-Untuk setiap chat baru, baca `MASTER/AI-START-HERE.md`, dokumen ini, lalu seluruh `MASTER/BUSINESS-MODEL-MASTER.md` sebelum analisis atau implementasi.
+Untuk setiap chat baru, baca `MASTER/AI-START-HERE.md`, lalu baca seluruh `MASTER/BUSINESS-MODEL-MASTER.md` terlebih dahulu. Setelah memahami model bisnis, baca dokumen tata kelola ini sebelum analisis atau implementasi.
 
 Urutan sumber: (1) Business Model Master untuk keputusan bisnis aktif; (2) Idea Backlog untuk gagasan belum diputuskan; (3) Project Status & Roadmap untuk pekerjaan yang disetujui dan status bukti; (4) spesifikasi teknis untuk kontrak implementasi; (5) kode/schema/runtime untuk kondisi aktual; (6) audit/UAT untuk bukti hasil.
 
