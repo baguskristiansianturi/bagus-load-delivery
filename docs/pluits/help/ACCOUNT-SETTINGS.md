@@ -22,3 +22,17 @@ Halaman Privasi dan Audiens menyimpan preferensi default personal, professional,
 
 ## Pemeliharaan dokumentasi
 Perubahan menu atau kemampuan harus diselaraskan dengan backend, bantuan, ketentuan, kebijakan privasi, pedoman komunitas, dan tes penerimaan. Draft kebijakan bukan dokumen legal final dan memerlukan review sebelum diberlakukan.
+
+## Pembaruan 8 November 2026 — Keamanan dan izin perangkat
+
+Pusat Pengaturan sekarang memiliki menu **Keamanan & perangkat** (`#/account/security`) sebagai modul terpisah:
+- Username akun dan visibilitas publik/pribadi.
+- Password baru.
+- Nomor HP dan verifikasi OTP SMS (bergantung konfigurasi penyedia SMS Supabase).
+- Verifikasi dua langkah TOTP melalui aplikasi authenticator.
+- Preferensi bahasa Indonesia/English. Penyimpanan preferensi tersedia, tetapi penerjemahan seluruh layar belum selesai.
+- Permintaan izin lokasi berdasarkan aksi pengguna.
+- Native photo/video picker. Browser/Android tetap mengelola izin galeri; Pluits tidak dapat memaksa atau memberi izin sebelum pengguna membuka pemilih media.
+- Verifikasi akun personal masih belum tersedia. Tidak ada badge yang diberikan otomatis; proses pemeriksaan profesional/toko berbeda dari verifikasi identitas personal.
+
+Status: kode dan backend preference telah diterapkan; SMS/TOTP dan seluruh pengaturan perlu diuji pada akun dan perangkat nyata. Jangan menyebutnya diterima sebelum UAT.
