@@ -331,3 +331,46 @@ Build dari commit `642a24bdbed4a85931271e7481f9880a04cc9fc3` berhasil. GitHub Pa
 - Subtotal is displayed as provisional only; delivery and service fee are explicitly marked as not yet calculated.
 - This is a safety improvement, not completion of checkout. Do not enable the button until a server-side order transaction and RLS tests exist.
 - Commit: 29a79b4fc246f829d888414f961cf017f0d0ce0a. Deployment workflow was in progress at checkpoint creation.
+
+
+## CP-016 — Live Pluits audit + media-ratio correction (8 November 2026)
+
+### Repository and deployment baseline
+- Confirmed the application repository is `baguskristiansianturi/bagus-load-delivery`, Vite frontend, branch `main`.
+- Confirmed Supabase project `pluits` / `ytndswhqxayqpftszwfh` is ACTIVE_HEALTHY in Singapore.
+- The docs commit `104594df3946c054012354a6570aabfea4268f14` passed GitHub Pages workflow run 368.
+- A direct CSS correction was committed as `07d81f76b8c46c9e81f53104263b1d91320daa5a`: mobile public social feed images and videos now use intrinsic height and `object-fit: contain`, avoiding the previous mobile `object-fit: cover` overrides. Workflow run 369 was in progress at the time of this checkpoint; do not mark deployed until it succeeds.
+
+### Verified live backend
+- 17 migrations in live history; 13 migration files currently tracked in GitHub.
+- Five live migration files are missing from GitHub; one tracked initial migration is not in live history. See `docs/pluits/LIVE-AUDIT-2026-11-08.md`.
+- All 28 public tables have RLS enabled.
+- No Edge Functions deployed.
+- Security advisor: two authenticated-callable SECURITY DEFINER RPC warnings and leaked-password protection disabled.
+- Performance advisor: 14 unindexed foreign keys, three wallet RLS init-plan warnings, 14 unused-index notices and one duplicate permissive Stories SELECT policy.
+- Health advisor returned no lints.
+- Existing draft store and draft product must not be represented as public active listings.
+
+### Frontend findings
+- Social account module supports user registration/login, profiles, text/photo/video posts, Explore, likes, comments, share, save and tagging.
+- Account feed media uses intrinsic proportions; profile-grid thumbnails intentionally use square crops.
+- Public homepage feed had mobile CSS overrides forcing `object-fit: cover`; CP-016 corrects this.
+- Public homepage feed action links currently navigate to Explore rather than performing anonymous likes/comments. Stories have a live table but the account UI does not yet provide a complete story creation/viewing experience.
+- Explore uses a simple interaction-weighted sort; following graph, messaging, notifications, communities, report/block/moderation and threaded replies are not complete.
+- Wallet UI and tables support request scaffolding only; no payment provider, verified settlement or real-money ledger is operational.
+- Marketplace checkout remains intentionally disabled pending real server-side orders, inventory validation, delivery calculation and payment processing (CP-015).
+
+### Next required work — ordered
+1. Reconcile and restore the five missing applied migration SQL files from their authoritative source; verify the one tracked-but-unapplied initial migration. No database reset.
+2. Enable leaked-password protection in Supabase Auth settings.
+3. Complete adversarial RLS/storage tests with anonymous, owner and second user; specifically test foreign media-path attachment, private profile/post/story reads and store RPC authorization.
+4. Review and narrow store staff permissions, audit writes and SECURITY DEFINER RPC grants.
+5. Complete mobile social feed UAT, then implement Stories UI, functional public feed metrics/actions, follow graph, notifications, report/block and moderation.
+6. Keep commerce and wallet claims disabled until their server-side transaction, ledger, settlement and refund paths are implemented and tested.
+
+### Status labels
+- **IMPLEMENTED:** media ratio CSS correction committed.
+- **DEPLOYMENT PENDING:** workflow run 369 at checkpoint time.
+- **AUDITED:** repository structure, live project status, migration history, public-table RLS coverage and Supabase advisors.
+- **NOT TESTED:** two-account privacy/UAT, media ownership adversarial tests, Android device presentation.
+- **NOT COMPLETE:** stories UI, follow graph, messaging, notifications, moderation, live checkout/payment, real wallet.
