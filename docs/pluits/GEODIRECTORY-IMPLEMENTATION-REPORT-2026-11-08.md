@@ -76,7 +76,7 @@ The exact live migration history is authoritative; the timestamp above for the f
 - GitHub Actions Pages workflow run #506 succeeded on commit `2432e4a81d8588eb46c62c9e3a10b18fafd00a03`.
 - This confirms the Vite production build and Pages deploy job succeeded for that commit.
 - Subsequent database-only migrations do not change frontend source. The latest database-only migrations and documentation commits are being checked by the current Pages workflow; verify that run before closing this report.
-- GitHub Pages URL remains `https://baguskristiansianturi.github.io/bagus-load-delivery/`; repository has not been renamed to `pluits`.
+- GitHub Pages URL remains `https://baguskristiansianturi.github.io/pluits/`; repository has not been renamed to `pluits`.
 
 ## 4. Not yet complete
 
