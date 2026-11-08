@@ -374,3 +374,15 @@ Build dari commit `642a24bdbed4a85931271e7481f9880a04cc9fc3` berhasil. GitHub Pa
 - **AUDITED:** repository structure, live project status, migration history, public-table RLS coverage and Supabase advisors.
 - **NOT TESTED:** two-account privacy/UAT, media ownership adversarial tests, Android device presentation.
 - **NOT COMPLETE:** stories UI, follow graph, messaging, notifications, moderation, live checkout/payment, real wallet.
+
+
+## CP-017 — Deployment and anonymous access smoke test (8 November 2026)
+
+- GitHub Pages workflow run 374 completed successfully on commit `8d7f3b30b2c7bc85b7295090e55b94dbf9058651`.
+- Confirmed `npm ci`, Vite production build, `dist/index.html` check, artifact upload and GitHub Pages deploy all passed.
+- Anonymous SQL smoke test (rolled back): 2 public profiles and 1 public post visible; 0 private address rows and 0 active Stories visible.
+- Anonymous Storage smoke test (rolled back): 2 of 4 user-media objects visible; 0 of 1 store-media objects visible.
+- Current user_posts data check: 2 rows, 0 media paths with a first-folder UUID different from the post owner. This does not prove future writes are protected.
+- Stories table currently has 0 rows.
+- **Not tested:** Android handset rendering, registration email delivery, signed-in owner vs unrelated-user RLS, media upload/delete, and adversarial media path attempts.
+- **Status:** build/deployment workflow verified; limited anonymous boundary smoke test passed; production readiness remains NOT APPROVED pending migration reconciliation and authenticated security tests.
