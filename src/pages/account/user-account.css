@@ -685,3 +685,25 @@
  .ua-social-home{width:100%;max-width:620px}
  .ua-social-home .ua-post-card{margin-bottom:0}
 }
+
+/* MOBILE FEED MEDIA FRAME — ratio bounds, original pixels remain uncropped */
+@media(max-width:760px){
+ .ua-social-app .ua-social-home .ua-media,
+ .ua-social-app .ua-social-home .ua-gallery-item{
+  display:grid!important;width:100%!important;min-width:100%!important;max-width:100%!important;
+  height:auto!important;max-height:78svh!important;aspect-ratio:1!important;
+  overflow:hidden!important;place-items:center!important;background:#f4f5f6!important;
+ }
+ .ua-social-app .ua-social-home .ua-media img,
+ .ua-social-app .ua-social-home .ua-media video,
+ .ua-social-app .ua-social-home .ua-gallery-item img,
+ .ua-social-app .ua-social-home .ua-gallery-item video{
+  display:block!important;width:100%!important;height:100%!important;min-width:0!important;
+  max-width:100%!important;max-height:100%!important;object-fit:contain!important;
+  object-position:center!important;background:#f4f5f6!important;
+ }
+ .ua-social-app .ua-social-home .ua-media-gallery{width:100%!important;max-width:100%!important}
+ .ua-social-app .ua-social-home .ua-gallery-track{align-items:start!important}
+}
+/* Remove floating avatar edit badge from the profile hero */
+.ua-profile-main .ua-avatar-edit{display:none!important}
