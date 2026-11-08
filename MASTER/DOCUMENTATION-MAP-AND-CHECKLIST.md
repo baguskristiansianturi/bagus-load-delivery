@@ -5,8 +5,8 @@ Dokumen ini memetakan satu sumber kebenaran per area. Semua dokumen turunan waji
 
 ## Urutan baca AI
 1. `MASTER/AI-START-HERE.md`
-2. `MASTER/PLUITS-AI-GOVERNANCE.md`
-3. `MASTER/BUSINESS-MODEL-MASTER.md` — baca keseluruhan.
+2. `MASTER/BUSINESS-MODEL-MASTER.md` — baca keseluruhan terlebih dahulu.
+3. `MASTER/PLUITS-AI-GOVERNANCE.md`.
 4. `MASTER/PROJECT-STATUS-ROADMAP.md`
 5. `MASTER/PLUITS-USER-TESTING.md`
 6. `MASTER/PLUITS-SECURITY-REVIEW.md` dan `MASTER/BACKEND-FOUNDATION-SPEC.md`
