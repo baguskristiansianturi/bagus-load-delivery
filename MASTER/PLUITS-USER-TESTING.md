@@ -72,7 +72,19 @@
 
 **Lulus jika:** unggah, tampil, buka, rasio media, audience, dan batas 24 jam sesuai. Tes ini masih harus dilakukan dengan akun nyata; uji database rollback saja bukan pengganti UAT.
 
-### 6. Uji interaksi pada postingan
+
+### 6. Uji Reels
+1. Dari Explore, tekan Lihat Reels.
+2. Jika belum ada video, kembali ke Buat postingan dan unggah video MP4/WebM.
+3. Buka Reels lagi dan pastikan video tampil di aliran vertikal.
+4. Putar video, jeda, lanjutkan, dan periksa kontrol pemutar.
+5. Pastikan video portrait, landscape, dan square tetap memakai rasio sumber; tidak dipaksa crop atau stretch.
+6. Uji suka, komentar, simpan, dan bagikan pada kartu video.
+7. Pastikan video privat hanya terlihat oleh pemilik sesuai aturan RLS.
+
+**Lulus jika:** daftar video terbuka, pemutar bekerja, interaksi tersimpan, dan rasio video tidak berubah. Full-screen swipe/autoplay belum menjadi bagian build ini.
+
+### 7. Uji interaksi pada postingan
 - Suka dan batalkan suka.
 - Buka komentar dan kirim komentar.
 - Bagikan tautan postingan.
@@ -80,13 +92,13 @@
 - Pada postingan milik sendiri, pilih Tag dan masukkan username akun lain yang sudah terdaftar.
 - Refresh halaman dan pastikan hasil interaksi tetap tersimpan.
 
-### 7. Uji privasi dasar
+### 8. Uji privasi dasar
 - Ubah profil menjadi Privat dan simpan.
 - Masuk dengan akun lain untuk memastikan postingan akun privat tidak muncul pada Explore.
 - Kembali ke akun pertama dan ubah lagi menjadi Publik bila ingin melanjutkan tes feed.
 
 ## Catatan batas fitur pada build ini
-- Chat pribadi, Reels khusus, followers/following, notifikasi tag, moderasi/report/block, edit/hapus postingan, halaman profil publik yang dapat dibuka lewat username, dan tampilan toko di profil masih menjadi PR. UI Stories sudah tersedia di Explore; upload/view nyata dan uji perangkat masih menunggu.
+- Chat pribadi, followers/following, notifikasi tag, moderasi/report/block, edit/hapus postingan, halaman profil publik yang dapat dibuka lewat username, dan tampilan toko di profil masih menjadi PR. Stories dan feed Reels dasar sudah tersedia; upload/view nyata dan uji perangkat masih menunggu. Full-screen swipe/autoplay Reels belum dibuat.
 - Share menggunakan native share sheet Android bila tersedia; browser lain menggunakan salin tautan.
 - Peta menggunakan OpenStreetMap/Leaflet dan membutuhkan koneksi internet. Jika peta gagal dimuat, koordinat tetap dapat dimasukkan manual.
 - Saldo/wallet dan transaksi uang sungguhan tidak diaktifkan.
