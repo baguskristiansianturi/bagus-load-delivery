@@ -140,3 +140,11 @@ Founder reports that Pluits is already published and has at least one registered
 - Updated product publishing, order fulfilment, and payment review RPCs to use the same permission helper as RLS.
 - Rollback-only SQL matrix tests passed for all listed roles and denied cross-role capabilities. No membership changes were committed.
 - Remaining: test actual REST/RLS and Storage requests as distinct real accounts, add a staff invitation/grant management UI with audit trail, and complete individual review of remaining SECURITY DEFINER functions.
+
+
+## 12. RLS policy shape and advisor recheck — 8 November 2026, 13:34 UTC
+
+- Applied migration `20261108133402_split_store_permission_write_policies_by_action` and committed its SQL file.
+- Write policies are now operation-specific (INSERT/UPDATE/DELETE), avoiding accidental extra SELECT policies from a permissive `FOR ALL` policy.
+- Re-ran advisors: no multiple-permissive-policy warnings remain; 20 SECURITY DEFINER warnings, 1 leaked-password warning, 84 informational unused-index notices, and 0 Health lints remain.
+- The 84 unused-index notices are not grounds for deletion while query traffic is low. Preserve the indexes until real workload evidence exists.
