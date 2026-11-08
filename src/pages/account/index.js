@@ -38,11 +38,11 @@ function frame(content,active='explore',avatarUrl=''){
   </header>
   <main class="ua-main ${profileView?'ua-profile-main':''}">${content}</main>
   <nav class="ua-mobile-nav" aria-label="Navigasi utama">
-   <a class="${active==='explore'?'active':''}" href="#/account/explore"><span>⌂</span><small>Beranda</small></a>
-   <a href="#/places"><span>⌖</span><small>Jelajah</small></a>
+   <a class="${active==='explore'?'active':''}" href="#/account/explore" aria-label="Beranda"><span>⌂</span><small>Beranda</small></a>
+   <a class="${active==='discover'?'active':''}" href="#/places" aria-label="Jelajah"><span>⌕</span><small>Jelajah</small></a>
    <a class="ua-mobile-create" href="#/account/compose" aria-label="Buat postingan"><span>＋</span><small>Buat</small></a>
-   <a href="#/trip"><span>✦</span><small>Trip</small></a>
-   <a class="${profileView?'active':''}" href="#/account/profile">${userAvatar}<small>Profil</small></a>
+   <a class="${active==='reels'?'active':''}" href="#/account/reels" aria-label="Reels"><span>▣</span><small>Reels</small></a>
+   <a class="${profileView?'active':''}" href="#/account/profile" aria-label="Profil">${userAvatar}<small>Profil</small></a>
   </nav>
   <div id="ua-toast" class="ua-toast" role="status"></div>
   <footer class="ua-footer">PLUITS · Identitas pengguna dan aktivitas komunitas</footer>
