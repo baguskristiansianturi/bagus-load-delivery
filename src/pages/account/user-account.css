@@ -568,3 +568,8 @@
  .ua-profile-main .ua-avatar.large{width:74px!important;height:74px!important}
  .ua-profile-main .ua-profile-stats{gap:12px!important}
 }
+
+/* Profile content tabs stay in one clean Instagram-style row */
+.ua-profile-main .ua-profile-tabs{flex-wrap:nowrap!important;white-space:nowrap!important}
+.ua-profile-main .ua-profile-tabs button{flex:0 1 150px;white-space:nowrap!important}
+@media(max-width:760px){.ua-profile-main .ua-profile-tabs button{flex:1 1 0;min-width:0}.ua-profile-main .ua-profile-tabs button span{white-space:nowrap}}
