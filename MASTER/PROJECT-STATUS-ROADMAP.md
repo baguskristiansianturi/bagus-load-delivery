@@ -714,3 +714,12 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - Split permission-aware writes into INSERT/UPDATE/DELETE policies, preserving separate read policies.
 - Supabase advisor recheck cleared the 7 multiple-permissive-policy notices caused by the initial `FOR ALL` write policy design.
 - Current advisor snapshot: 20 SECURITY DEFINER WARN, 1 leaked-password protection WARN, 84 unused-index INFO, 0 health lints.
+
+
+### CP-039 addendum — Vite demo and orphaned legacy modules removed
+
+- Deleted unused `src/counter.js` and unused `vite.svg` / `javascript.svg` starter assets.
+- Deleted old unreferenced `src/pages/auth/index.js`, which still contained fake localStorage login/logout and “AKUN BAGUS” copy with an explicit “backend later” message.
+- Deleted unreferenced logistics/material/property/service wrappers that depended on already-retired demo modules, plus redundant promo/not-found/search wrappers.
+- Expanded the CI production-surface guard to block these files and old BLD/Bagus runtime markers from returning.
+- Active router/main entry were inspected before deletion; no active route imports these files.
