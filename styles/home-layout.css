@@ -72,3 +72,61 @@
 @media(max-width:360px){
   .pl-social-home .pl-home-shortcuts a{flex-basis:70px;min-width:70px}
 }
+
+
+/* Explore category rail — lighter cards and clearer separation */
+.pl-social-home .pl-home-shortcuts{
+  box-sizing:border-box;
+  padding:15px 0 17px;
+  margin:0 0 14px;
+  border-top:1px solid #edf0f1;
+  border-bottom:1px solid #edf0f1;
+}
+.pl-social-home .pl-home-shortcuts a{
+  flex:0 0 88px;
+  min-width:88px;
+  min-height:60px;
+  padding:5px 4px;
+  gap:6px;
+  border:0;
+  border-radius:9px;
+  background:transparent;
+  box-shadow:none;
+  color:#52636d;
+}
+.pl-social-home .pl-home-shortcuts a>b{
+  width:28px;
+  height:28px;
+  flex-basis:28px;
+  border-radius:8px;
+  background:#f0f3f5;
+  color:#315d6a;
+  font-size:15px;
+}
+.pl-social-home .pl-home-shortcuts a>span{
+  font-size:10px;
+  line-height:1.25;
+}
+@media(max-width:760px){
+  .pl-social-home .pl-home-shortcuts{
+    padding:14px 14px 16px!important;
+    margin:0 0 12px;
+    border-top:1px solid #edf0f1;
+    border-bottom:1px solid #edf0f1;
+    gap:8px;
+  }
+  .pl-social-home .pl-home-shortcuts a{
+    flex:0 0 78px;
+    min-width:78px;
+    min-height:58px;
+    padding:4px 3px;
+    border:0;
+    background:transparent;
+  }
+  .pl-social-home .pl-home-shortcuts a>b{
+    width:27px;
+    height:27px;
+    flex-basis:27px;
+    font-size:14px;
+  }
+}
