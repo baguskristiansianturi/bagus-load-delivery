@@ -24,6 +24,12 @@ Urutan sumber: (1) Business Model Master untuk keputusan bisnis aktif; (2) Idea 
 7. Turunkan keputusan ke spesifikasi backend/frontend, lalu tambahkan pekerjaan ke roadmap.
 8. Setelah implementasi, catat bukti commit, migration, test, deployment, dan UAT.
 
+## 3A. Decision Log dan SOP
+- Keputusan founder yang sudah disetujui dicatat append-only di `MASTER/DECISION-LOG.md`; Business Model Master tetap otoritas isi keputusan bisnis.
+- Ide yang belum disetujui tetap di `IDEAS/IDEA-BACKLOG.md`; jangan menaikkannya menjadi keputusan atau pekerjaan.
+- Gunakan `SOP/PRODUCT-CHANGE-CONTROL.md` untuk sharing/ide/perubahan model bisnis/planning; `SOP/ENGINEERING-DELIVERY.md` untuk implementasi; `SOP/RELEASE-UAT.md` untuk deploy, UAT, dan handoff.
+- Setiap perubahan dokumen harus menjaga tautan dan status konsisten. Jika keputusan berubah, tambahkan entri baru yang merujuk keputusan sebelumnya; jangan menghapus sejarah.
+
 ## 4. Kontrak wajib bisnis → backend → frontend
 Setiap fitur harus punya traceability: business rule dan rujukan; persona/journey/state machine/acceptance criteria; domain data ownership/schema/constraints/RLS/Storage/RPC/API/error semantics; frontend route/page/component/service dan loading/empty/error/retry/offline states; test matrix; deployment dan UAT evidence.
 Backend menegakkan aturan dan akses. Frontend mencerminkan izin/status backend. UI tidak boleh mengarang keberhasilan, harga, saldo, stok, transaksi, verifikasi, atau izin.
