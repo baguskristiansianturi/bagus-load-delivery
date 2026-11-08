@@ -77,7 +77,7 @@ The registration flow uses the current GitHub Pages base path as `emailRedirectT
 - All 28 tables in the public schema have RLS enabled.
 - No Supabase Edge Functions are deployed.
 - Security advisor: two warnings for authenticated execution of `public.create_store` and `public.update_store_profile` (both check `auth.uid()` and use an empty fixed search_path; anonymous execution is denied, but authorization tests and grant review remain required); leaked-password protection is disabled.
-- Performance advisor: 14 unindexed foreign keys, three auth RLS init-plan warnings on wallet policies, 14 unused-index notices, and one multiple-permissive-policy notice on Stories. No health lints were returned.
+- Performance advisor after hardening: 14 unindexed foreign keys and 12 unused-index notices. Wallet RLS init-plan warnings and duplicate Stories SELECT policy warning are cleared. No health lints were returned.
 - The live store/product seed state remains one draft unverified store and one draft product; do not present them as active public listings.
 - Public feed media display was corrected in commit `07d81f76b8c46c9e81f53104263b1d91320daa5a` so mobile feed images/videos use intrinsic proportions rather than forced cover-cropping. Deployment run must be checked before claiming it is live.
 
@@ -91,3 +91,10 @@ Executed read-only queries as the PostgreSQL `anon` role inside a rolled-back tr
 - `pluits-store-media` objects visible: 0 of 1 total.
 
 This is a limited anonymous smoke test only. It does not replace signed-in owner/second-user tests, Storage upload/delete tests, or adversarial media-path tests.
+
+### Media ownership hardening — 8 November 2026
+- Migration `20261108011806_enforce_social_media_owner_paths` adds validated CHECK constraints to `user_posts` and `user_stories`: any referenced media path must start with the posting user's UUID folder and include a non-empty object name.
+- Adversarial test before fix: a public post with another UUID's media path was accepted inside a rollback transaction.
+- Adversarial tests after fix: foreign-folder media paths for posts and Stories were rejected; same-user folder paths were accepted. All probe rows were rolled back.
+- Migration `20261108011838_optimize_story_and_wallet_rls_policies` consolidates Stories SELECT policies and changes wallet RLS identity calls to init-plan-safe `(select auth.uid())`.
+- Re-run advisors: the Stories multiple-permissive warning and three wallet RLS init-plan warnings are no longer reported.
