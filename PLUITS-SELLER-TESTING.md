@@ -16,7 +16,7 @@
 
 ## Testing scope / limitations
 - This is a founder-led early testing workspace, not production-ready commerce.
-- Seller onboarding is currently open for Bali only and accepts PT/CV/UD business types.
+- Seller onboarding remains Bali-only at backend level. Founder decision D-005 now requires support for individuals, UMKM, family/home businesses, cooperatives and companies; live UI/CHECK constraint/create_store RPC still only accept PT/CV/UD until a new migration is staged and approved. Do not test by entering a false legal form.
 - Store creation uses the authenticated `create_store` RPC; the database creates the owner membership and default settings atomically.
 - Product/category/media write policies now use backend permission checks through `private.has_store_permission`. However, staff invitation/grant-management UI and real owner/staff negative authorization UAT are not complete. Do not invite staff until those tests pass.
 - Backend foundations exist for orders and manual bank-transfer review, but seller-side action handlers and end-to-end order/payment UAT are incomplete. Payouts, complete accounting ledger, PDF reports, full operating-hours management, staff invitations, and operational public-store activation are not ready.
@@ -51,3 +51,16 @@ Safe founder UAT scope after blockers are fixed: same Auth account → create st
 - Mobile Seller Center navigation uses a two-row layout at narrow widths.
 
 **Testing limit:** workflow build and deploy passed, but Android interaction, actual store creation, upload, and two-account authorization are still NOT TESTED. Current business type remains PT/CV/UD only; do not misrepresent an UMKM/individual business to bypass this limitation.
+
+
+## Store model decision D-005 — 9 November 2026
+Store registration is no longer restricted to PT/CV/UD. Operational business type and legal form must be separate; legal form is optional unless relevant. A real physical/operational location and accountable owner are required. A private/home address can be verified without exposing its exact address publicly. Full lifecycle, dashboard sections, URLs, and acceptance criteria are in [Seller Center Store Lifecycle & URL Specification](docs/pluits/SELLER-CENTER-STORE-LIFECYCLE-AND-URL-SPEC-2026-11-09.md).
+
+### Current live URL behavior
+- Store: `https://baguskristiansianturi.github.io/pluits/#/shop/{store_username}`
+- Product: `https://baguskristiansianturi.github.io/pluits/#/market-product/{variant_id}` (currently variant-based; product ID route alignment is still required).
+- Seller dashboard: `https://baguskristiansianturi.github.io/pluits/#/seller`
+- No `pluits.id` URL is live/authorized yet.
+
+### Not yet implemented
+The business-type CHECK and create_store RPC still reject non-PT/CV/UD; the profile still requires legal name in frontend; the verification RPC still requires legal_name/email/full_address. Branch/location UI, branch-specific settings, store logo/banner upload, stable product URL, alias redirects, and owner-guarded online-sales activation remain open. No database migration has been applied for D-005.
