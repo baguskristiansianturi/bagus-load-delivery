@@ -13,7 +13,7 @@ Pintu masuk wajib untuk setiap chat/sesi AI baru yang mengerjakan Pluits. AI har
 3. `MASTER/PLUITS-AI-GOVERNANCE.md`, `MASTER/DECISION-LOG.md`, dan `MASTER/PROJECT-STATUS-ROADMAP.md`.
 4. `SOP/README.md`, lalu SOP yang relevan dengan pekerjaan.
 5. `MASTER/PLUITS-SOCIAL-FIRST-RELEASE-SPEC.md` dan `MASTER/PLUITS-USER-TESTING.md` untuk pekerjaan Social Media.
-6. `MASTER/DOCUMENTATION-MAP-AND-CHECKLIST.md`, security review, backend foundation spec, `supabase/README.md`, dan technical architecture/security.
+6. `MASTER/DOCUMENTATION-MAP-AND-CHECKLIST.md`, `docs/pluits/PLUITS-BUSINESS-PRODUCT-TECH-BLUEPRINT.md`, security review, backend foundation spec, `supabase/README.md`, dan technical architecture/security.
 7. Audit live terbaru, alignment audit, dan spesifikasi modul terkait.
 8. `IDEAS/IDEA-BACKLOG.md` — ide belum disetujui, bukan instruksi implementasi.
 
