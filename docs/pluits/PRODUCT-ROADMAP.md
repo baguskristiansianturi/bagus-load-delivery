@@ -126,3 +126,18 @@ No implementation status is asserted by this planning document. Repository and a
 - **Current implementation delta:** Account Center CSS now uses a one-column phone layout and two-column tablet/desktop layout, with width and spacing adjustments at 380px, 760px, 1024px, and 1200px breakpoints. This is a targeted first pass, not proof that every Pluits screen is fully responsive.
 - **Status:** DESIGN DECIDED; Account Center responsive CSS IMPLEMENTED; deploy and device QA NOT YET VERIFIED. Other screens remain subject to the same responsive audit.
 - **Acceptance:** no horizontal overflow at supported widths; all controls reachable; no content clipped; readable line lengths; touch targets comfortable on mobile; keyboard and focus usable on desktop; same backend state across device classes.
+
+
+## CP-028 — Functional social feed, threaded comments and profile navigation (8 November 2026)
+
+- Founder UAT feedback: video/post flows, Explore, Feed, comments, and profile navigation must work as a connected social product; decorative controls or links that merely lead to unrelated screens are not acceptable.
+- Home feed: signed-in users can like/unlike and save/unsave directly; Share uses the native share sheet or copies a post link. Comment opens the post detail where the comment thread is available. Public author avatar and name open that user's profile.
+- Explore/Reels/post detail: post likes and comments remain available to the post owner as well as other signed-in users. Self-like was already permitted by the post-likes policy; the comment insert policy now explicitly permits the post owner to comment on their own post even if the audience preference disables comments from others.
+- Threaded comments: post_comments.parent_comment_id supports replies within the same post, enforced by a composite self-reference foreign key. post_comment_likes supports like/unlike on individual comments with authenticated-only RLS policies and per-user uniqueness.
+- Comment UI renders author links, reply controls, like counts, and nested reply forms. Profile avatars in post cards are links to the user's profile.
+- Account shell now keeps desktop navigation, mobile bottom navigation, and a visible profile destination on profile pages instead of removing navigation on the profile route.
+- Migration: supabase/migrations/20261108051829_pluits_post_comment_replies_and_likes.sql; applied to Supabase project ytndswhqxayqpftszwfh. Schema verification confirms parent_comment_id, post_comment_likes, and authenticated RLS policies exist.
+- **Status:** DB schema/policies APPLIED; frontend interactions IMPLEMENTED; production build/deploy status must be checked against the newest GitHub Actions run; Android UAT NOT YET TESTED.
+- **Not yet accepted as complete:** video upload/playback on a real Android device, two-account interactions, comment/reply/like counters after refresh, private-profile visibility, moderation and report flows, and cross-device responsive checks. Existing video upload implementation accepts MP4/WebM up to 50 MB; that code path is not proof of successful real-device upload.
+- **Acceptance tests:** (1) owner likes own post; (2) owner comments on own post; (3) another user likes/comments; (4) reply to a comment and reply to a reply; (5) like/unlike a comment; (6) refresh preserves counts and thread; (7) author avatar/name opens correct profile; (8) Home, Explore, Reels, post detail and Profile navigation work on phone/tablet/desktop.
+- **Next:** complete real-device media upload test and two-account interaction test; then finish Explore discovery controls, report/block/moderation affordances, and story/reel viewing interactions before marking the social core UAT-ready.
