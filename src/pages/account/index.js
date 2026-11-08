@@ -147,8 +147,8 @@ function settingsHubPage(){
    ['✉','Pesan','Percakapan pribadi antar akun Pluits','/messages','ready'],
    ['⊘','Akun diblokir','Kelola akun yang Anda blokir','/account/blocked','ready'],
    ['⌕','Jelajah dan GeoDirectory','Tempat, layanan, komunitas, dan penyedia lokal','/places','ready'],
-   ['▤','Marketplace','Toko, produk, layanan, dan pesanan','/','ready'],
-   ['⌁','Trip dan perjalanan','Temukan tempat dan rencanakan pengalaman','/places','staged'],
+   ['▤','Marketplace','Toko, produk, layanan, dan pesanan','/marketplace','ready'],
+   ['⌁','Trip dan perjalanan','Temukan tempat dan rencanakan pengalaman','/trip','ready'],
    ['▱','Wallet','Permintaan dan informasi saldo akun','/account/wallet','ready']]],
   ['Interaksi dan dukungan','Aktivitas akun, panduan, dan informasi layanan',[
    ['◷','Aktivitas dan notifikasi','Pemberitahuan suka, komentar, dan pengikut','/account/activity','ready'],
