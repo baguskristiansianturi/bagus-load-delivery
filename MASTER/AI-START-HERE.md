@@ -8,16 +8,14 @@
 Pintu masuk wajib untuk setiap chat/sesi AI baru yang mengerjakan Pluits. AI harus membaca Model Bisnis Master terlebih dahulu sebelum memberi analisis, rekomendasi, desain, atau perubahan frontend/backend/database/roadmap. Jangan mengandalkan ringkasan chat atau ingatan sebagai pengganti repository terkini.
 
 ## Urutan baca wajib
-1. Dokumen ini.
-2. `MASTER/BUSINESS-MODEL-MASTER.md` — baca seluruh dokumen terlebih dahulu; ini sumber tunggal visi, keputusan, dan aturan bisnis.
-3. `MASTER/PLUITS-AI-GOVERNANCE.md` — aturan kerja setelah memahami model bisnis.
-4. `MASTER/PROJECT-STATUS-ROADMAP.md` — satu-satunya roadmap delivery.
-5. `MASTER/PLUITS-SOCIAL-FIRST-RELEASE-SPEC.md` — wajib untuk seluruh pekerjaan Social Media dan release gate sebelum vertikal pengalaman lain.
-6. `MASTER/DOCUMENTATION-MAP-AND-CHECKLIST.md`.
-6. `MASTER/PLUITS-USER-TESTING.md`.
-7. `MASTER/PLUITS-SECURITY-REVIEW.md`, `MASTER/BACKEND-FOUNDATION-SPEC.md`, `supabase/README.md`, dan `docs/pluits/TECHNICAL-ARCHITECTURE-SECURITY.md`.
-8. Audit live terbaru dan docs/pluits/BUSINESS-FRONTEND-BACKEND-ALIGNMENT-AUDIT-2026-11-08.md, lalu spesifikasi arsitektur modul yang relevan.
-9. `IDEAS/IDEA-BACKLOG.md` — ide belum disetujui, bukan instruksi implementasi.
+1. Dokumen ini dan `AGENTS.md`.
+2. Seluruh `MASTER/BUSINESS-MODEL-MASTER.md` — otoritas tunggal keputusan bisnis.
+3. `MASTER/PLUITS-AI-GOVERNANCE.md`, `MASTER/DECISION-LOG.md`, dan `MASTER/PROJECT-STATUS-ROADMAP.md`.
+4. `SOP/README.md`, lalu SOP yang relevan dengan pekerjaan.
+5. `MASTER/PLUITS-SOCIAL-FIRST-RELEASE-SPEC.md` dan `MASTER/PLUITS-USER-TESTING.md` untuk pekerjaan Social Media.
+6. `MASTER/DOCUMENTATION-MAP-AND-CHECKLIST.md`, security review, backend foundation spec, `supabase/README.md`, dan technical architecture/security.
+7. Audit live terbaru, alignment audit, dan spesifikasi modul terkait.
+8. `IDEAS/IDEA-BACKLOG.md` — ide belum disetujui, bukan instruksi implementasi.
 
 ## Identitas proyek
 - Produk, frontend, backend, repository: **Pluits**.
@@ -37,7 +35,8 @@ Pluits sudah dipublikasikan dan memiliki pengguna terdaftar. Perlakukan akun/dat
 3. Project Status & Roadmap: apa yang disetujui untuk dikerjakan dan bukti statusnya.
 4. Spesifikasi teknis: bagaimana keputusan diwujudkan.
 5. Source code/schema/runtime: kondisi aktual, bukan otoritas untuk mengubah model bisnis.
-6. Audit dan UAT: bukti hasil serta keterbatasan.
+6. SOP: cara menjalankan proses perubahan dan delivery.
+7. Audit dan UAT: bukti hasil serta keterbatasan.
 
 Jika dokumen bertentangan, jangan menebak. Ikuti keputusan aktif terbaru di Business Model Master, catat konflik, perbaiki dokumen turunan, dan jangan mengubah keputusan bisnis tanpa persetujuan founder.
 
@@ -48,6 +47,8 @@ Jika dokumen bertentangan, jangan menebak. Ikuti keputusan aktif terbaru di Busi
 - Satu fungsi/route/komponen memiliki satu implementasi kanonis.
 - Jangan mengubah desain/fitur yang tidak diminta. Pertahankan modul berjalan; gunakan perubahan bertahap, kompatibel, dan rollback.
 - Ide baru dicatat di backlog. Tidak otomatis menjadi keputusan atau pekerjaan.
+- Keputusan eksplisit dicatat append-only di MASTER/DECISION-LOG.md; perubahan bisnis disinkronkan melalui SOP/PRODUCT-CHANGE-CONTROL.md.
+- Setiap perubahan mengikuti SOP/ENGINEERING-DELIVERY.md dan SOP/RELEASE-UAT.md yang relevan.
 - Migration yang sudah diterapkan tidak dihapus/ditulis ulang.
 - Jangan seed toko, produk, review, transaksi, saldo, engagement, akun, atau postingan palsu.
 - Pisahkan DECIDED, SPECIFIED, IMPLEMENTED, DEPLOYED, TESTED, ACCEPTED, BLOCKED, NOT TESTED, dan NOT VERIFIED.
