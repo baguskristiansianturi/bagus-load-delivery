@@ -757,3 +757,18 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - **Optional personal verification:** NOT IMPLEMENTED. Current verification schema only covers professional/store; no personal identity badge should be issued.
 - **Responsive/performance:** responsive CSS exists; device matrix, Android media upload/playback, accessibility and measured performance remain NOT TESTED.
 - **Release status:** implementation increment committed; deploy and CI must be verified on the latest head. Not yet accepted by founder. Do not label social release complete.
+
+
+## CP-041 — Social core implementation increment (8 November 2026)
+
+- **Business decision:** added section 31 to BUSINESS-MODEL-MASTER.md. Social Media is P0; other experience verticals wait for founder UAT acceptance.
+- **Canonical acceptance:** MASTER/PLUITS-SOCIAL-FIRST-RELEASE-SPEC.md.
+- **DM:** contact list from accepted follow graph, username search, inbox, Supabase realtime, cached contacts/thread metadata, offline device-local outbox (maximum 50), reconnect retry and idempotency. Server owns canonical message timestamps. No offline remote history/new-conversation creation. NOT TESTED on Android or two real accounts.
+- **Notifications:** follow/unfollow, like, comment, new message triggers; activity page recognizes all event types and refreshes from realtime. New inbox notification routes directly to its conversation.
+- **System information:** applied migration 20261108140823_pluits_system_announcements. Added published/draft/archived announcements, language, severity, expiry, RLS, per-user read receipts, moderator publisher in Moderation Center, and activity-center display/realtime refresh. Admin/moderator role UAT and user read receipt UAT NOT TESTED.
+- **Account settings:** modular page with username, public/private, password, phone OTP, TOTP MFA, language preference, location permission, and native photo/video picker. Complete English localization, SMS provider, TOTP and real account flow NOT TESTED.
+- **Icons and consistency:** settings hub now renders professional SVG icons from shared icon library; responsive styling added.
+- **Music/FYP:** recorded IDEA-007 for licensed/original audio and responsible recommendations. No music library or production-grade viral/FYP recommender implemented.
+- **Personal verification:** explicitly unavailable; no fake verification badge or application form.
+- **CI:** production regression guard expanded for DM, settings, notifications and announcement publisher. Pages workflow runs npm test before Vite build.
+- **Remaining P0 acceptance:** Android photo/video upload/playback; two-account RLS and social action tests; DM offline/reconnect; notifications; Auth/SMS/TOTP; device matrix, accessibility and measured performance. Founder UAT not yet accepted.
