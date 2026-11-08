@@ -1,6 +1,6 @@
 import { socialIcon } from '../common/social-icons.js';
 
-export function renderSocialHeader({ active = 'explore', profileView = false, user, profile, userAvatar = '', publicHome = false } = {}) {
+export function renderSocialHeader({ active = 'explore', profileView = false, user, profile, userAvatar = '', notificationCount = 0, publicHome = false } = {}) {
   const profileHref = user
     ? '#/@' + encodeURIComponent(profile?.username || '')
     : '#/account/login';
@@ -33,7 +33,7 @@ export function renderSocialHeader({ active = 'explore', profileView = false, us
         <a href="#/trip">Trip</a>
         <a class="${active === 'reels' ? 'active' : ''}" href="#/account/reels">Reels</a>
         <a href='#/messages'>${socialIcon('message', { size: 17 })}<span>Pesan</span></a>
-        <a class="${active === 'activity' ? 'active' : ''}" href="#/account/activity">Aktivitas</a>
+        <a class="${active === 'activity' ? 'active' : ''} pl-nav-activity" href="#/account/activity">Aktivitas${notificationCount ? '<i class="pl-nav-unread">'+(notificationCount>99?'99+':notificationCount)+'</i>' : ''}</a>
         <a class="${profileView ? 'active' : ''}" href="#/account/profile">Profil</a>
       </nav>
       <a class="ua-header-profile" href="${profileHref}" aria-label="Buka profil saya">${userAvatar || socialIcon('user', { size: 22 })}</a>
@@ -41,7 +41,7 @@ export function renderSocialHeader({ active = 'explore', profileView = false, us
     </header>`;
 }
 
-export function renderSocialMobileNav({ active = 'explore', profileView = false, user, profile, userAvatar = '', publicHome = false } = {}) {
+export function renderSocialMobileNav({ active = 'explore', profileView = false, user, profile, userAvatar = '', notificationCount = 0, publicHome = false } = {}) {
   const profileHref = user
     ? '#/@' + encodeURIComponent(profile?.username || '')
     : '#/account/login';
@@ -84,7 +84,7 @@ export function renderSocialMobileNav({ active = 'explore', profileView = false,
           <small>${item.label}</small>
         </a>`).join('')}
       <a href='#/messages' aria-label='Pesan'>${socialIcon('message', { size: 22 })}<small>Pesan</small></a>
-      <a class='${active === 'activity' ? 'active' : ''}' href='#/account/activity' aria-label='Aktivitas'>${socialIcon('bell', { size: 22 })}<small>Aktivitas</small></a>
+      <a class='${active === 'activity' ? 'active' : ''} pl-mobile-activity' href='#/account/activity' aria-label='Aktivitas'>${socialIcon('bell', { size: 22 })}<small>Aktivitas</small>${notificationCount ? '<i class="pl-nav-unread">'+(notificationCount>99?'99+':notificationCount)+'</i>' : ''}</a>
       <a class="${profileView ? 'active' : ''}" href="${profileHref}" aria-label="Profil">
         ${userAvatar || socialIcon('user', { size: 22 })}
         <small>Profil</small>
