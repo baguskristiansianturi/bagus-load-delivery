@@ -902,3 +902,80 @@
  .ua-social-home .ua-feed-search{font-size:11px;padding:0 8px}
  .ua-social-home .ua-feed-top>div{gap:8px}
 }
+
+
+/* PLUITS DESIGN SYSTEM — shared social controls */
+.ua-social-app{
+ --pl-color-ink:#172b45;--pl-color-muted:#738092;--pl-color-line:#e8edf1;
+ --pl-icon-size:20px;--pl-label-size:11px;--pl-body-size:13px;
+}
+.ua-social-app .pl-icon{display:inline-block;flex:none;width:var(--icon-size,20px);height:var(--icon-size,20px);vertical-align:middle}
+.ua-social-app button{font-family:inherit}
+.ua-social-app .ua-post-head{display:flex;align-items:center;gap:10px;min-width:0}
+.ua-social-app .ua-post-head>div:nth-child(2){flex:1;min-width:0}
+.ua-social-app .ua-post-more{
+ display:grid;place-items:center;width:36px;height:36px;flex:none;
+ padding:0;border:0;border-radius:50%;background:transparent;color:#344257;cursor:pointer;
+}
+.ua-social-app .ua-post-more:active{background:#f0f2f5}
+.ua-social-app .ua-post-menu-wrap{position:relative;flex:none}
+.ua-social-app .ua-post-menu{
+ position:absolute;z-index:80;top:40px;right:0;min-width:184px;padding:5px;
+ background:#fff;border:1px solid #e8edf1;border-radius:11px;
+ box-shadow:0 10px 30px #172b451c;
+}
+.ua-social-app .ua-post-menu[hidden]{display:none}
+.ua-social-app .ua-post-menu button{
+ display:flex;align-items:center;gap:10px;width:100%;min-height:42px;padding:0 11px;
+ border:0;border-radius:7px;background:#fff;color:#253449;text-align:left;
+ font-size:12px;font-weight:650;cursor:pointer;
+}
+.ua-social-app .ua-post-menu button:active{background:#f4f6f8}
+.ua-social-app .ua-post-menu .pl-icon{color:#53647b}
+.ua-social-app .ua-post-actions{
+ display:flex;align-items:center;gap:18px;padding:9px 13px 5px;
+}
+.ua-social-app .ua-post-actions button{
+ display:inline-flex;align-items:center;justify-content:center;gap:5px;
+ min-width:28px;min-height:34px;padding:3px 0;border:0;background:transparent;
+ color:#27364a;font-size:12px;font-weight:650;cursor:pointer;
+}
+.ua-social-app .ua-post-actions button .pl-icon{width:20px;height:20px}
+.ua-social-app .ua-post-actions button.is-liked{color:#c83e52}
+.ua-social-app .ua-post-actions button.is-saved{color:var(--pl-color-ink)}
+.ua-social-app .ua-post-caption{font-size:var(--pl-body-size);line-height:1.55}
+.ua-social-app .ua-post-caption p{margin:4px 0 8px}
+.ua-social-app .ua-post-caption a{color:inherit;text-decoration:none}
+.ua-social-app .ua-post-editor{
+ display:grid;gap:13px;margin:0;padding:14px;
+ border-top:1px solid var(--pl-color-line);background:#fafbfc;
+}
+.ua-social-app .ua-post-editor[hidden]{display:none}
+.ua-social-app .ua-edit-post-head{display:grid;gap:4px}
+.ua-social-app .ua-edit-post-head strong{font-size:14px;color:#24344a}
+.ua-social-app .ua-edit-post-head span,.ua-social-app .ua-edit-add-media small,
+.ua-social-app .ua-post-editor label small{font-size:10px;line-height:1.5;color:#7c8795;font-weight:400}
+.ua-social-app .ua-post-editor>label{display:grid;gap:7px;font-size:11px;font-weight:700;color:#40516a}
+.ua-social-app .ua-post-editor textarea,.ua-social-app .ua-post-editor input[type=text],
+.ua-social-app .ua-post-editor input:not([type]){
+ width:100%;min-width:0;padding:11px 12px;border:1px solid #dce3e9;
+ border-radius:8px;background:#fff;color:#26364b;font:inherit;font-size:13px;
+}
+.ua-social-app .ua-post-editor textarea{resize:vertical;line-height:1.5}
+.ua-social-app .ua-edit-section-label{font-size:11px;color:#40516a}
+.ua-social-app .ua-edit-media-list{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}
+.ua-social-app .ua-edit-media{position:relative;aspect-ratio:1;overflow:hidden;border-radius:7px;background:#eef1f4}
+.ua-social-app .ua-edit-media img,.ua-social-app .ua-edit-media video{width:100%;height:100%;object-fit:cover}
+.ua-social-app .ua-edit-media button{position:absolute;top:4px;right:4px;width:25px;height:25px;border:0;border-radius:50%;background:#172b45dd;color:#fff;font-size:18px}
+.ua-social-app .ua-edit-add-media{display:grid;gap:7px;padding:12px;border:1px dashed #cbd4de;border-radius:9px;background:#fff}
+.ua-social-app .ua-edit-add-media input{font-size:11px}
+.ua-social-app .ua-edit-actions{display:flex;gap:8px}
+.ua-social-app .ua-edit-actions button{min-height:38px;padding:0 14px;font-size:11px}
+.ua-social-app .ua-edit-actions .ua-primary{background:#172b45;color:#fff;border:1px solid #172b45;border-radius:8px}
+.ua-social-app .ua-edit-actions .ua-outline{background:#fff;color:#344257;border:1px solid #dce3e9;border-radius:8px}
+@media(max-width:760px){
+ .ua-social-app .ua-post-actions{gap:17px;padding-inline:13px}
+ .ua-social-app .ua-post-head{padding:10px 13px}
+ .ua-social-app .ua-post-more{width:34px;height:34px}
+ .ua-social-app .ua-edit-media-list{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
