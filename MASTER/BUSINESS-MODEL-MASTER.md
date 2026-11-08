@@ -1070,3 +1070,9 @@ Empat entitas awal yang dimasukkan: Museum Bali, Lapangan Puputan Badung, Pantai
 - `docs/pluits/GEODIRECTORY-ARCHITECTURE.md`
 - `docs/pluits/GEODIRECTORY-IMPLEMENTATION-REPORT-2026-11-08.md`
 - `supabase/migrations/20261108040323_pluits_geodirectory_core.sql` dan migration lanjutan sampai `20261108041053_pluits_directory_sources_deny_client.sql`
+
+### 29.7 Pemeriksaan performa dan keamanan tambahan
+- Migration `20261108041216_pluits_directory_fk_indexes` menambahkan indeks untuk foreign key GeoDirectory yang ditemukan belum terindeks.
+- Supabase Performance Advisor masih menunjukkan 14 foreign key tidak terindeks, semuanya berada pada tabel legacy Social/Marketplace (bukan tabel GeoDirectory baru). Perbaikannya perlu regresi dan review beban kerja terpisah.
+- Advisor menampilkan 43 indeks belum digunakan; ini wajar pada tahap awal sebelum trafik nyata. Jangan menghapus indeks yang disiapkan untuk query/rencana fitur hanya berdasarkan statistik awal.
+- Security Advisor tidak lagi melaporkan tabel sumber GeoDirectory tanpa policy. Dua peringatan SECURITY DEFINER lama (create_store/update_store_profile) dan leaked-password protection tetap ada; lihat laporan implementasi.
