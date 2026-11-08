@@ -15,7 +15,7 @@ import {tracking} from '../pages/tracking/index.js';
 import {sellerPage} from '../pages/seller/index.js';
 import {mountUserAccount} from '../pages/account/index.js';
 import {updateSEO} from '../pages/seo.js';
-import {marketplacePage,bindMarketplacePage} from '../pages/marketplace/index.js';
+import {marketplacePage,bindMarketplacePage,storePage,bindStorePage} from '../pages/marketplace/index.js';
 import {tripPage,bindTripPage,tripItineraryPage,bindTripItineraryPage} from '../pages/trip/index.js';
 import {directoryPage,bindDirectoryPage,placePage,claimPage,bindPlacePage} from '../pages/directory/index.js';
 
@@ -27,6 +27,7 @@ export function route(homeFn=home){
  if(!r)h=homeFn();
  else if(r==='places'){h=directoryPage();queueMicrotask(()=>bindDirectoryPage());}
  else if(r==='marketplace'){h=marketplacePage();queueMicrotask(()=>bindMarketplacePage());}
+ else if(r==='shop'){h=storePage();queueMicrotask(()=>bindStorePage(v||''));}
  else if(r==='trip'){h=s[1]==='itinerary'?tripItineraryPage(s[2]||''):tripPage();queueMicrotask(()=>s[1]==='itinerary'?bindTripItineraryPage(s[2]||''):bindTripPage());}
  else if(r==='place'){
   h='<div class="pl-directory-loading">Membuka tempat…</div>';
@@ -36,7 +37,7 @@ export function route(homeFn=home){
   });
  }
  else if(r==='search')h=search(p.get('q')||'');
- else if(r==='material'||r==='materials')h=v?categoryPage(v):listing('material','');
+ else if(r==='material'||r==='materials'){h=marketplacePage();queueMicrotask(()=>bindMarketplacePage());}
  else if(r==='jasa')h=v?categoryPage(v==='plumbing'?'plumbing-service':v):listing('service','');
  else if(r==='logistik'||r==='delivery')h=v?categoryPage(v):listing('logistics','');
  else if(r==='properti')h=listing('property',v||'');
