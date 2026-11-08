@@ -17,7 +17,7 @@ const uploadMime=file=>{const declared=String(file?.type||'').toLowerCase();cons
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmtDate=v=>new Date(v).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'});
 const initials=v=>String(v||'P').trim().slice(0,1).toUpperCase();
-let user=null,profile=null,profileReels=[],addresses=[],noticeTimer=null,leafletMap=null,leafletMarker=null,exploreFilter='recommended',reelsFilter='recommended',accountContext={active:'personal',professional:null,stores:[],prefs:{}};
+let user=null,profile=null,profileReels=[],addresses=[],noticeTimer=null,leafletMap=null,leafletMarker=null,exploreFilter='recommended',reelsFilter='recommended',activityNotificationChannel=null,accountContext={active:'personal',professional:null,stores:[],prefs:{}};
 
 function notify(message,type='success'){
  const el=document.querySelector('#ua-toast');if(!el)return;
@@ -462,6 +462,8 @@ async function notificationPage(){
  return '<div class="ua-page-heading"><div><span class="ua-eyebrow">AKTIVITAS AKUN</span><h1>Aktivitas</h1><p>'+(unread?unread+' pemberitahuan belum dibaca':'Semua aktivitas sudah dibaca')+'</p></div>'+(unread?'<button type="button" class="ua-outline" data-notifications-read-all>Tandai semua dibaca</button>':'')+'</div><section class="ua-panel ua-notification-list">'+(items||'<div class="ua-empty"><strong>Belum ada aktivitas</strong><p>Permintaan mengikuti, suka, dan komentar akan muncul di sini.</p></div>')+'</section>';
 }
 function bindNotificationActions(){
+ if(activityNotificationChannel){supabase.removeChannel(activityNotificationChannel);activityNotificationChannel=null;}
+ if(user){activityNotificationChannel=supabase.channel('pluits-activity-'+user.id).on('postgres_changes',{event:'INSERT',schema:'public',table:'user_notifications',filter:'recipient_user_id=eq.'+user.id},()=>{if(location.hash.includes('/account/activity'))mountAccount('activity');}).subscribe();}
  document.querySelectorAll('[data-notification-id]').forEach(link=>link.addEventListener('click',async e=>{e.preventDefault();const id=link.dataset.notificationId,href=link.dataset.notificationHref;if(link.classList.contains('is-unread')){const {error}=await supabase.from('user_notifications').update({read_at:new Date().toISOString()}).eq('id',id);if(error){notify('Status pemberitahuan belum dapat diperbarui.','error');return;}}location.hash=href;}));
  document.querySelector('[data-notifications-read-all]')?.addEventListener('click',async()=>{const {error}=await supabase.from('user_notifications').update({read_at:new Date().toISOString()}).is('read_at',null);if(error)notify(error.message,'error');else await mountAccount('activity');});
 }
@@ -522,6 +524,7 @@ function normalizeFeedMediaFrames(root=document){
  });
 }
 async function mountAccount(section='profile',parameter=''){
+ if(section!=='activity'&&activityNotificationChannel){supabase.removeChannel(activityNotificationChannel);activityNotificationChannel=null;}
  const {data:{session}}=await supabase.auth.getSession();user=session?.user||null;
  if(!user&&(section==='user'||section==='post')){
   try{
