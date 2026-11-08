@@ -57,4 +57,19 @@ Jika dokumen bertentangan, jangan menebak. Ikuti keputusan aktif terbaru di Busi
 - Founder bekerja mobile-first; laporan harus mudah diuji dari Android.
 
 ## Baseline audit
-Snapshot audit live 8 November 2026, 12:37 UTC: 60 public tables dengan RLS aktif, 73 migration history entries, 20 SECURITY DEFINER advisor warnings, leaked-password protection nonaktif, 84 unused-index notices, dan 0 Health Advisor lints. Tidak ditemukan tabel cart pada schema public. Angka ini bukan kondisi permanen; verifikasi ulang sebelum perubahan backend/security. Temuan authorization staff granular tetap prioritas sampai terbukti ditutup.
+Snapshot live 9 November 2026, sekitar 03:13 WITA:
+- Supabase project ytndswhqxayqpftszwfh, ACTIVE_HEALTHY, PostgreSQL 17.11.0.018, region ap-southeast-1.
+- 62 public base tables; seluruh 62 mengaktifkan RLS.
+- Live migration history: 81 entries; cocokkan versi/nama/konten dengan folder migration sebelum DDL.
+- 20 SECURITY DEFINER functions callable by authenticated users; periksa fungsi satu per satu, jangan menyimpulkan otomatis exploitable.
+- Leaked-password protection disabled.
+- Performance Advisor: 84 unused-index INFO notices; jangan hapus tanpa workload evidence.
+- Health Advisor: 0 lints.
+- Supabase Edge Functions deployed: 0.
+- Marketplace cart masih localStorage; tidak ada public cart table.
+- Wallet hanya scaffold account/request; belum ada ledger/payout/reconciliation siap uang sungguhan.
+- Social First Release tetap P0 sampai founder UAT diterima.
+
+Rincian dan batas bukti: docs/pluits/PLUITS-TECHNOLOGY-ROADMAP-AND-AUDIT-2026-11-09.md dan MASTER/PLUITS-SECURITY-REVIEW.md.
+
+**Prinsip wajib:** cerita founder dan masalah manusia—terutama perjalanan Ibu Nia—adalah alasan PLUITS dibuat. UX harus familiar bagi pengguna media sosial visual; GeoDirectory menghubungkan kehidupan lokal. Turunkan keputusan teknis dari model bisnis, bukan sebaliknya.
