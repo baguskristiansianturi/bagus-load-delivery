@@ -130,8 +130,8 @@ This section supersedes the stale empty-database snapshot above for current stat
 ### Current security findings
 1. **Authenticated SECURITY DEFINER RPCs (WARN):** `public.create_store` and `public.update_store_profile` are executable by authenticated users. Both functions check `auth.uid()`, use a fixed empty search_path, and `update_store_profile` checks store-owner membership. Anonymous execution is denied. These are privileged boundaries and must receive negative tests for unauthenticated, unrelated user, store member, and owner before production. Do not blindly convert to SECURITY INVOKER because the current store write policies and helper functions have deliberate privilege boundaries.
 2. **Leaked-password protection disabled (WARN):** enable Supabase Auth's leaked-password protection in the Auth security settings before public launch. This setting was not changed during this audit.
-3. **Storage ownership invariant:** upload policies bind object paths to the authenticated user's UUID. The social post insert/update policies and media path relationship still need dedicated adversarial tests to prove a user cannot attach another user's private object path to a public post.
-4. **Story policy overlap:** two permissive authenticated SELECT policies exist on `user_stories` (owner and public active). This is a performance warning, not by itself proof of a privacy leak; simplify after regression tests.
+3. **Media path ownership (FIXED):** validated CHECK constraints on `user_posts` and `user_stories` now require media paths to begin with the owning user's UUID folder. Rollback-only adversarial tests prove foreign-folder paths are rejected and same-user paths pass.
+4. **Story policy overlap (FIXED):** role-specific Stories SELECT policies replaced the overlapping authenticated policies; the advisor warning is cleared. A rollback-only test confirmed public Stories are visible to anon and private Stories are not.
 5. **RLS coverage:** all 28 public tables have RLS enabled. This is a positive baseline, not proof that each policy is correct. Policies still need actor-by-actor tests.
 
 ### Advisor snapshot
