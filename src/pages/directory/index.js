@@ -283,7 +283,7 @@ export function bindPlacePage() {
     const {data}=await supabase.auth.getUser();if(!data?.user){location.hash='#/account/login';return;}
     const values=new FormData(form);button.disabled=true;button.textContent='Mengirim…';
     const {error}=await supabase.from('directory_claims').insert({entity_id:form.dataset.entity,applicant_user_id:data.user.id,applicant_role:values.get('applicant_role'),evidence_note:String(values.get('evidence_note')||'').trim(),status:'submitted'});
-    if(error){status.textContent=error.code==='23505'?'Permohonan klaim Anda masih dalam proses.':error.message;button.disabled=false;button.textContent='Kirim permohonan';return;}
+    if(error){status.textContent=error.code==='23505'?'Sudah ada permohonan klaim yang sedang ditinjau untuk tempat ini.':error.message;button.disabled=false;button.textContent='Kirim permohonan';return;}
     status.textContent='Permohonan diterima dan menunggu pemeriksaan.';button.textContent='Terkirim';
   });
 }
