@@ -27,7 +27,7 @@ Inspected the GitHub main branch tree and key frontend files, live Supabase proj
 | Share/save/tag | Implemented baseline |
 | Public homepage social feed | Implemented read-only |
 | Public homepage like/comment/share actions | Links only; not real actions or live counts |
-| Stories | Database and RLS exist; full UI/UX not implemented |
+| Stories | Explore strip, photo/video composer, audience control and viewer implemented; UAT pending |
 | Follow/friends graph | Not implemented in inspected routes/schema |
 | Direct messages/group chat | Not implemented |
 | Notification center | Not implemented |
@@ -93,7 +93,7 @@ Two additional migrations were applied and committed: `20261108011806_enforce_so
 2. Enable leaked-password protection.
 3. Test storage object ownership, private content and store RPC boundaries with multiple accounts.
 4. Review store staff permissions, audit write path and RPC grants.
-5. Complete Stories UI and public feed metrics/actions.
+5. UAT Stories UI; then implement public feed metrics/actions.
 6. Build follow graph, notifications, report/block/moderation and messaging with privacy controls.
 7. Keep commerce checkout and wallet disabled until server-side transaction/ledger paths and UAT are complete.
 
@@ -125,3 +125,11 @@ Two additional migrations were applied and committed: `20261108011806_enforce_so
 - Migration `20261108011838` splits Stories read policies by role and changes wallet RLS calls to `(select auth.uid())`.
 - Latest advisors: 2 SECURITY DEFINER warnings remain, leaked-password protection remains disabled; performance warnings are 14 unindexed foreign keys and 12 unused indexes. No wallet RLS initplan or duplicate Stories policy warning remains.
 - Active migration files: 19; live history: 19; exact version/name match.
+
+## 14. Stories UI delivery
+- Explore Stories strip, compact photo/video composer, audience control, and viewer are implemented.
+- Private profiles cannot select public Story visibility in the UI.
+- Public Story vs private Story RLS smoke test passed inside a rolled-back transaction: anon can read the public Story of a public profile, but cannot read the private Story.
+- GitHub Pages workflow run 423 succeeded, including Vite build and Deploy to GitHub Pages.
+- Real account upload/view and Android handset UAT remain NOT TESTED.
+- Stories are hidden from active reads after 24 hours; automated object deletion/archive is not implemented yet.
