@@ -644,9 +644,19 @@ function bindFollowActions(){
   if(error){notify(error.message,'error');button.disabled=false;}else{notify('Permintaan mengikuti diterima.');await mountAccount('followers');}
  }));
  document.querySelectorAll('[data-follow-remove]').forEach(button=>button.addEventListener('click',async()=>{
-  const other=button.dataset.followRemove, incoming=location.hash.includes('/followers')||location.hash.includes('/requests');
-  const {error}=await supabase.from('user_follows').delete().eq('follower_id',incoming?other:user.id).eq('following_id',incoming?user.id:other);
-  if(error)notify(error.message,'error');else{notify(incoming?'Pengikut dihapus.':'Anda berhenti mengikuti akun ini.');await mountAccount(incoming?'followers':'following');}
+  const other = button.dataset.followRemove;
+  const incoming = location.hash.includes("/followers") || location.hash.includes("/requests");
+  const followerId = incoming ? other : user.id;
+  const followingId = incoming ? user.id : other;
+  const result = await supabase.from("user_follows").delete()
+    .eq("follower_id", followerId)
+    .eq("following_id", followingId);
+  if (result.error) {
+   notify(result.error.message, "error");
+   return;
+  }
+  notify(incoming ? "Pengikut dihapus." : "Anda berhenti mengikuti akun ini.");
+  await mountAccount(incoming ? "followers" : "following");
  }));
 }
 function bindExploreFilters(){
