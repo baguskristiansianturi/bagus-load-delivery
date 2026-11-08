@@ -38,7 +38,7 @@ export function renderSocialHeader({ active = 'explore', profileView = false, us
       </nav>
       <div class='pl-social-mobile-actions'>
         <a href='#/messages' aria-label='Pesan'>${socialIcon('message', { size: 21 })}</a>
-        <a href='#/account/activity' aria-label='Aktivitas'>${socialIcon('bell', { size: 21 })}</a>
+        <a class='pl-mobile-notice' href='#/account/activity' aria-label='Aktivitas'>${socialIcon('bell', { size: 21 })}${notificationCount ? '<i class="pl-nav-unread">'+(notificationCount>99?'99+':notificationCount)+'</i>' : ''}</a>
       </div>
       <a class="ua-header-profile" href="${profileHref}" aria-label="Buka profil saya">${userAvatar || socialIcon('user', { size: 22 })}</a>
       <a class="ua-header-create" href="#/account/compose" aria-label="Buat postingan">＋</a>
