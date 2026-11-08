@@ -341,3 +341,156 @@ The founder expresses a strong preference for decisive enforcement when someone 
 - Strategic hypotheses: verified affiliations may improve identity credibility, organization profile accuracy, user accountability, and the value of personal profiles as professional portfolios.
 - Open design proposals: relationship schema, role model, verification evidence, organization stewardship, regional dispute operations, and enforcement ladder.
 - Decisions: none. No automatic account deletion, local office expansion, verification standard, or affiliation feature is approved for implementation by this discussion alone.
+
+## IDEA-009 — Social Experience Commerce: transaksi sebagai bukti pengalaman, Feed sebagai nilai sosial, dan insentif akuisisi bisnis
+- **Tanggal ditemukan:** 9 November 2026.
+- **Sumber/konteks:** sharing founder tentang perilaku sosial pengguna, contoh Ibu Nia menginap di hotel premium di Bali, transaksi kamar dan layanan tambahan, pengalaman yang dibagikan terlambat, Trip sebagai riwayat perjalanan, serta alasan hotel dan bisnis lokal bergabung.
+- **Kategori:** Business Model | User Journey | Pricing/Revenue | Strategy/Growth | UX/UI | Trust/Safety | Operations.
+- **Jenis:** OBSERVATION | HYPOTHESIS | PROPOSAL.
+- **Status:** PROPOSED — belum menjadi keputusan final atau izin implementasi.
+- **Ruang lingkup:** pengembangan hipotesis model bisnis lintas Social, Trip, Marketplace/commerce, dan profil/alat operasional bisnis; bukan vertical baru yang berdiri sendiri.
+
+### 1. Gagasan inti founder
+Pluits dibangun dengan menerima perilaku sosial manusia yang sudah umum: orang senang membagikan pengalaman, menunjukkan tempat yang dikunjungi, barang yang dibeli, hotel tempat menginap, makanan yang dinikmati, aktivitas yang dilakukan, pencapaian, dan momen yang ingin diketahui orang lain. Sebagian orang menikmati validasi sosial atau ingin memperlihatkan gaya hidup; sebagian lain senang menonton, mengikuti, membandingkan, mencari inspirasi, dan menemukan tempat melalui pengalaman orang lain. Perilaku ini tidak dianggap salah atau wajib dilakukan. Berbagi pengalaman dan menautkannya ke transaksi harus tetap opsional.
+
+Hipotesis pembeda Pluits bukan melarang unggahan biasa atau mengganti kebiasaan sosial pengguna, melainkan memberi pilihan agar sebuah unggahan dapat memiliki hubungan yang lebih kuat dengan aktivitas nyata: penyedia yang benar, produk/layanan yang dipilih, harga, tanggal kejadian, durasi, dan transaksi yang sah. Foto, caption, geotag, atau klaim lokasi saja tidak membuktikan pembelian, pembayaran, menginap, atau kehadiran. Konten biasa tetap boleh, tetapi tidak boleh diberi label seolah-olah transaksi terverifikasi.
+
+Pluits perlu terasa akrab bagi orang yang telah terbiasa dengan Instagram: pengalaman visual, feed, foto/video, Story, interaksi, dan pola konsumsi konten harus mudah dipahami. Tujuannya bukan menyalin Instagram, melainkan mengurangi hambatan perpindahan kebiasaan. Alasan untuk mencoba Pluits adalah nilai tambahan yang tidak diberikan oleh unggahan sosial biasa: pengalaman dapat terhubung dengan transaksi dan katalog penyedia, menjadi bagian dari Trip, serta memberi manfaat komersial yang nyata kepada penyedia.
+
+### 2. Cerita pengguna: Ibu Nia menginap di hotel
+Ibu Nia datang berlibur ke Bali dan memesan kamar di sebuah hotel premium, misalnya Grand Hyatt. Nilai kamar dapat mencapai beberapa juta rupiah per malam dan masa menginapnya beberapa hari. Pemesanan kamar merupakan satu transaksi tersendiri: produk/layanan yang dibeli adalah kamar atau tipe kamar tertentu, dengan harga, tanggal menginap, jumlah malam, dan detail reservasi yang relevan.
+
+Ibu Nia mungkin tidak langsung membuat review pada hari check-in atau check-out. Ia dapat menyimpan pengalaman dan foto, lalu baru membagikannya beberapa minggu kemudian. Saat review itu akhirnya dipublikasikan:
+- Postingan masuk ke Feed menurut waktu publikasi sekarang dan tidak mundur atau menyela postingan lama.
+- Konten tetap menampilkan tanggal pengalaman/transaksi yang sebenarnya, terpisah jelas dari tanggal posting.
+- Jika ada transaksi yang sah di Pluits, tanggal transaksi, detail produk/layanan, dan bukti statusnya bersumber dari backend; pengguna tidak dapat mengubahnya menjadi tanggal lain melalui caption.
+- Pengalaman yang terlambat dibagikan tetap ditempatkan dalam urutan kronologis Trip berdasarkan waktu kejadian, bukan waktu review diterbitkan.
+- Feed menjawab “kapan cerita ini dibagikan”; Trip menjawab “kapan pengalaman ini benar-benar terjadi”.
+
+Ibu Nia tidak harus selalu memotret ulang setiap sudut kamar. Dengan izin penggunaan yang sesuai, ia dapat memilih foto resmi dari katalog hotel—misalnya kamar, kamar mandi, balkon, fasilitas, atau pemandangan—sebagai representasi tipe kamar/fasilitas yang ia pilih. Hubungan dengan transaksi menunjukkan pengalaman yang diklaimnya terkait dengan produk/akomodasi tersebut; foto katalog sendiri bukan bukti bahwa ia berada di kamar atau menikmati seluruh fasilitas. Konten resmi harus memiliki hak penggunaan/provenance yang jelas dan tidak boleh membuat orang salah mengira foto katalog sebagai foto pribadi yang diambil tamu.
+
+### 3. Satu kunjungan dapat menghasilkan beberapa transaksi dan pengalaman
+Selama tinggal di hotel, Ibu Nia dapat melakukan transaksi lain yang terpisah dari pemesanan kamar, misalnya:
+- makan siang atau makan malam di restoran hotel;
+- makan atau bersantai di tepi pantai/private beach;
+- spa atau treatment;
+- aktivitas, fasilitas, atau layanan tambahan lain yang dijual hotel.
+
+Contoh founder menyebut spa dengan harga sekitar Rp6 juta sebagai ilustrasi pengalaman premium yang mungkin ingin dibagikan seseorang. Jangan menyimpulkan bahwa setiap pelanggan membeli layanan tersebut semata-mata untuk pamer atau bahwa mereka tidak menikmati layanannya; motivasi pengguna beragam dan tidak boleh diprofilkan secara merendahkan.
+
+Transaksi kamar, makanan, spa, dan aktivitas merupakan item/lifecycle transaksi masing-masing, walaupun semuanya terjadi di properti dan kunjungan yang sama. Jika layanan tambahan dibayar langsung di lokasi melalui Pluits, transaksi itu dapat terhubung ke profil hotel, layanan/katalog yang tepat, harga, waktu transaksi, dan Trip. Pembayaran tunai atau kartu di luar Pluits tidak otomatis menjadi transaksi Pluits yang terverifikasi. Integrasi POS atau mekanisme pembuktian transaksi offline, bila kelak dipertimbangkan, memerlukan rancangan dan keputusan tersendiri; jangan memalsukan status transaksi hanya berdasarkan unggahan atau pengakuan merchant.
+
+Dengan demikian satu masa menginap dapat menghasilkan rangkaian pengalaman dan transaksi: kamar, restoran, spa, fasilitas, dan tempat lain. Setiap aktivitas tetap dapat memiliki waktu dan bukti masing-masing, sementara Trip menyusunnya menjadi perjalanan yang utuh.
+
+### 4. Dua waktu, Feed, dan Trip
+Pengalaman yang baru direview belakangan harus mempertahankan dua timestamp yang berbeda dan tidak saling menggantikan:
+1. **Occurred/transaction time:** waktu yang bersumber dari event transaksi/layanan yang sah, seperti pembayaran, reservasi, check-in, redeem, atau penyelesaian layanan sesuai bukti yang benar-benar tersedia.
+2. **Published time:** waktu ketika pengguna benar-benar menerbitkan konten ke Feed/Story.
+
+Feed mengurutkan posting berdasarkan aturan publikasi yang berlaku; posting lama yang baru dibagikan tidak boleh diam-diam mengubah urutan Feed. Trip mengurutkan pengalaman menurut waktu kejadian yang dapat dibuktikan. UI harus menjelaskan perbedaan kedua tanggal tersebut agar penonton tidak mengira unggahan baru berarti aktivitas sedang berlangsung sekarang.
+
+Trip dapat menjadi catatan perjalanan personal seperti **My Bali**, **My Jogja**, dan seterusnya. Nama “My” menunjukkan bahwa ini adalah perjalanan/riwayat milik pengguna. Jika seseorang mengunjungi Bali beberapa kali pada tahun atau periode berbeda, kunjungan tersebut tercatat sebagai perjalanan/episode berbeda; kunjungan berikutnya tidak menimpa riwayat sebelumnya. Pengguna dapat melihat bahwa ia pernah ke Bali beberapa kali dan bagaimana perjalanan-perjalanan itu tersusun. Riwayat dapat berisi aktivitas yang dibagikan belakangan, serta aktivitas yang tidak pernah dibuat menjadi review publik.
+
+Trip bukan sekadar itinerary masa depan. Ia berpotensi menjadi rekam kronologis pengalaman yang benar-benar terjadi dan, dengan pilihan pengguna, menjadi sumber inspirasi bagi orang lain untuk menyusun perjalanan mereka sendiri. Rencana masa depan tetap harus dibedakan dari perjalanan aktual. Mekanisme pembuktian timestamp/kehadiran belum diputuskan; pembayaran saja tidak selalu membuktikan layanan telah dinikmati, dan GPS/foto/geotag sendiri tidak cukup menjadi bukti transaksi.
+
+### 5. Nilai sosial dan motivasi dua sisi
+Ada dua kelompok motivasi yang saling melengkapi:
+- **Penerbit/pengunggah:** ingin menyimpan momen, menunjukkan pengalaman, berbagi pencapaian atau gaya hidup, mendapat respons, validasi, pengakuan, atau sekadar membuat catatan pribadi. Ada pengguna yang aktif memamerkan pengalaman, ada yang sesekali berbagi, dan ada yang memilih menyimpan semuanya secara privat.
+- **Penonton/pencari inspirasi:** ingin melihat pengalaman orang lain, menemukan hotel/restoran/toko/aktivitas, memahami pilihan nyata, membandingkan produk/harga/lokasi, mencari referensi, dan merencanakan pengalaman mereka sendiri.
+
+Pengalaman yang terhubung dengan transaksi dapat memberi konteks lebih berguna daripada sekadar foto di depan hotel dengan tag lokasi. Namun transaksi tidak boleh menjadi syarat untuk semua bentuk ekspresi sosial, dan status “verified” harus spesifik terhadap hal yang benar-benar dibuktikan. Pembeli yang membayar tidak otomatis membuktikan semua teman yang ditandai ikut membayar atau hadir. Privasi tetap pilihan pengguna; transaksi tidak boleh otomatis mempublikasikan nominal, detail reservasi, identitas peserta, atau lokasi privat tanpa persetujuan yang jelas.
+
+### 6. Alasan bisnis bergabung: hotel dan penyedia menjadi pihak yang berkepentingan
+Hotel seperti Grand Hyatt memiliki alasan bisnis untuk hadir bukan hanya agar tercantum dalam direktori. Hotel memahami bahwa media sosial dapat memengaruhi minat, aspirasi, pertimbangan, dan keputusan calon tamu. Pelanggan yang ingin membagikan pengalaman menginap dapat menjadi sumber distribusi konten dan promosi berbasis pengalaman pelanggan. Hotel mendapat peluang agar kamar, fasilitas, restoran, spa, dan aktivitasnya ditemukan melalui cerita tamu yang benar-benar memiliki hubungan dengan layanan tersebut.
+
+Jika hotel bergabung dan mengelola entitas/profil resminya, hotel dapat:
+- menampilkan informasi properti, tipe kamar, foto resmi, fasilitas, restoran, spa, aktivitas, harga, dan ketentuan;
+- menyediakan katalog produk/layanan yang sesuai dengan kategori bisnis;
+- mengelola ketersediaan kamar/unit, kalender, jadwal layanan, kapasitas, stok bila relevan, dan pemesanan;
+- mengelola transaksi/pesanan, status pemenuhan, dan komunikasi pelanggan sesuai lifecycle;
+- memperoleh halaman/landing page dan alat pengelolaan bisnis yang disediakan Pluits sesuai kategori;
+- merespons review atau unggahan pelanggan secara tepat, misalnya mengucapkan terima kasih atau menindaklanjuti keluhan;
+- mendapatkan discovery dan promosi dari aktivitas sosial pelanggan, tanpa menganggap setiap konten sebagai endorsement berbayar.
+
+Pola ini tidak terbatas pada hotel premium. Restoran, beach club, spa, toko besi, toko kebutuhan sehari-hari, penyedia aktivitas, dan bisnis lokal lain dapat memiliki katalog, harga, ketersediaan, jadwal, stok, dan alat pengelolaan yang disesuaikan dengan jenis usaha. Contoh toko besi: pengguna mencari “besi ulir”, melihat banyak pilihan, lalu memilih satu toko karena alasan tertentu—harga, jarak, stok, mutu, penawaran, atau pengiriman lokal. Konten transaksi/produk dapat menunjukkan pilihan yang dibuat dan informasi pembanding yang benar-benar tersedia. Sistem tidak boleh mengarang alasan pilihan jika pengguna tidak menyatakannya atau data objektif tidak membuktikannya.
+
+### 7. Keselarasan insentif dan kemungkinan pendapatan Pluits
+Hipotesis model ini menyelaraskan kepentingan:
+- pelanggan memperoleh pengalaman transaksi yang dapat terhubung ke Feed/Trip dan catatan pribadinya;
+- penyedia memperoleh penjualan, alat operasional, profil/katalog, dan peluang promosi dari pelanggan;
+- penonton memperoleh referensi dan informasi yang lebih kontekstual;
+- Pluits memperoleh aktivitas transaksi, data lifecycle yang sah, retensi, dan peluang pendapatan dari transaksi.
+
+Founder memberi contoh komisi Pluits sebesar **2% dari nilai transaksi**. Angka ini adalah ilustrasi hipotesis monetisasi, bukan tarif final yang telah disetujui. Perlu riset biaya payment processing, pajak, refund/chargeback, settlement, dukungan pelanggan, kontrak penyedia, kategori usaha, margin, dan ketentuan hukum. Tarif dapat berbeda menurut kategori/kontrak atau tidak layak diterapkan pada transaksi tertentu; jangan menjanjikan “tidak ada pihak yang rugi” sebelum unit economics dan dampak kepada pelanggan/merchant diuji.
+
+Founder juga mengamati bahwa sebagian pelanggan mungkin tetap memilih transaksi melalui Pluits walaupun harga akhir sesekali lebih tinggi daripada kanal lain, karena nilai utama yang dicari bukan selalu harga termurah: transaksi tersebut memungkinkan pengalaman yang ingin mereka tampilkan terhubung ke Feed/Trip. Ini adalah hipotesis perilaku yang perlu divalidasi, bukan alasan untuk menyembunyikan perbedaan harga. Harga total, biaya, syarat, dan manfaat harus transparan sebelum pembayaran; Pluits tidak boleh mengandalkan kebingungan pelanggan atau menekan merchant untuk menaikkan harga.
+
+### 8. Mengapa pengalaman sosial harus akrab, tetapi bukan tiruan Instagram
+Pengguna yang sudah terbiasa dengan Instagram memiliki kebiasaan dan jaringan sosial yang kuat. Memindahkan kebiasaan itu membutuhkan alasan yang bermakna, bukan hanya menambahkan katalog, peta, atau tombol transaksi. Hipotesis founder: alasan untuk mencoba Pluits adalah mereka tetap dapat menikmati pengalaman visual dan sosial yang familiar, sambil memperoleh nilai tambahan berupa transaksi yang dapat ditautkan, catatan Trip, referensi produk/layanan, dan bukti pengalaman.
+
+Karena itu:
+- Feed, foto/video, Story, interaksi, profil, dan konsumsi konten harus mudah dikenali serta nyaman.
+- Pluits tidak boleh menyalin identitas visual, detail UI, atau seluruh pola Instagram secara membabi buta.
+- Perbedaan Pluits harus terasa pada konteks dan hubungan data di balik konten: profil penyedia resmi, katalog, transaksi, pengalaman, Trip, serta kontrol privasi.
+- Konten personal non-transaksi tetap mempunyai tempat agar Feed tidak berubah menjadi katalog iklan atau daftar kuitansi.
+- Sponsor/iklan, konten resmi bisnis, konten pelanggan, dan konten yang memiliki bukti transaksi harus dapat dibedakan dengan jelas.
+
+### 9. Rantai nilai dan kemungkinan network effect
+1. Pengguna menemukan Pluits karena pengalaman sosial yang akrab dan konten yang menarik.
+2. Pengguna melakukan transaksi yang memang ingin dilakukan melalui Pluits, misalnya kamar hotel atau layanan tambahan.
+3. Aktivitas transaksi yang sah dapat menjadi sumber konteks untuk konten dan Trip.
+4. Pengguna membagikan pengalaman ketika ia mau; konten muncul di Feed pada waktu publikasi dan di Trip menurut waktu kejadian.
+5. Teman/penonton menemukan penyedia, melihat katalog dan informasi, membandingkan pilihan, lalu melakukan transaksi atau menyimpan inspirasi.
+6. Penyedia memperoleh penjualan dan distribusi sosial, sehingga memiliki alasan mengelola profil, katalog, stok, jadwal, dan ketersediaannya di Pluits.
+7. Semakin banyak penyedia dengan katalog/availability yang benar, semakin berguna discovery dan transaksi bagi pengguna.
+8. Semakin banyak pengalaman nyata yang dibagikan, semakin kaya referensi sosial dan Trip; ini dapat memperkuat alasan pengguna dan penyedia untuk kembali.
+
+Rantai ini adalah hipotesis network effect dua sisi/berlapis. Ia tidak otomatis terjadi hanya karena fitur tersedia. Perlu validasi supply onboarding, demand, conversion, repeat transaction, content creation, trust, merchant operations, dan biaya akuisisi.
+
+### 10. Dampak lintas domain
+- **Social:** konten biasa tetap didukung; konten tertentu dapat menautkan transaksi/layanan/produk; Feed memakai published time; label bukti harus presisi; komentar/respons bisnis dan pengaturan audiens perlu aturan.
+- **Trip:** menyusun pengalaman aktual dari event yang sah; mengelompokkan perjalanan seperti My Bali; mendukung kunjungan berulang; memisahkan plan dari actual; menjaga timestamp kejadian dan privasi.
+- **Marketplace/Commerce:** transaksi kamar/layanan tambahan/produk mempunyai item dan lifecycle masing-masing; harga, stok, jadwal, kapasitas, payment, fulfilment, refund dan settlement harus server-authoritative. Pemesanan akomodasi/aktivitas masa depan berbeda dari local instant/same-day fulfillment barang.
+- **GeoDirectory:** menyediakan identitas kanonis untuk properti, hotel, restoran, spa, beach club, toko, tempat, dan penyedia. Tempat yang tercatat di direktori tidak otomatis menjadi bisnis aktif/terkelola atau otomatis tampil sebagai penyedia aktif di Explore. Klaim dan otorisasi pengelola harus sah.
+- **Business tools:** halaman/landing page, katalog, inventory/stock, schedule/availability, booking/order management dan pengaturan kategori adalah hipotesis paket alat merchant. Hak owner/staff, audit trail, dan keamanan harus dibedakan.
+- **Identity/trust:** transaksi, reservasi, check-in, layanan selesai, peserta, review, dan unggahan adalah status berbeda. Jangan mengklaim bukti yang tidak tersedia.
+
+### 11. Risiko, batas, dan hal yang belum boleh diasumsikan
+- **Privasi dan keselamatan:** tidak benar bahwa 99% orang pasti ingin semua aktivitas publik. Sebagian orang mungkin ingin berbagi, sebagian hanya ke teman, sebagian privat. Default, consent, nominal, detail hotel, tanggal perjalanan, peserta, dan lokasi perlu kontrol yang jelas.
+- **Validitas bukti:** transaksi membuktikan event transaksi sesuai statusnya; tidak otomatis membuktikan check-in, kehadiran, kualitas, durasi aktual, atau semua peserta. Bukti untuk setiap klaim harus didefinisikan terpisah.
+- **Kronologi:** jangan mengizinkan edit tanggal transaksi/kejadian melalui UI; koreksi harus melalui audit trail dan sumber backend. Belum diputuskan mekanisme time provenance untuk aktivitas non-transaksi.
+- **Konten katalog:** hak penggunaan foto resmi dan cara menampilkan foto katalog versus foto pengguna harus jelas.
+- **Manipulasi dan insentif:** jangan mendorong transaksi palsu, review berbayar terselubung, pembelian demi status, tekanan sosial, self-dealing, atau merchant membuat transaksi fiktif. Review harus tetap jujur dan pengungkapan insentif wajib jelas.
+- **Keadilan harga:** nilai sosial tidak membenarkan harga/biaya tersembunyi atau klaim termurah yang tidak benar.
+- **Ekonomi merchant:** komisi 2% belum final. Biaya payment, refund, chargeback, pajak, settlement, margin, dan kontrak dapat membuat model berbeda per kategori.
+- **Operasional:** merchant tools gratis atau berbayar, batas fitur gratis, onboarding, dukungan, integrasi POS, settlement, dan SLA belum ditetapkan.
+- **Feed quality:** Feed tidak boleh dipenuhi promosi bisnis atau konten transaksi yang monoton; konten personal biasa tetap penting.
+- **Adopsi:** perpindahan dari Instagram tidak dapat diasumsikan hanya karena UI mirip. Network effect membutuhkan pengguna, penyedia, konten bermakna, transaksi yang benar, dan kualitas layanan.
+- **Skala internasional:** contoh hotel premium/Bali dan beach club menunjukkan potensi internasional, tetapi ekspansi membutuhkan payment, mata uang, bahasa, pajak, kontrak, compliance, dukungan, dan supply lokal di tiap wilayah.
+
+### 12. Pertanyaan validasi sebelum dipromosikan menjadi keputusan bisnis
+1. Apa saja event yang dapat menghasilkan activity/Trip record: paid order, booking confirmed, check-in, redeem, service completed, atau kombinasi dengan status bukti berbeda?
+2. Untuk kamar hotel, apakah pengalaman baru dapat dipublikasikan setelah booking, setelah pembayaran, saat check-in, atau setelah check-out? Klaim mana yang boleh muncul pada tiap tahap?
+3. Bagaimana transaksi layanan tambahan di lokasi diintegrasikan: checkout Pluits, QR/POS merchant, payment link, atau mekanisme lain? Apa yang terjadi untuk cash/card di luar platform?
+4. Apakah setiap transaksi otomatis membuat private Trip event, sementara Feed/Story memerlukan tindakan publikasi pengguna?
+5. Bagaimana pengguna memilih item katalog/foto resmi yang cocok dengan produk yang dibeli tanpa menyiratkan foto itu diambil sendiri?
+6. Bagaimana published time dan occurred time ditampilkan konsisten pada Feed, detail post, dan Trip?
+7. Bagaimana satu perjalanan mengelompokkan transaksi dan aktivitas multi-merchant di wilayah/periode yang sama tanpa menggabungkan transaksi berbeda?
+8. Bagaimana Trip menampilkan kunjungan berulang ke kota yang sama dan menghitung jumlah kunjungan secara akurat?
+9. Bagaimana companion/teman ditautkan ke pengalaman tanpa menyiratkan mereka membayar atau hadir jika belum ada bukti/consent?
+10. Paket alat bisnis mana yang benar-benar gratis, apa batasnya, dan apa sumber biaya operasionalnya?
+11. Apakah komisi 2% layak untuk setiap kategori dan siapa yang menanggung biaya payment/refund/chargeback/pajak?
+12. Apa metrik yang menunjukkan bahwa pelanggan memilih Pluits karena nilai sosial, bukan karena promosi sementara?
+13. Apa metrik merchant yang menunjukkan kenaikan penjualan/retensi yang dapat diatribusikan ke konten dan transaksi Pluits?
+14. Bagaimana menjaga feed tetap sosial dan menarik bagi penonton yang tidak sedang ingin bertransaksi?
+
+### 13. Klasifikasi dan batas keputusan
+- **Pernyataan/arah founder:** perilaku berbagi dan menunjukkan pengalaman adalah motivasi sosial yang ingin didukung, bukan diwajibkan; Feed harus familiar bagi pengguna media sosial; transaksi dapat menjadi dasar bukti; waktu publikasi berbeda dari waktu kejadian; Trip mencatat perjalanan dan kunjungan berulang; hotel/merchant memperoleh promosi serta alat operasional; Pluits dapat memperoleh komisi transaksi.
+- **Contoh ilustratif:** Ibu Nia, Grand Hyatt, kamar Rp5–10 juta, spa sekitar Rp6 juta, makan di tepi pantai/beach club, dan komisi 2%. Angka/nama ini tidak otomatis menjadi tarif, kontrak, atau target komersial.
+- **Hipotesis strategis:** pengguna akan memilih transaksi Pluits demi nilai sosial dan catatan pengalaman; penyedia akan bergabung karena pelanggan ingin membagikan pengalaman; alat merchant memperkuat supply onboarding; konten transaksi meningkatkan trust dan conversion; model dapat menarik segmen premium dan berkembang internasional.
+- **Hal belum diputuskan:** tarif komisi, paket gratis/berbayar, aturan publikasi, proof lifecycle, POS/offline transaction, timestamp mechanism, data publik, algoritma feed, merchant acquisition, dan urutan implementasi.
+- **Keputusan:** belum ada persetujuan final untuk mengubah Business Model Master, mengunci tarif 2%, membangun integrasi POS, atau memulai vertical hotel/spa/restaurant. Catatan ini merekam hipotesis model bisnis untuk dievaluasi founder; tidak mengubah prioritas Social-first yang sedang berlaku.
+
+### 14. Next step
+Lanjutkan founder sharing untuk melengkapi sisi pengguna, merchant, transaksi, dan ekonomi platform. Setelah pembahasan cukup, lakukan evaluasi unit economics, proof model, privasi, supply/demand acquisition, dan kompetitor. Hanya setelah founder menyatakan persetujuan secara eksplisit, buat D-XXX, promosikan bagian yang disetujui ke Business Model Master, lalu turunkan spesifikasi dan roadmap sesuai SOP Product Change Control.
+
