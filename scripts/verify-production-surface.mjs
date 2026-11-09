@@ -119,7 +119,7 @@ assert.match(sharedDesign, /--pl-color-line/, 'Social UI must use shared spacing
 const socialHome = read('src/pages/account/index.js');
 assert.match(socialHome, /\+socialIcon\('bell',\{size:21\}\)\+/, 'Feed notification icon must be rendered, not printed as a template expression.');
 assert.match(socialHome, /\+socialIcon\('message',\{size:21\}\)\+/, 'Feed message icon must be rendered, not printed as a template expression.');
-assert.doesNotMatch(socialHome, /\\$\\{socialIcon\\('(bell|message)'/, 'Feed header must not leak unexpanded icon template syntax.');
+assert.doesNotMatch(socialHome, /\$\{socialIcon\('(bell|message)'/, 'Feed header must not leak unexpanded icon template syntax.');
 
 const accountMobileCss = read('src/pages/account/user-account.css');
 for (const selector of ['.ua-social-home .ua-stories-block', '.ua-social-home .ua-story-strip', '.ua-social-home .ua-post-head', '.ua-social-app .pl-social-mobile-nav']) {
