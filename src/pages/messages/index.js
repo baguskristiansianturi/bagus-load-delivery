@@ -1,6 +1,5 @@
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { supabase as db } from '../../lib/supabase/client.js';
 
-const db = createClient('https://ytndswhqxayqpftszwfh.supabase.co', 'sb_publishable_kOUbKBYg88nXgz8FQRSnvA_k0hvKY65');
 const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 let currentUser = null;
 let currentConversation = null;

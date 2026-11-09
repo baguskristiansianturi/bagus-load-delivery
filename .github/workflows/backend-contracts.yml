@@ -1,0 +1,103 @@
+name: PLUITS Backend Contracts
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "supabase/**"
+      - "src/**"
+      - "scripts/**"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/backend-contracts.yml"
+  push:
+    branches: [main, 'work/**']
+    paths:
+      - "supabase/**"
+      - "src/**"
+      - "scripts/**"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/backend-contracts.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pluits-backend-contracts-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  backend-migration-replay:
+    name: Backend — isolated migration replay
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Assert local-only Supabase configuration
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f supabase/config.toml
+          grep -q '^project_id = "pluits-local-ci"$' supabase/config.toml
+          if grep -Eq '^\[remotes\.|project_id = "ytndswhqxayqpftszwfh"' supabase/config.toml; then
+            echo "Hosted Supabase target detected in local CI config; refusing to continue."
+            exit 1
+          fi
+          if [ -n "${SUPABASE_ACCESS_TOKEN:-}" ] || [ -n "${SUPABASE_DB_PASSWORD:-}" ]; then
+            echo "Hosted Supabase credentials must never be present in this job."
+            exit 1
+          fi
+
+      - name: Install pinned Supabase CLI v3
+        uses: supabase/setup-cli@v3
+        with:
+          version: 3.0.0
+
+      - name: Show CLI version
+        run: supabase --version
+
+      - name: Prepare disposable migration workspace in production history order
+        run: node scripts/prepare-local-migrations.mjs
+
+      - name: Start isolated local Supabase stack
+        working-directory: .supabase-ci
+        run: supabase start
+
+      - name: Replay every migration from an empty local database
+        working-directory: .supabase-ci
+        run: supabase db reset --local
+
+      - name: Stop local Supabase stack
+        if: always()
+        working-directory: .supabase-ci
+        run: supabase stop --no-backup
+
+  frontend-contracts:
+    name: Frontend — production contracts and build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Verify production surface and backend contracts
+        run: npm test
+
+      - name: Build frontend
+        run: npm run build
+
+      - name: Verify Pages artifact
+        run: test -f dist/index.html

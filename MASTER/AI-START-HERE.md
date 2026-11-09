@@ -15,7 +15,8 @@ Pintu masuk wajib untuk setiap chat/sesi AI baru yang mengerjakan Pluits. AI har
 5. `MASTER/PLUITS-SOCIAL-FIRST-RELEASE-SPEC.md` dan `MASTER/PLUITS-USER-TESTING.md` untuk pekerjaan Social Media.
 6. `MASTER/DOCUMENTATION-MAP-AND-CHECKLIST.md`, `docs/pluits/PLUITS-BUSINESS-PRODUCT-TECH-BLUEPRINT.md`, security review, backend foundation spec, `supabase/README.md`, dan technical architecture/security.
 7. Audit live terbaru, alignment audit, dan spesifikasi modul terkait.
-8. `IDEAS/IDEA-BACKLOG.md` — ide belum disetujui, bukan instruksi implementasi.
+8. `docs/pluits/BACKEND-FIRST-FOUNDATION-AND-LOCAL-CI-2026-11-09.md`, `docs/pluits/FRONTEND-BACKEND-ALIGNMENT-PLAN-2026-11-09.md`, dan `docs/pluits/FRONTEND-EXPERIENCE-COMPLETION-MATRIX-2026-11-09.md` untuk environment, kontrak backend, dan kewajiban penyelesaian UI/UX meskipun integrasi backend menyusul.
+9. `IDEAS/IDEA-BACKLOG.md` — ide belum disetujui, bukan instruksi implementasi.
 
 ## Identitas proyek
 - Produk, frontend, backend, repository: **Pluits**.

@@ -116,4 +116,34 @@ const sharedDesign = read('src/styles/social-components.css');
 assert.match(sharedDesign, /--pl-color-ink/, 'Social UI must use shared design tokens.');
 assert.match(sharedDesign, /--pl-color-line/, 'Social UI must use shared spacing/line tokens.');
 
-console.log('Production surface verification passed: legacy modules absent; Marketplace, Trip, social DM, account security and notification contracts present.');
+
+const sharedSupabaseClient = read('src/lib/supabase/client.js');
+assert.match(sharedSupabaseClient, /createClient\(/, 'A single shared Supabase browser client must exist.');
+assert.match(sharedSupabaseClient, /VITE_SUPABASE_URL/, 'Supabase URL must be configurable without editing page modules.');
+assert.match(sharedSupabaseClient, /VITE_SUPABASE_PUBLISHABLE_KEY/, 'Publishable key must be configurable without editing page modules.');
+assert.doesNotMatch(sharedSupabaseClient, /service_role|sb_secret/i, 'Secret/service-role keys must never enter the browser client.');
+for (const path of [
+  'src/pages/account/index.js',
+  'src/pages/seller/index.js',
+  'src/pages/marketplace/index.js',
+  'src/pages/trip/index.js',
+  'src/pages/messages/index.js',
+  'src/pages/directory/index.js',
+  'src/pages/admin/moderation.js',
+  'src/pages/home/index.js',
+  'src/pages/search/discovery.js',
+  'src/pages/misc/index.js',
+]) {
+  const content = read(path);
+  assert.doesNotMatch(content, /createClient\(|@supabase\/supabase-js@2/, `Page must use the shared Supabase client: ${path}`);
+  assert.match(content, /lib\/supabase\/client\.js/, `Shared Supabase client import missing: ${path}`);
+}
+
+const seller = read('src/pages/seller/index.js');
+assert.match(seller, /value="individual"/, 'Seller onboarding must accept individual businesses.');
+assert.match(seller, /value="umkm"/, 'Seller onboarding must accept UMKM businesses.');
+assert.match(seller, /value="family_business"/, 'Seller onboarding must accept family businesses.');
+assert.match(seller, /value="cooperative"/, 'Seller onboarding must accept cooperatives.');
+assert.match(seller, /value="company"/, 'Seller onboarding must accept companies.');
+
+console.log('Production surface verification passed: legacy modules absent; Marketplace, Trip, social DM, account security, notifications and Seller Center flow contracts present.');

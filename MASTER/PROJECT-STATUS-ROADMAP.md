@@ -964,3 +964,49 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - **Live database:** read-only inspection mengonfirmasi constraint, RPC, dan verification requirements masih belum sesuai D-005. Tidak ada DDL/data/Auth changes.
 - **Tidak dilakukan:** tidak ada perubahan frontend, browser rendering, Android test, staging branch, atau deployment fitur. GitHub clone lokal gagal karena runtime tidak dapat menjangkau GitHub; tool browser/device automation tidak tersedia.
 - **Next:** staging approval → schema/RPC alignment dan negative tests → onboarding UX + location/privacy → dashboard modules → automated build → Android founder UAT.
+
+
+## CP-059 — Backend-first foundation dan local CI tanpa upgrade Supabase
+- **Tanggal:** 9 November 2026
+- **Status:** SPECIFIED + IMPLEMENTED ON WORK BRANCH; CI NOT VERIFIED; NOT DEPLOYED.
+- **Arah founder:** bangun alur dan struktur backend terlebih dahulu, kemudian selaraskan frontend; tunda peningkatan kuota sampai PLUITS siap dibuka dan kebutuhan aktual membuktikannya.
+- **Perubahan branch:** `work/backend-first-flow-foundation`.
+- **File:** `supabase/config.toml` (local-only sentinel), `.github/workflows/backend-contracts.yml`, `docs/pluits/BACKEND-FIRST-FOUNDATION-AND-LOCAL-CI-2026-11-09.md`, `docs/pluits/FRONTEND-BACKEND-ALIGNMENT-PLAN-2026-11-09.md`.
+- **Environment safety:** tidak membuat hosted Supabase branch/project; tidak upgrade plan; workflow tidak diberi Supabase secret dan hanya replay migration pada local stack.
+- **Repository baseline:** `8bb79e378c112f4713abbdd3ad1468210d169ac8`; 81 migration files terdeteksi.
+- **Belum terbukti:** local stack berhasil start, semua migration replay berhasil, RLS role-context tests, service extraction, frontend refactor, deploy, Android UAT.
+- **Langkah berikutnya:** jalankan CI pada PR; perbaiki error replay tanpa menyentuh production; tambahkan structural/RLS tests; setelah backend contract stabil, refactor frontend bertahap dimulai dari account/session dan Social P0.
+
+
+### CP-059 update — Shared Supabase client boundary
+- **Tanggal:** 9 November 2026
+- **Status:** IMPLEMENTED ON WORK BRANCH; automated test NOT RUN; runtime/build NOT VERIFIED.
+- **Perubahan:** menambah `src/lib/supabase/client.js`; sepuluh page modules (account, seller, marketplace, trip, messages, directory, admin moderation, home, discovery, misc) menggunakan client yang sama; production-surface verifier menegakkan batas ini.
+- **Tujuan:** mencegah setiap page membuat instance client dan konfigurasi URL/publishable key yang terpisah.
+- **Batas:** belum menggabungkan auth-state listeners, belum mengekstrak domain services, belum mengubah business logic/RPC, belum menjalankan Android UAT.
+- **Commit terakhir pada branch:** `9b3ede386875387e7e00b956807a3aaba3835809` (cek ulang PR head sebelum memakai sebagai checkpoint final).
+
+
+## CP-060 — Frontend experience berjalan paralel dengan backend
+- **Tanggal:** 9 November 2026
+- **Arah founder:** seluruh frontend harus dibangun sampai lengkap dari sisi UI/UX dan alur pengguna; backend yang belum siap menjadi dependency integrasi, bukan penghambat pembangunan frontend.
+- **Dokumen kontrak:** `docs/pluits/FRONTEND-EXPERIENCE-COMPLETION-MATRIX-2026-11-09.md`.
+- **Cakupan:** route map untuk Social, Account, Messaging, Seller Center, GeoDirectory, Marketplace, Checkout, Trip, Moderation, Help/Legal/Editorial; setiap async surface wajib memiliki idle/loading/success/empty/validation/auth/forbidden/offline/retry/conflict/not-implemented states.
+- **Perbaikan kode pada branch:** Discovery dan Misc dialihkan ke shared Supabase client; account resumable upload menggunakan shared publishable key; production-surface verifier sekarang mengawasi kedua modul tersebut.
+- **Status:** IMPLEMENTED ON WORK BRANCH; test/build/workflow NOT VERIFIED; NOT DEPLOYED; Android UAT NOT TESTED.
+- **Aturan integrasi:** backend readiness tidak boleh menjadi alasan untuk meninggalkan halaman, alur, formulir, atau kontrol UI. Tidak boleh menampilkan keberhasilan palsu; fitur yang belum didukung harus menjelaskan statusnya dan mempertahankan input dengan aman.
+- **Commit terakhir:** akan dicatat setelah verifikasi head PR.
+
+
+## CP-061 — Independent frontend CI and migration test isolation
+- **Tanggal:** 9 November 2026
+- **Founder direction:** UI/UX continues even if backend contracts are pending; frontend CI must not be gated by backend migration replay. Seller eligibility, legal-form requirements, and verification rules are deferred to the later security/eligibility phase.
+- **CI:** frontend contract tests and Vite build run independently of backend replay. Local Supabase migration replay remains an isolated job.
+- **Status:** migration replay reached the post-media migration and exposed a missing closing parenthesis; frontend contract test exposed a stale expectation for a legal-form RPC argument. These are being corrected. Production NOT DEPLOYED; PR remains draft and unmerged.
+
+
+## CP-062 — Canonical mobile social navigation
+- **Founder direction:** bottom navigation on every social screen must use the same five-item pattern and visual component as the home page.
+- **Implemented:** `renderSocialMobileNav()` now renders one shared component for public home and authenticated social pages: Beranda, Jelajah, Buat, Reels, Profil. Active state is normalized between the public home key and authenticated Explore/feed key.
+- **UI scope:** no backend migration or quota increase required. This is a frontend consistency change; existing route targets and auth-aware profile destination are preserved.
+- **Verification:** frontend CI production-contract checks and Vite build PASSED on commit `af4e2990a0d4ed1f763ac74e65e0d26ceed4823a`. Backend isolated migration replay remains in progress at checkpoint time. No production deployment or merge.
