@@ -669,7 +669,7 @@ async function uploadMediaFile(file,path,mime,onProgress=()=>{}){
  if(!session?.access_token)throw new Error('Sesi login berakhir. Silakan masuk kembali.');
  return new Promise((resolve,reject)=>{
   const upload=new TusUpload(file,{
-   endpoint:SUPABASE_URL+'/storage/v1/upload/resumable',
+   endpoint:'https://ytndswhqxayqpftszwfh.storage.supabase.co/storage/v1/upload/resumable',
    retryDelays:[0,3000,5000,10000,20000],
    headers:{authorization:'Bearer '+session.access_token,apikey:SUPABASE_KEY,'x-upsert':'false'},
    uploadDataDuringCreation:true,removeFingerprintOnSuccess:true,chunkSize:6*1024*1024,
