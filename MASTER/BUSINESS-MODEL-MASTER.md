@@ -901,6 +901,16 @@ Spesifikasi lengkap, user journey, dashboard, status, URL, acceptance criteria d
 4. Publikasikan kebijakan setelah sinkron dengan implementasi dan legal review.
 5. Kembangkan Top 10, fingerprint video, AI moderation, watermark, music licensing, dan account lifecycle sesuai prioritas.
 
+### 33.13 Composer sosial harus media-first dan sesederhana Instagram
+- Alur membuat konten dimulai dari pemilihan foto/video, bukan formulir panjang. Satu Post dapat berisi beberapa media (foto/video campuran) dengan urutan, preview, dan hapus item sebelum diterbitkan.
+- Setelah media dipilih, caption/deskripsi tampil langsung di bawah preview. Pengaturan tambahan ditempatkan dalam satu panel ringkas yang dapat dibuka saat diperlukan; jangan memecah proses ke banyak halaman.
+- Pengaturan minimum per konten: audiens/privasi dan penandaan akun. Hashtag dapat dikenali dari caption. Lokasi, penjadwalan, produk/tempat yang ditandai, dan opsi lanjutan ditambahkan hanya ketika alur backend dan kebijakan privasinya siap.
+- Reel menggunakan composer yang sama agar tidak ada alur upload terpisah yang membingungkan, tetapi aturan validasi khusus: tepat satu video dan durasi sesuai batas produk.
+- Draf menyimpan caption, audiens, penandaan, dan media yang dipilih secara privat. Draf tidak pernah tampil pada feed/profil publik.
+- Batas ukuran/format media harus jelas, konsisten antara frontend, Storage bucket, dan kebijakan proyek. Upload besar memakai resumable upload; tampilkan progress, error yang dapat ditindaklanjuti, retry, dan cleanup file jika publikasi gagal.
+- Jangan mengklaim Post terjadwal bekerja hanya karena field tanggal tersedia. Penjadwalan membutuhkan status terjadwal, waktu publikasi, worker/cron yang andal, timezone, pembatalan, dan RLS; baru setelah itu kontrol Jadwalkan dapat diaktifkan.
+- Kriteria penerimaan utama: Android dapat memilih satu video, beberapa foto, dan campuran foto/video; preview dan hapus item berfungsi; upload tetap berjalan untuk file besar; Post muncul setelah refresh; Reel mematuhi batas durasi; serta audiens dan penandaan mengikuti RLS.
+
 ### 33.12 Profil terpadu, privasi tampilan, dan satu pusat pengaturan
 - Profil personal harus memakai satu identitas dan satu struktur halaman untuk pemilik maupun pengunjung. Perbedaan hanya pada izin: pemilik memperoleh kontrol pengelolaan, sedangkan pengunjung hanya melihat bagian yang diizinkan.
 - Struktur konten profil: **Post, Reels, Trip, dan Ditandai**. Post/Reels/Trip/penandaan tidak boleh digabung menjadi satu grid tanpa konteks. Wishlist dan pintasan akun lain bukan informasi publik secara default.
