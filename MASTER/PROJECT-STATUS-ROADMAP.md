@@ -998,11 +998,8 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - **Commit terakhir:** akan dicatat setelah verifikasi head PR.
 
 
-## CP-061 — Seller Center eligibility D-005 and independent frontend CI
+## CP-061 — Independent frontend CI and migration test isolation
 - **Tanggal:** 9 November 2026
-- **Founder direction:** UI/UX continues even if backend contracts are pending; frontend CI must not be gated by backend migration replay.
-- **Backend migration:** `20261109100000_pluits_seller_eligibility_d005.sql` adds operational business profiles (individual, UMKM, family business, cooperative, company), separates optional `legal_form`, maps legacy PT/CV/UD stores to company while preserving their former legal form, and revises verification requirements to require a physical/operational address and contact rather than a mandatory legal company name.
-- **Frontend:** Seller Center onboarding now offers all five D-005 business profiles and a separate optional legal-form field; sends the new RPC argument.
-- **CI:** frontend contract tests and Vite build run independently of backend replay. Local Supabase ports are isolated from common defaults; workflows for the same ref are serialized to prevent overlapping Docker stacks.
-- **Tests:** latest recorded frontend CI job passed `npm ci`, `npm test`, `npm run build`, and `dist/index.html` check. Backend local stack startup/replay remains in progress at checkpoint; do not mark backend migrations tested until replay and follow-up assertions pass.
-- **Status:** frontend checks TESTED on work branch; D-005 migration IMPLEMENTED but NOT TESTED against local Postgres; production NOT DEPLOYED; PR remains draft and unmerged.
+- **Founder direction:** UI/UX continues even if backend contracts are pending; frontend CI must not be gated by backend migration replay. Seller eligibility, legal-form requirements, and verification rules are deferred to the later security/eligibility phase.
+- **CI:** frontend contract tests and Vite build run independently of backend replay. Local Supabase migration replay remains an isolated job.
+- **Status:** migration replay reached the post-media migration and exposed a missing closing parenthesis; frontend contract test exposed a stale expectation for a legal-form RPC argument. These are being corrected. Production NOT DEPLOYED; PR remains draft and unmerged.
