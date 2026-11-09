@@ -51,7 +51,7 @@ export function messagesPage() {
         </div>
       </section>
       <div class="pl-msg-heading"><div><small>PRIVATE CONVERSATIONS</small><h1>Pesan</h1><p>Pesan pribadi antar akun Pluits.</p></div><span id="pl-msg-network" class="pl-msg-network" role="status">Memeriksa koneksi…</span></div>
-      <div class="pl-msg-layout">
+      <div class="pl-msg-layout" id="pl-msg-layout">
         <aside class="pl-msg-sidebar">
           <form id="pl-msg-search"><label>Cari akun berdasarkan username<input name="q" placeholder="Ketik username…" autocomplete="off"></label><button type="submit">Cari akun</button></form>
           <div id="pl-msg-search-results"></div>
@@ -173,11 +173,13 @@ async function openDraftConversation(recipientId) {
   try { person=(JSON.parse(localStorage.getItem(contactsKey())||'[]')).find(item=>item.id===recipientId)||null; } catch {}
   if(!person){document.querySelector('#pl-msg-chat').innerHTML='<div class="pl-msg-empty">Kontak ini belum tersimpan. Muat kontak saat online sebelum memulai DM offline.</div>';return;}
   const chat=document.querySelector('#pl-msg-chat');if(!chat)return;
+  document.querySelector('#pl-msg-layout')?.classList.add('is-chat-open');
   const queued=queueFor(currentConversation);
-  chat.innerHTML='<header class="pl-msg-chat-head"><div><b>'+esc(person.display_name||person.username)+'</b><small>@'+esc(person.username)+'</small></div><span>Draft offline</span></header>'+
+  chat.innerHTML='<header class="pl-msg-chat-head"><button type="button" class="pl-msg-back" data-chat-back aria-label="Kembali ke daftar pesan">‹</button><div><b>'+esc(person.display_name||person.username)+'</b><small>@'+esc(person.username)+'</small></div><span>Draft offline</span></header>'+
     '<div class="pl-msg-stream"><div class="pl-msg-empty">Percakapan baru akan dibuat saat koneksi kembali. Riwayat pesan belum tersedia offline.</div>'+queued.map(row=>messageMarkup(row,true)).join('')+'</div>'+
     '<form id="pl-msg-compose"><textarea name="body" rows="2" maxlength="5000" placeholder="Tulis pesan…" required></textarea><button type="submit">Simpan pesan</button></form>'+
     '<p class="pl-msg-chat-status" role="status">'+queued.length+' pesan menunggu koneksi. Draft hanya tersimpan di perangkat ini.</p>';
+  chat.querySelector('[data-chat-back]')?.addEventListener('click',()=>document.querySelector('#pl-msg-layout')?.classList.remove('is-chat-open'));
   chat.querySelector('#pl-msg-compose').onsubmit=async event=>{
     event.preventDefault();const form=event.currentTarget,body=String(new FormData(form).get('body')||'').trim();if(!body)return;
     if(navigator.onLine){
@@ -233,6 +235,7 @@ async function openConversation(id) {
   if(String(id).startsWith('draft:'))return openDraftConversation(String(id).slice(6));
   currentConversation=id;
   const chat=document.querySelector('#pl-msg-chat'); if(!chat)return;
+  document.querySelector('#pl-msg-layout')?.classList.add('is-chat-open');
   chat.innerHTML='<div class="pl-msg-empty">Memuat pesan…</div>';
   const thread=conversationCache.find(item=>item.id===id);
   const [messages,members]=await Promise.all([
@@ -241,10 +244,11 @@ async function openConversation(id) {
   ]);
   if((messages.error||members.error)&&navigator.onLine){chat.textContent=(messages.error||members.error).message;return;}
   const queued=queueFor(id);
-  chat.innerHTML='<header class="pl-msg-chat-head"><div><b>'+esc(thread?.other.display_name||thread?.other.username||'Percakapan')+'</b><small>@'+esc(thread?.other.username||'')+'</small></div><span>'+ (navigator.onLine?'Terhubung':'Offline · pesan antrean')+'</span></header>'+
+  chat.innerHTML='<header class="pl-msg-chat-head"><button type="button" class="pl-msg-back" data-chat-back aria-label="Kembali ke daftar pesan">‹</button><div><b>'+esc(thread?.other.display_name||thread?.other.username||'Percakapan')+'</b><small>@'+esc(thread?.other.username||'')+'</small></div><span>'+ (navigator.onLine?'Terhubung':'Offline · pesan antrean')+'</span></header>'+
     '<div class="pl-msg-stream">'+(messages.data||[]).map(message=>messageMarkup({...message,body:message.deleted_at?'Pesan dihapus':message.body})).join('')+queued.map(row=>messageMarkup(row,true)).join('')+'</div>'+
     '<form id="pl-msg-compose"><textarea name="body" rows="2" maxlength="5000" placeholder="Tulis pesan…" required></textarea><button type="submit">Kirim</button></form>'+
     '<p class="pl-msg-chat-status" role="status">'+(queued.length?queued.length+' pesan menunggu koneksi.':'Pesan tersinkron dengan server.')+'</p>';
+  chat.querySelector('[data-chat-back]')?.addEventListener('click',()=>document.querySelector('#pl-msg-layout')?.classList.remove('is-chat-open'));
   const readAt=members.data?.last_read_at;
   if(navigator.onLine&&(!readAt||new Date(readAt)<new Date())) await db.rpc('mark_conversation_read',{p_conversation_id:id});
   const form=chat.querySelector('#pl-msg-compose');
