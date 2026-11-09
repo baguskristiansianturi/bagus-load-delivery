@@ -319,7 +319,7 @@ async function feedPage(){
   ?"<a href='#/search'>Jelajahi akun</a>"
   :"<a href='#/account/compose'>Bagikan foto atau video</a>";
  const feedNote=usingOwnFallback?"<div class='ua-feed-fallback-note'>Belum ada postingan dari akun yang diikuti · Menampilkan postingan Anda untuk pengujian</div>":"";
- return "<div class='ua-social-home'><header class='ua-feed-top'><a class='ua-feed-wordmark' href='#/account/explore'>pluits</a><a class='ua-feed-search' href='#/search' aria-label='Cari di Pluits'>${socialIcon('search',{size:18})}<span>Cari teman, tempat, dan postingan</span></a><div><a href='#/account/activity' aria-label='Aktivitas'>${socialIcon('bell',{size:21})}</a><a href='#/messages' aria-label='Pesan'>${socialIcon('message',{size:21})}</a></div></header>"+storySection+feedNote+"<section class='ua-feed'>"+(sorted.length?sorted.map(postCard).join(''):"<div class='ua-feed-empty'><strong>"+empty+"</strong>"+emptyAction+"</div>")+"</section></div>";
+ return "<div class='ua-social-home'><header class='ua-feed-top'><a class='ua-feed-wordmark' href='#/account/explore'>pluits</a><a class='ua-feed-search' href='#/search' aria-label='Cari di Pluits'>"+socialIcon('search',{size:18})+"<span>Cari teman, tempat, dan postingan</span></a><div><a href='#/account/activity' aria-label='Aktivitas'>"+socialIcon('bell',{size:21})+"</a><a href='#/messages' aria-label='Pesan'>"+socialIcon('message',{size:21})+"</a></div></header>"+storySection+feedNote+"<section class='ua-feed'>"+(sorted.length?sorted.map(postCard).join(''):"<div class='ua-feed-empty'><strong>"+empty+"</strong>"+emptyAction+"</div>")+"</section></div>";
 }
 
 async function reelsPage(){
