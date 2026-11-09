@@ -534,7 +534,7 @@ async function postDetailPage(id){
  return `<div class="ua-post-detail-page"><div class="ua-page-heading"><div><span class="ua-eyebrow">POSTINGAN</span><h1>Detail postingan</h1></div><a class="ua-outline" href="#/account/explore">Kembali ke Explore</a></div><section class="ua-post-detail-stream">${postCard(p)}</section></div>`;
 }
 function normalizeFeedMediaFrames(root=document){
- const mediaNodes=root.querySelectorAll('.ua-social-home .ua-media img,.ua-social-home .ua-media video,.ua-social-home .ua-gallery-item img,.ua-social-home .ua-gallery-item video');
+ const mediaNodes=root.querySelectorAll('.ua-social-home .ua-media img,.ua-social-home .ua-media video,.ua-social-home .ua-gallery-item img,.ua-social-home .ua-gallery-item video,.ua-post-detail-page .ua-media img,.ua-post-detail-page .ua-media video,.ua-post-detail-page .ua-gallery-item img,.ua-post-detail-page .ua-gallery-item video');
  const dimensions=el=>({w:el.naturalWidth||el.videoWidth,h:el.naturalHeight||el.videoHeight});
  const boundedRatio=(w,h)=>Math.min(4/5,Math.max(1/1.91,w/h));
  const isDetail=el=>!!el.closest('.ua-post-detail-page');
