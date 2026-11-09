@@ -1,4 +1,3 @@
-import '../styles/page-transitions.css';
 import {discoverySearch,bindDiscoverySearch} from '../pages/search/discovery.js';
 import {misc} from '../pages/misc/index.js';
 import {helpPage,bindHelpPage,legalPage} from '../pages/help/index.js';
@@ -19,7 +18,7 @@ export function route(homeFn=home){
  const s=path.split('/').filter(Boolean),r=s[0],v=s[1],p=new URLSearchParams(q);
  let h;
  if(!r || ['home','feed','beranda'].includes(r))h=homeFn();
- else if(r.startsWith('@')){h='<div class="pluits-loading">Membuka profil…</div>';queueMicrotask(()=>mountUserAccount('user',decodeURIComponent(r.slice(1))));}
+ else if(r.startsWith('@')){h='<div class="pl-page-loading" role="status" aria-live="polite"><span class="pl-page-spinner" aria-hidden="true"></span><span class="pl-page-loading-label">Membuka profil</span></div>';queueMicrotask(()=>mountUserAccount('user',decodeURIComponent(r.slice(1))));}
  else if(r==='places'){h=directoryPage();queueMicrotask(()=>bindDirectoryPage());}
  else if(r==='marketplace'){h=marketplacePage();queueMicrotask(()=>bindMarketplacePage());}
  else if(r==='shop'){h=storePage();queueMicrotask(()=>bindStorePage(v||''));}
@@ -48,7 +47,7 @@ export function route(homeFn=home){
  else if(r==='jasa'){h=directoryPage();queueMicrotask(()=>bindDirectoryPage());}
  else if(r==='logistik'||r==='delivery'){h=marketplacePage();queueMicrotask(()=>bindMarketplacePage());}
  
-       else if(r==='login'||r==='register'){h='<div class="pluits-loading">Membuka akun Pluits…</div>';queueMicrotask(()=>mountUserAccount(r));}
+       else if(r==='login'||r==='register'){h='<div class="pl-page-loading" role="status" aria-live="polite"><span class="pl-page-spinner" aria-hidden="true"></span><span class="pl-page-loading-label">Menyiapkan halaman</span></div>';queueMicrotask(()=>mountUserAccount(r));}
  else if(r==='blog'||r==='guides'||r==='article')h=blog(r==='article'||r==='guides'?v:'');
    else if(r==='help'||r==='faq'){h=helpPage(p.get('topic')||'');queueMicrotask(()=>bindHelpPage());}
    else if(['terms','privacy','guidelines'].includes(r))h=legalPage(r);
@@ -57,7 +56,7 @@ export function route(homeFn=home){
  else if(r==='account'){h='<div class="pl-page-loading" role="status" aria-live="polite"><span class="pl-page-spinner" aria-hidden="true"></span><span class="pl-page-loading-label">Menyiapkan halaman</span></div>';queueMicrotask(()=>mountUserAccount(v||'explore',s[2]||''));}
  else if(r==='seller'){h='<div class="pl-page-loading" role="status" aria-live="polite"><span class="pl-page-spinner" aria-hidden="true"></span><span class="pl-page-loading-label">Menyiapkan Seller Center</span></div>';queueMicrotask(()=>sellerPage());}
    else h='<div class="empty-state large"><h1>Halaman tidak ditemukan</h1><p>Rute belum tersedia pada frontend ini.</p><a class="primary-button" href="#/">Kembali ke beranda</a></div>';
- document.querySelector('#app').innerHTML=h;
+ const app=document.querySelector('#app');app.classList.remove('pl-page-enter');app.innerHTML=h;requestAnimationFrame(()=>app.classList.add('pl-page-enter'));
  updateSEO({title:document.querySelector('h1')?.textContent?document.querySelector('h1').textContent+' — Pluits Indonesia':'Pluits — Pluits Indonesia',description:'Jelajahi direktori tempat, layanan, komunitas, pengalaman, dan produk lokal di Pluits.',path:path});
  window.scrollTo(0,0);
 }
