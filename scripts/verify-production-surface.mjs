@@ -117,9 +117,14 @@ assert.match(sharedDesign, /--pl-color-ink/, 'Social UI must use shared design t
 assert.match(sharedDesign, /--pl-color-line/, 'Social UI must use shared spacing/line tokens.');
 
 const socialHome = read('src/pages/account/index.js');
-assert.match(socialHome, /\+socialIcon\('bell',\{size:21\}\)\+/, 'Feed notification icon must be rendered, not printed as a template expression.');
-assert.match(socialHome, /\+socialIcon\('message',\{size:21\}\)\+/, 'Feed message icon must be rendered, not printed as a template expression.');
-assert.doesNotMatch(socialHome, /\$\{socialIcon\('(bell|message)'/, 'Feed header must not leak unexpanded icon template syntax.');
+const sharedHeader = read('src/components/social/navigation.js');
+assert.ok(sharedHeader.includes("aria-label='Notifikasi'") && sharedHeader.includes("socialIcon('bell', { size: 21 })"), 'Shared social header must render the notification bell.');
+assert.ok(sharedHeader.includes("aria-label='Kontak dan koneksi'") && sharedHeader.includes("socialIcon('users', { size: 21 })"), 'Shared social header must render Contacts.');
+assert.ok(sharedHeader.includes("aria-label='Wishlist dan tersimpan'") && sharedHeader.includes("socialIcon('bookmark', { size: 21 })"), 'Saved items shortcut must be available privately.');
+assert.ok(sharedHeader.includes("aria-label='Pengaturan'") && sharedHeader.includes("#/account/settings"), 'Settings must have one clear header entry point.');
+assert.ok(socialHome.includes('function createPage()') && socialHome.includes('function storyComposePage()'), 'Bottom create flow must expose Story/Post/Reel/Live entry selection.');
+assert.ok(socialHome.includes("section==='saved'?await savedPage()"), 'Saved items route must be available to the signed-in owner.');
+assert.doesNotMatch(socialHome, /<header class='ua-feed-top'>/, 'Signed-in feed must not render a duplicate second header.');
 
 const accountMobileCss = read('src/pages/account/user-account.css');
 for (const selector of ['.ua-social-home .ua-stories-block', '.ua-social-home .ua-story-strip', '.ua-social-home .ua-post-head', '.ua-social-app .pl-social-mobile-nav']) {
