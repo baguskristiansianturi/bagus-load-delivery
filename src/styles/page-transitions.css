@@ -1,0 +1,18 @@
+/* Lightweight, centered page feedback and soft route transitions. */
+#app{min-height:100dvh}
+#app.pl-page-enter{animation:plPageEnter .2s ease-out both}
+.pl-page-loading{
+ min-height:52vh;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;
+ gap:13px;padding:32px 20px;color:#718096;text-align:center;
+}
+.pl-page-spinner{
+ width:27px;height:27px;border:2.5px solid #e7edf3;border-top-color:#294a68;border-radius:50%;
+ animation:plPageSpin .72s linear infinite;
+}
+.pl-page-loading-label{font-size:12px;font-weight:600;letter-spacing:.015em;color:#718096}
+@keyframes plPageSpin{to{transform:rotate(360deg)}}
+@keyframes plPageEnter{from{opacity:.0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){
+ .pl-page-spinner{animation:none;border-top-color:#294a68}
+ #app.pl-page-enter{animation:none}
+}
