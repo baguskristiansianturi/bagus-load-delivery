@@ -3,7 +3,7 @@ import { socialIcon } from '../common/social-icons.js';
 export function renderSocialHeader({ active = 'explore', profileView = false, user, profile, userAvatar = '', notificationCount = 0, publicHome = false } = {}) {
   const profileHref = user
     ? '#/@' + encodeURIComponent(profile?.username || '')
-    : '#/account/login';
+    : '#/account/profile';
 
   if (publicHome) {
     return `
