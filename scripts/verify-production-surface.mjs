@@ -126,11 +126,11 @@ for (const selector of ['.ua-social-home .ua-stories-block', '.ua-social-home .u
   assert.ok(accountMobileCss.includes(selector), 'Mobile social layout missing responsive selector: ' + selector);
 }
 assert.match(accountMobileCss, /@media\s*\(max-width:\s*760px\)/, 'Social home must define a mobile breakpoint.');
-assert.match(accountMobileCss, /env\\(safe-area-inset-bottom\\)/, 'Social home must account for Android/iOS safe-area insets.');
+assert.ok(accountMobileCss.includes('env(safe-area-inset-bottom)'), 'Social home must account for Android/iOS safe-area insets.');
 
 const discovery = read('src/pages/search/discovery.js');
-assert.match(discovery, /renderSocialMobileNav\\(\\{active:'discover'\\}\\)/, 'Explore must reuse the shared five-item social navigation.');
-assert.match(discovery, /social-navigation\\.css/, 'Explore must load shared social navigation styles.');
+assert.ok(discovery.includes("renderSocialMobileNav({active:'discover'})"), 'Explore must reuse the shared five-item social navigation.');
+assert.ok(discovery.includes('social-navigation.css'), 'Explore must load shared social navigation styles.');
 const discoveryCss = read('src/pages/search/discovery.css');
 assert.match(discoveryCss, /grid-template-columns:\\s*repeat\\(3,\\s*minmax\\(0,\\s*1fr\\)\\)/, 'Explore must use a fluid three-column mobile grid.');
 assert.match(discoveryCss, /aspect-ratio:\\s*1\\s*\\/\\s*1/, 'Explore media tiles must preserve a square responsive ratio.');
