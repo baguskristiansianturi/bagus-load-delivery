@@ -20,7 +20,7 @@ export async function loadAccountContext(db,user){
 export function contextHeader(ctx){
  return `<div class="ua-context-switch"><label for="ua-context-select">KONTEKS AKUN</label><select id="ua-context-select"><option value="personal" ${ctx.active==='personal'?'selected':''}>Personal</option>${ctx.professional?'<option value="professional" '+(ctx.active==='professional'?'selected':'')+'>Professional</option>':''}${ctx.stores.length?'<option value="business" '+(ctx.active==='business'?'selected':'')+'>Business</option>':''}</select></div>`;
 }
-const nav=()=>`<a class="ua-account-back" href="#/account/profile">← Kembali ke menu akun</a>`;
+const nav=()=>`<a class="ua-account-back" href="#/account/settings">← Kembali ke Pusat Pengaturan</a>`;
 export function professionalPage(ctx,profile){
  const p=ctx.professional;
  if(!p)return professionalFormPage(ctx,profile);
