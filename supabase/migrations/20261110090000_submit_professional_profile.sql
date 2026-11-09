@@ -68,3 +68,86 @@ $function$;
 
 revoke all on function public.submit_professional_profile(uuid) from public;
 grant execute on function public.submit_professional_profile(uuid) to authenticated;
+
+
+-- Authorized reviewers can approve or reject submitted professional profiles.
+create or replace function public.review_professional_profile(
+  p_profile_id uuid,
+  p_decision text,
+  p_note text default ''
+)
+returns jsonb
+language plpgsql
+security definer
+set search_path = public, pg_temp
+as $function$
+declare
+  v_profile public.professional_profiles;
+  v_case public.profile_verification_cases;
+begin
+  if auth.uid() is null
+     or coalesce(auth.jwt()->'app_metadata'->>'role','') not in ('admin','moderator') then
+    raise exception 'Admin review access required';
+  end if;
+  if p_decision not in ('verified','rejected') then
+    raise exception 'Invalid review decision';
+  end if;
+
+  select * into v_profile
+  from public.professional_profiles
+  where id = p_profile_id
+  for update;
+  if not found then
+    raise exception 'Professional profile not found';
+  end if;
+
+  select * into v_case
+  from public.profile_verification_cases
+  where target_type = 'professional'
+    and target_id = p_profile_id
+    and status in ('submitted','under_review')
+  order by submitted_at desc
+  limit 1
+  for update;
+  if not found then
+    raise exception 'Professional profile is not awaiting review';
+  end if;
+
+  update public.professional_profiles
+  set profile_status = case when p_decision='verified' then 'active' else 'rejected' end,
+      updated_at = now()
+  where id = p_profile_id;
+
+  update public.profile_verification_cases
+  set status = p_decision,
+      reviewer_user_id = auth.uid(),
+      reviewer_note = left(trim(coalesce(p_note,'')),2000),
+      reviewed_at = now(),
+      updated_at = now()
+  where id = v_case.id;
+
+  return jsonb_build_object(
+    'profile_id', p_profile_id,
+    'profile_status', case when p_decision='verified' then 'active' else 'rejected' end,
+    'verification_case_id', v_case.id,
+    'decision', p_decision
+  );
+end;
+$function$;
+
+revoke all on function public.review_professional_profile(uuid,text,text) from public;
+grant execute on function public.review_professional_profile(uuid,text,text) to authenticated;
+
+drop policy if exists professional_profiles_admin_review_read on public.professional_profiles;
+create policy professional_profiles_admin_review_read
+on public.professional_profiles
+for select
+to authenticated
+using (coalesce(auth.jwt()->'app_metadata'->>'role','') in ('admin','moderator'));
+
+drop policy if exists profile_verification_admin_read on public.profile_verification_cases;
+create policy profile_verification_admin_read
+on public.profile_verification_cases
+for select
+to authenticated
+using (coalesce(auth.jwt()->'app_metadata'->>'role','') in ('admin','moderator'));
