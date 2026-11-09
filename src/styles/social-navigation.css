@@ -51,10 +51,13 @@
   }
 
   .ua-social-app .pl-social-header nav,
-  .ua-social-app .pl-social-header .ua-header-profile,
   .ua-social-app .pl-social-header .ua-header-create { display: none; }
+  .ua-social-app .pl-social-header .ua-header-profile { display: inline-flex; width: 34px; height: 34px; flex: 0 0 34px; align-items: center; justify-content: center; overflow: hidden; border: 1px solid #e5eaf0; border-radius: 50%; color: #172b45; text-decoration: none; }
+  .ua-social-app .pl-social-header .ua-header-profile img,
+  .ua-social-app .pl-social-header .ua-header-profile .ua-avatar { width: 100%; height: 100%; object-fit: cover; }
 
-  .pl-social-mobile-actions { display: flex; align-items: center; gap: 18px; }
+  .pl-social-mobile-actions { display: flex; align-items: center; gap: 14px; }
+  .pl-social-mobile-actions a { min-width: 30px; min-height: 38px; }
   .pl-social-mobile-actions a { display: inline-flex; align-items: center; justify-content: center; color: #172b45; min-width: 28px; min-height: 36px; }
   .pl-social-mobile-actions .pl-icon { width: 22px; height: 22px; }
 
@@ -177,4 +180,62 @@
   .ua-social-app .pl-social-mobile-nav > a {
     gap: 3px;
   }
+}
+
+
+/* Single entry points for settings and creation, with a compact mobile-first layout. */
+.ua-social-app .ua-profile-menu {
+  display: inline-flex;
+  width: 38px;
+  height: 38px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #e7ebf0;
+  border-radius: 50%;
+  color: #26384d;
+  text-decoration: none;
+  flex: 0 0 auto;
+}
+.ua-create-grid {
+  display: grid;
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  gap: 12px;
+  margin: 18px 0 28px;
+}
+.ua-create-option {
+  position: relative;
+  display: flex;
+  min-height: 148px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 18px;
+  border: 1px solid #e7ebf0;
+  border-radius: 16px;
+  background: #fff;
+  color: #172b45;
+  text-decoration: none;
+  box-shadow: 0 4px 18px rgba(24,42,64,.035);
+}
+.ua-create-option:active { transform: scale(.99); }
+.ua-create-icon {
+  display: inline-flex;
+  width: 42px;
+  height: 42px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 13px;
+  background: #f1f4f7;
+  color: #294a68;
+}
+.ua-create-option strong { font-size: 15px; }
+.ua-create-option small { max-width: 28ch; color: #68778a; font-size: 12px; line-height: 1.5; }
+.ua-create-arrow { position: absolute; top: 18px; right: 16px; color: #8190a1; font-size: 22px; }
+.ua-create-option.is-staged { background: #fafbfc; color: #68778a; }
+.ua-create-stage { font-size: 10px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: #758397; }
+.ua-audience-field { display: grid; gap: 8px; color: #33465b; font-size: 13px; font-weight: 650; }
+.ua-audience-field select { min-height: 44px; padding: 10px 12px; border: 1px solid #dfe5ec; border-radius: 10px; background: #fff; color: #172b45; }
+@media (max-width: 420px) {
+  .ua-create-grid { gap: 9px; }
+  .ua-create-option { min-height: 138px; padding: 14px; }
 }
