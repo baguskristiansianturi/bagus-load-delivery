@@ -16,7 +16,7 @@ export function route(homeFn=home){
  const [path,q='']=raw.split('?');
  const s=path.split('/').filter(Boolean),r=s[0],v=s[1],p=new URLSearchParams(q);
  let h;
- if(!r)h=homeFn();
+ if(!r || ['home','feed','beranda'].includes(r))h=homeFn();
  else if(r.startsWith('@')){h='<div class="pluits-loading">Membuka profil…</div>';queueMicrotask(()=>mountUserAccount('user',decodeURIComponent(r.slice(1))));}
  else if(r==='places'){h=directoryPage();queueMicrotask(()=>bindDirectoryPage());}
  else if(r==='marketplace'){h=marketplacePage();queueMicrotask(()=>bindMarketplacePage());}
