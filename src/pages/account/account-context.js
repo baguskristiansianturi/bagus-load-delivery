@@ -24,11 +24,11 @@ const nav=()=>`<a class="ua-account-back" href="#/account/settings">← Kembali 
 export function professionalPage(ctx,profile){
  const p=ctx.professional;
  if(!p)return professionalFormPage(ctx,profile);
- return `<div class="ua-page-heading"><div><span class="ua-eyebrow">PROFESSIONAL CENTER</span><h1>Profil Profesional</h1><p>Kelola reputasi, keahlian, portofolio, dan area layanan Anda.</p></div><span class="ua-review-pill">${esc(p.profile_status)}</span></div>${nav()}
+ return `<div class="ua-page-heading"><div><span class="ua-eyebrow">PROFESSIONAL CENTER</span><h1>Profil Profesional</h1><p>Kelola reputasi, keahlian, portofolio, dan area layanan Anda.</p></div><span class="ua-review-pill">${p.profile_status==='submitted'?'Menunggu persetujuan':p.profile_status==='active'?'Disetujui':p.profile_status==='rejected'?'Perlu perbaikan':esc(p.profile_status)}</span></div>${nav()}
  <section class="ua-professional-card"><div class="ua-professional-avatar">${esc(initials(p.display_name))}</div><div><h2>${esc(p.display_name)}</h2><strong>${esc(p.headline||p.profession_category)}</strong><p>${esc(p.bio||'Lengkapi deskripsi profesional Anda.')}</p><small>${esc(p.service_city||'Area layanan belum diatur')}${p.service_province?', '+esc(p.service_province):''}</small></div></section>
  <section class="ua-panel ua-professional-panel"><div class="ua-section-title"><div><span class="ua-eyebrow">KEAHLIAN & LAYANAN</span><h2>${esc(p.profession_category)}</h2></div>${p.profile_status==='active'?'<span class="ua-review-pill">Profil aktif · hubungi dukungan untuk perubahan</span>':'<a class="ua-outline" href="#/account/professional-create">Edit profil</a>'}</div>
  <div class="ua-skill-list">${(p.skills||[]).map(x=>'<span>'+esc(x)+'</span>').join('')||'<span>Belum ada keahlian</span>'}</div><div class="ua-professional-meta"><span>Pengalaman: ${Number(p.experience_years||0)} tahun</span><span>Mulai dari: ${p.price_from_minor?rupiah(p.price_from_minor):'Belum ditentukan'}</span></div>
- <p class="ua-muted">Status profil: <b>${esc(p.profile_status)}</b>. Profil draft belum ditampilkan untuk publik.</p></section>
+ <p class="ua-muted">${p.profile_status==='submitted'?'Profil sudah dikirim dan sedang menunggu pemeriksaan tim PLUITS.':p.profile_status==='active'?'Profil telah disetujui dan dapat ditampilkan sesuai pengaturan visibilitas.':p.profile_status==='rejected'?'Profil perlu diperbaiki sebelum diajukan kembali.':'Profil belum dikirim untuk pemeriksaan dan belum ditampilkan kepada publik.'}</p></section>
  <section class="ua-panel ua-professional-panel"><div class="ua-section-title"><div><span class="ua-eyebrow">PORTOFOLIO</span><h2>Karya dan pengalaman</h2></div></div><div class="ua-empty"><strong>Portofolio menyusul</strong><p>Database portofolio sudah disiapkan. Upload karya dan publikasi akan diaktifkan pada tahap berikutnya.</p></div></section>`;
 }
 export function professionalFormPage(ctx,profile){
@@ -46,8 +46,8 @@ export function professionalFormPage(ctx,profile){
  <label>Kota layanan<input name="service_city" value="${esc(p.service_city||'')}"></label><label>Provinsi layanan<input name="service_province" value="${esc(p.service_province||'')}"></label>
  <label>Radius layanan (km)<input name="service_radius_km" type="number" min="0" max="1000" value="${p.service_radius_km??''}"></label>
  <label>Visibilitas<select name="visibility"><option value="public" ${p.visibility!=='unlisted'?'selected':''}>Publik setelah diaktifkan</option><option value="unlisted" ${p.visibility==='unlisted'?'selected':''}>Tidak tercantum di pencarian</option></select></label>
- </div><p class="ua-professional-note">Menyimpan profil tidak otomatis memberi tanda terverifikasi atau mengaktifkan penerimaan pesanan. Profil baru disimpan sebagai draft.</p>
- <div class="ua-form-actions"><button class="ua-primary" type="submit">${p.id?'Simpan perubahan':'Simpan profil profesional'}</button><span id="ua-professional-note" class="ua-form-note"></span></div></form>`;
+ </div><p class="ua-professional-note">Saat disimpan, profil akan langsung dikirim ke antrean pemeriksaan PLUITS. Profil baru tampil setelah disetujui oleh tim. Pengiriman tidak berarti otomatis terverifikasi.</p>
+ <div class="ua-form-actions"><button class="ua-primary" type="submit">${p.id?'Simpan & ajukan pemeriksaan':'Buat & ajukan profil'}</button><span id="ua-professional-note" class="ua-form-note"></span></div></form>`;
 }
 export async function accountSettingsPage(db,user){
  const {data,error}=await db.from('account_content_preferences').select('*').eq('user_id',user.id).maybeSingle();if(error)throw error;
@@ -84,9 +84,12 @@ export function bindAccountContext({db,user,ctx,profile,refresh}){
   const payload={user_id:user.id,username,display_name:String(f.get('display_name')).trim(),profession_category:String(f.get('profession_category')).trim(),headline:String(f.get('headline')||'').trim(),bio:String(f.get('bio')||'').trim(),skills:String(f.get('skills')||'').split(',').map(x=>x.trim()).filter(Boolean).slice(0,30),experience_years:Number(f.get('experience_years')||0),service_city:String(f.get('service_city')||'').trim()||null,service_province:String(f.get('service_province')||'').trim()||null,service_radius_km:f.get('service_radius_km')?Number(f.get('service_radius_km')):null,price_from_minor:f.get('price_from')?Number(f.get('price_from')):null,visibility:String(f.get('visibility')||'public'),profile_status:'draft'};
   btn.disabled=true;note.textContent='Menyimpan profil…';
   const r=ctx.professional?await db.from('professional_profiles').update(payload).eq('id',ctx.professional.id).select().single():await db.from('professional_profiles').insert(payload).select().single();
-  btn.disabled=false;if(r.error){note.textContent=r.error.code==='23505'?'Username profesional sudah digunakan.':r.error.message;return;}
-  await db.from('account_context_preferences').upsert({user_id:user.id,active_context:'professional',active_store_id:null});
-  note.textContent='Profil tersimpan sebagai draft.';location.hash='/account/professional';
+  if(r.error){btn.disabled=false;note.textContent=r.error.code==='23505'?'Username profesional sudah digunakan.':r.error.message;return;}
+  const submitted=await db.rpc('submit_professional_profile',{p_profile_id:r.data.id});
+  if(submitted.error){btn.disabled=false;note.textContent='Profil tersimpan, tetapi belum masuk antrean pemeriksaan: '+submitted.error.message;return;}
+  const pref=await db.from('account_context_preferences').upsert({user_id:user.id,active_context:'professional',active_store_id:null});
+  btn.disabled=false;if(pref.error){note.textContent='Profil sudah diajukan untuk pemeriksaan. Konteks akun belum berhasil diperbarui: '+pref.error.message;return;}
+  note.textContent='Profil berhasil dikirim. Status: menunggu persetujuan PLUITS.';location.hash='/account/professional';
  });
  const settings=document.querySelector('#ua-content-settings-form');
  settings?.addEventListener('submit',async e=>{
