@@ -199,5 +199,5 @@ Use separate statuses: SPECIFIED, IMPLEMENTED, MIGRATION-REPLAYED, SECURITY-TEST
 - Do not rename, delete, rewrite, or repair historical migration files merely to make local reset pass. Their production history is already recorded.
 - `supabase/migration-order-overrides.json` records only the filename-to-production-version/name differences. `scripts/prepare-local-migrations.mjs` creates a disposable ignored workspace at `.supabase-ci/`, copies the original SQL files unchanged, and gives those copies the version names/order recorded in the live migration history.
 - CI runs Supabase only from this disposable workspace. No production project ref, credentials, live data, or hosted branch is used. The source migration files and production database remain unchanged.
-- The preparer currently asserts 81 migrations. When a new migration is added, review production version assignment and update the manifest/count deliberately before the next replay.
+- The preparer currently asserts 82 migrations (81 historical migrations plus the forward D-005 seller eligibility migration). When a new migration is added, review production version assignment and update the manifest/count deliberately before the next replay.
 - This solves ordering reproducibility only; a successful replay still needs to be followed by schema/RLS/role-context tests and frontend npm test/build.
