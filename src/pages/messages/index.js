@@ -87,11 +87,11 @@ async function renderPeopleStrip(people, withSignedImages=false) {
   const ownItem='<a class="pl-msg-person pl-msg-person-self" href="#/account/profile" aria-label="Buka profil saya">'+contactAvatar(own,ownUrl)+'<small>Anda</small></a>';
   const items=await Promise.all((people||[]).map(async person=>{
     const url=withSignedImages?await signedAvatar(person.avatar_path):'';
-    return '<button type="button" class="pl-msg-person" data-start-chat="'+person.id+'" aria-label="Mulai pesan dengan '+esc(person.display_name||person.username)+'">'+contactAvatar(person,url)+'<small>'+esc(person.display_name||person.username||'Kontak')+'</small></button>';
+    return '<a class="pl-msg-person" href="#/@'+encodeURIComponent(person.username||'')+'" aria-label="Buka profil '+esc(person.display_name||person.username)+'">'+contactAvatar(person,url)+'<small>'+esc(person.display_name||person.username||'Kontak')+'</small></a>';
   }));
   strip.innerHTML=ownItem+items.join('')||ownItem;
-  bindStartChat(strip);
 }
+
 function renderContactList(box,people,withSignedImages=false) {
   if(!box)return;
   box.innerHTML=(people||[]).map(person=>'<button type="button" class="pl-msg-contact" data-start-chat="'+person.id+'">'+contactAvatar(person,withSignedImages?person.avatar_url||'':'')+'<span><b>'+esc(person.display_name||person.username)+'</b><small>@'+esc(person.username)+'</small></span><span class="pl-msg-contact-action">Pesan</span></button>').join('')||'<p class="pl-msg-empty">Belum ada kontak yang dapat ditampilkan. Cari username untuk memulai.</p>';
