@@ -73,7 +73,7 @@ function storeOnboarding(user,isAdditional=false){
  document.querySelector('#pluits-store-form').addEventListener('submit',async e=>{
   e.preventDefault();const f=new FormData(e.currentTarget),btn=e.currentTarget.querySelector('button');btn.disabled=true;btn.textContent='Membuat toko…';
   try{
-   const {data,error}=await supabase.rpc('create_store',{p_name:f.get('name'),p_username:f.get('username').toLowerCase(),p_business_type:f.get('business_type'),p_phone:f.get('phone'),p_city:f.get('city'),p_area:f.get('area')||null,p_legal_name:f.get('legal_name')||null,p_email:f.get('email')||null,p_full_address:f.get('address'),p_legal_form:f.get('legal_form')||null});
+   const {data,error}=await supabase.rpc('create_store',{p_name:f.get('name'),p_username:f.get('username').toLowerCase(),p_business_type:f.get('business_type'),p_phone:f.get('phone'),p_city:f.get('city'),p_area:f.get('area')||null,p_legal_name:f.get('legal_name')||null,p_email:f.get('email')||null,p_full_address:f.get('address')});
    if(error)throw error;await renderSeller(data);
   }catch(err){notice(err.message||'Toko belum dapat dibuat.','error');}
   finally{btn.disabled=false;btn.innerHTML='Buat toko dan buka dashboard <span>→</span>';}
