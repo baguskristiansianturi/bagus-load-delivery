@@ -190,3 +190,14 @@ Rules:
 
 ## 8. Acceptance vocabulary
 Use separate statuses: SPECIFIED, IMPLEMENTED, MIGRATION-REPLAYED, SECURITY-TESTED, DEPLOYED, FOUNDER-UAT, ACCEPTED, BLOCKED, NOT TESTED, NOT VERIFIED. A passing migration replay does not prove RLS correctness. A passing CI workflow does not prove Android UAT or production readiness.
+
+
+## 9. Production migration-history alignment discovered during local replay
+- The first native filename-ordered replay failed at `20261108041100_pluits_directory_fk_indexes.sql` because the GeoDirectory core tables had not yet been created in that filename order.
+- A read-only query of the live production migration history showed all 81 tracked SQL files have corresponding production migration entries, but multiple filenames in the repository have different version prefixes/order from the versions recorded in production. For example, production records GeoDirectory core as version `20261108040323`, while the repository file is named `20261108090000_pluits_geodirectory_core.sql`.
+- Production history confirms GeoDirectory core and its dependent migrations were recorded before the directory index and claim-revocation migrations. The repository filename order did not preserve that sequence.
+- Do not rename, delete, rewrite, or repair historical migration files merely to make local reset pass. Their production history is already recorded.
+- `supabase/migration-order-overrides.json` records only the filename-to-production-version/name differences. `scripts/prepare-local-migrations.mjs` creates a disposable ignored workspace at `.supabase-ci/`, copies the original SQL files unchanged, and gives those copies the version names/order recorded in the live migration history.
+- CI runs Supabase only from this disposable workspace. No production project ref, credentials, live data, or hosted branch is used. The source migration files and production database remain unchanged.
+- The preparer currently asserts 81 migrations. When a new migration is added, review production version assignment and update the manifest/count deliberately before the next replay.
+- This solves ordering reproducibility only; a successful replay still needs to be followed by schema/RLS/role-context tests and frontend npm test/build.
