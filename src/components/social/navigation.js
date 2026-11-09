@@ -1,9 +1,7 @@
 import { socialIcon } from '../common/social-icons.js';
 
 export function renderSocialHeader({ active = 'explore', profileView = false, user, profile, userAvatar = '', notificationCount = 0, publicHome = false } = {}) {
-  const profileHref = user
-    ? '#/@' + encodeURIComponent(profile?.username || '')
-    : '#/account/profile';
+  const profileHref = user ? '#/account/profile' : '#/account/login';
 
   if (publicHome) {
     return `
@@ -37,23 +35,21 @@ export function renderSocialHeader({ active = 'explore', profileView = false, us
         <a class="${profileView ? 'active' : ''}" href="#/account/profile">Profil</a>
       </nav>
       <div class='pl-social-mobile-actions'>
-        <a href='#/messages' aria-label='Pesan'>${socialIcon('message', { size: 21 })}</a>
-        <a class='pl-mobile-notice' href='#/account/activity' aria-label='Aktivitas'>${socialIcon('bell', { size: 21 })}${notificationCount ? '<i class="pl-nav-unread">'+(notificationCount>99?'99+':notificationCount)+'</i>' : ''}</a>
+        <a href='#/account/followers' aria-label='Kontak dan koneksi'>${socialIcon('users', { size: 21 })}</a>
+        <a class='pl-mobile-notice' href='#/account/activity' aria-label='Notifikasi'>${socialIcon('bell', { size: 21 })}${notificationCount ? '<i class="pl-nav-unread">'+(notificationCount>99?'99+':notificationCount)+'</i>' : ''}</a>
+        <a href='#/account/settings' aria-label='Pengaturan'>${socialIcon('more', { size: 21 })}</a>
       </div>
-      <a class="ua-header-profile" href="${profileHref}" aria-label="Buka profil saya">${userAvatar || socialIcon('user', { size: 22 })}</a>
-      <a class="ua-header-create" href="#/account/compose" aria-label="Buat postingan">＋</a>
+      <a class="ua-header-profile" href="${user ? '#/account/story' : '#/account/login'}" aria-label="Tambahkan Story">${userAvatar || socialIcon('user', { size: 22 })}</a>
     </header>`;
 }
 
 export function renderSocialMobileNav({ active = 'explore', profileView = false, user, profile, userAvatar = '', publicHome = false } = {}) {
-  const profileHref = user
-    ? '#/@' + encodeURIComponent(profile?.username || '')
-    : '#/account/login';
+  const profileHref = user ? '#/account/profile' : '#/account/login';
   const activeKey = active === 'home' || active === 'explore' ? 'home' : active;
   const items = [
     { key: 'home', href: publicHome ? '#/' : '#/account/explore', label: 'Beranda', icon: 'home' },
     { key: 'discover', href: '#/search', label: 'Jelajah', icon: 'compass' },
-    { key: 'create', href: '#/account/compose', label: 'Buat', icon: 'plus' },
+    { key: 'create', href: '#/account/create', label: 'Buat', icon: 'plus' },
     { key: 'reels', href: '#/account/reels', label: 'Reels', icon: 'reels' },
   ];
   return `
