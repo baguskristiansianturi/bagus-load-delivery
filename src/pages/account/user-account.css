@@ -1106,3 +1106,182 @@
   .ua-social-home .ua-story-ring { width: 60px; height: 60px; }
   .ua-social-app .pl-social-mobile-nav { padding-inline: 5px; }
 }
+
+
+/* PROFILE HERO + FOUR-TAB SYSTEM — compact, aligned and responsive */
+.ua-profile-main .ua-profile-card {
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+.ua-profile-main .ua-profile-tabs {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: stretch;
+  gap: 0;
+  width: 100%;
+  margin: 0 0 14px;
+  padding: 0;
+  border-bottom: 1px solid #e5e9ee;
+  background: #fff;
+}
+.ua-profile-main .ua-profile-tabs button {
+  display: flex;
+  min-width: 0;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 11px 5px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  color: #738092;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 650;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.ua-profile-main .ua-profile-tabs button.active {
+  border-bottom-color: #172b45;
+  color: #172b45;
+}
+.ua-profile-main .ua-profile-tabs button span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ua-profile-main .ua-profile-tab-empty {
+  display: flex;
+  min-height: 190px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 24px 18px;
+  text-align: center;
+  background: #fff;
+}
+.ua-profile-main .ua-profile-tab-empty .ua-outline {
+  margin-top: 5px;
+  text-decoration: none;
+}
+@media (max-width: 760px) {
+  .ua-profile-main {
+    width: 100%;
+    max-width: none;
+    margin: 0 0 24px !important;
+    padding: 0 !important;
+  }
+  .ua-profile-main .ua-profile-card {
+    width: 100%;
+    margin: 0 0 10px !important;
+    border: 0;
+    border-bottom: 1px solid #e8edf1;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .ua-profile-main .ua-cover {
+    height: 142px !important;
+    min-height: 142px;
+    border-radius: 0 !important;
+  }
+  .ua-profile-main .ua-profile-content {
+    display: grid !important;
+    grid-template-columns: 78px minmax(0, 1fr) !important;
+    align-items: start !important;
+    gap: 0 12px !important;
+    min-height: 0 !important;
+    padding: 0 15px 15px !important;
+  }
+  .ua-profile-main .ua-profile-avatar {
+    grid-column: 1;
+    grid-row: 1;
+    margin: -32px 0 0 !important;
+    z-index: 1;
+  }
+  .ua-profile-main .ua-avatar.large {
+    display: block;
+    width: 76px !important;
+    height: 76px !important;
+    border: 3px solid #fff;
+    box-shadow: 0 1px 5px rgba(20,35,50,.12);
+  }
+  .ua-profile-main .ua-profile-identity {
+    grid-column: 2;
+    grid-row: 1;
+    min-width: 0;
+    padding: 8px 0 0 !important;
+  }
+  .ua-profile-main .ua-profile-name-row {
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 5px !important;
+  }
+  .ua-profile-main .ua-profile-name-row h2 {
+    font-size: 17px !important;
+    line-height: 1.25;
+  }
+  .ua-profile-main .ua-profile-identity > p {
+    margin: 5px 0 0 !important;
+    font-size: 11px;
+    line-height: 1.45;
+  }
+  .ua-profile-main .ua-profile-identity > .ua-location {
+    margin-top: 5px;
+    font-size: 10px;
+  }
+  .ua-profile-main .ua-profile-stats {
+    display: flex !important;
+    justify-content: flex-start;
+    gap: 20px !important;
+    margin-top: 12px !important;
+    flex-wrap: nowrap !important;
+  }
+  .ua-profile-main .ua-profile-stats a {
+    display: grid !important;
+    gap: 2px !important;
+    text-align: left !important;
+  }
+  .ua-profile-main .ua-profile-stats strong { font-size: 13px !important; }
+  .ua-profile-main .ua-profile-stats span { font-size: 10px !important; }
+  .ua-profile-main .ua-profile-tabs {
+    position: sticky;
+    top: 0;
+    z-index: 35;
+    width: 100%;
+    margin: 0 0 10px !important;
+    padding: 0 5px;
+    border-top: 1px solid #edf0f2;
+    border-bottom: 1px solid #e5e9ee;
+  }
+  .ua-profile-main .ua-profile-tabs button {
+    min-height: 46px;
+    padding: 10px 2px !important;
+    gap: 5px;
+    font-size: 10px !important;
+  }
+  .ua-profile-main .ua-profile-tab-content {
+    padding: 8px 0 0 !important;
+  }
+  .ua-profile-main .ua-profile-tab-content > .ua-section-title {
+    padding: 0 14px !important;
+    margin-bottom: 12px;
+  }
+  .ua-profile-main .ua-post-grid { gap: 2px !important; }
+  .ua-profile-main .ua-profile-tab-empty {
+    min-height: 180px;
+    padding: 22px 16px;
+  }
+}
+@media (max-width: 360px) {
+  .ua-profile-main .ua-cover { height: 128px !important; min-height: 128px; }
+  .ua-profile-main .ua-profile-content {
+    grid-template-columns: 68px minmax(0, 1fr) !important;
+    gap: 0 9px !important;
+    padding-inline: 11px !important;
+  }
+  .ua-profile-main .ua-avatar.large { width: 66px !important; height: 66px !important; }
+  .ua-profile-main .ua-profile-stats { gap: 13px !important; }
+  .ua-profile-main .ua-profile-tabs button { font-size: 9px !important; }
+}
