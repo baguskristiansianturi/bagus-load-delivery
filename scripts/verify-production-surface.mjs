@@ -91,7 +91,7 @@ assert.ok(postActions.includes('data-action="edit"'), 'Owners must have a functi
 assert.ok(postActions.includes('data-action="delete-post"'), 'Owners must have a delete-post action.');
 assert.ok(postActions.includes('data-save-post'), 'Post editor must expose a save action.');
 assert.match(postActions, /dblclick/, 'Photo posts must support double-tap/double-click like.');
-assert.match(postActions, /toggleLike\(true\)/, 'Double-tap must call the like action without toggling an existing like off.');
+assert.match(postActions, /toggleLike\(false\)/, 'Double-tap must toggle like state so a second double-tap can unlike.');
 
 for (const path of [
   'MASTER/DECISION-LOG.md',
