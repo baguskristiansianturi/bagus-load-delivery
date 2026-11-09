@@ -1,2 +1,88 @@
 .ds-page{min-height:100vh;background:#fff;color:#16181a;padding-bottom:66px}.ds-top{height:58px;display:flex;align-items:center;gap:10px;padding:0 12px;position:sticky;top:0;z-index:30;background:#fff;border-bottom:1px solid #eee}.ds-top>a{flex:0 0 25px;text-align:center;color:#17191b;text-decoration:none;font-size:25px;line-height:1}.ds-search{height:38px;flex:1;max-width:80%;margin:auto;display:flex;align-items:center;gap:7px;padding:0 10px;border:1px solid #e5e7e9;border-radius:11px;background:#f5f6f7}.ds-search span{font-size:20px;color:#747b81}.ds-search input{width:100%;min-width:0;border:0;outline:0;background:transparent;font-size:13px}.ds-search button{border:0;background:transparent;color:#252a2e;font-size:20px;padding:0}.ds-main{width:100%;max-width:900px;margin:0 auto}.ds-chips{height:49px;display:flex;align-items:center;gap:8px;overflow-x:auto;scrollbar-width:none;padding:0 10px;border-bottom:1px solid #f0f0f0}.ds-chips::-webkit-scrollbar{display:none}.ds-chips button{height:31px;flex:0 0 auto;padding:0 13px;border:1px solid #e7e8e9;border-radius:18px;background:#fff;color:#34383b;font-size:11px;white-space:nowrap}.ds-chips button.selected{background:#17191b;color:#fff;border-color:#17191b}.ds-feed{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2px}.ds-post{position:relative;display:block;aspect-ratio:1/1;min-width:0;overflow:hidden;background:#f0f1f2}.ds-post img,.ds-post video{display:block;width:100%;height:100%;object-fit:cover}.ds-video-mark{position:absolute;top:7px;right:8px;color:#fff;font-size:13px;text-shadow:0 1px 4px #222}.ds-loading{padding:25px 12px;text-align:center;color:#92979b;font-size:12px}.ds-nav{position:fixed;z-index:50;bottom:0;left:0;right:0;height:62px;display:grid;grid-template-columns:repeat(5,1fr);background:rgba(255,255,255,.98);border-top:1px solid #e9eaeb;backdrop-filter:blur(12px)}.ds-nav a{display:flex;align-items:center;justify-content:center;text-decoration:none;color:#333}.ds-nav a.active{color:#000}.ds-nav i{font-style:normal;font-size:24px;line-height:1}.ds-nav a:nth-child(3) i{font-size:29px}@media(min-width:700px){.ds-feed{grid-template-columns:repeat(4,minmax(0,1fr));gap:3px}.ds-post{aspect-ratio:1/1}}
 .ds-multi-mark{position:absolute;top:7px;right:8px;color:#fff;font-size:17px;line-height:1;text-shadow:0 1px 4px #222}.ds-post.is-video .ds-video-mark{right:auto;left:8px}.ds-post video{background:#111}
+
+
+/* PLUITS DISCOVERY — mobile-first spacing and stable media grid */
+.ds-page {
+  min-height: 100dvh;
+  padding-bottom: calc(70px + env(safe-area-inset-bottom));
+  background: #fff;
+  color: #202a32;
+}
+.ds-top {
+  height: 64px;
+  min-height: 64px;
+  gap: 12px;
+  padding: 0 16px;
+  border-bottom: 1px solid #edf0f2;
+}
+.ds-top > a {
+  display: grid;
+  flex: 0 0 30px;
+  width: 30px;
+  height: 38px;
+  place-items: center;
+  font-size: 24px;
+}
+.ds-search {
+  height: 42px;
+  max-width: none;
+  gap: 9px;
+  padding: 0 12px;
+  border-color: #e5e9ec;
+  border-radius: 13px;
+  background: #f6f7f8;
+}
+.ds-search input { font-size: 13px; }
+.ds-search button { display: grid; width: 30px; height: 34px; place-items: center; }
+.ds-main { max-width: 1120px; }
+.ds-chips {
+  height: 66px;
+  gap: 10px;
+  padding: 0 18px;
+  border-bottom: 1px solid #edf0f2;
+}
+.ds-chips button {
+  height: 42px;
+  padding: 0 19px;
+  border-width: 1px;
+  border-radius: 22px;
+  font-size: 13px;
+  font-weight: 550;
+  color: #414b53;
+}
+.ds-chips button.selected {
+  background: #202a32;
+  border-color: #202a32;
+  color: #fff;
+}
+.ds-feed-wrap { min-width: 0; }
+.ds-feed {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 3px;
+  align-items: start;
+}
+.ds-post {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: #f0f2f4;
+}
+.ds-post img,.ds-post video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+.ds-loading {
+  min-height: 76px;
+  padding: 24px 16px;
+  font-size: 12px;
+}
+@media (min-width: 700px) {
+  .ds-feed { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 5px; }
+}
+@media (max-width: 380px) {
+  .ds-top { padding-inline: 11px; gap: 8px; }
+  .ds-chips { padding-inline: 12px; gap: 8px; }
+  .ds-chips button { height: 39px; padding-inline: 15px; font-size: 12px; }
+}
