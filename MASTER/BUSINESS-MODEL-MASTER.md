@@ -901,4 +901,16 @@ Spesifikasi lengkap, user journey, dashboard, status, URL, acceptance criteria d
 4. Publikasikan kebijakan setelah sinkron dengan implementasi dan legal review.
 5. Kembangkan Top 10, fingerprint video, AI moderation, watermark, music licensing, dan account lifecycle sesuai prioritas.
 
+### 33.12 Profil terpadu, privasi tampilan, dan satu pusat pengaturan
+- Profil personal harus memakai satu identitas dan satu struktur halaman untuk pemilik maupun pengunjung. Perbedaan hanya pada izin: pemilik memperoleh kontrol pengelolaan, sedangkan pengunjung hanya melihat bagian yang diizinkan.
+- Struktur konten profil: **Post, Reels, Trip, dan Ditandai**. Post/Reels/Trip/penandaan tidak boleh digabung menjadi satu grid tanpa konteks. Wishlist dan pintasan akun lain bukan informasi publik secara default.
+- Pemilik harus dapat memilih bagian profil dan item mana yang ditampilkan kepada publik, teman/pengikut, atau hanya dirinya sendiri. Setiap Post juga mempunyai audience sendiri; default audience bukan pengganti kontrol per konten.
+- Konten Draft selalu privat dan hanya dapat dikelola pemilik. Draft tidak pernah menjadi tab publik.
+- Semua pengaturan akun, privasi, profil, notifikasi, dan preferensi harus mempunyai **satu pintu masuk utama**, yaitu menu titik tiga/Pusat Pengaturan. Hindari tautan pengaturan duplikat di halaman lain; subhalaman pengaturan harus menyediakan jalan kembali ke Pusat Pengaturan.
+- Foto profil pada header adalah shortcut untuk menambahkan Story, bukan membuka halaman profil. Navigasi Profil tetap membuka profil kanonis milik pengguna.
+- Tombol Buat pada navigasi bawah membuka satu pemilih format: Story, Post, Reel, dan Live. Live hanya dapat diaktifkan setelah layanan streaming, moderasi real-time, dan kesiapan operasional tersedia; jangan menampilkan fungsi Live palsu.
+- Header menempatkan Notifikasi dan Kontak/Koneksi sebagai akses cepat. Wishlist, kontak, dan ikon shortcut lain harus mengikuti pengaturan visibilitas dan tidak otomatis dipublikasikan.
+- **Kontrak backend berikutnya:** simpan preferensi visibilitas tiap bagian/shortcut dan audience per item; tegakkan pada query profil publik, RPC/API, Storage signed URL, dan RLS. UI yang menyembunyikan elemen saja tidak cukup sebagai perlindungan privasi.
+- Perubahan ini adalah keputusan UX/produk. Sampai backend contract, RLS, dan negative tests tersedia, jangan mengklaim semua pengaturan visibilitas profil sudah aman atau aktif. Pengujian Android dua akun tetap menjadi gate penerimaan.
+
 **Batas status:** bagian ini menetapkan arah produk, bukan klaim bahwa deteksi AI, copyright takedown, watermark, screenshot protection, Top 10, online presence, friend-only inbox, atau penghapusan akun otomatis telah tersedia.
