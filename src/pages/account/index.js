@@ -744,8 +744,8 @@ function bindCompose(){
     mediaRecord.duration_ms=duration;
     progress.hidden=false;progress.querySelector('span').style.width=Math.round(65*uploaded.length/files.length)+'%';
    }
-   const tags=[...new Set((caption.match(/#[\\p{L}\\p{N}_]+/gu)||[]).map(tag=>tag.slice(1).toLowerCase()))].slice(0,30);
-   const taggedNames=[...new Set(String(data.get('tagged_users')||'').split(/[\\s,]+/).map(name=>name.trim().replace(/^@/, '').toLowerCase()).filter(Boolean))].slice(0,10);
+   const tags=[...new Set((caption.match(/#[\p{L}\p{N}_]+/gu)||[]).map(tag=>tag.slice(1).toLowerCase()))].slice(0,30);
+   const taggedNames=[...new Set(String(data.get('tagged_users')||'').split(/[\s,]+/).map(name=>name.trim().replace(/^@/, '').toLowerCase()).filter(Boolean))].slice(0,10);
    let taggedUsers=[];
    if(taggedNames.length){const found=await supabase.from('user_profiles').select('id,username').in('username',taggedNames);if(found.error)throw found.error;taggedUsers=found.data||[];const missing=taggedNames.filter(name=>!taggedUsers.some(person=>person.username===name));if(missing.length)throw new Error('Username tidak ditemukan: '+missing.map(name=>'@'+name).join(', ')+'. Periksa kembali penandaan.');}
    const context={profile_context:accountContext.active,professional_profile_id:accountContext.active==='professional'?accountContext.professional?.id||null:null,business_store_id:accountContext.active==='business'?(accountContext.prefs?.active_store_id||accountContext.stores[0]?.id||null):null};
