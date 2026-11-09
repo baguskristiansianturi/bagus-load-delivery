@@ -208,7 +208,7 @@ async function loadConversations() {
   if(!ids.length){list.innerHTML='<div class="pl-msg-empty">Belum ada percakapan. Pilih kontak atau cari username untuk memulai.</div>';conversationCache=[];return;}
   const [convs,memberRows,msgRows]=await Promise.all([
     db.from('user_conversations').select('id,title,updated_at').in('id',ids).order('updated_at',{ascending:false}),
-    db.from('user_conversation_members').select('conversation_id,user_id').in('conversation_id',ids),
+    db.from('user_conversation_members').select('conversation_id,user_id,last_read_at').in('conversation_id',ids),
     db.from('user_messages').select('conversation_id,body,sender_id,created_at').in('conversation_id',ids).order('created_at',{ascending:false}).limit(200)
   ]);
   if(convs.error||memberRows.error||msgRows.error){
@@ -223,12 +223,15 @@ async function loadConversations() {
   const latest=new Map(); for(const message of msgRows.data||[]) if(!latest.has(message.conversation_id))latest.set(message.conversation_id,message);
   conversationCache=(convs.data||[]).map(conversation=>{
     const other=(memberRows.data||[]).find(row=>row.conversation_id===conversation.id&&row.user_id!==currentUser.id);
-    return {...conversation,other:pmap.get(other?.user_id)||{display_name:'Akun Pluits',username:'akun'},last:latest.get(conversation.id)};
+    const self=(memberRows.data||[]).find(row=>row.conversation_id===conversation.id&&row.user_id===currentUser.id);
+    const last=latest.get(conversation.id);
+    const unread=Boolean(last&&last.sender_id!==currentUser.id&&(!self?.last_read_at||new Date(last.created_at)>new Date(self.last_read_at)));
+    return {...conversation,other:pmap.get(other?.user_id)||{display_name:'Akun Pluits',username:'akun'},last,unread};
   });
   try { localStorage.setItem(threadsKey(),JSON.stringify(conversationCache.map(item=>({id:item.id,updated_at:item.updated_at,other:item.other})))); } catch {}
   list.innerHTML=conversationCache.length?conversationCache.map(conversation=>{
     const pending=queueFor(conversation.id).length;
-    return '<button class="pl-msg-thread '+(currentConversation===conversation.id?'active':'')+'" data-open-chat="'+conversation.id+'"><b>'+esc(conversation.other.display_name||conversation.other.username)+'</b><small>@'+esc(conversation.other.username)+'</small><p>'+esc(conversation.last?.body||'Belum ada pesan')+(pending?' · '+pending+' menunggu':'')+'</p></button>';
+    return '<button class="pl-msg-thread '+(currentConversation===conversation.id?'active':'')+(conversation.unread?' is-unread':'')+'" data-open-chat="'+conversation.id+'"><span class="pl-msg-thread-head"><b>'+esc(conversation.other.display_name||conversation.other.username)+'</b>'+(conversation.unread?'<i aria-label="Pesan belum dibaca"></i>':'')+'</span><small>@'+esc(conversation.other.username)+'</small><p>'+esc(conversation.last?.body||'Belum ada pesan')+(pending?' · '+pending+' menunggu':'')+'</p></button>';
   }).join(''):'<div class="pl-msg-empty">Belum ada percakapan. Pilih kontak atau cari username untuk memulai.</div>';
   list.querySelectorAll('[data-open-chat]').forEach(button=>button.onclick=()=>openConversation(button.dataset.openChat));
 }
