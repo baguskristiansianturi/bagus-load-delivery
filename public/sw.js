@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pluits-shell-v2';
+const CACHE_NAME = 'pluits-shell-v3';
 const APP_SHELL = [
   '/pluits/',
   '/pluits/index.html',
@@ -29,7 +29,7 @@ self.addEventListener('fetch', (event) => {
   const request = event.request;
   const url = new URL(request.url);
   if (request.method !== 'GET' || url.origin !== self.location.origin) return;
-  if (url.pathname.startsWith('/pluits/') && /\/rest\/v1\/|\/auth\/v1\/|\/storage\/v1\//.test(url.pathname)) return;
+  if (url.pathname.startsWith('/pluits/') && /\\/rest\\/v1\\/|\\/auth\\/v1\\/|\\/storage\\/v1\\//.test(url.pathname)) return;
 
   if (request.mode === 'navigate') {
     event.respondWith(
@@ -49,13 +49,13 @@ self.addEventListener('fetch', (event) => {
 
   if (url.pathname.startsWith('/pluits/assets/')) {
     event.respondWith(
-      caches.match(request).then((cached) => cached || fetch(request).then((response) => {
+      fetch(request).then((response) => {
         if (response.ok) {
           const copy = response.clone();
           caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
         }
         return response;
-      }))
+      }).catch(() => caches.match(request))
     );
   }
 });
