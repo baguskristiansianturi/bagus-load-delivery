@@ -211,7 +211,7 @@ async function profilePage(preview=false){
   </div>
  </section>
  <nav class="ua-profile-tabs" role="tablist" aria-label="Konten profil">
-  <button class="active" type="button" role="tab" aria-selected="true" data-profile-tab="posts">▦ <span>Postingan</span></button><button type="button" role="tab" aria-selected="false" data-profile-tab="reels">▣ <span>Reels</span></button><button type="button" role="tab" aria-selected="false" data-profile-tab="tagged">♙ <span>Ditandai</span></button>
+  <button class="active" type="button" role="tab" aria-selected="true" data-profile-tab="posts">▦ <span>Post/Feed</span></button><button type="button" role="tab" aria-selected="false" data-profile-tab="reels">▣ <span>Reels</span></button><button type="button" role="tab" aria-selected="false" data-profile-tab="trip">⌖ <span>Trip</span></button><button type="button" role="tab" aria-selected="false" data-profile-tab="tagged">♙ <span>Ditandai</span></button>
  </nav>
  <section id="ua-profile-tab-content" class="ua-profile-tab-content" role="tabpanel">
   <div class="ua-section-title"><strong>Postingan</strong><a class="ua-outline" href="#/account/compose">＋ Buat</a></div>
@@ -228,6 +228,7 @@ function bindProfileTabs(){
  const views={
   posts:postsMarkup,
   reels:reelsMarkup,
+  trip:'<div class="ua-profile-tab-empty"><span>⌖</span><strong>Perjalanan Anda</strong><p>Trip yang Anda buat, ikuti, atau bagikan akan tampil di sini.</p><a class="ua-outline" href="#/trip">Jelajahi Trip</a></div>',
   tagged:'<div class="ua-profile-tab-empty"><span>♙</span><strong>Foto dan video bersama Anda</strong><p>Konten yang menandai akun Anda akan tampil di sini.</p></div>'
  };
  nav.addEventListener('click',e=>{
