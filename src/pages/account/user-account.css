@@ -1646,3 +1646,27 @@
 }
 .ua-profile-main .ua-post-grid::after{content:none!important;display:none!important}
 .ua-profile-main .ua-post-thumb{background:#f2f4f6}
+
+/* Social-first profile baseline: clean identity-led hero without a mandatory cover. */
+.ua-profile-main .ua-cover{display:none!important}
+.ua-profile-main .ua-profile-content{grid-template-columns:112px minmax(0,1fr)!important;align-items:start!important;gap:20px!important;padding:26px 5.5% 22px!important}
+.ua-profile-main .ua-profile-avatar{margin:0!important;align-self:start!important}
+.ua-profile-main .ua-avatar.large{width:104px!important;height:104px!important}
+.ua-profile-main .ua-profile-identity{padding:0!important}
+@media(max-width:760px){
+ .ua-profile-main .ua-profile-content{grid-template-columns:76px minmax(0,1fr)!important;gap:13px!important;padding:20px 14px 17px!important}
+ .ua-profile-main .ua-profile-avatar{margin:0!important}
+ .ua-profile-main .ua-avatar.large{width:72px!important;height:72px!important}
+ .ua-profile-main .ua-profile-identity{padding:0!important}
+}
+.ua-compose-actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:10px}
+.ua-compose-actions button{min-width:120px}
+.ua-drafts-list{display:grid;gap:10px;margin:14px 0}
+.ua-draft-card{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:16px;border:1px solid #e4e9ee;border-radius:12px;background:#fff}
+.ua-draft-copy{display:grid;gap:6px;min-width:0}
+.ua-draft-copy strong{font-size:13px;overflow-wrap:anywhere}
+.ua-draft-copy small,.ua-drafts-note{font-size:11px;line-height:1.55;color:#758195}
+.ua-draft-actions{display:flex;align-items:center;gap:7px;flex:0 0 auto}
+.ua-draft-actions button,.ua-draft-actions a{font-size:11px}
+.ua-drafts-note{margin:14px 2px 24px}
+@media(max-width:560px){.ua-draft-card{align-items:flex-start;flex-direction:column}.ua-draft-actions{width:100%}.ua-draft-actions>*{flex:1;text-align:center}}
