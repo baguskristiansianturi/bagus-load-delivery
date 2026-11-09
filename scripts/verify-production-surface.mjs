@@ -116,4 +116,25 @@ const sharedDesign = read('src/styles/social-components.css');
 assert.match(sharedDesign, /--pl-color-ink/, 'Social UI must use shared design tokens.');
 assert.match(sharedDesign, /--pl-color-line/, 'Social UI must use shared spacing/line tokens.');
 
+const socialHome = read('src/pages/account/index.js');
+assert.match(socialHome, /\+socialIcon\('bell',\{size:21\}\)\+/, 'Feed notification icon must be rendered, not printed as a template expression.');
+assert.match(socialHome, /\+socialIcon\('message',\{size:21\}\)\+/, 'Feed message icon must be rendered, not printed as a template expression.');
+assert.doesNotMatch(socialHome, /\\$\\{socialIcon\\('(bell|message)'/, 'Feed header must not leak unexpanded icon template syntax.');
+
+const accountMobileCss = read('src/pages/account/user-account.css');
+for (const selector of ['.ua-social-home .ua-stories-block', '.ua-social-home .ua-story-strip', '.ua-social-home .ua-post-head', '.ua-social-app .pl-social-mobile-nav']) {
+  assert.ok(accountMobileCss.includes(selector), 'Mobile social layout missing responsive selector: ' + selector);
+}
+assert.match(accountMobileCss, /@media\s*\(max-width:\s*760px\)/, 'Social home must define a mobile breakpoint.');
+assert.match(accountMobileCss, /env\\(safe-area-inset-bottom\\)/, 'Social home must account for Android/iOS safe-area insets.');
+
+const discovery = read('src/pages/search/discovery.js');
+assert.match(discovery, /renderSocialMobileNav\\(\\{active:'discover'\\}\\)/, 'Explore must reuse the shared five-item social navigation.');
+assert.match(discovery, /social-navigation\\.css/, 'Explore must load shared social navigation styles.');
+const discoveryCss = read('src/pages/search/discovery.css');
+assert.match(discoveryCss, /grid-template-columns:\\s*repeat\\(3,\\s*minmax\\(0,\\s*1fr\\)\\)/, 'Explore must use a fluid three-column mobile grid.');
+assert.match(discoveryCss, /aspect-ratio:\\s*1\\s*\\/\\s*1/, 'Explore media tiles must preserve a square responsive ratio.');
+assert.match(discoveryCss, /safe-area-inset-bottom/, 'Explore bottom navigation must respect device safe areas.');
+
+
 console.log('Production surface verification passed: legacy modules absent; Marketplace, Trip, social DM, account security and notification contracts present.');
