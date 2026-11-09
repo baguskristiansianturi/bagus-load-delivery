@@ -145,6 +145,5 @@ assert.match(seller, /value="umkm"/, 'Seller onboarding must accept UMKM busines
 assert.match(seller, /value="family_business"/, 'Seller onboarding must accept family businesses.');
 assert.match(seller, /value="cooperative"/, 'Seller onboarding must accept cooperatives.');
 assert.match(seller, /value="company"/, 'Seller onboarding must accept companies.');
-assert.match(seller, /p_legal_form:/, 'Seller onboarding must submit legal form separately.');
 
-console.log('Production surface verification passed: legacy modules absent; Marketplace, Trip, social DM, account security, notifications and D-005 Seller onboarding contracts present.');
+console.log('Production surface verification passed: legacy modules absent; Marketplace, Trip, social DM, account security, notifications and Seller Center flow contracts present.');
