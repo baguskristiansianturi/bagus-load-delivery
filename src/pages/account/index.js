@@ -736,10 +736,11 @@ function bindCompose(){
     const file=files[i],mime=uploadMime(file),ext=(file.name.split('.').pop()||'bin').toLowerCase(),token=crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random().toString(36).slice(2),path=user.id+'/'+token+'.'+ext;
     const result=await uploadMediaFile(file,path,mime,pct=>{progress.hidden=false;progress.querySelector('span').style.width=Math.round((i+pct/100)/files.length*65)+'%';});
     if(result.error)throw result.error;
+    const mediaRecord={media_path:path,media_type:mime.startsWith('video/')?'video':'image',position:i,duration_ms:null};uploaded.push(mediaRecord);
     let duration=null;
     if(mime.startsWith('video/'))duration=await new Promise(resolve=>{const video=document.createElement('video');video.preload='metadata';video.onloadedmetadata=()=>{const ms=Number.isFinite(video.duration)?Math.round(video.duration*1000):null;URL.revokeObjectURL(video.src);resolve(ms);};video.onerror=()=>{URL.revokeObjectURL(video.src);resolve(null);};video.src=URL.createObjectURL(file);});
     if(form.dataset.contentKind==='reel'&&(!duration||duration>60000))throw new Error('Reel harus berupa video maksimal 60 detik.');
-    uploaded.push({media_path:path,media_type:mime.startsWith('video/')?'video':'image',position:i,duration_ms:duration});
+    mediaRecord.duration_ms=duration;
     progress.hidden=false;progress.querySelector('span').style.width=Math.round(65*uploaded.length/files.length)+'%';
    }
    const tags=[...new Set((caption.match(/#[\\p{L}\\p{N}_]+/gu)||[]).map(tag=>tag.slice(1).toLowerCase()))].slice(0,30);
