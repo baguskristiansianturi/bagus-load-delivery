@@ -1568,3 +1568,64 @@
   .ua-double-tap-heart.is-liking,
   .ua-double-tap-heart.is-removing { animation-duration: .2s; }
 }
+
+
+/* CP-036 — compact, connected comment threads for mobile and desktop */
+.ua-social-home .ua-comments{
+  padding:10px 13px 12px;
+  background:#fff;
+}
+.ua-social-home .ua-comment-thread{gap:7px;margin:0 0 8px}
+.ua-social-home .ua-comment-item{
+  position:relative;display:grid;gap:5px;min-width:0;
+  margin-left:0;padding-left:0;
+}
+.ua-social-home .ua-comment-item.ua-comment-nested{
+  margin-left:17px;padding-left:12px;
+  border-left:1px solid #d8e0e6;
+}
+.ua-social-home .ua-comment-item.ua-comment-nested::before{
+  content:"";position:absolute;left:-1px;top:15px;width:9px;
+  border-top:1px solid #d8e0e6;
+}
+.ua-social-home .ua-comment-copy{
+  padding:8px 10px;border-radius:10px;
+  background:#f7f8fa;border-color:#edf0f2;
+}
+.ua-social-home .ua-comment-author{font-size:12px;line-height:1.35}
+.ua-social-home .ua-comment-copy p{margin:3px 0 2px;font-size:12px;line-height:1.45}
+.ua-social-home .ua-comment-copy>small{font-size:10px}
+.ua-social-home .ua-comment-actions{gap:14px;margin-top:5px}
+.ua-social-home .ua-comment-actions button{
+  display:inline-flex;align-items:center;gap:4px;
+  min-height:25px;font-size:11px;
+}
+.ua-social-home .ua-comment-actions button svg{width:14px;height:14px;flex:none}
+.ua-social-home .ua-comment-actions button.is-liked{color:#c43f59}
+.ua-social-home .ua-comment-actions button b{font-size:10px;font-weight:650}
+.ua-social-home .ua-reply-form,.ua-social-home .ua-comment-form{
+  gap:6px;margin-top:6px;
+}
+.ua-social-home .ua-reply-form input,.ua-social-home .ua-comment-form input{
+  min-height:36px;padding:8px 12px;font-size:12px;
+}
+.ua-social-home .ua-reply-form button,.ua-social-home .ua-comment-form button{
+  padding:8px 12px;white-space:nowrap;
+}
+.ua-social-home .ua-comment-form{padding-top:8px;margin-top:8px}
+@media(max-width:760px){
+  .ua-social-home .ua-comments{padding:9px 11px 11px}
+  .ua-social-home .ua-comment-thread{gap:6px}
+  .ua-social-home .ua-comment-item.ua-comment-nested{
+    margin-left:10px;padding-left:9px;
+  }
+  .ua-social-home .ua-comment-item.ua-comment-nested::before{width:7px}
+  .ua-social-home .ua-comment-copy{padding:7px 9px}
+  .ua-social-home .ua-comment-copy p{font-size:12px;line-height:1.42}
+  .ua-social-home .ua-reply-form input,.ua-social-home .ua-comment-form input{
+    min-width:0;width:100%;font-size:13px;
+  }
+  .ua-social-home .ua-reply-form button,.ua-social-home .ua-comment-form button{
+    padding:8px 10px;font-size:11px;
+  }
+}
