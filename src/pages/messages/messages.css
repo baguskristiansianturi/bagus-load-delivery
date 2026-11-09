@@ -21,7 +21,7 @@
 .pl-msg-people-heading small{font-size:10px;color:#8491a1}
 .pl-msg-people-heading>a{font-size:10px;font-weight:750;color:#385a79;white-space:nowrap}
 .pl-msg-people-strip{display:flex;align-items:flex-start;gap:0;min-width:0;overflow-x:auto;overflow-y:hidden;padding:3px 4px 7px;overscroll-behavior-x:contain;scrollbar-width:thin;scroll-snap-type:x proximity}
-.pl-msg-person{width:66px;min-width:66px;min-height:82px;display:flex;flex-direction:column;align-items:center;gap:5px;margin-left:-10px;padding:0 2px;border:0;background:transparent;color:#34465c;cursor:pointer;scroll-snap-align:start}
+.pl-msg-person{text-decoration:none;width:66px;min-width:66px;min-height:82px;display:flex;flex-direction:column;align-items:center;gap:5px;margin-left:-10px;padding:0 2px;border:0;background:transparent;color:#34465c;cursor:pointer;scroll-snap-align:start}
 .pl-msg-person:first-child{margin-left:0}
 .pl-msg-person small{display:block;width:100%;overflow:hidden;text-align:center;text-overflow:ellipsis;white-space:nowrap;font-size:9px;color:#718095}
 .pl-msg-avatar{width:48px;height:48px;flex:0 0 48px;display:grid;place-items:center;overflow:hidden;border:2px solid #fff;border-radius:50%;background:#eaf0f5;box-shadow:0 0 0 1px #e0e7ee;color:#38536f;font-size:14px;font-weight:800}
