@@ -29,7 +29,7 @@ self.addEventListener('fetch', (event) => {
   const request = event.request;
   const url = new URL(request.url);
   if (request.method !== 'GET' || url.origin !== self.location.origin) return;
-  if (url.pathname.startsWith('/pluits/') && /\\/rest\\/v1\\/|\\/auth\\/v1\\/|\\/storage\\/v1\\//.test(url.pathname)) return;
+  if (url.pathname.includes('/rest/v1/') || url.pathname.includes('/auth/v1/') || url.pathname.includes('/storage/v1/')) return;
 
   if (request.mode === 'navigate') {
     event.respondWith(
