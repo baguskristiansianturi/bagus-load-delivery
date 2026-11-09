@@ -139,4 +139,12 @@ for (const path of [
   assert.match(content, /lib\/supabase\/client\.js/, `Shared Supabase client import missing: ${path}`);
 }
 
-console.log('Production surface verification passed: legacy modules absent; Marketplace, Trip, social DM, account security and notification contracts present.');
+const seller = read('src/pages/seller/index.js');
+assert.match(seller, /value="individual"/, 'Seller onboarding must accept individual businesses.');
+assert.match(seller, /value="umkm"/, 'Seller onboarding must accept UMKM businesses.');
+assert.match(seller, /value="family_business"/, 'Seller onboarding must accept family businesses.');
+assert.match(seller, /value="cooperative"/, 'Seller onboarding must accept cooperatives.');
+assert.match(seller, /value="company"/, 'Seller onboarding must accept companies.');
+assert.match(seller, /p_legal_form:/, 'Seller onboarding must submit legal form separately.');
+
+console.log('Production surface verification passed: legacy modules absent; Marketplace, Trip, social DM, account security, notifications and D-005 Seller onboarding contracts present.');
