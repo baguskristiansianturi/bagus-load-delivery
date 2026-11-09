@@ -1,5 +1,6 @@
 import { supabase as db } from '../../lib/supabase/client.js';
 import { renderSocialMobileNav } from '../../components/social/navigation.js';
+import '../../styles/social-navigation.css';
 import './discovery.css';
 
 const cats=[['all','Semua'],['things','Thing to do'],['restaurant','Restaurant'],['cafe','Cafe'],['tourist-attraction','Wisata'],['shopping','Belanja'],['event','Event']];
