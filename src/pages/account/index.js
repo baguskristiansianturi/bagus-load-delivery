@@ -889,7 +889,7 @@ function bindPostActions(){
   const toggleLike=async(force=false)=>{
    if(!user){notify('Masuk untuk menyukai postingan.','error');return;}
    if(!likeButton||likeButton.dataset.busy==='1')return;
-   const wasLiked=likeButton.classList.contains('is-liked');if(force&&wasLiked)return;
+   const wasLiked=likeButton.classList.contains('is-liked');
    likeButton.dataset.busy='1';likeButton.disabled=true;
    try{
     const result=wasLiked?await supabase.from('post_likes').delete().eq('post_id',id).eq('user_id',user.id):await supabase.from('post_likes').insert({post_id:id,user_id:user.id});
@@ -905,8 +905,8 @@ function bindPostActions(){
   likeButton?.addEventListener('click',()=>toggleLike(false));
   card.querySelectorAll('.ua-media img,.ua-gallery-item img').forEach(img=>{
    let lastTap=0;
-   const heart=()=>{const area=card.querySelector('.ua-media,.ua-media-gallery');if(!area)return;area.querySelector('.ua-double-tap-heart')?.remove();const el=document.createElement('span');el.className='ua-double-tap-heart';el.innerHTML=socialIcon('heart',{size:76});area.appendChild(el);setTimeout(()=>el.remove(),850);};
-   const likeFromDoubleTap=event=>{event.preventDefault();heart();toggleLike(true);};
+   const heart=()=>{const area=img.closest('.ua-media,.ua-gallery-item')||card.querySelector('.ua-media,.ua-media-gallery');if(!area)return;area.querySelector('.ua-double-tap-heart')?.remove();const removing=likeButton?.classList.contains('is-liked');const el=document.createElement('span');el.className='ua-double-tap-heart '+(removing?'is-removing':'is-liking');el.innerHTML=socialIcon(removing?'heart-crack':'heart',{size:112});area.appendChild(el);el.addEventListener('animationend',()=>el.remove(),{once:true});setTimeout(()=>el.remove(),1100);};
+   const likeFromDoubleTap=event=>{event.preventDefault();heart();toggleLike(false);};
    img.addEventListener('pointerup',event=>{if(event.pointerType==='mouse'&&event.button!==0)return;const now=Date.now();if(now-lastTap>0&&now-lastTap<360){lastTap=0;likeFromDoubleTap(event);}else lastTap=now;});
    img.addEventListener('dblclick',likeFromDoubleTap);
   });
