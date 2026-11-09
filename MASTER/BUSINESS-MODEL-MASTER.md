@@ -901,6 +901,14 @@ Spesifikasi lengkap, user journey, dashboard, status, URL, acceptance criteria d
 4. Publikasikan kebijakan setelah sinkron dengan implementasi dan legal review.
 5. Kembangkan Top 10, fingerprint video, AI moderation, watermark, music licensing, dan account lifecycle sesuai prioritas.
 
+### 33.14 Siklus simpan dan persetujuan profil
+- **Personal:** perubahan identitas personal (nama tampilan, username, bio, avatar, lokasi publik, dan privasi) disimpan langsung ke akun pemilik. Tidak membutuhkan verifikasi bisnis untuk tampil sebagai profil personal, kecuali fitur/atribut tertentu di masa depan diwajibkan oleh kebijakan keamanan.
+- **Premium / Professional:** pemilik melengkapi profil dan menekan satu tombol Simpan & Ajukan Pemeriksaan. Sistem menyimpan data, membuat atau menggunakan kembali permohonan verifikasi aktif, dan mengubah status menjadi `submitted`. Status pengguna yang terlihat adalah Menunggu Persetujuan. Profil belum tampil sebagai profil profesional aktif sampai moderator menyetujui.
+- **Business:** pemilik melengkapi identitas toko dan data legal, lalu menekan Simpan & Ajukan Verifikasi. Sistem menyimpan data publik/legal dan mengirim permohonan ke pemeriksaan. Status toko menjadi `pending_review` dengan `verification_status=pending`. Jika permohonan masih pending, penyimpanan perubahan tidak boleh membuat permohonan ganda.
+- **Approval:** hanya admin/moderator dengan otorisasi server-side yang dapat mengubah keputusan menjadi verified/active atau rejected. Tombol Simpan milik pemilik tidak pernah memberi status verified/active secara langsung.
+- **Kegagalan parsial:** UI harus membedakan data yang berhasil disimpan dari pengajuan yang gagal terkirim. Jangan menampilkan sukses pengajuan jika verification case atau RPC tidak berhasil.
+- **Transparansi:** setiap halaman profil menampilkan status yang dapat dimengerti: Draft (belum diajukan), Menunggu Persetujuan, Disetujui, atau Perlu Perbaikan. Pengajuan ulang setelah ditolak harus menghasilkan case baru dan mempertahankan jejak pemeriksaan sebelumnya.
+
 ### 33.13 Composer sosial harus media-first dan sesederhana Instagram
 - Alur membuat konten dimulai dari pemilihan foto/video, bukan formulir panjang. Satu Post dapat berisi beberapa media (foto/video campuran) dengan urutan, preview, dan hapus item sebelum diterbitkan.
 - Setelah media dipilih, caption/deskripsi tampil langsung di bawah preview. Pengaturan tambahan ditempatkan dalam satu panel ringkas yang dapat dibuka saat diperlukan; jangan memecah proses ke banyak halaman.
