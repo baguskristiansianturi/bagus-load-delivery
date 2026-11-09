@@ -952,3 +952,157 @@
 .ua-system-notice:focus-visible{outline:2px solid #34577d;outline-offset:2px}
 .ua-ac-icon{display:grid;place-items:center;flex:none}
 .ua-ac-icon .pl-icon{width:19px;height:19px}
+
+
+/* PLUITS MOBILE POLISH — calmer rhythm, balanced feed and safe-area navigation */
+@media (max-width: 760px) {
+  .ua-social-app {
+    background: #f4f6f8;
+    padding-bottom: calc(72px + env(safe-area-inset-bottom)) !important;
+  }
+  .ua-social-app .ua-main { background: #f4f6f8; }
+  .ua-social-home { background: #f4f6f8; }
+  .ua-social-home .ua-feed-top {
+    height: 62px;
+    min-height: 62px;
+    padding: 0 16px;
+    gap: 13px;
+    border-bottom: 1px solid #e9edf0;
+  }
+  .ua-social-home .ua-feed-wordmark {
+    font-size: 21px;
+    letter-spacing: -.055em;
+  }
+  .ua-social-home .ua-feed-search {
+    height: 40px;
+    padding: 0 12px;
+    gap: 9px;
+    border-radius: 12px;
+    font-size: 12px;
+  }
+  .ua-social-home .ua-feed-top > div { gap: 14px; }
+  .ua-social-home .ua-feed-top > div a {
+    display: grid;
+    width: 34px;
+    height: 38px;
+    place-items: center;
+    font-size: 0;
+  }
+  .ua-social-home .ua-feed-top > div .pl-icon {
+    width: 21px;
+    height: 21px;
+  }
+  .ua-social-home .ua-stories-block {
+    padding: 20px 16px 18px;
+    margin: 0 0 10px;
+    background: #fff;
+    border-bottom: 1px solid #e9edf0;
+  }
+  .ua-social-home .ua-stories-head {
+    min-height: 28px;
+    margin: 0 0 17px;
+    align-items: center;
+  }
+  .ua-social-home .ua-stories-head strong {
+    font-size: 16px;
+    letter-spacing: -.02em;
+  }
+  .ua-social-home .ua-stories-head a {
+    display: grid;
+    width: 34px;
+    height: 34px;
+    place-items: center;
+    border-radius: 50%;
+    background: #f1f4f6;
+    color: #24394d;
+    font-size: 23px;
+  }
+  .ua-social-home .ua-story-strip {
+    display: flex;
+    align-items: flex-start;
+    gap: 17px;
+    min-height: 100px;
+    padding: 2px 2px 0;
+  }
+  .ua-social-home .ua-story-item {
+    flex: 0 0 72px;
+    width: 72px;
+    gap: 9px;
+    font-size: 11px;
+  }
+  .ua-social-home .ua-story-ring {
+    width: 66px;
+    height: 66px;
+    padding: 3px;
+  }
+  .ua-social-home .ua-story-ring img,
+  .ua-social-home .ua-story-ring .ua-avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .ua-social-home .ua-story-empty {
+    align-self: center;
+    margin-left: 2px;
+    color: #84909a;
+    font-size: 12px;
+  }
+  .ua-social-home .ua-feed-fallback-note {
+    margin: 10px 0;
+    padding: 12px 16px;
+    background: #eef2f5;
+    border: 0;
+    color: #687783;
+    font-size: 11px;
+    line-height: 1.55;
+  }
+  .ua-social-home .ua-feed {
+    gap: 10px;
+    padding: 0 0 12px;
+  }
+  .ua-social-home .ua-post-card {
+    margin: 0 0 10px;
+    padding-bottom: 6px;
+    border: 0;
+    border-bottom: 1px solid #e8edf0;
+    background: #fff;
+  }
+  .ua-social-home .ua-post-head { padding: 15px 16px 12px; gap: 12px; }
+  .ua-social-home .ua-post-head .ua-avatar {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+  }
+  .ua-social-home .ua-post-head strong { font-size: 14px; }
+  .ua-social-home .ua-post-head small { margin-top: 3px; font-size: 11px; }
+  .ua-social-home .ua-post-actions {
+    min-height: 48px;
+    padding: 8px 16px 5px;
+    gap: 20px;
+  }
+  .ua-social-app .pl-social-mobile-nav {
+    min-height: calc(66px + env(safe-area-inset-bottom));
+    padding: 6px 9px env(safe-area-inset-bottom);
+    box-shadow: 0 -5px 20px rgba(24, 42, 58, .07);
+  }
+  .ua-social-app .pl-social-mobile-nav > a { gap: 5px; }
+  .ua-social-app .pl-social-mobile-nav > a .pl-icon {
+    width: 23px;
+    height: 23px;
+  }
+  .ua-social-app .pl-social-mobile-nav > a small {
+    font-size: 10px;
+    font-weight: 600;
+  }
+  .ua-social-app .pl-social-mobile-nav > a.active { color: #172f52; }
+  .ua-social-app .pl-social-mobile-nav > a.active .pl-icon { stroke-width: 2.2; }
+  .ua-social-app .ua-footer { display: none; }
+}
+@media (max-width: 380px) {
+  .ua-social-home .ua-feed-top { gap: 9px; padding-inline: 11px; }
+  .ua-social-home .ua-feed-search { padding-inline: 9px; }
+  .ua-social-home .ua-story-strip { gap: 12px; }
+  .ua-social-home .ua-story-item { flex-basis: 66px; width: 66px; }
+  .ua-social-home .ua-story-ring { width: 60px; height: 60px; }
+  .ua-social-app .pl-social-mobile-nav { padding-inline: 5px; }
+}
