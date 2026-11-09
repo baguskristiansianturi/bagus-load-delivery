@@ -35,10 +35,10 @@ export function route(homeFn=home){
  else if(r==='messages'){h=messagesPage();queueMicrotask(()=>bindMessagesPage());}
  else if(r==='admin'&&v==='moderation'){h=moderationPage();queueMicrotask(()=>bindModerationPage());}
  else if(r==='place'){
-  h='<div class="pl-directory-loading">Membuka tempat…</div>';
+  h='<div class="pl-page-loading" role="status" aria-live="polite"><span class="pl-page-spinner" aria-hidden="true"></span><span class="pl-page-loading-label">Membuka tempat</span></div>';
   queueMicrotask(async()=>{
    const content=s[2]==='claim'?await claimPage(v||''):await placePage(v||'');
-   const app=document.querySelector('#app');if(app){app.innerHTML=content;bindPlacePage();}
+   const app=document.querySelector('#app');if(app){app.classList.remove('pl-page-enter');app.innerHTML=content;bindPlacePage();requestAnimationFrame(()=>app.classList.add('pl-page-enter'));}
   });
  }
  else if(r==='search'){h=discoverySearch(p.get('q')||'');queueMicrotask(()=>bindDiscoverySearch());}
