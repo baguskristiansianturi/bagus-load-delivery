@@ -1003,3 +1003,10 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - **Founder direction:** UI/UX continues even if backend contracts are pending; frontend CI must not be gated by backend migration replay. Seller eligibility, legal-form requirements, and verification rules are deferred to the later security/eligibility phase.
 - **CI:** frontend contract tests and Vite build run independently of backend replay. Local Supabase migration replay remains an isolated job.
 - **Status:** migration replay reached the post-media migration and exposed a missing closing parenthesis; frontend contract test exposed a stale expectation for a legal-form RPC argument. These are being corrected. Production NOT DEPLOYED; PR remains draft and unmerged.
+
+
+## CP-062 — Canonical mobile social navigation
+- **Founder direction:** bottom navigation on every social screen must use the same five-item pattern and visual component as the home page.
+- **Implemented:** `renderSocialMobileNav()` now renders one shared component for public home and authenticated social pages: Beranda, Jelajah, Buat, Reels, Profil. Active state is normalized between the public home key and authenticated Explore/feed key.
+- **UI scope:** no backend migration or quota increase required. This is a frontend consistency change; existing route targets and auth-aware profile destination are preserved.
+- **Verification:** frontend CI production-contract checks and Vite build PASSED on commit `af4e2990a0d4ed1f763ac74e65e0d26ceed4823a`. Backend isolated migration replay remains in progress at checkpoint time. No production deployment or merge.
