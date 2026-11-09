@@ -599,7 +599,7 @@ async function mountAccount(section='profile',parameter=''){
   await loadProfile();accountContext=await loadAccountContext(supabase,user);
   unreadNotificationCount=await countUnreadActivity();
   if(section==='profile')updateSEO({title:profile.display_name+' (@'+profile.username+') — Pluits',description:(profile.bio||'Profil komunitas '+profile.display_name+' di Pluits.').slice(0,160),path:'#/@'+encodeURIComponent(profile.username)});
-  const page=section==='explore'?await feedPage():section==='activity'?await notificationPage():section==='reels'?await reelsPage():section==='create'?createPage():section==='story'?storyComposePage():section==='live'?livePage():section==='saved'?await savedPage():section==='reel'?await composePage('', 'reel'):section==='compose'?await composePage(parameter):section==='drafts'?await draftsPage():section==='addresses'?await addressPage():section==='wallet'?await walletPage():section==='post'?await postDetailPage(parameter||location.hash.split('/')[3]||''):section==='user'?await publicProfilePage(parameter):section==='followers'?await followListPage('followers'):section==='following'?await followListPage('following'):section==='requests'?await followListPage('followers'):section==='preview'?await profilePage(true):section==='professional'?professionalPage(accountContext,profile):section==='professional-create'?professionalFormPage(accountContext,profile):section==='settings'?settingsHubPage():section==='security'?await accountSecurityPage(supabase,user):section==='blocked'?await blockedAccountsPage():section==='content-settings'?await accountSettingsPage(supabase,user):await profilePage();
+  const page=section==='explore'?await feedPage():section==='activity'?await notificationPage():section==='reels'?await reelsPage():section==='create'?createPage():section==='story'?await storyComposePage():section==='live'?livePage():section==='saved'?await savedPage():section==='reel'?await composePage('', 'reel'):section==='compose'?await composePage(parameter):section==='drafts'?await draftsPage():section==='addresses'?await addressPage():section==='wallet'?await walletPage():section==='post'?await postDetailPage(parameter||location.hash.split('/')[3]||''):section==='user'?await publicProfilePage(parameter):section==='followers'?await followListPage('followers'):section==='following'?await followListPage('following'):section==='requests'?await followListPage('followers'):section==='preview'?await profilePage(true):section==='professional'?professionalPage(accountContext,profile):section==='professional-create'?professionalFormPage(accountContext,profile):section==='settings'?settingsHubPage():section==='security'?await accountSecurityPage(supabase,user):section==='blocked'?await blockedAccountsPage():section==='content-settings'?await accountSettingsPage(supabase,user):await profilePage();
   const headerAvatar=await signed(profile.avatar_path);document.querySelector('#app').innerHTML=frame(page,section==='explore'||section==='reels'?'explore':section==='activity'?'activity':section==='addresses'?'addresses':section==='compose'||section==='drafts'?'compose':section==='preview'?'profile':'profile',headerAvatar);
   document.querySelector('#ua-logout')?.addEventListener('click',async()=>{await supabase.auth.signOut();user=null;profile=null;authScreen('login');});
   bindAccountContext({db:supabase,user,ctx:accountContext,profile,refresh:mountAccount});
@@ -726,14 +726,17 @@ function createPage(){
   <div class="ua-create-option is-staged"><span class="ua-create-icon">${socialIcon('radio',{size:24})}</span><strong>Live</strong><small>Siaran langsung disiapkan pada tahap berikutnya.</small><span class="ua-create-stage">Segera</span></div>
  </section>`;
 }
-function storyComposePage(){
+async function storyComposePage(){
+ const {data:contentPrefs,error}=await supabase.from('account_content_preferences').select('story_default_visibility').eq('user_id',user.id).maybeSingle();
+ if(error)throw error;
+ const storyVisibility=contentPrefs?.story_default_visibility||'private';
  return `<div class="ua-page-heading"><div><span class="ua-eyebrow">STORY · 24 JAM</span><h1>Tambahkan Story</h1><p>Bagikan momen yang akan hilang setelah 24 jam.</p></div><a class="ua-outline" href="#/account/explore">Batal</a></div>
  <section class="ua-panel ua-compose-panel"><form id="ua-story-form" class="ua-compose-form">
   <label class="ua-upload-zone" for="ua-story-file"><span class="ua-upload-icon">＋</span><strong>Pilih foto atau video</strong><small>JPG, PNG, WebP, GIF, MP4, atau WebM · Maksimal 50 MB</small><input id="ua-story-file" type="file" accept="image/jpeg,image/png,image/webp,image/gif,video/*"></label>
   <div id="ua-story-preview" class="ua-media-preview"></div>
   <label class="ua-compose-caption-label"><textarea name="caption" rows="3" maxlength="500" placeholder="Tambahkan keterangan (opsional)"></textarea></label>
   <label class="ua-audience-field">Siapa yang dapat melihat Story?
-   <select name="visibility"><option value="public">Publik</option><option value="private" selected>Hanya saya</option></select>
+   <select name="visibility"><option value="public" ${storyVisibility==='public'?'selected':''}>Publik</option><option value="private" ${storyVisibility==='private'?'selected':''}>Hanya saya</option></select>
   </label>
   <div class="ua-compose-actions"><button class="ua-primary" type="submit">Bagikan Story</button></div><p class="ua-form-note" id="ua-story-note"></p>
  </form></section>`;
