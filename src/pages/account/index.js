@@ -531,19 +531,20 @@ async function followListPage(kind='followers'){
 async function postDetailPage(id){
  const {data,error}=await supabase.from('user_posts').select('*').eq('id',id).single();if(error)throw error;
  const [p]=await hydratePosts([data]);if(!p)throw new Error('Postingan tidak tersedia.');
- return `<div class="ua-page-heading"><div><span class="ua-eyebrow">POSTINGAN</span><h1>Detail postingan</h1></div><a class="ua-outline" href="#/account/explore">Kembali ke Explore</a></div>${postCard(p)}`;
+ return `<div class="ua-post-detail-page"><div class="ua-page-heading"><div><span class="ua-eyebrow">POSTINGAN</span><h1>Detail postingan</h1></div><a class="ua-outline" href="#/account/explore">Kembali ke Explore</a></div><section class="ua-post-detail-stream">${postCard(p)}</section></div>`;
 }
 function normalizeFeedMediaFrames(root=document){
  const mediaNodes=root.querySelectorAll('.ua-social-home .ua-media img,.ua-social-home .ua-media video,.ua-social-home .ua-gallery-item img,.ua-social-home .ua-gallery-item video');
  const dimensions=el=>({w:el.naturalWidth||el.videoWidth,h:el.naturalHeight||el.videoHeight});
- const boundedRatio=(w,h)=>Math.min(3/4,Math.max(1/1.91,w/h));
+ const boundedRatio=(w,h)=>Math.min(4/5,Math.max(1/1.91,w/h));
+ const isDetail=el=>!!el.closest('.ua-post-detail-page');
  const apply=el=>{
   const gallery=el.closest('.ua-media-gallery');
   if(gallery){
    const first=gallery.querySelector('.ua-gallery-item img,.ua-gallery-item video');
    if(!first)return;
    const {w,h}=dimensions(first);if(!w||!h)return;
-   const ratio=boundedRatio(w,h);
+   const ratio=isDetail(first)?boundedRatio(w,h):4/5;
    gallery.querySelectorAll('.ua-gallery-item').forEach(frame=>{
     frame.style.aspectRatio=String(ratio);
     frame.dataset.mediaRatio=ratio.toFixed(4);
@@ -551,7 +552,7 @@ function normalizeFeedMediaFrames(root=document){
    return;
   }
   const {w,h}=dimensions(el);if(!w||!h)return;
-  const ratio=boundedRatio(w,h);
+  const ratio=isDetail(el)?boundedRatio(w,h):4/5;
   const frame=el.closest('.ua-media');
   if(!frame)return;
   frame.style.aspectRatio=String(ratio);
