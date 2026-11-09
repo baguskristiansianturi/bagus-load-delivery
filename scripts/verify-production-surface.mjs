@@ -151,6 +151,7 @@ assert.ok(profileCss.includes('min-height: 0 !important'), 'Mobile profile hero 
 const postDetailSource = read('src/pages/account/index.js');
 assert.ok(postDetailSource.includes('class="ua-post-detail-page"'), 'Post detail must have a responsive detail layout wrapper.');
 assert.ok(postDetailSource.includes('class="ua-post-detail-stream"'), 'Post detail must have a dedicated content stream.');
+assert.ok(postDetailSource.includes('.ua-post-detail-page .ua-media img'), 'Media normalizer must include opened post detail images.');
 assert.ok(postDetailSource.includes('const ratio=isDetail(el)?boundedRatio(w,h):4/5'), 'Feed media frames must use a consistent 4:5 ratio while detail preserves source proportions.');
 const postLayoutCss = read('src/pages/account/user-account.css');
 assert.ok(postLayoutCss.includes('aspect-ratio: 4 / 5'), 'Feed media must use a consistent responsive frame.');
