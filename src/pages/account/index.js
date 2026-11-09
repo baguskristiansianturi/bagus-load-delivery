@@ -133,7 +133,7 @@ function settingsHubPage(){
    ['map-pin','Alamat tersimpan','Alamat privat untuk kebutuhan transaksi','/account/addresses','ready']]],
   ['Privasi & konten','Atur audiens dan kelola konten pribadi',[
    ['lock','Privasi dan audiens','Visibilitas default Post, Story, dan interaksi','/account/content-settings','ready'],
-   ['file-text','Draf konten','Lanjutkan atau hapus Post yang belum diterbitkan','/account/drafts','ready'],
+   ['edit','Draf konten','Lanjutkan atau hapus Post yang belum diterbitkan','/account/drafts','ready'],
    ['shield','Akun diblokir','Kelola akun yang tidak ingin Anda hubungi','/account/blocked','ready']]],
   ['Bantuan & kebijakan','Panduan, aturan komunitas, dan perlindungan data',[
    ['help','Pusat Bantuan','Panduan dan jawaban penggunaan Pluits','/help','staged'],
