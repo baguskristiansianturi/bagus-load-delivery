@@ -125,23 +125,17 @@ async function blockedAccountsPage(){
 function bindBlockedAccounts(){document.querySelectorAll('[data-unblock-user]').forEach(b=>b.onclick=async()=>{const {error}=await supabase.rpc('unblock_user',{p_blocked_user_id:b.dataset.unblockUser});if(error)notify(error.message,'error');else{notify('Blokir akun dibuka.');await mountAccount('blocked');}});}
 function settingsHubPage(){
  const groups=[
-  ['Akun Anda','Kelola identitas dan peran di Pluits',[
-   ['user','Pusat Akun','Informasi profil, username, dan identitas personal','/account/profile','ready'],
-   ['shield','Keamanan & perangkat','Password, nomor HP, 2FA, bahasa, dan izin perangkat','/account/security','ready'],
+  ['Akun & identitas','Kelola profil dan identitas yang terhubung ke satu akun',[
+   ['user','Profil pribadi','Nama, username, bio, dan informasi publik','/account/profile','ready'],
+   ['shield','Keamanan akun','Password, perangkat, dan perlindungan akun','/account/security','ready'],
    ['briefcase','Profil profesional','Keahlian, portofolio, dan area layanan','/account/professional','ready'],
-   ['store','Toko dan organisasi','Kelola toko, tim, dan identitas organisasi','/seller','ready'],
-   ['map-pin','Alamat dan lokasi','Alamat pengiriman dan lokasi tersimpan','/account/addresses','ready']]],
-  ['Cara Anda menggunakan Pluits','Atur pengalaman komunitas dan penemuan lokal',[
-   ['lock','Privasi dan audiens','Siapa yang dapat melihat postingan dan berinteraksi','/account/content-settings','ready'],
-   ['users','Pengikut dan permintaan','Kelola hubungan dan permintaan mengikuti','/account/followers','ready'],
-   ['message','Pesan','Percakapan pribadi antar akun Pluits','/messages','ready'],
-   ['lock','Akun diblokir','Kelola akun yang Anda blokir','/account/blocked','ready'],
-   ['compass','Jelajah dan GeoDirectory','Tempat, layanan, komunitas, dan penyedia lokal','/places','ready'],
-   ['store','Marketplace','Toko, produk, layanan, dan pesanan','/marketplace','ready'],
-   ['compass','Trip dan perjalanan','Temukan tempat dan rencanakan pengalaman','/trip','ready'],
-   ['wallet','Wallet','Fondasi saldo; belum menjadi layanan uang operasional','/account/wallet','staged']]],
-  ['Interaksi dan dukungan','Aktivitas akun, panduan, dan informasi layanan',[
-   ['bell','Aktivitas dan notifikasi','Pemberitahuan suka, komentar, dan pengikut','/account/activity','ready'],
+   ['store','Toko dan organisasi','Kelola identitas usaha dan keanggotaan','/seller','ready'],
+   ['map-pin','Alamat tersimpan','Alamat privat untuk kebutuhan transaksi','/account/addresses','ready']]],
+  ['Privasi & konten','Atur audiens dan kelola konten pribadi',[
+   ['lock','Privasi dan audiens','Visibilitas default Post, Story, dan interaksi','/account/content-settings','ready'],
+   ['file-text','Draf konten','Lanjutkan atau hapus Post yang belum diterbitkan','/account/drafts','ready'],
+   ['shield','Akun diblokir','Kelola akun yang tidak ingin Anda hubungi','/account/blocked','ready']]],
+  ['Bantuan & kebijakan','Panduan, aturan komunitas, dan perlindungan data',[
    ['help','Pusat Bantuan','Panduan dan jawaban penggunaan Pluits','/help','staged'],
    ['book','Pedoman Komunitas','Aturan konten dan interaksi yang aman','/guidelines','staged'],
    ['book','Ketentuan dan Privasi','Ketentuan layanan dan penggunaan data','/privacy','staged']]]
