@@ -355,7 +355,8 @@ async function composePage(draftId='',kind='post'){
   <label class="ua-compose-caption-label"><textarea name="caption" rows="3" maxlength="2200" placeholder="Tulis deskripsi..." aria-label="Tulis deskripsi">${esc(currentComposeDraft?.caption||'')}</textarea></label>
   <details class="ua-post-options"><summary>Pengaturan postingan <span>＋</span></summary><div class="ua-post-option-fields">
    <label>Audiens<select name="visibility"><option value="public" ${(currentComposeDraft?.visibility||defaultAudience)!=='private'?'selected':''}>Publik</option><option value="private" ${(currentComposeDraft?.visibility||defaultAudience)==='private'?'selected':''}>Hanya saya</option></select></label>
-   <p class="ua-option-hint">Penjadwalan, penandaan orang, dan lokasi akan diaktifkan setelah dukungan backend tersedia.</p>
+   <label>Tandai orang<input name="tagged_users" maxlength="240" placeholder="@username, @username" value="${esc(currentComposeDraft?.tagged_users||'')}"></label>
+   <p class="ua-option-hint">Jadwalkan dan tambahkan lokasi akan diaktifkan setelah alur backend siap.</p>
   </div></details>
   <div class="ua-progress" id="ua-upload-progress" hidden><span></span></div>
   <div class="ua-compose-actions"><button class="ua-text-action" type="button" id="ua-save-draft">Simpan draf</button><button class="ua-primary" type="submit">Bagikan</button></div><p class="ua-form-note" id="ua-compose-note">${currentComposeDraft?'Draf dipulihkan dari penyimpanan privat perangkat ini.':''}</p>
@@ -714,7 +715,7 @@ function bindCompose(){
   saveDraftButton.disabled=true;saveDraftButton.textContent='Menyimpan…';
   try{
    const draftFiles=selectedFiles.length?selectedFiles.map(file=>({name:file.name,type:file.type,size:file.size,lastModified:file.lastModified,blob:file})):(currentComposeDraft?.files||[]);
-   const draft={id:currentComposeDraft?.id||(crypto.randomUUID?crypto.randomUUID():'draft-'+Date.now()),user_id:user.id,caption,visibility:form.querySelector('[name=visibility]')?.value||form.dataset.defaultVisibility||'public',profile_context:accountContext.active,updated_at:new Date().toISOString(),files:draftFiles};
+   const draft={id:currentComposeDraft?.id||(crypto.randomUUID?crypto.randomUUID():'draft-'+Date.now()),user_id:user.id,caption,visibility:form.querySelector('[name=visibility]')?.value||form.dataset.defaultVisibility||'public',tagged_users:String(form.querySelector('[name=tagged_users]')?.value||'').trim(),profile_context:accountContext.active,updated_at:new Date().toISOString(),files:draftFiles};
    await savePrivateDraft(draft);currentComposeDraft=draft;note('Draf tersimpan di perangkat ini.');saveDraftButton.disabled=false;saveDraftButton.textContent='Draf tersimpan';
   }catch(error){note(error.message||'Draf tidak dapat disimpan.');saveDraftButton.disabled=false;saveDraftButton.textContent='Coba lagi';}
  });
@@ -744,10 +745,14 @@ function bindCompose(){
     progress.hidden=false;progress.querySelector('span').style.width=Math.round(65*uploaded.length/files.length)+'%';
    }
    const tags=[...new Set((caption.match(/#[\\p{L}\\p{N}_]+/gu)||[]).map(tag=>tag.slice(1).toLowerCase()))].slice(0,30);
+   const taggedNames=[...new Set(String(data.get('tagged_users')||'').split(/[\\s,]+/).map(name=>name.trim().replace(/^@/, '').toLowerCase()).filter(Boolean))].slice(0,10);
+   let taggedUsers=[];
+   if(taggedNames.length){const found=await supabase.from('user_profiles').select('id,username').in('username',taggedNames);if(found.error)throw found.error;taggedUsers=found.data||[];const missing=taggedNames.filter(name=>!taggedUsers.some(person=>person.username===name));if(missing.length)throw new Error('Username tidak ditemukan: '+missing.map(name=>'@'+name).join(', ')+'. Periksa kembali penandaan.');}
    const context={profile_context:accountContext.active,professional_profile_id:accountContext.active==='professional'?accountContext.professional?.id||null:null,business_store_id:accountContext.active==='business'?(accountContext.prefs?.active_store_id||accountContext.stores[0]?.id||null):null};
    const first=uploaded[0],insert=await supabase.from('user_posts').insert({user_id:user.id,...context,caption,tags,media_path:first?.media_path||null,media_type:uploaded.length?(uploaded.length===1?first.media_type:'mixed'):'text',visibility:data.get('visibility')==='private'?'private':'public'}).select('id').single();
    if(insert.error)throw insert.error;
    if(uploaded.length){const link=await supabase.from('post_media').insert(uploaded.map(media=>({...media,post_id:insert.data.id,user_id:user.id})));if(link.error){await supabase.from('user_posts').delete().eq('id',insert.data.id);throw link.error;}}
+   if(taggedUsers.length){const tagged=await supabase.from('post_tags').insert(taggedUsers.filter(person=>person.id!==user.id).map(person=>({post_id:insert.data.id,tagged_user_id:person.id,tagged_by:user.id})));if(tagged.error){await supabase.from('user_posts').delete().eq('id',insert.data.id);throw new Error('Penandaan belum dapat disimpan. Pastikan akun yang ditandai mengizinkan penandaan. '+tagged.error.message);}}
    progress.querySelector('span').style.width='100%';revoke();
    let draftWarning=false;if(currentComposeDraft?.id){try{await deletePrivateDraft(user.id,currentComposeDraft.id);}catch{draftWarning=true;}}
    currentComposeDraft=null;notify(draftWarning?'Post berhasil diterbitkan, tetapi draf lokal belum terhapus.':'Post berhasil diterbitkan.',draftWarning?'error':'success');await mountAccount('explore');
