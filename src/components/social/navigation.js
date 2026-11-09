@@ -49,42 +49,21 @@ export function renderSocialMobileNav({ active = 'explore', profileView = false,
   const profileHref = user
     ? '#/@' + encodeURIComponent(profile?.username || '')
     : '#/account/login';
-
-  if (publicHome) {
-    const items = [
-      { key: 'home', href: '#/', label: 'Beranda', icon: 'home' },
-      { key: 'discover', href: '#/account/explore', label: 'Jelajah', icon: 'compass' },
-      { key: 'create', href: '#/account/compose', label: 'Buat', icon: 'plus' },
-      { key: 'reels', href: '#/account/reels', label: 'Reels', icon: 'reels' },
-    ];
-    return `
-      <nav class="pl-home-mobile-nav pl-social-mobile-nav" aria-label="Navigasi utama Pluits">
-        ${items.map(item => `
-          <a class="${item.key === 'create' ? 'pl-home-create' : active === item.key ? 'active' : ''}"
-             href="${item.href}" aria-label="${item.label}">
-            ${socialIcon(item.icon, { size: item.key === 'create' ? 25 : 22 })}
-            <small>${item.label}</small>
-          </a>`).join('')}
-        <a href="${profileHref}" aria-label="Profil">
-          ${userAvatar || socialIcon('user', { size: 22 })}
-          <small>Profil</small>
-        </a>
-      </nav>`;
-  }
-
+  // One canonical five-item bottom navigation is shared by public home and
+  // every authenticated social page so mobile navigation never changes shape.
+  const activeKey = active === 'home' || active === 'explore' ? 'home' : active;
   const items = [
-    { key: 'explore', href: '#/account/explore', label: 'Beranda', icon: 'home' },
+    { key: 'home', href: publicHome ? '#/' : '#/account/explore', label: 'Beranda', icon: 'home' },
     { key: 'discover', href: '#/search', label: 'Jelajah', icon: 'compass' },
     { key: 'create', href: '#/account/compose', label: 'Buat', icon: 'plus' },
     { key: 'reels', href: '#/account/reels', label: 'Reels', icon: 'reels' },
   ];
-
   return `
-    <nav class="ua-mobile-nav pl-social-mobile-nav" aria-label="Navigasi utama">
+    <nav class="pl-home-mobile-nav pl-social-mobile-nav" aria-label="Navigasi utama Pluits">
       ${items.map(item => `
-        <a class="${item.key === 'create' ? 'ua-mobile-create' : active === item.key ? 'active' : ''}"
+        <a class="${item.key === 'create' ? 'pl-home-create' : activeKey === item.key ? 'active' : ''}"
            href="${item.href}" aria-label="${item.label}">
-          ${socialIcon(item.icon, { size: 22 })}
+          ${socialIcon(item.icon, { size: item.key === 'create' ? 25 : 22 })}
           <small>${item.label}</small>
         </a>`).join('')}
       <a class="${profileView ? 'active' : ''}" href="${profileHref}" aria-label="Profil">
