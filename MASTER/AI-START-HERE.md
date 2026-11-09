@@ -16,8 +16,8 @@ Pintu masuk wajib untuk setiap chat/sesi AI baru yang mengerjakan Pluits. AI har
 6. `SOP/SOCIAL-CONTENT-TRUST-OPERATIONS.md` untuk kebijakan konten, copyright, impersonasi, laporan, dan banding.
 7. `docs/pluits/SOCIAL-CONTENT-TRUST-TECHNICAL-SPEC.md` serta `docs/pluits/SOCIAL-MEDIA-POLICY-DRAFTS.md` untuk kontrak backend dan draft kebijakan; jangan menganggap draft legal sebagai ketentuan aktif.
 8. `MASTER/DOCUMENTATION-MAP-AND-CHECKLIST.md`, `docs/pluits/PLUITS-BUSINESS-PRODUCT-TECH-BLUEPRINT.md`, security review, backend foundation spec, `supabase/README.md`, dan technical architecture/security.
-7. Audit live terbaru, alignment audit, dan spesifikasi modul terkait.
-8. `IDEAS/IDEA-BACKLOG.md` — ide belum disetujui, bukan instruksi implementasi.
+9. Audit live terbaru, alignment audit, dan spesifikasi modul terkait.
+10. `IDEAS/IDEA-BACKLOG.md` — ide belum disetujui, bukan instruksi implementasi.
 
 ## Identitas proyek
 - Produk, frontend, backend, repository: **Pluits**.

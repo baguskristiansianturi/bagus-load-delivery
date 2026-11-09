@@ -987,3 +987,11 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - **Frontend route:** https://baguskristiansianturi.github.io/pluits/#/help
 - **Status:** IMPLEMENTED + DEPLOYED + BUILD TESTED. Browser runtime/Android UAT NOT TESTED; founder ACCEPTANCE NOT ACCEPTED.
 - **Batas:** deployment berhasil bukan bukti seluruh fitur moderasi, report, banding, watermark, Top 10, atau pengaturan baru sudah bekerja.
+
+
+### CP-061 — Sinkronisasi indeks dokumentasi dan navigasi kebijakan (10 November 2026)
+- **Commit:** 16e43b6b1d65f618988a35377ca67b9aed9ebff3.
+- **Workflow:** run 42665955688, #1089, conclusion SUCCESS.
+- **Perubahan:** SOP Social Content & Trust Operations masuk indeks SOP; dokumentasi teknis dan draft kebijakan masuk Documentation Map dan AI Start Here; IDEA-011 mencatat penghapusan akun tidak aktif dan proteksi screenshot sebagai proposal; menu Pedoman Komunitas diarahkan ke route kebijakan baru.
+- **Build/deploy:** production-surface verification SUCCESS; Vite build SUCCESS; GitHub Pages deployment SUCCESS pada commit ini.
+- **UAT:** Android/browser runtime NOT TESTED; founder ACCEPTANCE NOT ACCEPTED.
