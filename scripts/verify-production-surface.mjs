@@ -129,6 +129,7 @@ assert.ok(socialHome.includes("endpoint:'https://ytndswhqxayqpftszwfh.storage.su
 assert.ok(socialHome.includes('multiple accept="image/*,video/*"'), 'Composer must allow selecting multiple photos and videos.');
 assert.ok(socialHome.includes('let selectedFiles=[]') && socialHome.includes('data-remove-media'), 'Composer must preserve selected files and allow removing individual media.');
 assert.ok(socialHome.includes('name="visibility"') && socialHome.includes('class="ua-post-options"'), 'Post audience settings must be available inline in the compact composer.');
+assert.ok(socialHome.includes('name="tagged_users"') && socialHome.includes("from('post_tags').insert"), 'Composer must support real account tagging through post_tags.');
 assert.ok(socialHome.includes("files.length!==1||!uploadMime(files[0]).startsWith('video/')"), 'Reel must require exactly one video file.');
 assert.ok(socialHome.includes('const mediaRecord={media_path:path') && socialHome.includes("storage.from(BUCKET).remove(uploaded.map(media=>media.media_path))"), 'Failed video validation must clean up uploaded objects.');
 const composerCss = read('src/styles/social-navigation.css');
