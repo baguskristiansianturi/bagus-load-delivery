@@ -348,15 +348,20 @@ async function composePage(draftId='',kind='post'){
  currentComposeDraft=draftId?await getPrivateDraft(user.id,draftId):null;
  const {data:contentPrefs}=await supabase.from('account_content_preferences').select('*').eq('user_id',user.id).maybeSingle();
  const defaultAudience=accountContext.active==='professional'?(contentPrefs?.professional_default_visibility==='unlisted'?'private':'public'):accountContext.active==='business'?(contentPrefs?.business_default_visibility==='unlisted'?'private':'public'):(contentPrefs?.personal_default_visibility||'public');
- return `<div class="ua-page-heading"><div><span class="ua-eyebrow">BAGIKAN MOMEN</span><h1>${currentComposeDraft?'Lanjutkan draf':kind==='reel'?'Buat Reel':'Buat Post'}</h1></div><a class="ua-outline" href="#/account/drafts">Draf</a></div>
- <section class="ua-panel ua-compose-panel"><form id="ua-post-form" class="ua-compose-form" data-content-kind="${kind}" data-default-visibility="${currentComposeDraft?.visibility||defaultAudience}">
-  <label class="ua-upload-zone" for="ua-post-file"><span class="ua-upload-icon">＋</span><strong>${kind==='reel'?'Pilih satu video untuk Reel':'Pilih foto atau video'}</strong><small>${kind==='reel'?'Video tunggal maksimal 60 detik':'Pilih satu atau beberapa media dari galeri'}</small><input id="ua-post-file" type="file" ${kind==='reel'?'accept="video/*"':'multiple accept="image/jpeg,image/png,image/webp,image/gif,video/*"'}></label>
-  <div id="ua-media-preview" class="ua-media-preview"></div>
-  <label class="ua-compose-caption-label"><textarea name="caption" rows="4" maxlength="2200" placeholder="Tulis caption..." aria-label="Tulis caption">${esc(currentComposeDraft?.caption||'')}</textarea></label>
+ return `<div class="ua-page-heading"><div><span class="ua-eyebrow">BUAT KONTEN</span><h1>${currentComposeDraft?'Lanjutkan draf':kind==='reel'?'Reel baru':'Post baru'}</h1></div></div>
+ <section class="ua-panel ua-compose-panel"><form id="ua-post-form" class="ua-compose-form ua-clean-composer" data-content-kind="${kind}" data-default-visibility="${currentComposeDraft?.visibility||defaultAudience}">
+  <div class="ua-media-picker-row"><label class="ua-media-picker" for="ua-post-file"><span>＋</span><strong>${kind==='reel'?'Pilih video':'Tambah foto atau video'}</strong><small>${kind==='reel'?'Pilih satu video dari galeri':'Pilih beberapa media sekaligus atau tambahkan lagi'}</small><input id="ua-post-file" type="file" multiple accept="image/*,video/*"></label><span class="ua-media-count" id="ua-media-count">Belum ada media</span></div>
+  <div id="ua-media-preview" class="ua-media-preview ua-clean-preview"></div>
+  <label class="ua-compose-caption-label"><textarea name="caption" rows="3" maxlength="2200" placeholder="Tulis deskripsi..." aria-label="Tulis deskripsi">${esc(currentComposeDraft?.caption||'')}</textarea></label>
+  <details class="ua-post-options"><summary>Pengaturan postingan <span>＋</span></summary><div class="ua-post-option-fields">
+   <label>Audiens<select name="visibility"><option value="public" ${(currentComposeDraft?.visibility||defaultAudience)!=='private'?'selected':''}>Publik</option><option value="private" ${(currentComposeDraft?.visibility||defaultAudience)==='private'?'selected':''}>Hanya saya</option></select></label>
+   <p class="ua-option-hint">Penjadwalan, penandaan orang, dan lokasi akan diaktifkan setelah dukungan backend tersedia.</p>
+  </div></details>
   <div class="ua-progress" id="ua-upload-progress" hidden><span></span></div>
-  <div class="ua-compose-actions"><button class="ua-outline" type="button" id="ua-save-draft">Simpan draf</button><button class="ua-primary" type="submit">Bagikan</button></div><p class="ua-form-note" id="ua-compose-note">${currentComposeDraft?'Draf dipulihkan dari penyimpanan privat perangkat ini.':''}</p>
+  <div class="ua-compose-actions"><button class="ua-text-action" type="button" id="ua-save-draft">Simpan draf</button><button class="ua-primary" type="submit">Bagikan</button></div><p class="ua-form-note" id="ua-compose-note">${currentComposeDraft?'Draf dipulihkan dari penyimpanan privat perangkat ini.':''}</p>
  </form></section>`;
 }
+
 async function savedPage(){
  const {data:saves,error}=await supabase.from('post_saves').select('post_id').eq('user_id',user.id);
  if(error)throw error;
@@ -664,7 +669,7 @@ async function uploadMediaFile(file,path,mime,onProgress=()=>{}){
  if(!session?.access_token)throw new Error('Sesi login berakhir. Silakan masuk kembali.');
  return new Promise((resolve,reject)=>{
   const upload=new TusUpload(file,{
-   endpoint:'https://ytndswhqxayqpftszwfh.storage.supabase.co/storage/v1/upload/resumable',
+   endpoint:SUPABASE_URL+'/storage/v1/upload/resumable',
    retryDelays:[0,3000,5000,10000,20000],
    headers:{authorization:'Bearer '+session.access_token,apikey:SUPABASE_KEY,'x-upsert':'false'},
    uploadDataDuringCreation:true,removeFingerprintOnSuccess:true,chunkSize:6*1024*1024,
@@ -678,23 +683,80 @@ async function uploadMediaFile(file,path,mime,onProgress=()=>{}){
 }
 
 function bindCompose(){
- const input=document.querySelector('#ua-post-file'),preview=document.querySelector('#ua-media-preview'),note=msg=>{const n=document.querySelector('#ua-compose-note');if(n)n.textContent=msg;};
- input?.addEventListener('change',()=>{(JSON.parse(preview.dataset.urls||'[]')).forEach(URL.revokeObjectURL);preview.dataset.urls='';preview.innerHTML='';const files=[...(input.files||[])];if(!files.length)return;if(files.length>15){note('Maksimal 15 media.');input.value='';return;}const bad=files.find(f=>!uploadMime(f)||f.size>50*1024*1024);if(bad){note(!uploadMime(bad)?'Format tidak didukung.':'Maksimal 50 MB per file.');input.value='';return;}const urls=files.map(URL.createObjectURL);preview.dataset.urls=JSON.stringify(urls);preview.innerHTML=files.map((f,i)=>uploadMime(f).startsWith('video/')?'<video controls playsinline preload="metadata" src="'+urls[i]+'"></video>':'<img src="'+urls[i]+'" alt="Media '+(i+1)+'">').join('');});
+ const form=document.querySelector('#ua-post-form'),input=document.querySelector('#ua-post-file'),preview=document.querySelector('#ua-media-preview'),count=document.querySelector('#ua-media-count'),note=msg=>{const n=document.querySelector('#ua-compose-note');if(n)n.textContent=msg;};
+ if(!form||!input||!preview)return;
+ let selectedFiles=[];
+ const revoke=()=>{(JSON.parse(preview.dataset.urls||'[]')).forEach(url=>URL.revokeObjectURL(url));preview.dataset.urls='[]';};
+ const syncInput=()=>{try{const transfer=new DataTransfer();selectedFiles.forEach(file=>transfer.items.add(file));input.files=transfer.files;}catch{}};
+ const render=()=>{
+  revoke();preview.innerHTML='';
+  if(count)count.textContent=selectedFiles.length?selectedFiles.length+' media dipilih':'Belum ada media';
+  if(!selectedFiles.length)return;
+  const urls=selectedFiles.map(file=>URL.createObjectURL(file));preview.dataset.urls=JSON.stringify(urls);
+  preview.innerHTML=selectedFiles.map((file,index)=>{
+   const media=uploadMime(file).startsWith('video/')?'<video controls playsinline preload="metadata" src="'+urls[index]+'"></video>':'<img src="'+urls[index]+'" alt="Media '+(index+1)+'">';
+   return '<article class="ua-clean-media-item">'+media+'<button type="button" data-remove-media="'+index+'" aria-label="Hapus media">×</button><small>'+(index+1)+' / '+selectedFiles.length+'</small></article>';
+  }).join('');
+  preview.querySelectorAll('[data-remove-media]').forEach(button=>button.addEventListener('click',()=>{selectedFiles.splice(Number(button.dataset.removeMedia),1);syncInput();render();}));
+ };
+ input.addEventListener('change',()=>{
+  const incoming=[...(input.files||[])];if(!incoming.length)return;
+  const combined=[...selectedFiles,...incoming];
+  if(combined.length>15){note('Maksimal 15 foto atau video dalam satu Post.');syncInput();return;}
+  const bad=incoming.find(file=>!uploadMime(file)||file.size>50*1024*1024);
+  if(bad){note(!uploadMime(bad)?'Format file tidak didukung. Pilih foto JPG, PNG, WebP atau video MP4, WebM, MOV.':'Ukuran maksimal 50 MB per file.');syncInput();return;}
+  selectedFiles=combined;syncInput();render();note('');
+ });
  const saveDraftButton=document.querySelector('#ua-save-draft');
  saveDraftButton?.addEventListener('click',async()=>{
-  const files=[...(input?.files||[])],caption=String(document.querySelector('#ua-post-form [name=caption]')?.value||'').trim();
-  if(!files.length&&!caption){note('Tulis caption atau pilih media sebelum menyimpan draf.');return;}
+  const caption=String(form.querySelector('[name=caption]')?.value||'').trim();
+  if(!selectedFiles.length&&!caption){note('Pilih media atau tulis deskripsi sebelum menyimpan draf.');return;}
   saveDraftButton.disabled=true;saveDraftButton.textContent='Menyimpan…';
   try{
-   const draftFiles=files.length?files.map(file=>({name:file.name,type:file.type,size:file.size,lastModified:file.lastModified,blob:file})):(currentComposeDraft?.files||[]);const draft={id:currentComposeDraft?.id||(crypto.randomUUID?crypto.randomUUID():'draft-'+Date.now()),user_id:user.id,caption,visibility:document.querySelector('#ua-post-form')?.dataset.defaultVisibility||'public',profile_context:accountContext.active,updated_at:new Date().toISOString(),files:draftFiles};
-   await savePrivateDraft(draft);currentComposeDraft=draft;note('Draf tersimpan secara privat di browser ini. Draf belum tersinkron ke perangkat lain.');saveDraftButton.disabled=false;saveDraftButton.textContent='Draf tersimpan';
-  }catch(error){note(error.message||'Draf tidak dapat disimpan pada perangkat ini.');saveDraftButton.disabled=false;saveDraftButton.textContent='Coba lagi';}
+   const draftFiles=selectedFiles.length?selectedFiles.map(file=>({name:file.name,type:file.type,size:file.size,lastModified:file.lastModified,blob:file})):(currentComposeDraft?.files||[]);
+   const draft={id:currentComposeDraft?.id||(crypto.randomUUID?crypto.randomUUID():'draft-'+Date.now()),user_id:user.id,caption,visibility:form.querySelector('[name=visibility]')?.value||form.dataset.defaultVisibility||'public',profile_context:accountContext.active,updated_at:new Date().toISOString(),files:draftFiles};
+   await savePrivateDraft(draft);currentComposeDraft=draft;note('Draf tersimpan di perangkat ini.');saveDraftButton.disabled=false;saveDraftButton.textContent='Draf tersimpan';
+  }catch(error){note(error.message||'Draf tidak dapat disimpan.');saveDraftButton.disabled=false;saveDraftButton.textContent='Coba lagi';}
  });
- if(currentComposeDraft?.files?.length&&input){
-  try{const transfer=new DataTransfer();currentComposeDraft.files.forEach(item=>transfer.items.add(new File([item.blob],item.name,{type:item.type,lastModified:item.lastModified||Date.now()})));input.files=transfer.files;input.dispatchEvent(new Event('change',{bubbles:true}));}
-  catch{note('Draf teks dipulihkan. Browser ini belum mendukung pemulihan lampiran; file asli tetap tersimpan di draf perangkat.');}
+ if(currentComposeDraft?.files?.length){
+  try{selectedFiles=currentComposeDraft.files.map(item=>new File([item.blob],item.name,{type:item.type,lastModified:item.lastModified||Date.now()}));syncInput();render();}
+  catch{note('Draf teks dipulihkan. Lampiran belum dapat dipulihkan oleh browser ini.');}
  }
- document.querySelector('#ua-post-form')?.addEventListener('submit',async e=>{e.preventDefault();const form=e.currentTarget,files=[...(input?.files||[])],d=new FormData(form),caption=String(d.get('caption')||'').trim(),button=form.querySelector('button[type=submit]'),progress=document.querySelector('#ua-upload-progress');if(!files.length&&!caption){note('Tulis caption atau pilih media.');return;}if(files.length>15){note('Maksimal 15 media.');return;}if(form.dataset.contentKind==='reel'&&(files.length!==1||!uploadMime(files[0]).startsWith('video/'))){note('Reel harus berupa satu file video.');return;}const bad=files.find(f=>!uploadMime(f)||f.size>50*1024*1024);if(bad){note(!uploadMime(bad)?'Format tidak didukung.':'Maksimal 50 MB per file.');return;}button.disabled=true;button.textContent='Mengunggah…';const uploaded=[];try{for(let i=0;i<files.length;i++){const f=files[i],mime=uploadMime(f),ext=f.name.split('.').pop().toLowerCase(),token=crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random().toString(36).slice(2),path=user.id+'/'+token+'.'+ext,up=await uploadMediaFile(f,path,mime,pct=>{progress.hidden=false;progress.querySelector('span').style.width=Math.round((i+pct/100)/files.length*65)+'%';});if(up.error)throw up.error;let duration=null;if(mime.startsWith('video/'))duration=await new Promise(resolve=>{const v=document.createElement('video');v.preload='metadata';v.onloadedmetadata=()=>{const n=Number.isFinite(v.duration)?Math.round(v.duration*1000):null;URL.revokeObjectURL(v.src);resolve(n);};v.onerror=()=>resolve(null);v.src=URL.createObjectURL(f);});if(form.dataset.contentKind==='reel'&&(!duration||duration>60000))throw new Error('Reel harus berupa video berdurasi maksimal 60 detik.');uploaded.push({media_path:path,media_type:mime.startsWith('video/')?'video':'image',position:i,duration_ms:duration});progress.hidden=false;progress.querySelector('span').style.width=Math.round(65*uploaded.length/files.length)+'%';}const tags=[...new Set((caption.match(/#[\p{L}\p{N}_]+/gu)||[]).map(x=>x.slice(1).toLowerCase()))].slice(0,30),ctx={profile_context:accountContext.active,professional_profile_id:accountContext.active==='professional'?accountContext.professional?.id||null:null,business_store_id:accountContext.active==='business'?(accountContext.prefs?.active_store_id||accountContext.stores[0]?.id||null):null},first=uploaded[0],ins=await supabase.from('user_posts').insert({user_id:user.id,...ctx,caption,tags,media_path:first?.media_path||null,media_type:uploaded.length?(uploaded.length===1?first.media_type:'mixed'):'text',visibility:form.dataset.defaultVisibility==='private'?'private':'public'}).select('id').single();if(ins.error)throw ins.error;if(uploaded.length){const link=await supabase.from('post_media').insert(uploaded.map(x=>({...x,post_id:ins.data.id,user_id:user.id})));if(link.error){await supabase.from('user_posts').delete().eq('id',ins.data.id);throw link.error;}}progress.querySelector('span').style.width='100%';JSON.parse(preview.dataset.urls||'[]').forEach(URL.revokeObjectURL);let draftCleanupWarning=false;if(currentComposeDraft?.id){try{await deletePrivateDraft(user.id,currentComposeDraft.id);}catch{draftCleanupWarning=true;}}currentComposeDraft=null;notify(draftCleanupWarning?'Postingan terbit, tetapi draf lokal belum terhapus. Hapus draf secara manual.':'Postingan berhasil diterbitkan.',draftCleanupWarning?'error':'success');await mountAccount('explore');}catch(err){if(uploaded.length)await supabase.storage.from(BUCKET).remove(uploaded.map(x=>x.media_path));note(err.message||'Upload gagal.');button.disabled=false;button.textContent='Coba lagi';progress.hidden=true;}});
+ form.addEventListener('submit',async event=>{
+  event.preventDefault();
+  const files=[...selectedFiles],data=new FormData(form),caption=String(data.get('caption')||'').trim(),button=form.querySelector('button[type=submit]'),progress=document.querySelector('#ua-upload-progress');
+  if(!files.length&&!caption){note('Pilih foto/video atau tulis deskripsi.');return;}
+  if(files.length>15){note('Maksimal 15 media dalam satu Post.');return;}
+  if(form.dataset.contentKind==='reel'&&(files.length!==1||!uploadMime(files[0]).startsWith('video/'))){note('Reel harus terdiri dari satu file video.');return;}
+  const bad=files.find(file=>!uploadMime(file)||file.size>50*1024*1024);
+  if(bad){note(!uploadMime(bad)?'Format file tidak didukung.':'Ukuran maksimal 50 MB per file.');return;}
+  button.disabled=true;button.textContent='Mengunggah…';const uploaded=[];
+  try{
+   for(let i=0;i<files.length;i++){
+    const file=files[i],mime=uploadMime(file),ext=(file.name.split('.').pop()||'bin').toLowerCase(),token=crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random().toString(36).slice(2),path=user.id+'/'+token+'.'+ext;
+    const result=await uploadMediaFile(file,path,mime,pct=>{progress.hidden=false;progress.querySelector('span').style.width=Math.round((i+pct/100)/files.length*65)+'%';});
+    if(result.error)throw result.error;
+    let duration=null;
+    if(mime.startsWith('video/'))duration=await new Promise(resolve=>{const video=document.createElement('video');video.preload='metadata';video.onloadedmetadata=()=>{const ms=Number.isFinite(video.duration)?Math.round(video.duration*1000):null;URL.revokeObjectURL(video.src);resolve(ms);};video.onerror=()=>{URL.revokeObjectURL(video.src);resolve(null);};video.src=URL.createObjectURL(file);});
+    if(form.dataset.contentKind==='reel'&&(!duration||duration>60000))throw new Error('Reel harus berupa video maksimal 60 detik.');
+    uploaded.push({media_path:path,media_type:mime.startsWith('video/')?'video':'image',position:i,duration_ms:duration});
+    progress.hidden=false;progress.querySelector('span').style.width=Math.round(65*uploaded.length/files.length)+'%';
+   }
+   const tags=[...new Set((caption.match(/#[\\p{L}\\p{N}_]+/gu)||[]).map(tag=>tag.slice(1).toLowerCase()))].slice(0,30);
+   const context={profile_context:accountContext.active,professional_profile_id:accountContext.active==='professional'?accountContext.professional?.id||null:null,business_store_id:accountContext.active==='business'?(accountContext.prefs?.active_store_id||accountContext.stores[0]?.id||null):null};
+   const first=uploaded[0],insert=await supabase.from('user_posts').insert({user_id:user.id,...context,caption,tags,media_path:first?.media_path||null,media_type:uploaded.length?(uploaded.length===1?first.media_type:'mixed'):'text',visibility:data.get('visibility')==='private'?'private':'public'}).select('id').single();
+   if(insert.error)throw insert.error;
+   if(uploaded.length){const link=await supabase.from('post_media').insert(uploaded.map(media=>({...media,post_id:insert.data.id,user_id:user.id})));if(link.error){await supabase.from('user_posts').delete().eq('id',insert.data.id);throw link.error;}}
+   progress.querySelector('span').style.width='100%';revoke();
+   let draftWarning=false;if(currentComposeDraft?.id){try{await deletePrivateDraft(user.id,currentComposeDraft.id);}catch{draftWarning=true;}}
+   currentComposeDraft=null;notify(draftWarning?'Post berhasil diterbitkan, tetapi draf lokal belum terhapus.':'Post berhasil diterbitkan.',draftWarning?'error':'success');await mountAccount('explore');
+  }catch(error){
+   if(uploaded.length)await supabase.storage.from(BUCKET).remove(uploaded.map(media=>media.media_path));
+   const message=String(error?.message||error||'Upload gagal.');
+   note(/failed to fetch|network|timeout/i.test(message)?'Koneksi upload terputus. Periksa jaringan lalu coba lagi.':message);
+   button.disabled=false;button.textContent='Coba lagi';progress.hidden=true;
+  }
+ });
 }
 function bindStories(){
  document.querySelectorAll('.ua-story-item').forEach(button=>{
