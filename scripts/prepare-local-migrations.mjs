@@ -16,7 +16,7 @@ assert.ok(existsSync(path.join(sourceDir, 'config.toml')), 'Supabase config miss
 assert.equal(readFileSync(path.join(sourceDir, 'config.toml'), 'utf8').includes('ytndswhqxayqpftszwfh'), false, 'Production project ref must not enter local workspace');
 
 const files = readdirSync(sourceMigrations).filter((name) => name.endsWith('.sql')).sort();
-assert.equal(files.length, 82, 'Migration count changed; refresh and review the production order manifest before CI replay');
+assert.equal(files.length, 83, 'Migration count changed; refresh and review the production order manifest before CI replay');
 
 const entries = files.map((file) => {
   const match = file.match(/^(\d{14})_(.+)\.sql$/);
