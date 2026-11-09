@@ -559,3 +559,51 @@ Jangan membuat job penghapusan otomatis atau mengumumkan aturan satu tahun sebel
 ### B. Pencegahan screenshot/download
 Founder ingin mengurangi penyimpanan gambar/video dan menambahkan watermark jika media berhasil disalin. Pemblokiran screenshot masih dipertimbangkan dan tidak dapat dijamin pada browser/web lintas perangkat.
 Arah yang disukai untuk diteliti: kontrol akses media, URL sementara, tidak menyediakan direct download sebagai default, watermark dengan @username pemilik dan identitas Pluits pada salinan resmi, serta fingerprint tersembunyi. Jangan menjanjikan pencegahan 100%.
+
+## IDEA-012 — Offline proximity text chat for emergency communication
+Status: PROPOSED / NEEDS RESEARCH — NOT APPROVED FOR IMPLEMENTATION  
+Source: founder request, 10 November 2026.
+
+### User problem and goal
+In an emergency, a person may have no mobile data quota, no internet connection, or a damaged/overloaded network. The proposed Pluits capability is a lightweight text-only chat that can connect people physically nearby without relying on a cloud server. Images, video, and other large media are intentionally out of scope for the first experiment; short text, discovery, delivery state, and safety are the priority.
+
+### Important distinction
+- **Offline outbox (current implementation):** a message is stored locally on the sender's device and sent to Supabase after internet returns. It cannot reach another person while both devices are disconnected.
+- **True offline peer-to-peer chat (proposed):** devices discover and connect to one another locally, then exchange encrypted text directly without an internet round-trip. It only works between compatible nearby devices within radio range or through a connected relay/mesh.
+- This does not provide global messaging. A remote friend in another city cannot receive a message unless there is a chain of connected devices or a gateway that eventually reconnects.
+
+### Technical options to evaluate
+1. **Android Nearby Connections API — preferred first research prototype.** Google documents discovery, connection and data exchange between nearby devices without internet, using Bluetooth, BLE and Wi-Fi under one API. It supports byte payloads/streams and encrypted peer connections. Evaluate Android compatibility, cross-platform behavior, background restrictions, permissions, battery usage, relay behavior and Play distribution requirements.
+   - https://developers.google.com/nearby/connections/overview
+2. **Wi-Fi Direct — candidate for higher throughput/range.** Android supports peer discovery and device-to-device network creation without an access point or internet. It needs Android native APIs, runtime permissions and connection lifecycle handling.
+   - https://developer.android.com/develop/connectivity/wifi/wifi-direct
+3. **Bluetooth LE — candidate for very small text and discovery.** Potentially lower throughput and more constraints; evaluate message fragmentation, connection reliability, range, battery and device compatibility.
+4. **Web/PWA only — not the preferred production route.** Web Bluetooth is limited/experimental and browser support is inconsistent; it is not a dependable cross-device peer discovery and mesh transport layer. Do not promise universal offline chat through the current GitHub Pages web app.
+   - https://developer.mozilla.org/en-US/docs/Web/API/Web_Bluetooth_API
+
+### Proposed phased experiment (not approved yet)
+- Phase A: two Android devices, text-only, explicit nearby-device discovery, mutual consent/pairing, encrypted one-to-one message exchange, sent/received acknowledgements, and clear local-only message history.
+- Phase B: small group chat and store-and-forward through a device that remains connected to both peers.
+- Phase C: evaluate multi-hop mesh routing, duplicate suppression, TTL/expiry, hop limits, abuse controls, battery and congestion. Do not claim mesh coverage until tested.
+- Internet recovery: reconcile offline conversations with the normal Pluits inbox only through an explicit identity/linking process; avoid duplicate messages and spoofed identities.
+
+### Safety, privacy and abuse requirements
+- No silent discovery or automatic connection. User must opt in and see the nearby peer identity before accepting.
+- Authenticate peer identity using a QR/pairing code or another reviewed trust mechanism; device name alone is not proof of account identity.
+- Encrypt message payloads end-to-end for the local link; design key exchange and recovery before any real deployment.
+- Limit message length, rate, group size and local cache; expire or let users delete local history.
+- Prevent replay, impersonation, spam, denial-of-service, tracking and unwanted proximity contact.
+- Clearly label local-only messages and distinguish queued, sent to nearby device, received, and synced to Pluits cloud. A local radio acknowledgement is not proof that the recipient read the message.
+- Emergency disclaimers: this is not a replacement for emergency services, cellular emergency calls, or official warning systems. Never imply guaranteed delivery or coverage.
+
+### Open questions
+- Which Android versions and devices should be supported first?
+- Is the first goal direct one-to-one chat only, or should a connected phone relay messages for others?
+- How should users verify a nearby peer belongs to a Pluits account without a server?
+- What is the maximum useful range and expected number of peers in an evacuation/shelter scenario?
+- Should emergency mode be opt-in per session, auto-expire, and delete local history afterward?
+- How should cloud sync work when internet returns, including conflict resolution and identity continuity?
+- What platform/legal review and privacy disclosure are required for radio permissions and proximity discovery?
+
+### Decision boundary
+This is an unapproved research idea. Do not add native dependencies, change app packaging, request Bluetooth/Wi-Fi permissions, alter the business model, or advertise offline emergency messaging until the founder approves a tested technical direction and a safety/privacy design.
