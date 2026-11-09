@@ -1629,3 +1629,20 @@
     padding:8px 10px;font-size:11px;
   }
 }
+/* Profile grid must end at its actual last media row — no phantom empty third row. */
+.ua-profile-main .ua-profile-tab-content{
+  min-height:0!important;
+  height:auto!important;
+  padding-bottom:0!important;
+  background:#fff;
+}
+.ua-profile-main .ua-profile-tab-content:empty{display:none}
+.ua-profile-main .ua-post-grid{
+  min-height:0!important;
+  height:auto!important;
+  align-content:start!important;
+  grid-auto-rows:auto!important;
+  background:transparent!important;
+}
+.ua-profile-main .ua-post-grid::after{content:none!important;display:none!important}
+.ua-profile-main .ua-post-thumb{background:#f2f4f6}
