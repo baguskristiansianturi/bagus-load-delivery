@@ -1505,3 +1505,66 @@
   .ua-post-detail-page .ua-page-heading { padding-inline: 11px; }
   .ua-social-home .ua-post-head { padding-inline: 12px; }
 }
+
+
+/* Larger Instagram-style double-tap reaction with a distinct unlike animation. */
+.ua-social-home .ua-media,
+.ua-social-home .ua-gallery-item,
+.ua-post-detail-page .ua-media,
+.ua-post-detail-page .ua-gallery-item {
+  position: relative;
+}
+.ua-double-tap-heart {
+  position: absolute;
+  z-index: 12;
+  left: 50%;
+  top: 50%;
+  display: grid;
+  width: 124px;
+  height: 124px;
+  place-items: center;
+  color: #ff3158;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(0 7px 20px rgba(0,0,0,.28));
+}
+.ua-double-tap-heart svg {
+  display: block;
+  width: 112px;
+  height: 112px;
+  stroke-width: 1.8;
+}
+.ua-double-tap-heart.is-liking svg {
+  fill: #ff3158;
+  stroke: #fff;
+}
+.ua-double-tap-heart.is-removing {
+  color: #d7dce4;
+  animation: ua-heart-crack 1s cubic-bezier(.2,.75,.25,1) both;
+}
+.ua-double-tap-heart.is-removing svg {
+  fill: transparent;
+  stroke: #fff;
+  stroke-width: 2.2;
+}
+.ua-double-tap-heart.is-liking {
+  animation: ua-heart-appear 1s cubic-bezier(.18,.8,.25,1) both;
+}
+@keyframes ua-heart-appear {
+  0% { opacity: 0; transform: translate(-50%,-50%) scale(.35) rotate(-12deg); }
+  24% { opacity: 1; transform: translate(-50%,-50%) scale(1.22) rotate(5deg); }
+  42% { opacity: 1; transform: translate(-50%,-50%) scale(1) rotate(0); }
+  72% { opacity: .95; transform: translate(-50%,-50%) scale(1); }
+  100% { opacity: 0; transform: translate(-50%,-50%) scale(.88); }
+}
+@keyframes ua-heart-crack {
+  0% { opacity: 0; transform: translate(-50%,-50%) scale(.75); }
+  22% { opacity: 1; transform: translate(-50%,-50%) scale(1.08) rotate(5deg); }
+  40% { opacity: 1; transform: translate(-50%,-50%) scale(1) rotate(-5deg); }
+  58% { opacity: .85; transform: translate(-50%,-50%) scale(1.05) rotate(5deg); }
+  100% { opacity: 0; transform: translate(-50%,-50%) scale(.65) rotate(-12deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ua-double-tap-heart.is-liking,
+  .ua-double-tap-heart.is-removing { animation-duration: .2s; }
+}
