@@ -30,8 +30,17 @@ function messageMarkup(row, pending = false) {
 }
 export function messagesPage() {
   return `<main class="pl-msg">
-    <header class="pl-msg-head"><a href="#/account/profile" class="pl-msg-brand">PLUITS <span>MESSAGES</span></a>
-      <nav><a href="#/account/explore">Beranda</a><a href="#/account/activity">Notifikasi</a><a href="#/account/profile">Profil</a></nav>
+    <header class="pl-msg-head">
+      <a href="#/account/profile" class="pl-msg-self" aria-label="Buka profil saya"><span class="pl-msg-self-avatar">P</span></a>
+      <div class="pl-msg-head-brand"><a href="#/account/explore" class="pl-msg-brand">PLUITS <span>INBOX</span></a><small>Ruang percakapan Anda</small></div>
+      <button type="button" class="pl-msg-settings-toggle" id="pl-msg-settings-toggle" aria-label="Pengaturan inbox" aria-expanded="false">⋯</button>
+      <div class="pl-msg-settings" id="pl-msg-settings" hidden>
+        <strong>Pengaturan inbox</strong>
+        <label><input type="checkbox" checked> Tampilkan pesan utama</label>
+        <label><input type="checkbox" checked> Tampilkan permintaan pesan</label>
+        <label><input type="checkbox" checked> Tampilkan pembaruan sistem</label>
+        <small>Pengaturan tampilan inbox</small>
+      </div>
     </header>
     <section class="pl-msg-content">
       <div class="pl-msg-heading"><div><small>PRIVATE CONVERSATIONS</small><h1>Pesan</h1><p>Pesan pribadi antar akun Pluits.</p></div><span id="pl-msg-network" class="pl-msg-network" role="status">Memeriksa koneksi…</span></div>
@@ -44,6 +53,7 @@ export function messagesPage() {
         </aside>
         <section class="pl-msg-chat" id="pl-msg-chat"><div class="pl-msg-empty">Pilih percakapan atau kontak untuk memulai pesan.</div></section>
       </div>
+      <nav class="pl-msg-mobile-nav" aria-label="Navigasi utama"><a href="#/account/explore">⌂<small>Beranda</small></a><a class="active" href="#/messages">✉<small>Inbox</small></a><a href="#/account/activity">♧<small>Aktivitas</small></a><a href="#/account/profile">◉<small>Profil</small></a></nav>
       <p class="pl-msg-offline-note">Jika koneksi terputus, pesan yang Anda kirim disimpan sementara di perangkat ini dan otomatis dicoba kirim saat online kembali. Pesan belum terkirim sampai server mengonfirmasi.</p>
     </section>
   </main>`;
@@ -65,8 +75,11 @@ async function loadContacts() {
   if (!ids.length) { box.innerHTML='<p class="pl-msg-empty">Kontak akan muncul dari akun yang saling terhubung. Anda juga dapat mencari username di atas.</p>'; return; }
   const {data:profiles,error:profileError} = await db.rpc('get_user_profile_directory_by_ids',{p_ids:ids});
   if (profileError) { box.textContent=profileError.message; return; }
-  box.innerHTML=(profiles||[]).map(person=>'<button class="pl-msg-contact" data-start-chat="'+person.id+'"><b>'+esc(person.display_name||person.username)+'</b><small>@'+esc(person.username)+'</small><span>Pesan →</span></button>').join('') || '<p class="pl-msg-empty">Belum ada kontak yang dapat ditampilkan.</p>';
-  bindStartChat(box);
+  const people=profiles||[];
+  box.innerHTML=people.map(person=>'<button class="pl-msg-contact" data-start-chat="'+person.id+'"><b>'+esc(person.display_name||person.username)+'</b><small>@'+esc(person.username)+'</small><span>Pesan →</span></button>').join('') || '<p class="pl-msg-empty">Belum ada kontak yang dapat ditampilkan.</p>';
+  const strip=document.querySelector('#pl-msg-people-strip');
+  if(strip)strip.innerHTML=people.slice(0,12).map(person=>'<button class="pl-msg-person" data-start-chat="'+person.id+'" aria-label="Mulai pesan dengan '+esc(person.display_name||person.username)+'"><span class="pl-msg-person-avatar">'+esc((person.display_name||person.username||'P').slice(0,1).toUpperCase())+'</span><small>'+esc(person.username||person.display_name||'Kontak')+'</small></button>').join('')||'<span class="pl-msg-people-loading">Kontak yang terhubung akan muncul di sini.</span>';
+  bindStartChat(box);if(strip)bindStartChat(strip);
 }
 function bindStartChat(box) {
   box.querySelectorAll('[data-start-chat]').forEach(button=>button.onclick=async()=>{
@@ -85,6 +98,9 @@ export async function bindMessagesPage() {
   if(!user) { app.querySelector('#pl-msg-conversations').innerHTML='<div class="pl-msg-empty">Masuk ke akun Pluits untuk menggunakan pesan. <a href="#/account/login">Masuk →</a></div>'; return; }
   if(realtimeChannel) { await db.removeChannel(realtimeChannel); realtimeChannel=null; }
   await Promise.all([loadContacts(),loadConversations()]);
+  const settingsToggle=app.querySelector('#pl-msg-settings-toggle'),settingsPanel=app.querySelector('#pl-msg-settings');
+  if(settingsToggle&&settingsPanel)settingsToggle.onclick=()=>{const open=settingsPanel.hidden;settingsPanel.hidden=!open;settingsToggle.setAttribute('aria-expanded',String(open));};
+  const selfAvatar=app.querySelector('.pl-msg-self-avatar');if(selfAvatar)selfAvatar.textContent=(user.user_metadata?.full_name||user.email||'P').slice(0,1).toUpperCase();
   const requestedConversation=new URLSearchParams((location.hash.split('?')[1]||'')).get('conversation');
   if(requestedConversation&&conversationCache.some(item=>item.id===requestedConversation)) await openConversation(requestedConversation);
   const search=app.querySelector('#pl-msg-search');
