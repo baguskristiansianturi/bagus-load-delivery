@@ -68,7 +68,7 @@ export function messagesPage() {
 }
 function updateNetworkStatus() {
   const node = document.querySelector('#pl-msg-network');
-  if (node) { node.textContent = navigator.onLine ? '● Online' : '○ Offline'; node.classList.toggle('is-offline', !navigator.onLine); }
+  if (node) { node.textContent = navigator.onLine ? '● Koneksi aktif' : '○ Tidak ada koneksi'; node.classList.toggle('is-offline', !navigator.onLine); }
 }
 function contactAvatar(person, imageUrl='') {
   const name=person.display_name||person.username||'P';
