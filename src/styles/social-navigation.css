@@ -135,3 +135,46 @@
 
 .pl-social-mobile-actions .pl-mobile-notice{position:relative}
 .pl-social-mobile-actions .pl-nav-unread{top:0;right:-8px}
+
+
+/* Keep every bottom-navigation symbol at the same visual size, including profile avatar. */
+@media (max-width: 760px) {
+  .ua-social-app .pl-social-mobile-nav > a .pl-icon,
+  .ua-social-app .pl-social-mobile-nav > a .ua-avatar {
+    display: block;
+    width: 22px !important;
+    height: 22px !important;
+    min-width: 22px;
+    min-height: 22px;
+    max-width: 22px;
+    max-height: 22px;
+    flex: 0 0 22px;
+    padding: 0 !important;
+    border: 0;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: none;
+  }
+
+  .ua-social-app .pl-social-mobile-nav > a .ua-avatar-fallback {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    line-height: 1;
+  }
+
+  .ua-social-app .pl-social-mobile-nav .pl-home-create .pl-icon {
+    width: 22px !important;
+    height: 22px !important;
+    min-width: 22px;
+    min-height: 22px;
+    padding: 0 !important;
+    border: 0;
+    border-radius: 0;
+  }
+
+  .ua-social-app .pl-social-mobile-nav > a {
+    gap: 3px;
+  }
+}
