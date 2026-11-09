@@ -132,8 +132,8 @@ const discovery = read('src/pages/search/discovery.js');
 assert.ok(discovery.includes("renderSocialMobileNav({active:'discover'})"), 'Explore must reuse the shared five-item social navigation.');
 assert.ok(discovery.includes('social-navigation.css'), 'Explore must load shared social navigation styles.');
 const discoveryCss = read('src/pages/search/discovery.css');
-assert.match(discoveryCss, /grid-template-columns:\\s*repeat\\(3,\\s*minmax\\(0,\\s*1fr\\)\\)/, 'Explore must use a fluid three-column mobile grid.');
-assert.match(discoveryCss, /aspect-ratio:\\s*1\\s*\\/\\s*1/, 'Explore media tiles must preserve a square responsive ratio.');
+assert.ok(discoveryCss.includes('grid-template-columns: repeat(3, minmax(0, 1fr))'), 'Explore must use a fluid three-column mobile grid.');
+assert.ok(discoveryCss.includes('aspect-ratio: 1 / 1'), 'Explore media tiles must preserve a square responsive ratio.');
 assert.match(discoveryCss, /safe-area-inset-bottom/, 'Explore bottom navigation must respect device safe areas.');
 
 
