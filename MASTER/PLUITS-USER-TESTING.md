@@ -190,3 +190,18 @@ Check the same core flows at viewport widths 320, 360, 390, 430, 768, 1024, and 
 - Record load time, image/video size, upload duration, errors, device model, Android version, and browser version. Do not report performance as passed without measurements.
 
 **Important:** A successful GitHub Pages deployment is not an acceptance test. Record exact device/browser, steps, observed result, and screenshot/error text. Never share passwords, OTP, MFA QR/secret, auth tokens, or private message content.
+
+## 11. Uji draf postingan privat — frontend lokal
+
+1. Login dengan akun yang Anda kendalikan dan buka Profil → Draf postingan.
+2. Buat postingan baru, pilih satu foto atau video pendek, tulis caption, lalu pilih **Simpan draf**.
+3. Pastikan status menyatakan draf tersimpan pada browser/perangkat ini; jangan menganggapnya tersinkron ke cloud.
+4. Refresh halaman, buka Profil → Draf postingan, lalu pilih **Lanjutkan**.
+5. Pastikan caption dan lampiran dipulihkan ke composer. Uji juga draf teks tanpa lampiran.
+6. Pastikan draf tidak muncul di profil publik, feed, Explore, pencarian, atau halaman pengunjung tanpa login.
+7. Buat draf pada akun A, logout, lalu login akun B pada browser yang sama. Pastikan draf A tidak tampil pada daftar B.
+8. Kembali ke akun A, hapus satu draf dan pastikan hanya draf yang dipilih yang hilang.
+9. Terbitkan satu draf uji yang memang ingin dipublikasikan. Pastikan postingan muncul sesuai audience dan draf tersebut hilang dari daftar.
+10. Jangan menghapus data browser selama masih membutuhkan draf; penyimpanan saat ini lokal dan belum memiliki sinkronisasi lintas perangkat.
+
+**Lulus jika:** draf terpisah per user_id, dapat disimpan/dipulihkan/dihapus, lampiran dipulihkan pada browser yang mendukung DataTransfer, dan tidak pernah diterbitkan sebelum pengguna menekan Bagikan. Android runtime UAT masih harus dilakukan founder.

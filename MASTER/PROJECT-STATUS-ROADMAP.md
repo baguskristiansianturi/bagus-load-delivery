@@ -995,3 +995,17 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - **Perubahan:** SOP Social Content & Trust Operations masuk indeks SOP; dokumentasi teknis dan draft kebijakan masuk Documentation Map dan AI Start Here; IDEA-011 mencatat penghapusan akun tidak aktif dan proteksi screenshot sebagai proposal; menu Pedoman Komunitas diarahkan ke route kebijakan baru.
 - **Build/deploy:** production-surface verification SUCCESS; Vite build SUCCESS; GitHub Pages deployment SUCCESS pada commit ini.
 - **UAT:** Android/browser runtime NOT TESTED; founder ACCEPTANCE NOT ACCEPTED.
+
+
+### CP-062 — Social frontend increment: clean profile hero and private local drafts (10 November 2026)
+- **Business decision:** D-006; Business Model Master Bagian 33.1. Social Media remains frontend-first and P0.
+- **Commit:** `f28b44ff576d8699d8d873f11ae1d634facc13c9`.
+- **Workflow:** GitHub Actions run `42669706122`; build, production-surface guard, output verification, artifact upload, and Pages deployment SUCCESS.
+- **Frontend implemented:** default profile presentation hides the mandatory cover area and uses an identity-led clean Hero; private owner-only Drafts route/menu; IndexedDB stores draft caption and selected media blobs locally; drafts can be listed, resumed, deleted, and removed after successful publish.
+- **Help Center:** added a Drafts help article that clearly states local-only storage and no cloud sync.
+- **Database/backend:** unchanged. No production migration, RLS, Storage, Auth, or Edge Function change. Draft sync across devices is NOT IMPLEMENTED.
+- **Security note:** local IndexedDB is scoped by user_id in application reads, but it is device/browser storage, not a server-side privacy boundary. Shared-device users should sign out and protect their device. No draft record is exposed through public routes or Supabase.
+- **Not yet implemented:** selectable Hero/feed layout presets, cloud drafts, immersive media viewer, Explore-wide autoplay, global Top 10, AI video detection, copyright fingerprinting, music-rights enforcement, server watermarking, online presence carousel, and full friend-only messaging semantics.
+- **Live backend audit:** 62/62 public tables RLS enabled; 81 live migrations; 146 public policies; 20 authenticated-callable SECURITY DEFINER advisor findings; leaked-password protection warning; 83 unused-index INFO notices; health advisor 0 lints; 0 Edge Functions. SOC-01–SOC-04 remain present in live policies; GDT-01 remains a separate known finding. No production DDL applied.
+- **UAT:** build/deploy TESTED; Android runtime, two-account drafts, media restore, and founder acceptance NOT TESTED / NOT ACCEPTED.
+- **Next:** Android UAT for drafts/profile Hero; fix Social privacy RLS only after staging environment and negative two-account tests; then continue the next frontend Social journeys without fabricating backend readiness.
