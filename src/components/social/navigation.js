@@ -32,12 +32,14 @@ export function renderSocialHeader({ active = 'explore', profileView = false, us
         <a class="${active === 'reels' ? 'active' : ''}" href="#/account/reels">Reels</a>
         <a href='#/messages'>${socialIcon('message', { size: 17 })}<span>Pesan</span></a>
         <a href='#/account/followers' aria-label='Kontak'>${socialIcon('users', { size: 17 })}<span>Kontak</span></a>
+        <a href='#/account/saved' aria-label='Tersimpan'>${socialIcon('bookmark', { size: 17 })}<span>Tersimpan</span></a>
         <a href='#/account/settings' aria-label='Pengaturan'>${socialIcon('more', { size: 17 })}<span>Pengaturan</span></a>
         <a class="${active === 'activity' ? 'active' : ''} pl-nav-activity" href="#/account/activity">Aktivitas${notificationCount ? '<i class="pl-nav-unread">'+(notificationCount>99?'99+':notificationCount)+'</i>' : ''}</a>
         <a class="${profileView ? 'active' : ''}" href="#/account/profile">Profil</a>
       </nav>
       <div class='pl-social-mobile-actions'>
         <a href='#/account/followers' aria-label='Kontak dan koneksi'>${socialIcon('users', { size: 21 })}</a>
+        <a href='#/account/saved' aria-label='Wishlist dan tersimpan'>${socialIcon('bookmark', { size: 21 })}</a>
         <a class='pl-mobile-notice' href='#/account/activity' aria-label='Notifikasi'>${socialIcon('bell', { size: 21 })}${notificationCount ? '<i class="pl-nav-unread">'+(notificationCount>99?'99+':notificationCount)+'</i>' : ''}</a>
         <a href='#/account/settings' aria-label='Pengaturan'>${socialIcon('more', { size: 21 })}</a>
       </div>
