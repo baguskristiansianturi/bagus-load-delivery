@@ -964,3 +964,16 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - **Live database:** read-only inspection mengonfirmasi constraint, RPC, dan verification requirements masih belum sesuai D-005. Tidak ada DDL/data/Auth changes.
 - **Tidak dilakukan:** tidak ada perubahan frontend, browser rendering, Android test, staging branch, atau deployment fitur. GitHub clone lokal gagal karena runtime tidak dapat menjangkau GitHub; tool browser/device automation tidak tersedia.
 - **Next:** staging approval → schema/RPC alignment dan negative tests → onboarding UX + location/privacy → dashboard modules → automated build → Android founder UAT.
+
+
+### CP-059 — Social Media frontend-first, Trust & Safety, dan Help Center (10 November 2026)
+- **Rujukan:** D-006; Business Model Master Bagian 33.
+- **Tujuan:** pisahkan model bisnis, SOP, frontend, dan kontrak backend agar Social Media dapat diuji tanpa membangun backend terlalu jauh sebelum journey stabil.
+- **Dokumentasi:** model bisnis Bagian 33; SOP Social Content & Trust Operations; Social Content Trust Technical Spec; draft internal Privacy/Terms/Community Guidelines.
+- **Frontend tahap pertama:** Help Center responsif dengan pencarian, kategori, artikel, deep link, status ketersediaan, serta halaman status dokumen Terms/Privacy/Guidelines.
+- **Frontend berikutnya:** report/appeal, profil Hero/feed layout, Draft privat, immersive media, Explore/Top 10, inbox privacy/online presence, dan media protection UI. Jangan tampilkan kontrol palsu.
+- **Backend preparation:** state machine moderation/report/appeal/copyright claim, media provenance/fingerprint, music rights per wilayah, watermark delivery, identity verification, business link quota, inbox relationship policy, online presence, dan audit trail.
+- **Tidak dilakukan:** production DDL/migration, perubahan RLS/Storage, AI detector, fingerprint service, screenshot enforcement, copyright takedown automation, watermark pipeline, account auto-deletion, atau pesan baru.
+- **Status awal:** Help Center frontend IMPLEMENTED dalam commit ini; build/deploy menunggu workflow; browser/Android UAT NOT TESTED; founder acceptance NOT ACCEPTED.
+- **Batas:** penghapusan otomatis akun setelah 12 bulan tidak aktif tetap belum disetujui.
+- **Next:** tunggu Pages workflow, uji Help Center dari Android, lalu lanjutkan frontend social core berdasarkan UAT tanpa mengubah area non-social.

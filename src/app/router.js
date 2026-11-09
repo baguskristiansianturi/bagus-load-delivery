@@ -1,5 +1,6 @@
 import {discoverySearch,bindDiscoverySearch} from '../pages/search/discovery.js';
 import {misc} from '../pages/misc/index.js';
+import {helpPage,bindHelpPage,legalPage} from '../pages/help/index.js';
 import {blog} from '../pages/blog/index.js';
 import {home} from '../pages/home/index.js';
 import {sellerPage} from '../pages/seller/index.js';
@@ -48,7 +49,9 @@ export function route(homeFn=home){
  
        else if(r==='login'||r==='register'){h='<div class="pluits-loading">Membuka akun Pluits…</div>';queueMicrotask(()=>mountUserAccount(r));}
  else if(r==='blog'||r==='guides'||r==='article')h=blog(r==='article'||r==='guides'?v:'');
-   else if(['promo','help','faq','about','contact','reviews','terms','privacy','recent'].includes(r))h=misc(r);
+   else if(r==='help'||r==='faq'){h=helpPage(p.get('topic')||'');queueMicrotask(()=>bindHelpPage());}
+   else if(['terms','privacy','guidelines'].includes(r))h=legalPage(r);
+   else if(['promo','about','contact','reviews','recent'].includes(r))h=misc(r);
  else if(r==='account'){h='<div class="pluits-loading">Membuka akun Pluits…</div>';queueMicrotask(()=>mountUserAccount(v||'explore',s[2]||''));}
  else if(r==='seller'){h='<div class="pluits-loading">Membuka Seller Center Pluits…</div>';queueMicrotask(()=>sellerPage());}
    else h='<div class="empty-state large"><h1>Halaman tidak ditemukan</h1><p>Rute belum tersedia pada frontend ini.</p><a class="primary-button" href="#/">Kembali ke beranda</a></div>';

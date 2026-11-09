@@ -83,3 +83,14 @@ Salin untuk keputusan berikutnya:
 - **Dokumen otoritatif:** Business Model Master Bagian 32.14 dan `docs/pluits/SELLER-CENTER-STORE-LIFECYCLE-AND-URL-SPEC-2026-11-09.md`.
 - **Supersedes:** tidak ada; mengoreksi pembatasan teknis lama PT/CV/UD.
 - **Status implementasi:** DECIDED; schema/RPC migration NOT STARTED; frontend full flow NOT IMPLEMENTED; production DDL NOT APPLIED.
+
+
+## D-006 — Social Media frontend-first, discovery global, content integrity, dan perlindungan pengguna
+- **Tanggal keputusan:** 10 November 2026
+- **Status:** DECIDED untuk arah produk; detail teknis/legal dan implementasi bertahap.
+- **Founder approval:** eksplisit dalam arahan percakapan 10 November 2026.
+- **Konteks:** pengalaman sosial akan berubah melalui pengujian. Backend terlalu jauh sebelum journey matang berisiko tidak sesuai kebutuhan.
+- **Keputusan:** (1) Social Media tetap P0 dan frontend-first; backend disiapkan sebagai kontrak mengikuti UAT. (2) Top 10 global dipisah negara/kategori, terbuka untuk akun personal, kreator, bisnis, organisasi, organik dan tidak dapat dibeli. (3) Akun bisnis dikelola owner/tim; tautan eksternal promosi maksimal satu unggahan per hari per akun bisnis. (4) Video manusia/kejadian sintetis AI dilarang; foto AI-assisted editing/avatar tetap diperbolehkan. (5) Moderasi kontekstual membedakan akting/komedi/olahraga dari kekerasan nyata; kritik, berita, dan kepentingan publik tidak otomatis dihapus; bullying, ancaman, doxxing, persekusi, dan pelecehan ditangani proporsional. (6) Distribusi dapat dibatasi sementara, dengan alasan dan banding; kasus ambigu/berisiko tinggi memerlukan human review. (7) Duplicate detection tidak boleh menyamakan rekaman independen kejadian yang sama dengan pencurian; takedown memerlukan bukti hak/kewenangan. (8) Musik mengikuti lisensi wilayah; audio dapat dibisukan/diganti tanpa merusak visual bila memungkinkan. (9) Proteksi media berlapis dan watermark pemilik + Pluits; screenshot tidak dijamin terblokir 100% di web. (10) Badge verifikasi berbeda dari Premium; akun unverified tidak otomatis palsu; identity takedown diprioritaskan. (11) Inbox friend-first, status online sesuai preferensi, carousel kontak aktif, chat inline. (12) Help Center dan kebijakan dikembangkan bertahap; dokumen legal tidak dipublikasikan final sebelum review.
+- **Batas:** penghapusan akun setelah 12 bulan tidak aktif masih dipertimbangkan; belum disetujui. Definisi friend, SLA takedown/banding, retensi bukti, metode/vendor deteksi, dan detail hukum perlu spesifikasi.
+- **Dokumen otoritatif:** Business Model Master Bagian 33; SOP Social Content & Trust Operations; Social Content Trust Technical Spec.
+- **Status implementasi:** dokumentasi dan Help Center frontend dimulai; backend trust/safety NOT STARTED; dokumen legal DRAFT/LEGAL REVIEW REQUIRED.

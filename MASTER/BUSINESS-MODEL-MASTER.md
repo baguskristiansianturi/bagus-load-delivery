@@ -817,3 +817,88 @@ URL publik menggunakan slug/username yang dapat dibaca, terhubung ke UUID kanoni
 
 Spesifikasi lengkap, user journey, dashboard, status, URL, acceptance criteria dan tahapan implementasi: `docs/pluits/SELLER-CENTER-STORE-LIFECYCLE-AND-URL-SPEC-2026-11-09.md`.
 **Status implementasi:** aturan bisnis DECIDED; schema/RPC/frontend lengkap belum diimplementasikan; live production belum diubah.
+
+
+## 33. Social Media — pengalaman, discovery, integritas konten, dan perlindungan pengguna
+**Tanggal arah keputusan: 10 November 2026.** Bagian ini mengonsolidasikan arahan founder. Keputusan arah produk tidak berarti seluruh kemampuan sudah diimplementasikan.
+
+### 33.1 Prinsip pengalaman dan pengembangan
+- Social Media tetap P0. Frontend dan alur pengguna disempurnakan serta diuji terlebih dahulu karena pengalaman sosial akan berubah berdasarkan pengujian nyata. Backend disiapkan sebagai kontrak dan dibangun bertahap mengikuti hasil UAT.
+- Pengalaman harus sederhana, bersih, elegan, mobile-first, dan kaya kemampuan melalui progressive disclosure.
+- Pengguna dapat memilih model Hero/profil dan tata letak feed, lalu mengubahnya kapan pun. Hero tanpa cover menjadi pilihan dasar.
+- Draft postingan hanya terlihat oleh pemilik dan tidak boleh muncul di profil publik, Explore, pencarian, atau API publik.
+- Tampilan fokus media mendukung pembesaran, identitas pemilik dan caption yang halus di bagian bawah, swipe horizontal untuk galeri, dan scroll vertikal antarpost.
+- Double-tap membalik status apresiasi: like jika belum disukai, unlike jika sudah; animasi dan jumlah harus konsisten.
+- Video Explore dapat autoplay ketika cukup terlihat, default muted, berhenti ketika keluar viewport, dan menghormati preferensi data/baterai.
+
+### 33.2 Top 10 global per negara dan kategori
+- Top 10 dipisahkan menurut negara dan kategori: misalnya Australia, Indonesia, Malaysia, Singapura; restoran, produk, kreator, destinasi, layanan, dan kategori lain.
+- Akun personal, kreator, bisnis, dan organisasi dapat bersaing dalam kategori yang tepat.
+- Ranking tidak dapat dibeli dan tidak otomatis naik karena Premium atau pembayaran bisnis.
+- Penilaian kategori menggunakan sinyal yang relevan: retention, completion, replay, unique viewers, interaksi bermakna, saves, ulasan sah bila relevan, freshness, negative feedback, dan integritas aktivitas. Bobot tiap kategori harus diuji; jangan memakai satu rumus mentah untuk semuanya.
+- Normalisasi memberi peluang kepada akun baru/lokal. Bot, engagement palsu, spam, dan koordinasi manipulatif harus difilter.
+- Postingan yang pernah masuk Top 10 dapat memiliki penanda historis yang jelas berbeda dari peringkat aktif, dengan kategori, wilayah, periode, dan pencapaian yang benar-benar tercatat.
+
+### 33.3 Akun bisnis dan tautan
+- Jenis identitas akun (personal, business, organization) dipisahkan dari paket keanggotaan (Free/Premium). Premium tidak sama dengan verifikasi.
+- Akun bisnis/organisasi dikelola owner dan orang yang diberi kewenangan. Pengelola bertanggung jawab atas informasi operasional yang diterbitkan; Pluits tetap bertanggung jawab atas kewajiban platformnya sendiri.
+- Akun bisnis dapat mengunggah foto, video, tulisan, dan aktivitas usaha mengikuti aturan umum. Unggahan yang memuat tautan eksternal promosi dibatasi maksimal satu kali per akun bisnis per hari. Penegakan wajib di backend; sebelum itu jangan mengklaim kuota aktif.
+- Ranking bisnis/restoran/produk tetap organik dan tidak dapat dibeli.
+
+### 33.4 Keaslian video dan moderasi kontekstual
+- Video manusia atau kejadian sintetis yang dibuat generator AI dilarang, termasuk avatar manusia sintetis dan text-to-video/image-to-video yang disajikan seperti rekaman nyata.
+- Foto yang diedit dengan bantuan AI, filter, perbaikan visual, crop, atau avatar tetap diperbolehkan.
+- Deteksi AI memakai beberapa sinyal; satu model tidak boleh menjadi bukti tunggal. Kasus meragukan perlu pemeriksaan tambahan.
+- Adegan komedi, akting, olahraga, edukasi, dan pertunjukan yang memperlihatkan gerakan menampar/menendang tidak otomatis dilarang.
+- Kekerasan nyata, penganiayaan, eksploitasi, ancaman, persekusi digital, doxxing, dan konten yang mempermalukan korban dapat dibatasi/dihapus sesuai konteks dan tingkat bahaya.
+- Kritik, berita, dokumentasi fakta, dan kepentingan publik tidak otomatis dihapus hanya karena subjek meminta takedown. Privasi, keselamatan, hak cipta, konteks, dan hukum tetap diperiksa.
+- Diskusi agama, identitas, atau isu sosial tidak otomatis menjadi pelanggaran. Tindak ancaman, pelecehan, diskriminasi, hasutan, dan serangan terhadap orang, bukan identitas yang dilindungi.
+
+### 33.5 Moderasi, laporan, dan banding
+- Moderasi berlangsung sebelum publikasi dan berkelanjutan setelah konten terbit.
+- Konten yang perlu diperiksa dapat dibatasi distribusinya sementara tanpa langsung dihapus. Pemilik menerima alasan dan jalur banding.
+- Tindakan bertingkat: tanpa tindakan, label/peringatan, pembatasan distribusi/fitur, penghapusan konten, suspensi sementara, hingga penghentian akun untuk kasus berat/berulang.
+- Laporan tidak otomatis menjadi vonis. Kasus ambigu dan keputusan berdampak besar memerlukan human review.
+- Simpan audit trail keputusan, bukti, reviewer, alasan, notifikasi, dan hasil banding sesuai kebijakan retensi.
+
+### 33.6 Duplikasi video dan hak cipta
+- Siapkan video fingerprinting, perceptual hashing, audio fingerprinting, scene/temporal matching, dan pencocokan potongan dengan sumber panjang.
+- Kemiripan tidak otomatis berarti pencurian. Banyak orang dapat merekam kejadian sama secara mandiri dari sudut serupa; pertandingan, konser, dan kejadian publik adalah contoh.
+- Urutan upload pertama dan metadata bukan bukti tunggal kepemilikan.
+- Klaim takedown memerlukan bukti kepemilikan/kewenangan, sumber asli, dan materi yang disengketakan. Orang yang tampil dalam video belum tentu pemilik hak cipta rekaman.
+- Review, kritik, komentar, berita, pendidikan, dan kepentingan publik dinilai berdasarkan konteks dan hukum. Alasan kritik bukan izin otomatis untuk semua penggunaan materi.
+- Pengunggah yang dilaporkan diberi pemberitahuan dan jalur keberatan/counter-notice yang sesuai hukum.
+
+### 33.7 Musik, watermark, dan perlindungan media
+- Musik harus memiliki lisensi yang mencakup penggunaan Pluits dan wilayah pemutaran. Hak dapat berbeda antarnegara, berakhir, atau dicabut.
+- Jika musik tidak diizinkan di suatu wilayah, upayakan membisukan/mengganti musik tanpa merusak visual. Jika pemisahan audio tidak aman, audio dapat dibisukan seluruhnya pada wilayah terdampak.
+- Pengguna dapat mengganti track dengan katalog berlisensi.
+- Pluits mengurangi pengunduhan melalui kontrol akses, URL sementara, dan antarmuka tanpa tombol unduh. Screenshot/rekam layar tidak dapat dijamin terblokir pada semua browser/perangkat.
+- Salinan resmi yang disediakan Pluits dapat memakai watermark @username pemilik dan identitas Pluits. Fingerprint tersembunyi dapat membantu penelusuran. Watermark bukan bukti hukum tunggal kepemilikan.
+
+### 33.8 Verifikasi dan impersonasi
+- Akun tanpa verifikasi tidak otomatis palsu. Lencana membedakan verifikasi individu, bisnis/organisasi, serta akun resmi/tokoh publik jika programnya tersedia. Premium bukan verifikasi.
+- Laporan dari orang yang identitas/fotonya disalahgunakan diprioritaskan; badge dapat membantu pembuktian tetapi bukan satu-satunya bukti.
+- Jika terbukti, konten/foto yang melanggar dapat diturunkan terlebih dahulu. Akun pelanggar ditindak bertingkat hingga penghapusan untuk pelanggaran berat/berulang.
+- Dokumen verifikasi harus dibatasi aksesnya dan tidak ditampilkan publik.
+
+### 33.9 Inbox dan status online
+- Prinsip inbox adalah friend-first: orang di luar hubungan pertemanan yang memenuhi definisi produk tidak dapat memulai DM secara default. Definisi teknis relasi harus ditetapkan sebelum backend.
+- Status online hanya ditampilkan ketika aktif dan sesuai preferensi visibilitas. Label offline tidak perlu ditampilkan.
+- Inbox dapat menampilkan carousel kontak aktif; memilih kontak membuka percakapan inline pada halaman yang sama, bukan navigasi penuh.
+- Blokir berlaku konsisten pada pesan, feed, profil, komentar, dan discovery. Online bukan bukti pesan dibaca.
+
+### 33.10 Bantuan, privasi, dan syarat penggunaan
+- Help Center dikembangkan bertahap dengan kategori, pencarian, artikel, deep link, dan status ketersediaan.
+- Privacy Policy, Terms, dan Community Guidelines disusun berdasarkan inventaris data, fitur nyata, praktik backend, yurisdiksi, dan legal review. Draft internal tidak boleh ditampilkan sebagai dokumen final.
+- Setiap halaman membedakan AVAILABLE, IN DEVELOPMENT, PLANNED, dan DRAFT/LEGAL REVIEW REQUIRED.
+- Penghapusan akun karena tidak aktif 12 bulan belum menjadi keputusan final; perlu kajian dampak, peringatan, pemulihan, retensi transaksi/audit, dan persetujuan founder.
+
+### 33.11 Urutan pengembangan
+1. Sempurnakan frontend Social Media dan Help Center; uji alur nyata di mobile.
+2. Turunkan hasil UAT menjadi spesifikasi state, permission, dan backend contract.
+3. Implementasikan backend trust/safety bertahap dengan RLS, audit trail, idempotensi, dan tes lintas akun.
+4. Publikasikan kebijakan setelah sinkron dengan implementasi dan legal review.
+5. Kembangkan Top 10, fingerprint video, AI moderation, watermark, music licensing, dan account lifecycle sesuai prioritas.
+
+**Batas status:** bagian ini menetapkan arah produk, bukan klaim bahwa deteksi AI, copyright takedown, watermark, screenshot protection, Top 10, online presence, friend-only inbox, atau penghapusan akun otomatis telah tersedia.
