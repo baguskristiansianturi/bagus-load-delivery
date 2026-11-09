@@ -312,7 +312,7 @@ async function feedPage(){
   return {...s,owner,mediaUrl:await signed(s.media_path),avatarUrl:owner.avatar_path?await signed(owner.avatar_path):''};
  }));
  const storyCards=stories.map(s=>"<button type='button' class='ua-story-item' data-story-url='"+esc(s.mediaUrl||'')+"' data-story-type='"+esc(s.media_type)+"' data-story-owner='"+esc(s.owner.display_name||'Pengguna Pluits')+"' data-story-caption='"+esc(s.caption||"")+"'><span class='ua-story-ring'>"+(s.avatarUrl?"<img src='"+esc(s.avatarUrl)+"' alt=''>":"<b>PL</b>")+"</span><small>"+esc(s.owner.display_name||'Pluits')+"</small></button>").join('');
- const storySection="<section class='ua-stories-block'><div class='ua-stories-head'><strong>Stories</strong><a href='#/account/compose' aria-label='Buat postingan'>＋</a></div><div class='ua-story-strip'><a class='ua-story-item ua-story-own' href='#/account/compose'><span class='ua-story-ring'>"+avatar(await signed(profile?.avatar_path),profile?.display_name||'Anda')+"<i>＋</i></span><small>Cerita Anda</small></a>"+(storyCards||"<span class='ua-story-empty'>Belum ada cerita baru</span>")+"</div></section>";
+ const storySection="<section class='ua-stories-block'><div class='ua-stories-head'><strong>Stories</strong><a href='#/account/compose' aria-label='Buat postingan'>＋</a></div><div class='ua-story-strip'><a class='ua-story-item ua-story-own' href='#/account/story'><span class='ua-story-ring'>"+avatar(await signed(profile?.avatar_path),profile?.display_name||'Anda')+"<i>＋</i></span><small>Cerita Anda</small></a>"+(storyCards||"<span class='ua-story-empty'>Belum ada cerita baru</span>")+"</div></section>";
  const empty=followingIds.length
   ?"Belum ada postingan dari akun yang Anda ikuti. Coba jelajahi akun lain."
   :"Belum ada postingan di jaringan Anda. Bagikan foto atau video pertama untuk mengisi Beranda.";
@@ -320,7 +320,7 @@ async function feedPage(){
   ?"<a href='#/search'>Jelajahi akun</a>"
   :"<a href='#/account/compose'>Bagikan foto atau video</a>";
  const feedNote=usingOwnFallback?"<div class='ua-feed-fallback-note'>Belum ada postingan dari akun yang diikuti · Menampilkan postingan Anda untuk pengujian</div>":"";
- return "<div class='ua-social-home'><header class='ua-feed-top'><a class='ua-feed-wordmark' href='#/account/explore'>pluits</a><a class='ua-feed-search' href='#/search' aria-label='Cari di Pluits'>"+socialIcon('search',{size:18})+"<span>Cari teman, tempat, dan postingan</span></a><div><a href='#/account/activity' aria-label='Aktivitas'>"+socialIcon('bell',{size:21})+"</a><a href='#/messages' aria-label='Pesan'>"+socialIcon('message',{size:21})+"</a></div></header>"+storySection+feedNote+"<section class='ua-feed'>"+(sorted.length?sorted.map(postCard).join(''):"<div class='ua-feed-empty'><strong>"+empty+"</strong>"+emptyAction+"</div>")+"</section></div>";
+ return "<div class='ua-social-home'><a class='ua-feed-search ua-feed-search-row' href='#/search' aria-label='Cari di Pluits'>"+socialIcon('search',{size:18})+"<span>Cari teman, tempat, dan postingan</span></a>"+storySection+feedNote+"<section class='ua-feed'>"+(sorted.length?sorted.map(postCard).join(''):"<div class='ua-feed-empty'><strong>"+empty+"</strong>"+emptyAction+"</div>")+"</section></div>";
 }
 
 async function reelsPage(){
