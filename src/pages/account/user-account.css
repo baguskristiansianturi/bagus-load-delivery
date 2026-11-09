@@ -1670,3 +1670,37 @@
 .ua-draft-actions button,.ua-draft-actions a{font-size:11px}
 .ua-drafts-note{margin:14px 2px 24px}
 @media(max-width:560px){.ua-draft-card{align-items:flex-start;flex-direction:column}.ua-draft-actions{width:100%}.ua-draft-actions>*{flex:1;text-align:center}}
+
+/* Responsive account/auth form hardening — keep every control inside the viewport. */
+.ua-auth-app,.ua-auth-app *{box-sizing:border-box}
+.ua-auth-app{width:100%;min-width:0;overflow-x:clip}
+.ua-auth-wrap{width:min(1050px,100%);min-width:0;padding:26px 0}
+.ua-auth-form{width:100%;min-width:0}
+.ua-auth-form label{min-width:0}
+.ua-auth-form input{display:block;width:100%;min-width:0;min-height:46px;box-sizing:border-box}
+.ua-auth-form button{min-height:44px}
+.ua-auth-form .ua-form-note{overflow-wrap:anywhere}
+.ua-notification-avatar{overflow:hidden}
+.ua-notification-avatar img{display:block;width:100%;height:100%;object-fit:cover;border-radius:50%}
+.ua-notification-copy{overflow-wrap:anywhere}
+.ua-notification-row{overflow:hidden}
+@media(max-width:760px){
+ .ua-auth-app{padding:0 14px}
+ .ua-auth-app .ua-header{height:56px;padding:0 2px}
+ .ua-auth-wrap{min-height:calc(100dvh - 112px);grid-template-columns:minmax(0,1fr);gap:16px;padding:22px 0 28px;align-content:start}
+ .ua-auth-copy h1{font-size:clamp(25px,7vw,34px);line-height:1.1}
+ .ua-auth-copy p{font-size:12px;line-height:1.6}
+ .ua-auth-points{grid-template-columns:1fr;gap:7px;margin-top:14px;font-size:11px}
+ .ua-auth-form{padding:18px 15px;border-radius:14px}
+ .ua-auth-form h2{font-size:21px;margin-bottom:15px}
+ .ua-auth-form label{font-size:11px}
+ .ua-auth-form input{font-size:16px;padding:11px 12px}
+ .ua-auth-form .ua-form-note{font-size:11px}
+ .ua-auth-app .ua-footer{padding:16px 0}
+}
+@media(max-width:360px){
+ .ua-auth-app{padding-inline:10px}
+ .ua-auth-form{padding:15px 12px}
+ .ua-auth-copy h1{font-size:25px}
+ .ua-auth-form h2{font-size:19px}
+}
