@@ -59,20 +59,21 @@ function storeOnboarding(user,isAdditional=false){
   <div class="pluits-form-grid">
    <label>Nama toko / nama dagang<input name="name" required placeholder="Contoh: Sinar Bangunan"></label>
    <label>Username toko<input name="username" required minlength="3" maxlength="40" pattern="[a-z0-9][a-z0-9-]{2,39}" placeholder="sinar-bangunan"><small>URL toko: pluits.id/t/username (alamat sementara akan disesuaikan)</small></label>
-   <label>Bentuk badan usaha<select name="business_type" required><option value="">Pilih bentuk usaha</option><option>PT</option><option>CV</option><option>UD</option></select></label>
-   <label>Nama legal perusahaan<input name="legal_name" placeholder="Sesuai dokumen usaha"></label>
+   <label>Jenis usaha<select name="business_type" required><option value="">Pilih jenis usaha</option><option value="individual">Usaha perorangan</option><option value="umkm">UMKM</option><option value="family_business">Usaha keluarga</option><option value="cooperative">Koperasi</option><option value="company">Perusahaan</option></select></label>
+   <label>Bentuk hukum (opsional)<select name="legal_form"><option value="">Belum ada / tidak dicantumkan</option><option>PT</option><option>CV</option><option>UD</option><option>Koperasi</option><option>Yayasan</option><option>Lainnya</option></select></label>
+   <label>Nama legal (opsional)<input name="legal_name" placeholder="Jika berbeda dari nama toko"></label>
    <label>Nomor WhatsApp / telepon<input name="phone" required type="tel" placeholder="08xxxxxxxxxx"></label>
    <label>Email toko<input name="email" type="email" placeholder="opsional"></label>
    <label>Kota<input name="city" required value="Denpasar"></label>
    <label>Kecamatan / area<input name="area" placeholder="Contoh: Denpasar Barat"></label>
-   <label class="pluits-span">Alamat lengkap toko<input name="address" placeholder="Alamat operasional toko"></label>
+   <label class="pluits-span">Alamat fisik / operasional<input name="address" required minlength="8" placeholder="Alamat lokasi usaha untuk verifikasi"></label>
   </div>
   <div class="pluits-form-actions"><p id="pluits-notice" class="pluits-notice"></p><button class="pluits-primary" type="submit">Buat toko dan buka dashboard <span>→</span></button></div>
  </form>`,user);
  document.querySelector('#pluits-store-form').addEventListener('submit',async e=>{
   e.preventDefault();const f=new FormData(e.currentTarget),btn=e.currentTarget.querySelector('button');btn.disabled=true;btn.textContent='Membuat toko…';
   try{
-   const {data,error}=await supabase.rpc('create_store',{p_name:f.get('name'),p_username:f.get('username').toLowerCase(),p_business_type:f.get('business_type'),p_phone:f.get('phone'),p_city:f.get('city'),p_area:f.get('area')||null,p_legal_name:f.get('legal_name')||null,p_email:f.get('email')||null,p_full_address:f.get('address')||null});
+   const {data,error}=await supabase.rpc('create_store',{p_name:f.get('name'),p_username:f.get('username').toLowerCase(),p_business_type:f.get('business_type'),p_phone:f.get('phone'),p_city:f.get('city'),p_area:f.get('area')||null,p_legal_name:f.get('legal_name')||null,p_email:f.get('email')||null,p_full_address:f.get('address'),p_legal_form:f.get('legal_form')||null});
    if(error)throw error;await renderSeller(data);
   }catch(err){notice(err.message||'Toko belum dapat dibuat.','error');}
   finally{btn.disabled=false;btn.innerHTML='Buat toko dan buka dashboard <span>→</span>';}
