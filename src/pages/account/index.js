@@ -214,8 +214,7 @@ async function profilePage(preview=false){
   <button class="active" type="button" role="tab" aria-selected="true" data-profile-tab="posts">▦ <span>Post/Feed</span></button><button type="button" role="tab" aria-selected="false" data-profile-tab="reels">▣ <span>Reels</span></button><button type="button" role="tab" aria-selected="false" data-profile-tab="trip">⌖ <span>Trip</span></button><button type="button" role="tab" aria-selected="false" data-profile-tab="tagged">♙ <span>Ditandai</span></button>
  </nav>
  <section id="ua-profile-tab-content" class="ua-profile-tab-content" role="tabpanel">
-  <div class="ua-section-title"><strong>Postingan</strong><a class="ua-outline" href="#/account/compose">＋ Buat</a></div>
-  ${ownPosts.length?postGrid(ownPosts):'<div class="ua-empty"><strong>Belum ada postingan</strong><p>Bagikan foto, video, atau cerita pertama Anda.</p><a class="ua-primary ua-inline" href="#/account/compose">Buat postingan</a></div>'}
+  ${ownPosts.length?postGrid(ownPosts):'<div class="ua-empty"><strong>Belum ada postingan</strong><p>Bagikan foto atau video pertama melalui tombol Buat pada navigasi utama.</p></div>'}
  </section>
 `;
 }
