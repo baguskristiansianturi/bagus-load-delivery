@@ -977,3 +977,13 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - **Status awal:** Help Center frontend IMPLEMENTED dalam commit ini; build/deploy menunggu workflow; browser/Android UAT NOT TESTED; founder acceptance NOT ACCEPTED.
 - **Batas:** penghapusan otomatis akun setelah 12 bulan tidak aktif tetap belum disetujui.
 - **Next:** tunggu Pages workflow, uji Help Center dari Android, lalu lanjutkan frontend social core berdasarkan UAT tanpa mengubah area non-social.
+
+
+### CP-060 — Verifikasi deployment Help Center dan status UAT (10 November 2026)
+- **Commit:** 99c0246505a5347c32b8796e3c4e449e1108e7f4.
+- **Workflow:** run 42665573505, #1088, conclusion SUCCESS.
+- **Build:** production-surface verification SUCCESS; Vite production build SUCCESS; build output verification SUCCESS.
+- **Deployment:** GitHub Pages deployment step SUCCESS untuk commit yang sama.
+- **Frontend route:** https://baguskristiansianturi.github.io/pluits/#/help
+- **Status:** IMPLEMENTED + DEPLOYED + BUILD TESTED. Browser runtime/Android UAT NOT TESTED; founder ACCEPTANCE NOT ACCEPTED.
+- **Batas:** deployment berhasil bukan bukti seluruh fitur moderasi, report, banding, watermark, Top 10, atau pengaturan baru sudah bekerja.

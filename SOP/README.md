@@ -6,6 +6,7 @@ SOP adalah prosedur kerja operasional. Business Model Master tetap otoritas kepu
 1. [Product Change Control](./PRODUCT-CHANGE-CONTROL.md) — menangani diskusi, temuan, ide, riset, persetujuan, perubahan model bisnis, dan sinkronisasi dokumen.
 2. [Engineering Delivery](./ENGINEERING-DELIVERY.md) — analisis teknis, modularisasi, implementasi frontend/backend, keamanan, testing, commit, dan deployment.
 3. [Release & UAT](./RELEASE-UAT.md) — bukti build/deploy, pemeriksaan produksi, UAT founder, status release, dan checkpoint lintas sesi.
+4. [Social Content & Trust Operations](./SOCIAL-CONTENT-TRUST-OPERATIONS.md) — prosedur konten, laporan, hak cipta, impersonasi, banding, dan Help Center.
 
 ## Aturan
 - Setiap sesi membaca SOP yang relevan; tidak perlu membaca SOP yang tidak terkait.

@@ -142,7 +142,7 @@ function settingsHubPage(){
   ['Interaksi dan dukungan','Aktivitas akun, panduan, dan informasi layanan',[
    ['bell','Aktivitas dan notifikasi','Pemberitahuan suka, komentar, dan pengikut','/account/activity','ready'],
    ['help','Pusat Bantuan','Panduan dan jawaban penggunaan Pluits','/help','staged'],
-   ['book','Pedoman Komunitas','Aturan konten dan interaksi yang aman','/guides','staged'],
+   ['book','Pedoman Komunitas','Aturan konten dan interaksi yang aman','/guidelines','staged'],
    ['book','Ketentuan dan Privasi','Ketentuan layanan dan penggunaan data','/privacy','staged']]]
  ];
  if(['admin','moderator'].includes(user?.app_metadata?.role))groups.push(['Administrasi Pluits','Kelola keamanan komunitas dan informasi resmi', [['shield','Moderation Center','Tinjau laporan dan terbitkan informasi sistem','/admin/moderation','ready']]]);

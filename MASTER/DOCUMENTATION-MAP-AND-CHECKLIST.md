@@ -74,3 +74,19 @@ BLOCKED, FAILED, NOT TESTED, dan NOT VERIFIED wajib dicatat. Satu status tidak m
 - Tidak ada secret/data pribadi/data uji privat di repository publik.
 - Backend menegakkan akses; frontend merefleksikan izin/status.
 - Terapkan least privilege, audit trail, observability, backup/restore, rate limits, dan human approval untuk tindakan AI berisiko.
+
+
+## Social Media Trust & Help Center (10 November 2026)
+| Dokumen | Fungsi | Status |
+|---|---|---|
+| MASTER/BUSINESS-MODEL-MASTER.md Bagian 33 | Arah produk Social Media, Top 10, content integrity, identity, inbox, dan bantuan | Otoritas keputusan |
+| SOP/SOCIAL-CONTENT-TRUST-OPERATIONS.md | Prosedur operasional moderasi, copyright, impersonasi, banding, dan help/legal | SOP internal |
+| docs/pluits/SOCIAL-CONTENT-TRUST-TECHNICAL-SPEC.md | State machine dan kontrak backend yang disiapkan setelah frontend/UAT | Specification; no migration |
+| docs/pluits/SOCIAL-MEDIA-POLICY-DRAFTS.md | Bahan internal Privacy, Terms, Community Guidelines | Draft; legal review required |
+| docs/pluits/HELP-CENTER-LEGAL-CONTENT-BLUEPRINT.md | Taxonomy dan tata kelola Help Center/legal | Blueprint |
+| src/pages/help/ | Pusat Bantuan publik, pencarian, artikel, dan status dokumen | Frontend implemented; Android UAT pending |
+
+Aturan tambahan:
+- Penghapusan otomatis akun setelah 12 bulan tidak aktif masih proposal dan tidak boleh diterapkan atau dipublikasikan sebagai aturan aktif.
+- Halaman #/privacy, #/terms, dan #/guidelines menampilkan status draft; bukan dokumen legal final.
+- Help Center route #/help harus menampilkan status ketersediaan yang jujur dan tidak menjanjikan kontrol backend yang belum tersedia.

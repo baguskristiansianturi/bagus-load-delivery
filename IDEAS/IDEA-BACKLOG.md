@@ -542,3 +542,20 @@ Perusahaan/organisasi dapat menerbitkan kebutuhan tenaga kerja. Pengguna memilik
 
 ### Next step
 Riset legal/operasional organisasi, desain role/stewardship, model kontribusi, hiring workflow, dan regional service desk. Setelah founder memutuskan detailnya, promosikan bagian yang disetujui melalui Product Change Control.
+
+
+## IDEA-011 — Penghapusan akun tidak aktif dan proteksi screenshot/download
+- **Tanggal ditemukan:** 10 November 2026.
+- **Sumber:** sharing founder tentang penghapusan akun setelah satu tahun tidak aktif dan perlindungan foto/video.
+- **Kategori:** Account Lifecycle | Privacy | Media Protection | Legal | Trust/Safety.
+- **Jenis:** PROPOSAL / NEEDS RESEARCH.
+- **Status:** BELUM DISETUJUI sebagai kebijakan aktif.
+
+### A. Penghapusan akun tidak aktif
+Founder mempertimbangkan penghapusan akun tepat 12 bulan setelah aktivitas terakhir, dengan peringatan mulai enam bulan sebelumnya melalui email dan kemungkinan nomor telepon. Belum diputuskan final.
+Pertanyaan wajib: definisi aktivitas yang mereset timer; akun bisnis/organisasi dan dana/transaksi; data yang wajib disimpan; masa pemulihan; proses ekspor; akun yang sedang disengketakan; validitas kontak; serta hukum dan perlindungan konsumen.
+Jangan membuat job penghapusan otomatis atau mengumumkan aturan satu tahun sebelum keputusan final.
+
+### B. Pencegahan screenshot/download
+Founder ingin mengurangi penyimpanan gambar/video dan menambahkan watermark jika media berhasil disalin. Pemblokiran screenshot masih dipertimbangkan dan tidak dapat dijamin pada browser/web lintas perangkat.
+Arah yang disukai untuk diteliti: kontrol akses media, URL sementara, tidak menyediakan direct download sebagai default, watermark dengan @username pemilik dan identitas Pluits pada salinan resmi, serta fingerprint tersembunyi. Jangan menjanjikan pencegahan 100%.

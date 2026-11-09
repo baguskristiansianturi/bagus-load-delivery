@@ -212,3 +212,9 @@ H5 — Trust, safety & operations: report, block, moderation, appeal, support, v
 ## 12. Catatan kepatuhan
 
 Blueprint ini adalah arsitektur produk dan dokumentasi internal. Draft legal harus disesuaikan dengan entitas operator Pluits, yurisdiksi, model pembayaran, kategori layanan, mitra pemroses data, dan praktik aktual. Sebelum diterbitkan sebagai ketentuan mengikat, minta tinjauan penasihat hukum Indonesia dan yurisdiksi terkait bila layanan lintas negara diluncurkan.
+
+
+## 13. Social Media Trust & Safety — tambahan 10 November 2026
+Topik bantuan yang disusun bertahap: larangan video manusia sintetis AI; foto AI-assisted editing; kekerasan dan konteks; bullying/pelecehan/doxxing; copyright dan rekaman independen kejadian sama; takedown/counter-notice; musik berlisensi per wilayah; impersonasi/verifikasi; watermark dan batas screenshot; inbox friend-first; Top 10 negara/kategori; tautan eksternal akun bisnis satu kali per hari.
+Setiap artikel membedakan AVAILABLE, IN DEVELOPMENT, PLANNED, dan DRAFT/LEGAL REVIEW REQUIRED. Penghapusan akun setelah 12 bulan tidak aktif masih proposal dan tidak boleh ditampilkan sebagai aturan aktif.
+Frontend awal berada pada route #/help. Route #/terms, #/privacy, dan #/guidelines menampilkan status dokumen secara transparan; draft legal internal tidak otomatis dipublikasikan sebagai dokumen final.
