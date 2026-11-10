@@ -158,7 +158,9 @@ for (const tab of ['posts', 'reels', 'trip', 'tagged']) {
 assert.ok(profileSource.includes('trip:\'<div class="ua-profile-tab-empty"'), 'Trip tab must render its own profile panel.');
 assert.ok(profileSource.includes('Post/Feed'), 'Profile posts tab must be clearly labelled Post/Feed.');
 assert.ok(profileSource.includes('id="ua-profile-form"'), 'Personal profile must expose an editable identity form.');
-assert.ok(profileSource.includes('Simpan perubahan') && profileSource.includes('ua-profile-savebar'), 'Profile save action must remain sticky and reachable on mobile.');
+assert.ok(profileSource.includes('Simpan perubahan') && profileSource.includes('ua-profile-edit-actions'), 'Profile save action must be contained in the dedicated edit page, not the navbar.');
+assert.ok(profileSource.includes("parameter==='edit'") && profileSource.includes('href="#/account/profile/edit"'), 'Profile editing must open only on its dedicated canonical route.');
+assert.ok(!profileSource.includes('ua-profile-savebar'), 'Profile view must not render a sticky save bar.');
 assert.ok(profileSource.includes('validatePersonalUsername') && profileSource.includes('validatePersonalDisplayName'), 'Personal identity must enforce username and display-name rules.');
 assert.ok(profileSource.includes(".update(payload).eq('id',user.id).select().single()"), 'Profile save must update the existing profile row and confirm the persisted result without a full remount.');
 assert.ok(profileSource.includes('profile={...profile,...payload};paintIdentity(profile)') && profileSource.includes('profile=previous;paintIdentity(previous)'), 'Profile save must feel immediate and roll back optimistic UI if the server rejects the change.');
@@ -169,6 +171,7 @@ assert.ok(!profileSource.includes('<div class="ua-section-title"><strong>Posting
 assert.ok(profileSource.includes('melalui tombol Buat pada navigasi utama'), 'Empty profile feed should direct users to the primary create navigation.');
 const socialNavigationCss = read('src/styles/social-navigation.css');
 assert.ok(socialNavigationCss.includes('.pl-settings-dots') && socialNavigationCss.includes('display: flex !important'), 'Mobile settings shortcut must remain visibly accessible.');
+assert.ok(!socialNavigationCss.includes('.ua-profile-savebar'), 'Profile edit controls must not be styled as a sticky navbar.');
 assert.ok(socialNavigationCss.includes('.ua-social-app .pl-social-mobile-nav > a .ua-avatar'), 'Mobile profile avatar must share the navigation icon sizing rules.');
 assert.ok(socialNavigationCss.includes('flex: 0 0 22px'), 'Mobile navigation symbols must use a consistent 22px visual size.');
 
@@ -196,5 +199,8 @@ assert.ok(postLayoutCss.includes('@keyframes pluits-heart-core') && postLayoutCs
 
 
 
+
+assert.ok(read('src/main.js').includes("history.replaceState(null, '', location.pathname + location.search + '#/')"), 'Legacy home aliases must normalize to the canonical public home URL.');
+assert.ok(read('src/pages/home/index.js').includes("'#/account/explore'"), 'Authenticated users must land on the canonical Explore feed URL.');
 
 console.log('Production surface verification passed: legacy modules absent; Marketplace, Trip, social DM, account security and notification contracts present.');
