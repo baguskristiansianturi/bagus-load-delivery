@@ -201,13 +201,28 @@ async function profilePage(preview=false){
    ${profile.visibility!=='public'?'<div class="ua-empty"><strong>Akun ini privat</strong><p>Postingan hanya dapat dilihat oleh pemilik akun.</p></div>':visiblePosts.length?postGrid(visiblePosts):'<div class="ua-empty"><strong>Belum ada postingan publik</strong><p>Postingan yang Anda atur sebagai privat tidak ditampilkan di profil publik.</p></div>'}
   </section>`;
  }
- return ` <section class="ua-profile-card">
+ return `
+ <div class="ua-profile-savebar"><span>Identitas akun</span><button class="ua-primary" type="submit" form="ua-profile-form">Simpan perubahan</button></div>
+ <section class="ua-profile-card">
   <div class="ua-cover" ${coverUrl?`style="background-image:url('${coverUrl}')"`:''}><label class="ua-cover-edit"><span>Ubah foto sampul</span><input id="ua-cover-file" type="file" accept="image/jpeg,image/png,image/webp"></label></div>
   <div class="ua-profile-content"><div class="ua-profile-avatar">${avatar(avatarUrl,profile.display_name,'large')}<label class="ua-avatar-edit" aria-label="Ubah foto profil" title="Ubah foto profil"><span>Ubah foto</span><input id="ua-avatar-file" type="file" accept="image/jpeg,image/png,image/webp"></label></div>
    <div class="ua-profile-identity"><div class="ua-profile-name-row"><div><h2>${esc(profile.display_name)}</h2><div class="ua-username">@${esc(profile.username)}</div></div></div><p>${esc(profile.bio||'Bio belum ditambahkan.')}</p><div class="ua-location">${profile.public_city&&profile.public_province?'⌖ '+esc(profile.public_city)+', '+esc(profile.public_province):''}</div><div class="ua-profile-stats"><a href="#profile-posts"><strong>${ownPosts.length}</strong><span>Postingan</span></a><a href="#/account/followers"><strong>${followersCount.count||0}</strong><span>Pengikut</span></a><a href="#/account/following"><strong>${followingCount.count||0}</strong><span>Mengikuti</span></a></div></div>
   </div>
  </section>
- <nav class="ua-profile-tabs" role="tablist" aria-label="Konten profil">
+ <form id="ua-profile-form" class="ua-panel ua-profile-edit-form" autocomplete="off">
+  <div class="ua-section-title"><div><span class="ua-eyebrow">IDENTITAS PERSONAL</span><h2>Edit profil</h2><p>Gunakan nama yang mewakili diri Anda. Profil profesional dan toko dapat dikelola terpisah.</p></div></div>
+  <div class="ua-form-grid">
+   <label>Nama tampilan<input name="display_name" maxlength="80" required value="${esc(profile.display_name||'')}"></label>
+   <label>Username<input name="username" minlength="3" maxlength="30" autocapitalize="none" autocomplete="off" spellcheck="false" required value="${esc(profile.username||'')}"><small>3–30 karakter: huruf kecil, angka, titik, garis bawah, atau tanda hubung. Tidak boleh menyerupai domain.</small></label>
+   <label class="ua-span-2">Bio<textarea name="bio" rows="3" maxlength="500">${esc(profile.bio||'')}</textarea></label>
+   <label>Kota<input name="public_city" maxlength="80" value="${esc(profile.public_city||'')}"></label>
+   <label>Provinsi<input name="public_province" maxlength="80" value="${esc(profile.public_province||'')}"></label>
+   <label>Visibilitas akun<select name="visibility"><option value="public" ${profile.visibility==='public'?'selected':''}>Publik</option><option value="private" ${profile.visibility==='private'?'selected':''}>Pribadi</option></select></label>
+   <label class="ua-checkbox"><input type="checkbox" name="show_store" ${profile.show_store?'checked':''}> Tampilkan tautan toko saya pada profil</label>
+  </div>
+  <p id="ua-profile-note" class="ua-form-note" role="status" aria-live="polite"></p>
+ </form>
+ ${marker2}
   <button class="active" type="button" role="tab" aria-selected="true" data-profile-tab="posts">▦ <span>Post/Feed</span></button><button type="button" role="tab" aria-selected="false" data-profile-tab="reels">▣ <span>Reels</span></button><button type="button" role="tab" aria-selected="false" data-profile-tab="trip">⌖ <span>Trip</span></button><button type="button" role="tab" aria-selected="false" data-profile-tab="tagged">♙ <span>Ditandai</span></button>
  </nav>
  <section id="ua-profile-tab-content" class="ua-profile-tab-content" role="tabpanel">
@@ -663,17 +678,39 @@ function bindWallet(){
   notify('Permintaan transaksi berhasil dikirim.');await mountAccount('wallet');
  });
 }
+function validatePersonalUsername(value){
+ const username=String(value||'').trim().toLowerCase();
+ if(!/^[a-z0-9](?:[a-z0-9._-]{1,28}[a-z0-9])$/.test(username)||username.includes('..'))return 'Username 3–30 karakter; gunakan huruf kecil, angka, titik, garis bawah, atau tanda hubung. Awal/akhir harus huruf atau angka.';
+ if(/\.(com|co|co\.id|id|net|org|biz|info|xyz|app|dev|io|me|asia|site|online|store|shop)$/i.test(username))return 'Username tidak boleh menggunakan akhiran seperti nama domain (.com, .co.id, .id, dan sejenisnya).';
+ return '';
+}
+function validatePersonalDisplayName(value){
+ const name=String(value||'').trim();
+ if(name.length<2||name.length>80)return 'Nama tampilan harus 2–80 karakter.';
+ const first=name.toLowerCase().normalize('NFKD').replace(/[^a-z0-9]+/g,' ').trim().split(' ')[0];
+ const entityWords=new Set(['toko','warung','restoran','restaurant','hotel','cafe','kafe','shop','store','market','service','jasa','layanan','tour','travel','transport','clinic','klinik','salon','barbershop','company','perusahaan','official','group','foundation','yayasan','community','komunitas','supplier','distributor','contractor','bengkel','laundry']);
+ return entityWords.has(first)?'Nama akun personal tidak boleh diawali nama jenis toko, organisasi, atau layanan. Gunakan nama diri; usaha dapat dibuat melalui Toko/Organisasi.':'';
+}
 function bindProfile(){
  const form=document.querySelector('#ua-profile-form');
  form?.addEventListener('submit',async e=>{
-  e.preventDefault();const f=new FormData(form),note=document.querySelector('#ua-profile-note');
-  const username=String(f.get('username')).trim().toLowerCase();
-  if(!/^[a-z0-9][a-z0-9._]{2,29}$/.test(username)){note.textContent='Username 3–30 karakter, huruf kecil, angka, titik, atau garis bawah.';return;}
-  const payload={id:user.id,display_name:String(f.get('display_name')).trim(),username,bio:String(f.get('bio')||'').trim(),public_city:String(f.get('public_city')||'').trim()||null,public_province:String(f.get('public_province')||'').trim()||null,visibility:String(f.get('visibility')),show_store:f.get('show_store')==='on',avatar_path:profile.avatar_path,cover_path:profile.cover_path,updated_at:new Date().toISOString()};
-  const btn=form.querySelector('button');btn.disabled=true;note.textContent='Menyimpan…';
-  const {data,error}=await supabase.from('user_profiles').upsert(payload).select().single();
-  btn.disabled=false;if(error){note.textContent=error.code==='23505'?'Username sudah digunakan. Pilih username lain.':error.message;return;}
-  profile=data;note.textContent='Profil berhasil disimpan.';notify('Profil diperbarui.');setTimeout(()=>mountAccount('profile'),450);
+  e.preventDefault();const f=new FormData(form),note=document.querySelector('#ua-profile-note'),btn=form.querySelector('button[form="ua-profile-form"]')||document.querySelector('.ua-profile-savebar button');
+  const username=String(f.get('username')||'').trim().toLowerCase(),displayName=String(f.get('display_name')||'').trim();
+  const usernameError=validatePersonalUsername(username),nameError=validatePersonalDisplayName(displayName);
+  if(usernameError){note.textContent=usernameError;form.elements.username.focus();return;}
+  if(nameError){note.textContent=nameError;form.elements.display_name.focus();return;}
+  const previous={...profile};
+  const payload={display_name:displayName,username,bio:String(f.get('bio')||'').trim(),public_city:String(f.get('public_city')||'').trim()||null,public_province:String(f.get('public_province')||'').trim()||null,visibility:String(f.get('visibility')),show_store:f.get('show_store')==='on',updated_at:new Date().toISOString()};
+  btn.disabled=true;note.textContent='Menyimpan…';
+  const {data,error}=await supabase.from('user_profiles').update(payload).eq('id',user.id).select().single();
+  btn.disabled=false;
+  if(error){note.textContent=error.code==='23505'?'Username sudah digunakan orang lain. Pilih username yang berbeda.':error.message;notify(note.textContent,'error');return;}
+  profile=data;note.textContent='Tersimpan.';notify('Profil berhasil diperbarui.');
+  document.querySelectorAll('.ua-profile-identity h2,.ua-ac-identity-copy strong').forEach(el=>el.textContent=profile.display_name);
+  document.querySelectorAll('.ua-username,.ua-ac-identity-copy span').forEach(el=>{if(el.classList.contains('ua-username'))el.textContent='@'+profile.username;});
+  document.querySelectorAll('.ua-profile-identity p').forEach(el=>el.textContent=profile.bio||'Bio belum ditambahkan.');
+  updateSEO({title:profile.display_name+' (@'+profile.username+') — Pluits',description:(profile.bio||'Profil komunitas '+profile.display_name+' di Pluits.').slice(0,160),path:'#/@'+encodeURIComponent(profile.username)});
+  if(previous.username!==profile.username)note.textContent='Tersimpan. Alamat profil baru: @'+profile.username;
  });
  bindImageUpload('ua-avatar-file','avatar_path','avatar');bindImageUpload('ua-cover-file','cover_path','cover');
 }
