@@ -1097,3 +1097,22 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - Two-account end-to-end social isolation and full SOC-01–SOC-04/GDT-01 negative RLS matrix.
 - Performance timings on physical Android devices.
 - No claim of 100% bug-free operation or founder acceptance is made from build/test/deploy evidence alone.
+
+
+---
+
+## CP-068 — Social performance, route isolation, and backend access hardening (10 November 2026)
+
+- **Status:** IMPLEMENTED / DEPLOYED / AUTOMATED TESTED. Founder UAT and Android runtime acceptance remain NOT TESTED.
+- **Business authority:** Business Model Master sections 30–33; Social First Release is P0. This increment does not activate Café/Resto or broaden secondary product verticals.
+- **Frontend architecture:** route-level modules now load on demand. Account workspace is no longer imported into the public homepage startup path. Router sequence tokens prevent a slow import from replacing a newer route. Dynamic routes retain explicit modules and bind functions.
+- **Performance evidence:** initial JS entry 49.18 kB (14.97 kB gzip); account JS 130.12 kB (37.16 kB gzip) and account CSS 112.80 kB (19.54 kB gzip) are separate lazy chunks. Initial CSS 273.53 kB (46.59 kB gzip). Previous whole-app JS was 304.81 kB (85.77 kB gzip). This is bundle evidence, not device timing.
+- **Feed data layer:** signed media/avatar URLs use deduplicated Storage batch signing, up to 100 paths/request; per-object fallback occurs only if batch signing fails. Media/tags/likes/comments are indexed by post ID. Supabase query errors are surfaced instead of silently converted to empty results.
+- **Backend security migration:** `20261110123935_revoke_anon_professional_profile_rpcs` applied. Anonymous EXECUTE removed from professional-profile submission/review RPCs; authenticated EXECUTE retained. Verified with `has_function_privilege`.
+- **Live Supabase snapshot:** 2 Auth users; 5 posts; 4 gallery media rows; no video rows, follow relations, conversations/messages, stories or notifications; 1 store, 1 product, no orders, 4 GeoDirectory entities, no Trip requests. This confirms schema foundations exist but several lifecycle journeys have no real production test records yet.
+- **Security Advisor:** no remaining anon-callable SECURITY DEFINER findings; 22 authenticated-callable SECURITY DEFINER findings remain, plus leaked-password protection disabled. Do not revoke all 22 indiscriminately; review per function and preserve intended authenticated operations.
+- **Health Advisor:** 0 lints. Existing SOC-01–SOC-04 and GDT-01 RLS candidate has not been applied; no Supabase development branch exists. A branch has an hourly cost gate, so full negative RLS testing is pending branch-cost approval.
+- **Automated tests:** `npm test` = 8 passed, 0 failed. Production Vite build and GitHub Pages deployment successful.
+- **Commit:** `ea983f83fb6ae17147c6048ffbc6f3886350bd81`; **Actions:** [42818616779 SUCCESS](https://github.com/baguskristiansianturi/pluits/actions/runs/42818616779); **live:** `https://baguskristiansianturi.github.io/pluits/?v=ea983f8`.
+- **Not accepted / not tested:** Android actual gallery upload/video playback, two-account social relationship/DM journeys, offline reconnect behavior, full SOC/GDT negative RLS matrix, physical-device latency, founder UI/UX UAT.
+- **Next gate:** use a cost-approved Supabase development branch to apply the reviewed RLS candidate and run negative access tests. In parallel, founder performs Android UAT on the deployed Social flows. No Café/Resto or additional Trip/Marketplace scope until Social release acceptance.

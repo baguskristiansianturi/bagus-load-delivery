@@ -55,3 +55,33 @@ The active Business Model Master defines Pluits as a social-first ecosystem conn
 - GitHub Actions run: `42817405183` — build, `npm test` (7 passed, 0 failed), production build, artifact upload, and GitHub Pages deployment all succeeded.
 - Live URL: `https://baguskristiansianturi.github.io/pluits/?v=1838f0b`.
 - Android gallery upload/playback, two-account end-to-end UAT, and visual UI review remain NOT TESTED / founder-owned.
+
+
+## Final route-loading and production-data audit — 10 November 2026
+**Current deployed code:** `ea983f83fb6ae17147c6048ffbc6f3886350bd81`  
+**GitHub Actions:** [Run 42818616779](https://github.com/baguskristiansianturi/pluits/actions/runs/42818616779) — SUCCESS
+
+### Route-level code splitting
+- Router page modules are now loaded on demand. The signed-in account workspace is also deferred; a public visitor does not download the account bundle until an authenticated account route is needed.
+- A navigation sequence guard prevents a late route import from overwriting a newer page after rapid navigation.
+- The latest production build emits separate chunks for account, discovery, help, messages, seller, Trip, Marketplace, moderation and other route modules.
+- Initial JS entry: **49.18 kB (14.97 kB gzip)**. Account JS chunk: **130.12 kB (37.16 kB gzip)**, loaded only when the account workspace is requested. Account CSS is also emitted as a separate lazy chunk: **112.80 kB (19.54 kB gzip)**. Initial CSS: **273.53 kB (46.59 kB gzip)**.
+- Previous pre-splitting app JS was one 304.81 kB (85.77 kB gzip) bundle. The 49.18 kB figure is the new initial entry chunk, not the sum of all route chunks.
+- This is measured build output and request-scope reduction, not a physical-device latency benchmark.
+
+### Production data readiness snapshot (counts only; no personal data retrieved)
+- 2 Auth users; 5 posts; 4 gallery media rows; 0 video media rows; 0 stories; 0 follow relationships; 0 conversations; 0 messages; 0 notifications.
+- 1 store and 1 product; 0 marketplace orders; 4 GeoDirectory entities; 0 Trip service requests.
+- 4 post media paths resolve to Storage objects; 0 gallery records point to missing objects. There are 7 objects in `pluits-user-media`; one object is not referenced by the currently checked post/story/profile tables. It is a possible orphan, not automatically deleted; other legacy references and ownership must be checked first.
+- Since there are currently no video objects or real follow/message relationships in production, the Android video upload, two-account social graph, and DM journeys cannot be honestly marked end-to-end tested from production data.
+
+### Live security and health status after migration
+- The two anonymous professional-profile RPC grants remain revoked; catalog verification shows anon=false and authenticated=true for both.
+- Security Advisor no longer reports anon-callable SECURITY DEFINER functions. It reports 22 authenticated-callable SECURITY DEFINER functions plus leaked-password protection disabled. Source review shows these functions are owned by postgres and have a fixed search_path; all user-facing functions except the auth-user trigger function reference `auth.uid()`. They still need role/ownership/negative tests; do not blanket-revoke legitimate business RPCs.
+- Health Advisor: zero lints.
+- The SOC-01–SOC-04 social privacy and GDT-01 GeoDirectory RLS remediation candidate remains un-applied. No staging branch exists. Creating a Supabase development branch requires cost confirmation; production policies were not changed to bypass that gate.
+
+### Functional verification scope
+- `npm test`: **8 passed, 0 failed** (production-surface contracts, Android media MIME/size handling, signed URL batching and route lazy-loading contracts).
+- Vite production build, output verification, artifact upload and GitHub Pages deployment: SUCCESS.
+- Automated source/contract tests are not equivalent to Android gallery testing, authenticated two-account UAT, or the full RLS matrix.
