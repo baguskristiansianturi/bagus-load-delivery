@@ -114,7 +114,7 @@ export function messagesPage() {
     <header class="pl-msg-head">
       <a href="#/account/explore" class="pl-msg-brand" aria-label="PLUITS Beranda">PLUITS</a>
       <form id="pl-msg-search" class="pl-msg-head-search" role="search">
-        <label class="pl-msg-search-field"><span class="pl-msg-search-symbol">${socialIcon('search',{size:18})}</span><input name="q" type="search" placeholder="Cari teman…" autocomplete="off" aria-label="Cari nama atau username teman"></label>
+        <div class="pl-msg-search-field"><span class="pl-msg-search-symbol">${socialIcon('search',{size:18})}</span><input name="q" type="search" placeholder="Cari teman…" autocomplete="off" aria-label="Cari nama atau username teman"></div>
         <button type="submit" aria-label="Cari">${socialIcon('search',{size:18})}</button>
         <div id="pl-msg-search-results" class="pl-msg-search-results" hidden></div>
       </form>
@@ -128,7 +128,7 @@ export function messagesPage() {
     </header>
     <section class="pl-msg-content">
       <section class="pl-msg-people" aria-label="Teman yang sedang online">
-        <div class="pl-msg-people-heading"><div><strong>Online sekarang</strong></div><a href="#/account/followers">Lihat semua</a></div>
+        <div class="pl-msg-people-heading"><div><strong>Online</strong></div><a href="#/account/followers">Lihat semua</a></div>
         <div id="pl-msg-people-strip" class="pl-msg-people-strip"><span class="pl-msg-people-loading">Menyiapkan teman…</span></div>
       </section>
       <div class="pl-msg-layout" id="pl-msg-layout">
