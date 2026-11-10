@@ -1799,3 +1799,129 @@
 .ua-social-app .ua-clean-media-item{min-width:0;max-width:100%;overflow:hidden}
 .ua-social-app .ua-clean-media-item video{max-height:360px}
 @media(max-width:760px){.ua-social-app .ua-media-preview{width:100%;max-height:65vh}.ua-social-app .ua-media-preview video{width:100%;max-height:65vh}.ua-social-app .ua-media video,.ua-social-app .ua-gallery-item video{max-height:70vh}}
+
+
+/* PLUITS AUTH — refined responsive login and registration */
+.ua-auth-app{
+  background:
+    radial-gradient(ellipse at 12% 18%,rgba(214,226,239,.48),transparent 34%),
+    linear-gradient(145deg,#f8fafc 0%,#f2f5f8 100%);
+  color:#18283b;
+}
+.ua-auth-app .ua-header{
+  max-width:1180px;
+  height:76px;
+  border-bottom-color:#e5eaf0;
+}
+.ua-auth-app .ua-brand{font-size:19px;letter-spacing:.2em}
+.ua-auth-app .ua-logout{
+  margin-left:auto;
+  min-height:40px;
+  padding:0 16px;
+  border-color:#dce4ed;
+  border-radius:999px;
+  background:rgba(255,255,255,.82);
+  transition:background .2s ease,border-color .2s ease,transform .2s ease;
+}
+.ua-auth-app .ua-logout:hover{background:#fff;border-color:#aebdce;transform:translateY(-1px)}
+.ua-auth-wrap{
+  max-width:1080px;
+  min-height:calc(100svh - 150px);
+  grid-template-columns:minmax(0,1fr) minmax(360px,440px);
+  gap:clamp(38px,7vw,92px);
+  padding:54px 0;
+}
+.ua-auth-copy{max-width:540px}
+.ua-auth-copy .ua-eyebrow{color:#637b96}
+.ua-auth-copy h1{
+  max-width:520px;
+  color:#172b45;
+  font-size:clamp(36px,4.5vw,54px);
+  line-height:1.06;
+  letter-spacing:-.052em;
+  font-weight:780;
+}
+.ua-auth-copy p{max-width:460px;color:#68788c;font-size:14px;line-height:1.8}
+.ua-auth-points{gap:11px;color:#50647b;font-size:12px}
+.ua-auth-points span{display:flex;align-items:center;gap:10px}
+.ua-auth-points span:before{
+  content:"";
+  width:7px;height:7px;flex:none;border-radius:50%;
+  background:#8da8c2;box-shadow:0 0 0 4px #e7edf4;
+}
+.ua-auth-form{
+  padding:clamp(26px,3vw,34px);
+  border:1px solid #e3e9f0;
+  border-radius:20px;
+  background:rgba(255,255,255,.96);
+  box-shadow:0 22px 65px rgba(30,49,72,.09),0 2px 8px rgba(30,49,72,.025);
+}
+.ua-auth-form>.ua-eyebrow{color:#71859c}
+.ua-auth-form h2{margin:9px 0 25px;color:#172b45;font-size:27px;letter-spacing:-.04em}
+.ua-auth-form label{gap:8px;margin-bottom:17px;color:#40536a;font-size:12px}
+.ua-auth-form input{
+  min-height:49px;
+  padding:13px 14px;
+  border:1px solid #dce4ed;
+  border-radius:10px;
+  background:#fbfcfe;
+  color:#172b45;
+  font-size:14px;
+  outline:none;
+  transition:border-color .18s ease,box-shadow .18s ease,background .18s ease;
+}
+.ua-auth-form input::placeholder{color:#a0acba}
+.ua-auth-form input:focus{
+  border-color:#829bb7;
+  background:#fff;
+  box-shadow:0 0 0 4px rgba(130,155,183,.15);
+}
+.ua-auth-form>.ua-primary{
+  min-height:49px;
+  margin-top:8px;
+  border-radius:10px;
+  background:#193653;
+  font-size:13px;
+  letter-spacing:.01em;
+  box-shadow:0 7px 16px rgba(25,54,83,.14);
+  transition:background .2s ease,transform .2s ease,box-shadow .2s ease;
+}
+.ua-auth-form>.ua-primary:hover:not(:disabled){
+  background:#244766;
+  transform:translateY(-1px);
+  box-shadow:0 10px 20px rgba(25,54,83,.18);
+}
+.ua-auth-switch{margin-top:21px;color:#7b8999;font-size:12px}
+.ua-auth-switch a{color:#234866}
+.ua-auth-app .ua-footer{border-top-color:#e5eaf0;color:#8996a5}
+.ua-auth-form .ua-form-note{font-size:12px}
+@media(max-width:760px){
+  .ua-auth-app{padding:0 16px}
+  .ua-auth-app .ua-header{height:62px;padding:0;border-bottom-color:#e5eaf0}
+  .ua-auth-app .ua-brand{font-size:17px}
+  .ua-auth-wrap{
+    min-height:calc(100svh - 112px);
+    grid-template-columns:minmax(0,1fr);
+    gap:17px;
+    align-content:start;
+    padding:30px 0 24px;
+  }
+  .ua-auth-copy{max-width:none}
+  .ua-auth-copy h1{max-width:440px;margin:8px 0 0;font-size:clamp(25px,7vw,32px);line-height:1.12}
+  .ua-auth-copy p,.ua-auth-points{display:none}
+  .ua-auth-form{padding:23px 19px;border-radius:17px}
+  .ua-auth-form h2{font-size:23px;margin:7px 0 21px}
+  .ua-auth-form label{font-size:12px;margin-bottom:15px}
+  .ua-auth-form input{min-height:49px;font-size:16px}
+  .ua-auth-form>.ua-primary{min-height:49px}
+  .ua-auth-switch{font-size:12px}
+  .ua-auth-app .ua-footer{padding:14px 0;margin-top:8px}
+}
+@media(max-width:380px){
+  .ua-auth-app{padding-inline:12px}
+  .ua-auth-wrap{padding-top:24px}
+  .ua-auth-form{padding:20px 15px}
+}
+@media(prefers-reduced-motion:reduce){
+  .ua-auth-app *{transition:none!important}
+}
