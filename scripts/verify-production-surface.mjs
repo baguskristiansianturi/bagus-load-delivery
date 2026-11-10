@@ -191,10 +191,14 @@ assert.ok(postLayoutCss.includes('aspect-ratio: 4 / 5'), 'Feed media must use a 
 assert.ok(postLayoutCss.includes('.ua-post-detail-page .ua-media img'), 'Post detail images must have responsive sizing rules.');
 assert.ok(postLayoutCss.includes('overflow-y: auto;'), 'Mobile social pages must retain vertical document scrolling.');
 assert.ok(postLayoutCss.includes('overflow: visible;'), 'Social feed must not clip vertical content.');
-assert.ok(postDetailSource.includes("socialIcon(liked?'heart':'heart-crack',{size:108})"), 'Double-tap must show a large heart or cracked-heart feedback based on current like state.');
+assert.ok(postDetailSource.includes("socialIcon(liked?'heart':'heart-crack',{size:144})"), 'Double-tap must show a prominent heart or cracked-heart feedback based on current like state.');
+assert.ok(postDetailSource.includes('setTimeout(()=>overlay.remove(),1550)'), 'Like feedback must remain visible long enough for a smooth animation.');
 assert.ok(postDetailSource.includes("const wasLiked=likeButton.classList.contains('is-liked');"), 'Double-tap on an already liked post must allow unlike.');
 assert.ok(postLayoutCss.includes('.ua-double-tap-heart.is-removing'), 'Unlike feedback must have a distinct cracked-heart animation.');
 assert.ok(postLayoutCss.includes('@keyframes pluits-heart-core') && postLayoutCss.includes('@keyframes pluits-heart-particle'), 'Like feedback must bloom into smaller hearts and fade out.');
+assert.match(postLayoutCss, /\.ua-double-tap-heart\{[^}]*inset:0;transform:none!important/, 'Heart overlay must stay centered within the tapped image.');
+assert.match(postLayoutCss, /\.ua-heart-core \.pl-icon\{width:144px;height:144px/, 'Main heart feedback must be large enough to see clearly.');
+assert.match(postLayoutCss, /pluits-heart-core 1\.18s/, 'Main heart animation must be smooth, not abrupt.');
 
 
 
