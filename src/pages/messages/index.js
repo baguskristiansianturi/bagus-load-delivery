@@ -128,7 +128,7 @@ export function messagesPage() {
     </header>
     <section class="pl-msg-content">
       <section class="pl-msg-people" aria-label="Teman yang sedang online">
-        <div class="pl-msg-people-heading"><div><strong>Online</strong></div><a href="#/account/followers">Lihat semua</a></div>
+        <div class="pl-msg-people-heading"><div class="pl-msg-people-counts"><strong>Teman</strong><small><span id="pl-msg-online-count">0 online</span><span aria-hidden="true"> · </span><span id="pl-msg-offline-count">0 offline</span></small></div><a href="#/account/followers">Lihat semua</a></div>
         <div id="pl-msg-people-strip" class="pl-msg-people-strip"><span class="pl-msg-people-loading">Menyiapkan teman…</span></div>
       </section>
       <div class="pl-msg-layout" id="pl-msg-layout">
@@ -179,9 +179,19 @@ async function signedAvatar(path) {
   const {data,error}=await db.storage.from('pluits-user-media').createSignedUrl(path,1800);
   return error?'':data?.signedUrl||'';
 }
+async function renderPeopleCounts(people=contactsCache) {
+  const rows=Array.isArray(people)?people:[];
+  const online=rows.filter(person=>onlineUserIds.has(person.id)).length;
+  const offline=Math.max(0,rows.length-online);
+  const onlineNode=document.querySelector('#pl-msg-online-count');
+  const offlineNode=document.querySelector('#pl-msg-offline-count');
+  if(onlineNode)onlineNode.textContent=online+' online';
+  if(offlineNode)offlineNode.textContent=offline+' offline';
+}
 async function renderPeopleStrip(people=contactsCache, withSignedImages=false) {
   const strip=document.querySelector('#pl-msg-people-strip');if(!strip)return;
   const onlinePeople=(people||[]).filter(person=>onlineUserIds.has(person.id));
+  renderPeopleCounts(people);
   const items=await Promise.all(onlinePeople.map(async person=>{
     const url=withSignedImages?await signedAvatar(person.avatar_path):'';
     return '<a class="pl-msg-person" href="#/@'+encodeURIComponent(person.username||'')+'" aria-label="Buka profil '+esc(person.display_name||person.username)+', sedang online">'+contactAvatar(person,url)+'<span class="pl-msg-online-dot" aria-hidden="true"></span><small>'+esc(person.display_name||person.username||'Teman')+'</small></a>';
@@ -245,13 +255,18 @@ export async function bindMessagesPage() {
   const {data:ownProfile}=await db.from('user_profiles').select('id,display_name,username,avatar_path').eq('id',user.id).maybeSingle();
   currentProfile=ownProfile||{id:user.id,display_name:user.user_metadata?.full_name||'Anda',username:'akun'};
   await Promise.all([loadContacts(),loadConversations()]);
-  presenceChannel=db.channel('pluits-online-v1')
+  presenceChannel=db.channel('pluits-online-v1',{config:{presence:{key:user.id}}})
     .on('presence',{event:'sync'},()=>{
       const state=presenceChannel?.presenceState?.()||{};
       onlineUserIds=new Set(Object.values(state).flat().map(entry=>entry.user_id).filter(Boolean));
+      renderPeopleCounts(contactsCache);
       renderPeopleStrip(contactsCache,true);
     })
-    .subscribe();
+    .subscribe(async status=>{
+      if(status==='SUBSCRIBED'){
+        await presenceChannel.track({user_id:user.id,online_at:new Date().toISOString()});
+      }
+    });
   bindInboxTabs(app);
   const requestedConversation=new URLSearchParams((location.hash.split('?')[1]||'')).get('conversation');
   if(requestedConversation&&conversationCache.some(item=>item.id===requestedConversation)) await openConversation(requestedConversation);

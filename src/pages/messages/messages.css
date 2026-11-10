@@ -282,3 +282,19 @@
 .pl-msg-people-heading strong{display:inline-flex;align-items:center;gap:5px;padding:3px 8px;border-radius:20px;background:#edf7f0;color:#27834f;font-size:10px;font-weight:750;line-height:1.2}
 .pl-msg-people-heading strong:before{width:6px;height:6px;border-radius:50%;background:#36a765;content:""}
 @media(max-width:760px){#pl-msg-search .pl-msg-search-field{height:38px;padding-inline:10px}.pl-msg-people-heading strong{font-size:10px;padding:3px 7px}}
+
+/* Inbox friend presence counters and robust single-field search layout. */
+.pl-msg-people-counts{display:flex;align-items:baseline;gap:8px;min-width:0}
+.pl-msg-people-counts strong{padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;color:#34465c!important;font-size:12px!important;font-weight:750!important}
+.pl-msg-people-counts small{display:inline-flex;align-items:center;gap:3px;color:#718095;font-size:10px;font-weight:600;white-space:nowrap}
+#pl-msg-search.pl-msg-head-search{display:flex!important;align-items:center;min-width:0;overflow:visible}
+#pl-msg-search .pl-msg-search-field{position:relative;display:flex!important;align-items:center!important;gap:8px!important;min-width:0!important;width:100%!important;height:40px;box-sizing:border-box;overflow:hidden}
+#pl-msg-search .pl-msg-search-field input{position:static!important;display:block!important;flex:1 1 auto!important;width:0!important;min-width:0!important;height:100%;margin:0!important;padding:0!important;box-sizing:border-box!important;appearance:none;-webkit-appearance:none;background:transparent!important;border:0!important;box-shadow:none!important;line-height:normal!important;font-size:13px!important}
+#pl-msg-search .pl-msg-search-field input::-webkit-search-decoration,
+#pl-msg-search .pl-msg-search-field input::-webkit-search-cancel-button{-webkit-appearance:none}
+@media(max-width:760px){
+ #pl-msg-search .pl-msg-search-field{height:38px!important}
+ #pl-msg-search .pl-msg-search-field input{font-size:12px!important}
+ .pl-msg-people-counts{gap:6px}
+ .pl-msg-people-counts small{font-size:9px}
+}
