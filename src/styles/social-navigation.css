@@ -332,25 +332,14 @@
   }
 }
 
-/* Keep profile save action in reach while the form is scrolled. */
-.ua-profile-savebar {
-  position: sticky;
-  top: 58px;
-  z-index: 225;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin: 0 -12px 12px;
-  padding: 9px 12px;
-  border-bottom: 1px solid #e7ebf0;
-  background: rgba(255,255,255,.97);
-  backdrop-filter: blur(12px);
-}
-.ua-profile-savebar > span { color: #596a80; font-size: 12px; font-weight: 750; }
-.ua-profile-savebar .ua-primary { min-height: 40px; padding: 9px 17px; }
+/* Profile editing is a dedicated page, never a sticky navbar layer. */
 .ua-profile-edit-form { padding: 18px; margin: 0 0 20px; scroll-margin-top: 112px; }
-.ua-profile-edit-form .ua-section-title { align-items: flex-start; }
+.ua-profile-edit-form .ua-profile-edit-heading { display:flex; align-items:flex-start; justify-content:space-between; gap:14px; }
+.ua-profile-edit-form .ua-profile-edit-heading h2 { margin:0; }
+.ua-profile-edit-form .ua-profile-edit-heading p { margin:7px 0 0; color:#748196; font-size:11px; line-height:1.5; }
+.ua-profile-edit-actions { display:flex; align-items:center; gap:8px; flex:0 0 auto; }
+.ua-profile-edit-actions .ua-primary,.ua-profile-edit-actions .ua-outline { min-height:40px; white-space:nowrap; }
+.ua-profile-edit-link { margin-left:10px; white-space:nowrap; }
 .ua-profile-edit-form .ua-section-title p { margin: 7px 0 0; color: #748196; font-size: 11px; line-height: 1.5; }
 .ua-profile-edit-form .ua-form-grid { margin-top: 14px; }
 .ua-profile-edit-form label { display: grid; gap: 7px; color: #46546a; font-size: 11px; font-weight: 750; }
@@ -363,6 +352,8 @@
 .ua-profile-edit-form .ua-checkbox input { width: 17px; height: 17px; accent-color: #172b45; }
 .ua-profile-edit-form .ua-form-note { min-height: 16px; margin: 10px 0 0; }
 @media (max-width: 760px) {
-  .ua-profile-savebar { top: 58px; margin-inline: -12px; }
   .ua-profile-edit-form { padding: 14px; }
+  .ua-profile-edit-form .ua-profile-edit-heading { flex-direction:column; }
+  .ua-profile-edit-actions { width:100%; }
+  .ua-profile-edit-actions .ua-primary { flex:1; }
 }
