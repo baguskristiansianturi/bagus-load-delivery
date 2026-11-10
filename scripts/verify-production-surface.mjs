@@ -177,7 +177,8 @@ assert.ok(socialHome.includes('function createPage()') && socialHome.includes('f
 assert.ok(socialHome.includes("section==='saved'?await savedPage()"), 'Saved items route must be available to the signed-in owner.');
 assert.doesNotMatch(socialHome, /<header class='ua-feed-top'>/, 'Signed-in feed must not render a duplicate second header.');
 assert.ok(read('src/features/media/storage-upload.js').includes('storage/v1/upload/resumable'), 'Large video uploads must use the Supabase direct-storage TUS endpoint in the isolated storage module.');
-assert.ok(socialHome.includes("kind==='reel'?'accept=\"video/*\"':'multiple accept=\"image/*,video/*\"'"), 'Reel picker must request videos only while Post accepts multiple photos and videos.');
+assert.ok(socialHome.includes('accept="video/*,.mp4,.m4v,.mov,.webm,.3gp,.3gpp,.3g2,.3gp2"') && socialHome.includes('multiple accept="image/*,video/*,.mp4,.m4v,.mov,.webm,.3gp,.3gpp,.3g2,.3gp2"'), 'Reel picker must request videos only while Post accepts multiple photos and videos, including Android formats.');
+assert.ok(socialHome.includes("uploadMediaFile(file,path,mime,()=>{})"), 'Story uploads must use the same resumable media uploader as posts.');
 assert.ok(socialHome.includes('let selectedFiles=[]') && socialHome.includes('data-remove-media'), 'Composer must preserve selected files and allow removing individual media.');
 assert.ok(socialHome.includes('name="visibility"') && socialHome.includes('class="ua-post-options"'), 'Post audience settings must be available inline in the compact composer.');
 assert.ok(socialHome.includes('name="tagged_users"') && socialHome.includes("from('post_tags').insert"), 'Composer must support real account tagging through post_tags.');
