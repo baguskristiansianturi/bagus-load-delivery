@@ -44,3 +44,9 @@ test('profile hero has isolated responsive layouts for desktop, mobile and narro
  assert.match(css,/@media\(max-width:760px\)/);
  assert.match(css,/@media\(max-width:380px\)/);
 });
+
+
+test('Inbox imports the shared mobile navigation renderer at runtime',async()=>{
+ const source=await (await import('node:fs/promises')).readFile(new URL('../../src/pages/messages/index.js',import.meta.url),'utf8');
+ assert.match(source,/import\s*\{\s*renderSocialMobileNav\s*\}\s*from\s*['"]\.\.\/\.\.\/components\/social\/navigation\.js['"]/);
+});
