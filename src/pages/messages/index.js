@@ -39,17 +39,17 @@ function formatDuration(value) {
 function messageMarkup(row, pending = false, readByOther = false) {
   const voice=row.message_type==='voice'&&row.media_path&&!row.deleted_at;
   const content=voice
-    ? '<div class="pl-msg-voice-player"><audio controls preload="none" data-voice-path="'+esc(row.media_path)+'"></audio><span>Pesan suara · '+formatDuration(row.media_duration_seconds)+'</span></div>'
+    ? '<div class="pl-msg-voice-player"><audio controls preload="none" data-voice-path="'+esc(row.media_path)+'"></audio><span>Voice message · '+formatDuration(row.media_duration_seconds)+'</span></div>'
     : esc(row.body);
   return '<article class="pl-msg-bubble '+(row.sender_id===currentUser.id?'mine':'')+(pending?' is-pending':'')+'">'+
-    content+'<small>'+formatTime(row.created_at)+(pending?' · Tersimpan di perangkat, menunggu koneksi':readByOther?' · ✓✓ Dibaca':'')+'</small></article>';
+    content+'<small>'+formatTime(row.created_at)+(pending?' · Saved on this device · Waiting for connection':readByOther?' · ✓✓ Read':'')+'</small></article>';
 }
 async function hydrateVoicePlayers(container) {
   const players=[...container.querySelectorAll('audio[data-voice-path]')];
   await Promise.all(players.map(async player=>{
     const {data,error}=await db.storage.from('pluits-message-media').createSignedUrl(player.dataset.voicePath,3600);
     if(!error&&data?.signedUrl) player.src=data.signedUrl;
-    else { const note=document.createElement('span');note.className='pl-msg-audio-error';note.textContent='Audio tidak dapat dimuat';player.replaceWith(note); }
+    else { const note=document.createElement('span');note.className='pl-msg-audio-error';note.textContent='Unable to load audio';player.replaceWith(note); }
   }));
 }
 function bindVoiceRecorder(chat, conversationId) {
@@ -57,12 +57,12 @@ function bindVoiceRecorder(chat, conversationId) {
   const status=chat.querySelector('.pl-msg-chat-status');
   if(!button)return;
   if(!navigator.mediaDevices?.getUserMedia||typeof MediaRecorder==='undefined') {
-    button.disabled=true;button.title='Perekaman suara tidak didukung browser ini';return;
+    button.disabled=true;button.title='Voice recording is not supported by this browser';return;
   }
   let recorder=null,stream=null,chunks=[],startedAt=0,limitTimer=null;
   button.onclick=async()=>{
     if(recorder?.state==='recording'){recorder.stop();return;}
-    if(!navigator.onLine){status.textContent='Pesan suara membutuhkan koneksi internet. Pesan teks tetap dapat diantrekan.';return;}
+    if(!navigator.onLine){status.textContent='Voice messages require an internet connection. Text messages can still be queued.';return;}
     try {
       stream=await navigator.mediaDevices.getUserMedia({audio:true});
       const preferred=['audio/webm;codecs=opus','audio/mp4','audio/ogg;codecs=opus','audio/webm'];
@@ -70,21 +70,21 @@ function bindVoiceRecorder(chat, conversationId) {
       recorder=new MediaRecorder(stream,mimeType?{mimeType}:undefined);
       chunks=[];startedAt=Date.now();
       recorder.ondataavailable=event=>{if(event.data?.size)chunks.push(event.data);};
-      recorder.onerror=()=>{status.textContent='Perekaman gagal. Periksa izin mikrofon lalu coba lagi.';};
+      recorder.onerror=()=>{status.textContent='Recording failed. Check microphone permissions and try again.';};
       recorder.onstop=async()=>{
         clearTimeout(limitTimer);stream?.getTracks().forEach(track=>track.stop());stream=null;
-        button.disabled=true;button.textContent='Mengunggah…';button.classList.remove('is-recording');
+        button.disabled=true;button.textContent='Uploading…';button.classList.remove('is-recording');
         const duration=Math.min(180,Math.max(1,Math.round((Date.now()-startedAt)/1000)));
         const blob=new Blob(chunks,{type:recorder.mimeType||'audio/webm'});
-        if(blob.size>10*1024*1024){status.textContent='File suara melebihi batas 10 MB.';button.disabled=false;button.textContent='🎙 Suara';return;}
-        if(duration<1||!blob.size){status.textContent='Rekaman terlalu singkat. Coba rekam minimal satu detik.';button.disabled=false;button.textContent='🎙 Suara';return;}
+        if(blob.size>10*1024*1024){status.textContent='Voice message exceeds the 10 MB limit.';button.disabled=false;button.textContent='🎙 Voice';return;}
+        if(duration<1||!blob.size){status.textContent='Recording is too short. Please record for at least one second.';button.disabled=false;button.textContent='🎙 Voice';return;}
         const mime=blob.type.split(';')[0].toLowerCase();
         const ext=({'audio/webm':'webm','audio/mp4':'m4a','audio/ogg':'ogg','audio/mpeg':'mp3','audio/wav':'wav','audio/3gpp':'3gp'})[mime];
-        if(!ext){status.textContent='Format audio browser ini belum didukung.';button.disabled=false;button.textContent='🎙 Suara';return;}
+        if(!ext){status.textContent='This browser audio format is not supported.';button.disabled=false;button.textContent='🎙 Voice';return;}
         const path=conversationId+'/'+currentUser.id+'/'+crypto.randomUUID()+'.'+ext;
-        status.textContent='Mengunggah pesan suara…';
+        status.textContent='Uploading voice message…';
         const uploaded=await db.storage.from('pluits-message-media').upload(path,blob,{contentType:mime,upsert:false});
-        if(uploaded.error){status.textContent='Upload suara gagal: '+uploaded.error.message;button.disabled=false;button.textContent='🎙 Suara';return;}
+        if(uploaded.error){status.textContent='Voice upload failed: '+uploaded.error.message;button.disabled=false;button.textContent='🎙 Voice';return;}
         const saved=await db.from('user_messages').insert({
           conversation_id:conversationId,sender_id:currentUser.id,body:'',
           message_type:'voice',media_path:path,media_duration_seconds:duration,
@@ -92,20 +92,20 @@ function bindVoiceRecorder(chat, conversationId) {
         });
         if(saved.error){
           await db.storage.from('pluits-message-media').remove([path]);
-          status.textContent='Pesan suara belum terkirim: '+saved.error.message;
+          status.textContent='Voice message was not sent: '+saved.error.message;
         } else {
-          status.textContent='Pesan suara terkirim.';
+          status.textContent='Voice message sent.';
           await openConversation(conversationId);await loadConversations();
         }
-        button.disabled=false;button.textContent='🎙 Suara';
+        button.disabled=false;button.textContent='🎙 Voice';
       };
       recorder.start(250);button.textContent='■ Selesai';button.classList.add('is-recording');
-      status.textContent='Merekam… tekan Selesai untuk mengirim. Maksimal 3 menit.';
+      status.textContent='Recording… tap Done to send. Maximum 3 minutes.';
       limitTimer=setTimeout(()=>{if(recorder?.state==='recording')recorder.stop();},180000);
     } catch(error) {
       stream?.getTracks().forEach(track=>track.stop());stream=null;
-      status.textContent='Mikrofon tidak dapat diakses. Izinkan akses mikrofon di browser.';
-      button.textContent='🎙 Suara';button.classList.remove('is-recording');
+      status.textContent='Microphone unavailable. Allow microphone access in your browser.';
+      button.textContent='🎙 Voice';button.classList.remove('is-recording');
     }
   };
 }
@@ -114,35 +114,35 @@ export function messagesPage() {
     <header class="pl-msg-head">
       <a href="#/account/explore" class="pl-msg-brand" aria-label="PLUITS Beranda">PLUITS</a>
       <form id="pl-msg-search" class="pl-msg-head-search" role="search">
-        <div class="pl-msg-search-field"><span class="pl-msg-search-symbol">${socialIcon('search',{size:18})}</span><input name="q" type="search" placeholder="Cari teman…" autocomplete="off" aria-label="Cari nama atau username teman"></div>
-        <button type="submit" aria-label="Cari">${socialIcon('search',{size:18})}</button>
+        <div class="pl-msg-search-field"><span class="pl-msg-search-symbol">${socialIcon('search',{size:18})}</span><input name="q" type="search" placeholder="Search people…" autocomplete="off" aria-label="Search by name or username"></div>
+        <button type="submit" aria-label="Search">${socialIcon('search',{size:18})}</button>
         <div id="pl-msg-search-results" class="pl-msg-search-results" hidden></div>
       </form>
       <div class="pl-msg-head-menu">
-        <button type="button" class="pl-msg-menu-toggle" aria-label="Pengaturan pesan" aria-expanded="false" aria-controls="pl-msg-head-menu">⋮</button>
-        <nav class="pl-msg-head-menu-panel" id="pl-msg-head-menu" aria-label="Pengaturan Inbox" hidden>
-          <a href="#/inbox/settings">Pengaturan pesan</a>
+        <button type="button" class="pl-msg-menu-toggle" aria-label="Message settings" aria-expanded="false" aria-controls="pl-msg-head-menu">⋮</button>
+        <nav class="pl-msg-head-menu-panel" id="pl-msg-head-menu" aria-label="Message menu" hidden>
+          <a href="#/inbox/settings">Message settings</a>
         </nav>
       </div>
     </header>
     <section class="pl-msg-content">
-      <section class="pl-msg-people" aria-label="Teman yang sedang online">
-        <div class="pl-msg-people-heading"><div class="pl-msg-people-counts"><strong>Teman</strong><small><span id="pl-msg-online-count">0 online</span><span aria-hidden="true"> · </span><span id="pl-msg-offline-count">0 offline</span></small></div><a href="#/account/followers">Lihat semua</a></div>
-        <div id="pl-msg-people-strip" class="pl-msg-people-strip"><span class="pl-msg-people-loading">Menyiapkan teman…</span></div>
+      <section class="pl-msg-people" aria-label="Online contacts">
+        <div class="pl-msg-people-heading"><div class="pl-msg-people-counts"><strong>Contacts</strong><small><span id="pl-msg-online-count">0 online</span><span aria-hidden="true"> · </span><span id="pl-msg-offline-count">0 offline</span></small></div><a href="#/account/followers">View all</a></div>
+        <div id="pl-msg-people-strip" class="pl-msg-people-strip"><span class="pl-msg-people-loading">Loading contacts…</span></div>
       </section>
       <div class="pl-msg-layout" id="pl-msg-layout">
         <aside class="pl-msg-sidebar">
-          <nav class="pl-msg-inbox-tabs" aria-label="Kategori pesan" role="tablist">
-            <button type="button" class="is-active" data-inbox-tab="primary" role="tab" aria-selected="true">Utama</button>
-            <button type="button" data-inbox-tab="requests" role="tab" aria-selected="false">Permintaan</button>
-            <button type="button" data-inbox-tab="blocked" role="tab" aria-selected="false">Diblokir</button>
+          <nav class="pl-msg-inbox-tabs" aria-label="Message categories" role="tablist">
+            <button type="button" class="is-active" data-inbox-tab="primary" role="tab" aria-selected="true">Primary</button>
+            <button type="button" data-inbox-tab="requests" role="tab" aria-selected="false">Requests</button>
+            <button type="button" data-inbox-tab="blocked" role="tab" aria-selected="false">Blocked</button>
           </nav>
-          <div id="pl-msg-conversations"><p class="pl-msg-empty">Memuat percakapan…</p></div>
+          <div id="pl-msg-conversations"><p class="pl-msg-empty">Loading conversations…</p></div>
           <div id="pl-msg-category-empty" class="pl-msg-category-empty" hidden></div>
         </aside>
-        <section class="pl-msg-chat" id="pl-msg-chat"><div class="pl-msg-empty">Pilih percakapan untuk mulai mengirim pesan.</div></section>
+        <section class="pl-msg-chat" id="pl-msg-chat"><div class="pl-msg-empty">Select a conversation to start messaging.</div></section>
       </div>
-      <p class="pl-msg-offline-note">Jika koneksi terputus, pesan yang Anda kirim disimpan sementara di perangkat ini dan otomatis dicoba kirim saat online kembali. Pesan belum terkirim sampai server mengonfirmasi.</p>
+      <p class="pl-msg-offline-note">If your connection drops, outgoing messages are saved on this device and retried when you are back online. A message is not sent until the server confirms it.</p>
       ${renderSocialMobileNav({active:'messages',user:{id:'inbox'},navClass:'pl-msg-mobile-nav'})}
     </section>
   </main>`;
@@ -158,15 +158,15 @@ function bindInboxTabs(root=document) {
     if(empty){
       empty.hidden=activeInboxTab==='primary';
       empty.innerHTML=activeInboxTab==='requests'
-        ? '<strong>Permintaan pesan</strong><p>Pesan dari orang yang belum terhubung akan tampil di sini. Anda dapat meninjau dan menyetujui permintaan sebelum percakapan masuk ke Utama.</p><small>Persiapan kategori · alur persetujuan akan diaktifkan bersama backend.</small>'
-        : '<strong>Akun diblokir</strong><p>Daftar akun yang Anda blokir akan dikelola di sini.</p><small>Persiapan kategori · pengelolaan blokir belum diaktifkan.</small>';
+        ? '<strong>Message requests</strong><p>Messages from people you are not connected with will appear here. Review and accept a request before it moves to Primary.</p><small>Category preview · request approval will be enabled with the backend flow.</small>'
+        : '<strong>Blocked accounts</strong><p>Manage the accounts you have blocked here.</p><small>Category preview · block management is not enabled yet.</small>';
     }
   });
   (tabs.find(tab=>tab.dataset.inboxTab===activeInboxTab)||tabs[0])?.click();
 }
 function updateNetworkStatus() {
   const node = document.querySelector('#pl-msg-network');
-  if (node) { node.textContent = navigator.onLine ? '● Koneksi aktif' : '○ Tidak ada koneksi'; node.classList.toggle('is-offline', !navigator.onLine); }
+  if (node) { node.textContent = navigator.onLine ? '● Connected' : '○ Offline'; node.classList.toggle('is-offline', !navigator.onLine); }
 }
 function contactAvatar(person, imageUrl='') {
   const name=person.display_name||person.username||'P';
@@ -193,15 +193,15 @@ async function renderPeopleStrip(people=contactsCache, withSignedImages=false) {
   renderPeopleCounts(people);
   const items=await Promise.all(onlinePeople.map(async person=>{
     const url=withSignedImages?await signedAvatar(person.avatar_path):'';
-    return '<a class="pl-msg-person" href="#/@'+encodeURIComponent(person.username||'')+'" aria-label="Buka profil '+esc(person.display_name||person.username)+', sedang online">'+contactAvatar(person,url)+'<span class="pl-msg-online-dot" aria-hidden="true"></span><small>'+esc(person.display_name||person.username||'Teman')+'</small></a>';
+    return '<a class="pl-msg-person" href="#/@'+encodeURIComponent(person.username||'')+'" aria-label="Open profile '+esc(person.display_name||person.username)+', online">'+contactAvatar(person,url)+'<span class="pl-msg-online-dot" aria-hidden="true"></span><small>'+esc(person.display_name||person.username||'Contact')+'</small></a>';
   }));
   strip.classList.toggle('has-many',onlinePeople.length>=5);
-  strip.innerHTML=items.length?items.join(''):'<span class="pl-msg-online-empty">Teman yang online akan muncul di sini</span>';
+  strip.innerHTML=items.length?items.join(''):'<span class="pl-msg-online-empty">Contact yang online akan muncul di sini</span>';
 }
 
 function renderContactList(box,people,withSignedImages=false) {
   if(!box)return;
-  box.innerHTML=(people||[]).map(person=>'<button type="button" class="pl-msg-contact" data-start-chat="'+person.id+'">'+contactAvatar(person,withSignedImages?person.avatar_url||'':'')+'<span><b>'+esc(person.display_name||person.username)+'</b><small>@'+esc(person.username)+'</small></span><span class="pl-msg-contact-action">Pesan</span></button>').join('')||'<p class="pl-msg-empty">Belum ada kontak yang dapat ditampilkan. Cari username untuk memulai.</p>';
+  box.innerHTML=(people||[]).map(person=>'<button type="button" class="pl-msg-contact" data-start-chat="'+person.id+'">'+contactAvatar(person,withSignedImages?person.avatar_url||'':'')+'<span><b>'+esc(person.display_name||person.username)+'</b><small>@'+esc(person.username)+'</small></span><span class="pl-msg-contact-action">Message</span></button>').join('')||'<p class="pl-msg-empty">No contacts to show yet. Search for a username to start a conversation.</p>';
   bindStartChat(box);
 }
 async function loadContacts() {
@@ -213,15 +213,15 @@ async function loadContacts() {
       const cached=JSON.parse(localStorage.getItem(contactsKey())||'[]');
       contactsCache=cached;
       renderContactList(box,cached,false);await renderPeopleStrip(cached,false);
-      if(!cached.length&&box)box.innerHTML='<p class="pl-msg-empty">Kontak belum tersimpan di perangkat ini. Hubungkan internet untuk memuat kontak.</p>';
-    } catch { if(box)box.textContent='Kontak offline belum tersedia.'; }
+      if(!cached.length&&box)box.innerHTML='<p class="pl-msg-empty">Contacts are not cached on this device. Connect to the internet to load them.</p>';
+    } catch { if(box)box.textContent='Offline contacts are not available.'; }
     return;
   }
   const ids=[...new Set((rows||[]).map(row=>row.follower_id===currentUser.id?row.following_id:row.follower_id).filter(id=>id!==currentUser.id))];
   if(!ids.length) {
     contactsCache=[];
     try{localStorage.setItem(contactsKey(),'[]');}catch{}
-    if(box)box.innerHTML='<p class="pl-msg-empty">Kontak akan muncul dari akun yang saling terhubung. Anda juga dapat mencari username di atas.</p>';
+    if(box)box.innerHTML='<p class="pl-msg-empty">Contacts appear when accounts are connected. You can also search for a username above.</p>';
     await renderPeopleStrip([],false);return;
   }
   const {data:profiles,error:profileError}=await db.rpc('get_user_profile_directory_by_ids',{p_ids:ids});
@@ -247,7 +247,7 @@ export async function bindMessagesPage() {
   const {data:{user},error:authError}=await db.auth.getUser();
   if(authError) { app.querySelector('#pl-msg-chat').textContent=authError.message; return; }
   currentUser=user;
-  if(!user) { app.querySelector('#pl-msg-conversations').innerHTML='<div class="pl-msg-empty">Masuk ke akun Pluits untuk menggunakan pesan. <a href="#/account/login">Masuk →</a></div>'; return; }
+  if(!user) { app.querySelector('#pl-msg-conversations').innerHTML='<div class="pl-msg-empty">Sign in to Pluits to use Messages. <a href="#/account/login">Sign in →</a></div>'; return; }
   if(realtimeChannel) { await db.removeChannel(realtimeChannel); realtimeChannel=null; }
   if(presenceChannel) { await db.removeChannel(presenceChannel); presenceChannel=null; }
   onlineUserIds=new Set();contactsCache=[];
@@ -274,11 +274,11 @@ export async function bindMessagesPage() {
     event.preventDefault();
     const query=String(new FormData(search).get('q')||'').trim().replace(/^@/,'').replace(/[(),]/g,' ').replace(/\s+/g,' ').trim();
     const box=app.querySelector('#pl-msg-search-results');
-    if(query.length<2){box.hidden=false;box.innerHTML='<p class="pl-msg-search-hint">Ketik minimal dua karakter untuk mencari teman.</p>';return;}
+    if(query.length<2){box.hidden=false;box.innerHTML='<p class="pl-msg-search-hint">Type at least two characters to search.</p>';return;}
     const {data,error}=await db.from('user_profiles').select('id,display_name,username').or('username.ilike.%'+query+'%,display_name.ilike.%'+query+'%').neq('id',user.id).limit(8);
     if(error){box.hidden=false;box.textContent=error.message;return;}
     box.hidden=false;
-    box.innerHTML=data?.length?data.map(person=>'<button class="pl-msg-contact" data-start-chat="'+person.id+'"><b>'+esc(person.display_name||person.username)+'</b><small>@'+esc(person.username)+'</small><span>Pesan</span></button>').join(''):'<p class="pl-msg-search-hint">Akun tidak ditemukan.</p>';
+    box.innerHTML=data?.length?data.map(person=>'<button class="pl-msg-contact" data-start-chat="'+person.id+'"><b>'+esc(person.display_name||person.username)+'</b><small>@'+esc(person.username)+'</small><span>Message</span></button>').join(''):'<p class="pl-msg-search-hint">No accounts found.</p>';
     bindStartChat(box);
   };
   const headMenu=app.querySelector('.pl-msg-head-menu');
@@ -342,14 +342,14 @@ async function openDraftConversation(recipientId) {
   currentConversation='draft:'+recipientId;
   let person=null;
   try { person=(JSON.parse(localStorage.getItem(contactsKey())||'[]')).find(item=>item.id===recipientId)||null; } catch {}
-  if(!person){document.querySelector('#pl-msg-chat').innerHTML='<div class="pl-msg-empty">Kontak ini belum tersimpan. Muat kontak saat online sebelum memulai DM offline.</div>';return;}
+  if(!person){document.querySelector('#pl-msg-chat').innerHTML='<div class="pl-msg-empty">This contact is not cached. Load contacts while online before starting an offline DM.</div>';return;}
   const chat=document.querySelector('#pl-msg-chat');if(!chat)return;
   document.querySelector('#pl-msg-layout')?.classList.add('is-chat-open');
   const queued=queueFor(currentConversation);
-  chat.innerHTML='<header class="pl-msg-chat-head"><button type="button" class="pl-msg-back" data-chat-back aria-label="Kembali ke daftar pesan">‹</button><div><b>'+esc(person.display_name||person.username)+'</b><small>@'+esc(person.username)+'</small></div><span>Draft offline</span></header>'+
-    '<div class="pl-msg-stream"><div class="pl-msg-empty">Percakapan baru akan dibuat saat koneksi kembali. Riwayat pesan belum tersedia offline.</div>'+queued.map(row=>messageMarkup(row,true)).join('')+'</div>'+
-    '<form id="pl-msg-compose"><textarea name="body" rows="2" maxlength="5000" placeholder="Tulis pesan…" required></textarea><button type="submit">Simpan pesan</button></form>'+
-    '<p class="pl-msg-chat-status" role="status">'+queued.length+' pesan menunggu koneksi. Draft hanya tersimpan di perangkat ini.</p>';
+  chat.innerHTML='<header class="pl-msg-chat-head"><button type="button" class="pl-msg-back" data-chat-back aria-label="Back to Messages">‹</button><div><b>'+esc(person.display_name||person.username)+'</b><small>@'+esc(person.username)+'</small></div><span>Offline draft</span></header>'+
+    '<div class="pl-msg-stream"><div class="pl-msg-empty">A new conversation will be created when you reconnect. Message history is not available offline.</div>'+queued.map(row=>messageMarkup(row,true)).join('')+'</div>'+
+    '<form id="pl-msg-compose"><textarea name="body" rows="2" maxlength="5000" placeholder="Write a message…" required></textarea><button type="submit">Save message</button></form>'+
+    '<p class="pl-msg-chat-status" role="status">'+queued.length+' messages waiting for connection. Drafts are saved only on this device.</p>';
   chat.querySelector('[data-chat-back]')?.addEventListener('click',()=>document.querySelector('#pl-msg-layout')?.classList.remove('is-chat-open'));
   chat.querySelector('#pl-msg-compose').onsubmit=async event=>{
     event.preventDefault();const form=event.currentTarget,body=String(new FormData(form).get('body')||'').trim();if(!body)return;
@@ -361,7 +361,7 @@ async function openDraftConversation(recipientId) {
       return;
     }
     const queue=readQueue();queue.push({client_message_id:crypto.randomUUID(),conversation_id:null,recipient_user_id:recipientId,sender_id:currentUser.id,body,created_at:new Date().toISOString()});
-    if(!writeQueue(queue)){chat.querySelector('.pl-msg-chat-status').textContent='Batas antrean 50 pesan tercapai atau penyimpanan perangkat tidak tersedia. Pesan belum disimpan.';return;}
+    if(!writeQueue(queue)){chat.querySelector('.pl-msg-chat-status').textContent='The 50-message queue limit was reached or device storage is unavailable. Message was not saved.';return;}
     await openDraftConversation(recipientId);
   };
   chat.querySelector('.pl-msg-stream').scrollTop=chat.querySelector('.pl-msg-stream').scrollHeight;
@@ -370,20 +370,20 @@ async function loadConversations() {
   const list=document.querySelector('#pl-msg-conversations'); if(!list)return;
   const {data:members,error}=await db.from('user_conversation_members').select('conversation_id,last_read_at').eq('user_id',currentUser.id);
   if(error){
-    try { const cached=JSON.parse(localStorage.getItem(threadsKey())||'[]'); conversationCache=cached; list.innerHTML=cached.length?cached.map(item=>'<button class="pl-msg-thread" data-open-chat="'+item.id+'"><b>'+esc(item.other.display_name||item.other.username)+'</b><small>@'+esc(item.other.username)+'</small><p>Riwayat tersedia saat online</p></button>').join(''):'<div class="pl-msg-empty">Inbox offline belum tersimpan. Hubungkan internet untuk memuat percakapan.</div>'; list.querySelectorAll('[data-open-chat]').forEach(button=>button.onclick=()=>openConversation(button.dataset.openChat)); }
-    catch { list.textContent='Inbox offline belum tersedia.'; }
+    try { const cached=JSON.parse(localStorage.getItem(threadsKey())||'[]'); conversationCache=cached; list.innerHTML=cached.length?cached.map(item=>'<button class="pl-msg-thread" data-open-chat="'+item.id+'"><b>'+esc(item.other.display_name||item.other.username)+'</b><small>@'+esc(item.other.username)+'</small><p>History available when online</p></button>').join(''):'<div class="pl-msg-empty">No offline inbox cache. Connect to the internet to load conversations.</div>'; list.querySelectorAll('[data-open-chat]').forEach(button=>button.onclick=()=>openConversation(button.dataset.openChat)); }
+    catch { list.textContent='Offline inbox is not available.'; }
     return;
   }
   const ids=(members||[]).map(row=>row.conversation_id);
-  if(!ids.length){list.innerHTML='<div class="pl-msg-empty">Belum ada percakapan. Pilih kontak atau cari username untuk memulai.</div>';conversationCache=[];return;}
+  if(!ids.length){list.innerHTML='<div class="pl-msg-empty">No conversations yet. Select a contact or search for a username to get started.</div>';conversationCache=[];return;}
   const [convs,memberRows,msgRows]=await Promise.all([
     db.from('user_conversations').select('id,title,updated_at').in('id',ids).order('updated_at',{ascending:false}),
     db.from('user_conversation_members').select('conversation_id,user_id,last_read_at').in('conversation_id',ids),
     db.from('user_messages').select('conversation_id,body,sender_id,created_at,message_type').in('conversation_id',ids).order('created_at',{ascending:false}).limit(200)
   ]);
   if(convs.error||memberRows.error||msgRows.error){
-    try { const cached=JSON.parse(localStorage.getItem(threadsKey())||'[]'); conversationCache=cached; list.innerHTML=cached.length?cached.map(item=>'<button class="pl-msg-thread" data-open-chat="'+item.id+'"><b>'+esc(item.other.display_name||item.other.username)+'</b><small>@'+esc(item.other.username)+'</small><p>Riwayat tersedia saat online</p></button>').join(''):'<div class="pl-msg-empty">Inbox offline belum tersimpan. Hubungkan internet untuk memuat percakapan.</div>'; list.querySelectorAll('[data-open-chat]').forEach(button=>button.onclick=()=>openConversation(button.dataset.openChat)); }
-    catch { list.textContent='Inbox offline belum tersedia.'; }
+    try { const cached=JSON.parse(localStorage.getItem(threadsKey())||'[]'); conversationCache=cached; list.innerHTML=cached.length?cached.map(item=>'<button class="pl-msg-thread" data-open-chat="'+item.id+'"><b>'+esc(item.other.display_name||item.other.username)+'</b><small>@'+esc(item.other.username)+'</small><p>History available when online</p></button>').join(''):'<div class="pl-msg-empty">No offline inbox cache. Connect to the internet to load conversations.</div>'; list.querySelectorAll('[data-open-chat]').forEach(button=>button.onclick=()=>openConversation(button.dataset.openChat)); }
+    catch { list.textContent='Offline inbox is not available.'; }
     return;
   }
   const otherIds=[...new Set((memberRows.data||[]).map(row=>row.user_id).filter(id=>id!==currentUser.id))];
@@ -401,8 +401,8 @@ async function loadConversations() {
   try { localStorage.setItem(threadsKey(),JSON.stringify(conversationCache.map(item=>({id:item.id,updated_at:item.updated_at,other:item.other})))); } catch {}
   list.innerHTML=conversationCache.length?conversationCache.map(conversation=>{
     const pending=queueFor(conversation.id).length;
-    return '<button class="pl-msg-thread '+(currentConversation===conversation.id?'active':'')+(conversation.unread?' is-unread':'')+'" data-open-chat="'+conversation.id+'"><span class="pl-msg-thread-head"><b>'+esc(conversation.other.display_name||conversation.other.username)+'</b>'+(conversation.unread?'<i aria-label="Pesan belum dibaca"></i>':'')+'</span><small>@'+esc(conversation.other.username)+'</small><p>'+esc(conversation.last?.message_type==='voice'?'🎙 Pesan suara':conversation.last?.body||'Belum ada pesan')+(pending?' · '+pending+' menunggu':'')+'</p></button>';
-  }).join(''):'<div class="pl-msg-empty">Belum ada percakapan. Pilih kontak atau cari username untuk memulai.</div>';
+    return '<button class="pl-msg-thread '+(currentConversation===conversation.id?'active':'')+(conversation.unread?' is-unread':'')+'" data-open-chat="'+conversation.id+'"><span class="pl-msg-thread-head"><b>'+esc(conversation.other.display_name||conversation.other.username)+'</b>'+(conversation.unread?'<i aria-label="Unread message"></i>':'')+'</span><small>@'+esc(conversation.other.username)+'</small><p>'+esc(conversation.last?.message_type==='voice'?'🎙 Voice message':conversation.last?.body||'No messages yet')+(pending?' · '+pending+' menunggu':'')+'</p></button>';
+  }).join(''):'<div class="pl-msg-empty">No conversations yet. Select a contact or search for a username to get started.</div>';
   list.querySelectorAll('[data-open-chat]').forEach(button=>button.onclick=()=>openConversation(button.dataset.openChat));
   list.hidden=activeInboxTab!=='primary';
 }
@@ -411,7 +411,7 @@ async function openConversation(id) {
   currentConversation=id;
   const chat=document.querySelector('#pl-msg-chat'); if(!chat)return;
   document.querySelector('#pl-msg-layout')?.classList.add('is-chat-open');
-  chat.innerHTML='<div class="pl-msg-empty">Memuat pesan…</div>';
+  chat.innerHTML='<div class="pl-msg-empty">Loading messages…</div>';
   const thread=conversationCache.find(item=>item.id===id);
   const [messages,members]=await Promise.all([
     db.from('user_messages').select('id,sender_id,body,created_at,deleted_at,message_type,media_path,media_duration_seconds').eq('conversation_id',id).order('created_at',{ascending:true}).limit(150),
@@ -419,15 +419,15 @@ async function openConversation(id) {
   ]);
   if((messages.error||members.error)&&navigator.onLine){chat.textContent=(messages.error||members.error).message;return;}
   const queued=queueFor(id);
-  chat.innerHTML='<header class="pl-msg-chat-head"><button type="button" class="pl-msg-back" data-chat-back aria-label="Kembali ke daftar pesan">‹</button><div><b>'+esc(thread?.other.display_name||thread?.other.username||'Percakapan')+'</b><small>@'+esc(thread?.other.username||'')+'</small></div><span>'+ (navigator.onLine?'Terhubung':'Offline · pesan antrean')+'</span></header>'+
+  chat.innerHTML='<header class="pl-msg-chat-head"><button type="button" class="pl-msg-back" data-chat-back aria-label="Back to Messages">‹</button><div><b>'+esc(thread?.other.display_name||thread?.other.username||'Conversation')+'</b><small>@'+esc(thread?.other.username||'')+'</small></div><span>'+ (navigator.onLine?'Connected':'Offline · messages queued')+'</span></header>'+
     '<div class="pl-msg-stream">'+(messages.data||[]).map(message=>{
       const deleted=Boolean(message.deleted_at);
       const otherMember=(members.data||[]).find(member=>member.user_id!==currentUser.id);
       const readByOther=message.sender_id===currentUser.id&&Boolean(otherMember?.last_read_at)&&new Date(otherMember.last_read_at)>=new Date(message.created_at);
       return messageMarkup({...message,body:deleted?'Pesan dihapus':message.body,message_type:deleted?'text':message.message_type,media_path:deleted?null:message.media_path},false,readByOther);
     }).join('')+queued.map(row=>messageMarkup(row,true)).join('')+'</div>'+
-    '<form id="pl-msg-compose"><textarea name="body" rows="2" maxlength="5000" placeholder="Tulis pesan…" required></textarea><button type="button" class="pl-msg-voice" data-voice-record aria-label="Rekam pesan suara">🎙 Suara</button><button type="submit">Kirim</button></form>'+
-    '<p class="pl-msg-chat-status" role="status">'+(queued.length?queued.length+' pesan menunggu koneksi.':'Pesan tersinkron dengan server. Pesan suara maksimal 3 menit.')+'</p>';
+    '<form id="pl-msg-compose"><textarea name="body" rows="2" maxlength="5000" placeholder="Write a message…" required></textarea><button type="button" class="pl-msg-voice" data-voice-record aria-label="Record a voice message">🎙 Voice</button><button type="submit">Send</button></form>'+
+    '<p class="pl-msg-chat-status" role="status">'+(queued.length?queued.length+' messages waiting for connection.':'Pesan tersinkron dengan server. Voice message maksimal 3 menit.')+'</p>';
   chat.querySelector('[data-chat-back]')?.addEventListener('click',()=>document.querySelector('#pl-msg-layout')?.classList.remove('is-chat-open'));
   await hydrateVoicePlayers(chat);
   const selfMember=(members.data||[]).find(member=>member.user_id===currentUser.id);

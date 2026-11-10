@@ -2,57 +2,57 @@ import './settings.css';
 
 const groups = [
   {
-    id:'privacy', icon:'◉', title:'Privasi dan keamanan', description:'Atur siapa yang dapat menghubungi dan melihat aktivitas pesan Anda.',
+    id:'privacy', icon:'◉', title:'Privacy & Security', description:'Control who can contact you and see your messaging activity.',
     items:[
-      ['Status online','Pilih siapa yang dapat melihat saat Anda sedang aktif.'],
-      ['Tanda pesan dibaca','Kendalikan apakah pengirim mengetahui pesan sudah dibaca.'],
-      ['Indikator sedang mengetik','Atur visibilitas aktivitas saat menulis pesan.'],
-      ['Siapa yang dapat mengirim pesan','Semua orang, akun yang Anda ikuti, atau orang yang terhubung.'],
-      ['Akun diblokir','Tinjau dan kelola akun yang tidak dapat menghubungi Anda.']
+      ['Activity Status','Choose who can see when you are active.'],
+      ['Read Receipts','Choose whether people can see when you have read their messages.'],
+      ['Typing Indicators','Control whether others can see when you are typing.'],
+      ['Who Can Message You','Everyone, accounts you follow, or connected people.'],
+      ['Blocked Accounts','Review accounts that cannot contact you.']
     ]
   },
   {
-    id:'requests', icon:'✉', title:'Permintaan pesan', description:'Kendalikan pesan dari orang yang belum terhubung dengan Anda.',
+    id:'requests', icon:'✉', title:'Message Requests', description:'Manage messages from people you are not connected with.',
     items:[
-      ['Filter permintaan','Pisahkan pesan dari orang yang dikenal dan belum dikenal.'],
-      ['Permintaan mencurigakan','Penyaringan pesan spam, tautan berisiko, dan aktivitas mencurigakan.'],
-      ['Persetujuan percakapan','Tentukan kapan permintaan berubah menjadi percakapan utama.']
+      ['Request Filtering','Separate messages from people you know and people you do not.'],
+      ['Spam & Suspicious Requests','Filter spam, risky links, and suspicious activity.'],
+      ['Conversation Approval','Choose when a request becomes a regular conversation.']
     ]
   },
   {
-    id:'notifications', icon:'♧', title:'Notifikasi pesan', description:'Pilih pemberitahuan yang ingin Anda terima.',
+    id:'notifications', icon:'♧', title:'Message Notifications', description:'Choose which alerts you want to receive.',
     items:[
-      ['Pesan baru','Notifikasi untuk pesan masuk dari percakapan utama.'],
-      ['Permintaan pesan','Pemberitahuan ketika ada permintaan percakapan baru.'],
-      ['Suara notifikasi','Aktifkan atau senyapkan suara pesan.'],
-      ['Pratinjau pesan','Tampilkan atau sembunyikan isi pesan pada notifikasi.'],
-      ['Jeda notifikasi','Atur waktu tenang agar tidak terganggu.']
+      ['New Messages','Alerts for incoming messages in your main inbox.'],
+      ['Message Requests','Pemberitahuan ketika ada permintaan percakapan baru.'],
+      ['Notification Sound','Turn message sounds on or off.'],
+      ['Message Previews','Show or hide message content in notifications.'],
+      ['Pause Notifications','Set quiet hours to avoid interruptions.']
     ]
   },
   {
-    id:'appearance', icon:'◐', title:'Tampilan dan pengalaman', description:'Sesuaikan cara Anda membaca dan menggunakan ruang pesan.',
+    id:'appearance', icon:'◐', title:'Appearance & Experience', description:'Customize how messages look and feel.',
     items:[
-      ['Tema tampilan','Terang, gelap, atau mengikuti pengaturan perangkat.'],
-      ['Ukuran teks','Atur ukuran huruf agar percakapan nyaman dibaca.'],
-      ['Enter untuk mengirim','Pilih apakah tombol Enter mengirim pesan atau membuat baris baru.'],
-      ['Animasi','Kurangi gerakan dan animasi bila diperlukan.']
+      ['Theme','Light, dark, or match your device settings.'],
+      ['Text Size','Adjust text size for comfortable reading.'],
+      ['Enter to Send','Choose whether Enter sends a message or starts a new line.'],
+      ['Animations','Reduce motion and animations if needed.']
     ]
   },
   {
-    id:'media', icon:'▧', title:'Foto, video, dan data', description:'Kelola penggunaan data dan pengalaman media dalam percakapan.',
+    id:'media', icon:'▧', title:'Media & Data', description:'Manage data usage and media behavior in conversations.',
     items:[
-      ['Putar otomatis video','Atur apakah video diputar otomatis.'],
-      ['Unduh media otomatis','Pilih kapan foto dan video dimuat otomatis.'],
-      ['Hemat penggunaan data','Kurangi pemakaian data seluler saat membuka media.'],
-      ['Kualitas unggahan','Pilih kualitas media saat mengirim foto dan video.']
+      ['Autoplay Videos','Choose whether videos play automatically.'],
+      ['Auto-download Media','Choose when photos and videos load automatically.'],
+      ['Data Saver','Reduce mobile data usage when viewing media.'],
+      ['Upload Quality','Choose media quality when sending photos and videos.']
     ]
   },
   {
-    id:'support', icon:'?', title:'Bantuan dan keamanan akun', description:'Temukan bantuan saat mengalami masalah dalam percakapan.',
+    id:'support', icon:'?', title:'Help & Account Safety', description:'Get help with messaging issues and account safety.',
     items:[
-      ['Laporkan percakapan','Laporkan spam, pelecehan, atau konten yang melanggar aturan.'],
-      ['Pusat bantuan pesan','Panduan mengelola pesan dan melindungi akun.'],
-      ['Informasi privasi','Pelajari bagaimana Pluits mengelola data pesan.']
+      ['Report a Conversation','Report spam, harassment, or content that violates our rules.'],
+      ['Messaging Help Center','Guides for managing messages and protecting your account.'],
+      ['Privacy Information','Learn how Pluits handles messaging data.']
     ]
   }
 ];
@@ -60,23 +60,23 @@ const groups = [
 export function messageSettingsPage(){
   return `<main class="pl-dm-settings">
     <header class="pl-dm-settings-head">
-      <a class="pl-dm-settings-back" href="#/inbox" aria-label="Kembali ke Inbox"><span aria-hidden="true">‹</span><small>Inbox</small></a>
-      <div class="pl-dm-settings-head-copy"><span>PLUITS · PESAN</span><h1>Pengaturan pesan</h1></div>
-      <span class="pl-dm-settings-head-mark" aria-hidden="true">•••</span>
+      <a class="pl-dm-settings-back" href="#/inbox" aria-label="Back to Messages"><span aria-hidden="true">‹</span><small>Messages</small></a>
+      <div class="pl-dm-settings-head-copy"><span>PLUITS · MESSAGING</span><h1>Message Settings</h1></div>
+      
     </header>
     <div class="pl-dm-settings-body">
       <div class="pl-dm-settings-intro">
-        <span class="pl-dm-settings-eyebrow">PREFERENSI PESAN</span>
-        <h2>Atur pengalaman percakapan Anda</h2>
-        <p>Daftar ini merupakan rancangan menu pengaturan pesan PLUITS. Pilih bagian untuk melihat cakupan pengaturannya.</p>
+        <span class="pl-dm-settings-eyebrow">MESSAGE PREFERENCES</span>
+        <h2>Make messaging work for you</h2>
+        <p>Explore the proposed controls for privacy, requests, notifications, appearance, media, and support.</p>
       </div>
       <div class="pl-dm-settings-groups">
         ${groups.map((group,index)=>`<details class="pl-dm-settings-group" ${index===0?'open':''} id="dm-setting-${group.id}">
           <summary><span class="pl-dm-settings-icon" aria-hidden="true">${group.icon}</span><span class="pl-dm-settings-group-copy"><strong>${group.title}</strong><small>${group.description}</small></span><span class="pl-dm-settings-chevron" aria-hidden="true">⌄</span></summary>
-          <div class="pl-dm-settings-items">${group.items.map(item=>`<div class="pl-dm-settings-item"><span><strong>${item[0]}</strong><small>${item[1]}</small></span><em>Rancangan</em></div>`).join('')}</div>
+          <div class="pl-dm-settings-items">${group.items.map(item=>`<div class="pl-dm-settings-item"><span><strong>${item[0]}</strong><small>${item[1]}</small></span><em>Proposed</em></div>`).join('')}</div>
         </details>`).join('')}
       </div>
-      <p class="pl-dm-settings-footnote">Pengaturan di atas adalah daftar usulan untuk ditinjau terlebih dahulu. Belum ada perubahan preferensi atau privasi yang diterapkan ke akun Anda.</p>
+      <p class="pl-dm-settings-footnote">These are proposed settings for review. They do not change your account preferences or privacy controls yet.</p>
     </div>
   </main>`;
 }

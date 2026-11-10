@@ -1,11 +1,11 @@
 .pl-dm-settings{min-height:100dvh;background:#f5f7fa;color:#1d2d40;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding-bottom:36px}
-.pl-dm-settings-head{height:76px;display:flex;align-items:center;gap:16px;padding:0 max(18px,calc((100vw - 920px)/2));background:#fff;border-bottom:1px solid #e8edf2}
-.pl-dm-settings-back{width:64px;flex:0 0 64px;display:flex;align-items:center;gap:7px;color:#30475f;text-decoration:none}
-.pl-dm-settings-back>span{font-size:32px;line-height:1;font-weight:300}
+.pl-dm-settings-head{min-height:72px;display:flex;align-items:center;gap:14px;padding:0 max(20px,calc((100vw - 920px)/2));background:#fff;border-bottom:1px solid #e8edf2;box-sizing:border-box}
+.pl-dm-settings-back{min-width:96px;min-height:44px;flex:0 0 auto;display:inline-flex;align-items:center;justify-content:flex-start;gap:8px;padding:0 8px 0 0;border:0;border-radius:10px;color:#30475f;text-decoration:none;white-space:nowrap}
+.pl-dm-settings-back>span{font-size:27px;line-height:1;font-weight:400}
 .pl-dm-settings-back small{font-size:12px;font-weight:700}
-.pl-dm-settings-head-copy{min-width:0;flex:1}
+.pl-dm-settings-head-copy{min-width:0;flex:1;display:grid;gap:3px}
 .pl-dm-settings-head-copy>span,.pl-dm-settings-eyebrow{font-size:9px;font-weight:850;letter-spacing:.15em;color:#8290a1}
-.pl-dm-settings-head-copy h1{margin:4px 0 0;font-size:19px;letter-spacing:-.035em;color:#203850}
+.pl-dm-settings-head-copy h1{margin:0;font-size:19px;line-height:1.2;letter-spacing:-.035em;color:#203850}
 .pl-dm-settings-head-mark{font-size:15px;letter-spacing:2px;color:#718197}
 .pl-dm-settings-body{width:min(100% - 32px,760px);margin:30px auto}
 .pl-dm-settings-intro{margin-bottom:22px}
@@ -30,10 +30,10 @@
 .pl-dm-settings-item em{flex:0 0 auto;padding:5px 7px;border-radius:6px;background:#f2f4f7;color:#8793a1;font-size:8px;font-style:normal;font-weight:750}
 .pl-dm-settings-footnote{margin:16px 2px 0;color:#929dab;font-size:10px;line-height:1.65}
 @media(max-width:600px){
- .pl-dm-settings-head{height:64px;padding:0 14px;gap:10px}
- .pl-dm-settings-back{width:54px;flex-basis:54px;gap:4px}
- .pl-dm-settings-back>span{font-size:30px}
- .pl-dm-settings-head-copy h1{font-size:16px}
+ .pl-dm-settings-head{min-height:62px;padding:0 14px;gap:10px}
+ .pl-dm-settings-back{min-width:88px;gap:6px}
+ .pl-dm-settings-back>span{font-size:25px}
+ .pl-dm-settings-head-copy h1{font-size:16px;line-height:1.15}
  .pl-dm-settings-body{width:calc(100% - 24px);margin:22px auto}
  .pl-dm-settings-intro{margin-bottom:16px}
  .pl-dm-settings-group summary{min-height:72px;padding:11px 12px;gap:10px}
@@ -45,3 +45,12 @@
  .pl-dm-settings-item em{margin-top:2px}
 }
 @media(prefers-reduced-motion:reduce){.pl-dm-settings-chevron{transition:none}}
+
+.pl-dm-settings-head>*{min-width:0}
+.pl-dm-settings-back:focus-visible{outline:2px solid #6685a3;outline-offset:2px}
+@media(max-width:350px){
+ .pl-dm-settings-head{gap:6px;padding-inline:10px}
+ .pl-dm-settings-back{min-width:80px;gap:5px}
+ .pl-dm-settings-back small{font-size:11px}
+ .pl-dm-settings-head-copy h1{font-size:14px}
+}
