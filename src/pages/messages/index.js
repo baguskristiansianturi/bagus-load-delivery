@@ -144,7 +144,7 @@ export function messagesPage() {
       </section>
       <div class="pl-msg-layout" id="pl-msg-layout">
         <aside class="pl-msg-sidebar">
-          <nav class="pl-msg-inbox-tabs" aria-label="Message categories" role="tablist">
+          <nav class="pl-msg-inbox-tabs" aria-label="Kategori pesan" role="tablist">
             <button type="button" class="is-active" data-inbox-tab="primary" role="tab" aria-selected="true">Utama</button>
             <button type="button" data-inbox-tab="requests" role="tab" aria-selected="false">Permintaan</button>
             <button type="button" data-inbox-tab="blocked" role="tab" aria-selected="false">Diblokir</button>
@@ -152,7 +152,7 @@ export function messagesPage() {
           <div id="pl-msg-conversations"><p class="pl-msg-empty">Memuat percakapan…</p></div>
           <div id="pl-msg-category-empty" class="pl-msg-category-empty" hidden></div>
         </aside>
-        <section class="pl-msg-chat" id="pl-msg-chat">'+emptyStateMarkup({variant:'message',title:'Pesan Anda dimulai di sini',description:'Pilih percakapan di sebelah kiri atau cari seseorang untuk mulai mengirim pesan.'})+'</section>
+        <section class="pl-msg-chat" id="pl-msg-chat">${emptyStateMarkup({variant:'message',title:'Pesan Anda dimulai di sini',description:'Pilih percakapan di sebelah kiri atau cari seseorang untuk mulai mengirim pesan.'})}</section>
       </div>
       <p class="pl-msg-offline-note">If your connection drops, outgoing messages are saved on this device and retried when you are back online. A message is not sent until the server confirms it.</p>
       ${renderSocialMobileNav({active:'messages',user:{id:'inbox'},navClass:'pl-msg-mobile-nav'})}
@@ -358,9 +358,9 @@ async function openDraftConversation(recipientId) {
   const chat=document.querySelector('#pl-msg-chat');if(!chat)return;
   document.querySelector('#pl-msg-layout')?.classList.add('is-chat-open');
   const queued=queueFor(currentConversation);
-  chat.innerHTML='<header class="pl-msg-chat-head"><button type="button" class="pl-msg-back" data-chat-back aria-label="Back to Messages">‹</button><div><b>'+esc(person.display_name||person.username)+'</b><small>@'+esc(person.username)+'</small></div><span>Offline draft</span></header>'+
+  chat.innerHTML='<header class="pl-msg-chat-head"><button type="button" class="pl-msg-back" data-chat-back aria-label="Kembali ke Pesan">‹</button><div><b>'+esc(person.display_name||person.username)+'</b><small>@'+esc(person.username)+'</small></div><span>Offline draft</span></header>'+
     '<div class="pl-msg-stream"><div class="pl-msg-empty">A new conversation will be created when you reconnect. Message history is not available offline.</div>'+queued.map(row=>messageMarkup(row,true)).join('')+'</div>'+
-    '<form id="pl-msg-compose"><textarea name="body" rows="2" maxlength="5000" placeholder="Write a message…" required></textarea><button type="submit">Save message</button></form>'+
+    '<form id="pl-msg-compose"><textarea name="body" rows="2" maxlength="5000" placeholder="Tulis pesan…" required></textarea><button type="submit">Save message</button></form>'+
     '<p class="pl-msg-chat-status" role="status">'+queued.length+' messages waiting for connection. Drafts are saved only on this device.</p>';
   chat.querySelector('[data-chat-back]')?.addEventListener('click',()=>document.querySelector('#pl-msg-layout')?.classList.remove('is-chat-open'));
   chat.querySelector('#pl-msg-compose').onsubmit=async event=>{
@@ -431,14 +431,14 @@ async function openConversation(id) {
   ]);
   if((messages.error||members.error)&&navigator.onLine){chat.textContent=(messages.error||members.error).message;return;}
   const queued=queueFor(id);
-  chat.innerHTML='<header class="pl-msg-chat-head"><button type="button" class="pl-msg-back" data-chat-back aria-label="Back to Messages">‹</button><div><b>'+esc(thread?.other.display_name||thread?.other.username||'Conversation')+'</b><small>@'+esc(thread?.other.username||'')+'</small></div><span>'+ (navigator.onLine?'Connected':'Offline · messages queued')+'</span></header>'+
+  chat.innerHTML='<header class="pl-msg-chat-head"><button type="button" class="pl-msg-back" data-chat-back aria-label="Kembali ke Pesan">‹</button><div><b>'+esc(thread?.other.display_name||thread?.other.username||'Conversation')+'</b><small>@'+esc(thread?.other.username||'')+'</small></div><span>'+ (navigator.onLine?'Connected':'Offline · messages queued')+'</span></header>'+
     '<div class="pl-msg-stream">'+((messages.data||[]).length? (messages.data||[]).map(message=>{
       const deleted=Boolean(message.deleted_at);
       const otherMember=(members.data||[]).find(member=>member.user_id!==currentUser.id);
       const readByOther=message.sender_id===currentUser.id&&Boolean(otherMember?.last_read_at)&&new Date(otherMember.last_read_at)>=new Date(message.created_at);
       return messageMarkup({...message,body:deleted?'Pesan dihapus':message.body,message_type:deleted?'text':message.message_type,media_path:deleted?null:message.media_path},false,readByOther);
     }).join('') : emptyStateMarkup({variant:'message',title:'Belum ada pesan',description:'Kirim pesan pertama untuk memulai percakapan.'}))+queued.map(row=>messageMarkup(row,true)).join('')+'</div>'+
-    '<form id="pl-msg-compose"><textarea name="body" rows="2" maxlength="5000" placeholder="Write a message…" required></textarea><button type="button" class="pl-msg-voice" data-voice-record aria-label="Record a voice message">🎙 Voice</button><button type="submit">Send</button></form>'+
+    '<form id="pl-msg-compose"><textarea name="body" rows="2" maxlength="5000" placeholder="Tulis pesan…" required></textarea><button type="button" class="pl-msg-voice" data-voice-record aria-label="Record a voice message">🎙 Voice</button><button type="submit">Kirim</button></form>'+
     '<p class="pl-msg-chat-status" role="status">'+(queued.length?queued.length+' messages waiting for connection.':'Pesan tersinkron dengan server. Voice message maksimal 3 menit.')+'</p>';
   chat.querySelector('[data-chat-back]')?.addEventListener('click',()=>document.querySelector('#pl-msg-layout')?.classList.remove('is-chat-open'));
   await hydrateVoicePlayers(chat);
