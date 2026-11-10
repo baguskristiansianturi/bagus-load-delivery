@@ -1050,10 +1050,10 @@ function bindPostActions(){
   const paintLikeState=(liked,count)=>{
    if(!likeButton)return;
    likeButton.classList.toggle('is-liked',liked);
-   likeButton.setAttribute('aria-label',liked?'Batalkan apresiasi':'Beri apresiasi');
+   likeButton.setAttribute('aria-label',liked?'Batalkan suka':'Sukai');
    const countNode=likeButton.querySelector('b');if(countNode)countNode.textContent=String(count);
    let captionCount=card.querySelector('.ua-post-caption strong');
-   if(count){if(!captionCount){captionCount=document.createElement('strong');card.querySelector('.ua-post-caption')?.prepend(captionCount);}if(captionCount)captionCount.textContent=count+' apresiasi';}
+   if(count){if(!captionCount){captionCount=document.createElement('strong');card.querySelector('.ua-post-caption')?.prepend(captionCount);}if(captionCount)captionCount.textContent=count+' suka';}
    else captionCount?.remove();
   };
   const animateLikeTransition=(area,liked)=>{
@@ -1066,7 +1066,7 @@ function bindPostActions(){
    area.appendChild(overlay);const cleanup=()=>overlay.remove();overlay.addEventListener('animationend',cleanup,{once:true});setTimeout(cleanup,850);
   };
   const toggleLike=async()=>{
-   if(!user){notify('Masuk untuk memberi apresiasi.','error');return;}
+   if(!user){notify('Masuk untuk menyukai postingan.','error');return;}
    if(!likeButton||likeButton.dataset.busy==='1')return;
    const wasLiked=likeButton.classList.contains('is-liked'),liked=!wasLiked;
    const oldCount=Number(likeButton.querySelector('b')?.textContent||0),nextCount=Math.max(0,oldCount+(liked?1:-1));
