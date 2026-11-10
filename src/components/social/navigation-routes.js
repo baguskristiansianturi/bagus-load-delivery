@@ -1,7 +1,7 @@
 /** Canonical destinations. Navigation UI must never invent shared routes. */
 export const ROUTES = Object.freeze({
   publicHome: '#/', home: '#/account/explore', discover: '#/search', create: '#/account/create',
-  inbox: '#/messages', activity: '#/account/activity', profile: '#/account/profile', login: '#/account/login',
+  inbox: '#/inbox', activity: '#/account/activity', profile: '#/account/profile', login: '#/account/login',
   contacts: '#/account/followers', saved: '#/account/saved', places: '#/places', marketplace: '#/marketplace',
   trip: '#/trip', reels: '#/account/reels', register: '#/account/register', settings: '#/account/settings', editProfile: '#/account/profile/edit'
 });

@@ -56,6 +56,10 @@ export async function route(homeFn){
    queueMicrotask(()=>{if(version===routeVersion){if(s[1]==='itinerary')mod.bindTripItineraryPage(s[2]||'');else mod.bindTripPage();}});
   }
   else if(r==='messages'){
+   // Legacy deep links are normalized to the public Inbox route.
+   location.hash='#/inbox';return;
+  }
+  else if(r==='inbox'){
    const mod=await import('../pages/messages/index.js');h=mod.messagesPage();queueMicrotask(()=>version===routeVersion&&mod.bindMessagesPage());
   }
   else if(r==='admin'&&v==='moderation'){

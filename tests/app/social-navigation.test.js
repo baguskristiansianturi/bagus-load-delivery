@@ -6,7 +6,7 @@ import {readFile} from 'node:fs/promises';
 
 test('canonical destinations keep home, inbox and profile on separate routes',()=>{
  assert.equal(ROUTES.home,'#/account/explore');
- assert.equal(ROUTES.inbox,'#/messages');
+ assert.equal(ROUTES.inbox,'#/inbox');
  assert.equal(ROUTES.profile,'#/account/profile');
  assert.notEqual(ROUTES.home,ROUTES.profile);
  assert.notEqual(ROUTES.inbox,ROUTES.profile);
@@ -15,7 +15,7 @@ test('canonical destinations keep home, inbox and profile on separate routes',()
 test('signed-in social bottom navigation points to the intended pages',()=>{
  const html=renderSocialMobileNav({active:'home',user:{id:'u1'}});
  assert.match(html,/href="#\/account\/explore"[^>]*aria-label="Beranda"/);
- assert.match(html,/href="#\/messages"[^>]*aria-label="Inbox"/);
+ assert.match(html,/href="#\/inbox"[^>]*aria-label="Inbox"/);
  assert.match(html,/href="#\/account\/profile"[^>]*aria-label="Profil"/);
 });
 
@@ -45,6 +45,13 @@ test('profile hero has isolated responsive layouts for desktop, mobile and narro
  assert.match(css,/@media\(max-width:380px\)/);
 });
 
+
+test('Inbox has a canonical inbox URL and legacy messages links normalize to it',async()=>{
+ const router=await (await import('node:fs/promises')).readFile(new URL('../../src/app/router.js',import.meta.url),'utf8');
+ assert.match(router,/r==='messages'[\\s\\S]*?location\\.hash='#\\/inbox'/);
+ assert.match(router,/r==='inbox'[\\s\\S]*?messagesPage\\(\\)/);
+ assert.doesNotMatch(ROUTES.inbox,/messages/);
+});
 
 test('Inbox imports the shared mobile navigation renderer at runtime',async()=>{
  const source=await (await import('node:fs/promises')).readFile(new URL('../../src/pages/messages/index.js',import.meta.url),'utf8');
