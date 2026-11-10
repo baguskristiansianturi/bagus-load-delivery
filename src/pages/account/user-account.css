@@ -1925,3 +1925,21 @@
 @media(prefers-reduced-motion:reduce){
   .ua-auth-app *{transition:none!important}
 }
+
+
+/* Beranda feed hierarchy */
+.ua-social-home .ua-feed-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin:0 0 18px}
+.ua-social-home .ua-feed-heading h1{margin:5px 0;font-size:clamp(25px,4vw,32px);letter-spacing:-.045em;color:#1d3046}
+.ua-social-home .ua-feed-heading p{margin:0;color:#788697;font-size:12px;line-height:1.55}
+.ua-social-home .ua-feed-heading>.ua-outline{flex:none;white-space:nowrap}
+.ua-social-home .ua-explore-filters{display:flex;gap:7px;overflow-x:auto;margin:16px 0 18px;padding:0 0 7px;border-bottom:1px solid #e9edf1;scrollbar-width:none}
+.ua-social-home .ua-explore-filters::-webkit-scrollbar{display:none}
+.ua-social-home .ua-explore-filters button{flex:none;border:1px solid #e3e8ee;border-radius:999px;background:#fff;color:#64748b;padding:9px 15px;font:inherit;font-size:11px;font-weight:700;cursor:pointer}
+.ua-social-home .ua-explore-filters button.is-active{background:#193653;border-color:#193653;color:#fff}
+@media(max-width:760px){
+ .ua-social-home .ua-feed-heading{align-items:flex-start;gap:10px}
+ .ua-social-home .ua-feed-heading h1{font-size:25px}
+ .ua-social-home .ua-feed-heading p{max-width:245px;font-size:11px}
+ .ua-social-home .ua-feed-heading>.ua-outline{padding:9px 10px;font-size:10px}
+ .ua-social-home .ua-explore-filters{margin:12px -2px 14px}
+}
