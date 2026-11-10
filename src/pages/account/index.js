@@ -643,7 +643,7 @@ async function mountAccount(section='profile',parameter=''){
   bindPostGalleries();
   if(section==='post'){
    const focusId=parameter||location.hash.split('/')[3]||'';
-   requestAnimationFrame(()=>document.querySelector('#ua-post-focus-'+CSS.escape(focusId))?.scrollIntoView({block:'start',behavior:'instant'}));
+   requestAnimationFrame(()=>document.getElementById('ua-post-focus-'+focusId)?.scrollIntoView({block:'start',behavior:'auto'}));
   }
   bindProfileTabs();
   bindNotificationActions();
