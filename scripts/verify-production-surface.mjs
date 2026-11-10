@@ -105,7 +105,7 @@ for (const path of [
 
 const publicHome = read('src/pages/home/index.js');
 assert.match(publicHome, /mountUserAccount\('explore'\)/, 'Signed-in homepage must use the canonical interactive social feed.');
-assert.match(publicHome, /if\(viewer\)\{mountUserAccount\('explore'\);return;\}/, 'Guest feed must not render a duplicate interactive experience for signed-in users.');
+assert.match(publicHome, /if\(viewer\)\{history\.replaceState\(null,'',location\.pathname\+location\.search\+'#\/account\/explore'\);mountUserAccount\('explore'\);return;\}/, 'Signed-in homepage must canonicalize to the interactive Explore feed without leaving a duplicate URL.');
 
 const navigationCss = read('src/styles/social-navigation.css');
 assert.match(navigationCss, /max-width:\s*760px/, 'Social navigation must retain its mobile layout breakpoint.');
