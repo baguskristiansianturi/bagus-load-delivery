@@ -15,7 +15,7 @@ test('canonical destinations keep home, inbox and profile on separate routes',()
 test('signed-in social bottom navigation points to the intended pages',()=>{
  const html=renderSocialMobileNav({active:'home',user:{id:'u1'}});
  assert.match(html,/href="#\/account\/explore"[^>]*aria-label="Beranda"/);
- assert.match(html,/href="#\/inbox"[^>]*aria-label="Inbox"/);
+ assert.match(html,/href="#\/inbox"[^>]*aria-label="Messages"/);
  assert.match(html,/href="#\/account\/profile"[^>]*aria-label="Profil"/);
 });
 
@@ -23,7 +23,7 @@ test('Inbox replaces its fourth slot with notifications but keeps profile separa
  const html=renderSocialMobileNav({active:'messages',user:{id:'u1'}});
  assert.match(html,/href="#\/account\/activity"[^>]*aria-label="Notifikasi"/);
  assert.match(html,/href="#\/account\/profile"[^>]*aria-label="Profil"/);
- assert.doesNotMatch(html,/aria-label="Inbox"/);
+ assert.doesNotMatch(html,/aria-label="Messages"/);
 });
 
 test('shared header does not render a second profile avatar target',()=>{
