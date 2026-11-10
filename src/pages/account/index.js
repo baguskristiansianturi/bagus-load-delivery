@@ -701,14 +701,18 @@ function bindProfile(){
   if(nameError){note.textContent=nameError;form.elements.display_name.focus();return;}
   const previous={...profile};
   const payload={display_name:displayName,username,bio:String(f.get('bio')||'').trim(),public_city:String(f.get('public_city')||'').trim()||null,public_province:String(f.get('public_province')||'').trim()||null,visibility:String(f.get('visibility')),show_store:f.get('show_store')==='on',updated_at:new Date().toISOString()};
+  const paintIdentity=person=>{
+   document.querySelectorAll('.ua-profile-identity h2,.ua-ac-identity-copy strong').forEach(el=>el.textContent=person.display_name);
+   document.querySelectorAll('.ua-username').forEach(el=>el.textContent='@'+person.username);
+   document.querySelectorAll('.ua-profile-identity p').forEach(el=>el.textContent=person.bio||'Bio belum ditambahkan.');
+   document.querySelectorAll('.ua-location').forEach(el=>el.textContent=person.public_city&&person.public_province?'⌖ '+person.public_city+', '+person.public_province:'');
+  };
   btn.disabled=true;note.textContent='Menyimpan…';
+  profile={...profile,...payload};paintIdentity(profile);
   const {data,error}=await supabase.from('user_profiles').update(payload).eq('id',user.id).select().single();
   btn.disabled=false;
-  if(error){note.textContent=error.code==='23505'?'Username sudah digunakan orang lain. Pilih username yang berbeda.':error.message;notify(note.textContent,'error');return;}
-  profile=data;note.textContent='Tersimpan.';notify('Profil berhasil diperbarui.');
-  document.querySelectorAll('.ua-profile-identity h2,.ua-ac-identity-copy strong').forEach(el=>el.textContent=profile.display_name);
-  document.querySelectorAll('.ua-username,.ua-ac-identity-copy span').forEach(el=>{if(el.classList.contains('ua-username'))el.textContent='@'+profile.username;});
-  document.querySelectorAll('.ua-profile-identity p').forEach(el=>el.textContent=profile.bio||'Bio belum ditambahkan.');
+  if(error){profile=previous;paintIdentity(previous);note.textContent=error.code==='23505'?'Username sudah digunakan orang lain. Pilih username yang berbeda.':error.message;notify(note.textContent,'error');return;}
+  profile=data;paintIdentity(profile);note.textContent='Tersimpan.';notify('Profil berhasil diperbarui.');
   updateSEO({title:profile.display_name+' (@'+profile.username+') — Pluits',description:(profile.bio||'Profil komunitas '+profile.display_name+' di Pluits.').slice(0,160),path:'#/@'+encodeURIComponent(profile.username)});
   if(previous.username!==profile.username)note.textContent='Tersimpan. Alamat profil baru: @'+profile.username;
  });
