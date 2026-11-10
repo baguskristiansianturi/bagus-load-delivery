@@ -387,7 +387,7 @@ async function loadConversations() {
     return;
   }
   const ids=(members||[]).map(row=>row.conversation_id);
-  if(!ids.length){list.innerHTML='<div class="pl-msg-empty">No conversations yet. Select a contact or search for a username to get started.</div>';conversationCache=[];return;}
+  if(!ids.length){list.innerHTML=emptyStateMarkup({variant:'message',title:'Belum ada percakapan',description:'Pilih kontak atau cari nama pengguna untuk memulai percakapan.'});conversationCache=[];return;}
   const [convs,memberRows,msgRows]=await Promise.all([
     db.from('user_conversations').select('id,title,updated_at').in('id',ids).order('updated_at',{ascending:false}),
     db.from('user_conversation_members').select('conversation_id,user_id,last_read_at').in('conversation_id',ids),
@@ -414,7 +414,7 @@ async function loadConversations() {
   list.innerHTML=conversationCache.length?conversationCache.map(conversation=>{
     const pending=queueFor(conversation.id).length;
     return '<button class="pl-msg-thread '+(currentConversation===conversation.id?'active':'')+(conversation.unread?' is-unread':'')+'" data-open-chat="'+conversation.id+'"><span class="pl-msg-thread-head"><b>'+esc(conversation.other.display_name||conversation.other.username)+'</b>'+(conversation.unread?'<i aria-label="Unread message"></i>':'')+'</span><small>@'+esc(conversation.other.username)+'</small><p>'+esc(conversation.last?.message_type==='voice'?'🎙 Voice message':conversation.last?.body||'Belum ada pesan')+(pending?' · '+pending+' menunggu':'')+'</p></button>';
-  }).join(''):'<div class="pl-msg-empty">No conversations yet. Select a contact or search for a username to get started.</div>';
+  }).join(''):emptyStateMarkup({variant:'message',title:'Belum ada percakapan',description:'Pilih kontak atau cari nama pengguna untuk memulai percakapan.'});
   list.querySelectorAll('[data-open-chat]').forEach(button=>button.onclick=()=>openConversation(button.dataset.openChat));
   list.hidden=activeInboxTab!=='primary';
 }
