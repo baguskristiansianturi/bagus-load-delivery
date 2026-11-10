@@ -406,3 +406,27 @@
   -webkit-overflow-scrolling:touch;
 }
 .pl-msg-head-menu-panel a{min-height:44px;display:flex;align-items:center}
+
+/* Centered, illustrated empty states for inbox, categories and sign-in. */
+.pl-msg-empty-state{width:min(100%,340px);margin:auto;padding:26px 18px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;box-sizing:border-box}
+.pl-msg-empty-art{width:124px;height:116px;margin:0 auto 12px;opacity:.9}
+.pl-msg-empty-art svg{display:block;width:100%;height:100%}
+.pl-msg-empty-state>strong{display:block;color:#344b63;font-size:14px;font-weight:750;letter-spacing:-.015em}
+.pl-msg-empty-state>p{max-width:290px;margin:7px auto 0;color:#8795a4;font-size:11px;line-height:1.7}
+.pl-msg-empty-action{display:inline-flex;align-items:center;justify-content:center;min-height:40px;margin-top:17px;padding:0 18px;border-radius:10px;background:#294966;color:#fff;text-decoration:none;font-size:11px;font-weight:750}
+.pl-msg-chat>.pl-msg-empty-state{flex:1 1 auto;min-height:0}
+#pl-msg-conversations:has(>.pl-msg-empty-state){display:flex;align-items:stretch;justify-content:center;min-height:100%;overflow:auto}
+.pl-msg-category-empty{display:flex;align-items:center;justify-content:center;flex-direction:column;flex:1 1 auto;min-height:0;padding:12px!important;box-sizing:border-box}
+.pl-msg-category-empty .pl-msg-empty-state{padding:12px}
+.pl-msg-layout.is-auth-empty{display:flex;align-items:center;justify-content:center;min-height:440px}
+.pl-msg-layout.is-auth-empty>.pl-msg-empty-state{min-height:380px}
+@media(max-width:760px){
+ .pl-msg-layout.is-auth-empty{flex:1 1 auto;min-height:0!important;height:auto;padding:12px}
+ .pl-msg-layout.is-auth-empty>.pl-msg-empty-state{min-height:0;flex:1 1 auto}
+ .pl-msg-chat>.pl-msg-empty-state{min-height:0;padding:18px 12px}
+ .pl-msg-empty-art{width:112px;height:106px;margin-bottom:10px}
+ .pl-msg-empty-state>strong{font-size:13px}
+ .pl-msg-empty-state>p{font-size:10px}
+ #pl-msg-conversations:has(>.pl-msg-empty-state){flex:1 1 auto;min-height:0}
+ .pl-msg-category-empty .pl-msg-empty-state{padding:8px}
+}

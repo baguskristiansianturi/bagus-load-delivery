@@ -29,7 +29,7 @@ export function renderSocialHeader({ active = 'explore', profileView = false, sh
         <a href="${ROUTES.marketplace}">Marketplace</a>
         <a href="${ROUTES.trip}">Trip</a>
         <a class="${active === 'reels' ? 'active' : ''}" href="${ROUTES.reels}">Reels</a>
-        <a href='${ROUTES.inbox}'>${socialIcon('message', { size: 17 })}<span>Messages</span></a>
+        <a href='${ROUTES.inbox}'>${socialIcon('message', { size: 17 })}<span>Pesan</span></a>
         <a href='${ROUTES.contacts}' aria-label='Kontak'>${socialIcon('users', { size: 17 })}<span>Kontak</span></a>
         <a href='${ROUTES.saved}' aria-label='Tersimpan'>${socialIcon('bookmark', { size: 17 })}<span>Tersimpan</span></a>
         <a class="${active === 'activity' ? 'active' : ''} pl-nav-activity" href="${ROUTES.activity}" aria-label="Aktivitas">${socialIcon('bell', { size: 17 })}<span>Aktivitas</span>${notificationCount ? '<i class="pl-nav-unread">'+(notificationCount>99?'99+':notificationCount)+'</i>' : ''}</a>
@@ -53,7 +53,7 @@ export function renderSocialMobileNav({ active = 'home', profileView = false, us
     { key: 'home', href: publicHome ? ROUTES.publicHome : getRoute('home', Boolean(user)), label: 'Beranda', icon: 'home' },
     { key: 'discover', href: ROUTES.discover, label: 'Jelajah', icon: 'compass' },
     { key: 'create', href: getRoute('create', Boolean(user)), label: 'Buat', icon: 'plus' },
-    isInbox ? { key: 'activity', href: getRoute('activity', Boolean(user)), label: 'Notifikasi', icon: 'bell' } : { key: 'messages', href: getRoute('inbox', Boolean(user)), label: 'Messages', icon: 'message' },
+    isInbox ? { key: 'activity', href: getRoute('activity', Boolean(user)), label: 'Notifikasi', icon: 'bell' } : { key: 'messages', href: getRoute('inbox', Boolean(user)), label: 'Pesan', icon: 'message' },
     { key: 'profile', href: profileHref, label: 'Profil', icon: 'user', avatar: userAvatar }
   ];
   return `<nav class="${navClass}" aria-label="Navigasi utama Pluits">${items.map(item => {

@@ -109,38 +109,50 @@ function bindVoiceRecorder(chat, conversationId) {
     }
   };
 }
+
+function emptyStateMarkup({variant='message',title,description,action=''}) {
+  const art = variant==='login'
+    ? '<circle cx="60" cy="48" r="19" fill="#dce9f4"/><path d="M28 104c3-20 15-30 32-30s29 10 32 30" fill="#c8d9e9"/><rect x="76" y="14" width="34" height="25" rx="8" fill="#fff" stroke="#c5d6e5"/><path d="M84 23h18M84 29h12" stroke="#8ca8c2" stroke-width="2" stroke-linecap="round"/>'
+    : variant==='requests'
+    ? '<rect x="25" y="30" width="72" height="50" rx="12" fill="#fff" stroke="#c5d6e5" stroke-width="2"/><path d="m29 37 32 23 32-23" fill="none" stroke="#9db5ca" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="91" cy="23" r="10" fill="#d9e8f4"/><path d="M87 23h8M91 19v8" stroke="#6485a4" stroke-width="2" stroke-linecap="round"/>'
+    : variant==='blocked'
+    ? '<rect x="32" y="29" width="58" height="58" rx="16" fill="#fff" stroke="#c5d6e5" stroke-width="2"/><path d="M47 50v-7a14 14 0 0 1 28 0v7" fill="none" stroke="#8ca8c2" stroke-width="4" stroke-linecap="round"/><rect x="43" y="49" width="36" height="27" rx="7" fill="#dce9f4"/><path d="m53 58 16 10m0-10L53 68" stroke="#6f8ca8" stroke-width="2.5" stroke-linecap="round"/>'
+    : '<rect x="20" y="28" width="67" height="47" rx="12" fill="#fff" stroke="#c5d6e5" stroke-width="2"/><path d="M29 39h46M29 48h30" stroke="#a5bacd" stroke-width="3" stroke-linecap="round"/><path d="m55 75 12 12 12-12" fill="#dce9f4"/><rect x="65" y="55" width="35" height="25" rx="9" fill="#dce9f4" stroke="#b7ccde"/><path d="M74 64h17M74 70h11" stroke="#6f8ca8" stroke-width="2" stroke-linecap="round"/>';
+  return '<div class="pl-msg-empty-state pl-msg-empty-state-'+variant+'"><div class="pl-msg-empty-art" aria-hidden="true"><svg viewBox="0 0 120 112" role="img" focusable="false"><circle cx="60" cy="56" r="48" fill="#edf3f8"/><circle cx="17" cy="26" r="5" fill="#dce8f2"/><circle cx="105" cy="88" r="4" fill="#dce8f2"/>'+art+'</svg></div><strong>'+title+'</strong><p>'+description+'</p>'+action+'</div>';
+}
+
 export function messagesPage() {
   return `<main class="pl-msg ua-social-app">
     <header class="pl-msg-head">
       <a href="#/account/explore" class="pl-msg-brand" aria-label="PLUITS Beranda">PLUITS</a>
       <form id="pl-msg-search" class="pl-msg-head-search" role="search">
-        <div class="pl-msg-search-field"><span class="pl-msg-search-symbol">${socialIcon('search',{size:18})}</span><input name="q" type="search" placeholder="Search people…" autocomplete="off" aria-label="Search by name or username"></div>
+        <div class="pl-msg-search-field"><span class="pl-msg-search-symbol">${socialIcon('search',{size:18})}</span><input name="q" type="search" placeholder="Cari orang…" autocomplete="off" aria-label="Cari berdasarkan nama atau nama pengguna"></div>
         <button type="submit" aria-label="Search">${socialIcon('search',{size:18})}</button>
         <div id="pl-msg-search-results" class="pl-msg-search-results" hidden></div>
       </form>
       <div class="pl-msg-head-menu">
-        <button type="button" class="pl-msg-menu-toggle" aria-label="Message settings" aria-expanded="false" aria-controls="pl-msg-head-menu">⋮</button>
-        <nav class="pl-msg-head-menu-panel" id="pl-msg-head-menu" aria-label="Message menu" hidden>
-          <a href="#/inbox/settings">Message settings</a>
+        <button type="button" class="pl-msg-menu-toggle" aria-label="Pengaturan pesan" aria-expanded="false" aria-controls="pl-msg-head-menu">⋮</button>
+        <nav class="pl-msg-head-menu-panel" id="pl-msg-head-menu" aria-label="Menu pesan" hidden>
+          <a href="#/inbox/settings">Pengaturan pesan</a>
         </nav>
       </div>
     </header>
     <section class="pl-msg-content">
       <section class="pl-msg-people" aria-label="Online contacts">
-        <div class="pl-msg-people-heading"><div class="pl-msg-people-counts"><strong>Contacts</strong><small><span id="pl-msg-online-count">0 online</span><span aria-hidden="true"> · </span><span id="pl-msg-offline-count">0 offline</span></small></div><a href="#/account/followers">View all</a></div>
-        <div id="pl-msg-people-strip" class="pl-msg-people-strip"><span class="pl-msg-people-loading">Loading contacts…</span></div>
+        <div class="pl-msg-people-heading"><div class="pl-msg-people-counts"><strong>Kontak</strong><small><span id="pl-msg-online-count">0 online</span><span aria-hidden="true"> · </span><span id="pl-msg-offline-count">0 offline</span></small></div><a href="#/account/followers">Lihat semua</a></div>
+        <div id="pl-msg-people-strip" class="pl-msg-people-strip"><span class="pl-msg-people-loading">Memuat kontak…</span></div>
       </section>
       <div class="pl-msg-layout" id="pl-msg-layout">
         <aside class="pl-msg-sidebar">
           <nav class="pl-msg-inbox-tabs" aria-label="Message categories" role="tablist">
-            <button type="button" class="is-active" data-inbox-tab="primary" role="tab" aria-selected="true">Primary</button>
-            <button type="button" data-inbox-tab="requests" role="tab" aria-selected="false">Requests</button>
-            <button type="button" data-inbox-tab="blocked" role="tab" aria-selected="false">Blocked</button>
+            <button type="button" class="is-active" data-inbox-tab="primary" role="tab" aria-selected="true">Utama</button>
+            <button type="button" data-inbox-tab="requests" role="tab" aria-selected="false">Permintaan</button>
+            <button type="button" data-inbox-tab="blocked" role="tab" aria-selected="false">Diblokir</button>
           </nav>
-          <div id="pl-msg-conversations"><p class="pl-msg-empty">Loading conversations…</p></div>
+          <div id="pl-msg-conversations"><p class="pl-msg-empty">Memuat percakapan…</p></div>
           <div id="pl-msg-category-empty" class="pl-msg-category-empty" hidden></div>
         </aside>
-        <section class="pl-msg-chat" id="pl-msg-chat"><div class="pl-msg-empty">Select a conversation to start messaging.</div></section>
+        <section class="pl-msg-chat" id="pl-msg-chat">'+emptyStateMarkup({variant:'message',title:'Pesan Anda dimulai di sini',description:'Pilih percakapan di sebelah kiri atau cari seseorang untuk mulai mengirim pesan.'})+'</section>
       </div>
       <p class="pl-msg-offline-note">If your connection drops, outgoing messages are saved on this device and retried when you are back online. A message is not sent until the server confirms it.</p>
       ${renderSocialMobileNav({active:'messages',user:{id:'inbox'},navClass:'pl-msg-mobile-nav'})}
@@ -158,8 +170,8 @@ function bindInboxTabs(root=document) {
     if(empty){
       empty.hidden=activeInboxTab==='primary';
       empty.innerHTML=activeInboxTab==='requests'
-        ? '<strong>Message requests</strong><p>Messages from people you are not connected with will appear here. Review and accept a request before it moves to Primary.</p><small>Category preview · request approval will be enabled with the backend flow.</small>'
-        : '<strong>Blocked accounts</strong><p>Manage the accounts you have blocked here.</p><small>Category preview · block management is not enabled yet.</small>';
+        ? emptyStateMarkup({variant:'requests',title:'Belum ada permintaan pesan',description:'Pesan dari orang yang belum terhubung dengan Anda akan muncul di sini.'})
+        : emptyStateMarkup({variant:'blocked',title:'Belum ada akun yang diblokir',description:'Daftar akun yang Anda blokir akan ditampilkan di sini.'});
     }
   });
   (tabs.find(tab=>tab.dataset.inboxTab===activeInboxTab)||tabs[0])?.click();
@@ -214,7 +226,7 @@ async function loadContacts() {
       contactsCache=cached;
       renderContactList(box,cached,false);await renderPeopleStrip(cached,false);
       if(!cached.length&&box)box.innerHTML='<p class="pl-msg-empty">Contacts are not cached on this device. Connect to the internet to load them.</p>';
-    } catch { if(box)box.textContent='Offline contacts are not available.'; }
+    } catch { if(box)box.textContent='Kontak offline tidak tersedia.'; }
     return;
   }
   const ids=[...new Set((rows||[]).map(row=>row.follower_id===currentUser.id?row.following_id:row.follower_id).filter(id=>id!==currentUser.id))];
@@ -247,7 +259,7 @@ export async function bindMessagesPage() {
   const {data:{user},error:authError}=await db.auth.getUser();
   if(authError) { app.querySelector('#pl-msg-chat').textContent=authError.message; return; }
   currentUser=user;
-  if(!user) { app.querySelector('#pl-msg-conversations').innerHTML='<div class="pl-msg-empty">Sign in to Pluits to use Messages. <a href="#/account/login">Sign in →</a></div>'; return; }
+  if(!user) { const layout=app.querySelector('#pl-msg-layout'); layout.classList.add('is-auth-empty'); layout.innerHTML=emptyStateMarkup({variant:'login',title:'Masuk untuk mulai berkirim pesan',description:'Hubungkan diri dengan teman dan komunitas Anda melalui percakapan pribadi.',action:'<a class="pl-msg-empty-action" href="#/account/login">Masuk ke PLUITS</a>'}); app.querySelector('.pl-msg-people')?.setAttribute('hidden',''); return; }
   if(realtimeChannel) { await db.removeChannel(realtimeChannel); realtimeChannel=null; }
   if(presenceChannel) { await db.removeChannel(presenceChannel); presenceChannel=null; }
   onlineUserIds=new Set();contactsCache=[];
@@ -371,7 +383,7 @@ async function loadConversations() {
   const {data:members,error}=await db.from('user_conversation_members').select('conversation_id,last_read_at').eq('user_id',currentUser.id);
   if(error){
     try { const cached=JSON.parse(localStorage.getItem(threadsKey())||'[]'); conversationCache=cached; list.innerHTML=cached.length?cached.map(item=>'<button class="pl-msg-thread" data-open-chat="'+item.id+'"><b>'+esc(item.other.display_name||item.other.username)+'</b><small>@'+esc(item.other.username)+'</small><p>History available when online</p></button>').join(''):'<div class="pl-msg-empty">No offline inbox cache. Connect to the internet to load conversations.</div>'; list.querySelectorAll('[data-open-chat]').forEach(button=>button.onclick=()=>openConversation(button.dataset.openChat)); }
-    catch { list.textContent='Offline inbox is not available.'; }
+    catch { list.textContent='Kotak masuk offline tidak tersedia.'; }
     return;
   }
   const ids=(members||[]).map(row=>row.conversation_id);
@@ -401,7 +413,7 @@ async function loadConversations() {
   try { localStorage.setItem(threadsKey(),JSON.stringify(conversationCache.map(item=>({id:item.id,updated_at:item.updated_at,other:item.other})))); } catch {}
   list.innerHTML=conversationCache.length?conversationCache.map(conversation=>{
     const pending=queueFor(conversation.id).length;
-    return '<button class="pl-msg-thread '+(currentConversation===conversation.id?'active':'')+(conversation.unread?' is-unread':'')+'" data-open-chat="'+conversation.id+'"><span class="pl-msg-thread-head"><b>'+esc(conversation.other.display_name||conversation.other.username)+'</b>'+(conversation.unread?'<i aria-label="Unread message"></i>':'')+'</span><small>@'+esc(conversation.other.username)+'</small><p>'+esc(conversation.last?.message_type==='voice'?'🎙 Voice message':conversation.last?.body||'No messages yet')+(pending?' · '+pending+' menunggu':'')+'</p></button>';
+    return '<button class="pl-msg-thread '+(currentConversation===conversation.id?'active':'')+(conversation.unread?' is-unread':'')+'" data-open-chat="'+conversation.id+'"><span class="pl-msg-thread-head"><b>'+esc(conversation.other.display_name||conversation.other.username)+'</b>'+(conversation.unread?'<i aria-label="Unread message"></i>':'')+'</span><small>@'+esc(conversation.other.username)+'</small><p>'+esc(conversation.last?.message_type==='voice'?'🎙 Voice message':conversation.last?.body||'Belum ada pesan')+(pending?' · '+pending+' menunggu':'')+'</p></button>';
   }).join(''):'<div class="pl-msg-empty">No conversations yet. Select a contact or search for a username to get started.</div>';
   list.querySelectorAll('[data-open-chat]').forEach(button=>button.onclick=()=>openConversation(button.dataset.openChat));
   list.hidden=activeInboxTab!=='primary';
@@ -411,7 +423,7 @@ async function openConversation(id) {
   currentConversation=id;
   const chat=document.querySelector('#pl-msg-chat'); if(!chat)return;
   document.querySelector('#pl-msg-layout')?.classList.add('is-chat-open');
-  chat.innerHTML='<div class="pl-msg-empty">Loading messages…</div>';
+  chat.innerHTML='<div class="pl-msg-empty">Memuat pesan…</div>';
   const thread=conversationCache.find(item=>item.id===id);
   const [messages,members]=await Promise.all([
     db.from('user_messages').select('id,sender_id,body,created_at,deleted_at,message_type,media_path,media_duration_seconds').eq('conversation_id',id).order('created_at',{ascending:true}).limit(150),
@@ -420,12 +432,12 @@ async function openConversation(id) {
   if((messages.error||members.error)&&navigator.onLine){chat.textContent=(messages.error||members.error).message;return;}
   const queued=queueFor(id);
   chat.innerHTML='<header class="pl-msg-chat-head"><button type="button" class="pl-msg-back" data-chat-back aria-label="Back to Messages">‹</button><div><b>'+esc(thread?.other.display_name||thread?.other.username||'Conversation')+'</b><small>@'+esc(thread?.other.username||'')+'</small></div><span>'+ (navigator.onLine?'Connected':'Offline · messages queued')+'</span></header>'+
-    '<div class="pl-msg-stream">'+(messages.data||[]).map(message=>{
+    '<div class="pl-msg-stream">'+((messages.data||[]).length? (messages.data||[]).map(message=>{
       const deleted=Boolean(message.deleted_at);
       const otherMember=(members.data||[]).find(member=>member.user_id!==currentUser.id);
       const readByOther=message.sender_id===currentUser.id&&Boolean(otherMember?.last_read_at)&&new Date(otherMember.last_read_at)>=new Date(message.created_at);
       return messageMarkup({...message,body:deleted?'Pesan dihapus':message.body,message_type:deleted?'text':message.message_type,media_path:deleted?null:message.media_path},false,readByOther);
-    }).join('')+queued.map(row=>messageMarkup(row,true)).join('')+'</div>'+
+    }).join('') : emptyStateMarkup({variant:'message',title:'Belum ada pesan',description:'Kirim pesan pertama untuk memulai percakapan.'}))+queued.map(row=>messageMarkup(row,true)).join('')+'</div>'+
     '<form id="pl-msg-compose"><textarea name="body" rows="2" maxlength="5000" placeholder="Write a message…" required></textarea><button type="button" class="pl-msg-voice" data-voice-record aria-label="Record a voice message">🎙 Voice</button><button type="submit">Send</button></form>'+
     '<p class="pl-msg-chat-status" role="status">'+(queued.length?queued.length+' messages waiting for connection.':'Pesan tersinkron dengan server. Voice message maksimal 3 menit.')+'</p>';
   chat.querySelector('[data-chat-back]')?.addEventListener('click',()=>document.querySelector('#pl-msg-layout')?.classList.remove('is-chat-open'));
