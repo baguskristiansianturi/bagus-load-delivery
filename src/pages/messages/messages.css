@@ -112,3 +112,21 @@
 .pl-msg-thread-head i{width:7px;height:7px;flex:0 0 7px;border-radius:50%;background:#315d7b}
 .pl-msg-thread.is-unread .pl-msg-thread-head b{font-weight:850;color:#172b45}
 .pl-msg-thread.is-unread p{color:#425a73;font-weight:650}
+
+
+/* Voice notes — private, compact and thumb-friendly on mobile. */
+#pl-msg-compose .pl-msg-voice{
+  min-height:42px;padding:0 12px;border:1px solid #dce5ed;border-radius:10px;
+  background:#f6f8fa;color:#294663;font:inherit;font-size:11px;font-weight:800;
+  white-space:nowrap;
+}
+#pl-msg-compose .pl-msg-voice.is-recording{background:#fff1f0;border-color:#f0c8c4;color:#a13f36}
+.pl-msg-voice-player{display:grid;gap:6px;min-width:min(260px,62vw)}
+.pl-msg-voice-player audio{width:100%;height:36px;max-width:280px}
+.pl-msg-voice-player span,.pl-msg-audio-error{font-size:10px;color:#687b8f}
+.pl-msg-bubble:has(.pl-msg-voice-player){padding:10px 12px}
+@media(max-width:420px){
+ #pl-msg-compose{gap:6px}
+ #pl-msg-compose .pl-msg-voice{padding:0 9px;font-size:10px}
+ #pl-msg-compose button[type="submit"]{padding:0 10px}
+}
