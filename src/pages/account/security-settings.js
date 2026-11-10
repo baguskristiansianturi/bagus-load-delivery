@@ -11,7 +11,7 @@ export async function accountSecurityPage(db,user){
  <div class="ua-security-grid">
   <section class="ua-panel ua-security-card"><span class="ua-eyebrow">IDENTITAS & PRIVASI</span><h2>Profil akun</h2>
    <form id="ua-identity-form" class="ua-security-form">
-    <label>Username<input name="username" minlength="3" maxlength="30" pattern="[a-z0-9._]{3,30}" value="${esc(profile.username)}" required><small>3–30 karakter, huruf kecil, angka, titik, atau garis bawah.</small></label>
+    <label>Username<input name="username" minlength="3" maxlength="30" pattern="[a-z0-9][a-z0-9._-]{1,28}[a-z0-9]" value="${esc(profile.username)}" required><small>3–30 karakter: huruf kecil, angka, titik, garis bawah, atau tanda hubung; bukan nama domain.</small></label>
     <label>Visibilitas akun<select name="visibility"><option value="public" ${profile.visibility==='public'?'selected':''}>Publik</option><option value="private" ${profile.visibility==='private'?'selected':''}>Pribadi</option></select><small>Akun pribadi memerlukan persetujuan untuk pengikut baru.</small></label>
     <label>Bahasa aplikasi<select name="preferred_language"><option value="id" ${(profile.preferred_language||'id')==='id'?'selected':''}>Bahasa Indonesia</option><option value="en" ${profile.preferred_language==='en'?'selected':''}>English</option></select><small>Preferensi disimpan di akun. Terjemahan seluruh layar masih dalam tahap penerapan.</small></label>
     <button class="ua-primary" type="submit">Simpan identitas</button><p class="ua-form-note" id="ua-identity-note" role="status"></p>
@@ -59,7 +59,7 @@ export function bindAccountSecurity(db,user){
  const identity=document.querySelector('#ua-identity-form');
  identity?.addEventListener('submit',async event=>{
   event.preventDefault();const data=new FormData(identity),username=String(data.get('username')).trim().toLowerCase(),note=document.querySelector('#ua-identity-note'),button=identity.querySelector('button');
-  if(!/^[a-z0-9._]{3,30}$/.test(username)){note.textContent='Format username tidak valid.';return;}
+  if(!/^[a-z0-9][a-z0-9._-]{1,28}[a-z0-9]$/.test(username)||username.includes('..')){note.textContent='Username 3–30 karakter. Gunakan huruf kecil, angka, titik, garis bawah, atau tanda hubung; awal dan akhir harus huruf/angka.';return;}\n  if(/\\.(com|co|co\\.id|id|net|org|biz|info|xyz|app|dev|io|me|asia|site|online|store|shop)$/i.test(username)){note.textContent='Username tidak boleh menyerupai nama domain (.com, .co.id, .id, dan sejenisnya).';return;}
   button.disabled=true;note.textContent='Menyimpan…';
   const {error}=await db.from('user_profiles').update({username,visibility:String(data.get('visibility')),preferred_language:String(data.get('preferred_language'))}).eq('id',user.id);
   button.disabled=false;note.textContent=error?(error.code==='23505'?'Username sudah digunakan.':error.message):'Identitas dan preferensi berhasil disimpan.';
