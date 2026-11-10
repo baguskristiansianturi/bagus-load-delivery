@@ -1782,5 +1782,5 @@
 @keyframes pluits-heart-core{0%{opacity:0;transform:scale(.28)}28%{opacity:1;transform:scale(1.16)}48%{opacity:1;transform:scale(1)}72%{opacity:.95;transform:scale(.82)}100%{opacity:0;transform:scale(.56)}}
 @keyframes pluits-heart-particle{0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}22%{opacity:1}100%{opacity:0;transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(.82) rotate(18deg)}}
 @keyframes pluits-heart-crack{0%{opacity:0;transform:scale(.5) rotate(-8deg)}25%{opacity:1;transform:scale(1.08) rotate(5deg)}48%{opacity:1;transform:scale(1) rotate(-3deg)}100%{opacity:0;transform:scale(.82) rotate(0)}}
-@keyframes pluits-heart-fragment{0%{opacity:0;transform:translate(-50%,-50%) scale(.55)}25%{opacity:1}100%{opacity:0;transform:translate(calc(-50% + var(--dx)*.72),calc(-50% + var(--dy)*.72)) scale(.35) rotate(-24deg)}}
+@keyframes pluits-heart-fragment{0%{opacity:0;transform:translate(-50%,-50%) scale(.55)}25%{opacity:1}100%{opacity:0;transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(.35) rotate(-24deg)}}
 @media(prefers-reduced-motion:reduce){.ua-double-tap-heart,.ua-heart-core,.ua-heart-particle{animation-duration:.12s!important}}
