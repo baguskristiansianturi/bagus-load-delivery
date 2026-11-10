@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
+import { renderSocialHeader, renderSocialMobileNav } from '../src/components/social/navigation.js';
 
 const read = (path) => readFileSync(path, 'utf8');
 const retiredFiles = [
@@ -77,6 +78,16 @@ assert.match(navigation, /socialIcon\('bell'/, 'Mobile notification shortcut mus
 assert.match(navigation, /label: 'Inbox'/, 'Signed-in bottom navigation must retain the inbox route.');
 assert.match(navigation, /label: 'Aktivitas'/, 'Signed-in bottom navigation must retain the activity route.');
 
+const signedInHeader = renderSocialHeader({ active: 'explore', user: { id: 'test-user' }, profile: {}, userAvatar: '<span>U</span>', notificationCount: 3 });
+const signedInMobileNav = renderSocialMobileNav({ active: 'explore', user: { id: 'test-user' }, profile: {}, userAvatar: '<span>U</span>', notificationCount: 3 });
+const publicMobileNav = renderSocialMobileNav({ active: 'home', publicHome: true });
+assert.match(signedInHeader, /aria-label='Pesan langsung'/, 'Rendered signed-in mobile header must expose direct messages.');
+assert.match(signedInHeader, /aria-label='Notifikasi'/, 'Rendered signed-in mobile header must expose notifications.');
+assert.match(signedInMobileNav, /href="#\/messages"/, 'Rendered signed-in mobile navigation must expose Inbox.');
+assert.match(signedInMobileNav, /href="#\/account\/activity"/, 'Rendered signed-in mobile navigation must expose Activity.');
+assert.match(signedInMobileNav, /pl-mobile-activity/, 'Rendered Activity item must expose its badge anchor.');
+assert.match(signedInMobileNav, /99\+|>3</, 'Rendered Activity item must display its unread badge.');
+assert.doesNotMatch(publicMobileNav, /#\/messages|#\/account\/activity/, 'Public navigation must not expose private Inbox or Activity.');
 const account = read('src/pages/account/index.js');
 assert.match(account, /unreadNotificationCount/, 'Social navigation must receive unread notification count.');
 assert.match(account, /refreshUnreadBadge/, 'Realtime social events must refresh the unread badge.');

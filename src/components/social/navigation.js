@@ -70,7 +70,7 @@ export function renderSocialMobileNav({ active = 'explore', profileView = false,
   return `
     <nav class="pl-home-mobile-nav pl-social-mobile-nav" aria-label="Navigasi utama Pluits">
       ${items.map(item => `
-        <a class="${item.key === 'create' ? 'pl-home-create' : activeKey === item.key ? 'active' : ''}"
+        <a class="${[item.key === 'create' ? 'pl-home-create' : activeKey === item.key ? 'active' : '',item.key === 'activity' ? 'pl-mobile-activity' : '',item.key === 'messages' ? 'pl-mobile-inbox' : ''].filter(Boolean).join(' ')}"
            href="${item.href}" aria-label="${item.label}">
           ${socialIcon(item.icon, { size: item.key === 'create' ? 25 : 22 })}
           <small>${item.label}</small>
