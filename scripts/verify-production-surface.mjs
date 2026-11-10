@@ -272,3 +272,12 @@ assert.ok(postActionFeature.includes('pl-post-icon') && !postActionFeature.inclu
 assert.ok(read('src/features/posts/post-actions.css').includes('.pl-post-actions'), 'Post action controls must own their feature-scoped styles.');
 assert.ok(read('src/pages/account/index.js').includes('renderPostActions({user,liked:p.liked,likes:p.likes,comments:p.comments,saved:p.saved})'), 'Post cards must delegate action rendering to the post feature module.');
 assert.ok(read('src/pages/account/user-account.css').includes('.ua-social-app .ua-post-caption'), 'Post caption spacing must be explicitly compacted.');
+
+import { ROUTES, NAVIGATION_CONTEXTS, getRoute } from '../src/components/social/navigation-routes.js';
+assert.equal(ROUTES.inbox, '#/messages', 'Inbox must have one canonical route.');
+assert.equal(ROUTES.profile, '#/account/profile', 'Profile must have one canonical route.');
+assert.equal(getRoute('inbox', true), '#/messages', 'Authenticated Inbox must never route to Profile.');
+assert.equal(getRoute('inbox', false), ROUTES.login, 'Anonymous Inbox must route to login.');
+assert.deepEqual(NAVIGATION_CONTEXTS.social, ['home','discover','create','inbox','profile']);
+assert.deepEqual(NAVIGATION_CONTEXTS.inbox, ['home','discover','create','activity','profile']);
+assert.throws(() => getRoute('unknown'), /Unknown PLUITS route/);
