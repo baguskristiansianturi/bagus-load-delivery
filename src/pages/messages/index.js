@@ -121,8 +121,7 @@ export function messagesPage() {
       <div class="pl-msg-head-menu">
         <button type="button" class="pl-msg-menu-toggle" aria-label="Pengaturan pesan" aria-expanded="false" aria-controls="pl-msg-head-menu">⋮</button>
         <nav class="pl-msg-head-menu-panel" id="pl-msg-head-menu" aria-label="Pengaturan Inbox" hidden>
-          <a href="#/account/settings">Pengaturan pesan</a>
-          <a href="#/account/settings">Pengaturan akun</a>
+          <a href="#/inbox/settings">Pengaturan pesan</a>
         </nav>
       </div>
     </header>
@@ -285,15 +284,46 @@ export async function bindMessagesPage() {
   const headMenu=app.querySelector('.pl-msg-head-menu');
   const menuToggle=app.querySelector('.pl-msg-menu-toggle');
   const menuPanel=app.querySelector('#pl-msg-head-menu');
+  const closeHeadMenu=()=>{
+    if(!menuPanel||!menuToggle)return;
+    menuPanel.hidden=true;
+    menuToggle.setAttribute('aria-expanded','false');
+  };
+  const placeHeadMenu=()=>{
+    if(!headMenu||!menuToggle||!menuPanel||menuPanel.hidden)return;
+    const rect=menuToggle.getBoundingClientRect();
+    const viewport=window.visualViewport;
+    const width=Math.min(248,(viewport?.width||window.innerWidth)-24);
+    const left=Math.max(12,Math.min(rect.right-width,(viewport?.width||window.innerWidth)-width-12));
+    menuPanel.style.width=width+'px';
+    menuPanel.style.left=left+'px';
+    menuPanel.style.right='auto';
+    menuPanel.style.maxHeight=Math.max(120,(viewport?.height||window.innerHeight)-24)+'px';
+    menuPanel.style.top='auto';
+    menuPanel.style.bottom='auto';
+    const panelHeight=Math.min(menuPanel.scrollHeight,(viewport?.height||window.innerHeight)-24);
+    const below=(viewport?.height||window.innerHeight)-rect.bottom-8;
+    if(below>=Math.min(panelHeight,150)){
+      menuPanel.style.top=(rect.bottom+8)+'px';
+    }else{
+      menuPanel.style.top=Math.max(12,rect.top-panelHeight-8)+'px';
+    }
+  };
   menuToggle?.addEventListener('click',()=>{
     const opening=menuPanel.hidden;
-    menuPanel.hidden=!opening;
-    menuToggle.setAttribute('aria-expanded',String(opening));
+    if(!opening){closeHeadMenu();return;}
+    menuPanel.hidden=false;
+    menuToggle.setAttribute('aria-expanded','true');
+    placeHeadMenu();
   });
   app.addEventListener('click',event=>{
     if(!event.target.closest('.pl-msg-head-search')){const results=app.querySelector('#pl-msg-search-results');if(results)results.hidden=true;}
-    if(headMenu&&!headMenu.contains(event.target)){menuPanel.hidden=true;menuToggle?.setAttribute('aria-expanded','false');}
+    if(headMenu&&!headMenu.contains(event.target))closeHeadMenu();
   });
+  window.addEventListener('resize',placeHeadMenu,{passive:true});
+  window.addEventListener('scroll',placeHeadMenu,{passive:true,capture:true});
+  window.visualViewport?.addEventListener('resize',placeHeadMenu,{passive:true});
+  app.addEventListener('keydown',event=>{if(event.key==='Escape')closeHeadMenu();});
   updateNetworkStatus();
   if(!networkListenersBound){window.addEventListener('online',onOnline);window.addEventListener('offline',updateNetworkStatus);networkListenersBound=true;}
   realtimeChannel=db.channel('pluits-dm-'+user.id)

@@ -393,3 +393,16 @@
     flex:0 0 calc(64px + env(safe-area-inset-bottom));
   }
 }
+
+
+/* Inbox overflow menu is viewport-anchored on small screens. */
+.pl-msg-head-menu-panel{
+  position:fixed!important;
+  z-index:120!important;
+  width:min(248px,calc(100vw - 24px));
+  max-height:calc(100dvh - 24px);
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;
+}
+.pl-msg-head-menu-panel a{min-height:44px;display:flex;align-items:center}

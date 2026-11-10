@@ -59,6 +59,9 @@ export async function route(homeFn){
    // Legacy deep links are normalized to the public Inbox route.
    location.hash='#/inbox';return;
   }
+  else if(r==='inbox'&&v==='settings'){
+   const mod=await import('../pages/messages/settings.js');h=mod.messageSettingsPage();queueMicrotask(()=>version===routeVersion&&mod.bindMessageSettingsPage());
+  }
   else if(r==='inbox'){
    const mod=await import('../pages/messages/index.js');h=mod.messagesPage();queueMicrotask(()=>version===routeVersion&&mod.bindMessagesPage());
   }
