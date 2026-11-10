@@ -299,3 +299,70 @@
  }
  .ua-social-app{padding-bottom:calc(70px + env(safe-area-inset-bottom))}
 }
+
+
+/* Visible, thumb-friendly settings access on the mobile header. */
+@media (max-width: 760px) {
+  .ua-social-app .pl-social-mobile-actions {
+    display: flex !important;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 9px;
+    min-width: 0;
+  }
+  .ua-social-app .pl-social-mobile-actions a[aria-label="Pengaturan"] {
+    display: inline-flex;
+    width: 40px;
+    min-width: 40px;
+    height: 40px;
+    min-height: 40px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #f2f4f7;
+    color: #172b45;
+  }
+  .pl-settings-dots {
+    display: block;
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    line-height: 1;
+    transform: translateY(-4px);
+  }
+}
+
+/* Keep profile save action in reach while the form is scrolled. */
+.ua-profile-savebar {
+  position: sticky;
+  top: 58px;
+  z-index: 225;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0 -12px 12px;
+  padding: 9px 12px;
+  border-bottom: 1px solid #e7ebf0;
+  background: rgba(255,255,255,.97);
+  backdrop-filter: blur(12px);
+}
+.ua-profile-savebar > span { color: #596a80; font-size: 12px; font-weight: 750; }
+.ua-profile-savebar .ua-primary { min-height: 40px; padding: 9px 17px; }
+.ua-profile-edit-form { padding: 18px; margin: 0 0 20px; scroll-margin-top: 112px; }
+.ua-profile-edit-form .ua-section-title { align-items: flex-start; }
+.ua-profile-edit-form .ua-section-title p { margin: 7px 0 0; color: #748196; font-size: 11px; line-height: 1.5; }
+.ua-profile-edit-form .ua-form-grid { margin-top: 14px; }
+.ua-profile-edit-form label { display: grid; gap: 7px; color: #46546a; font-size: 11px; font-weight: 750; }
+.ua-profile-edit-form input:not([type=checkbox]), .ua-profile-edit-form textarea, .ua-profile-edit-form select {
+  width: 100%; min-width: 0; box-sizing: border-box; border: 1px solid #dce2e9;
+  border-radius: 9px; padding: 11px 12px; background: #fff; color: #1e293b; font: inherit; font-size: 13px;
+}
+.ua-profile-edit-form small { color: #8490a0; font-size: 10px; font-weight: 450; line-height: 1.45; }
+.ua-profile-edit-form .ua-checkbox { display: flex; align-items: center; gap: 9px; }
+.ua-profile-edit-form .ua-checkbox input { width: 17px; height: 17px; accent-color: #172b45; }
+.ua-profile-edit-form .ua-form-note { min-height: 16px; margin: 10px 0 0; }
+@media (max-width: 760px) {
+  .ua-profile-savebar { top: 58px; margin-inline: -12px; }
+  .ua-profile-edit-form { padding: 14px; }
+}
