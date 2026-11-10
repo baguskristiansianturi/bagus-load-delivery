@@ -1,7 +1,7 @@
 import { socialIcon } from '../common/social-icons.js';
 import { ROUTES, getRoute } from './navigation-routes.js';
 
-export function renderSocialHeader({ active = 'explore', profileView = false, showEditProfile = profileView, user, profile, userAvatar = '', notificationCount = 0, publicHome = false, navClass = 'pl-home-mobile-nav pl-social-mobile-nav' } = {}) {
+export function renderSocialHeader({ active = 'explore', profileView = false, showEditProfile = profileView, user, profile, userAvatar = '', notificationCount = 0, publicHome = false } = {}) {
   if (publicHome) {
     return `
       <header class="pl-social-header">
@@ -45,7 +45,7 @@ export function renderSocialHeader({ active = 'explore', profileView = false, sh
     </header>`;
 }
 
-export function renderSocialMobileNav({ active = 'home', profileView = false, user, profile, userAvatar = '', notificationCount = 0, messageCount = 0, publicHome = false } = {}) {
+export function renderSocialMobileNav({ active = 'home', profileView = false, user, profile, userAvatar = '', notificationCount = 0, messageCount = 0, publicHome = false, navClass = 'pl-home-mobile-nav pl-social-mobile-nav' } = {}) {
   const isInbox = active === 'messages';
   const activeKey = active === 'home' || active === 'explore' ? 'home' : active === 'discover' ? 'discover' : active === 'profile-edit' || active === 'profile' || active === 'preview' ? 'profile' : active;
   const profileHref = getRoute('profile', Boolean(user));
