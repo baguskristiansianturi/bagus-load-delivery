@@ -81,7 +81,7 @@ assert.match(messages, /renderSocialMobileNav\(\{active:'messages'/, 'Inbox must
 assert.match(messages, /data-inbox-tab="primary"/, 'Inbox must expose the Primary category.');
 assert.match(messages, /data-inbox-tab="requests"/, 'Inbox must expose the Requests category.');
 assert.match(messages, /data-inbox-tab="blocked"/, 'Inbox must expose the Blocked category.');
-assert.match(messages, /Search by name or username/, 'Inbox header search must be discoverable.');
+assert.match(messages, /Cari berdasarkan nama atau nama pengguna/, 'Inbox header search must be discoverable.');
 assert.match(messages, /display_name\.ilike/, 'Inbox search must match display names as well as usernames.');
 assert.match(messages, /classList\.toggle\('has-many'/, 'Online carousel must switch to partial overlap for larger friend sets.');
 
