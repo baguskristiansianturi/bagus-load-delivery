@@ -150,12 +150,12 @@ assert.ok(sharedHeader.includes('showEditProfile') && socialHome.includes("secti
 assert.ok(socialHome.includes('function createPage()') && socialHome.includes('function storyComposePage()'), 'Bottom create flow must expose Story/Post/Reel/Live entry selection.');
 assert.ok(socialHome.includes("section==='saved'?await savedPage()"), 'Saved items route must be available to the signed-in owner.');
 assert.doesNotMatch(socialHome, /<header class='ua-feed-top'>/, 'Signed-in feed must not render a duplicate second header.');
-assert.ok(socialHome.includes("endpoint:'https://ytndswhqxayqpftszwfh.storage.supabase.co/storage/v1/upload/resumable'"), 'Large video uploads must use the Supabase direct-storage TUS endpoint.');
-assert.ok(socialHome.includes('multiple accept="image/*,video/*"'), 'Composer must allow selecting multiple photos and videos.');
+assert.ok(read('src/features/media/storage-upload.js').includes('storage/v1/upload/resumable'), 'Large video uploads must use the Supabase direct-storage TUS endpoint in the isolated storage module.');
+assert.ok(socialHome.includes("kind==='reel'?'accept=\"video/*\"':'multiple accept=\"image/*,video/*\"'"), 'Reel picker must request videos only while Post accepts multiple photos and videos.');
 assert.ok(socialHome.includes('let selectedFiles=[]') && socialHome.includes('data-remove-media'), 'Composer must preserve selected files and allow removing individual media.');
 assert.ok(socialHome.includes('name="visibility"') && socialHome.includes('class="ua-post-options"'), 'Post audience settings must be available inline in the compact composer.');
 assert.ok(socialHome.includes('name="tagged_users"') && socialHome.includes("from('post_tags').insert"), 'Composer must support real account tagging through post_tags.');
-assert.ok(socialHome.includes("files.length!==1||!uploadMime(files[0]).startsWith('video/')"), 'Reel must require exactly one video file.');
+assert.ok(socialHome.includes("files.length!==1||!getMediaMime(files[0]).startsWith('video/')"), 'Reel must require exactly one video file using the shared media-type module.');
 assert.ok(socialHome.includes('const mediaRecord={media_path:path') && socialHome.includes("storage.from(BUCKET).remove(uploaded.map(media=>media.media_path))"), 'Failed video validation must clean up uploaded objects.');
 const composerCss = read('src/styles/social-navigation.css');
 assert.ok(composerCss.includes('.ua-clean-composer') && composerCss.includes('.ua-clean-media-item'), 'Composer must use the clean mobile media-picker and preview styles.');
