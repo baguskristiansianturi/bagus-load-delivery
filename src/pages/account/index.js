@@ -144,7 +144,7 @@ function settingsHubPage(){
  ];
  if(['admin','moderator'].includes(user?.app_metadata?.role))groups.push(['Administrasi Pluits','Kelola keamanan komunitas dan informasi resmi', [['shield','Moderation Center','Tinjau laporan dan terbitkan informasi sistem','/admin/moderation','ready']]]);
  const rows=groups.map(g=>'<section class="ua-ac-group"><div class="ua-ac-group-head"><h2>'+g[0]+'</h2><p>'+g[1]+'</p></div><div class="ua-ac-list">'+g[2].map(x=>'<a class="ua-ac-row" href="#'+x[3]+'"><span class="ua-ac-icon">'+socialIcon(x[0],{size:18})+'</span><span class="ua-ac-copy"><strong>'+x[1]+'</strong><small>'+x[2]+'</small></span>'+(x[4]==='staged'?'<span class="ua-ac-stage">Bertahap</span>':'')+'<span class="ua-ac-arrow">›</span></a>').join('')+'</div></section>').join('');
- return '<div class="ua-account-center"><header class="ua-ac-header"><a class="ua-ac-back" href="#/account/profile" aria-label="Kembali ke profil">‹</a><div><span>PLUITS ACCOUNT</span><h1>Pusat Pengaturan</h1></div></header><section class="ua-ac-identity">'+avatar(profile?.avatar_url,profile?.display_name||user?.email||'P','large')+'<div class="ua-ac-identity-copy"><strong>'+esc(profile?.display_name||'Pengguna Pluits')+'</strong><span>@'+esc(profile?.username||'')+'</span><small>'+esc(user?.email||'')+'</small></div><a href="#/account/profile" aria-label="Edit profil">Edit</a></section><div class="ua-ac-intro"><strong>Semua kendali akun Anda dalam satu tempat.</strong><p>Atur identitas, privasi, aktivitas sosial, dan layanan Pluits sesuai kebutuhan.</p></div>'+rows+'<section class="ua-ac-logout"><div><strong>Login dan keamanan</strong><small>Kelola sesi akun dan keluar dari Pluits.</small></div><button id="ua-settings-logout" type="button">Keluar dari akun</button></section><p class="ua-ac-version">PLUITS INDONESIA · Pusat Akun</p></div>';
+ return '<div class="ua-account-center"><header class="ua-ac-header"><a class="ua-ac-back" href="#/account/profile" aria-label="Kembali ke profil">‹</a><div><span>PLUITS ACCOUNT</span><h1>Pusat Pengaturan</h1></div></header><section class="ua-ac-identity">'+avatar(profile?.avatar_url,profile?.display_name||user?.email||'P','large')+'<div class="ua-ac-identity-copy"><strong>'+esc(profile?.display_name||'Pengguna Pluits')+'</strong><span>@'+esc(profile?.username||'')+'</span><small>'+esc(user?.email||'')+'</small></div></section><div class="ua-ac-intro"><strong>Semua kendali akun Anda dalam satu tempat.</strong><p>Atur identitas, privasi, aktivitas sosial, dan layanan Pluits sesuai kebutuhan.</p></div>'+rows+'<section class="ua-ac-logout"><div><strong>Login dan keamanan</strong><small>Kelola sesi akun dan keluar dari Pluits.</small></div><button id="ua-settings-logout" type="button">Keluar dari akun</button></section><p class="ua-ac-version">PLUITS INDONESIA · Pusat Akun</p></div>';
 }
 async function walletPage(){
  const [a,r]=await Promise.all([
@@ -186,6 +186,28 @@ async function profilePage(preview=false,editMode=false){
  ]);
  if(followersCount.error||followingCount.error||pendingCount.error)throw followersCount.error||followingCount.error||pendingCount.error;
  const stores=storesResult.error?[]:(storesResult.data||[]);
+ if(editMode){
+  return `<div class="ua-profile-editor">
+   <header class="ua-profile-editor-head"><a href="#/account/profile" aria-label="Kembali ke profil" class="ua-editor-back">‹</a><div><span>PERSONAL PROFILE</span><h1>Edit profil</h1><p>Atur bagaimana orang mengenal Anda di Pluits.</p></div><button class="ua-editor-save" type="submit" form="ua-profile-form">Simpan</button></header>
+   <form id="ua-profile-form" class="ua-profile-edit-form" autocomplete="off">
+    <section class="ua-editor-photo"><div class="ua-editor-avatar">${avatar(avatarUrl,profile.display_name,'large')}</div><div><strong>Foto profil</strong><small>Gunakan foto yang jelas dan mudah dikenali.</small><label for="ua-avatar-file" class="ua-editor-photo-action">Ubah foto profil</label><input id="ua-avatar-file" type="file" accept="image/jpeg,image/png,image/webp"></div></section>
+    <section class="ua-editor-section"><div class="ua-editor-section-title"><h2>Informasi pribadi</h2><p>Informasi ini membantu orang menemukan dan mengenali Anda.</p></div>
+     <label class="ua-editor-field"><span>Nama</span><input name="display_name" maxlength="80" required value="${esc(profile.display_name||'')}" placeholder="Nama Anda"></label>
+     <label class="ua-editor-field"><span>Username</span><div class="ua-editor-input-prefix"><b>@</b><input name="username" minlength="3" maxlength="30" autocapitalize="none" autocomplete="off" spellcheck="false" required value="${esc(profile.username||'')}" placeholder="username"></div><small>3–30 karakter. Gunakan huruf kecil, angka, titik, garis bawah, atau tanda hubung.</small></label>
+     <label class="ua-editor-field"><span>Bio</span><textarea name="bio" rows="3" maxlength="500" placeholder="Ceritakan sedikit tentang diri Anda">${esc(profile.bio||'')}</textarea><small>Maksimal 500 karakter.</small></label>
+    </section>
+    <section class="ua-editor-section"><div class="ua-editor-section-title"><h2>Informasi tambahan</h2><p>Lokasi publik bersifat opsional.</p></div>
+     <div class="ua-editor-two-col"><label class="ua-editor-field"><span>Kota</span><input name="public_city" maxlength="80" value="${esc(profile.public_city||'')}" placeholder="Kota"></label><label class="ua-editor-field"><span>Provinsi</span><input name="public_province" maxlength="80" value="${esc(profile.public_province||'')}" placeholder="Provinsi"></label></div>
+    </section>
+    <section class="ua-editor-section"><div class="ua-editor-section-title"><h2>Privasi profil</h2><p>Tentukan siapa yang dapat melihat profil dan postingan publik Anda.</p></div>
+     <label class="ua-editor-field"><span>Jenis akun</span><select name="visibility"><option value="public" ${profile.visibility==='public'?'selected':''}>Publik · dapat ditemukan semua orang</option><option value="private" ${profile.visibility==='private'?'selected':''}>Pribadi · batasi akses ke postingan</option></select></label>
+     <label class="ua-editor-toggle"><span><strong>Tampilkan toko di profil</strong><small>Tautkan toko Anda pada halaman profil personal.</small></span><input type="checkbox" name="show_store" ${profile.show_store?'checked':''}></label>
+    </section>
+    <p id="ua-profile-note" class="ua-form-note" role="status" aria-live="polite"></p>
+    <div class="ua-editor-bottom-actions"><a href="#/account/profile">Batal</a><button class="ua-editor-save" type="submit">Simpan perubahan</button></div>
+   </form>
+  </div>`;
+ }
  if(preview){
   const visiblePosts=profile.visibility==='public'?ownPosts.filter(p=>p.visibility==='public'&&p.moderation_status==='published'):[];
   return `<div class="ua-page-heading"><div><span class="ua-eyebrow">PRATINJAU PROFIL</span><h1>Begini profil Anda terlihat</h1><p>Ini adalah simulasi tampilan profil bagi pengunjung Pluits.</p></div><a class="ua-outline" href="#/account/profile">← Kembali ke Edit Profil</a></div>
@@ -203,24 +225,12 @@ async function profilePage(preview=false,editMode=false){
  }
  return `
  <section class="ua-profile-card">
-  <div class="ua-cover" ${coverUrl?`style="background-image:url('${coverUrl}')"`:''}><label class="ua-cover-edit"><span>Ubah foto sampul</span><input id="ua-cover-file" type="file" accept="image/jpeg,image/png,image/webp"></label></div>
-  <div class="ua-profile-content"><div class="ua-profile-avatar">${avatar(avatarUrl,profile.display_name,'large')}<label class="ua-avatar-edit" aria-label="Ubah foto profil" title="Ubah foto profil"><span>Ubah foto</span><input id="ua-avatar-file" type="file" accept="image/jpeg,image/png,image/webp"></label></div>
-   <div class="ua-profile-identity"><div class="ua-profile-name-row"><div><h2>${esc(profile.display_name)}</h2><div class="ua-username">@${esc(profile.username)}</div></div><a class="ua-outline ua-profile-edit-link" href="#/account/profile/edit">Edit profil</a></div><p>${esc(profile.bio||'Bio belum ditambahkan.')}</p><div class="ua-location">${profile.public_city&&profile.public_province?'⌖ '+esc(profile.public_city)+', '+esc(profile.public_province):''}</div><div class="ua-profile-stats"><a href="#profile-posts"><strong>${ownPosts.length}</strong><span>Postingan</span></a><a href="#/account/followers"><strong>${followersCount.count||0}</strong><span>Pengikut</span></a><a href="#/account/following"><strong>${followingCount.count||0}</strong><span>Mengikuti</span></a></div></div>
+  <div class="ua-cover ${coverUrl?'has-cover':'no-cover'}" ${coverUrl?`style="background-image:url('${coverUrl}')`:''}></div>
+  <div class="ua-profile-content"><div class="ua-profile-avatar">${avatar(avatarUrl,profile.display_name,'large')}</div>
+   <div class="ua-profile-identity"><div class="ua-profile-name-row"><div><h2>${esc(profile.display_name)}</h2><div class="ua-username">@${esc(profile.username)}</div></div></div><p>${esc(profile.bio||'Bio belum ditambahkan.')}</p><div class="ua-location">${profile.public_city&&profile.public_province?'⌖ '+esc(profile.public_city)+', '+esc(profile.public_province):''}</div><div class="ua-profile-stats"><a href="#profile-posts"><strong>${ownPosts.length}</strong><span>Postingan</span></a><a href="#/account/followers"><strong>${followersCount.count||0}</strong><span>Pengikut</span></a><a href="#/account/following"><strong>${followingCount.count||0}</strong><span>Mengikuti</span></a></div></div>
   </div>
  </section>
- ${editMode?`<form id="ua-profile-form" class="ua-panel ua-profile-edit-form" autocomplete="off">
-  <div class="ua-profile-edit-heading"><div><span class="ua-eyebrow">IDENTITAS PERSONAL</span><h2>Edit profil</h2><p>Gunakan nama yang mewakili diri Anda. Profil profesional dan toko dapat dikelola terpisah.</p></div><div class="ua-profile-edit-actions"><a class="ua-outline" href="#/account/profile">Batal</a><button class="ua-primary" type="submit">Simpan perubahan</button></div></div>
-  <div class="ua-form-grid">
-   <label>Nama tampilan<input name="display_name" maxlength="80" required value="${esc(profile.display_name||'')}"></label>
-   <label>Username<input name="username" minlength="3" maxlength="30" autocapitalize="none" autocomplete="off" spellcheck="false" required value="${esc(profile.username||'')}"><small>3–30 karakter: huruf kecil, angka, titik, garis bawah, atau tanda hubung. Tidak boleh menyerupai domain.</small></label>
-   <label class="ua-span-2">Bio<textarea name="bio" rows="3" maxlength="500">${esc(profile.bio||'')}</textarea></label>
-   <label>Kota<input name="public_city" maxlength="80" value="${esc(profile.public_city||'')}"></label>
-   <label>Provinsi<input name="public_province" maxlength="80" value="${esc(profile.public_province||'')}"></label>
-   <label>Visibilitas akun<select name="visibility"><option value="public" ${profile.visibility==='public'?'selected':''}>Publik</option><option value="private" ${profile.visibility==='private'?'selected':''}>Pribadi</option></select></label>
-   <label class="ua-checkbox"><input type="checkbox" name="show_store" ${profile.show_store?'checked':''}> Tampilkan tautan toko saya pada profil</label>
-  </div>
-  <p id="ua-profile-note" class="ua-form-note" role="status" aria-live="polite"></p>
- </form>`:''}
+}
  <nav class="ua-profile-tabs" role="tablist" aria-label="Konten profil">
   <button class="active" type="button" role="tab" aria-selected="true" data-profile-tab="posts">▦ <span>Post/Feed</span></button><button type="button" role="tab" aria-selected="false" data-profile-tab="reels">▣ <span>Reels</span></button><button type="button" role="tab" aria-selected="false" data-profile-tab="trip">⌖ <span>Trip</span></button><button type="button" role="tab" aria-selected="false" data-profile-tab="tagged">♙ <span>Ditandai</span></button>
  </nav>
