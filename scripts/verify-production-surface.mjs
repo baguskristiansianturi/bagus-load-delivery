@@ -161,13 +161,13 @@ assert.ok(profileSource.includes('id="ua-profile-form"'), 'Personal profile must
 assert.ok(profileSource.includes('Simpan perubahan') && profileSource.includes('ua-profile-savebar'), 'Profile save action must remain sticky and reachable on mobile.');
 assert.ok(profileSource.includes('validatePersonalUsername') && profileSource.includes('validatePersonalDisplayName'), 'Personal identity must enforce username and display-name rules.');
 assert.ok(profileSource.includes(".update(payload).eq('id',user.id).select().single()"), 'Profile save must update the existing profile row and confirm the persisted result without a full remount.');
-assert.ok(socialNavigationCss.includes('.pl-settings-dots') && socialNavigationCss.includes('display: flex !important'), 'Mobile settings shortcut must remain visibly accessible.');
 assert.ok(existsSync('supabase/migrations/20261110091730_enforce_personal_profile_identity_rules.sql'));
 assert.ok(existsSync('supabase/migrations/20261110091739_allow_personal_username_separators.sql'));
 
 assert.ok(!profileSource.includes('<div class="ua-section-title"><strong>Postingan</strong><a class="ua-outline" href="#/account/compose">＋ Buat</a></div>'), 'Profile feed must not repeat the Post/Feed label or create action already present in primary navigation.');
 assert.ok(profileSource.includes('melalui tombol Buat pada navigasi utama'), 'Empty profile feed should direct users to the primary create navigation.');
 const socialNavigationCss = read('src/styles/social-navigation.css');
+assert.ok(socialNavigationCss.includes('.pl-settings-dots') && socialNavigationCss.includes('display: flex !important'), 'Mobile settings shortcut must remain visibly accessible.');
 assert.ok(socialNavigationCss.includes('.ua-social-app .pl-social-mobile-nav > a .ua-avatar'), 'Mobile profile avatar must share the navigation icon sizing rules.');
 assert.ok(socialNavigationCss.includes('flex: 0 0 22px'), 'Mobile navigation symbols must use a consistent 22px visual size.');
 
