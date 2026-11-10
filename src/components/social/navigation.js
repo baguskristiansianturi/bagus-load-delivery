@@ -41,7 +41,7 @@ export function renderSocialHeader({ active = 'explore', profileView = false, us
         <a href='#/account/followers' aria-label='Kontak dan koneksi'>${socialIcon('users', { size: 21 })}</a>
         <a href='#/account/saved' aria-label='Wishlist dan tersimpan'>${socialIcon('bookmark', { size: 21 })}</a>
         <a class='pl-mobile-notice' href='#/account/activity' aria-label='Notifikasi'>${socialIcon('bell', { size: 21 })}${notificationCount ? '<i class="pl-nav-unread">'+(notificationCount>99?'99+':notificationCount)+'</i>' : ''}</a>
-        <a href='#/account/settings' aria-label='Pengaturan'>${socialIcon('more', { size: 21 })}</a>
+        <a href='#/account/settings' aria-label='Pengaturan'><span class='pl-settings-dots' aria-hidden='true'>•••</span></a>
       </div>
       <a class="ua-header-profile" href="${user ? '#/account/story' : '#/account/login'}" aria-label="Tambahkan Story">${userAvatar || socialIcon('user', { size: 22 })}</a>
     </header>`;
