@@ -1068,7 +1068,8 @@ function bindPostActions(){
   const toggleLike=async()=>{
    if(!user){notify('Masuk untuk menyukai postingan.','error');return;}
    if(!likeButton||likeButton.dataset.busy==='1')return;
-   const wasLiked=likeButton.classList.contains('is-liked'),liked=!wasLiked;
+   const wasLiked=likeButton.classList.contains('is-liked');
+   const liked=!wasLiked;
    const oldCount=Number(likeButton.querySelector('b')?.textContent||0),nextCount=Math.max(0,oldCount+(liked?1:-1));
    likeButton.dataset.busy='1';
    paintLikeState(liked,nextCount);animateLikeTransition(card.querySelector('.ua-media,.ua-media-gallery'),liked);
