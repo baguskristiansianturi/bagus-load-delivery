@@ -2,19 +2,20 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import {socialIcon} from '../../components/common/social-icons.js';
 import {renderSocialHeader,renderSocialMobileNav} from '../../components/social/navigation.js';
 import {updateSEO} from '../seo.js';
-import { Upload as TusUpload } from 'https://esm.sh/tus-js-client@4.3.1';
 import './user-account.css';
 import {accountSecurityPage,bindAccountSecurity} from './security-settings.js';
 import '../../styles/social-components.css';
 import '../../styles/social-navigation.css';
 import {loadAccountContext,contextHeader,professionalPage,professionalFormPage,accountSettingsPage,bindAccountContext} from './account-context.js';
 import {listPrivateDrafts,getPrivateDraft,savePrivateDraft,deletePrivateDraft} from './drafts.js';
+import {getMediaMime,validateMediaFile,getVideoDuration} from '../../features/media/media-types.js';
+import {createMediaUploader} from '../../features/media/storage-upload.js';
 
 const SUPABASE_URL='https://ytndswhqxayqpftszwfh.supabase.co';
 const SUPABASE_KEY='sb_publishable_kOUbKBYg88nXgz8FQRSnvA_k0hvKY65';
 const supabase=createClient(SUPABASE_URL,SUPABASE_KEY);
 const BUCKET='pluits-user-media';
-const uploadMime=file=>{const declared=String(file?.type||'').toLowerCase();const ext=String(file?.name||'').split('.').pop().toLowerCase();const byExt=({jpg:'image/jpeg',jpeg:'image/jpeg',png:'image/png',webp:'image/webp',gif:'image/gif',mp4:'video/mp4',m4v:'video/mp4',webm:'video/webm','3gp':'video/3gpp','3gpp':'video/3gpp',mov:'video/quicktime'})[ext]||'';const mime=declared||byExt;const allowed=['image/jpeg','image/png','image/webp','image/gif','video/mp4','video/webm','video/3gpp','video/quicktime'];return allowed.includes(mime)?mime:'';};
+const uploadMediaFile=createMediaUploader({supabase,bucket:BUCKET,supabaseUrl:SUPABASE_URL,publishableKey:SUPABASE_KEY});
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmtDate=v=>new Date(v).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'});
 const initials=v=>String(v||'P').trim().slice(0,1).toUpperCase();
@@ -768,30 +769,6 @@ function bindImageUpload(inputId,column,label){
  });
 }
 
-async function uploadMediaFile(file,path,mime,onProgress=()=>{}){
- if(file.size<=6*1024*1024){
-  const result=await supabase.storage.from(BUCKET).upload(path,file,{contentType:mime,upsert:false});
-  if(result.error)throw result.error;
-  onProgress(100);return result;
- }
- const {data:{session},error:sessionError}=await supabase.auth.getSession();
- if(sessionError)throw sessionError;
- if(!session?.access_token)throw new Error('Sesi login berakhir. Silakan masuk kembali.');
- return new Promise((resolve,reject)=>{
-  const upload=new TusUpload(file,{
-   endpoint:'https://ytndswhqxayqpftszwfh.storage.supabase.co/storage/v1/upload/resumable',
-   retryDelays:[0,3000,5000,10000,20000],
-   headers:{authorization:'Bearer '+session.access_token,apikey:SUPABASE_KEY,'x-upsert':'false'},
-   uploadDataDuringCreation:true,removeFingerprintOnSuccess:true,chunkSize:6*1024*1024,
-   metadata:{bucketName:BUCKET,objectName:path,contentType:mime,cacheControl:'3600'},
-   onProgress:(sent,total)=>onProgress(total?sent/total*100:0),
-   onError:error=>reject(error),
-   onSuccess:()=>resolve({data:{path},error:null})
-  });
-  upload.findPreviousUploads().then(previous=>{if(previous.length)upload.resumeFromPreviousUpload(previous[0]);upload.start();}).catch(reject);
- });
-}
-
 function bindCompose(){
  const form=document.querySelector('#ua-post-form'),input=document.querySelector('#ua-post-file'),preview=document.querySelector('#ua-media-preview'),count=document.querySelector('#ua-media-count'),note=msg=>{const n=document.querySelector('#ua-compose-note');if(n)n.textContent=msg;};
  if(!form||!input||!preview)return;
@@ -804,7 +781,7 @@ function bindCompose(){
   if(!selectedFiles.length)return;
   const urls=selectedFiles.map(file=>URL.createObjectURL(file));preview.dataset.urls=JSON.stringify(urls);
   preview.innerHTML=selectedFiles.map((file,index)=>{
-   const media=uploadMime(file).startsWith('video/')?'<video controls playsinline preload="metadata" src="'+urls[index]+'"></video>':'<img src="'+urls[index]+'" alt="Media '+(index+1)+'">';
+   const media=getMediaMime(file).startsWith('video/')?'<video controls playsinline preload="metadata" src="'+urls[index]+'"></video>':'<img src="'+urls[index]+'" alt="Media '+(index+1)+'">';
    return '<article class="ua-clean-media-item">'+media+'<button type="button" data-remove-media="'+index+'" aria-label="Hapus media">×</button><small>'+(index+1)+' / '+selectedFiles.length+'</small></article>';
   }).join('');
   preview.querySelectorAll('[data-remove-media]').forEach(button=>button.addEventListener('click',()=>{selectedFiles.splice(Number(button.dataset.removeMedia),1);syncInput();render();}));
@@ -813,8 +790,8 @@ function bindCompose(){
   const incoming=[...(input.files||[])];if(!incoming.length)return;
   const combined=[...selectedFiles,...incoming];
   if(combined.length>15){note('Maksimal 15 foto atau video dalam satu Post.');syncInput();return;}
-  const bad=incoming.find(file=>!uploadMime(file)||file.size>50*1024*1024);
-  if(bad){note(!uploadMime(bad)?'Format file tidak didukung. Pilih foto JPG, PNG, WebP atau video MP4, WebM, MOV.':'Ukuran maksimal 50 MB per file.');syncInput();return;}
+  const bad=incoming.find(file=>!validateMediaFile(file).valid);
+  if(bad){const check=validateMediaFile(bad);note(check.reason==='too-large'?'Ukuran maksimal 50 MB per file.':'File "'+bad.name+'" tidak dikenali. Tipe perangkat: '+(bad.type||'tidak tersedia')+'. Coba video MP4, MOV, WebM atau 3GP.');syncInput();return;}
   selectedFiles=combined;syncInput();render();note('');
  });
  const saveDraftButton=document.querySelector('#ua-save-draft');
@@ -837,18 +814,18 @@ function bindCompose(){
   const files=[...selectedFiles],data=new FormData(form),caption=String(data.get('caption')||'').trim(),button=form.querySelector('button[type=submit]'),progress=document.querySelector('#ua-upload-progress');
   if(!files.length&&!caption){note('Pilih foto/video atau tulis deskripsi.');return;}
   if(files.length>15){note('Maksimal 15 media dalam satu Post.');return;}
-  if(form.dataset.contentKind==='reel'&&(files.length!==1||!uploadMime(files[0]).startsWith('video/'))){note('Reel harus terdiri dari satu file video.');return;}
-  const bad=files.find(file=>!uploadMime(file)||file.size>50*1024*1024);
-  if(bad){note(!uploadMime(bad)?'Format file tidak didukung.':'Ukuran maksimal 50 MB per file.');return;}
+  if(form.dataset.contentKind==='reel'&&(files.length!==1||!getMediaMime(files[0]).startsWith('video/'))){note('Reel harus terdiri dari satu file video.');return;}
+  const bad=files.find(file=>!validateMediaFile(file).valid);
+  if(bad){const check=validateMediaFile(bad);note(check.reason==='too-large'?'Ukuran maksimal 50 MB per file.':'File "'+bad.name+'" tidak dikenali sebagai media yang didukung. Tipe perangkat: '+(bad.type||'tidak tersedia')+'.');return;}
   button.disabled=true;button.textContent='Mengunggah…';const uploaded=[];
   try{
    for(let i=0;i<files.length;i++){
-    const file=files[i],mime=uploadMime(file),ext=(file.name.split('.').pop()||'bin').toLowerCase(),token=crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random().toString(36).slice(2),path=user.id+'/'+token+'.'+ext;
+    const file=files[i],mime=getMediaMime(file),ext=(file.name.split('.').pop()||'bin').toLowerCase(),token=crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random().toString(36).slice(2),path=user.id+'/'+token+'.'+ext;
     const result=await uploadMediaFile(file,path,mime,pct=>{progress.hidden=false;progress.querySelector('span').style.width=Math.round((i+pct/100)/files.length*65)+'%';});
     if(result.error)throw result.error;
     const mediaRecord={media_path:path,media_type:mime.startsWith('video/')?'video':'image',position:i,duration_ms:null};uploaded.push(mediaRecord);
     let duration=null;
-    if(mime.startsWith('video/'))duration=await new Promise(resolve=>{const video=document.createElement('video');video.preload='metadata';video.onloadedmetadata=()=>{const ms=Number.isFinite(video.duration)?Math.round(video.duration*1000):null;URL.revokeObjectURL(video.src);resolve(ms);};video.onerror=()=>{URL.revokeObjectURL(video.src);resolve(null);};video.src=URL.createObjectURL(file);});
+    if(mime.startsWith('video/'))duration=await getVideoDuration(file);
     if(form.dataset.contentKind==='reel'&&(!duration||duration>60000))throw new Error('Reel harus berupa video maksimal 60 detik.');
     mediaRecord.duration_ms=duration;
     progress.hidden=false;progress.querySelector('span').style.width=Math.round(65*uploaded.length/files.length)+'%';
@@ -928,7 +905,7 @@ function bindStoryCompose(){
   if(preview.dataset.objectUrl)URL.revokeObjectURL(preview.dataset.objectUrl);
   preview.dataset.objectUrl='';preview.innerHTML='';
   const file=fileInput.files?.[0];if(!file)return;
-  const mime=uploadMime(file);
+  const mime=getMediaMime(file);
   if(!mime){note.textContent='Format tidak didukung. Gunakan JPG, PNG, WebP, GIF, MP4, atau WebM.';fileInput.value='';return;}
   const url=URL.createObjectURL(file);preview.dataset.objectUrl=url;
   preview.innerHTML=mime.startsWith('video/')?"<video controls playsinline preload='metadata' src='"+url+"'></video>":"<img src='"+url+"' alt='Pratinjau Story'>";
@@ -937,7 +914,7 @@ function bindStoryCompose(){
   event.preventDefault();
   const file=fileInput?.files?.[0];
   if(!file){note.textContent='Pilih foto atau video terlebih dahulu.';return;}
-  const mime=uploadMime(file);
+  const mime=getMediaMime(file);
   if(!mime){note.textContent='Format tidak didukung. Gunakan JPG, PNG, WebP, GIF, MP4, atau WebM.';return;}
   if(file.size>50*1024*1024){note.textContent='Ukuran file maksimal 50 MB.';return;}
   const button=form.querySelector("button[type='submit']"),data=new FormData(form),caption=String(data.get('caption')||'').trim(),visibility=String(data.get('visibility')||'private');
@@ -1067,16 +1044,16 @@ function bindPostActions(){
     box.dataset.ready='1';
     box.querySelector('[data-save-post]').onclick=async()=>{
      const btn=box.querySelector('[data-save-post]'),files=[...(box.querySelector('[name=add_media]')?.files||[])],caption=box.querySelector('[name=caption]').value.trim(),visibility=box.querySelector('[name=visibility]').value,raw=box.querySelector('[name=tags]').value,hashtags=[...new Set((raw.match(/#[A-Za-z0-9_]+/g)||[]).map(x=>x.slice(1).toLowerCase()))].slice(0,30);
-     const bad=files.find(f=>!uploadMime(f)||f.size>50*1024*1024);
-     if(bad){notify(!uploadMime(bad)?'Format file tidak didukung.':'Maksimal 50 MB per file.','error');return;}
+     const bad=files.find(f=>!getMediaMime(f)||f.size>50*1024*1024);
+     if(bad){notify(!getMediaMime(bad)?'Format file tidak didukung.':'Maksimal 50 MB per file.','error');return;}
      if(media.length+files.length>15){notify('Maksimal 15 media per postingan.','error');return;}
      btn.disabled=true;btn.textContent='Menyimpan…';const added=[];
      try{
       for(let i=0;i<files.length;i++){
-       const file=files[i],mime=uploadMime(file),ext=file.name.split('.').pop().toLowerCase(),token=crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random().toString(36).slice(2),path=user.id+'/'+token+'.'+ext,up=await uploadMediaFile(file,path,mime,()=>{});
+       const file=files[i],mime=getMediaMime(file),ext=file.name.split('.').pop().toLowerCase(),token=crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random().toString(36).slice(2),path=user.id+'/'+token+'.'+ext,up=await uploadMediaFile(file,path,mime,()=>{});
        if(up.error)throw up.error;
        let duration=null;
-       if(mime.startsWith('video/'))duration=await new Promise(resolve=>{const v=document.createElement('video');v.preload='metadata';v.onloadedmetadata=()=>{const d=Number.isFinite(v.duration)?Math.round(v.duration*1000):null;URL.revokeObjectURL(v.src);resolve(d);};v.onerror=()=>resolve(null);v.src=URL.createObjectURL(file);});
+       if(mime.startsWith('video/'))duration=await getVideoDuration(file);
        added.push({post_id:id,user_id:user.id,media_path:path,media_type:mime.startsWith('video/')?'video':'image',position:media.reduce((max,item)=>Math.max(max,Number(item.position)||0),-1)+1+i,duration_ms:duration});
       }
       if(added.length){const ins=await supabase.from('post_media').insert(added);if(ins.error)throw ins.error;}
