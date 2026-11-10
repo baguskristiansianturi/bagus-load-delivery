@@ -2,8 +2,6 @@ import { socialIcon } from '../common/social-icons.js';
 import { ROUTES, getRoute } from './navigation-routes.js';
 
 export function renderSocialHeader({ active = 'explore', profileView = false, showEditProfile = profileView, user, profile, userAvatar = '', notificationCount = 0, publicHome = false } = {}) {
-  const profileHref = getRoute('profile', Boolean(user));
-
   if (publicHome) {
     return `
       <header class="pl-social-header">
@@ -40,18 +38,17 @@ export function renderSocialHeader({ active = 'explore', profileView = false, sh
       <div class="pl-social-header-menu">
         <button class="pl-social-menu-trigger" type="button" aria-label="Menu profil" aria-expanded="false" aria-controls="pl-account-menu"><span aria-hidden="true">•••</span></button>
         <div class="pl-social-menu-panel" id="pl-account-menu" hidden>
-          ${showEditProfile?'<a href="${ROUTES.editProfile}">'+socialIcon('edit',{size:17})+'<span>Edit profil</span></a>':''}
+          ${showEditProfile?`<a href="${ROUTES.editProfile}">${socialIcon('edit',{size:17})}<span>Edit profil</span></a>`:''}
           <a href="${ROUTES.settings}">${socialIcon('settings',{size:17})}<span>Pusat Pengaturan</span></a>
         </div>
       </div>
-      <a class="ua-header-profile" href="${user ? '#/account/profile' : '#/account/login'}" aria-label="Profil">${userAvatar || socialIcon('user', { size: 22 })}</a>
     </header>`;
 }
 
 export function renderSocialMobileNav({ active = 'home', profileView = false, user, profile, userAvatar = '', notificationCount = 0, messageCount = 0, publicHome = false } = {}) {
   const isInbox = active === 'messages';
   const activeKey = active === 'home' || active === 'explore' ? 'home' : active === 'discover' ? 'discover' : active === 'profile-edit' || active === 'profile' || active === 'preview' ? 'profile' : active;
-  const profileHref = user ? '#/account/profile' : '#/account/login';
+  const profileHref = getRoute('profile', Boolean(user));
   const items = [
     { key: 'home', href: publicHome ? ROUTES.publicHome : getRoute('home', Boolean(user)), label: 'Beranda', icon: 'home' },
     { key: 'discover', href: ROUTES.discover, label: 'Jelajah', icon: 'compass' },

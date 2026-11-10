@@ -1,0 +1,54 @@
+/* Isolated responsive identity hero for the personal profile route. */
+.ua-profile-main,
+.ua-profile-main *{box-sizing:border-box}
+.ua-profile-main{width:min(935px,100%);min-width:0;margin:18px auto 42px!important;padding:0!important}
+.ua-profile-main .ua-profile-card{width:100%;min-width:0;margin:0 0 16px!important;overflow:visible!important;border:0!important;border-radius:0!important;box-shadow:none!important;background:#fff!important}
+.ua-profile-main .ua-cover{display:none!important}
+.ua-profile-main .ua-profile-content{
+ display:grid!important;
+ grid-template-columns:112px minmax(0,1fr)!important;
+ align-items:start!important;
+ gap:clamp(14px,3vw,26px)!important;
+ min-width:0;
+ padding:24px clamp(14px,5.5vw,52px) 22px!important;
+ border-bottom:1px solid #e8eaed!important;
+}
+.ua-profile-main .ua-profile-avatar{min-width:0;margin:0!important;align-self:start!important}
+.ua-profile-main .ua-avatar.large{display:block;width:104px!important;height:104px!important;max-width:100%;object-fit:cover;border:3px solid #fff;box-shadow:0 1px 5px rgba(0,0,0,.1)}
+.ua-profile-main .ua-profile-identity{min-width:0;padding:0!important;overflow-wrap:anywhere}
+.ua-profile-main .ua-profile-name-row{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:8px;margin:0 0 8px}
+.ua-profile-main .ua-profile-name-row h2{margin:0 0 3px!important;font-size:clamp(18px,2.5vw,23px)!important;line-height:1.2;font-weight:600!important;overflow-wrap:anywhere}
+.ua-profile-main .ua-username,.ua-profile-main .ua-location{max-width:100%;overflow-wrap:anywhere}
+.ua-profile-main .ua-profile-identity>p{margin:9px 0 5px!important;font-size:13px;line-height:1.55;overflow-wrap:anywhere}
+.ua-profile-main .ua-profile-stats{display:flex!important;flex-wrap:wrap;gap:clamp(12px,3vw,30px)!important;margin:14px 0 0!important}
+.ua-profile-main .ua-profile-stats a{display:flex!important;align-items:baseline;gap:5px;min-width:0;color:#30343a!important;text-decoration:none}
+.ua-profile-main .ua-profile-stats strong{font-size:14px!important}
+.ua-profile-main .ua-profile-stats span{font-size:12px!important}
+.ua-profile-main .ua-profile-tabs{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:0!important;width:100%;margin:0!important;border-bottom:1px solid #e8eaed!important;background:#fff!important}
+.ua-profile-main .ua-profile-tabs button{display:flex!important;min-width:0;min-height:48px;align-items:center;justify-content:center;gap:6px;padding:10px 4px!important;white-space:normal;text-align:center;font-size:12px}
+.ua-profile-main .ua-profile-tab-content{min-width:0;min-height:0!important;height:auto!important;padding:14px 0 24px!important}
+.ua-profile-main .ua-profile-tab-content .ua-post-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px!important;align-content:start}
+.ua-profile-main .ua-profile-tab-content .ua-post-thumb{min-width:0;aspect-ratio:1/1}
+@media(max-width:760px){
+ .ua-profile-main{width:100%;margin:0!important;padding:0!important}
+ .ua-profile-main .ua-profile-card{margin:0 0 10px!important}
+ .ua-profile-main .ua-profile-content{grid-template-columns:76px minmax(0,1fr)!important;gap:12px!important;padding:18px 14px 16px!important}
+ .ua-profile-main .ua-avatar.large{width:72px!important;height:72px!important}
+ .ua-profile-main .ua-profile-name-row h2{font-size:18px!important}
+ .ua-profile-main .ua-profile-stats{gap:12px!important;margin-top:12px!important}
+ .ua-profile-main .ua-profile-stats a{gap:4px}
+ .ua-profile-main .ua-profile-stats strong{font-size:13px!important}
+ .ua-profile-main .ua-profile-stats span{font-size:10px!important}
+ .ua-profile-main .ua-profile-tabs{position:sticky!important;top:54px!important;z-index:40}
+ .ua-profile-main .ua-profile-tabs button{min-height:46px;padding:9px 2px!important;font-size:10px}
+ .ua-profile-main .ua-profile-tab-content{padding:10px 0 22px!important}
+ .ua-profile-main .ua-profile-tab-content .ua-post-grid{gap:2px!important}
+}
+@media(max-width:380px){
+ .ua-profile-main .ua-profile-content{grid-template-columns:62px minmax(0,1fr)!important;gap:10px!important;padding-inline:11px!important}
+ .ua-profile-main .ua-avatar.large{width:60px!important;height:60px!important}
+ .ua-profile-main .ua-profile-name-row h2{font-size:16px!important}
+ .ua-profile-main .ua-profile-tabs button{font-size:9px;gap:3px}
+ .ua-profile-main .ua-profile-stats{gap:8px!important}
+ .ua-profile-main .ua-profile-stats span{font-size:9px!important}
+}
