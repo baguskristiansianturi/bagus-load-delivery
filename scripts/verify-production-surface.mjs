@@ -81,7 +81,7 @@ assert.match(messages, /renderSocialMobileNav\(\{active:'messages'/, 'Inbox must
 assert.match(messages, /data-inbox-tab="primary"/, 'Inbox must expose the Primary category.');
 assert.match(messages, /data-inbox-tab="requests"/, 'Inbox must expose the Requests category.');
 assert.match(messages, /data-inbox-tab="blocked"/, 'Inbox must expose the Blocked category.');
-assert.match(messages, /Cari nama atau username teman/, 'Inbox header search must be discoverable.');
+assert.match(messages, /Search by name or username/, 'Inbox header search must be discoverable.');
 assert.match(messages, /display_name\.ilike/, 'Inbox search must match display names as well as usernames.');
 assert.match(messages, /classList\.toggle\('has-many'/, 'Online carousel must switch to partial overlap for larger friend sets.');
 
@@ -96,7 +96,7 @@ assert.match(accountSettings, /visibility/, 'Account privacy setting must persis
 const navigation = read('src/components/social/navigation.js');
 assert.match(navigation, /ROUTES\.inbox|ROUTES\.activity/, 'Social navigation must consume the canonical route registry.');
 assert.match(navigation, /getRoute\('inbox'/, 'Inbox destinations must resolve through the canonical route registry.');
-assert.match(navigation, /label: 'Inbox'/, 'Mobile bottom navigation must retain the inbox route outside Inbox.');
+assert.match(navigation, /label: 'Messages'/, 'Mobile bottom navigation must label the messaging destination Messages.');
 assert.match(navigation, /label: 'Notifikasi'/, 'Inbox context must replace its own bottom slot with notifications.');
 assert.match(navigation, /label: 'Profil'/, 'Profile must remain the fifth mobile destination.');
 assert.match(navigation, /pl-create-orb/, 'The center Create action must have a dedicated visual treatment.');
