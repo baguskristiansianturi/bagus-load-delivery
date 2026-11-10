@@ -119,7 +119,7 @@ export function messagesPage() {
         <div id="pl-msg-search-results" class="pl-msg-search-results" hidden></div>
       </form>
       <div class="pl-msg-head-menu">
-        <button type="button" class="pl-msg-menu-toggle" aria-label="Pengaturan pesan" aria-expanded="false" aria-controls="pl-msg-head-menu">•••</button>
+        <button type="button" class="pl-msg-menu-toggle" aria-label="Pengaturan pesan" aria-expanded="false" aria-controls="pl-msg-head-menu">⋮</button>
         <nav class="pl-msg-head-menu-panel" id="pl-msg-head-menu" aria-label="Pengaturan Inbox" hidden>
           <a href="#/account/settings">Pengaturan pesan</a>
           <a href="#/account/settings">Pengaturan akun</a>
