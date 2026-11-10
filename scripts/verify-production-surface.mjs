@@ -96,7 +96,7 @@ assert.match(accountSettings, /visibility/, 'Account privacy setting must persis
 const navigation = read('src/components/social/navigation.js');
 assert.match(navigation, /ROUTES\.inbox|ROUTES\.activity/, 'Social navigation must consume the canonical route registry.');
 assert.match(navigation, /getRoute\('inbox'/, 'Inbox destinations must resolve through the canonical route registry.');
-assert.match(navigation, /label: 'Messages'/, 'Mobile bottom navigation must label the messaging destination Messages.');
+assert.match(navigation, /label: 'Pesan'/, 'Mobile bottom navigation must label the messaging destination Pesan.');
 assert.match(navigation, /label: 'Notifikasi'/, 'Inbox context must replace its own bottom slot with notifications.');
 assert.match(navigation, /label: 'Profil'/, 'Profile must remain the fifth mobile destination.');
 assert.match(navigation, /pl-create-orb/, 'The center Create action must have a dedicated visual treatment.');
