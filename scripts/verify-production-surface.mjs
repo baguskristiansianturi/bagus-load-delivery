@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { renderSocialHeader, renderSocialMobileNav } from '../src/components/social/navigation.js';
-import { getMediaMime, validateMediaFile } from '../src/features/media/media-types.js';
+import { getMediaMime, getMediaExtension, validateMediaFile } from '../src/features/media/media-types.js';
 
 const read = (path) => readFileSync(path, 'utf8');
 const retiredFiles = [
@@ -31,9 +31,20 @@ for (const path of retiredFiles) {
   assert.equal(existsSync(path), false, `Retired demo module returned: ${path}`);
 }
 
-const androidVideoCases=[[{name:'VID_20261110.mp4',type:'application/octet-stream',size:1024},'video/mp4'],[{name:'VID_20261110.mp4',type:'image/jpeg',size:1024},'video/mp4'],[{name:'clip.m4v',type:'video/x-m4v',size:1024},'video/mp4'],[{name:'clip.mov',type:'video/quicktime',size:1024},'video/quicktime'],[{name:'clip.3gp',type:'',size:1024},'video/3gpp'],[{name:'clip.webm',type:'application/octet-stream',size:1024},'video/webm']];
+const androidVideoCases=[[{name:'VID_20261110.mp4',type:'application/octet-stream',size:1024},'video/mp4'],[{name:'VID_20261110.mp4',type:'image/jpeg',size:1024},'video/mp4'],[{name:'clip.m4v',type:'video/x-m4v',size:1024},'video/mp4'],[{name:'clip.mov',type:'video/quicktime',size:1024},'video/quicktime'],[{name:'clip.3gp',type:'',size:1024},'video/3gpp'],[{name:'clip.3g2',type:'application/octet-stream',size:1024},'video/3gpp2'],[{name:'clip.webm',type:'application/octet-stream',size:1024},'video/webm']];
 for(const [file,expected] of androidVideoCases){assert.equal(getMediaMime(file),expected,'Android video MIME fallback must use filename extensions.');assert.equal(validateMediaFile(file).valid,true,'Supported mobile video must pass validation.');}
 assert.equal(getMediaMime({name:'unknown.bin',type:'application/octet-stream',size:1}),'','Unknown binary files must remain rejected.');
+assert.equal(getMediaExtension({name:'camera-no-extension',type:'video/mp4'},'video/mp4'),'mp4','Video files without extensions must receive a valid storage suffix.');
+const accountMedia = read('src/pages/account/index.js');
+assert.match(accountMedia, /uploadMediaFile\(file,path,mime,\(\)=>\{\}\)/, 'Story and post media must share the resumable upload pipeline.');
+assert.match(accountMedia, /\.3gp2/, 'Android file pickers must explicitly accept common 3G2 extensions.');
+assert.match(accountMedia, /getMediaExtension\(file,mime\)/, 'Media storage paths must use normalized extensions.');
+const storageUploader = read('src/features/media/storage-upload.js');
+assert.match(storageUploader, /import\('https:\/\/esm\.sh\/tus-js-client@4\.3\.1'\)/, 'TUS must load lazily so CDN failure cannot prevent the social module from loading.');
+assert.match(storageUploader, /if\(!TusUpload\)/, 'Large-file upload must have a fallback when the TUS module CDN is unavailable.');
+const mediaReadMigration = read('supabase/migrations/20261110115836_allow_post_media_storage_reads.sql');
+assert.match(mediaReadMigration, /from public\.post_media pm/, 'Storage read policies must authorize media linked through post_media, not only the legacy first-media column.');
+
 assert.equal(validateMediaFile({name:'large.mp4',type:'video/mp4',size:51*1024*1024}).reason,'too-large','The Free storage limit must be enforced.');
 const router = read('src/app/router.js');
 for (const retiredImport of ['page-factory.js', '../app/services.js', '../app/store.js', '../data/catalog.js', '../data/marketplace.js', '../data/master-data.js', '../pages/auth/index.js']) {
