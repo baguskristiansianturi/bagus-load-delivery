@@ -161,6 +161,7 @@ assert.ok(profileSource.includes('id="ua-profile-form"'), 'Personal profile must
 assert.ok(profileSource.includes('Simpan perubahan') && profileSource.includes('ua-profile-savebar'), 'Profile save action must remain sticky and reachable on mobile.');
 assert.ok(profileSource.includes('validatePersonalUsername') && profileSource.includes('validatePersonalDisplayName'), 'Personal identity must enforce username and display-name rules.');
 assert.ok(profileSource.includes(".update(payload).eq('id',user.id).select().single()"), 'Profile save must update the existing profile row and confirm the persisted result without a full remount.');
+assert.ok(profileSource.includes('profile={...profile,...payload};paintIdentity(profile)') && profileSource.includes('profile=previous;paintIdentity(previous)'), 'Profile save must feel immediate and roll back optimistic UI if the server rejects the change.');
 assert.ok(existsSync('supabase/migrations/20261110091730_enforce_personal_profile_identity_rules.sql'));
 assert.ok(existsSync('supabase/migrations/20261110091739_allow_personal_username_separators.sql'));
 
