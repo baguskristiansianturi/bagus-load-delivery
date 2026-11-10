@@ -47,24 +47,21 @@ export function renderSocialHeader({ active = 'explore', profileView = false, sh
     </header>`;
 }
 
-export function renderSocialMobileNav({ active = 'explore', profileView = false, user, profile, userAvatar = '', notificationCount = 0, publicHome = false } = {}) {
+export function renderSocialMobileNav({ active = 'home', profileView = false, user, profile, userAvatar = '', notificationCount = 0, messageCount = 0, publicHome = false } = {}) {
+  const isInbox = active === 'messages';
+  const activeKey = active === 'home' || active === 'explore' ? 'home' : active === 'discover' ? 'discover' : active === 'profile-edit' || active === 'profile' || active === 'preview' ? 'profile' : active;
   const profileHref = user ? '#/account/profile' : '#/account/login';
-  const activeKey = active === 'home' || active === 'explore' ? 'home' : active === 'profile-edit' || active === 'profile' || active === 'preview' ? '' : active;
   const items = [
     { key: 'home', href: publicHome ? '#/' : '#/account/explore', label: 'Beranda', icon: 'home' },
     { key: 'discover', href: '#/search', label: 'Jelajah', icon: 'compass' },
     { key: 'create', href: user ? '#/account/create' : '#/account/login', label: 'Buat', icon: 'plus' },
-    { key: 'activity', href: user ? '#/account/activity' : '#/account/login', label: 'Notifikasi', icon: 'bell' },
-    { key: 'messages', href: user ? '#/messages' : '#/account/login', label: 'Inbox', icon: 'message' },
+    isInbox ? { key: 'activity', href: user ? '#/account/activity' : '#/account/login', label: 'Notifikasi', icon: 'bell' } : { key: 'messages', href: user ? '#/messages' : '#/account/login', label: 'Inbox', icon: 'message' },
+    { key: 'profile', href: profileHref, label: 'Profil', icon: 'user', avatar: userAvatar }
   ];
-  return `
-    <nav class="pl-home-mobile-nav pl-social-mobile-nav" aria-label="Navigasi utama Pluits">
-      ${items.map(item => `
-        <a class="${[item.key === 'create' ? 'pl-home-create' : activeKey === item.key ? 'active' : '',item.key === 'activity' ? 'pl-mobile-activity' : '',item.key === 'messages' ? 'pl-mobile-inbox' : ''].filter(Boolean).join(' ')}"
-           href="${item.href}" aria-label="${item.label}">
-          ${item.key === 'create' ? '<span class="pl-create-orb">'+socialIcon(item.icon,{size:25})+'</span>' : socialIcon(item.icon, { size: 22 })}
-          <small>${item.label}</small>
-          ${item.key === 'activity' && notificationCount ? '<i class="pl-nav-unread">'+(notificationCount>99?'99+':notificationCount)+'</i>' : ''}
-        </a>`).join('')}
-    </nav>`;
+  return `<nav class="pl-home-mobile-nav pl-social-mobile-nav" aria-label="Navigasi utama Pluits">${items.map(item => {
+    const iconMarkup = item.avatar || socialIcon(item.icon, { size: 22 });
+    const badge = item.key === 'activity' ? notificationCount : item.key === 'messages' ? messageCount : 0;
+    const isActive = activeKey === item.key;
+    return `<a class="${[item.key === 'create' ? 'pl-home-create' : isActive ? 'active' : '',item.key === 'activity' ? 'pl-mobile-activity' : '',item.key === 'messages' ? 'pl-mobile-inbox' : '',item.key === 'profile' ? 'pl-mobile-profile' : ''].filter(Boolean).join(' ')}" href="${item.href}" aria-label="${item.label}" ${isActive?'aria-current="page"':''}>${item.key === 'create' ? '<span class="pl-create-orb">'+socialIcon(item.icon,{size:25})+'</span>' : iconMarkup}<small>${item.label}</small>${badge ? '<i class="pl-nav-unread">'+(badge>99?'99+':badge)+'</i>' : ''}</a>`;
+  }).join('')}</nav>`;
 }

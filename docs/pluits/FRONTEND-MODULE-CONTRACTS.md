@@ -74,7 +74,7 @@ A page's successful build alone does not prove the navigation is visible or usab
  
 ## Mobile primary navigation (fixed contract)
 
-Mobile has exactly five bottom destinations in this order: **Beranda · Jelajah · Buat · Notifikasi · Inbox**. The center Create control is visually emphasized and opens the existing Story/Post/Reel creation choices. Profile is opened from the avatar in the top-right header; it is not a sixth bottom tab. Contacts, saved items, and profile settings remain contextual/profile destinations, not primary bottom navigation. For signed-out users, protected destinations route to login while preserving the same five-slot layout.
+The social mobile bar has exactly five stable slots in this order: **Beranda · Jelajah · Buat · Inbox · Profil**. Profile is a first-class destination at the far right. The center Create control opens the existing Story/Post/Reel choices. On the Inbox route only, the fourth slot changes contextually from Inbox to **Notifikasi** because the user is already inside Inbox; the fifth Profile slot remains available. This is a route-aware substitution, not a different navigation layout. All five slots retain equal width, icon size, spacing, safe-area behavior and alignment. Public users retain the same five-slot structure with protected destinations routed to login.
 
 ## Post action feature ownership
 
