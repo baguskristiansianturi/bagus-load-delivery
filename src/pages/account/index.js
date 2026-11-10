@@ -924,8 +924,8 @@ function bindStoryCompose(){
   button.disabled=true;button.textContent='Mengunggah Story…';note.textContent='Mengunggah media ke Pluits…';
   let uploadedPath=null,storyInserted=false;
   try{
-   const extension=file.name.split('.').pop().toLowerCase(),unique=crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random().toString(36).slice(2),path=user.id+'/'+unique+'.'+extension;
-   const upload=await supabase.storage.from(BUCKET).upload(path,file,{contentType:mime,upsert:false});
+   const extension=getMediaExtension(file,mime),unique=crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random().toString(36).slice(2),path=user.id+'/'+unique+'.'+extension;
+   const upload=await uploadMediaFile(file,path,mime,()=>{});
    if(upload.error)throw new Error('Upload gagal: '+upload.error.message);
    uploadedPath=path;
    const insert=await supabase.from('user_stories').insert({user_id:user.id,media_path:uploadedPath,media_type:mime.startsWith('video/')?'video':'image',caption,visibility});
