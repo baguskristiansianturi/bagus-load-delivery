@@ -430,3 +430,13 @@
  #pl-msg-conversations:has(>.pl-msg-empty-state){flex:1 1 auto;min-height:0}
  .pl-msg-category-empty .pl-msg-empty-state{padding:8px}
 }
+
+/* Refined inbox empty illustrations: intentionally soft, borderless and subordinate to copy. */
+.pl-msg-empty-art{opacity:.46!important}
+.pl-msg-empty-art svg{overflow:visible}
+.pl-msg-empty-art svg>circle:first-child{fill:#f5f8fb!important}
+.pl-msg-empty-art svg>circle:not(:first-child){fill:#e9f0f6!important;opacity:.55}
+.pl-msg-empty-art svg *{stroke:#c8d7e4!important;stroke-opacity:.28!important}
+.pl-msg-empty-state>strong{color:#263e56!important;font-weight:780!important}
+.pl-msg-empty-state>p{color:#8997a6!important}
+#pl-msg-conversations[hidden]{display:none!important}

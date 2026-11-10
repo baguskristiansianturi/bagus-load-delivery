@@ -150,7 +150,6 @@ export function messagesPage() {
             <button type="button" data-inbox-tab="blocked" role="tab" aria-selected="false">Diblokir</button>
           </nav>
           <div id="pl-msg-conversations"><p class="pl-msg-empty">Memuat percakapan…</p></div>
-          <div id="pl-msg-category-empty" class="pl-msg-category-empty" hidden></div>
         </aside>
         <section class="pl-msg-chat" id="pl-msg-chat">${emptyStateMarkup({variant:'message',title:'Pesan Anda dimulai di sini',description:'Pilih percakapan di sebelah kiri atau cari seseorang untuk mulai mengirim pesan.'})}</section>
       </div>
@@ -162,17 +161,18 @@ export function messagesPage() {
 function bindInboxTabs(root=document) {
   const tabs=[...root.querySelectorAll('[data-inbox-tab]')];
   const list=root.querySelector('#pl-msg-conversations');
-  const empty=root.querySelector('#pl-msg-category-empty');
   tabs.forEach(tab=>tab.onclick=()=>{
     activeInboxTab=tab.dataset.inboxTab;
     tabs.forEach(item=>{const active=item===tab;item.classList.toggle('is-active',active);item.setAttribute('aria-selected',String(active));});
-    if(list)list.hidden=activeInboxTab!=='primary';
-    if(empty){
-      empty.hidden=activeInboxTab==='primary';
-      empty.innerHTML=activeInboxTab==='requests'
-        ? emptyStateMarkup({variant:'requests',title:'Belum ada permintaan pesan',description:'Pesan dari orang yang belum terhubung dengan Anda akan muncul di sini.'})
-        : emptyStateMarkup({variant:'blocked',title:'Belum ada akun yang diblokir',description:'Daftar akun yang Anda blokir akan ditampilkan di sini.'});
+    if(!list)return;
+    list.hidden=false;
+    if(activeInboxTab==='primary') {
+      loadConversations();
+      return;
     }
+    list.innerHTML=activeInboxTab==='requests'
+      ? emptyStateMarkup({variant:'requests',title:'Belum ada permintaan pesan',description:'Pesan dari orang yang belum terhubung dengan Anda akan muncul di sini.'})
+      : emptyStateMarkup({variant:'blocked',title:'Belum ada akun yang diblokir',description:'Daftar akun yang Anda blokir akan ditampilkan di sini.'});
   });
   (tabs.find(tab=>tab.dataset.inboxTab===activeInboxTab)||tabs[0])?.click();
 }
@@ -381,6 +381,7 @@ async function openDraftConversation(recipientId) {
 async function loadConversations() {
   const list=document.querySelector('#pl-msg-conversations'); if(!list)return;
   const {data:members,error}=await db.from('user_conversation_members').select('conversation_id,last_read_at').eq('user_id',currentUser.id);
+  if(activeInboxTab!=='primary')return;
   if(error){
     try { const cached=JSON.parse(localStorage.getItem(threadsKey())||'[]'); conversationCache=cached; list.innerHTML=cached.length?cached.map(item=>'<button class="pl-msg-thread" data-open-chat="'+item.id+'"><b>'+esc(item.other.display_name||item.other.username)+'</b><small>@'+esc(item.other.username)+'</small><p>History available when online</p></button>').join(''):'<div class="pl-msg-empty">No offline inbox cache. Connect to the internet to load conversations.</div>'; list.querySelectorAll('[data-open-chat]').forEach(button=>button.onclick=()=>openConversation(button.dataset.openChat)); }
     catch { list.textContent='Kotak masuk offline tidak tersedia.'; }
@@ -393,6 +394,7 @@ async function loadConversations() {
     db.from('user_conversation_members').select('conversation_id,user_id,last_read_at').in('conversation_id',ids),
     db.from('user_messages').select('conversation_id,body,sender_id,created_at,message_type').in('conversation_id',ids).order('created_at',{ascending:false}).limit(200)
   ]);
+  if(activeInboxTab!=='primary')return;
   if(convs.error||memberRows.error||msgRows.error){
     try { const cached=JSON.parse(localStorage.getItem(threadsKey())||'[]'); conversationCache=cached; list.innerHTML=cached.length?cached.map(item=>'<button class="pl-msg-thread" data-open-chat="'+item.id+'"><b>'+esc(item.other.display_name||item.other.username)+'</b><small>@'+esc(item.other.username)+'</small><p>History available when online</p></button>').join(''):'<div class="pl-msg-empty">No offline inbox cache. Connect to the internet to load conversations.</div>'; list.querySelectorAll('[data-open-chat]').forEach(button=>button.onclick=()=>openConversation(button.dataset.openChat)); }
     catch { list.textContent='Offline inbox is not available.'; }
@@ -400,6 +402,7 @@ async function loadConversations() {
   }
   const otherIds=[...new Set((memberRows.data||[]).map(row=>row.user_id).filter(id=>id!==currentUser.id))];
   const profiles=otherIds.length?await db.rpc('get_user_profile_directory_by_ids',{p_ids:otherIds}):{data:[],error:null};
+  if(activeInboxTab!=='primary')return;
   if(profiles.error){list.textContent=profiles.error.message;return;}
   const pmap=new Map((profiles.data||[]).map(person=>[person.id,person]));
   const latest=new Map(); for(const message of msgRows.data||[]) if(!latest.has(message.conversation_id))latest.set(message.conversation_id,message);
@@ -416,7 +419,7 @@ async function loadConversations() {
     return '<button class="pl-msg-thread '+(currentConversation===conversation.id?'active':'')+(conversation.unread?' is-unread':'')+'" data-open-chat="'+conversation.id+'"><span class="pl-msg-thread-head"><b>'+esc(conversation.other.display_name||conversation.other.username)+'</b>'+(conversation.unread?'<i aria-label="Unread message"></i>':'')+'</span><small>@'+esc(conversation.other.username)+'</small><p>'+esc(conversation.last?.message_type==='voice'?'🎙 Voice message':conversation.last?.body||'Belum ada pesan')+(pending?' · '+pending+' menunggu':'')+'</p></button>';
   }).join(''):emptyStateMarkup({variant:'message',title:'Belum ada percakapan',description:'Pilih kontak atau cari nama pengguna untuk memulai percakapan.'});
   list.querySelectorAll('[data-open-chat]').forEach(button=>button.onclick=()=>openConversation(button.dataset.openChat));
-  list.hidden=activeInboxTab!=='primary';
+  list.hidden=false;
 }
 async function openConversation(id) {
   if(String(id).startsWith('draft:'))return openDraftConversation(String(id).slice(6));
