@@ -59,7 +59,7 @@ export function bindAccountSecurity(db,user){
  const identity=document.querySelector('#ua-identity-form');
  identity?.addEventListener('submit',async event=>{
   event.preventDefault();const data=new FormData(identity),username=String(data.get('username')).trim().toLowerCase(),note=document.querySelector('#ua-identity-note'),button=identity.querySelector('button');
-  if(!/^[a-z0-9][a-z0-9._-]{1,28}[a-z0-9]$/.test(username)||username.includes('..')){note.textContent='Username 3–30 karakter. Gunakan huruf kecil, angka, titik, garis bawah, atau tanda hubung; awal dan akhir harus huruf/angka.';return;}\n  if(/\\.(com|co|co\\.id|id|net|org|biz|info|xyz|app|dev|io|me|asia|site|online|store|shop)$/i.test(username)){note.textContent='Username tidak boleh menyerupai nama domain (.com, .co.id, .id, dan sejenisnya).';return;}
+  if(!/^[a-z0-9][a-z0-9._-]{1,28}[a-z0-9]$/.test(username)||username.includes('..')){note.textContent='Username 3–30 karakter. Gunakan huruf kecil, angka, titik, garis bawah, atau tanda hubung; awal dan akhir harus huruf/angka.';return;}\n  if(/\.(com|co|co\.id|id|net|org|biz|info|xyz|app|dev|io|me|asia|site|online|store|shop)$/i.test(username)){note.textContent='Username tidak boleh menyerupai nama domain (.com, .co.id, .id, dan sejenisnya).';return;}
   button.disabled=true;note.textContent='Menyimpan…';
   const {error}=await db.from('user_profiles').update({username,visibility:String(data.get('visibility')),preferred_language:String(data.get('preferred_language'))}).eq('id',user.id);
   button.disabled=false;note.textContent=error?(error.code==='23505'?'Username sudah digunakan.':error.message):'Identitas dan preferensi berhasil disimpan.';
