@@ -169,8 +169,8 @@ assert.match(sharedDesign, /--pl-color-line/, 'Social UI must use shared spacing
 
 const socialHome = read('src/pages/account/index.js');
 const sharedHeader = read('src/components/social/navigation.js');
-assert.ok(sharedHeader.includes('user ? \'#/account/profile\' : \'#/account/login\''), 'Header avatar must open the profile.');
-assert.ok(sharedHeader.includes('pl-social-menu-trigger') && sharedHeader.includes('Pusat Pengaturan') && sharedHeader.includes('#/account/settings'), 'Profile menu must be the single entry point for account settings.');
+assert.ok(sharedHeader.includes("getRoute('profile', Boolean(user))"), 'Header avatar must resolve the canonical profile route.');
+assert.ok(sharedHeader.includes('pl-social-menu-trigger') && sharedHeader.includes('Pusat Pengaturan') && sharedHeader.includes('ROUTES.settings'), 'Profile menu must be the single entry point for account settings.');
 assert.ok(sharedHeader.includes('showEditProfile') && socialHome.includes("section==='profile'?(parameter==='edit'?'profile-edit':'profile')"), 'Edit profile must only appear in the three-dot menu on the profile view, not throughout settings pages.');
 assert.ok(socialHome.includes('function createPage()') && socialHome.includes('function storyComposePage()'), 'Bottom create flow must expose Story/Post/Reel/Live entry selection.');
 assert.ok(socialHome.includes("section==='saved'?await savedPage()"), 'Saved items route must be available to the signed-in owner.');
@@ -210,7 +210,7 @@ assert.ok(profileSource.includes('trip:\'<div class="ua-profile-tab-empty"'), 'T
 assert.ok(profileSource.includes('Post/Feed'), 'Profile posts tab must be clearly labelled Post/Feed.');
 assert.ok(profileSource.includes('id="ua-profile-form"') && profileSource.includes('function bindProfileMenu()'), 'Personal profile must expose a dedicated editor and functional profile menu.');
 assert.ok(profileSource.includes('Simpan perubahan') && profileSource.includes('ua-profile-editor') && profileSource.includes('ua-editor-save'), 'Profile editing must use a dedicated polished editor page with clear save actions.');
-assert.ok(profileSource.includes("parameter==='edit'") && sharedHeader.includes('href="#/account/profile/edit"'), 'Profile editing must open only on its dedicated canonical route from the three-dot menu.');
+assert.ok(profileSource.includes("parameter==='edit'") && sharedHeader.includes('ROUTES.editProfile'), 'Profile editing must open only on its dedicated canonical route from the three-dot menu.');
 assert.ok(!profileSource.includes('ua-profile-savebar'), 'Profile view must not render a sticky save bar.');
 assert.ok(profileSource.includes('validatePersonalUsername') && profileSource.includes('validatePersonalDisplayName'), 'Personal identity must enforce username and display-name rules.');
 assert.ok(profileSource.includes(".update(payload).eq('id',user.id).select().single()"), 'Profile save must update the existing profile row and confirm the persisted result without a full remount.');
