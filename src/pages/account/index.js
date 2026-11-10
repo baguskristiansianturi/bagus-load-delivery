@@ -889,7 +889,7 @@ async function storyComposePage(){
  const storyVisibility=contentPrefs?.story_default_visibility||'private';
  return `<div class="ua-page-heading"><div><span class="ua-eyebrow">STORY · 24 JAM</span><h1>Tambahkan Story</h1><p>Bagikan momen yang akan hilang setelah 24 jam.</p></div><a class="ua-outline" href="#/account/explore">Batal</a></div>
  <section class="ua-panel ua-compose-panel"><form id="ua-story-form" class="ua-compose-form">
-  <label class="ua-upload-zone" for="ua-story-file"><span class="ua-upload-icon">＋</span><strong>Pilih foto atau video</strong><small>JPG, PNG, WebP, GIF, MP4, MOV, WebM, 3GP atau 3G2 · Maksimal 50 MB</small><input id="ua-story-file" type="file" accept="image/jpeg,image/png,image/webp,image/gif,video/*"></label>
+  <label class="ua-upload-zone" for="ua-story-file"><span class="ua-upload-icon">＋</span><strong>Pilih foto atau video</strong><small>JPG, PNG, WebP, GIF, MP4, MOV, WebM, 3GP atau 3G2 · Maksimal 50 MB</small><input id="ua-story-file" type="file" accept="image/jpeg,image/png,image/webp,image/gif,video/*,.mp4,.m4v,.mov,.webm,.3gp,.3gpp,.3g2,.3gp2"></label>
   <div id="ua-story-preview" class="ua-media-preview"></div>
   <label class="ua-compose-caption-label"><textarea name="caption" rows="3" maxlength="500" placeholder="Tambahkan keterangan (opsional)"></textarea></label>
   <label class="ua-audience-field">Siapa yang dapat melihat Story?
