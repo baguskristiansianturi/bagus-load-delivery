@@ -14,7 +14,7 @@ export async function bindHome(){
  try{
   const {data:{user:viewer}}=await db.auth.getUser();
   // Authenticated users must use the canonical interactive feed, not the guest-only duplicate.
-  if(viewer){mountUserAccount('explore');return;}
+  if(viewer){history.replaceState(null,'',location.pathname+location.search+'#/account/explore');mountUserAccount('explore');return;}
   const headerActions=document.querySelector('.pl-social-header>div');
   if(viewer&&headerActions){
    const {data:me}=await db.from('user_profiles').select('display_name,username,avatar_path').eq('id',viewer.id).maybeSingle();
