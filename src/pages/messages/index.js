@@ -118,7 +118,13 @@ export function messagesPage() {
         <button type="submit" aria-label="Cari">${socialIcon('search',{size:18})}</button>
         <div id="pl-msg-search-results" class="pl-msg-search-results" hidden></div>
       </form>
-      <a href="#/account/activity" class="pl-msg-head-icon" aria-label="Notifikasi">${socialIcon('bell',{size:21})}</a>
+      <div class="pl-msg-head-menu">
+        <button type="button" class="pl-msg-menu-toggle" aria-label="Pengaturan pesan" aria-expanded="false" aria-controls="pl-msg-head-menu">•••</button>
+        <nav class="pl-msg-head-menu-panel" id="pl-msg-head-menu" aria-label="Pengaturan Inbox" hidden>
+          <a href="#/account/settings">Pengaturan pesan</a>
+          <a href="#/account/settings">Pengaturan akun</a>
+        </nav>
+      </div>
     </header>
     <section class="pl-msg-content">
       <section class="pl-msg-people" aria-label="Teman yang sedang online">
@@ -261,7 +267,18 @@ export async function bindMessagesPage() {
     box.innerHTML=data?.length?data.map(person=>'<button class="pl-msg-contact" data-start-chat="'+person.id+'"><b>'+esc(person.display_name||person.username)+'</b><small>@'+esc(person.username)+'</small><span>Pesan</span></button>').join(''):'<p class="pl-msg-search-hint">Akun tidak ditemukan.</p>';
     bindStartChat(box);
   };
-  app.addEventListener('click',event=>{if(!event.target.closest('.pl-msg-head-search')){const results=app.querySelector('#pl-msg-search-results');if(results)results.hidden=true;}});
+  const headMenu=app.querySelector('.pl-msg-head-menu');
+  const menuToggle=app.querySelector('.pl-msg-menu-toggle');
+  const menuPanel=app.querySelector('#pl-msg-head-menu');
+  menuToggle?.addEventListener('click',()=>{
+    const opening=menuPanel.hidden;
+    menuPanel.hidden=!opening;
+    menuToggle.setAttribute('aria-expanded',String(opening));
+  });
+  app.addEventListener('click',event=>{
+    if(!event.target.closest('.pl-msg-head-search')){const results=app.querySelector('#pl-msg-search-results');if(results)results.hidden=true;}
+    if(headMenu&&!headMenu.contains(event.target)){menuPanel.hidden=true;menuToggle?.setAttribute('aria-expanded','false');}
+  });
   updateNetworkStatus();
   if(!networkListenersBound){window.addEventListener('online',onOnline);window.addEventListener('offline',updateNetworkStatus);networkListenersBound=true;}
   realtimeChannel=db.channel('pluits-dm-'+user.id)

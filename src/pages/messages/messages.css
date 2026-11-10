@@ -226,3 +226,52 @@
  .pl-msg .pl-msg-mobile-nav .pl-create-orb{width:38px;height:38px;flex-basis:38px}
 }
 @media(min-width:761px){.pl-msg .pl-msg-mobile-nav{display:none!important}}
+
+
+/* Mobile Inbox header: brand left, friend search centered, settings menu right. */
+.pl-msg-head{
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr) auto;
+  align-items:center;
+  gap:clamp(8px,2vw,18px);
+}
+.pl-msg-brand{white-space:nowrap;line-height:1}
+.pl-msg-head-search{width:100%;min-width:0;max-width:520px;margin:0 auto}
+.pl-msg-search-field{width:100%;min-width:0}
+.pl-msg-head-search>button{display:none}
+.pl-msg-head-menu{position:relative;display:flex;align-items:center;justify-content:flex-end}
+.pl-msg-menu-toggle{
+  display:grid;place-items:center;width:40px;height:40px;padding:0;
+  border:0;border-radius:50%;background:transparent;color:#263c53;
+  font:800 22px/1 system-ui,sans-serif;letter-spacing:1px;cursor:pointer;
+}
+.pl-msg-menu-toggle:active,.pl-msg-menu-toggle[aria-expanded="true"]{background:#eef2f6}
+.pl-msg-head-menu-panel{
+  position:absolute;top:calc(100% + 8px);right:0;z-index:80;
+  display:grid;gap:2px;width:min(220px,calc(100vw - 28px));
+  padding:7px;border:1px solid #e6ebf0;border-radius:13px;
+  background:#fff;box-shadow:0 12px 32px #172b4520;
+}
+.pl-msg-head-menu-panel[hidden]{display:none}
+.pl-msg-head-menu-panel a{
+  display:block;padding:12px;border-radius:8px;color:#30465e;
+  font-size:12px;font-weight:650;text-decoration:none;
+}
+.pl-msg-head-menu-panel a:active{background:#f1f4f7}
+@media(max-width:760px){
+  .pl-msg-head{height:58px;padding:0 12px;grid-template-columns:auto minmax(0,1fr) auto;gap:9px}
+  .pl-msg-brand{font-size:15px;letter-spacing:.1em}
+  .pl-msg-head-search{gap:0}
+  .pl-msg-search-field{height:38px;padding-inline:10px;border-radius:11px}
+  .pl-msg-search-field input{font-size:12px}
+  .pl-msg-head-menu{width:32px}
+  .pl-msg-menu-toggle{width:32px;height:36px;font-size:21px}
+}
+@media(max-width:380px){
+  .pl-msg-head{padding-inline:9px;gap:7px}
+  .pl-msg-brand{font-size:13px;letter-spacing:.08em}
+  .pl-msg-search-field{gap:5px;padding-inline:7px}
+  .pl-msg-search-field input{font-size:11px}
+  .pl-msg-head-menu{width:29px}
+  .pl-msg-menu-toggle{width:29px}
+}
