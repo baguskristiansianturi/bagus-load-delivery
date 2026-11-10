@@ -1100,10 +1100,10 @@ function bindPostActions(){
    if(!area)return;
    area.querySelector('.ua-double-tap-heart')?.remove();
    const overlay=document.createElement('span');overlay.className='ua-double-tap-heart '+(liked?'is-liking':'is-removing');
-   const core=document.createElement('span');core.className='ua-heart-core';core.innerHTML=socialIcon(liked?'heart':'heart-crack',{size:108});overlay.appendChild(core);
-   const vectors=[[0,-76],[62,-42],[76,24],[30,68],[-34,65],[-76,20],[-62,-42]];
-   vectors.forEach(([dx,dy],index)=>{const particle=document.createElement('i');particle.className='ua-heart-particle';particle.style.setProperty('--dx',dx+'px');particle.style.setProperty('--dy',dy+'px');particle.style.setProperty('--delay',(index*18)+'ms');particle.innerHTML=socialIcon(liked?'heart':'heart-crack',{size:18});overlay.appendChild(particle);});
-   area.appendChild(overlay);setTimeout(()=>overlay.remove(),850);
+   const core=document.createElement('span');core.className='ua-heart-core';core.innerHTML=socialIcon(liked?'heart':'heart-crack',{size:144});overlay.appendChild(core);
+   const vectors=[[0,-94],[76,-58],[96,20],[42,88],[-46,84],[-96,18],[-76,-58]];
+   vectors.forEach(([dx,dy],index)=>{const particle=document.createElement('i');particle.className='ua-heart-particle';particle.style.setProperty('--dx',dx+'px');particle.style.setProperty('--dy',dy+'px');particle.style.setProperty('--delay',(index*32)+'ms');particle.innerHTML=socialIcon(liked?'heart':'heart-crack',{size:18});overlay.appendChild(particle);});
+   area.appendChild(overlay);setTimeout(()=>overlay.remove(),1550);
   };
   const toggleLike=async(animationArea=null)=>{
    if(!user){notify('Masuk untuk menyukai postingan.','error');return;}
