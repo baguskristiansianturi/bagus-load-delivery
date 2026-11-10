@@ -1,0 +1,5 @@
+/* Feature-owned styles for post action controls and accessible touch feedback. */
+.ua-social-app .pl-post-actions{box-sizing:border-box}
+.ua-social-app .pl-post-actions button:focus-visible{outline:2px solid #315d7b;outline-offset:3px;border-radius:5px}
+.ua-social-app .pl-post-actions button:active{transform:scale(.96)}
+.ua-social-app .pl-post-actions .ua-login-action{font-size:11px}

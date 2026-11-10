@@ -77,22 +77,25 @@ assert.match(accountSettings, /visibility/, 'Account privacy setting must persis
 const navigation = read('src/components/social/navigation.js');
 assert.match(navigation, /#\/messages/, 'Social navigation must expose inbox access.');
 assert.match(navigation, /#\/account\/activity/, 'Social navigation must expose activity access.');
-assert.match(navigation, /pl-mobile-dm/, 'Mobile header must retain a direct-message shortcut.');
-assert.match(navigation, /socialIcon\('message'/, 'Mobile direct-message shortcut must use the shared SVG icon.');
-assert.match(navigation, /socialIcon\('bell'/, 'Mobile notification shortcut must use the shared SVG bell.');
-assert.match(navigation, /label: 'Inbox'/, 'Signed-in bottom navigation must retain the inbox route.');
-assert.match(navigation, /label: 'Aktivitas'/, 'Signed-in bottom navigation must retain the activity route.');
+assert.match(navigation, /label: 'Inbox'/, 'Mobile bottom navigation must retain the inbox route.');
+assert.match(navigation, /label: 'Notifikasi'/, 'Mobile bottom navigation must retain the notification route.');
+assert.match(navigation, /pl-create-orb/, 'The center Create action must have a dedicated visual treatment.');
+assert.doesNotMatch(navigation, /label: 'Reels'/, 'Reels must be created from the central Create action, not consume a navigation slot.');
+assert.doesNotMatch(navigation, /<small>Profil<\/small>/, 'Profile must be opened from the header avatar, not a bottom tab.');
 
 const signedInHeader = renderSocialHeader({ active: 'explore', user: { id: 'test-user' }, profile: {}, userAvatar: '<span>U</span>', notificationCount: 3 });
 const signedInMobileNav = renderSocialMobileNav({ active: 'explore', user: { id: 'test-user' }, profile: {}, userAvatar: '<span>U</span>', notificationCount: 3 });
 const publicMobileNav = renderSocialMobileNav({ active: 'home', publicHome: true });
-assert.match(signedInHeader, /aria-label='Pesan langsung'/, 'Rendered signed-in mobile header must expose direct messages.');
-assert.match(signedInHeader, /aria-label='Notifikasi'/, 'Rendered signed-in mobile header must expose notifications.');
+assert.match(signedInHeader, /href="#\/account\/profile"/, 'Header avatar must open the signed-in profile.');
 assert.match(signedInMobileNav, /href="#\/messages"/, 'Rendered signed-in mobile navigation must expose Inbox.');
-assert.match(signedInMobileNav, /href="#\/account\/activity"/, 'Rendered signed-in mobile navigation must expose Activity.');
-assert.match(signedInMobileNav, /pl-mobile-activity/, 'Rendered Activity item must expose its badge anchor.');
-assert.match(signedInMobileNav, /99\+|>3</, 'Rendered Activity item must display its unread badge.');
-assert.doesNotMatch(publicMobileNav, /#\/messages|#\/account\/activity/, 'Public navigation must not expose private Inbox or Activity.');
+assert.match(signedInMobileNav, /href="#\/account\/activity"/, 'Rendered signed-in mobile navigation must expose notifications.');
+assert.match(signedInMobileNav, /pl-mobile-activity/, 'Rendered notification item must expose its badge anchor.');
+assert.match(signedInMobileNav, /99\+|>3</, 'Rendered notification item must display its unread badge.');
+assert.equal((signedInMobileNav.match(/<a class=/g) || []).length, 5, 'Signed-in mobile navigation must contain exactly five destinations.');
+assert.match(signedInMobileNav, /pl-create-orb/, 'Rendered central Create action must use the dedicated center control.');
+assert.doesNotMatch(signedInMobileNav, /<small>Profil<\/small>/, 'Profile must not consume a bottom-navigation slot.');
+assert.doesNotMatch(publicMobileNav, /href="#\/messages"|href="#\/account\/activity"/, 'Public navigation must route private destinations through login.');
+assert.equal((publicMobileNav.match(/<a class=/g) || []).length, 5, 'Public mobile navigation must keep the same five-slot structure.');
 const account = read('src/pages/account/index.js');
 assert.match(account, /unreadNotificationCount/, 'Social navigation must receive unread notification count.');
 assert.match(account, /refreshUnreadBadge/, 'Realtime social events must refresh the unread badge.');
@@ -141,10 +144,7 @@ assert.match(sharedDesign, /--pl-color-line/, 'Social UI must use shared spacing
 
 const socialHome = read('src/pages/account/index.js');
 const sharedHeader = read('src/components/social/navigation.js');
-assert.ok(sharedHeader.includes("aria-label='Notifikasi'") && sharedHeader.includes("socialIcon('bell', { size: 21 })"), 'Shared social header must render the notification bell.');
-assert.ok(sharedHeader.includes("aria-label='Pesan langsung'") && sharedHeader.includes("socialIcon('message', { size: 21 })"), 'Shared mobile header must render the direct-message icon.');
-assert.ok(sharedHeader.includes("aria-label='Kontak dan koneksi'") && sharedHeader.includes("socialIcon('users', { size: 21 })"), 'Shared social header must render Contacts.');
-assert.ok(sharedHeader.includes("aria-label='Wishlist dan tersimpan'") && sharedHeader.includes("socialIcon('bookmark', { size: 21 })"), 'Saved items shortcut must be available privately.');
+assert.ok(sharedHeader.includes('user ? \'#/account/profile\' : \'#/account/login\''), 'Header avatar must open the profile.');
 assert.ok(sharedHeader.includes('pl-social-menu-trigger') && sharedHeader.includes('Pusat Pengaturan') && sharedHeader.includes('#/account/settings'), 'Profile menu must be the single entry point for account settings.');
 assert.ok(sharedHeader.includes('showEditProfile') && socialHome.includes("section==='profile'?(parameter==='edit'?'profile-edit':'profile')"), 'Edit profile must only appear in the three-dot menu on the profile view, not throughout settings pages.');
 assert.ok(socialHome.includes('function createPage()') && socialHome.includes('function storyComposePage()'), 'Bottom create flow must expose Story/Post/Reel/Live entry selection.');
@@ -238,3 +238,10 @@ assert.ok(read('src/features/reels/reel-card.js').includes('ua-reel-stage'),'Ree
 assert.ok(read('src/features/reels/reels.css').includes('aspect-ratio:9/16'),'Reel layout must preserve vertical framing.');
 assert.ok(read('src/features/media/storage-upload.js').includes('storage/v1/upload/resumable'),'Media storage upload must be isolated.');
 console.log('Production surface verification passed: Android media detection, mobile Reel module, Marketplace, Trip, DM, account and notification contracts.');
+
+const postActions = read('src/features/posts/post-actions.js');
+assert.ok(postActions.includes('data-action="like"') && postActions.includes('data-action="comments"') && postActions.includes('data-action="share"') && postActions.includes('data-action="save"'), 'Dedicated post actions must preserve all interaction hooks.');
+assert.ok(postActions.includes('pl-post-icon') && !postActions.includes('pluits-like'), 'Post actions must use their own restrained SVG icon set.');
+assert.ok(read('src/features/posts/post-actions.css').includes('.pl-post-actions'), 'Post action controls must own their feature-scoped styles.');
+assert.ok(read('src/pages/account/index.js').includes('renderPostActions({user,liked:p.liked,likes:p.likes,comments:p.comments,saved:p.saved})'), 'Post cards must delegate action rendering to the post feature module.');
+assert.ok(read('src/pages/account/user-account.css').includes('.ua-social-app .ua-post-caption'), 'Post caption spacing must be explicitly compacted.');

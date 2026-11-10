@@ -1,5 +1,7 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import {socialIcon} from '../../components/common/social-icons.js';
+import {renderPostActions} from '../../features/posts/post-actions.js';
+import '../../features/posts/post-actions.css';
 import {renderSocialHeader,renderSocialMobileNav} from '../../components/social/navigation.js';
 import {updateSEO} from '../seo.js';
 import './user-account.css';
@@ -393,7 +395,7 @@ function postCard(p){
  return `<article class="ua-post-card" data-post-id="${p.id}" data-owner-id="${p.user_id}">
  <div class="ua-post-head"><a class="ua-post-avatar-link" href="${profileHref}">${avatar(p.avatarUrl,p.owner.display_name)}</a><div><a class="ua-author-link" href="${profileHref}"><strong>${esc(p.owner.display_name)}</strong></a><small>@${esc(p.owner.username)} ${p.owner.public_city&&p.owner.public_province?'· '+esc(p.owner.public_city):''}</small></div><div class="ua-post-menu-wrap"><button class="ua-post-more" type="button" aria-label="Menu postingan" aria-expanded="false" data-post-menu>${socialIcon("more",{size:21})}</button><div class="ua-post-menu" hidden>${p.user_id===user?.id?`<button type="button" data-action="edit">${socialIcon("edit",{size:16})}<span>Edit postingan</span></button><button type="button" data-action="delete-post"><span class="ua-menu-delete-icon">×</span><span>Hapus postingan</span></button>`:`<button type="button" data-action="share">${socialIcon("send",{size:16})}<span>Bagikan postingan</span></button>`}</div></div></div>
  ${mediaMarkup}
- ${user?`<div class="ua-post-actions"><button data-action="like" class="${p.liked?'is-liked':''}" aria-label="Suka">${socialIcon("pluits-like",{size:23})}<b>${p.likes}</b></button><button data-action="comments" aria-label="Komentar">${socialIcon("pluits-comment",{size:22})}<b>${p.comments}</b></button><button data-action="share" aria-label="Bagikan">${socialIcon("pluits-share",{size:21})}</button><button data-action="save" class="${p.saved?'is-saved':''}" aria-label="Simpan">${socialIcon("pluits-mark",{size:21})}</button></div>`:`<div class="ua-post-actions"><a class="ua-login-action" href="#/account/login">Masuk untuk berinteraksi</a></div>`}
+ ${renderPostActions({user,liked:p.liked,likes:p.likes,comments:p.comments,saved:p.saved})}
  <div class="ua-post-caption">${p.likes?'<strong>'+p.likes+' suka</strong>':''}<p><a href="${profileHref}"><b>${esc(p.owner.username)}</b></a> ${esc(p.caption||'')}</p>${p.comments?'<button data-action="comments" class="ua-view-comments">Lihat semua '+p.comments+' komentar</button>':''}</div>
  ${user?(p.user_id===user.id?'<section class="ua-post-editor" hidden></section>':'')+'<div class="ua-comments" hidden></div>':''}
  </article>`;

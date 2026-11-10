@@ -70,3 +70,15 @@ The production verifier must check both source contracts and rendered shared-nav
 - route and CSS breakpoint/safe-area contracts.
 
 A page's successful build alone does not prove the navigation is visible or usable. Any change to shared navigation requires all sibling-route checks above.
+
+ 
+## Mobile primary navigation (fixed contract)
+
+Mobile has exactly five bottom destinations in this order: **Beranda · Jelajah · Buat · Notifikasi · Inbox**. The center Create control is visually emphasized and opens the existing Story/Post/Reel creation choices. Profile is opened from the avatar in the top-right header; it is not a sixth bottom tab. Contacts, saved items, and profile settings remain contextual/profile destinations, not primary bottom navigation. For signed-out users, protected destinations route to login while preserving the same five-slot layout.
+
+## Post action feature ownership
+
+- `src/features/posts/post-actions.js`: post like/comment/share/save iconography and action markup. Preserve `data-action` hooks used by existing behavior.
+- `src/features/posts/post-actions.css`: action-control visual styling, focus and touch feedback.
+- `src/pages/account/index.js`: supplies current post/user state; it must not own the post action SVG paths.
+- `src/pages/account/user-account.css`: feed-level spacing only. Username, caption and comment links stay visually connected to the post, with no excessive blank gap before the next post.

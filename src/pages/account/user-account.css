@@ -1784,3 +1784,11 @@
 @keyframes pluits-heart-crack{0%{opacity:0;transform:scale(.62) rotate(-5deg)}22%{opacity:1;transform:scale(1.04) rotate(3deg)}46%{opacity:1;transform:scale(1) rotate(-2deg)}100%{opacity:0;transform:scale(.86) rotate(0)}}
 @keyframes pluits-heart-fragment{0%{opacity:0;transform:translate(-50%,-50%) scale(.65)}24%{opacity:.92}100%{opacity:0;transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(.48) rotate(-16deg)}}
 @media(prefers-reduced-motion:reduce){.ua-double-tap-heart,.ua-heart-core,.ua-heart-particle{animation-duration:.12s!important}}
+
+/* Compact post text and remove decorative iconography from the action row. */
+.ua-social-app .ua-post-caption{margin:0!important;padding:0 13px 7px!important;font-size:12px;line-height:1.42}
+.ua-social-app .ua-post-caption>strong{display:block;margin:0 0 3px!important;font-size:11px;line-height:1.25;font-weight:650}
+.ua-social-app .ua-post-caption p{margin:0!important;line-height:1.42}
+.ua-social-app .ua-post-caption .ua-view-comments{padding:3px 0 0;font-size:10px;line-height:1.25}
+.ua-social-app .ua-post-card{padding-bottom:0!important;margin-bottom:0!important}
+@media(max-width:760px){.ua-social-app .ua-post-caption{padding:0 13px 6px!important;font-size:11px}.ua-social-app .ua-post-caption>strong{margin-bottom:2px!important}}
