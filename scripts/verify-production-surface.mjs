@@ -239,9 +239,9 @@ assert.ok(read('src/features/reels/reels.css').includes('aspect-ratio:9/16'),'Re
 assert.ok(read('src/features/media/storage-upload.js').includes('storage/v1/upload/resumable'),'Media storage upload must be isolated.');
 console.log('Production surface verification passed: Android media detection, mobile Reel module, Marketplace, Trip, DM, account and notification contracts.');
 
-const postActions = read('src/features/posts/post-actions.js');
-assert.ok(postActions.includes('data-action="like"') && postActions.includes('data-action="comments"') && postActions.includes('data-action="share"') && postActions.includes('data-action="save"'), 'Dedicated post actions must preserve all interaction hooks.');
-assert.ok(postActions.includes('pl-post-icon') && !postActions.includes('pluits-like'), 'Post actions must use their own restrained SVG icon set.');
+const postActionFeature = read('src/features/posts/post-actions.js');
+assert.ok(postActionFeature.includes('data-action="like"') && postActionFeature.includes('data-action="comments"') && postActionFeature.includes('data-action="share"') && postActionFeature.includes('data-action="save"'), 'Dedicated post actions must preserve all interaction hooks.');
+assert.ok(postActionFeature.includes('pl-post-icon') && !postActionFeature.includes('pluits-like'), 'Post actions must use their own restrained SVG icon set.');
 assert.ok(read('src/features/posts/post-actions.css').includes('.pl-post-actions'), 'Post action controls must own their feature-scoped styles.');
 assert.ok(read('src/pages/account/index.js').includes('renderPostActions({user,liked:p.liked,likes:p.likes,comments:p.comments,saved:p.saved})'), 'Post cards must delegate action rendering to the post feature module.');
 assert.ok(read('src/pages/account/user-account.css').includes('.ua-social-app .ua-post-caption'), 'Post caption spacing must be explicitly compacted.');
