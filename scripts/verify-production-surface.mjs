@@ -93,8 +93,8 @@ assert.match(accountSettings, /preferred_language/, 'Account language preference
 assert.match(accountSettings, /visibility/, 'Account privacy setting must persist.');
 
 const navigation = read('src/components/social/navigation.js');
-assert.match(navigation, /#\/messages/, 'Social navigation must expose inbox access.');
-assert.match(navigation, /#\/account\/activity/, 'Social navigation must expose activity access.');
+assert.match(navigation, /ROUTES\.inbox|ROUTES\.activity/, 'Social navigation must consume the canonical route registry.');
+assert.match(navigation, /getRoute\('inbox'/, 'Inbox destinations must resolve through the canonical route registry.');
 assert.match(navigation, /label: 'Inbox'/, 'Mobile bottom navigation must retain the inbox route outside Inbox.');
 assert.match(navigation, /label: 'Notifikasi'/, 'Inbox context must replace its own bottom slot with notifications.');
 assert.match(navigation, /label: 'Profil'/, 'Profile must remain the fifth mobile destination.');
@@ -105,7 +105,6 @@ const signedInHeader = renderSocialHeader({ active: 'explore', user: { id: 'test
 const signedInMobileNav = renderSocialMobileNav({ active: 'explore', user: { id: 'test-user' }, profile: {}, userAvatar: '<span>U</span>', notificationCount: 3 });
 const publicMobileNav = renderSocialMobileNav({ active: 'home', publicHome: true });
 assert.match(signedInHeader, /href="#\/account\/profile"/, 'Header avatar must open the signed-in profile.');
-assert.match(signedInMobileNav, /href="#\/messages"/, 'Rendered signed-in mobile navigation must expose Inbox.');
 assert.match(signedInMobileNav, /href="#\/messages"/, 'Rendered signed-in mobile navigation must expose Inbox.');
 assert.match(signedInMobileNav, /<small>Profil<\/small>/, 'Profile must be the fifth bottom-navigation destination.');
 assert.equal((signedInMobileNav.match(/<a class=/g) || []).length, 5, 'Signed-in mobile navigation must contain exactly five destinations.');
