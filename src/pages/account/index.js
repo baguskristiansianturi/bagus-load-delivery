@@ -3,6 +3,7 @@ import {socialIcon} from '../../components/common/social-icons.js';
 import {renderSocialHeader,renderSocialMobileNav} from '../../components/social/navigation.js';
 import {updateSEO} from '../seo.js';
 import './user-account.css';
+import '../../features/reels/reels.css';
 import {accountSecurityPage,bindAccountSecurity} from './security-settings.js';
 import '../../styles/social-components.css';
 import '../../styles/social-navigation.css';
@@ -368,7 +369,7 @@ async function feedPage(){
   ?"<a href='#/search'>Jelajahi akun</a>"
   :"<a href='#/account/compose'>Bagikan foto atau video</a>";
  const feedNote=usingOwnFallback?"<div class='ua-feed-fallback-note'>Belum ada postingan dari akun yang diikuti · Menampilkan postingan Anda untuk pengujian</div>":"";
- return "<div class='ua-social-home'><a class='ua-feed-search ua-feed-search-row' href='#/search' aria-label='Cari di Pluits'>"+socialIcon('search',{size:18})+"<span>Cari teman, tempat, dan postingan</span></a>"+storySection+feedNote+"<section class='ua-feed'>"+(sorted.length?sorted.map(postCard).join(''):"<div class='ua-feed-empty'><strong>"+empty+"</strong>"+emptyAction+"</div>")+"</section></div>";
+ return "<div class='ua-social-home'><a class='ua-feed-search ua-feed-search-row' href='#/search' aria-label='Cari di Pluits'>"+socialIcon('search',{size:18})+"<span>Cari teman, tempat, dan postingan</span></a>"+storySection+feedNote+"<section class='ua-feed'>"+(sorted.length?sorted.map(post=>renderReelCard(post,{user,avatar,esc,socialIcon})).join(''):"<div class='ua-feed-empty'><strong>"+empty+"</strong>"+emptyAction+"</div>")+"</section></div>";
 }
 
 async function reelsPage(){
@@ -404,7 +405,7 @@ async function composePage(draftId='',kind='post'){
  const defaultAudience=accountContext.active==='professional'?(contentPrefs?.professional_default_visibility==='unlisted'?'private':'public'):accountContext.active==='business'?(contentPrefs?.business_default_visibility==='unlisted'?'private':'public'):(contentPrefs?.personal_default_visibility||'public');
  return `<div class="ua-page-heading"><div><span class="ua-eyebrow">BUAT KONTEN</span><h1>${currentComposeDraft?'Lanjutkan draf':kind==='reel'?'Reel baru':'Post baru'}</h1></div></div>
  <section class="ua-panel ua-compose-panel"><form id="ua-post-form" class="ua-compose-form ua-clean-composer" data-content-kind="${kind}" data-default-visibility="${currentComposeDraft?.visibility||defaultAudience}">
-  <div class="ua-media-picker-row"><label class="ua-media-picker" for="ua-post-file"><span>＋</span><strong>${kind==='reel'?'Pilih video':'Tambah foto atau video'}</strong><small>${kind==='reel'?'Pilih satu video dari galeri':'Pilih beberapa media sekaligus atau tambahkan lagi'}</small><input id="ua-post-file" type="file" multiple accept="image/*,video/*"></label><span class="ua-media-count" id="ua-media-count">Belum ada media</span></div>
+  <div class="ua-media-picker-row"><label class="ua-media-picker" for="ua-post-file"><span>＋</span><strong>${kind==='reel'?'Pilih video':'Tambah foto atau video'}</strong><small>${kind==='reel'?'Video MP4, MOV, WebM atau 3GP · Maksimal 60 detik dan 50 MB':'Pilih beberapa foto atau video · Maksimal 15 media, 50 MB per file'}</small><input id="ua-post-file" type="file" ${kind==='reel'?'accept="video/*"':'multiple accept="image/*,video/*"'} aria-label="${kind==='reel'?'Pilih video Reel':'Pilih foto atau video'}"></label><span class="ua-media-count" id="ua-media-count">Belum ada media</span></div>
   <div id="ua-media-preview" class="ua-media-preview ua-clean-preview"></div>
   <label class="ua-compose-caption-label"><textarea name="caption" rows="3" maxlength="2200" placeholder="Tulis deskripsi..." aria-label="Tulis deskripsi">${esc(currentComposeDraft?.caption||'')}</textarea></label>
   <details class="ua-post-options"><summary>Pengaturan postingan <span>＋</span></summary><div class="ua-post-option-fields">
@@ -1016,7 +1017,7 @@ function bindExploreFilters(){
   exploreFilter=next;await mountAccount('explore');
  }));
 }
-function bindReelsPlayback(){document.querySelectorAll('[data-reels-filter]').forEach(btn=>btn.addEventListener('click',()=>{reelsFilter=btn.dataset.reelsFilter;mountAccount('reels');}));const feed=document.querySelector('.ua-reels-feed');if(!feed||!('IntersectionObserver' in window))return;const videos=[...feed.querySelectorAll('video')];let active=null;const io=new IntersectionObserver(entries=>entries.forEach(e=>{const v=e.target;if(e.isIntersecting&&e.intersectionRatio>=.7){if(active&&active!==v)active.pause();active=v;v.muted=true;v.loop=true;v.play().catch(()=>{v.controls=true;});}else if(e.intersectionRatio<.25){v.pause();if(active===v)active=null;}}),{threshold:[0,.25,.7,1]});videos.forEach(v=>{v.playsInline=true;v.preload='metadata';io.observe(v);});}
+function bindReelsPlayback(){document.querySelectorAll('[data-reels-filter]').forEach(btn=>btn.addEventListener('click',()=>{reelsFilter=btn.dataset.reelsFilter;mountAccount('reels');}));const feed=document.querySelector('.ua-reels-feed');if(!feed)return;feed.querySelectorAll('[data-reel-toggle]').forEach(b=>b.addEventListener('click',()=>{const v=b.closest('.ua-reel-stage')?.querySelector('[data-reel-video]');if(v){if(v.paused)v.play().catch(()=>{});else v.pause();}}));feed.querySelectorAll('[data-reel-video]').forEach(v=>{v.addEventListener('play',()=>{const b=v.closest('.ua-reel-stage')?.querySelector('[data-reel-toggle]');if(b){b.textContent='Ⅱ';b.setAttribute('aria-label','Jeda video');}});v.addEventListener('pause',()=>{const b=v.closest('.ua-reel-stage')?.querySelector('[data-reel-toggle]');if(b){b.textContent='▶';b.setAttribute('aria-label','Putar video');}});});if(!('IntersectionObserver'in window))return;const videos=[...feed.querySelectorAll('[data-reel-video]')];let active=null;const io=new IntersectionObserver(es=>es.forEach(e=>{const v=e.target;if(e.isIntersecting&&e.intersectionRatio>=.72){if(active&&active!==v)active.pause();active=v;v.muted=true;v.loop=true;v.playsInline=true;v.play().catch(()=>{});}else if(e.intersectionRatio<.25){v.pause();if(active===v)active=null;}}),{threshold:[0,.25,.72,1]});videos.forEach(v=>{v.playsInline=true;v.preload='metadata';io.observe(v);});}
 function bindPostActions(){
  document.querySelectorAll('.ua-post-card').forEach(card=>{
   const id=card.dataset.postId;

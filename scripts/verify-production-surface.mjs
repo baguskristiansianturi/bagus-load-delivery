@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { renderSocialHeader, renderSocialMobileNav } from '../src/components/social/navigation.js';
+import { getMediaMime, validateMediaFile } from '../src/features/media/media-types.js';
 
 const read = (path) => readFileSync(path, 'utf8');
 const retiredFiles = [
@@ -30,6 +31,10 @@ for (const path of retiredFiles) {
   assert.equal(existsSync(path), false, `Retired demo module returned: ${path}`);
 }
 
+const androidVideoCases=[[{name:'VID_20261110.mp4',type:'application/octet-stream',size:1024},'video/mp4'],[{name:'VID_20261110.mp4',type:'image/jpeg',size:1024},'video/mp4'],[{name:'clip.m4v',type:'video/x-m4v',size:1024},'video/mp4'],[{name:'clip.mov',type:'video/quicktime',size:1024},'video/quicktime'],[{name:'clip.3gp',type:'',size:1024},'video/3gpp'],[{name:'clip.webm',type:'application/octet-stream',size:1024},'video/webm']];
+for(const [file,expected] of androidVideoCases){assert.equal(getMediaMime(file),expected,'Android video MIME fallback must use filename extensions.');assert.equal(validateMediaFile(file).valid,true,'Supported mobile video must pass validation.');}
+assert.equal(getMediaMime({name:'unknown.bin',type:'application/octet-stream',size:1}),'','Unknown binary files must remain rejected.');
+assert.equal(validateMediaFile({name:'large.mp4',type:'video/mp4',size:51*1024*1024}).reason,'too-large','The Free storage limit must be enforced.');
 const router = read('src/app/router.js');
 for (const retiredImport of ['page-factory.js', '../app/services.js', '../app/store.js', '../data/catalog.js', '../data/marketplace.js', '../data/master-data.js', '../pages/auth/index.js']) {
   assert.equal(router.includes(retiredImport), false, `Router references retired module: ${retiredImport}`);
@@ -227,4 +232,9 @@ assert.match(postLayoutCss, /pluits-heart-core 1\.18s/, 'Main heart animation mu
 assert.ok(read('src/main.js').includes("history.replaceState(null, '', location.pathname + location.search + '#/')"), 'Legacy home aliases must normalize to the canonical public home URL.');
 assert.ok(read('src/pages/home/index.js').includes("'#/account/explore'"), 'Authenticated users must land on the canonical Explore feed URL.');
 
-console.log('Production surface verification passed: legacy modules absent; Marketplace, Trip, social DM, account security and notification contracts present.');
+assert.ok(read('src/pages/account/index.js').includes('renderReelCard(post,{user,avatar,esc,socialIcon})'),'Reels must use its dedicated feature renderer.');
+assert.ok(read('src/pages/account/index.js').includes("kind==='reel'?'accept=\"video/*\"'"),'Reel picker must request videos only.');
+assert.ok(read('src/features/reels/reel-card.js').includes('ua-reel-stage'),'Reel card module must own its stage.');
+assert.ok(read('src/features/reels/reels.css').includes('aspect-ratio:9/16'),'Reel layout must preserve vertical framing.');
+assert.ok(read('src/features/media/storage-upload.js').includes('storage/v1/upload/resumable'),'Media storage upload must be isolated.');
+console.log('Production surface verification passed: Android media detection, mobile Reel module, Marketplace, Trip, DM, account and notification contracts.');
