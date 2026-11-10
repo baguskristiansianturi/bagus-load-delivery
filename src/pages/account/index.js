@@ -1063,16 +1063,16 @@ function bindPostActions(){
    const core=document.createElement('span');core.className='ua-heart-core';core.innerHTML=socialIcon(liked?'heart':'heart-crack',{size:108});overlay.appendChild(core);
    const vectors=[[0,-76],[62,-42],[76,24],[30,68],[-34,65],[-76,20],[-62,-42]];
    vectors.forEach(([dx,dy],index)=>{const particle=document.createElement('i');particle.className='ua-heart-particle';particle.style.setProperty('--dx',dx+'px');particle.style.setProperty('--dy',dy+'px');particle.style.setProperty('--delay',(index*18)+'ms');particle.innerHTML=socialIcon(liked?'heart':'heart-crack',{size:18});overlay.appendChild(particle);});
-   area.appendChild(overlay);const cleanup=()=>overlay.remove();overlay.addEventListener('animationend',cleanup,{once:true});setTimeout(cleanup,850);
+   area.appendChild(overlay);setTimeout(()=>overlay.remove(),850);
   };
-  const toggleLike=async()=>{
+  const toggleLike=async(animationArea=null)=>{
    if(!user){notify('Masuk untuk menyukai postingan.','error');return;}
    if(!likeButton||likeButton.dataset.busy==='1')return;
    const wasLiked=likeButton.classList.contains('is-liked');
    const liked=!wasLiked;
    const oldCount=Number(likeButton.querySelector('b')?.textContent||0),nextCount=Math.max(0,oldCount+(liked?1:-1));
    likeButton.dataset.busy='1';
-   paintLikeState(liked,nextCount);animateLikeTransition(card.querySelector('.ua-media,.ua-media-gallery'),liked);
+   paintLikeState(liked,nextCount);if(animationArea)animateLikeTransition(animationArea,liked);
    try{
     const result=wasLiked?await supabase.from('post_likes').delete().eq('post_id',id).eq('user_id',user.id):await supabase.from('post_likes').insert({post_id:id,user_id:user.id});
     if(result.error)throw result.error;
@@ -1084,7 +1084,7 @@ function bindPostActions(){
    let lastTap=0;img.style.touchAction='manipulation';
    img.addEventListener('pointerup',event=>{
     if(event.pointerType==='mouse'&&event.button!==0)return;
-    const now=Date.now();if(lastTap&&now-lastTap<330){lastTap=0;event.preventDefault();toggleLike();}else lastTap=now;
+    const now=Date.now();if(lastTap&&now-lastTap<330){lastTap=0;event.preventDefault();toggleLike(img.closest('.ua-media,.ua-gallery-item'));}else lastTap=now;
    });
   });
   card.querySelector('[data-action="save"]')?.addEventListener('click',async()=>{
