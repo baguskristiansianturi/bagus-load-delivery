@@ -41,3 +41,17 @@ The active Business Model Master defines Pluits as a social-first ecosystem conn
 - Feed hydration previously generated signed URLs per media/avatar object. It now uses bounded batch requests, reducing Storage request fan-out as the feed grows.
 - Engagement rows for visible posts are still fetched to calculate counts. An aggregate RPC remains a measured follow-up, not an untested privileged endpoint.
 - No browser/device/Lighthouse timing claims are made. Performance measurement still requires realistic runtime and Android UAT.
+
+## Additional backend security fix — applied and verified
+- Live migration `20261110123935_revoke_anon_professional_profile_rpcs` was applied to Supabase project `ytndswhqxayqpftszwfh`.
+- Revoked `EXECUTE` from `PUBLIC` and `anon` for `public.review_professional_profile(uuid,text,text)` and `public.submit_professional_profile(uuid)`; explicitly retained `EXECUTE` for `authenticated`.
+- Before migration, anonymous execution was enabled for both functions. After migration, catalog verification returned `anon=false` and `authenticated=true` for both functions.
+- Security Advisor no longer reports anon-callable SECURITY DEFINER RPCs. It still reports 22 authenticated-callable SECURITY DEFINER functions and leaked-password protection disabled; these require function-by-function review and Auth configuration review, not blanket revocation.
+- Health Advisor remains at zero lints.
+- Rollback is intentionally not automatic. If a legitimate anonymous use case is discovered, review that use case first and grant only the required function to the narrowest role.
+
+## Release evidence
+- Frontend commit: `1838f0b2ad8086c4ceeddb3bd1c0888abf9bdccb`.
+- GitHub Actions run: `42817405183` — build, `npm test` (7 passed, 0 failed), production build, artifact upload, and GitHub Pages deployment all succeeded.
+- Live URL: `https://baguskristiansianturi.github.io/pluits/?v=1838f0b`.
+- Android gallery upload/playback, two-account end-to-end UAT, and visual UI review remain NOT TESTED / founder-owned.

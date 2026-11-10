@@ -1071,3 +1071,29 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - Backend boundary: Utama reads existing real conversations. Permintaan and Diblokir are presentation placeholders only; request approval and block-list lifecycle are not yet enabled by this UI change. No fake conversation, request, or blocked-account records are created.
 - Acceptance: production build and verifier must pass; founder must inspect on Android at normal and narrow widths. Two-account realtime messaging and category backend behavior remain separate UAT items.
 - Status: DEPLOYED on GitHub Pages. Commit e05b1503b8b4dae799c748ed2b28da2595df594a; workflow run 42808257040 completed successfully. Android visual UAT and real two-account category tests remain NOT TESTED.
+
+---
+
+## Delivery update — 10 November 2026 (engineering increment)
+
+**Frontend commit:** `1838f0b2ad8086c4ceeddb3bd1c0888abf9bdccb`  
+**GitHub Actions:** [Run 42817405183](https://github.com/baguskristiansianturi/pluits/actions/runs/42817405183) — SUCCESS  
+**Pages:** `https://baguskristiansianturi.github.io/pluits/?v=1838f0b`
+
+### Implemented and deployed
+- Feed media/avatar signed URLs now use deduplicated Storage batches (maximum 100 objects per request), with per-object fallback only if batch signing fails.
+- Post hydration groups media, tags, likes and comments by post ID; Supabase query errors are surfaced instead of silently returning incomplete counts.
+- Added automated Node tests for Android 3G2/3GP MIME recognition, common video types, file size limits, Storage URL batching, deduplication, bounded batch size and fallback.
+- Automated tests: **7 passed, 0 failed**. Production Vite build and Pages deployment succeeded.
+
+### Backend migration applied and verified
+- Migration `20261110123935_revoke_anon_professional_profile_rpcs` removes anonymous execution from professional profile submission/review RPCs and retains authenticated execution.
+- Verified with `has_function_privilege`: anon cannot execute either RPC; authenticated can execute both.
+- Security Advisor no longer reports anon-callable SECURITY DEFINER RPCs. 22 authenticated-callable SECURITY DEFINER findings remain for individual review; leaked-password protection remains disabled.
+- Health Advisor: zero lints.
+
+### Not yet accepted / not tested
+- Android device upload/playback and founder visual UAT.
+- Two-account end-to-end social isolation and full SOC-01–SOC-04/GDT-01 negative RLS matrix.
+- Performance timings on physical Android devices.
+- No claim of 100% bug-free operation or founder acceptance is made from build/test/deploy evidence alone.
