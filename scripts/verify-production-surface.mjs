@@ -273,9 +273,9 @@ assert.ok(read('src/pages/account/index.js').includes('renderPostActions({user,l
 assert.ok(read('src/pages/account/user-account.css').includes('.ua-social-app .ua-post-caption'), 'Post caption spacing must be explicitly compacted.');
 
 import { ROUTES, NAVIGATION_CONTEXTS, getRoute } from '../src/components/social/navigation-routes.js';
-assert.equal(ROUTES.inbox, '#/messages', 'Inbox must have one canonical route.');
+assert.equal(ROUTES.inbox, '#/inbox', 'Inbox must have one canonical route.');
 assert.equal(ROUTES.profile, '#/account/profile', 'Profile must have one canonical route.');
-assert.equal(getRoute('inbox', true), '#/messages', 'Authenticated Inbox must never route to Profile.');
+assert.equal(getRoute('inbox', true), '#/inbox', 'Authenticated Inbox must never route to Profile.');
 assert.equal(getRoute('inbox', false), ROUTES.login, 'Anonymous Inbox must route to login.');
 assert.deepEqual(NAVIGATION_CONTEXTS.social, ['home','discover','create','inbox','profile']);
 assert.deepEqual(NAVIGATION_CONTEXTS.inbox, ['home','discover','create','activity','profile']);
