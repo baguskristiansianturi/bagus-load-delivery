@@ -8,6 +8,9 @@ let currentProfile = null;
 let currentConversation = null;
 let conversationCache = [];
 let realtimeChannel = null;
+let presenceChannel = null;
+let contactsCache = [];
+let onlineUserIds = new Set();
 let sendingQueue = false;
 let networkListenersBound = false;
 
@@ -119,7 +122,7 @@ export function messagesPage() {
     </header>
     <section class="pl-msg-content">
       <section class="pl-msg-people" aria-label="Kontak Anda">
-        <div class="pl-msg-people-heading"><div><strong>Kontak</strong><small>Mulai percakapan dengan orang yang terhubung</small></div><a href="#/account/followers">Lihat semua</a></div>
+        <div class="pl-msg-people-heading"><div><strong>Sedang online</strong><small>Profil Anda dan teman yang sedang aktif</small></div><a href="#/account/followers">Lihat semua</a></div>
         <div id="pl-msg-people-strip" class="pl-msg-people-strip">
           <span class="pl-msg-people-loading">Menyiapkan kontak…</span>
         </div>
@@ -153,16 +156,17 @@ async function signedAvatar(path) {
   const {data,error}=await db.storage.from('pluits-user-media').createSignedUrl(path,1800);
   return error?'':data?.signedUrl||'';
 }
-async function renderPeopleStrip(people, withSignedImages=false) {
+async function renderPeopleStrip(people=contactsCache, withSignedImages=false) {
   const strip=document.querySelector('#pl-msg-people-strip');if(!strip)return;
   const own=currentProfile||{display_name:'Anda',username:'akun'};
   const ownUrl=withSignedImages?await signedAvatar(own.avatar_path):'';
   const ownItem='<a class="pl-msg-person pl-msg-person-self" href="#/account/profile" aria-label="Buka profil saya">'+contactAvatar(own,ownUrl)+'<small>Anda</small></a>';
-  const items=await Promise.all((people||[]).map(async person=>{
+  const onlinePeople=(people||[]).filter(person=>onlineUserIds.has(person.id));
+  const items=await Promise.all(onlinePeople.map(async person=>{
     const url=withSignedImages?await signedAvatar(person.avatar_path):'';
-    return '<a class="pl-msg-person" href="#/@'+encodeURIComponent(person.username||'')+'" aria-label="Buka profil '+esc(person.display_name||person.username)+'">'+contactAvatar(person,url)+'<small>'+esc(person.display_name||person.username||'Kontak')+'</small></a>';
+    return '<a class="pl-msg-person" href="#/@'+encodeURIComponent(person.username||'')+'" aria-label="Buka profil '+esc(person.display_name||person.username)+', sedang online">'+contactAvatar(person,url)+'<span class="pl-msg-online-dot" aria-hidden="true"></span><small>'+esc(person.display_name||person.username||'Kontak')+'</small></a>';
   }));
-  strip.innerHTML=ownItem+items.join('')||ownItem;
+  strip.innerHTML=ownItem+(items.length?items.join(''):'<span class="pl-msg-online-empty">Belum ada teman yang online</span>');
 }
 
 function renderContactList(box,people,withSignedImages=false) {
@@ -177,6 +181,7 @@ async function loadContacts() {
   if(error) {
     try {
       const cached=JSON.parse(localStorage.getItem(contactsKey())||'[]');
+      contactsCache=cached;
       renderContactList(box,cached,false);await renderPeopleStrip(cached,false);
       if(!cached.length)box.innerHTML='<p class="pl-msg-empty">Kontak belum tersimpan di perangkat ini. Hubungkan internet untuk memuat kontak.</p>';
     } catch { if(box)box.textContent='Kontak offline belum tersedia.'; }
@@ -184,6 +189,7 @@ async function loadContacts() {
   }
   const ids=[...new Set((rows||[]).map(row=>row.follower_id===currentUser.id?row.following_id:row.follower_id).filter(id=>id!==currentUser.id))];
   if(!ids.length) {
+    contactsCache=[];
     try{localStorage.setItem(contactsKey(),'[]');}catch{}
     if(box)box.innerHTML='<p class="pl-msg-empty">Kontak akan muncul dari akun yang saling terhubung. Anda juga dapat mencari username di atas.</p>';
     await renderPeopleStrip([],false);return;
@@ -191,6 +197,7 @@ async function loadContacts() {
   const {data:profiles,error:profileError}=await db.rpc('get_user_profile_directory_by_ids',{p_ids:ids});
   if(profileError){if(box)box.textContent=profileError.message;return;}
   const people=profiles||[];
+  contactsCache=people;
   try{localStorage.setItem(contactsKey(),JSON.stringify(people.map(({id,display_name,username,avatar_path})=>({id,display_name,username,avatar_path}))));}catch{}
   const enriched=await Promise.all(people.map(async person=>({...person,avatar_url:await signedAvatar(person.avatar_path)})));
   renderContactList(box,enriched,true);
@@ -212,9 +219,20 @@ export async function bindMessagesPage() {
   currentUser=user;
   if(!user) { app.querySelector('#pl-msg-conversations').innerHTML='<div class="pl-msg-empty">Masuk ke akun Pluits untuk menggunakan pesan. <a href="#/account/login">Masuk →</a></div>'; return; }
   if(realtimeChannel) { await db.removeChannel(realtimeChannel); realtimeChannel=null; }
+  if(presenceChannel) { await db.removeChannel(presenceChannel); presenceChannel=null; }
+  onlineUserIds=new Set();contactsCache=[];
   const {data:ownProfile}=await db.from('user_profiles').select('id,display_name,username,avatar_path').eq('id',user.id).maybeSingle();
   currentProfile=ownProfile||{id:user.id,display_name:user.user_metadata?.full_name||'Anda',username:'akun'};
   await Promise.all([loadContacts(),loadConversations()]);
+  presenceChannel=db.channel('pluits-online-v1',{config:{presence:{key:user.id}}})
+    .on('presence',{event:'sync'},()=>{
+      const state=presenceChannel?.presenceState?.()||{};
+      onlineUserIds=new Set(Object.values(state).flat().map(entry=>entry.user_id).filter(Boolean));
+      renderPeopleStrip(contactsCache,true);
+    })
+    .subscribe(async status=>{
+      if(status==='SUBSCRIBED') await presenceChannel.track({user_id:user.id,online_at:new Date().toISOString()});
+    });
   const settingsToggle=app.querySelector('#pl-msg-settings-toggle'),settingsPanel=app.querySelector('#pl-msg-settings');
   if(settingsToggle&&settingsPanel)settingsToggle.onclick=()=>{const open=settingsPanel.hidden;settingsPanel.hidden=!open;settingsToggle.setAttribute('aria-expanded',String(open));};
   const selfAvatar=app.querySelector('.pl-msg-self-avatar');if(selfAvatar)selfAvatar.textContent=(currentProfile.display_name||user.email||'P').slice(0,1).toUpperCase();
