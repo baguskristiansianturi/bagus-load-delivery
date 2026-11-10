@@ -1762,3 +1762,25 @@
     width:82px;height:82px;
   }
 }
+
+/* PLUITS signature reaction: instant heart bloom on like, soft fracture on cancel. */
+.ua-social-app .ua-post-actions button{transition:color .16s ease,transform .16s ease}
+.ua-social-app .ua-post-actions button:active{transform:scale(.94)}
+.ua-social-app .ua-post-actions button.is-liked .pl-icon{fill:#d94d68;stroke:#d94d68}
+.ua-social-app .ua-post-actions button[data-action="like"] .pl-icon{transition:transform .18s ease,fill .18s ease,stroke .18s ease}
+.ua-social-app .ua-post-actions button[data-action="like"].is-liked .pl-icon{transform:scale(1.08)}
+.ua-media,.ua-gallery-item{position:relative}
+.ua-double-tap-heart{position:absolute;z-index:12;inset:0;display:grid;place-items:center;pointer-events:none;overflow:visible}
+.ua-heart-core{display:grid;place-items:center;color:#e94e70;filter:drop-shadow(0 5px 14px rgba(0,0,0,.2));animation:pluits-heart-core .62s cubic-bezier(.18,.82,.24,1) both}
+.ua-heart-core .pl-icon{width:108px;height:108px;fill:#ee5473;stroke:#fff;stroke-width:1.25}
+.ua-heart-particle{position:absolute;left:50%;top:50%;display:grid;place-items:center;font-style:normal;color:#ee5473;opacity:0;animation:pluits-heart-particle .52s cubic-bezier(.15,.75,.2,1) var(--delay) both}
+.ua-heart-particle .pl-icon{width:18px;height:18px;fill:#ee5473;stroke:#fff;stroke-width:1}
+.ua-double-tap-heart.is-removing .ua-heart-core{color:#9c5265;animation:pluits-heart-crack .58s cubic-bezier(.2,.75,.25,1) both}
+.ua-double-tap-heart.is-removing .ua-heart-core .pl-icon{fill:#b85a70;stroke:#fff}
+.ua-double-tap-heart.is-removing .ua-heart-particle{color:#b85a70;animation-name:pluits-heart-fragment}
+.ua-social-app .ua-media img,.ua-social-app .ua-gallery-item img{touch-action:manipulation}
+@keyframes pluits-heart-core{0%{opacity:0;transform:scale(.28)}28%{opacity:1;transform:scale(1.16)}48%{opacity:1;transform:scale(1)}72%{opacity:.95;transform:scale(.82)}100%{opacity:0;transform:scale(.56)}}
+@keyframes pluits-heart-particle{0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}22%{opacity:1}100%{opacity:0;transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(.82) rotate(18deg)}}
+@keyframes pluits-heart-crack{0%{opacity:0;transform:scale(.5) rotate(-8deg)}25%{opacity:1;transform:scale(1.08) rotate(5deg)}48%{opacity:1;transform:scale(1) rotate(-3deg)}100%{opacity:0;transform:scale(.82) rotate(0)}}
+@keyframes pluits-heart-fragment{0%{opacity:0;transform:translate(-50%,-50%) scale(.55)}25%{opacity:1}100%{opacity:0;transform:translate(calc(-50% + var(--dx)*.72),calc(-50% + var(--dy)*.72)) scale(.35) rotate(-24deg)}}
+@media(prefers-reduced-motion:reduce){.ua-double-tap-heart,.ua-heart-core,.ua-heart-particle{animation-duration:.12s!important}}
