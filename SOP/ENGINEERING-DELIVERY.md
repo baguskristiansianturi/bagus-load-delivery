@@ -38,3 +38,8 @@
 - Update checkpoint roadmap dan hanya dokumen yang terdampak.
 - Catat migration yang diterapkan, risiko tersisa, rollback, dan langkah berikutnya.
 - Jangan mengklaim UAT oleh founder. Status ACCEPTED hanya setelah founder menyatakan menerima.
+
+
+## Audit dampak modul sebelum perubahan
+
+Sebelum mengubah komponen bersama, rujuk `docs/pluits/FRONTEND-MODULE-CONTRACTS.md`. Perubahan pada router, header, navigasi mobile, ikon, token desain, atau CSS global wajib mengaudit seluruh pemanggil dan halaman saudara, bukan hanya halaman yang sedang dibuka. Setelah perubahan, jalankan `npm test` dan `npm run build`, tinjau diff, lalu periksa rute publik, feed, profil, pengaturan, DM, notifikasi, pencarian, GeoDirectory, Marketplace, dan Trip pada mobile serta desktop. Deployment tidak boleh dinyatakan selesai sebelum workflow Pages sukses.

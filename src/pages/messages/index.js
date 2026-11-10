@@ -1,5 +1,6 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import './messages.css';
+import { socialIcon } from '../../components/common/social-icons.js';
 
 const db = createClient('https://ytndswhqxayqpftszwfh.supabase.co', 'sb_publishable_kOUbKBYg88nXgz8FQRSnvA_k0hvKY65');
 const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
@@ -111,7 +112,7 @@ export function messagesPage() {
     <header class="pl-msg-head">
       <a href="#/account/profile" class="pl-msg-self" aria-label="Buka profil saya"><span class="pl-msg-self-avatar">P</span></a>
       <div class="pl-msg-head-brand"><a href="#/account/explore" class="pl-msg-brand">PLUITS <span>INBOX</span></a><small>Ruang percakapan Anda</small></div>
-      <button type="button" class="pl-msg-settings-toggle" id="pl-msg-settings-toggle" aria-label="Pengaturan inbox" aria-expanded="false">⋯</button>
+      <div class="pl-msg-head-actions"><a href="#/account/activity" class="pl-msg-head-icon" aria-label="Notifikasi">${socialIcon('bell',{size:20})}</a><a href="#/account/profile" class="pl-msg-head-icon" aria-label="Profil saya">${socialIcon('user',{size:20})}</a><button type="button" class="pl-msg-settings-toggle" id="pl-msg-settings-toggle" aria-label="Pengaturan inbox" aria-expanded="false">⋯</button></div>
       <div class="pl-msg-settings" id="pl-msg-settings" hidden>
         <strong>Pengaturan inbox</strong>
         <label><input type="checkbox" checked> Tampilkan pesan utama</label>
@@ -137,7 +138,7 @@ export function messagesPage() {
         </aside>
         <section class="pl-msg-chat" id="pl-msg-chat"><div class="pl-msg-empty">Pilih percakapan atau kontak untuk memulai pesan.</div></section>
       </div>
-      <nav class="pl-msg-mobile-nav" aria-label="Navigasi utama"><a href="#/account/explore">⌂<small>Beranda</small></a><a class="active" href="#/messages">✉<small>Inbox</small></a><a href="#/account/activity">♧<small>Aktivitas</small></a><a href="#/account/profile">◉<small>Profil</small></a></nav>
+      <nav class="pl-msg-mobile-nav" aria-label="Navigasi utama"><a href="#/account/explore">${socialIcon('home',{size:22})}<small>Beranda</small></a><a class="active" href="#/messages" aria-current="page">${socialIcon('message',{size:22})}<small>Inbox</small></a><a href="#/account/activity">${socialIcon('bell',{size:22})}<small>Aktivitas</small></a><a href="#/account/profile">${socialIcon('user',{size:22})}<small>Profil</small></a></nav>
       <p class="pl-msg-offline-note">Jika koneksi terputus, pesan yang Anda kirim disimpan sementara di perangkat ini dan otomatis dicoba kirim saat online kembali. Pesan belum terkirim sampai server mengonfirmasi.</p>
     </section>
   </main>`;

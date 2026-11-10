@@ -417,3 +417,24 @@
  .ua-editor-section{padding:20px 0}
 }
 @media(max-width:380px){.ua-editor-two-col{grid-template-columns:1fr;gap:0}.ua-profile-editor-head p{max-width:185px}}
+
+/* Shared mobile header actions: fixed-size icons prevent clipping on narrow Android screens. */
+@media(max-width:760px){
+ .ua-social-app .pl-social-header{gap:7px;justify-content:flex-start;padding-inline:10px}
+ .ua-social-app .pl-social-header>.ua-brand{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+ .ua-social-app .pl-social-header-menu{flex:0 0 34px;margin-left:0!important}
+ .ua-social-app .pl-social-header-menu .pl-social-menu-trigger{width:34px;height:34px}
+ .ua-social-app .pl-social-mobile-actions{flex:0 0 auto;gap:4px}
+ .ua-social-app .pl-social-mobile-actions a{width:30px;min-width:30px;height:36px;min-height:36px;flex:0 0 30px}
+ .ua-social-app .pl-social-mobile-actions .pl-icon{width:21px;height:21px}
+ .ua-social-app .pl-social-header>.ua-header-profile{width:32px;height:32px;flex:0 0 32px}
+ .ua-social-app .pl-social-mobile-nav>.pl-mobile-activity{position:relative;overflow:visible}
+ .ua-social-app .pl-social-mobile-nav>.pl-mobile-activity .pl-nav-unread{top:2px;right:calc(50% - 19px)}
+}
+@media(max-width:350px){
+ .ua-social-app .pl-social-header{gap:5px;padding-inline:8px}
+ .ua-social-app .pl-social-mobile-actions{gap:1px}
+ .ua-social-app .pl-social-mobile-actions a{width:27px;min-width:27px;flex-basis:27px}
+ .ua-social-app .pl-social-header-menu,.ua-social-app .pl-social-header-menu .pl-social-menu-trigger{width:32px;flex-basis:32px}
+ .ua-social-app .pl-social-header>.ua-header-profile{width:29px;height:29px;flex-basis:29px}
+}

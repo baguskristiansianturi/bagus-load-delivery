@@ -58,6 +58,8 @@ assert.match(messages, /flushOutbox/, 'DM outbox must retry queued messages afte
 assert.match(messages, /contactsKey/, 'DM contacts must be cached for offline access.');
 assert.match(messages, /openDraftConversation/, 'A new DM can be drafted offline from a cached contact.');
 assert.match(messages, /recipient_user_id/, 'Offline new-conversation drafts must resolve their recipient when reconnecting.');
+assert.match(messages, /socialIcon\('bell'/, 'Inbox header must expose a consistent notification shortcut.');
+assert.match(messages, /socialIcon\('message'/, 'Inbox navigation must use the shared chat icon.');
 
 const accountSettings = read('src/pages/account/security-settings.js');
 assert.match(accountSettings, /auth\.mfa\.enroll/, 'Account settings must provide authenticator enrollment.');
@@ -69,6 +71,11 @@ assert.match(accountSettings, /visibility/, 'Account privacy setting must persis
 const navigation = read('src/components/social/navigation.js');
 assert.match(navigation, /#\/messages/, 'Social navigation must expose inbox access.');
 assert.match(navigation, /#\/account\/activity/, 'Social navigation must expose activity access.');
+assert.match(navigation, /pl-mobile-dm/, 'Mobile header must retain a direct-message shortcut.');
+assert.match(navigation, /socialIcon\('message'/, 'Mobile direct-message shortcut must use the shared SVG icon.');
+assert.match(navigation, /socialIcon\('bell'/, 'Mobile notification shortcut must use the shared SVG bell.');
+assert.match(navigation, /label: 'Inbox'/, 'Signed-in bottom navigation must retain the inbox route.');
+assert.match(navigation, /label: 'Aktivitas'/, 'Signed-in bottom navigation must retain the activity route.');
 
 const account = read('src/pages/account/index.js');
 assert.match(account, /unreadNotificationCount/, 'Social navigation must receive unread notification count.');
@@ -119,6 +126,7 @@ assert.match(sharedDesign, /--pl-color-line/, 'Social UI must use shared spacing
 const socialHome = read('src/pages/account/index.js');
 const sharedHeader = read('src/components/social/navigation.js');
 assert.ok(sharedHeader.includes("aria-label='Notifikasi'") && sharedHeader.includes("socialIcon('bell', { size: 21 })"), 'Shared social header must render the notification bell.');
+assert.ok(sharedHeader.includes("aria-label='Pesan langsung'") && sharedHeader.includes("socialIcon('message', { size: 21 })"), 'Shared mobile header must render the direct-message icon.');
 assert.ok(sharedHeader.includes("aria-label='Kontak dan koneksi'") && sharedHeader.includes("socialIcon('users', { size: 21 })"), 'Shared social header must render Contacts.');
 assert.ok(sharedHeader.includes("aria-label='Wishlist dan tersimpan'") && sharedHeader.includes("socialIcon('bookmark', { size: 21 })"), 'Saved items shortcut must be available privately.');
 assert.ok(sharedHeader.includes('pl-social-menu-trigger') && sharedHeader.includes('Pusat Pengaturan') && sharedHeader.includes('#/account/settings'), 'Profile menu must be the single entry point for account settings.');
