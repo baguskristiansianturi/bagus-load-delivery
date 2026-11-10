@@ -128,7 +128,7 @@ function bindBlockedAccounts(){document.querySelectorAll('[data-unblock-user]').
 function settingsHubPage(){
  const groups=[
   ['Akun & identitas','Kelola profil dan identitas yang terhubung ke satu akun',[
-   ['user','Profil pribadi','Nama, username, bio, dan informasi publik','/account/profile','ready'],
+   ['user','Profil pribadi','Nama, username, bio, dan informasi publik','/account/profile/edit','ready'],
    ['shield','Keamanan akun','Password, perangkat, dan perlindungan akun','/account/security','ready'],
    ['briefcase','Profil profesional','Keahlian, portofolio, dan area layanan','/account/professional','ready'],
    ['store','Toko dan organisasi','Kelola identitas usaha dan keanggotaan','/seller','ready'],
@@ -170,7 +170,7 @@ async function walletPage(){
  ${items.length?items.map(x=>`<div class="ua-wallet-row"><div><strong>${x.request_type==='top_up'?'Top Up':'Tarik Saldo'}</strong><small>${fmtDate(x.created_at)} · ${esc(x.payment_method||'Metode belum diisi')}</small></div><b>${rupiah(Number(x.amount_minor))}</b><span class="ua-wallet-status ${esc(x.status)}">${x.status==='pending'?'Menunggu':x.status==='approved'?'Disetujui':x.status==='rejected'?'Ditolak':'Dibatalkan'}</span></div>`).join(''):'<div class="ua-empty"><strong>Belum ada transaksi</strong><p>Riwayat permintaan top up dan penarikan akan tampil di sini.</p></div>'}
  </section>`;
 }
-async function profilePage(preview=false){
+async function profilePage(preview=false,editMode=false){
  const [avatarUrl,coverUrl,postsResult,storesResult]=await Promise.all([
   signed(profile.avatar_path),signed(profile.cover_path),
   supabase.from('user_posts').select('*').eq('user_id',user.id).order('created_at',{ascending:false}),
@@ -202,15 +202,14 @@ async function profilePage(preview=false){
   </section>`;
  }
  return `
- <div class="ua-profile-savebar"><span>Identitas akun</span><button class="ua-primary" type="submit" form="ua-profile-form">Simpan perubahan</button></div>
  <section class="ua-profile-card">
   <div class="ua-cover" ${coverUrl?`style="background-image:url('${coverUrl}')"`:''}><label class="ua-cover-edit"><span>Ubah foto sampul</span><input id="ua-cover-file" type="file" accept="image/jpeg,image/png,image/webp"></label></div>
   <div class="ua-profile-content"><div class="ua-profile-avatar">${avatar(avatarUrl,profile.display_name,'large')}<label class="ua-avatar-edit" aria-label="Ubah foto profil" title="Ubah foto profil"><span>Ubah foto</span><input id="ua-avatar-file" type="file" accept="image/jpeg,image/png,image/webp"></label></div>
-   <div class="ua-profile-identity"><div class="ua-profile-name-row"><div><h2>${esc(profile.display_name)}</h2><div class="ua-username">@${esc(profile.username)}</div></div></div><p>${esc(profile.bio||'Bio belum ditambahkan.')}</p><div class="ua-location">${profile.public_city&&profile.public_province?'⌖ '+esc(profile.public_city)+', '+esc(profile.public_province):''}</div><div class="ua-profile-stats"><a href="#profile-posts"><strong>${ownPosts.length}</strong><span>Postingan</span></a><a href="#/account/followers"><strong>${followersCount.count||0}</strong><span>Pengikut</span></a><a href="#/account/following"><strong>${followingCount.count||0}</strong><span>Mengikuti</span></a></div></div>
+   <div class="ua-profile-identity"><div class="ua-profile-name-row"><div><h2>${esc(profile.display_name)}</h2><div class="ua-username">@${esc(profile.username)}</div></div><a class="ua-outline ua-profile-edit-link" href="#/account/profile/edit">Edit profil</a></div><p>${esc(profile.bio||'Bio belum ditambahkan.')}</p><div class="ua-location">${profile.public_city&&profile.public_province?'⌖ '+esc(profile.public_city)+', '+esc(profile.public_province):''}</div><div class="ua-profile-stats"><a href="#profile-posts"><strong>${ownPosts.length}</strong><span>Postingan</span></a><a href="#/account/followers"><strong>${followersCount.count||0}</strong><span>Pengikut</span></a><a href="#/account/following"><strong>${followingCount.count||0}</strong><span>Mengikuti</span></a></div></div>
   </div>
  </section>
- <form id="ua-profile-form" class="ua-panel ua-profile-edit-form" autocomplete="off">
-  <div class="ua-section-title"><div><span class="ua-eyebrow">IDENTITAS PERSONAL</span><h2>Edit profil</h2><p>Gunakan nama yang mewakili diri Anda. Profil profesional dan toko dapat dikelola terpisah.</p></div></div>
+ ${editMode?`<form id="ua-profile-form" class="ua-panel ua-profile-edit-form" autocomplete="off">
+  <div class="ua-profile-edit-heading"><div><span class="ua-eyebrow">IDENTITAS PERSONAL</span><h2>Edit profil</h2><p>Gunakan nama yang mewakili diri Anda. Profil profesional dan toko dapat dikelola terpisah.</p></div><div class="ua-profile-edit-actions"><a class="ua-outline" href="#/account/profile">Batal</a><button class="ua-primary" type="submit">Simpan perubahan</button></div></div>
   <div class="ua-form-grid">
    <label>Nama tampilan<input name="display_name" maxlength="80" required value="${esc(profile.display_name||'')}"></label>
    <label>Username<input name="username" minlength="3" maxlength="30" autocapitalize="none" autocomplete="off" spellcheck="false" required value="${esc(profile.username||'')}"><small>3–30 karakter: huruf kecil, angka, titik, garis bawah, atau tanda hubung. Tidak boleh menyerupai domain.</small></label>
@@ -221,7 +220,7 @@ async function profilePage(preview=false){
    <label class="ua-checkbox"><input type="checkbox" name="show_store" ${profile.show_store?'checked':''}> Tampilkan tautan toko saya pada profil</label>
   </div>
   <p id="ua-profile-note" class="ua-form-note" role="status" aria-live="polite"></p>
- </form>
+ </form>`:''}
  <nav class="ua-profile-tabs" role="tablist" aria-label="Konten profil">
   <button class="active" type="button" role="tab" aria-selected="true" data-profile-tab="posts">▦ <span>Post/Feed</span></button><button type="button" role="tab" aria-selected="false" data-profile-tab="reels">▣ <span>Reels</span></button><button type="button" role="tab" aria-selected="false" data-profile-tab="trip">⌖ <span>Trip</span></button><button type="button" role="tab" aria-selected="false" data-profile-tab="tagged">♙ <span>Ditandai</span></button>
  </nav>
@@ -456,7 +455,7 @@ async function publicProfilePage(username){
  const target=Array.isArray(data)?data[0]:data;
  if(!target)throw new Error('Profil tidak ditemukan atau tidak tersedia.');
  const isOwner=!!user&&target.id===user.id;
- if(isOwner)return profilePage(false);
+ if(isOwner){history.replaceState(null,'',location.pathname+location.search+'#/account/profile');return profilePage(false);}
  updateSEO({title:target.display_name+' (@'+target.username+') — Pluits',description:(target.bio||'Lihat foto, video, dan aktivitas '+target.display_name+' di Pluits.').slice(0,160),path:'#/@'+encodeURIComponent(target.username)});
  let relation=null;
  if(user&&!isOwner){
@@ -646,7 +645,7 @@ async function mountAccount(section='profile',parameter=''){
   await loadProfile();accountContext=await loadAccountContext(supabase,user);
   unreadNotificationCount=await countUnreadActivity();
   if(section==='profile')updateSEO({title:profile.display_name+' (@'+profile.username+') — Pluits',description:(profile.bio||'Profil komunitas '+profile.display_name+' di Pluits.').slice(0,160),path:'#/@'+encodeURIComponent(profile.username)});
-  const page=section==='explore'?await feedPage():section==='activity'?await notificationPage():section==='reels'?await reelsPage():section==='create'?createPage():section==='story'?await storyComposePage():section==='live'?livePage():section==='saved'?await savedPage():section==='reel'?await composePage('', 'reel'):section==='compose'?await composePage(parameter):section==='drafts'?await draftsPage():section==='addresses'?await addressPage():section==='wallet'?await walletPage():section==='post'?await postDetailPage(parameter||location.hash.split('/')[3]||''):section==='user'?await publicProfilePage(parameter):section==='followers'?await followListPage('followers'):section==='following'?await followListPage('following'):section==='requests'?await followListPage('followers'):section==='preview'?await profilePage(true):section==='professional'?professionalPage(accountContext,profile):section==='professional-create'?professionalFormPage(accountContext,profile):section==='settings'?settingsHubPage():section==='security'?await accountSecurityPage(supabase,user):section==='blocked'?await blockedAccountsPage():section==='content-settings'?await accountSettingsPage(supabase,user):await profilePage();
+  const page=section==='explore'?await feedPage():section==='activity'?await notificationPage():section==='reels'?await reelsPage():section==='create'?createPage():section==='story'?await storyComposePage():section==='live'?livePage():section==='saved'?await savedPage():section==='reel'?await composePage('', 'reel'):section==='compose'?await composePage(parameter):section==='drafts'?await draftsPage():section==='addresses'?await addressPage():section==='wallet'?await walletPage():section==='post'?await postDetailPage(parameter||location.hash.split('/')[3]||''):section==='user'?await publicProfilePage(parameter):section==='followers'?await followListPage('followers'):section==='following'?await followListPage('following'):section==='requests'?await followListPage('followers'):section==='preview'?await profilePage(true):section==='profile'?await profilePage(false,parameter==='edit'):section==='professional'?professionalPage(accountContext,profile):section==='professional-create'?professionalFormPage(accountContext,profile):section==='settings'?settingsHubPage():section==='security'?await accountSecurityPage(supabase,user):section==='blocked'?await blockedAccountsPage():section==='content-settings'?await accountSettingsPage(supabase,user):await profilePage();
   const headerAvatar=await signed(profile.avatar_path);const app=document.querySelector('#app');const navActive=section==='explore'?'explore':section==='reels'?'reels':['create','compose','reel','story'].includes(section)?'create':section==='post'?'post':section==='activity'?'activity':section==='addresses'?'addresses':'profile';app.classList.remove('pl-page-enter');app.innerHTML=frame(page,navActive,headerAvatar);requestAnimationFrame(()=>app.classList.add('pl-page-enter'));
   document.querySelector('#ua-logout')?.addEventListener('click',async()=>{await supabase.auth.signOut();user=null;profile=null;authScreen('login');});
   bindAccountContext({db:supabase,user,ctx:accountContext,profile,refresh:mountAccount});
