@@ -260,7 +260,7 @@ assert.ok(read('src/main.js').includes("history.replaceState(null, '', location.
 assert.ok(read('src/pages/home/index.js').includes("'#/account/explore'"), 'Authenticated users must land on the canonical Explore feed URL.');
 
 assert.ok(read('src/pages/account/index.js').includes('renderReelCard(post,{user,avatar,esc,socialIcon})'),'Reels must use its dedicated feature renderer.');
-assert.ok(read('src/pages/account/index.js').includes("kind==='reel'?'accept=\"video/*\"'"),'Reel picker must request videos only.');
+assert.ok(read('src/pages/account/index.js').includes('accept="video/*,.mp4,.m4v,.mov,.webm,.3gp,.3gpp,.3g2,.3gp2"'),'Reel picker must request common Android video formats explicitly.');
 assert.ok(read('src/features/reels/reel-card.js').includes('ua-reel-stage'),'Reel card module must own its stage.');
 assert.ok(read('src/features/reels/reels.css').includes('aspect-ratio:9/16'),'Reel layout must preserve vertical framing.');
 assert.ok(read('src/features/media/storage-upload.js').includes('storage/v1/upload/resumable'),'Media storage upload must be isolated.');
