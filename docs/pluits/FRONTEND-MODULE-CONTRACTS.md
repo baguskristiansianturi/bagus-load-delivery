@@ -82,3 +82,13 @@ Mobile has exactly five bottom destinations in this order: **Beranda · Jelajah 
 - `src/features/posts/post-actions.css`: action-control visual styling, focus and touch feedback.
 - `src/pages/account/index.js`: supplies current post/user state; it must not own the post action SVG paths.
 - `src/pages/account/user-account.css`: feed-level spacing only. Username, caption and comment links stay visually connected to the post, with no excessive blank gap before the next post.
+
+## Inbox feature ownership and interaction contract
+
+- src/pages/messages/index.js owns inbox markup, contact search, online-friend rendering, conversation list, chat interactions and message lifecycle.
+- src/pages/messages/messages.css owns inbox-only visual rules. It must not override the shared five-destination navigation or unrelated account/feed styles.
+- The inbox header contains the PLUITS wordmark, a name/username friend search and a notification-bell shortcut. Search results are contextual to the search field; the default inbox remains uncluttered.
+- The online-friend strip contains only contacts currently present in the realtime online set. Few contacts use natural spacing; five or more use partial overlap. It remains horizontally scrollable.
+- Inbox categories are Utama, Permintaan, and Diblokir. Utama displays real conversation records. Permintaan and Diblokir are clearly marked as preparation-only until backend permission-request and block-list contracts are implemented; never fabricate rows or imply these actions are live.
+- The bottom mobile navigation must reuse renderSocialMobileNav and preserve the canonical five destinations. Do not create an inbox-specific competing navigation.
+- The chat stream may use a subtle neutral patterned surface, while bubbles and composer remain high-contrast and readable. Do not use a heavy wallpaper that harms legibility.

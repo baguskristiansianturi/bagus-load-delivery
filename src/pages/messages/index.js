@@ -243,7 +243,7 @@ export async function bindMessagesPage() {
     const query=String(new FormData(search).get('q')||'').trim().replace(/^@/,'');
     const box=app.querySelector('#pl-msg-search-results');
     if(query.length<2){box.textContent='Masukkan minimal dua karakter username.';return;}
-    const {data,error}=await db.from('user_profiles').select('id,display_name,username').ilike('username','%'+query+'%').neq('id',user.id).limit(8);
+    const {data,error}=await db.from('user_profiles').select('id,display_name,username').or('username.ilike.%'+query+'%,display_name.ilike.%'+query+'%').neq('id',user.id).limit(8);
     if(error){box.textContent=error.message;return;}
     box.innerHTML=data?.length?data.map(person=>'<button class="pl-msg-contact" data-start-chat="'+person.id+'"><b>'+esc(person.display_name||person.username)+'</b><small>@'+esc(person.username)+'</small><span>Pesan →</span></button>').join(''):'<p class="pl-msg-empty">Akun tidak ditemukan.</p>';
     bindStartChat(box);

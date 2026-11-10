@@ -65,7 +65,7 @@ assert.match(messages, /contactsKey/, 'DM contacts must be cached for offline ac
 assert.match(messages, /openDraftConversation/, 'A new DM can be drafted offline from a cached contact.');
 assert.match(messages, /recipient_user_id/, 'Offline new-conversation drafts must resolve their recipient when reconnecting.');
 assert.match(messages, /socialIcon\('bell'/, 'Inbox header must expose a consistent notification shortcut.');
-assert.match(messages, /socialIcon\('message'/, 'Inbox navigation must use the shared chat icon.');
+assert.match(messages, /renderSocialMobileNav\(\{active:'messages'/, 'Inbox must reuse the canonical social navigation component.');
 
 const accountSettings = read('src/pages/account/security-settings.js');
 assert.match(accountSettings, /auth\.mfa\.enroll/, 'Account settings must provide authenticator enrollment.');

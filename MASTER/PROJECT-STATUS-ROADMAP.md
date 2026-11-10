@@ -1064,3 +1064,10 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - **Responsive verification:** JavaScript syntax checks passed for `src/pages/messages/index.js` and `src/pages/account/index.js`. The GitHub Actions workflow for final frontend commit `26474104628335b94bf0be1752f69a42f9763674` passed production-surface tests, `npm run build`, artifact verification, and GitHub Pages deployment (run `42724036220`, conclusion `success`). Live Android viewport/touch testing and two-account runtime UAT remain NOT TESTED.
 - **Offline emergency chat:** current DM offline feature is still a local outbox that sends after reconnect; it does not deliver device-to-device without internet. New offline proximity chat is recorded separately as an unapproved idea in IDEA-009. See Android Nearby Connections and Wi-Fi Direct references in the idea entry.
 - **Next:** run production build/CI; finish account route/action matrix; design privacy-safe Realtime Presence and online-status preference; define account deletion/retention contract; conduct 320/360/390/430/768/1024/1440px and two-account Android UAT.
+
+## CP-045 — Inbox information architecture and mobile presentation (10 November 2026)
+
+- Frontend specified/implemented in code: Inbox header with PLUITS wordmark, friend name/username search and notification bell; online-friend carousel with natural spacing for small sets and partial overlap for larger sets; three inbox categories (Utama, Permintaan, Diblokir); canonical shared five-item mobile navigation; restrained chat-stream texture.
+- Backend boundary: Utama reads existing real conversations. Permintaan and Diblokir are presentation placeholders only; request approval and block-list lifecycle are not yet enabled by this UI change. No fake conversation, request, or blocked-account records are created.
+- Acceptance: production build and verifier must pass; founder must inspect on Android at normal and narrow widths. Two-account realtime messaging and category backend behavior remain separate UAT items.
+- Status: IMPLEMENTATION IN PROGRESS until workflow confirms deployment; Android visual UAT NOT TESTED.
