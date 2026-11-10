@@ -336,7 +336,7 @@ async function reelsPage(){
 
 function postCard(p){
  const profileHref='#/@'+encodeURIComponent(p.owner.username);
- const mediaMarkup=(p.media||[]).length>1?`<div class="ua-media-gallery" data-gallery><div class="ua-gallery-track">${p.media.map((m,i)=>`<div class="ua-gallery-item">${m.media_type==='video'?`<video src="${m.url}" controls playsinline preload="metadata"></video>`:`<img src="${m.url}" alt="Media ${i+1}">`}</div>`).join('')}</div><span class="ua-gallery-count">1/${p.media.length}</span></div>`:(p.media?.length?`<div class="ua-media">${p.media[0].media_type==='video'?`<video src="${p.media[0].url}" controls playsinline preload="metadata"></video>`:`<img src="${p.media[0].url}" alt="${esc(p.caption||'Foto postingan')}">`}</div>`:'<div class="ua-text-post-mark">PLUITS</div>');
+ const mediaMarkup=(p.media||[]).length>1?`<div class="ua-media-gallery" data-gallery><div class="ua-gallery-track">${p.media.map((m,i)=>`<div class="ua-gallery-item">${m.media_type==='video'?`<video src="${m.url}" controls playsinline preload="metadata"></video>`:`<img src="${m.url}" alt="Media ${i+1}">`}</div>`).join('')}</div><span class="ua-gallery-count" data-gallery-count>1/${p.media.length}</span></div>`:(p.media?.length?`<div class="ua-media">${p.media[0].media_type==='video'?`<video src="${p.media[0].url}" controls playsinline preload="metadata"></video>`:`<img src="${p.media[0].url}" alt="${esc(p.caption||'Foto postingan')}">`}</div>`:'<div class="ua-text-post-mark">PLUITS</div>');
  return `<article class="ua-post-card" data-post-id="${p.id}" data-owner-id="${p.user_id}">
  <div class="ua-post-head"><a class="ua-post-avatar-link" href="${profileHref}">${avatar(p.avatarUrl,p.owner.display_name)}</a><div><a class="ua-author-link" href="${profileHref}"><strong>${esc(p.owner.display_name)}</strong></a><small>@${esc(p.owner.username)} ${p.owner.public_city&&p.owner.public_province?'· '+esc(p.owner.public_city):''}</small></div><div class="ua-post-menu-wrap"><button class="ua-post-more" type="button" aria-label="Menu postingan" aria-expanded="false" data-post-menu>${socialIcon("more",{size:21})}</button><div class="ua-post-menu" hidden>${p.user_id===user?.id?`<button type="button" data-action="edit">${socialIcon("edit",{size:16})}<span>Edit postingan</span></button><button type="button" data-action="delete-post"><span class="ua-menu-delete-icon">×</span><span>Hapus postingan</span></button>`:`<button type="button" data-action="share">${socialIcon("send",{size:16})}<span>Bagikan postingan</span></button>`}</div></div></div>
  ${mediaMarkup}
@@ -556,9 +556,33 @@ async function followListPage(kind='followers'){
  }).join(''):'<div class="ua-empty"><strong>Belum ada data</strong><p>Aktivitas mengikuti akun akan tampil di sini.</p></div>'}</section>`;
 }
 async function postDetailPage(id){
- const {data,error}=await supabase.from('user_posts').select('*').eq('id',id).single();if(error)throw error;
- const [p]=await hydratePosts([data]);if(!p)throw new Error('Postingan tidak tersedia.');
- return `<div class="ua-post-detail-page"><div class="ua-page-heading"><div><span class="ua-eyebrow">POSTINGAN</span><h1>Detail postingan</h1></div><a class="ua-outline" href="#/account/explore">Kembali ke Explore</a></div><section class="ua-post-detail-stream">${postCard(p)}</section></div>`;
+ const {data:selected,error}=await supabase.from('user_posts').select('*').eq('id',id).single();
+ if(error)throw error;
+ if(!selected)throw new Error('Postingan tidak tersedia.');
+ const isOwner=!!user&&selected.user_id===user.id;
+ if(!isOwner&&(selected.visibility!=='public'||selected.moderation_status!=='published'))throw new Error('Postingan ini tidak tersedia untuk publik.');
+ const {data:rows,error:feedError}=await supabase.from('user_posts').select('*')
+  .eq('user_id',selected.user_id).eq('visibility','public').eq('moderation_status','published')
+  .order('created_at',{ascending:false}).limit(60);
+ if(feedError)throw feedError;
+ const streamRows=[...(rows||[])];
+ if(isOwner&&!streamRows.some(post=>post.id===selected.id))streamRows.unshift(selected);
+ const posts=await hydratePosts(streamRows);
+ const owner=posts[0]?.owner||{username:'pengguna',display_name:'Pengguna Pluits'};
+ return `<div class="ua-post-detail-page" data-post-author="${esc(owner.username)}">
+  <div class="ua-post-stream-heading"><a class="ua-post-stream-back" href="#/@${encodeURIComponent(owner.username)}">← Profil @${esc(owner.username)}</a><span class="ua-eyebrow">POSTINGAN KOMUNITAS</span><h1>Feed ${esc(owner.display_name)}</h1><p>Geser foto ke samping untuk melihat seluruh media, lalu gulir ke bawah untuk postingan berikutnya.</p></div>
+  <section class="ua-post-detail-stream">${posts.length?posts.map(post=>'<div class="ua-post-stream-item" id="ua-post-focus-'+post.id+'">'+postCard(post)+'</div>').join(''):'<div class="ua-empty">Belum ada postingan yang dapat ditampilkan.</div>'}</section>
+  <a class="ua-post-stream-back ua-post-stream-bottom" href="#/@${encodeURIComponent(owner.username)}">Kembali ke profil</a>
+ </div>`;
+}
+function bindPostGalleries(root=document){
+ root.querySelectorAll('.ua-media-gallery[data-gallery]').forEach(gallery=>{
+  const track=gallery.querySelector('.ua-gallery-track'),counter=gallery.querySelector('[data-gallery-count]');
+  if(!track||!counter||track.dataset.bound==='1')return;
+  track.dataset.bound='1';
+  const update=()=>{const width=track.clientWidth||1;const index=Math.min(track.children.length,Math.max(1,Math.round(track.scrollLeft/width)+1));counter.textContent=index+'/'+track.children.length;};
+  track.addEventListener('scroll',update,{passive:true});update();
+ });
 }
 function normalizeFeedMediaFrames(root=document){
  const mediaNodes=root.querySelectorAll('.ua-social-home .ua-media img,.ua-social-home .ua-media video,.ua-social-home .ua-gallery-item img,.ua-social-home .ua-gallery-item video,.ua-post-detail-page .ua-media img,.ua-post-detail-page .ua-media video,.ua-post-detail-page .ua-gallery-item img,.ua-post-detail-page .ua-gallery-item video');
@@ -616,6 +640,11 @@ async function mountAccount(section='profile',parameter=''){
   document.querySelector('#ua-edit-profile-link')?.addEventListener('click',e=>{e.preventDefault();document.querySelector('#edit-profile')?.scrollIntoView({behavior:'smooth',block:'start'});});
   document.querySelector('#ua-menu-logout')?.addEventListener('click',async()=>{await supabase.auth.signOut();user=null;profile=null;location.hash='/';});
   normalizeFeedMediaFrames(document);
+  bindPostGalleries();
+  if(section==='post'){
+   const focusId=parameter||location.hash.split('/')[3]||'';
+   requestAnimationFrame(()=>document.querySelector('#ua-post-focus-'+CSS.escape(focusId))?.scrollIntoView({block:'start',behavior:'instant'}));
+  }
   bindProfileTabs();
   bindNotificationActions();
   if(section==='drafts')bindDrafts();
