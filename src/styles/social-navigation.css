@@ -282,3 +282,20 @@
  .ua-clean-composer .ua-media-picker { padding:12px; }
  .ua-clean-composer .ua-media-count { padding-top:8px; text-align:right; }
 }
+
+/* One canonical fixed bottom bar. No transform/flow dependency on page content. */
+@media(max-width:760px){
+ .ua-social-app .pl-social-mobile-nav{
+  position:fixed!important;
+  left:0!important;right:0!important;bottom:0!important;top:auto!important;
+  width:100%!important;
+  height:calc(62px + env(safe-area-inset-bottom))!important;
+  min-height:calc(62px + env(safe-area-inset-bottom))!important;
+  box-sizing:border-box!important;
+  padding:4px 8px env(safe-area-inset-bottom)!important;
+  margin:0!important;
+  flex-wrap:nowrap!important;
+  transform:none!important;
+ }
+ .ua-social-app{padding-bottom:calc(70px + env(safe-area-inset-bottom))}
+}
