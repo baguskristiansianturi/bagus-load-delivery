@@ -66,6 +66,13 @@ assert.match(messages, /openDraftConversation/, 'A new DM can be drafted offline
 assert.match(messages, /recipient_user_id/, 'Offline new-conversation drafts must resolve their recipient when reconnecting.');
 assert.match(messages, /socialIcon\('bell'/, 'Inbox header must expose a consistent notification shortcut.');
 assert.match(messages, /renderSocialMobileNav\(\{active:'messages'/, 'Inbox must reuse the canonical social navigation component.');
+assert.match(messages, /data-inbox-tab="primary"/, 'Inbox must expose the Primary category.');
+assert.match(messages, /data-inbox-tab="requests"/, 'Inbox must expose the Requests category.');
+assert.match(messages, /data-inbox-tab="blocked"/, 'Inbox must expose the Blocked category.');
+assert.match(messages, /Cari nama atau username teman/, 'Inbox header search must be discoverable.');
+assert.match(messages, /display_name\.ilike/, 'Inbox search must match display names as well as usernames.');
+assert.match(messages, /classList\.toggle\('has-many'/, 'Online carousel must switch to partial overlap for larger friend sets.');
+
 
 const accountSettings = read('src/pages/account/security-settings.js');
 assert.match(accountSettings, /auth\.mfa\.enroll/, 'Account settings must provide authenticator enrollment.');
@@ -132,6 +139,11 @@ for (const path of [
 const publicHome = read('src/pages/home/index.js');
 assert.match(publicHome, /mountUserAccount\('explore'\)/, 'Signed-in homepage must use the canonical interactive social feed.');
 assert.match(publicHome, /if\(viewer\)\{history\.replaceState\(null,'',location\.pathname\+location\.search\+'#\/account\/explore'\);mountUserAccount\('explore'\);return;\}/, 'Signed-in homepage must canonicalize to the interactive Explore feed without leaving a duplicate URL.');
+
+const inboxCss = read('src/pages/messages/messages.css');
+assert.match(inboxCss, /pl-msg-head-search/, 'Inbox must own a compact top-bar search field.');
+assert.match(inboxCss, /pl-msg-inbox-tabs/, 'Inbox categories must have dedicated scoped styling.');
+assert.match(inboxCss, /pl-msg-people-strip\.has-many/, 'Large online contact sets must use the compact overlapping carousel.');
 
 const navigationCss = read('src/styles/social-navigation.css');
 assert.match(navigationCss, /max-width:\s*760px/, 'Social navigation must retain its mobile layout breakpoint.');

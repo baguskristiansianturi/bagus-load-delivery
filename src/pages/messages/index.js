@@ -197,7 +197,7 @@ async function loadContacts() {
       const cached=JSON.parse(localStorage.getItem(contactsKey())||'[]');
       contactsCache=cached;
       renderContactList(box,cached,false);await renderPeopleStrip(cached,false);
-      if(!cached.length)box.innerHTML='<p class="pl-msg-empty">Kontak belum tersimpan di perangkat ini. Hubungkan internet untuk memuat kontak.</p>';
+      if(!cached.length&&box)box.innerHTML='<p class="pl-msg-empty">Kontak belum tersimpan di perangkat ini. Hubungkan internet untuk memuat kontak.</p>';
     } catch { if(box)box.textContent='Kontak offline belum tersedia.'; }
     return;
   }
