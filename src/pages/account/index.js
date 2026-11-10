@@ -222,7 +222,7 @@ async function profilePage(preview=false){
   </div>
   <p id="ua-profile-note" class="ua-form-note" role="status" aria-live="polite"></p>
  </form>
- ${marker2}
+ <nav class="ua-profile-tabs" role="tablist" aria-label="Konten profil">
   <button class="active" type="button" role="tab" aria-selected="true" data-profile-tab="posts">▦ <span>Post/Feed</span></button><button type="button" role="tab" aria-selected="false" data-profile-tab="reels">▣ <span>Reels</span></button><button type="button" role="tab" aria-selected="false" data-profile-tab="trip">⌖ <span>Trip</span></button><button type="button" role="tab" aria-selected="false" data-profile-tab="tagged">♙ <span>Ditandai</span></button>
  </nav>
  <section id="ua-profile-tab-content" class="ua-profile-tab-content" role="tabpanel">
