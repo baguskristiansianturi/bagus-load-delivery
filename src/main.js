@@ -34,14 +34,14 @@ import { home, bindHome } from './pages/home/index.js';
 
 function render() {
   const hash = location.hash || '#/';
-  const path = hash.replace(/^#\/?/, '').split('?')[0].replace(/\/$/, '');
-  route(home);
-
-  // Older shared links used /home, /feed and /beranda. Keep them on the
-  // current social home instead of falling through to a legacy/unknown page.
-  if (!path || ['home', 'feed', 'beranda'].includes(path)) {
-    queueMicrotask(bindHome);
+  let path = hash.replace(/^#\/?/, '').split('?')[0].replace(/\/$/, '');
+  // Keep one canonical URL for the public home; older aliases resolve to #/.
+  if (['home', 'feed', 'beranda'].includes(path)) {
+    history.replaceState(null, '', location.pathname + location.search + '#/');
+    path = '';
   }
+  route(home);
+  if (!path) queueMicrotask(bindHome);
 }
 
 window.addEventListener('hashchange', render);
