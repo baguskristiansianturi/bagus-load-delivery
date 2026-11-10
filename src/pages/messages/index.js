@@ -224,15 +224,13 @@ export async function bindMessagesPage() {
   const {data:ownProfile}=await db.from('user_profiles').select('id,display_name,username,avatar_path').eq('id',user.id).maybeSingle();
   currentProfile=ownProfile||{id:user.id,display_name:user.user_metadata?.full_name||'Anda',username:'akun'};
   await Promise.all([loadContacts(),loadConversations()]);
-  presenceChannel=db.channel('pluits-online-v1',{config:{presence:{key:user.id}}})
+  presenceChannel=db.channel('pluits-online-v1')
     .on('presence',{event:'sync'},()=>{
       const state=presenceChannel?.presenceState?.()||{};
       onlineUserIds=new Set(Object.values(state).flat().map(entry=>entry.user_id).filter(Boolean));
       renderPeopleStrip(contactsCache,true);
     })
-    .subscribe(async status=>{
-      if(status==='SUBSCRIBED') await presenceChannel.track({user_id:user.id,online_at:new Date().toISOString()});
-    });
+    .subscribe();
   const settingsToggle=app.querySelector('#pl-msg-settings-toggle'),settingsPanel=app.querySelector('#pl-msg-settings');
   if(settingsToggle&&settingsPanel)settingsToggle.onclick=()=>{const open=settingsPanel.hidden;settingsPanel.hidden=!open;settingsToggle.setAttribute('aria-expanded',String(open));};
   const selfAvatar=app.querySelector('.pl-msg-self-avatar');if(selfAvatar)selfAvatar.textContent=(currentProfile.display_name||user.email||'P').slice(0,1).toUpperCase();
