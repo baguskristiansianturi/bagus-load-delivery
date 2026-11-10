@@ -109,7 +109,7 @@ function bindVoiceRecorder(chat, conversationId) {
   };
 }
 export function messagesPage() {
-  return `<main class="pl-msg">
+  return `<main class="pl-msg ua-social-app">
     <header class="pl-msg-head">
       <a href="#/account/explore" class="pl-msg-brand" aria-label="PLUITS Beranda">PLUITS</a>
       <form id="pl-msg-search" class="pl-msg-head-search" role="search">
