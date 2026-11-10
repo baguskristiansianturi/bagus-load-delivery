@@ -105,7 +105,7 @@ const signedInHeader = renderSocialHeader({ active: 'explore', user: { id: 'test
 const signedInMobileNav = renderSocialMobileNav({ active: 'explore', user: { id: 'test-user' }, profile: {}, userAvatar: '<span>U</span>', notificationCount: 3 });
 const publicMobileNav = renderSocialMobileNav({ active: 'home', publicHome: true });
 assert.match(signedInHeader, /href="#\/account\/profile"/, 'Header avatar must open the signed-in profile.');
-assert.match(signedInMobileNav, /href="#\/messages"/, 'Rendered signed-in mobile navigation must expose Inbox.');
+assert.match(signedInMobileNav, /href="#\/inbox"/, 'Rendered signed-in mobile navigation must expose Inbox.');
 assert.match(signedInMobileNav, /<small>Profil<\/small>/, 'Profile must be the fifth bottom-navigation destination.');
 assert.equal((signedInMobileNav.match(/<a class=/g) || []).length, 5, 'Signed-in mobile navigation must contain exactly five destinations.');
 assert.match(signedInMobileNav, /pl-create-orb/, 'Rendered central Create action must use the dedicated center control.');
@@ -114,7 +114,7 @@ assert.match(inboxMobileNav, /href="#\/account\/activity"/, 'Inbox context must 
 assert.match(inboxMobileNav, /pl-mobile-activity/, 'Inbox-context notification item must expose its badge anchor.');
 assert.match(inboxMobileNav, />3</, 'Inbox-context notification item must display its unread badge.');
 assert.match(inboxMobileNav, /<small>Profil<\/small>/, 'Profile must remain available inside Inbox.');
-assert.doesNotMatch(publicMobileNav, /href="#\/messages"|href="#\/account\/activity"/, 'Public navigation must route private destinations through login.');
+assert.doesNotMatch(publicMobileNav, /href="#\/inbox"|href="#\/account\/activity"/, 'Public navigation must route private destinations through login.');
 assert.equal((publicMobileNav.match(/<a class=/g) || []).length, 5, 'Public mobile navigation must keep the same five-slot structure.');
 const account = read('src/pages/account/index.js');
 assert.match(account, /unreadNotificationCount/, 'Social navigation must receive unread notification count.');
