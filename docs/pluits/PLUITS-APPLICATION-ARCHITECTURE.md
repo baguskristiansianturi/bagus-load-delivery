@@ -67,3 +67,13 @@ Feature CSS is rooted in its namespace. No generic element selectors, global sid
 
 ## Migration order
 1. Canonical route registry (started). 2. Split social header/bottom nav with compatibility exports. 3. Design tokens/layout primitives. 4. Extract Profile Hero. 5. Extract Inbox. 6. Decompose account controller. 7. Store/Wishlist/Checkout shells. 8. Route and visual regression. 9. Capacitor adapter after browser auth/media/offline stabilize.
+
+
+## Route loading and runtime performance
+- The app shell and social homepage remain the initial entry path.
+- Route-level page modules (account, messages, marketplace, Trip, directory, seller, moderation, help and discovery) are loaded with explicit dynamic imports when their route is requested.
+- The router uses a monotonically increasing navigation token so a slow module import cannot overwrite a newer route after the user navigates away.
+- Route-load failures render a recoverable error state; they do not silently leave an empty page.
+- Feature CSS imported by a lazy route can be emitted as route-associated CSS chunks by Vite instead of forcing every workspace stylesheet into the first load.
+- Keep media lists and upload operations bounded; avoid parallelizing large mobile uploads.
+- Verify production bundle output and route chunking in CI. This is a code-splitting baseline, not a claim of measured device latency.
