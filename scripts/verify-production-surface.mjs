@@ -90,8 +90,8 @@ assert.ok(postActions.includes('data-post-menu'), 'Feed cards must expose the po
 assert.ok(postActions.includes('data-action="edit"'), 'Owners must have a functional edit-post action.');
 assert.ok(postActions.includes('data-action="delete-post"'), 'Owners must have a delete-post action.');
 assert.ok(postActions.includes('data-save-post'), 'Post editor must expose a save action.');
-assert.match(postActions, /dblclick/, 'Photo posts must support double-tap/double-click like.');
-assert.match(postActions, /toggleLike\(false\)/, 'Double-tap must toggle like state so a second double-tap can unlike.');
+assert.match(postActions, /pointerup/, 'Photo posts must support responsive pointer-based double-tap like.');
+assert.match(postActions, /toggleLike\(\)/, 'Double-tap must toggle like state so a second double-tap can unlike.');
 
 for (const path of [
   'MASTER/DECISION-LOG.md',
@@ -179,10 +179,10 @@ assert.ok(postLayoutCss.includes('aspect-ratio: 4 / 5'), 'Feed media must use a 
 assert.ok(postLayoutCss.includes('.ua-post-detail-page .ua-media img'), 'Post detail images must have responsive sizing rules.');
 assert.ok(postLayoutCss.includes('overflow-y: auto;'), 'Mobile social pages must retain vertical document scrolling.');
 assert.ok(postLayoutCss.includes('overflow: visible;'), 'Social feed must not clip vertical content.');
-assert.ok(postDetailSource.includes("socialIcon(removing?'heart-crack':'heart',{size:112})"), 'Double-tap must show a large heart or cracked-heart feedback based on current like state.');
+assert.ok(postDetailSource.includes("socialIcon(liked?'heart':'heart-crack',{size:108})"), 'Double-tap must show a large heart or cracked-heart feedback based on current like state.');
 assert.ok(postDetailSource.includes("const wasLiked=likeButton.classList.contains('is-liked');"), 'Double-tap on an already liked post must allow unlike.');
 assert.ok(postLayoutCss.includes('.ua-double-tap-heart.is-removing'), 'Unlike feedback must have a distinct cracked-heart animation.');
-assert.ok(postLayoutCss.includes('@keyframes ua-heart-appear'), 'Like feedback must animate in and fade out.');
+assert.ok(postLayoutCss.includes('@keyframes pluits-heart-core') && postLayoutCss.includes('@keyframes pluits-heart-particle'), 'Like feedback must bloom into smaller hearts and fade out.');
 
 
 
