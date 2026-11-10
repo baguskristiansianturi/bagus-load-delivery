@@ -340,7 +340,7 @@ function postCard(p){
  return `<article class="ua-post-card" data-post-id="${p.id}" data-owner-id="${p.user_id}">
  <div class="ua-post-head"><a class="ua-post-avatar-link" href="${profileHref}">${avatar(p.avatarUrl,p.owner.display_name)}</a><div><a class="ua-author-link" href="${profileHref}"><strong>${esc(p.owner.display_name)}</strong></a><small>@${esc(p.owner.username)} ${p.owner.public_city&&p.owner.public_province?'· '+esc(p.owner.public_city):''}</small></div><div class="ua-post-menu-wrap"><button class="ua-post-more" type="button" aria-label="Menu postingan" aria-expanded="false" data-post-menu>${socialIcon("more",{size:21})}</button><div class="ua-post-menu" hidden>${p.user_id===user?.id?`<button type="button" data-action="edit">${socialIcon("edit",{size:16})}<span>Edit postingan</span></button><button type="button" data-action="delete-post"><span class="ua-menu-delete-icon">×</span><span>Hapus postingan</span></button>`:`<button type="button" data-action="share">${socialIcon("send",{size:16})}<span>Bagikan postingan</span></button>`}</div></div></div>
  ${mediaMarkup}
- ${user?`<div class="ua-post-actions"><button data-action="like" class="${p.liked?'is-liked':''}" aria-label="Suka">${socialIcon("heart",{size:21})}<b>${p.likes}</b></button><button data-action="comments" aria-label="Komentar">${socialIcon("comment",{size:21})}<b>${p.comments}</b></button><button data-action="share" aria-label="Bagikan">${socialIcon("send",{size:20})}</button><button data-action="save" class="${p.saved?'is-saved':''}" aria-label="Simpan">${socialIcon("bookmark",{size:20})}</button></div>`:`<div class="ua-post-actions"><a class="ua-login-action" href="#/account/login">Masuk untuk berinteraksi</a></div>`}
+ ${user?`<div class="ua-post-actions"><button data-action="like" class="${p.liked?'is-liked':''}" aria-label="Suka">${socialIcon("pluits-like",{size:23})}<b>${p.likes}</b></button><button data-action="comments" aria-label="Komentar">${socialIcon("pluits-comment",{size:22})}<b>${p.comments}</b></button><button data-action="share" aria-label="Bagikan">${socialIcon("pluits-share",{size:21})}</button><button data-action="save" class="${p.saved?'is-saved':''}" aria-label="Simpan">${socialIcon("pluits-mark",{size:21})}</button></div>`:`<div class="ua-post-actions"><a class="ua-login-action" href="#/account/login">Masuk untuk berinteraksi</a></div>`}
  <div class="ua-post-caption">${p.likes?'<strong>'+p.likes+' suka</strong>':''}<p><a href="${profileHref}"><b>${esc(p.owner.username)}</b></a> ${esc(p.caption||'')}</p>${p.comments?'<button data-action="comments" class="ua-view-comments">Lihat semua '+p.comments+' komentar</button>':''}</div>
  ${user?(p.user_id===user.id?'<section class="ua-post-editor" hidden></section>':'')+'<div class="ua-comments" hidden></div>':''}
  </article>`;
@@ -1047,29 +1047,44 @@ function bindPostActions(){
   });
 
   const likeButton=card.querySelector('[data-action="like"]');
-  const toggleLike=async(force=false)=>{
-   if(!user){notify('Masuk untuk menyukai postingan.','error');return;}
+  const paintLikeState=(liked,count)=>{
+   if(!likeButton)return;
+   likeButton.classList.toggle('is-liked',liked);
+   likeButton.setAttribute('aria-label',liked?'Batalkan apresiasi':'Beri apresiasi');
+   const countNode=likeButton.querySelector('b');if(countNode)countNode.textContent=String(count);
+   let captionCount=card.querySelector('.ua-post-caption strong');
+   if(count){if(!captionCount){captionCount=document.createElement('strong');card.querySelector('.ua-post-caption')?.prepend(captionCount);}if(captionCount)captionCount.textContent=count+' apresiasi';}
+   else captionCount?.remove();
+  };
+  const animateLikeTransition=(area,liked)=>{
+   if(!area)return;
+   area.querySelector('.ua-double-tap-heart')?.remove();
+   const overlay=document.createElement('span');overlay.className='ua-double-tap-heart '+(liked?'is-liking':'is-removing');
+   const core=document.createElement('span');core.className='ua-heart-core';core.innerHTML=socialIcon(liked?'heart':'heart-crack',{size:108});overlay.appendChild(core);
+   const vectors=[[0,-76],[62,-42],[76,24],[30,68],[-34,65],[-76,20],[-62,-42]];
+   vectors.forEach(([dx,dy],index)=>{const particle=document.createElement('i');particle.className='ua-heart-particle';particle.style.setProperty('--dx',dx+'px');particle.style.setProperty('--dy',dy+'px');particle.style.setProperty('--delay',(index*18)+'ms');particle.innerHTML=socialIcon(liked?'heart':'heart-crack',{size:18});overlay.appendChild(particle);});
+   area.appendChild(overlay);const cleanup=()=>overlay.remove();overlay.addEventListener('animationend',cleanup,{once:true});setTimeout(cleanup,850);
+  };
+  const toggleLike=async()=>{
+   if(!user){notify('Masuk untuk memberi apresiasi.','error');return;}
    if(!likeButton||likeButton.dataset.busy==='1')return;
-   const wasLiked=likeButton.classList.contains('is-liked');
-   likeButton.dataset.busy='1';likeButton.disabled=true;
+   const wasLiked=likeButton.classList.contains('is-liked'),liked=!wasLiked;
+   const oldCount=Number(likeButton.querySelector('b')?.textContent||0),nextCount=Math.max(0,oldCount+(liked?1:-1));
+   likeButton.dataset.busy='1';
+   paintLikeState(liked,nextCount);animateLikeTransition(card.querySelector('.ua-media,.ua-media-gallery'),liked);
    try{
     const result=wasLiked?await supabase.from('post_likes').delete().eq('post_id',id).eq('user_id',user.id):await supabase.from('post_likes').insert({post_id:id,user_id:user.id});
     if(result.error)throw result.error;
-    const liked=!wasLiked,count=Math.max(0,Number(likeButton.querySelector('b')?.textContent||0)+(liked?1:-1));
-    likeButton.classList.toggle('is-liked',liked);likeButton.setAttribute('aria-label',liked?'Batal suka':'Suka');
-    const countNode=likeButton.querySelector('b');if(countNode)countNode.textContent=String(count);
-    let captionCount=card.querySelector('.ua-post-caption strong');
-    if(count){if(!captionCount){captionCount=document.createElement('strong');card.querySelector('.ua-post-caption')?.prepend(captionCount);}if(captionCount)captionCount.textContent=count+' suka';}else captionCount?.remove();
-   }catch(err){notify(err.message||'Like belum berhasil disimpan.','error');}
-   finally{likeButton.dataset.busy='';likeButton.disabled=false;}
+   }catch(err){paintLikeState(wasLiked,oldCount);notify(err.message||'Perubahan apresiasi belum tersimpan.','error');}
+   finally{likeButton.dataset.busy='';}
   };
-  likeButton?.addEventListener('click',()=>toggleLike(false));
+  likeButton?.addEventListener('click',toggleLike);
   card.querySelectorAll('.ua-media img,.ua-gallery-item img').forEach(img=>{
-   let lastTap=0;
-   const heart=()=>{const area=img.closest('.ua-media,.ua-gallery-item')||card.querySelector('.ua-media,.ua-media-gallery');if(!area)return;area.querySelector('.ua-double-tap-heart')?.remove();const removing=likeButton?.classList.contains('is-liked');const el=document.createElement('span');el.className='ua-double-tap-heart '+(removing?'is-removing':'is-liking');el.innerHTML=socialIcon(removing?'heart-crack':'heart',{size:112});area.appendChild(el);el.addEventListener('animationend',()=>el.remove(),{once:true});setTimeout(()=>el.remove(),1100);};
-   const likeFromDoubleTap=event=>{event.preventDefault();heart();toggleLike(false);};
-   img.addEventListener('pointerup',event=>{if(event.pointerType==='mouse'&&event.button!==0)return;const now=Date.now();if(now-lastTap>0&&now-lastTap<360){lastTap=0;likeFromDoubleTap(event);}else lastTap=now;});
-   img.addEventListener('dblclick',likeFromDoubleTap);
+   let lastTap=0;img.style.touchAction='manipulation';
+   img.addEventListener('pointerup',event=>{
+    if(event.pointerType==='mouse'&&event.button!==0)return;
+    const now=Date.now();if(lastTap&&now-lastTap<330){lastTap=0;event.preventDefault();toggleLike();}else lastTap=now;
+   });
   });
   card.querySelector('[data-action="save"]')?.addEventListener('click',async()=>{
    const p=await supabase.from('post_saves').select('post_id').eq('post_id',id).eq('user_id',user.id).maybeSingle();
