@@ -27,9 +27,10 @@ function notify(message,type='success'){
 }
 function frame(content,active='explore',avatarUrl=''){
  const userAvatar=avatar(avatarUrl,profile?.display_name||user?.email||'P');
- const profileView=active==='profile'||active==='preview';
+ const profileView=active==='profile'||active==='preview'||active==='profile-edit';
+ const showEditProfile=active==='profile'||active==='preview';
  return `<div class="ua-app ua-social-app">
-  ${renderSocialHeader({active,profileView,user,profile,userAvatar,notificationCount:unreadNotificationCount})}
+  ${renderSocialHeader({active,profileView,showEditProfile,user,profile,userAvatar,notificationCount:unreadNotificationCount})}
    <main class="ua-main ${profileView?'ua-profile-main':''}">${content}</main>
   ${renderSocialMobileNav({active,profileView,user,profile,userAvatar,notificationCount:unreadNotificationCount})}
      <div id="ua-toast" class="ua-toast" role="status"></div>
@@ -682,7 +683,7 @@ async function mountAccount(section='profile',parameter=''){
   unreadNotificationCount=await countUnreadActivity();
   if(section==='profile')updateSEO({title:profile.display_name+' (@'+profile.username+') — Pluits',description:(profile.bio||'Profil komunitas '+profile.display_name+' di Pluits.').slice(0,160),path:'#/@'+encodeURIComponent(profile.username)});
   const page=section==='explore'?await feedPage():section==='activity'?await notificationPage():section==='reels'?await reelsPage():section==='create'?createPage():section==='story'?await storyComposePage():section==='live'?livePage():section==='saved'?await savedPage():section==='reel'?await composePage('', 'reel'):section==='compose'?await composePage(parameter):section==='drafts'?await draftsPage():section==='addresses'?await addressPage():section==='wallet'?await walletPage():section==='post'?await postDetailPage(parameter||location.hash.split('/')[3]||''):section==='user'?await publicProfilePage(parameter):section==='followers'?await followListPage('followers'):section==='following'?await followListPage('following'):section==='requests'?await followListPage('followers'):section==='preview'?await profilePage(true):section==='profile'?await profilePage(false,parameter==='edit'):section==='professional'?professionalPage(accountContext,profile):section==='professional-create'?professionalFormPage(accountContext,profile):section==='settings'?settingsHubPage():section==='security'?await accountSecurityPage(supabase,user):section==='blocked'?await blockedAccountsPage():section==='content-settings'?await accountSettingsPage(supabase,user):await profilePage();
-  const headerAvatar=await signed(profile.avatar_path);const app=document.querySelector('#app');const navActive=section==='explore'?'explore':section==='reels'?'reels':['create','compose','reel','story'].includes(section)?'create':section==='post'?'post':section==='activity'?'activity':section==='addresses'?'addresses':'profile';app.classList.remove('pl-page-enter');app.innerHTML=frame(page,navActive,headerAvatar);requestAnimationFrame(()=>app.classList.add('pl-page-enter'));
+  const headerAvatar=await signed(profile.avatar_path);const app=document.querySelector('#app');const navActive=section==='profile'?(parameter==='edit'?'profile-edit':'profile'):section==='preview'?'preview':section==='explore'?'explore':section==='reels'?'reels':['create','compose','reel','story'].includes(section)?'create':section==='post'?'post':section==='activity'?'activity':section==='addresses'?'addresses':'account';app.classList.remove('pl-page-enter');app.innerHTML=frame(page,navActive,headerAvatar);requestAnimationFrame(()=>app.classList.add('pl-page-enter'));
   document.querySelector('#ua-logout')?.addEventListener('click',async()=>{await supabase.auth.signOut();user=null;profile=null;authScreen('login');});
   bindAccountContext({db:supabase,user,ctx:accountContext,profile,refresh:mountAccount});
   bindProfileMenu();

@@ -1,6 +1,6 @@
 import { socialIcon } from '../common/social-icons.js';
 
-export function renderSocialHeader({ active = 'explore', profileView = false, user, profile, userAvatar = '', notificationCount = 0, publicHome = false } = {}) {
+export function renderSocialHeader({ active = 'explore', profileView = false, showEditProfile = profileView, user, profile, userAvatar = '', notificationCount = 0, publicHome = false } = {}) {
   const profileHref = user ? '#/account/profile' : '#/account/login';
 
   if (publicHome) {
@@ -39,7 +39,7 @@ export function renderSocialHeader({ active = 'explore', profileView = false, us
       <div class="pl-social-header-menu">
         <button class="pl-social-menu-trigger" type="button" aria-label="Menu profil" aria-expanded="false" aria-controls="pl-account-menu"><span aria-hidden="true">•••</span></button>
         <div class="pl-social-menu-panel" id="pl-account-menu" hidden>
-          ${profileView?'<a href="#/account/profile/edit">'+socialIcon('edit',{size:17})+'<span>Edit profil</span></a>':''}
+          ${showEditProfile?'<a href="#/account/profile/edit">'+socialIcon('edit',{size:17})+'<span>Edit profil</span></a>':''}
           <a href="#/account/settings">${socialIcon('settings',{size:17})}<span>Pusat Pengaturan</span></a>
         </div>
       </div>

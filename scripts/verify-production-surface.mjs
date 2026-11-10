@@ -122,6 +122,7 @@ assert.ok(sharedHeader.includes("aria-label='Notifikasi'") && sharedHeader.inclu
 assert.ok(sharedHeader.includes("aria-label='Kontak dan koneksi'") && sharedHeader.includes("socialIcon('users', { size: 21 })"), 'Shared social header must render Contacts.');
 assert.ok(sharedHeader.includes("aria-label='Wishlist dan tersimpan'") && sharedHeader.includes("socialIcon('bookmark', { size: 21 })"), 'Saved items shortcut must be available privately.');
 assert.ok(sharedHeader.includes('pl-social-menu-trigger') && sharedHeader.includes('Pusat Pengaturan') && sharedHeader.includes('#/account/settings'), 'Profile menu must be the single entry point for account settings.');
+assert.ok(sharedHeader.includes('showEditProfile') && socialHome.includes("section==='profile'?(parameter==='edit'?'profile-edit':'profile')"), 'Edit profile must only appear in the three-dot menu on the profile view, not throughout settings pages.');
 assert.ok(socialHome.includes('function createPage()') && socialHome.includes('function storyComposePage()'), 'Bottom create flow must expose Story/Post/Reel/Live entry selection.');
 assert.ok(socialHome.includes("section==='saved'?await savedPage()"), 'Saved items route must be available to the signed-in owner.');
 assert.doesNotMatch(socialHome, /<header class='ua-feed-top'>/, 'Signed-in feed must not render a duplicate second header.');
