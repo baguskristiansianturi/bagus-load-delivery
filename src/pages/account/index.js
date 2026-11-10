@@ -11,7 +11,7 @@ import '../../styles/social-components.css';
 import '../../styles/social-navigation.css';
 import {loadAccountContext,contextHeader,professionalPage,professionalFormPage,accountSettingsPage,bindAccountContext} from './account-context.js';
 import {listPrivateDrafts,getPrivateDraft,savePrivateDraft,deletePrivateDraft} from './drafts.js';
-import {getMediaMime,validateMediaFile,getVideoDuration} from '../../features/media/media-types.js';
+import {getMediaMime,getMediaExtension,validateMediaFile,getVideoDuration} from '../../features/media/media-types.js';
 import {createMediaUploader} from '../../features/media/storage-upload.js';
 
 const SUPABASE_URL='https://ytndswhqxayqpftszwfh.supabase.co';
@@ -407,7 +407,7 @@ async function composePage(draftId='',kind='post'){
  const defaultAudience=accountContext.active==='professional'?(contentPrefs?.professional_default_visibility==='unlisted'?'private':'public'):accountContext.active==='business'?(contentPrefs?.business_default_visibility==='unlisted'?'private':'public'):(contentPrefs?.personal_default_visibility||'public');
  return `<div class="ua-page-heading"><div><span class="ua-eyebrow">BUAT KONTEN</span><h1>${currentComposeDraft?'Lanjutkan draf':kind==='reel'?'Reel baru':'Post baru'}</h1></div></div>
  <section class="ua-panel ua-compose-panel"><form id="ua-post-form" class="ua-compose-form ua-clean-composer" data-content-kind="${kind}" data-default-visibility="${currentComposeDraft?.visibility||defaultAudience}">
-  <div class="ua-media-picker-row"><label class="ua-media-picker" for="ua-post-file"><span>＋</span><strong>${kind==='reel'?'Pilih video':'Tambah foto atau video'}</strong><small>${kind==='reel'?'Video MP4, MOV, WebM atau 3GP · Maksimal 60 detik dan 50 MB':'Pilih beberapa foto atau video · Maksimal 15 media, 50 MB per file'}</small><input id="ua-post-file" type="file" ${kind==='reel'?'accept="video/*"':'multiple accept="image/*,video/*"'} aria-label="${kind==='reel'?'Pilih video Reel':'Pilih foto atau video'}"></label><span class="ua-media-count" id="ua-media-count">Belum ada media</span></div>
+  <div class="ua-media-picker-row"><label class="ua-media-picker" for="ua-post-file"><span>＋</span><strong>${kind==='reel'?'Pilih video':'Tambah foto atau video'}</strong><small>${kind==='reel'?'Video MP4, MOV, WebM atau 3GP · Maksimal 60 detik dan 50 MB':'Pilih beberapa foto atau video · Maksimal 15 media, 50 MB per file'}</small><input id="ua-post-file" type="file" ${kind==='reel'?'accept="video/*,.mp4,.m4v,.mov,.webm,.3gp,.3gpp,.3g2,.3gp2"':'multiple accept="image/*,video/*,.mp4,.m4v,.mov,.webm,.3gp,.3gpp,.3g2,.3gp2"'} aria-label="${kind==='reel'?'Pilih video Reel':'Pilih foto atau video'}"></label><span class="ua-media-count" id="ua-media-count">Belum ada media</span></div>
   <div id="ua-media-preview" class="ua-media-preview ua-clean-preview"></div>
   <label class="ua-compose-caption-label"><textarea name="caption" rows="3" maxlength="2200" placeholder="Tulis deskripsi..." aria-label="Tulis deskripsi">${esc(currentComposeDraft?.caption||'')}</textarea></label>
   <details class="ua-post-options"><summary>Pengaturan postingan <span>＋</span></summary><div class="ua-post-option-fields">
@@ -823,7 +823,7 @@ function bindCompose(){
   button.disabled=true;button.textContent='Mengunggah…';const uploaded=[];
   try{
    for(let i=0;i<files.length;i++){
-    const file=files[i],mime=getMediaMime(file),ext=(file.name.split('.').pop()||'bin').toLowerCase(),token=crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random().toString(36).slice(2),path=user.id+'/'+token+'.'+ext;
+    const file=files[i],mime=getMediaMime(file),ext=getMediaExtension(file,mime),token=crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random().toString(36).slice(2),path=user.id+'/'+token+'.'+ext;
     const result=await uploadMediaFile(file,path,mime,pct=>{progress.hidden=false;progress.querySelector('span').style.width=Math.round((i+pct/100)/files.length*65)+'%';});
     if(result.error)throw result.error;
     const mediaRecord={media_path:path,media_type:mime.startsWith('video/')?'video':'image',position:i,duration_ms:null};uploaded.push(mediaRecord);
@@ -889,7 +889,7 @@ async function storyComposePage(){
  const storyVisibility=contentPrefs?.story_default_visibility||'private';
  return `<div class="ua-page-heading"><div><span class="ua-eyebrow">STORY · 24 JAM</span><h1>Tambahkan Story</h1><p>Bagikan momen yang akan hilang setelah 24 jam.</p></div><a class="ua-outline" href="#/account/explore">Batal</a></div>
  <section class="ua-panel ua-compose-panel"><form id="ua-story-form" class="ua-compose-form">
-  <label class="ua-upload-zone" for="ua-story-file"><span class="ua-upload-icon">＋</span><strong>Pilih foto atau video</strong><small>JPG, PNG, WebP, GIF, MP4, atau WebM · Maksimal 50 MB</small><input id="ua-story-file" type="file" accept="image/jpeg,image/png,image/webp,image/gif,video/*"></label>
+  <label class="ua-upload-zone" for="ua-story-file"><span class="ua-upload-icon">＋</span><strong>Pilih foto atau video</strong><small>JPG, PNG, WebP, GIF, MP4, MOV, WebM, 3GP atau 3G2 · Maksimal 50 MB</small><input id="ua-story-file" type="file" accept="image/jpeg,image/png,image/webp,image/gif,video/*"></label>
   <div id="ua-story-preview" class="ua-media-preview"></div>
   <label class="ua-compose-caption-label"><textarea name="caption" rows="3" maxlength="500" placeholder="Tambahkan keterangan (opsional)"></textarea></label>
   <label class="ua-audience-field">Siapa yang dapat melihat Story?
@@ -909,7 +909,7 @@ function bindStoryCompose(){
   preview.dataset.objectUrl='';preview.innerHTML='';
   const file=fileInput.files?.[0];if(!file)return;
   const mime=getMediaMime(file);
-  if(!mime){note.textContent='Format tidak didukung. Gunakan JPG, PNG, WebP, GIF, MP4, atau WebM.';fileInput.value='';return;}
+  if(!mime){note.textContent='Format tidak didukung. Gunakan JPG, PNG, WebP, GIF, MP4, MOV, WebM, 3GP atau 3G2.';fileInput.value='';return;}
   const url=URL.createObjectURL(file);preview.dataset.objectUrl=url;
   preview.innerHTML=mime.startsWith('video/')?"<video controls playsinline preload='metadata' src='"+url+"'></video>":"<img src='"+url+"' alt='Pratinjau Story'>";
  });
@@ -918,7 +918,7 @@ function bindStoryCompose(){
   const file=fileInput?.files?.[0];
   if(!file){note.textContent='Pilih foto atau video terlebih dahulu.';return;}
   const mime=getMediaMime(file);
-  if(!mime){note.textContent='Format tidak didukung. Gunakan JPG, PNG, WebP, GIF, MP4, atau WebM.';return;}
+  if(!mime){note.textContent='Format tidak didukung. Gunakan JPG, PNG, WebP, GIF, MP4, MOV, WebM, 3GP atau 3G2.';return;}
   if(file.size>50*1024*1024){note.textContent='Ukuran file maksimal 50 MB.';return;}
   const button=form.querySelector("button[type='submit']"),data=new FormData(form),caption=String(data.get('caption')||'').trim(),visibility=String(data.get('visibility')||'private');
   button.disabled=true;button.textContent='Mengunggah Story…';note.textContent='Mengunggah media ke Pluits…';

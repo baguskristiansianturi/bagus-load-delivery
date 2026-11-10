@@ -1792,3 +1792,10 @@
 .ua-social-app .ua-post-caption .ua-view-comments{padding:3px 0 0;font-size:10px;line-height:1.25}
 .ua-social-app .ua-post-card{padding-bottom:0!important;margin-bottom:0!important}
 @media(max-width:760px){.ua-social-app .ua-post-caption{padding:0 13px 6px!important;font-size:11px}.ua-social-app .ua-post-caption>strong{margin-bottom:2px!important}}
+
+/* Mobile video upload and playback: native controls remain reachable and media stays inside its container. */
+.ua-social-app .ua-media video,.ua-social-app .ua-gallery-item video,.ua-social-app .ua-media-preview video,.ua-social-app .ua-clean-media-item video{display:block;width:100%;max-width:100%;height:auto;max-height:min(72vh,650px);object-fit:contain;background:#101820}
+.ua-social-app .ua-media-preview video{min-height:160px}
+.ua-social-app .ua-clean-media-item{min-width:0;max-width:100%;overflow:hidden}
+.ua-social-app .ua-clean-media-item video{max-height:360px}
+@media(max-width:760px){.ua-social-app .ua-media-preview{width:100%;max-height:65vh}.ua-social-app .ua-media-preview video{width:100%;max-height:65vh}.ua-social-app .ua-media video,.ua-social-app .ua-gallery-item video{max-height:70vh}}
