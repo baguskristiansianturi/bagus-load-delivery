@@ -138,7 +138,7 @@ export function messagesPage() {
         <section class="pl-msg-chat" id="pl-msg-chat"><div class="pl-msg-empty">Pilih percakapan untuk mulai mengirim pesan.</div></section>
       </div>
       <p class="pl-msg-offline-note">Jika koneksi terputus, pesan yang Anda kirim disimpan sementara di perangkat ini dan otomatis dicoba kirim saat online kembali. Pesan belum terkirim sampai server mengonfirmasi.</p>
-      ${renderSocialMobileNav({active:'messages',user:{id:'inbox'}})}
+      ${renderSocialMobileNav({active:'messages',user:{id:'inbox'},navClass:'pl-social-mobile-nav pl-msg-mobile-nav'})}
     </section>
   </main>`;
 }

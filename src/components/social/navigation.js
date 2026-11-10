@@ -1,7 +1,7 @@
 import { socialIcon } from '../common/social-icons.js';
 import { ROUTES, getRoute } from './navigation-routes.js';
 
-export function renderSocialHeader({ active = 'explore', profileView = false, showEditProfile = profileView, user, profile, userAvatar = '', notificationCount = 0, publicHome = false } = {}) {
+export function renderSocialHeader({ active = 'explore', profileView = false, showEditProfile = profileView, user, profile, userAvatar = '', notificationCount = 0, publicHome = false, navClass = 'pl-home-mobile-nav pl-social-mobile-nav' } = {}) {
   if (publicHome) {
     return `
       <header class="pl-social-header">
@@ -56,7 +56,7 @@ export function renderSocialMobileNav({ active = 'home', profileView = false, us
     isInbox ? { key: 'activity', href: getRoute('activity', Boolean(user)), label: 'Notifikasi', icon: 'bell' } : { key: 'messages', href: getRoute('inbox', Boolean(user)), label: 'Inbox', icon: 'message' },
     { key: 'profile', href: profileHref, label: 'Profil', icon: 'user', avatar: userAvatar }
   ];
-  return `<nav class="pl-home-mobile-nav pl-social-mobile-nav" aria-label="Navigasi utama Pluits">${items.map(item => {
+  return `<nav class="${navClass}" aria-label="Navigasi utama Pluits">${items.map(item => {
     const iconMarkup = item.avatar || socialIcon(item.icon, { size: 22 });
     const badge = item.key === 'activity' ? notificationCount : item.key === 'messages' ? messageCount : 0;
     const isActive = activeKey === item.key;

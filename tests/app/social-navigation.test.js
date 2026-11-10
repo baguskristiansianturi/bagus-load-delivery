@@ -50,3 +50,14 @@ test('Inbox imports the shared mobile navigation renderer at runtime',async()=>{
  const source=await (await import('node:fs/promises')).readFile(new URL('../../src/pages/messages/index.js',import.meta.url),'utf8');
  assert.match(source,/import\s*\{\s*renderSocialMobileNav\s*\}\s*from\s*['"]\.\.\/\.\.\/components\/social\/navigation\.js['"]/);
 });
+
+
+test('Inbox requests an isolated five-column navigation layout',async()=>{
+ const page=await (await import('node:fs/promises')).readFile(new URL('../../src/pages/messages/index.js',import.meta.url),'utf8');
+ const nav=await (await import('node:fs/promises')).readFile(new URL('../../src/components/social/navigation.js',import.meta.url),'utf8');
+ const css=await (await import('node:fs/promises')).readFile(new URL('../../src/pages/messages/messages.css',import.meta.url),'utf8');
+ assert.match(page,/navClass:'pl-social-mobile-nav pl-msg-mobile-nav'/);
+ assert.match(nav,/navClass = 'pl-home-mobile-nav pl-social-mobile-nav'/);
+ assert.match(css,/\.pl-msg \.pl-msg-mobile-nav\{display:grid!important/);
+ assert.match(css,/grid-template-columns:repeat\(5,minmax\(0,1fr\)\)/);
+});
