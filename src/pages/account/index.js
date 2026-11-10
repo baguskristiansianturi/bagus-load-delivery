@@ -18,7 +18,7 @@ const uploadMime=file=>{const declared=String(file?.type||'').toLowerCase();cons
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmtDate=v=>new Date(v).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'});
 const initials=v=>String(v||'P').trim().slice(0,1).toUpperCase();
-let user=null,profile=null,profileReels=[],addresses=[],noticeTimer=null,leafletMap=null,leafletMarker=null,exploreFilter='recommended',reelsFilter='recommended',activityNotificationChannel=null,unreadNotificationCount=0,currentComposeDraft=null,accountContext={active:'personal',professional:null,stores:[],prefs:{}};
+let user=null,profile=null,profileReels=[],addresses=[],noticeTimer=null,leafletMap=null,leafletMarker=null,exploreFilter='recommended',reelsFilter='recommended',activityNotificationChannel=null,unreadNotificationCount=0,currentComposeDraft=null,profileMenuBound=false,accountContext={active:'personal',professional:null,stores:[],prefs:{}};
 
 function notify(message,type='success'){
  const el=document.querySelector('#ua-toast');if(!el)return;
@@ -128,7 +128,6 @@ function bindBlockedAccounts(){document.querySelectorAll('[data-unblock-user]').
 function settingsHubPage(){
  const groups=[
   ['Akun & identitas','Kelola profil dan identitas yang terhubung ke satu akun',[
-   ['user','Profil pribadi','Nama, username, bio, dan informasi publik','/account/profile/edit','ready'],
    ['shield','Keamanan akun','Password, perangkat, dan perlindungan akun','/account/security','ready'],
    ['briefcase','Profil profesional','Keahlian, portofolio, dan area layanan','/account/professional','ready'],
    ['store','Toko dan organisasi','Kelola identitas usaha dan keanggotaan','/seller','ready'],
@@ -240,6 +239,34 @@ async function profilePage(preview=false,editMode=false){
 `;
 }
 
+function bindProfileMenu(){
+ const trigger=document.querySelector('.pl-social-menu-trigger'),panel=document.querySelector('#pl-account-menu');
+ if(!trigger||!panel)return;
+ const close=()=>{panel.hidden=true;trigger.setAttribute('aria-expanded','false');};
+ trigger.addEventListener('click',event=>{
+  event.stopPropagation();
+  const open=panel.hidden;
+  panel.hidden=!open;
+  trigger.setAttribute('aria-expanded',String(open));
+ });
+ panel.addEventListener('click',event=>{if(event.target.closest('a'))close();});
+ if(!profileMenuBound){
+  document.addEventListener('click',event=>{
+   const menu=document.querySelector('.pl-social-header-menu');
+   if(menu&&!menu.contains(event.target)){
+    const current=menu.querySelector('.pl-social-menu-panel'),button=menu.querySelector('.pl-social-menu-trigger');
+    if(current&&button){current.hidden=true;button.setAttribute('aria-expanded','false');}
+   }
+  });
+  document.addEventListener('keydown',event=>{
+   if(event.key!=='Escape')return;
+   const menu=document.querySelector('.pl-social-header-menu');
+   const current=menu?.querySelector('.pl-social-menu-panel'),button=menu?.querySelector('.pl-social-menu-trigger');
+   if(current&&button){current.hidden=true;button.setAttribute('aria-expanded','false');button.focus();}
+  });
+  profileMenuBound=true;
+ }
+}
 function bindProfileTabs(){
  const nav=document.querySelector('.ua-profile-tabs'),panel=document.querySelector('#ua-profile-tab-content');
  if(!nav||!panel)return;
@@ -659,6 +686,7 @@ async function mountAccount(section='profile',parameter=''){
   const headerAvatar=await signed(profile.avatar_path);const app=document.querySelector('#app');const navActive=section==='explore'?'explore':section==='reels'?'reels':['create','compose','reel','story'].includes(section)?'create':section==='post'?'post':section==='activity'?'activity':section==='addresses'?'addresses':'profile';app.classList.remove('pl-page-enter');app.innerHTML=frame(page,navActive,headerAvatar);requestAnimationFrame(()=>app.classList.add('pl-page-enter'));
   document.querySelector('#ua-logout')?.addEventListener('click',async()=>{await supabase.auth.signOut();user=null;profile=null;authScreen('login');});
   bindAccountContext({db:supabase,user,ctx:accountContext,profile,refresh:mountAccount});
+  bindProfileMenu();
   if(section==='security')bindAccountSecurity(supabase,user);
   document.querySelector('#ua-settings-logout')?.addEventListener('click',async()=>{await supabase.auth.signOut();user=null;profile=null;location.hash='/account/login';});
   document.querySelector('#ua-edit-profile-link')?.addEventListener('click',e=>{e.preventDefault();document.querySelector('#edit-profile')?.scrollIntoView({behavior:'smooth',block:'start'});});

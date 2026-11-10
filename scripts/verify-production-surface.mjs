@@ -121,7 +121,7 @@ const sharedHeader = read('src/components/social/navigation.js');
 assert.ok(sharedHeader.includes("aria-label='Notifikasi'") && sharedHeader.includes("socialIcon('bell', { size: 21 })"), 'Shared social header must render the notification bell.');
 assert.ok(sharedHeader.includes("aria-label='Kontak dan koneksi'") && sharedHeader.includes("socialIcon('users', { size: 21 })"), 'Shared social header must render Contacts.');
 assert.ok(sharedHeader.includes("aria-label='Wishlist dan tersimpan'") && sharedHeader.includes("socialIcon('bookmark', { size: 21 })"), 'Saved items shortcut must be available privately.');
-assert.ok(sharedHeader.includes("aria-label='Pengaturan'") && sharedHeader.includes("#/account/settings"), 'Settings must have one clear header entry point.');
+assert.ok(sharedHeader.includes('pl-social-menu-trigger') && sharedHeader.includes('Pusat Pengaturan') && sharedHeader.includes('#/account/settings'), 'Profile menu must be the single entry point for account settings.');
 assert.ok(socialHome.includes('function createPage()') && socialHome.includes('function storyComposePage()'), 'Bottom create flow must expose Story/Post/Reel/Live entry selection.');
 assert.ok(socialHome.includes("section==='saved'?await savedPage()"), 'Saved items route must be available to the signed-in owner.');
 assert.doesNotMatch(socialHome, /<header class='ua-feed-top'>/, 'Signed-in feed must not render a duplicate second header.');
@@ -157,8 +157,8 @@ for (const tab of ['posts', 'reels', 'trip', 'tagged']) {
 }
 assert.ok(profileSource.includes('trip:\'<div class="ua-profile-tab-empty"'), 'Trip tab must render its own profile panel.');
 assert.ok(profileSource.includes('Post/Feed'), 'Profile posts tab must be clearly labelled Post/Feed.');
-assert.ok(profileSource.includes('id="ua-profile-form"'), 'Personal profile must expose an editable identity form.');
-assert.ok(profileSource.includes('Simpan perubahan') && profileSource.includes('ua-profile-edit-actions'), 'Profile save action must be contained in the dedicated edit page, not the navbar.');
+assert.ok(profileSource.includes('id="ua-profile-form"') && profileSource.includes('function bindProfileMenu()'), 'Personal profile must expose a dedicated editor and functional profile menu.');
+assert.ok(profileSource.includes('Simpan perubahan') && profileSource.includes('ua-profile-editor') && profileSource.includes('ua-editor-save'), 'Profile editing must use a dedicated polished editor page with clear save actions.');
 assert.ok(profileSource.includes("parameter==='edit'") && profileSource.includes('href="#/account/profile/edit"'), 'Profile editing must open only on its dedicated canonical route.');
 assert.ok(!profileSource.includes('ua-profile-savebar'), 'Profile view must not render a sticky save bar.');
 assert.ok(profileSource.includes('validatePersonalUsername') && profileSource.includes('validatePersonalDisplayName'), 'Personal identity must enforce username and display-name rules.');
@@ -170,7 +170,7 @@ assert.ok(existsSync('supabase/migrations/20261110091739_allow_personal_username
 assert.ok(!profileSource.includes('<div class="ua-section-title"><strong>Postingan</strong><a class="ua-outline" href="#/account/compose">＋ Buat</a></div>'), 'Profile feed must not repeat the Post/Feed label or create action already present in primary navigation.');
 assert.ok(profileSource.includes('melalui tombol Buat pada navigasi utama'), 'Empty profile feed should direct users to the primary create navigation.');
 const socialNavigationCss = read('src/styles/social-navigation.css');
-assert.ok(socialNavigationCss.includes('.pl-settings-dots') && socialNavigationCss.includes('display: flex !important'), 'Mobile settings shortcut must remain visibly accessible.');
+assert.ok(socialNavigationCss.includes('.pl-social-menu-trigger') && socialNavigationCss.includes('.pl-social-menu-panel') && socialNavigationCss.includes('.ua-profile-editor'), 'Profile editing and settings must share one refined three-dot entry point and a dedicated editor surface.');
 assert.ok(!socialNavigationCss.includes('.ua-profile-savebar'), 'Profile edit controls must not be styled as a sticky navbar.');
 assert.ok(socialNavigationCss.includes('.ua-social-app .pl-social-mobile-nav > a .ua-avatar'), 'Mobile profile avatar must share the navigation icon sizing rules.');
 assert.ok(socialNavigationCss.includes('flex: 0 0 22px'), 'Mobile navigation symbols must use a consistent 22px visual size.');
