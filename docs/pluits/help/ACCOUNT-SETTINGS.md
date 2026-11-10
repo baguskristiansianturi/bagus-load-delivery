@@ -36,3 +36,14 @@ Pusat Pengaturan sekarang memiliki menu **Keamanan & perangkat** (`#/account/sec
 - Verifikasi akun personal masih belum tersedia. Tidak ada badge yang diberikan otomatis; proses pemeriksaan profesional/toko berbeda dari verifikasi identitas personal.
 
 Status: kode dan backend preference telah diterapkan; SMS/TOTP dan seluruh pengaturan perlu diuji pada akun dan perangkat nyata. Jangan menyebutnya diterima sebelum UAT.
+
+## Aturan identitas personal — 10 November 2026
+
+- Setiap akun PLUITS merepresentasikan seorang individu. Status Premium, kepemilikan toko/restoran, atau peran sebagai pengelola tempat wisata tidak mengubah akun inti menjadi akun entitas.
+- Identitas toko, organisasi, dan layanan dikelola sebagai profil/ruang usaha terpisah yang terhubung ke akun individu.
+- Nama personal boleh memuat konteks profesi atau nama keluarga/usaha yang wajar (contoh: “Bagus Driver Bali”, “Bagus Jaya Baja”). Nama generik yang diawali kategori entitas/layanan seperti “Toko Semen”, “Jasa ...”, atau “Restoran ...” tidak diterima sebagai nama personal.
+- Username 3–30 karakter; huruf kecil dan angka, dengan titik, garis bawah, atau tanda hubung sebagai pemisah. Tidak boleh diawali/diakhiri tanda baca, mengandung koma/simbol lain, menyerupai akhiran domain internet, atau sudah dipakai akun lain.
+- Perubahan nama tampilan dan username dilakukan dari Edit Profil. Tombol Simpan tetap mudah dijangkau di bagian atas layar saat formulir digulir. Penyimpanan memperbarui baris profil milik akun tanpa memuat ulang seluruh halaman.
+- Database menjaga validasi identitas dan indeks unik username; validasi UI hanya membantu pengguna lebih awal dan bukan pengganti validasi server.
+
+Status: aturan backend telah diterapkan dan diuji dengan contoh valid/invalid. Alur UI sudah masuk pipeline deploy; uji langsung pada Android dan penggantian username akun nyata tetap perlu dilakukan.
