@@ -14,6 +14,7 @@ let contactsCache = [];
 let onlineUserIds = new Set();
 let sendingQueue = false;
 let networkListenersBound = false;
+let activeInboxTab = 'primary';
 
 const queueKey = () => 'pluits:dm:outbox:v1:' + currentUser.id;
 const contactsKey = () => 'pluits:dm:contacts:v1:' + currentUser.id;
@@ -110,38 +111,52 @@ function bindVoiceRecorder(chat, conversationId) {
 export function messagesPage() {
   return `<main class="pl-msg">
     <header class="pl-msg-head">
-      <a href="#/account/profile" class="pl-msg-self" aria-label="Buka profil saya"><span class="pl-msg-self-avatar">P</span></a>
-      <div class="pl-msg-head-brand"><a href="#/account/explore" class="pl-msg-brand">PLUITS <span>INBOX</span></a><small>Ruang percakapan Anda</small></div>
-      <div class="pl-msg-head-actions"><a href="#/account/activity" class="pl-msg-head-icon" aria-label="Notifikasi">${socialIcon('bell',{size:20})}</a><a href="#/account/profile" class="pl-msg-head-icon" aria-label="Profil saya">${socialIcon('user',{size:20})}</a><button type="button" class="pl-msg-settings-toggle" id="pl-msg-settings-toggle" aria-label="Pengaturan inbox" aria-expanded="false">⋯</button></div>
-      <div class="pl-msg-settings" id="pl-msg-settings" hidden>
-        <strong>Pengaturan inbox</strong>
-        <label><input type="checkbox" checked> Tampilkan pesan utama</label>
-        <label><input type="checkbox" checked> Tampilkan permintaan pesan</label>
-        <label><input type="checkbox" checked> Tampilkan pembaruan sistem</label>
-        <small>Pengaturan tampilan inbox</small>
-      </div>
+      <a href="#/account/explore" class="pl-msg-brand" aria-label="PLUITS Beranda">PLUITS</a>
+      <form id="pl-msg-search" class="pl-msg-head-search" role="search">
+        <label class="pl-msg-search-field"><span class="pl-msg-search-symbol">${socialIcon('search',{size:18})}</span><input name="q" type="search" placeholder="Cari teman…" autocomplete="off" aria-label="Cari nama atau username teman"></label>
+        <button type="submit" aria-label="Cari">${socialIcon('search',{size:18})}</button>
+        <div id="pl-msg-search-results" class="pl-msg-search-results" hidden></div>
+      </form>
+      <a href="#/account/activity" class="pl-msg-head-icon" aria-label="Notifikasi">${socialIcon('bell',{size:21})}</a>
     </header>
     <section class="pl-msg-content">
-      <section class="pl-msg-people" aria-label="Kontak Anda">
-        <div class="pl-msg-people-heading"><div><strong>Sedang online</strong><small>Profil Anda dan teman yang sedang aktif</small></div><a href="#/account/followers">Lihat semua</a></div>
-        <div id="pl-msg-people-strip" class="pl-msg-people-strip">
-          <span class="pl-msg-people-loading">Menyiapkan kontak…</span>
-        </div>
+      <section class="pl-msg-people" aria-label="Teman yang sedang online">
+        <div class="pl-msg-people-heading"><div><strong>Online sekarang</strong></div><a href="#/account/followers">Lihat semua</a></div>
+        <div id="pl-msg-people-strip" class="pl-msg-people-strip"><span class="pl-msg-people-loading">Menyiapkan teman…</span></div>
       </section>
-      <div class="pl-msg-heading"><div><small>PRIVATE CONVERSATIONS</small><h1>Pesan</h1><p>Pesan pribadi antar akun Pluits.</p></div><span id="pl-msg-network" class="pl-msg-network" role="status">Memeriksa koneksi…</span></div>
       <div class="pl-msg-layout" id="pl-msg-layout">
         <aside class="pl-msg-sidebar">
-          <form id="pl-msg-search"><label>Cari akun berdasarkan username<input name="q" placeholder="Ketik username…" autocomplete="off"></label><button type="submit">Cari akun</button></form>
-          <div id="pl-msg-search-results"></div>
-          <div class="pl-msg-list-title">Kontak Anda</div><div id="pl-msg-contacts"><p class="pl-msg-empty">Memuat kontak…</p></div>
-          <div class="pl-msg-list-title">Kotak masuk</div><div id="pl-msg-conversations"><p>Memuat percakapan…</p></div>
+          <nav class="pl-msg-inbox-tabs" aria-label="Kategori pesan" role="tablist">
+            <button type="button" class="is-active" data-inbox-tab="primary" role="tab" aria-selected="true">Utama</button>
+            <button type="button" data-inbox-tab="requests" role="tab" aria-selected="false">Permintaan</button>
+            <button type="button" data-inbox-tab="blocked" role="tab" aria-selected="false">Diblokir</button>
+          </nav>
+          <div id="pl-msg-conversations"><p class="pl-msg-empty">Memuat percakapan…</p></div>
+          <div id="pl-msg-category-empty" class="pl-msg-category-empty" hidden></div>
         </aside>
-        <section class="pl-msg-chat" id="pl-msg-chat"><div class="pl-msg-empty">Pilih percakapan atau kontak untuk memulai pesan.</div></section>
+        <section class="pl-msg-chat" id="pl-msg-chat"><div class="pl-msg-empty">Pilih percakapan untuk mulai mengirim pesan.</div></section>
       </div>
-      <nav class="pl-msg-mobile-nav" aria-label="Navigasi utama"><a href="#/account/explore">${socialIcon('home',{size:22})}<small>Beranda</small></a><a class="active" href="#/messages" aria-current="page">${socialIcon('message',{size:22})}<small>Inbox</small></a><a href="#/account/activity">${socialIcon('bell',{size:22})}<small>Aktivitas</small></a><a href="#/account/profile">${socialIcon('user',{size:22})}<small>Profil</small></a></nav>
       <p class="pl-msg-offline-note">Jika koneksi terputus, pesan yang Anda kirim disimpan sementara di perangkat ini dan otomatis dicoba kirim saat online kembali. Pesan belum terkirim sampai server mengonfirmasi.</p>
+      ${renderSocialMobileNav({active:'messages',user:{id:'inbox'}})}
     </section>
   </main>`;
+}
+function bindInboxTabs(root=document) {
+  const tabs=[...root.querySelectorAll('[data-inbox-tab]')];
+  const list=root.querySelector('#pl-msg-conversations');
+  const empty=root.querySelector('#pl-msg-category-empty');
+  tabs.forEach(tab=>tab.onclick=()=>{
+    activeInboxTab=tab.dataset.inboxTab;
+    tabs.forEach(item=>{const active=item===tab;item.classList.toggle('is-active',active);item.setAttribute('aria-selected',String(active));});
+    if(list)list.hidden=activeInboxTab!=='primary';
+    if(empty){
+      empty.hidden=activeInboxTab==='primary';
+      empty.innerHTML=activeInboxTab==='requests'
+        ? '<strong>Permintaan pesan</strong><p>Pesan dari orang yang belum terhubung akan tampil di sini. Anda dapat meninjau dan menyetujui permintaan sebelum percakapan masuk ke Utama.</p><small>Persiapan kategori · alur persetujuan akan diaktifkan bersama backend.</small>'
+        : '<strong>Akun diblokir</strong><p>Daftar akun yang Anda blokir akan dikelola di sini.</p><small>Persiapan kategori · pengelolaan blokir belum diaktifkan.</small>';
+    }
+  });
+  (tabs.find(tab=>tab.dataset.inboxTab===activeInboxTab)||tabs[0])?.click();
 }
 function updateNetworkStatus() {
   const node = document.querySelector('#pl-msg-network');
@@ -159,15 +174,13 @@ async function signedAvatar(path) {
 }
 async function renderPeopleStrip(people=contactsCache, withSignedImages=false) {
   const strip=document.querySelector('#pl-msg-people-strip');if(!strip)return;
-  const own=currentProfile||{display_name:'Anda',username:'akun'};
-  const ownUrl=withSignedImages?await signedAvatar(own.avatar_path):'';
-  const ownItem='<a class="pl-msg-person pl-msg-person-self" href="#/account/profile" aria-label="Buka profil saya">'+contactAvatar(own,ownUrl)+'<small>Anda</small></a>';
   const onlinePeople=(people||[]).filter(person=>onlineUserIds.has(person.id));
   const items=await Promise.all(onlinePeople.map(async person=>{
     const url=withSignedImages?await signedAvatar(person.avatar_path):'';
-    return '<a class="pl-msg-person" href="#/@'+encodeURIComponent(person.username||'')+'" aria-label="Buka profil '+esc(person.display_name||person.username)+', sedang online">'+contactAvatar(person,url)+'<span class="pl-msg-online-dot" aria-hidden="true"></span><small>'+esc(person.display_name||person.username||'Kontak')+'</small></a>';
+    return '<a class="pl-msg-person" href="#/@'+encodeURIComponent(person.username||'')+'" aria-label="Buka profil '+esc(person.display_name||person.username)+', sedang online">'+contactAvatar(person,url)+'<span class="pl-msg-online-dot" aria-hidden="true"></span><small>'+esc(person.display_name||person.username||'Teman')+'</small></a>';
   }));
-  strip.innerHTML=ownItem+(items.length?items.join(''):'<span class="pl-msg-online-empty">Belum ada teman yang online</span>');
+  strip.classList.toggle('has-many',onlinePeople.length>=5);
+  strip.innerHTML=items.length?items.join(''):'<span class="pl-msg-online-empty">Teman yang online akan muncul di sini</span>';
 }
 
 function renderContactList(box,people,withSignedImages=false) {
@@ -232,22 +245,22 @@ export async function bindMessagesPage() {
       renderPeopleStrip(contactsCache,true);
     })
     .subscribe();
-  const settingsToggle=app.querySelector('#pl-msg-settings-toggle'),settingsPanel=app.querySelector('#pl-msg-settings');
-  if(settingsToggle&&settingsPanel)settingsToggle.onclick=()=>{const open=settingsPanel.hidden;settingsPanel.hidden=!open;settingsToggle.setAttribute('aria-expanded',String(open));};
-  const selfAvatar=app.querySelector('.pl-msg-self-avatar');if(selfAvatar)selfAvatar.textContent=(currentProfile.display_name||user.email||'P').slice(0,1).toUpperCase();
+  bindInboxTabs(app);
   const requestedConversation=new URLSearchParams((location.hash.split('?')[1]||'')).get('conversation');
   if(requestedConversation&&conversationCache.some(item=>item.id===requestedConversation)) await openConversation(requestedConversation);
   const search=app.querySelector('#pl-msg-search');
   search.onsubmit=async event=>{
     event.preventDefault();
-    const query=String(new FormData(search).get('q')||'').trim().replace(/^@/,'');
+    const query=String(new FormData(search).get('q')||'').trim().replace(/^@/,'').replace(/[(),]/g,' ').replace(/\s+/g,' ').trim();
     const box=app.querySelector('#pl-msg-search-results');
-    if(query.length<2){box.textContent='Masukkan minimal dua karakter username.';return;}
+    if(query.length<2){box.hidden=false;box.innerHTML='<p class="pl-msg-search-hint">Ketik minimal dua karakter untuk mencari teman.</p>';return;}
     const {data,error}=await db.from('user_profiles').select('id,display_name,username').or('username.ilike.%'+query+'%,display_name.ilike.%'+query+'%').neq('id',user.id).limit(8);
-    if(error){box.textContent=error.message;return;}
-    box.innerHTML=data?.length?data.map(person=>'<button class="pl-msg-contact" data-start-chat="'+person.id+'"><b>'+esc(person.display_name||person.username)+'</b><small>@'+esc(person.username)+'</small><span>Pesan →</span></button>').join(''):'<p class="pl-msg-empty">Akun tidak ditemukan.</p>';
+    if(error){box.hidden=false;box.textContent=error.message;return;}
+    box.hidden=false;
+    box.innerHTML=data?.length?data.map(person=>'<button class="pl-msg-contact" data-start-chat="'+person.id+'"><b>'+esc(person.display_name||person.username)+'</b><small>@'+esc(person.username)+'</small><span>Pesan</span></button>').join(''):'<p class="pl-msg-search-hint">Akun tidak ditemukan.</p>';
     bindStartChat(box);
   };
+  app.addEventListener('click',event=>{if(!event.target.closest('.pl-msg-head-search')){const results=app.querySelector('#pl-msg-search-results');if(results)results.hidden=true;}});
   updateNetworkStatus();
   if(!networkListenersBound){window.addEventListener('online',onOnline);window.addEventListener('offline',updateNetworkStatus);networkListenersBound=true;}
   realtimeChannel=db.channel('pluits-dm-'+user.id)
@@ -328,6 +341,7 @@ async function loadConversations() {
     return '<button class="pl-msg-thread '+(currentConversation===conversation.id?'active':'')+(conversation.unread?' is-unread':'')+'" data-open-chat="'+conversation.id+'"><span class="pl-msg-thread-head"><b>'+esc(conversation.other.display_name||conversation.other.username)+'</b>'+(conversation.unread?'<i aria-label="Pesan belum dibaca"></i>':'')+'</span><small>@'+esc(conversation.other.username)+'</small><p>'+esc(conversation.last?.message_type==='voice'?'🎙 Pesan suara':conversation.last?.body||'Belum ada pesan')+(pending?' · '+pending+' menunggu':'')+'</p></button>';
   }).join(''):'<div class="pl-msg-empty">Belum ada percakapan. Pilih kontak atau cari username untuk memulai.</div>';
   list.querySelectorAll('[data-open-chat]').forEach(button=>button.onclick=()=>openConversation(button.dataset.openChat));
+  list.hidden=activeInboxTab!=='primary';
 }
 async function openConversation(id) {
   if(String(id).startsWith('draft:'))return openDraftConversation(String(id).slice(6));
