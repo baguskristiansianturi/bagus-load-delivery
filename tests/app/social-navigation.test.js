@@ -48,8 +48,8 @@ test('profile hero has isolated responsive layouts for desktop, mobile and narro
 
 test('Inbox has a canonical inbox URL and legacy messages links normalize to it',async()=>{
  const router=await (await import('node:fs/promises')).readFile(new URL('../../src/app/router.js',import.meta.url),'utf8');
- assert.match(router,/r==='messages'[\\s\\S]*?location\\.hash='#\\/inbox'/);
- assert.match(router,/r==='inbox'[\\s\\S]*?messagesPage\\(\\)/);
+ assert.ok(router.includes("else if(r==='messages')") && router.includes("location.hash='#/inbox';return;"),'Legacy messages URL must redirect to canonical Inbox.');
+ assert.ok(router.includes("else if(r==='inbox')") && router.includes("messagesPage()"),'Canonical Inbox URL must invoke the Inbox page.');
  assert.doesNotMatch(ROUTES.inbox,/messages/);
 });
 
