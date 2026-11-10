@@ -237,6 +237,10 @@ export async function bindMessagesPage() {
     .on('postgres_changes',{event:'INSERT',schema:'public',table:'user_messages'},payload=>{
       if(payload.new?.conversation_id===currentConversation) openConversation(currentConversation);
       else loadConversations();
+    })
+    .on('postgres_changes',{event:'UPDATE',schema:'public',table:'user_conversation_members'},payload=>{
+      if(payload.new?.conversation_id===currentConversation) openConversation(currentConversation);
+      else loadConversations();
     }).subscribe();
   await flushOutbox();
 }
@@ -282,7 +286,7 @@ async function loadConversations() {
   const [convs,memberRows,msgRows]=await Promise.all([
     db.from('user_conversations').select('id,title,updated_at').in('id',ids).order('updated_at',{ascending:false}),
     db.from('user_conversation_members').select('conversation_id,user_id,last_read_at').in('conversation_id',ids),
-    db.from('user_messages').select('conversation_id,body,sender_id,created_at').in('conversation_id',ids).order('created_at',{ascending:false}).limit(200)
+    db.from('user_messages').select('conversation_id,body,sender_id,created_at,message_type').in('conversation_id',ids).order('created_at',{ascending:false}).limit(200)
   ]);
   if(convs.error||memberRows.error||msgRows.error){
     try { const cached=JSON.parse(localStorage.getItem(threadsKey())||'[]'); conversationCache=cached; list.innerHTML=cached.length?cached.map(item=>'<button class="pl-msg-thread" data-open-chat="'+item.id+'"><b>'+esc(item.other.display_name||item.other.username)+'</b><small>@'+esc(item.other.username)+'</small><p>Riwayat tersedia saat online</p></button>').join(''):'<div class="pl-msg-empty">Inbox offline belum tersimpan. Hubungkan internet untuk memuat percakapan.</div>'; list.querySelectorAll('[data-open-chat]').forEach(button=>button.onclick=()=>openConversation(button.dataset.openChat)); }
@@ -304,7 +308,7 @@ async function loadConversations() {
   try { localStorage.setItem(threadsKey(),JSON.stringify(conversationCache.map(item=>({id:item.id,updated_at:item.updated_at,other:item.other})))); } catch {}
   list.innerHTML=conversationCache.length?conversationCache.map(conversation=>{
     const pending=queueFor(conversation.id).length;
-    return '<button class="pl-msg-thread '+(currentConversation===conversation.id?'active':'')+(conversation.unread?' is-unread':'')+'" data-open-chat="'+conversation.id+'"><span class="pl-msg-thread-head"><b>'+esc(conversation.other.display_name||conversation.other.username)+'</b>'+(conversation.unread?'<i aria-label="Pesan belum dibaca"></i>':'')+'</span><small>@'+esc(conversation.other.username)+'</small><p>'+esc(conversation.last?.body||'Belum ada pesan')+(pending?' · '+pending+' menunggu':'')+'</p></button>';
+    return '<button class="pl-msg-thread '+(currentConversation===conversation.id?'active':'')+(conversation.unread?' is-unread':'')+'" data-open-chat="'+conversation.id+'"><span class="pl-msg-thread-head"><b>'+esc(conversation.other.display_name||conversation.other.username)+'</b>'+(conversation.unread?'<i aria-label="Pesan belum dibaca"></i>':'')+'</span><small>@'+esc(conversation.other.username)+'</small><p>'+esc(conversation.last?.message_type==='voice'?'🎙 Pesan suara':conversation.last?.body||'Belum ada pesan')+(pending?' · '+pending+' menunggu':'')+'</p></button>';
   }).join(''):'<div class="pl-msg-empty">Belum ada percakapan. Pilih kontak atau cari username untuk memulai.</div>';
   list.querySelectorAll('[data-open-chat]').forEach(button=>button.onclick=()=>openConversation(button.dataset.openChat));
 }
