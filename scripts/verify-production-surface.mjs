@@ -150,8 +150,8 @@ for (const path of [
 }
 
 const publicHome = read('src/pages/home/index.js');
-assert.match(publicHome, /mountUserAccount\('explore'\)/, 'Signed-in homepage must use the canonical interactive social feed.');
-assert.match(publicHome, /if\(viewer\)\{history\.replaceState\(null,'',location\.pathname\+location\.search\+'#\/account\/explore'\);mountUserAccount\('explore'\);return;\}/, 'Signed-in homepage must canonicalize to the interactive Explore feed without leaving a duplicate URL.');
+assert.match(publicHome, /await mountUserAccount\('explore'\)/, 'Signed-in homepage must use the canonical interactive social feed after lazy loading.');
+assert.match(publicHome, /if\(viewer\)\{history\.replaceState\(null,'',location\.pathname\+location\.search\+'#\/account\/explore'\);const \{mountUserAccount\}=await import\('\.\.\/account\/index\.js'\);await mountUserAccount\('explore'\);return;\}/, 'Signed-in homepage must lazy-load and canonicalize to the interactive Explore feed.');
 
 const inboxCss = read('src/pages/messages/messages.css');
 assert.match(inboxCss, /pl-msg-head-search/, 'Inbox must own a compact top-bar search field.');

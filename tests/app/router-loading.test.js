@@ -8,4 +8,6 @@ test('route page modules are lazy-loaded instead of statically bundled at app st
  const staticPageImports=[...source.matchAll(/^import .* from ['"]\.\.\/pages\/(?!seo\.js)[^'"]+['"];?$/gm)];
  assert.equal(staticPageImports.length,0,'router should not statically import route-level page modules');
  assert.ok((source.match(/import\(['"]\.\.\/pages\//g)||[]).length>=10,'route modules should be loaded on demand');
+ assert.doesNotMatch(home,/from ['"]\.\.\/account\/index\.js['"]/,'the public homepage must not eagerly load the signed-in account workspace');
+ assert.match(home,/await import\(['"]\.\.\/account\/index\.js['"]\)/,'the account workspace should load only after an authenticated visitor needs it');
 });
