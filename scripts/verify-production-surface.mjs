@@ -75,7 +75,8 @@ assert.match(messages, /flushOutbox/, 'DM outbox must retry queued messages afte
 assert.match(messages, /contactsKey/, 'DM contacts must be cached for offline access.');
 assert.match(messages, /openDraftConversation/, 'A new DM can be drafted offline from a cached contact.');
 assert.match(messages, /recipient_user_id/, 'Offline new-conversation drafts must resolve their recipient when reconnecting.');
-assert.match(messages, /socialIcon\('bell'/, 'Inbox header must expose a consistent notification shortcut.');
+assert.match(messages, /pl-msg-menu-toggle/, 'Inbox header must expose the requested three-dot settings menu.');
+assert.match(messages, /pl-msg-head-search/, 'Inbox header must keep friend search in the center.');
 assert.match(messages, /renderSocialMobileNav\(\{active:'messages'/, 'Inbox must reuse the canonical social navigation component.');
 assert.match(messages, /data-inbox-tab="primary"/, 'Inbox must expose the Primary category.');
 assert.match(messages, /data-inbox-tab="requests"/, 'Inbox must expose the Requests category.');
