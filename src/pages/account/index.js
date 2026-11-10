@@ -693,7 +693,7 @@ function validatePersonalDisplayName(value){
 function bindProfile(){
  const form=document.querySelector('#ua-profile-form');
  form?.addEventListener('submit',async e=>{
-  e.preventDefault();const f=new FormData(form),note=document.querySelector('#ua-profile-note'),btn=form.querySelector('button[form="ua-profile-form"]')||document.querySelector('.ua-profile-savebar button');
+  e.preventDefault();const f=new FormData(form),note=document.querySelector('#ua-profile-note'),btn=form.querySelector('button[type="submit"]');
   const username=String(f.get('username')||'').trim().toLowerCase(),displayName=String(f.get('display_name')||'').trim();
   const usernameError=validatePersonalUsername(username),nameError=validatePersonalDisplayName(displayName);
   if(usernameError){note.textContent=usernameError;form.elements.username.focus();return;}
