@@ -1733,3 +1733,32 @@
  .ua-profile-main .ua-profile-tabs{top:54px;z-index:40}
 }
 @media(prefers-reduced-motion:reduce){.ua-post-detail-page .ua-gallery-track{scroll-behavior:auto}}
+
+
+/* Profile hero: cover is optional; keep the identity area elegant when absent. */
+.ua-cover.no-cover{
+  height:42px;
+  background:transparent;
+  border-bottom:1px solid #f0f2f5;
+}
+.ua-profile-card:has(.ua-cover.no-cover) .ua-profile-content{
+  min-height:0;
+  padding-top:0;
+}
+.ua-profile-card:has(.ua-cover.no-cover) .ua-profile-avatar{
+  margin-top:-36px;
+}
+.ua-profile-card:has(.ua-cover.no-cover) .ua-profile-identity{
+  padding-top:14px;
+}
+@media(max-width:760px){
+  .ua-cover.no-cover{height:30px}
+  .ua-profile-card:has(.ua-cover.no-cover) .ua-profile-content{
+    gap:12px;
+    padding:0 14px 18px;
+  }
+  .ua-profile-card:has(.ua-cover.no-cover) .ua-profile-avatar{margin-top:-30px}
+  .ua-profile-card:has(.ua-cover.no-cover) .ua-avatar.large{
+    width:82px;height:82px;
+  }
+}

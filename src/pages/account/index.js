@@ -191,7 +191,7 @@ async function profilePage(preview=false){
   return `<div class="ua-page-heading"><div><span class="ua-eyebrow">PRATINJAU PROFIL</span><h1>Begini profil Anda terlihat</h1><p>Ini adalah simulasi tampilan profil bagi pengunjung Pluits.</p></div><a class="ua-outline" href="#/account/profile">← Kembali ke Edit Profil</a></div>
   <div class="ua-preview-status">${profile.visibility==='public'?'Profil Anda bersifat publik.':'Profil Anda privat. Pengunjung lain tidak dapat melihat postingan Anda.'}</div>
   <section class="ua-profile-card ua-public-profile">
-   <div class="ua-cover" ${coverUrl?`style="background-image:url('${coverUrl}')"`:''}><span>PLUITS PROFILE</span></div>
+   <div class="ua-cover ${coverUrl?'has-cover':'no-cover'}" ${coverUrl?`style="background-image:url('${coverUrl}')"`:''}>${coverUrl?'<span>PLUITS PROFILE</span>':''}</div>
    <div class="ua-profile-content"><div class="ua-profile-avatar">${avatar(avatarUrl,profile.display_name,'large')}</div>
     <div class="ua-profile-identity"><h2>${esc(profile.display_name)}</h2><div class="ua-username">@${esc(profile.username)}</div><div class="ua-location">${profile.public_city&&profile.public_province?'⌖ '+esc(profile.public_city)+', '+esc(profile.public_province):''}</div><p>${esc(profile.bio||'Bio belum ditambahkan.')}</p></div>
     <div class="ua-profile-count"><strong>${visiblePosts.length}</strong><span>Postingan publik</span></div>
