@@ -13,6 +13,7 @@ import {loadAccountContext,contextHeader,professionalPage,professionalFormPage,a
 import {listPrivateDrafts,getPrivateDraft,savePrivateDraft,deletePrivateDraft} from './drafts.js';
 import {getMediaMime,getMediaExtension,validateMediaFile,getVideoDuration} from '../../features/media/media-types.js';
 import {createMediaUploader} from '../../features/media/storage-upload.js';
+import {createSignedUrlMap} from '../../services/storage/signed-urls.js';
 
 const SUPABASE_URL='https://ytndswhqxayqpftszwfh.supabase.co';
 const SUPABASE_KEY='sb_publishable_kOUbKBYg88nXgz8FQRSnvA_k0hvKY65';
@@ -293,23 +294,43 @@ function bindProfileTabs(){
 
 function postGrid(posts){return `<div class="ua-post-grid">${posts.map(p=>`<a class="ua-post-thumb" href="#/account/post/${p.id}">${p.media?.length?(p.media[0].media_type==='video'?'<span class="ua-video-mark">▶ VIDEO</span><video src="'+p.media[0].url+'" muted playsinline preload="metadata"></video>':'<img src="'+p.media[0].url+'" alt="'+esc(p.caption||'Postingan Pluits')+'">'):'<span class="ua-text-thumb">PLUITS</span>'}<span class="ua-thumb-caption">${esc(p.caption||'')}</span></a>`).join('')}</div>`;}
 async function hydratePosts(rows){
- if(!rows.length)return [];
- const postIds=rows.map(p=>p.id);
- const [tagRowsRes,mediaRowsRes]=await Promise.all([supabase.from('post_tags').select('post_id,tagged_user_id').in('post_id',postIds),supabase.from('post_media').select('id,post_id,user_id,media_path,media_type,position,duration_ms').in('post_id',postIds).order('position',{ascending:true})]);if(mediaRowsRes.error)throw mediaRowsRes.error;const taggedRows=tagRowsRes.data||[],mediaRows=mediaRowsRes.data||[];
- const ids=[...new Set([...rows.map(p=>p.user_id),...taggedRows.map(t=>t.tagged_user_id)])];
- const [profilesRes,likesRes,commentsRes,savesRes]=await Promise.all([
-  supabase.from('user_profiles').select('id,display_name,username,avatar_path,public_city,public_province,visibility').in('id',ids),
-  supabase.from('post_likes').select('post_id,user_id').in('post_id',postIds),
-  supabase.from('post_comments').select('post_id').in('post_id',postIds),
-  user?.id?supabase.from('post_saves').select('post_id,user_id').in('post_id',postIds).eq('user_id',user.id):Promise.resolve({data:[]})
- ]);
- const pmap=new Map((profilesRes.data||[]).map(x=>[x.id,x]));
- const likeRows=likesRes.data||[],commentRows=commentsRes.data||[],saved=new Set((savesRes.data||[]).map(x=>x.post_id));
- return Promise.all(rows.map(async p=>{
-  const owner=pmap.get(p.user_id)||{display_name:'Pengguna Pluits',username:'pengguna',visibility:'private'};
-  const gallery=mediaRows.filter(m=>m.post_id===p.id),media=gallery.length?await Promise.all(gallery.map(async m=>({...m,url:await signed(m.media_path)}))):(p.media_path?[{media_path:p.media_path,media_type:p.media_type,position:0,duration_ms:null,url:await signed(p.media_path)}]:[]);return {...p,owner,media,tagged:taggedRows.filter(t=>t.post_id===p.id).map(t=>pmap.get(t.tagged_user_id)).filter(Boolean),mediaUrl:media[0]?.url||'',avatarUrl:await signed(owner.avatar_path),likes:likeRows.filter(x=>x.post_id===p.id).length,liked:!!user&&likeRows.some(x=>x.post_id===p.id&&x.user_id===user.id),comments:commentRows.filter(x=>x.post_id===p.id).length,saved:saved.has(p.id)};
- }));
-}
+  if(!rows.length)return [];
+  const postIds=rows.map(p=>p.id);
+  const [tagRowsRes,mediaRowsRes]=await Promise.all([
+   supabase.from('post_tags').select('post_id,tagged_user_id').in('post_id',postIds),
+   supabase.from('post_media').select('id,post_id,user_id,media_path,media_type,position,duration_ms').in('post_id',postIds).order('position',{ascending:true})
+  ]);
+  if(tagRowsRes.error||mediaRowsRes.error)throw tagRowsRes.error||mediaRowsRes.error;
+  const taggedRows=tagRowsRes.data||[],mediaRows=mediaRowsRes.data||[];
+  const ids=[...new Set([...rows.map(p=>p.user_id),...taggedRows.map(t=>t.tagged_user_id)])];
+  const [profilesRes,likesRes,commentsRes,savesRes]=await Promise.all([
+   supabase.from('user_profiles').select('id,display_name,username,avatar_path,public_city,public_province,visibility').in('id',ids),
+   supabase.from('post_likes').select('post_id,user_id').in('post_id',postIds),
+   supabase.from('post_comments').select('post_id').in('post_id',postIds),
+   user?.id?supabase.from('post_saves').select('post_id,user_id').in('post_id',postIds).eq('user_id',user.id):Promise.resolve({data:[],error:null})
+  ]);
+  const queryError=profilesRes.error||likesRes.error||commentsRes.error||savesRes.error;
+  if(queryError)throw queryError;
+  const pmap=new Map((profilesRes.data||[]).map(x=>[x.id,x]));
+  const saved=new Set((savesRes.data||[]).map(x=>x.post_id));
+  const groupByPost=items=>{
+   const grouped=new Map();
+   for(const item of items){const list=grouped.get(item.post_id)||[];list.push(item);grouped.set(item.post_id,list);}
+   return grouped;
+  };
+  const mediaByPost=groupByPost(mediaRows),tagsByPost=groupByPost(taggedRows);
+  const likeCounts=new Map(),commentCounts=new Map(),likedPosts=new Set();
+  for(const row of likesRes.data||[]){likeCounts.set(row.post_id,(likeCounts.get(row.post_id)||0)+1);if(user?.id===row.user_id)likedPosts.add(row.post_id);}
+  for(const row of commentsRes.data||[])commentCounts.set(row.post_id,(commentCounts.get(row.post_id)||0)+1);
+  const paths=[...mediaRows.map(m=>m.media_path),...rows.map(p=>p.media_path),...(profilesRes.data||[]).map(p=>p.avatar_path)].filter(Boolean);
+  const mediaUrls=await createSignedUrlMap(supabase.storage,BUCKET,paths,3600);
+  return rows.map(p=>{
+   const owner=pmap.get(p.user_id)||{display_name:'Pengguna Pluits',username:'pengguna',visibility:'private'};
+   const gallery=mediaByPost.get(p.id)||[];
+   const media=gallery.length?gallery.map(m=>({...m,url:mediaUrls.get(m.media_path)||''})):(p.media_path?[{media_path:p.media_path,media_type:p.media_type,position:0,duration_ms:null,url:mediaUrls.get(p.media_path)||''}]:[]);
+   return {...p,owner,media,tagged:(tagsByPost.get(p.id)||[]).map(t=>pmap.get(t.tagged_user_id)).filter(Boolean),mediaUrl:media[0]?.url||'',avatarUrl:mediaUrls.get(owner.avatar_path)||'',likes:likeCounts.get(p.id)||0,liked:likedPosts.has(p.id),comments:commentCounts.get(p.id)||0,saved:saved.has(p.id)};
+  });
+ }
 async function feedPage(){
  // Beranda adalah feed akun yang diikuti. Akun sendiri hanya menjadi fallback
  // ketika belum ada postingan dari jaringan yang diikuti.

@@ -1,0 +1,43 @@
+# PLUITS — Functional Flow, Backend and Performance Audit
+**Date:** 10 November 2026  
+**Baseline commit:** a6933709ce9d69eec8759a7322b6b3f2d27c2882  
+**Scope:** Social-first business-model alignment, media upload source/schema inspection, feed hydration performance, and read-only Supabase inspection.
+
+## Business model and delivery order
+The active Business Model Master defines Pluits as a social-first ecosystem connected to Local Marketplace, Trip/Travel, and GeoDirectory. Social First Release remains P0 until founder UAT acceptance. This increment hardens shared social feed/media infrastructure; it does not activate unapproved monetization or expand secondary verticals.
+
+## Live backend findings
+- Supabase project `ytndswhqxayqpftszwfh` is ACTIVE_HEALTHY on PostgreSQL 17.11 in ap-southeast-1.
+- The private `pluits-user-media` bucket allows 50 MB files and includes MP4, QuickTime, WebM, 3GPP and 3GPP2 MIME types. Existing migrations include Android 3GPP2 support and post/gallery media read policies.
+- Health Advisor reports zero lints.
+- Security Advisor reports two anon-callable SECURITY DEFINER RPCs (`review_professional_profile`, `submit_professional_profile`), 22 authenticated-callable SECURITY DEFINER findings, and leaked-password protection disabled. The two anon-callable functions check auth claims internally, but their EXECUTE grants should still be narrowed after ACL review and a migration/rollback plan.
+- Performance Advisor reports 84 unused-index INFO notices (not a deletion list), two RLS init-plan warnings and two multiple-permissive-policy warnings. No indexes or policies were changed.
+- No production rows, Auth settings, RLS policies, Storage objects, or migrations were changed in this audit.
+
+## Media upload flow inspected
+- Post composer accepts up to 15 mixed image/video files; Reel composer accepts one video. Limit is 50 MB per file.
+- MIME detection recognizes MP4, MOV, WebM, 3GP, 3GPP, 3G2 and 3GP2, including generic Android picker MIME when a known extension exists.
+- Uploads are sequential to avoid loading multiple large media files into memory/network pressure. Files over 6 MB use resumable TUS when available.
+- Reel duration is read from browser video metadata and must be <=60 seconds. Ordinary video posts may retain a null duration if the browser cannot read metadata.
+- Storage ownership is scoped to the authenticated user's UUID folder.
+- Actual Android gallery upload, video playback and two-account Storage isolation remain NOT TESTED. Source/schema inspection alone does not prove the user's reported issue is fixed.
+
+## Implemented in this increment
+- Batch short-lived Storage signed URLs for post media and profile avatars, deduplicate paths and cap batches at 100 objects.
+- Fall back to individual signed URL requests only if the batch API fails.
+- Pre-index media, tags, likes and comments by post ID instead of repeatedly scanning all returned rows for every post.
+- Propagate Supabase query errors rather than silently rendering incomplete/incorrect engagement counts.
+- Add Node tests for Android MIME/extension handling, file size validation, signed URL batching, deduplication, bounded chunks, fallback and empty input.
+- No UI layout or CSS changes.
+
+## Remaining backend/security work
+1. Review and narrow EXECUTE grants for the two anon-callable professional-profile RPCs; audit every SECURITY DEFINER function for owner, fixed search_path, authorization, input validation and grants.
+2. Complete SOC-01–SOC-04 and GDT-01 RLS candidate tests in a disposable/staging environment with anonymous, owner, accepted-follower, unrelated-user, blocked-pair and cross-entity scenarios.
+3. Verify Android upload, signed URL access, gallery playback and cleanup on failed Post/Story creation using two controlled accounts.
+4. Consider aggregate engagement RPC only if measured feed payloads justify it; do not add privileged endpoints pre-emptively.
+5. Keep Marketplace local fulfillment, Trip booking, GeoDirectory trust and finance/attribution separate; do not imply those capabilities are fully implemented.
+
+## Performance notes
+- Feed hydration previously generated signed URLs per media/avatar object. It now uses bounded batch requests, reducing Storage request fan-out as the feed grows.
+- Engagement rows for visible posts are still fetched to calculate counts. An aggregate RPC remains a measured follow-up, not an untested privileged endpoint.
+- No browser/device/Lighthouse timing claims are made. Performance measurement still requires realistic runtime and Android UAT.
