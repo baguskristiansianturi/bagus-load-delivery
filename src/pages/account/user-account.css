@@ -1985,3 +1985,59 @@
  .ua-create-entry .ua-create-card-copy small{min-height:0}
  .ua-create-verification-note{padding:14px}
 }
+
+
+/* Create hub: compact, icon-led quick actions */
+.ua-create-hub{width:100%;max-width:900px;margin:0 auto;min-width:0}
+.ua-create-top{margin:0 0 24px;padding:0 2px}
+.ua-create-top h1{margin:0;color:#172b3b;font-size:clamp(24px,3vw,30px);font-weight:760;letter-spacing:-.045em}
+.ua-create-section{min-width:0;margin:0 0 26px}
+.ua-create-section-head{margin:0 0 11px}
+.ua-create-section-head h2{margin:0;color:#536477;font-size:12px;font-weight:750;letter-spacing:.015em}
+.ua-create-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;min-width:0}
+.ua-create-card{box-sizing:border-box;display:flex;position:relative;align-items:center;gap:11px;min-width:0;min-height:76px;padding:13px 38px 13px 13px;border:1px solid #e9edf0;border-radius:13px;background:#fff;color:#203447;text-decoration:none;box-shadow:none;transition:border-color .15s ease,background .15s ease}
+.ua-create-card:hover{transform:none;border-color:#b8dedd;background:#fbfefe;box-shadow:none}
+.ua-create-card-icon{width:40px;height:40px;display:grid;place-items:center;flex:0 0 40px;border-radius:12px;background:#eff7f6;color:#21878a}
+.ua-create-card>strong{display:block;min-width:0;overflow-wrap:anywhere;color:#26394b;font-size:13px;line-height:1.25;font-weight:700}
+.ua-create-card-plus{position:absolute;right:11px;top:50%;width:23px;height:23px;display:grid;place-items:center;transform:translateY(-50%);border-radius:50%;background:#f1f5f6;color:#6c8790}
+.ua-create-card.is-disabled{min-height:76px;opacity:1;cursor:not-allowed;border-style:solid;background:#f8f9fa}
+.ua-create-card.is-disabled .ua-create-card-icon{background:#f0f2f4;color:#929da7}
+.ua-create-card.is-disabled>strong{color:#89939e}
+.ua-create-card.is-disabled em{position:absolute;left:64px;bottom:9px;margin:0;color:#929ba4;font-size:8px;font-style:normal;font-weight:800;letter-spacing:.08em}
+.ua-create-card.is-disabled{padding-bottom:20px}
+.ua-create-publish-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+.ua-create-locked-wrap{position:relative;min-width:0}
+.ua-create-locked-wrap .ua-create-card{width:100%;border-color:#e6e2ef;background:#fff}
+.ua-create-locked-wrap .ua-create-card-icon{background:#f3f0f8;color:#75649a}
+.ua-create-lock-mark{position:absolute;top:7px;right:7px;width:20px;height:20px;display:grid;place-items:center;border-radius:50%;background:#f0edf7;color:#71618e;pointer-events:none}
+.ua-create-locked-wrap .ua-create-card{padding-right:40px}
+.ua-create-locked-wrap .ua-create-card-plus{display:none}
+.ua-create-premium-hint{display:block;margin:7px 2px 0;color:#75649a;font-size:9px;font-weight:800;letter-spacing:.08em}
+.ua-create-business-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.ua-create-entry{min-height:76px;cursor:default}
+.ua-create-entry:hover{transform:none;border-color:#e9edf0;background:#fff;box-shadow:none}
+.ua-create-entry .ua-create-card-plus{background:#eff7f6;color:#21878a}
+.ua-create-foot,.ua-create-hero,.ua-create-verification-note{display:none!important}
+@media(max-width:760px){
+ .ua-create-hub{padding-bottom:12px}
+ .ua-create-top{margin-bottom:20px}
+ .ua-create-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+ .ua-create-business-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .ua-create-section{margin-bottom:23px}
+ .ua-create-card{min-height:70px;padding:11px 34px 11px 10px;gap:9px;border-radius:12px}
+ .ua-create-card-icon{width:36px;height:36px;flex-basis:36px;border-radius:11px}
+ .ua-create-card>strong{font-size:12px}
+ .ua-create-card-plus{right:8px;width:21px;height:21px}
+ .ua-create-card.is-disabled{min-height:70px;padding-bottom:19px}
+ .ua-create-card.is-disabled em{left:55px;bottom:7px;font-size:7px}
+ .ua-create-locked-wrap .ua-create-card{padding-right:34px}
+}
+@media(max-width:360px){
+ .ua-create-grid,.ua-create-business-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+ .ua-create-card{gap:7px;padding-left:8px;padding-right:30px}
+ .ua-create-card-icon{width:32px;height:32px;flex-basis:32px}
+ .ua-create-card>strong{font-size:11px}
+ .ua-create-card-plus{right:6px;width:19px;height:19px}
+ .ua-create-card.is-disabled em{left:47px}
+}
+@media(prefers-reduced-motion:reduce){.ua-create-card{transition:none}}
