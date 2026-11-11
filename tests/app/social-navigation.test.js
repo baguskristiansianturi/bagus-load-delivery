@@ -98,9 +98,9 @@ test('signed-in home leads with Bali experiences, search, wishlist and the perso
  const account=await readFile(new URL('../../src/pages/account/index.js',import.meta.url),'utf8');
  const navigation=await readFile(new URL('../../src/components/social/navigation.js',import.meta.url),'utf8');
  const css=await readFile(new URL('../../src/pages/account/user-account.css',import.meta.url),'utf8');
- assert.ok(account.includes('Sedang ramai di Bali')&&account.includes('ua-home-topten'),'Home must lead discovery with a Top 10 popular experience module.');
+ assert.ok(account.includes('>Trending</h2>')&&account.includes('ua-topten-card'),'Home must lead discovery with image-led Trending cards.');
  assert.ok(!account.includes('"+discoverySection+'),'Home feed must not reference the removed category-card section.');
- assert.ok(account.includes('BALI · BERDASARKAN AKTIVITAS NYATA'),'Popularity labels must be grounded in real activity data.');
+ assert.ok(!account.includes('BERDASARKAN AKTIVITAS NYATA')&&!account.includes('aktivitas pengguna cukup terkumpul'),'Internal ranking explanations must never appear in visitor-facing copy.');
  assert.ok(navigation.includes('ua-home-searchbar')&&navigation.includes('ua-home-wishlist')&&navigation.includes('ua-home-search-prompt'),'Home header must show animated search and saved items.');
  assert.ok(account.includes('Jelajahi kuliner yang ramai di Bali')&&account.includes('startHomeSearchPrompt'),'Search prompt must rotate typed discovery suggestions.');
  assert.ok(account.includes('navigator.geolocation.getCurrentPosition'),'Home must request device location when no current location is available.');
@@ -109,7 +109,7 @@ test('signed-in home leads with Bali experiences, search, wishlist and the perso
  assert.ok(account.includes('homeNearbySection')&&account.includes('bindHomeNearby'),'Home must use live nearby results.');
  assert.ok(account.includes('enableHighAccuracy:true'),'Home must request precise GPS for accurate nearby distance.');
  const directory=await readFile(new URL('../../src/pages/directory/index.js',import.meta.url),'utf8');
- assert.ok(directory.includes('Jarak dari lokasi perangkat, tanpa peta')&&directory.includes('distance(Number(row.distance_m)'),'Nearby places must be displayed as distance cards, not a map.');
+ assert.ok(directory.includes('Tempat terdekat')&&directory.includes('distance(Number(row.distance_m)'),'Nearby places must be displayed as distance cards, not a map.');
  assert.ok(css.includes('.ua-topten-card')&&css.includes('.ua-home-searchbar')&&css.includes('.pl-home-map-chip'),'Experience cards, animated search and nearby cards must have responsive styles.');
  assert.ok(!directory.includes('id="pl-home-nearby-map"'),'Home must not render the GeoDirectory map.');
 });
