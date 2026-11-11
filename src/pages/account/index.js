@@ -26,7 +26,7 @@ const uploadMediaFile=createMediaUploader({supabase,bucket:BUCKET,supabaseUrl:SU
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmtDate=v=>new Date(v).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'});
 const initials=v=>String(v||'P').trim().slice(0,1).toUpperCase();
-let user=null,profile=null,profileReels=[],addresses=[],noticeTimer=null,leafletMap=null,leafletMarker=null,exploreFilter='recommended',reelsFilter='recommended',activityNotificationChannel=null,unreadNotificationCount=0,currentComposeDraft=null,profileMenuBound=false,accountContext={active:'personal',professional:null,stores:[],prefs:{}};
+let trendSliderTimer=null,user=null,profile=null,profileReels=[],addresses=[],noticeTimer=null,leafletMap=null,leafletMarker=null,exploreFilter='recommended',reelsFilter='recommended',activityNotificationChannel=null,unreadNotificationCount=0,currentComposeDraft=null,profileMenuBound=false,accountContext={active:'personal',professional:null,stores:[],prefs:{}};
 
 function notify(message,type='success'){
  const el=document.querySelector('#ua-toast');if(!el)return;
@@ -352,7 +352,7 @@ async function feedPage(){
 <div class="ua-home-section-heading"><div><span class="ua-eyebrow">EXPLORE PLUITS</span><h2>Top 10 Trending</h2></div><a href="#/discover">Lihat semua <b>↗</b></a></div>
 <div class="ua-topten-grid" id="ua-home-topten-grid">
 <a class="ua-topten-card ua-topten-card-1" href="#/places"><img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=1000&q=85" alt="Hidangan kuliner khas" fetchpriority="high"><span class="ua-topten-copy"><small>Kuliner</small><strong>Babi Guling Bu Coco</strong><em>Temukan cita rasa khas Bali</em></span></a>
-<a class="ua-topten-card ua-topten-card-2" href="#/places"><img src="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=850&q=85" alt="Sajian makanan lokal" loading="lazy"><span class="ua-topten-copy"><small>Kuliner</small><strong>Nasi Tempong Indra</strong></span></a>
+<a class="ua-topten-card ua-topten-card-2" href="#/places"><img src="https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?auto=format&fit=crop&w=1000&q=85" alt="Hidangan beef steak" loading="lazy"><span class="ua-topten-copy"><small>Kuliner</small><strong>Beef Slab</strong><em>Jelajahi sajian sejenis</em></span></a>
 <a class="ua-topten-card ua-topten-card-3" href="#/places"><img src="https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?auto=format&fit=crop&w=850&q=85" alt="Suasana pantai" loading="lazy"><span class="ua-topten-copy"><small>Destinasi</small><strong>Atlas Beach Club</strong></span></a>
 <a class="ua-topten-card ua-topten-card-4" href="#/trip"><img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=850&q=85" alt="Aktivitas menyelam di laut" loading="lazy"><span class="ua-topten-copy"><small>Aktivitas</small><strong>Diving Nusa Penida</strong></span></a>
 <a class="ua-topten-card ua-topten-card-5" href="#/places"><img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=850&q=85" alt="Pemandangan Ubud dan Bali" loading="lazy"><span class="ua-topten-copy"><small>Destinasi</small><strong>Jelajah Ubud</strong></span></a>
@@ -754,7 +754,7 @@ function bindHomeDiscoveryLocation(){
   bindProfileTabs();
   bindNotificationActions();
   if(section==='drafts')bindDrafts();
-  bindProfile();bindCompose();bindStoryCompose();bindStories();bindExploreFilters();bindAddresses();bindWallet();bindPostActions();bindFollowActions();if(section==='blocked')bindBlockedAccounts();if(section==='reels')bindReelsPlayback();if(section==='addresses')initMap();
+  bindProfile();bindCompose();bindStoryCompose();bindStories();bindExploreFilters();bindToptenSlider();bindAddresses();bindWallet();bindPostActions();bindFollowActions();if(section==='blocked')bindBlockedAccounts();if(section==='reels')bindReelsPlayback();if(section==='addresses')initMap();
  }catch(err){document.querySelector('#app').innerHTML=frame('<div class="ua-panel ua-error"><h1>Ada kendala memuat akun</h1><p>'+esc(err.message)+'</p><button class="ua-primary" onclick="location.reload()">Coba lagi</button></div>');document.querySelector('#ua-logout')?.addEventListener('click',()=>supabase.auth.signOut());}
 }
 function bindWallet(){
@@ -1101,6 +1101,21 @@ function bindFollowActions(){
   notify(incoming ? "Pengikut dihapus." : "Anda berhenti mengikuti akun ini.");
   await mountAccount(incoming ? "followers" : "following");
  }));
+}
+function bindToptenSlider(){
+ if(trendSliderTimer){clearInterval(trendSliderTimer);trendSliderTimer=null;}
+ const track=document.querySelector('#ua-home-topten-grid');
+ if(!track||!window.matchMedia('(max-width:760px)').matches)return;
+ const cards=[...track.querySelectorAll('.ua-topten-card')];if(cards.length<2)return;
+ let index=0,paused=false;
+ const goTo=next=>{index=(next+cards.length)%cards.length;track.scrollTo({left:cards[index].offsetLeft-track.offsetLeft,behavior:'smooth'});};
+ track.addEventListener('touchstart',()=>{paused=true;},{passive:true});
+ track.addEventListener('touchend',()=>{paused=false;index=cards.reduce((best,card,i)=>Math.abs(card.getBoundingClientRect().left-track.getBoundingClientRect().left)<Math.abs(cards[best].getBoundingClientRect().left-track.getBoundingClientRect().left)?i:best,0);},{passive:true});
+ track.addEventListener('mouseenter',()=>{paused=true;});
+ track.addEventListener('mouseleave',()=>{paused=false;});
+ track.addEventListener('focusin',()=>{paused=true;});
+ track.addEventListener('focusout',()=>{paused=false;});
+ trendSliderTimer=setInterval(()=>{if(!paused&&!document.hidden)goTo(index+1);},4200);
 }
 function bindExploreFilters(){
  document.querySelectorAll('[data-explore-filter]').forEach(button=>button.addEventListener('click',async()=>{
