@@ -374,7 +374,7 @@ async function feedPage(){
  const {data:blocks,error:blockError}=await supabase.from('user_blocks').select('blocker_id,blocked_id').or('blocker_id.eq.'+user.id+',blocked_id.eq.'+user.id);
  if(blockError)throw blockError;
  const blockedIds=(blocks||[]).map(x=>x.blocker_id===user.id?x.blocked_id:x.blocker_id);
- const {data:rows,error}=await supabase.from('user_posts').select('*').eq('visibility','public').eq('moderation_status','published').order('created_at',{ascending:false}).limit(120);
+ const {data:rows,error}=await supabase.from('user_posts').select('*').eq('visibility','public').eq('moderation_status','published').order('created_at',{ascending:false}).limit(30);
  if(error)throw error;
  const available=(rows||[]).filter(p=>!blockedIds.includes(p.user_id));
  const hydrated=await hydratePosts(available);
@@ -386,7 +386,7 @@ async function feedPage(){
   :[...hydrated].sort((a,b)=>score(b)-score(a)||new Date(b.created_at)-new Date(a.created_at));
  const storyIds=[...followingIds,user.id];
  let storyRows=[];
- if(storyIds.length){const q=await supabase.from('user_stories').select('id,user_id,media_path,media_type,caption,visibility,created_at,expires_at').in('user_id',storyIds).gt('expires_at',new Date().toISOString()).eq('visibility','public').order('created_at',{ascending:false}).limit(30);if(q.error)throw q.error;storyRows=q.data||[];}
+ if(storyIds.length){const q=await supabase.from('user_stories').select('id,user_id,media_path,media_type,caption,visibility,created_at,expires_at').in('user_id',storyIds).gt('expires_at',new Date().toISOString()).eq('visibility','public').order('created_at',{ascending:false}).limit(12);if(q.error)throw q.error;storyRows=q.data||[];}
  const ownerIds=[...new Set(storyRows.map(s=>s.user_id))];
  const profiles=ownerIds.length?await supabase.from('user_profiles').select('id,display_name,username,avatar_path').in('id',ownerIds):{data:[],error:null};
  if(profiles.error)throw profiles.error;
@@ -401,9 +401,9 @@ async function feedPage(){
  return "<div class='ua-social-home'><div class='ua-feed-heading'><div><span class='ua-eyebrow'>PLUITS COMMUNITY</span><h1>Beranda</h1><p>Ruang personal untuk minat, tempat terdekat, teman, dan rekomendasi.</p></div><a class='ua-outline' href='#/account/compose'>＋ Buat postingan</a></div><a class='ua-feed-search ua-feed-search-row' href='#/search' aria-label='Cari di Pluits'>"+socialIcon('search',{size:18})+"<span>Cari teman, tempat, dan postingan</span></a>"+discoverySection+interestSection+storySection+filterNav+"<section class='ua-feed'>"+(sorted.length?sorted.map(post=>postCard(post)).join(''):"<div class='ua-feed-empty'><strong>"+empty+"</strong>"+action+"</div>")+"</section></div>";
 }
 async function reelsPage(){
- const {data:vm,error:me}=await supabase.from('post_media').select('post_id,duration_ms').eq('media_type','video').lte('duration_ms',60000).order('created_at',{ascending:false}).limit(160);if(me)throw me;
+ const {data:vm,error:me}=await supabase.from('post_media').select('post_id,duration_ms').eq('media_type','video').lte('duration_ms',60000).order('created_at',{ascending:false}).limit(60);if(me)throw me;
  const ids=[...new Set((vm||[]).map(x=>x.post_id))];let rows=[];
- if(ids.length){const q=await supabase.from('user_posts').select('*').in('id',ids).eq('visibility','public').eq('moderation_status','published').order('created_at',{ascending:false}).limit(100);if(q.error)throw q.error;rows=q.data||[];}
+ if(ids.length){const q=await supabase.from('user_posts').select('*').in('id',ids).eq('visibility','public').eq('moderation_status','published').order('created_at',{ascending:false}).limit(40);if(q.error)throw q.error;rows=q.data||[];}
  let followingIds=[],blockedIds=[];
  if(user?.id){const b=await supabase.from('user_blocks').select('blocker_id,blocked_id').or('blocker_id.eq.'+user.id+',blocked_id.eq.'+user.id);if(b.error)throw b.error;blockedIds=(b.data||[]).map(x=>x.blocker_id===user.id?x.blocked_id:x.blocker_id);rows=rows.filter(p=>!blockedIds.includes(p.user_id));const f=await supabase.from('user_follows').select('following_id').eq('follower_id',user.id).eq('status','accepted');if(f.error)throw f.error;followingIds=(f.data||[]).map(x=>x.following_id);}
  const posts=await hydratePosts(rows),eligible=posts.filter(p=>p.media?.length===1&&p.media[0].media_type==='video'&&Number(p.media[0].duration_ms||0)>0&&Number(p.media[0].duration_ms)<=60000);
