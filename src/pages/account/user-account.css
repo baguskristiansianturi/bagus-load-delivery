@@ -2157,3 +2157,28 @@
  .ua-create-feature .ua-create-card-icon{width:28px;height:28px;flex-basis:28px}
  .ua-create-feature .ua-create-card-copy small{font-size:9px}
 }
+
+
+/* Signed-in home: interests first, then nearby directory, then community feed. */
+.ua-home-interests{margin:0 0 16px;padding:16px 17px;border:1px solid #e8eeee;border-radius:14px;background:#fff}
+.ua-home-section-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin:0 0 11px}
+.ua-home-section-heading h2{margin:0;color:#263a45;font-size:16px;line-height:1.25;font-weight:760}
+.ua-home-section-heading p{margin:4px 0 0;color:#7a8990;font-size:11px;line-height:1.5}
+.ua-home-section-heading .ua-eyebrow{margin:0 0 5px;font-size:9px}
+.ua-home-section-heading>a{flex:0 0 auto;color:#168f87;font-size:11px;font-weight:700;text-decoration:none}
+.ua-home-interest-chips{display:flex;flex-wrap:wrap;gap:7px}
+.ua-home-interest-chips a{display:inline-flex;align-items:center;min-height:30px;padding:0 11px;border:1px solid #dcebe9;border-radius:999px;background:#f4faf9;color:#287b75;font-size:11px;font-weight:650;text-decoration:none}
+.ua-home-interest-empty{padding:11px 12px;border-radius:10px;background:#f7f9fa;color:#718087;font-size:11px;line-height:1.6}
+.ua-home-interest-empty a{display:inline-block;margin-left:4px;color:#168f87;font-weight:700;text-decoration:none}
+.ua-home-nearby{margin:0 0 17px}
+.ua-home-nearby .pl-nearby-home{margin:0!important;padding:15px 16px;border:1px solid #e8eeee;border-radius:14px;background:#fff}
+.ua-home-nearby .pl-nearby-heading h2{font-size:16px}
+.ua-home-nearby .pl-nearby-heading p{font-size:11px}
+.ua-home-nearby .pl-home-nearby-grid{gap:8px}
+@media(max-width:760px){
+ .ua-home-interests{margin:0 0 12px;padding:14px;border-radius:0;border-left:0;border-right:0}
+ .ua-home-section-heading h2{font-size:14px}
+ .ua-home-nearby{margin:0 0 12px}
+ .ua-home-nearby .pl-nearby-home{padding:14px;border:0;border-radius:0;border-bottom:7px solid #f5f7f8}
+ .ua-home-nearby .pl-nearby-heading{align-items:flex-start}
+}
