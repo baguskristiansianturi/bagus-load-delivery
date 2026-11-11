@@ -885,6 +885,24 @@ async function createPage(){
   <section class="ua-create-section ua-create-publishing"><div class="ua-create-section-head"><div><span class="ua-eyebrow">PENERBITAN & PERSONAL BRAND</span><h2>Bangun ruang ceritamu</h2><p>Publikasikan tulisan dan pengalaman dengan identitas blog sendiri.</p></div></div>
    ${hasBlog||premium?card('book','Blog','Ruang khusus untuk catatan, puisi, pengalaman, dan artikel.',blogHref,hasBlog?'KELOLA BLOG':'PREMIUM AKTIF','is-blog'):('<div class="ua-create-locked-wrap">'+card('book','Blog','Ruang khusus untuk catatan, puisi, pengalaman, dan artikel.',blogHref,'','is-locked')+'<span class="ua-create-lock-mark" aria-label="Fitur terkunci">'+socialIcon('lock',{size:14})+'</span><p class="ua-create-premium-hint">UPGRADE KE PREMIUM</p></div>')}
   </section>
+  <section class="ua-create-section ua-create-business">
+   <div class="ua-create-section-head"><div><span class="ua-eyebrow">USAHA, TEMPAT & ORGANISASI</span><h2>Bangun kehadiran di PLUITS</h2><p>Satu pintu untuk menemukan, mengklaim, atau mengelola identitas publik.</p></div></div>
+   <div class="ua-create-grid ua-create-business-grid">
+    <article class="ua-create-card ua-create-entry">
+     <span class="ua-create-card-icon">\${socialIcon('map-pin',{size:25})}</span>
+     <span class="ua-create-card-copy"><strong>Tempat & Entitas</strong><small>Restoran, kafe, destinasi, sekolah, kampus, rumah sakit, organisasi, dan tempat lainnya.</small><em>GEODIRECTORY · KLAIM ATAU AJUKAN</em></span><span class="ua-create-card-arrow">↗</span>
+    </article>
+    <article class="ua-create-card ua-create-entry">
+     <span class="ua-create-card-icon">\${socialIcon('store',{size:25})}</span>
+     <span class="ua-create-card-copy"><strong>Toko</strong><small>Buat identitas penjual untuk menampilkan produk, katalog, stok, dan pesanan.</small><em>UNTUK PENJUAL PRODUK</em></span><span class="ua-create-card-arrow">↗</span>
+    </article>
+    <article class="ua-create-card ua-create-entry">
+     <span class="ua-create-card-icon">\${socialIcon('briefcase',{size:25})}</span>
+     <span class="ua-create-card-copy"><strong>Layanan</strong><small>Tampilkan jasa, keahlian, paket layanan, dan cara pelanggan menghubungi atau memesan.</small><em>UNTUK PENYEDIA JASA</em></span><span class="ua-create-card-arrow">↗</span>
+    </article>
+   </div>
+   <div class="ua-create-verification-note"><span class="ua-create-verification-icon">\${socialIcon('shield-check',{size:18})}</span><p><strong>Verifikasi identitas untuk pengelolaan usaha</strong><small>Toko dan Layanan memerlukan verifikasi identitas. Untuk Tempat & Entitas, pengguna perlu membuktikan hubungan atau kewenangannya saat mengajukan klaim. Status dan langkah berikutnya akan mengikuti pemeriksaan akun.</small></p></div>
+  </section>
   <footer class="ua-create-foot"><span>Semua konten tetap berada dalam kendali privasi akunmu.</span><a href="#/account/drafts">Lihat draf tersimpan →</a></footer>
  </div>`;
 }
