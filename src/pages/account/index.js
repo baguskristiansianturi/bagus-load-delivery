@@ -873,37 +873,33 @@ async function createPage(){
  if(entitlement.error)throw entitlement.error;if(blog.error)throw blog.error;
  const now=Date.now(),premium=entitlement.data?.plan_key==='premium'&&entitlement.data.status==='active'&&new Date(entitlement.data.starts_at).getTime()<=now&&(!entitlement.data.expires_at||new Date(entitlement.data.expires_at).getTime()>now);
  const hasBlog=!!blog.data,blogHref=hasBlog||premium?'#/account/blog':'#/account/upgrade';
- const card=(icon,title,desc,href,meta,kind='')=>'<a class="ua-create-card '+kind+'" href="'+href+'"><span class="ua-create-card-icon">'+socialIcon(icon,{size:25})+'</span><span class="ua-create-card-copy"><strong>'+title+'</strong><small>'+desc+'</small><em>'+meta+'</em></span><span class="ua-create-card-arrow">↗</span></a>';
+ const card=(icon,title,href,kind='',meta='')=>'<a class="ua-create-card '+kind+'" href="'+href+'"><span class="ua-create-card-icon">'+socialIcon(icon,{size:22})+'</span><strong>'+title+'</strong>'+(meta?'<em>'+meta+'</em>':'')+'<span class="ua-create-card-plus" aria-hidden="true">'+socialIcon('plus',{size:15})+'</span></a>';
+ const entry=(icon,title)=>'<article class="ua-create-card ua-create-entry"><span class="ua-create-card-icon">'+socialIcon(icon,{size:22})+'</span><strong>'+title+'</strong><span class="ua-create-card-plus" aria-hidden="true">'+socialIcon('plus',{size:15})+'</span></article>';
  return `<div class="ua-create-hub">
-  <header class="ua-create-hero"><div><span class="ua-eyebrow">PLUITS CREATION STUDIO</span><h1>Buat sesuatu yang berarti.</h1><p>Bagikan momen, ceritakan pengalaman, dan bangun ruang kreatifmu di Pluits.</p></div><div class="ua-create-hero-mark">${socialIcon('plus',{size:30})}</div></header>
-  <section class="ua-create-section"><div class="ua-create-section-head"><div><span class="ua-eyebrow">KONTEN SOSIAL</span><h2>Mulai dari sebuah momen</h2><p>Format yang bisa langsung kamu gunakan.</p></div></div><div class="ua-create-grid">
-   ${card('camera','Story','Momen foto atau video yang tampil selama 24 jam.','#/account/story','AKTIF','is-story')}
-   ${card('image','Post','Bagikan foto, video, dan cerita di profilmu.','#/account/compose','AKTIF','is-post')}
-   ${card('reels','Reel','Video pendek tunggal hingga 60 detik.','#/account/reel','AKTIF','is-reel')}
-   <div class="ua-create-card is-disabled" aria-disabled="true"><span class="ua-create-card-icon">${socialIcon('radio',{size:25})}</span><span class="ua-create-card-copy"><strong>Live</strong><small>Siaran langsung dan interaksi real-time.</small><em>COMING SOON</em></span><span class="ua-create-card-arrow">⌁</span></div>
-  </div></section>
-  <section class="ua-create-section ua-create-publishing"><div class="ua-create-section-head"><div><span class="ua-eyebrow">PENERBITAN & PERSONAL BRAND</span><h2>Bangun ruang ceritamu</h2><p>Publikasikan tulisan dan pengalaman dengan identitas blog sendiri.</p></div></div>
-   ${hasBlog||premium?card('book','Blog','Ruang khusus untuk catatan, puisi, pengalaman, dan artikel.',blogHref,hasBlog?'KELOLA BLOG':'PREMIUM AKTIF','is-blog'):('<div class="ua-create-locked-wrap">'+card('book','Blog','Ruang khusus untuk catatan, puisi, pengalaman, dan artikel.',blogHref,'','is-locked')+'<span class="ua-create-lock-mark" aria-label="Fitur terkunci">'+socialIcon('lock',{size:14})+'</span><p class="ua-create-premium-hint">UPGRADE KE PREMIUM</p></div>')}
-  </section>
-  <section class="ua-create-section ua-create-business">
-   <div class="ua-create-section-head"><div><span class="ua-eyebrow">USAHA, TEMPAT & ORGANISASI</span><h2>Bangun kehadiran di PLUITS</h2><p>Satu pintu untuk menemukan, mengklaim, atau mengelola identitas publik.</p></div></div>
-   <div class="ua-create-grid ua-create-business-grid">
-    <article class="ua-create-card ua-create-entry">
-     <span class="ua-create-card-icon">${socialIcon('map-pin',{size:25})}</span>
-     <span class="ua-create-card-copy"><strong>Tempat & Entitas</strong><small>Restoran, kafe, destinasi, sekolah, kampus, rumah sakit, organisasi, dan tempat lainnya.</small><em>GEODIRECTORY · KLAIM ATAU AJUKAN</em></span><span class="ua-create-card-arrow">↗</span>
-    </article>
-    <article class="ua-create-card ua-create-entry">
-     <span class="ua-create-card-icon">${socialIcon('store',{size:25})}</span>
-     <span class="ua-create-card-copy"><strong>Toko</strong><small>Buat identitas penjual untuk menampilkan produk, katalog, stok, dan pesanan.</small><em>UNTUK PENJUAL PRODUK</em></span><span class="ua-create-card-arrow">↗</span>
-    </article>
-    <article class="ua-create-card ua-create-entry">
-     <span class="ua-create-card-icon">${socialIcon('briefcase',{size:25})}</span>
-     <span class="ua-create-card-copy"><strong>Layanan</strong><small>Tampilkan jasa, keahlian, paket layanan, dan cara pelanggan menghubungi atau memesan.</small><em>UNTUK PENYEDIA JASA</em></span><span class="ua-create-card-arrow">↗</span>
-    </article>
+  <header class="ua-create-top"><h1>Buat</h1></header>
+  <section class="ua-create-section">
+   <div class="ua-create-section-head"><h2>Konten</h2></div>
+   <div class="ua-create-grid ua-create-social-grid">
+    ${card('camera','Story','#/account/story','is-story')}
+    ${card('image','Post','#/account/compose','is-post')}
+    ${card('reels','Reel','#/account/reel','is-reel')}
+    <div class="ua-create-card is-disabled" aria-disabled="true"><span class="ua-create-card-icon">${socialIcon('radio',{size:22})}</span><strong>Live</strong><em>COMING SOON</em></div>
    </div>
-   <div class="ua-create-verification-note"><span class="ua-create-verification-icon">${socialIcon('shield-check',{size:18})}</span><p><strong>Verifikasi identitas untuk pengelolaan usaha</strong><small>Toko dan Layanan memerlukan verifikasi identitas. Untuk Tempat & Entitas, pengguna perlu membuktikan hubungan atau kewenangannya saat mengajukan klaim. Status dan langkah berikutnya akan mengikuti pemeriksaan akun.</small></p></div>
   </section>
-  <footer class="ua-create-foot"><span>Semua konten tetap berada dalam kendali privasi akunmu.</span><a href="#/account/drafts">Lihat draf tersimpan →</a></footer>
+  <section class="ua-create-section">
+   <div class="ua-create-section-head"><h2>Penerbitan</h2></div>
+   <div class="ua-create-grid ua-create-publish-grid">
+    ${hasBlog||premium?card('book','Blog',blogHref,'is-blog',hasBlog?'KELOLA':'PREMIUM'):('<div class="ua-create-locked-wrap">'+card('book','Blog',blogHref,'is-locked')+'<span class="ua-create-lock-mark" aria-label="Fitur terkunci">'+socialIcon('lock',{size:12})+'</span><span class="ua-create-premium-hint">UPGRADE KE PREMIUM</span></div>')}
+   </div>
+  </section>
+  <section class="ua-create-section">
+   <div class="ua-create-section-head"><h2>Usaha & tempat</h2></div>
+   <div class="ua-create-grid ua-create-business-grid">
+    ${entry('map-pin','Tempat & Entitas')}
+    ${entry('store','Toko')}
+    ${entry('briefcase','Layanan')}
+   </div>
+  </section>
  </div>`;
 }
 function upgradePage(){
