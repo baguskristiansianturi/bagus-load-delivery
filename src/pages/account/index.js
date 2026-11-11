@@ -774,43 +774,49 @@ function bindHomeDiscoveryLocation(){
   prompt.textContent=error.code===1?'Izinkan lokasi untuk pengalaman lokal':'Lokasi belum terdeteksi';loadNearby(null);
  },{enableHighAccuracy:true,timeout:15000,maximumAge:120000});
 }
- async function mountAccount(section='profile',parameter=''){
+ let accountMountSequence=0;
+async function mountAccount(section='profile',parameter=''){
+ const mountSequence=++accountMountSequence,routeVersion=window.__pluitsRouteVersion||0,requestedHash=location.hash;
+ const isCurrent=()=>mountSequence===accountMountSequence&&routeVersion===(window.__pluitsRouteVersion||0)&&requestedHash===location.hash;
  if(section!=='activity'&&activityNotificationChannel){supabase.removeChannel(activityNotificationChannel);activityNotificationChannel=null;}
- const {data:{session}}=await supabase.auth.getSession();user=session?.user||null;
- if(!user&&(section==='user'||section==='post')){
-  try{
-   const page=section==='user'?await publicProfilePage(parameter):await postDetailPage(parameter||location.hash.split('/')[3]||'');
-   document.querySelector('#app').innerHTML=frame(page,'explore');return;
-  }catch(err){document.querySelector('#app').innerHTML='<div class="ua-panel ua-error"><h1>Konten tidak tersedia</h1><p>'+esc(err.message)+'</p><a href="#/">Kembali</a></div>';return;}
- }
- if(section==='register'){authScreen('register');return;}
- if(!user){authScreen('login');return;}
  try{
-  await loadProfile();accountContext=await loadAccountContext(supabase,user);
-  unreadNotificationCount=await countUnreadActivity();
+  const {data:{session}}=await supabase.auth.getSession();if(!isCurrent())return;
+  user=session?.user||null;
+  if(!user&&(section==='user'||section==='post')){
+   const page=section==='user'?await publicProfilePage(parameter):await postDetailPage(parameter||location.hash.split('/')[3]||'');if(!isCurrent())return;
+   document.querySelector('#app').innerHTML=frame(page,'explore');return;
+  }
+  if(section==='register'){authScreen('register');return;}
+  if(!user){authScreen('login');return;}
+  await loadProfile();if(!isCurrent())return;
+  accountContext=await loadAccountContext(supabase,user);if(!isCurrent())return;
+  unreadNotificationCount=await countUnreadActivity();if(!isCurrent())return;
   if(section==='profile')updateSEO({title:profile.display_name+' (@'+profile.username+') — Pluits',description:(profile.bio||'Profil komunitas '+profile.display_name+' di Pluits.').slice(0,160),path:'#/@'+encodeURIComponent(profile.username)});
   const page=section==='explore'?await feedPage():section==='activity'?await notificationPage():section==='reels'?await reelsPage():section==='create'?await createPage():section==='upgrade'?upgradePage():section==='story'?await storyComposePage():section==='live'?livePage():section==='saved'?await savedPage():section==='reel'?await composePage('', 'reel'):section==='compose'?await composePage(parameter):section==='drafts'?await draftsPage():section==='addresses'?await addressPage():section==='wallet'?await walletPage():section==='post'?await postDetailPage(parameter||location.hash.split('/')[3]||''):section==='user'?await publicProfilePage(parameter):section==='followers'?await followListPage('followers'):section==='following'?await followListPage('following'):section==='requests'?await followListPage('followers'):section==='preview'?await profilePage(true):section==='profile'?await profilePage(false,parameter==='edit'):section==='professional'?professionalPage(accountContext,profile):section==='professional-create'?professionalFormPage(accountContext,profile):section==='settings'?settingsHubPage():section==='security'?await accountSecurityPage(supabase,user):section==='blocked'?await blockedAccountsPage():section==='content-settings'?await accountSettingsPage(supabase,user):await profilePage();
-  const headerAvatar=await signed(profile.avatar_path);const app=document.querySelector('#app');const navActive=section==='profile'?(parameter==='edit'?'profile-edit':'profile'):section==='preview'?'preview':section==='explore'?'explore':section==='reels'?'reels':['create','compose','reel','story'].includes(section)?'create':section==='post'?'post':section==='activity'?'activity':section==='addresses'?'addresses':'account';app.classList.remove('pl-page-enter');app.innerHTML=frame(page,navActive,headerAvatar);requestAnimationFrame(()=>app.classList.add('pl-page-enter'));
+  if(!isCurrent())return;
+  const headerAvatar=await signed(profile.avatar_path);if(!isCurrent())return;
+  const app=document.querySelector('#app');if(!app)return;
+  const navActive=section==='profile'?(parameter==='edit'?'profile-edit':'profile'):section==='preview'?'preview':section==='explore'?'explore':section==='reels'?'reels':['create','compose','reel','story'].includes(section)?'create':section==='post'?'post':section==='activity'?'activity':section==='addresses'?'addresses':'account';
+  app.classList.remove('pl-page-enter');app.innerHTML=frame(page,navActive,headerAvatar);requestAnimationFrame(()=>{if(isCurrent())app.classList.add('pl-page-enter');});
   document.querySelector('#ua-logout')?.addEventListener('click',async()=>{await supabase.auth.signOut();user=null;profile=null;authScreen('login');});
   bindAccountContext({db:supabase,user,ctx:accountContext,profile,refresh:mountAccount});
-  if(section==='explore'){bindHomeDiscoveryLocation();}
-
+  if(section==='explore')bindHomeDiscoveryLocation();
   bindProfileMenu();
   if(section==='security')bindAccountSecurity(supabase,user);
   document.querySelector('#ua-settings-logout')?.addEventListener('click',async()=>{await supabase.auth.signOut();user=null;profile=null;location.hash='/account/login';});
   document.querySelector('#ua-edit-profile-link')?.addEventListener('click',e=>{e.preventDefault();document.querySelector('#edit-profile')?.scrollIntoView({behavior:'smooth',block:'start'});});
   document.querySelector('#ua-menu-logout')?.addEventListener('click',async()=>{await supabase.auth.signOut();user=null;profile=null;location.hash='/';});
-  normalizeFeedMediaFrames(document);
-  bindPostGalleries();
-  if(section==='post'){
-   const focusId=parameter||location.hash.split('/')[3]||'';
-   requestAnimationFrame(()=>document.getElementById('ua-post-focus-'+focusId)?.scrollIntoView({block:'start',behavior:'auto'}));
-  }
-  bindProfileTabs();
-  bindNotificationActions();
-  if(section==='drafts')bindDrafts();
-  bindProfile();bindCompose();bindStoryCompose();bindStories();bindExploreFilters();bindToptenSlider();bindAddresses();bindWallet();bindPostActions();bindFollowActions();if(section==='blocked')bindBlockedAccounts();if(section==='reels')bindReelsPlayback();if(section==='addresses')initMap();
- }catch(err){document.querySelector('#app').innerHTML=frame('<div class="ua-panel ua-error"><h1>Ada kendala memuat akun</h1><p>'+esc(err.message)+'</p><button class="ua-primary" onclick="location.reload()">Coba lagi</button></div>');document.querySelector('#ua-logout')?.addEventListener('click',()=>supabase.auth.signOut());}
+  normalizeFeedMediaFrames(document);bindPostGalleries();
+  if(section==='post'){const focusId=parameter||location.hash.split('/')[3]||'';requestAnimationFrame(()=>document.getElementById('ua-post-focus-'+focusId)?.scrollIntoView({block:'start',behavior:'auto'}));}
+  bindProfileTabs();bindNotificationActions();if(section==='drafts')bindDrafts();
+  bindProfile();bindCompose();bindStoryCompose();bindStories();bindExploreFilters();bindToptenSlider();bindAddresses();bindWallet();bindPostActions();bindFollowActions();
+  if(section==='blocked')bindBlockedAccounts();if(section==='reels')bindReelsPlayback();if(section==='addresses')initMap();
+ }catch(err){
+  if(!isCurrent())return;
+  const app=document.querySelector('#app');if(!app)return;
+  app.innerHTML=frame('<div class="ua-panel ua-error"><h1>Ada kendala memuat akun</h1><p>'+esc(err.message)+'</p><button class="ua-primary" onclick="location.reload()">Coba lagi</button></div>');
+  document.querySelector('#ua-logout')?.addEventListener('click',()=>supabase.auth.signOut());
+ }
 }
 function bindWallet(){
  const form=document.querySelector('#ua-wallet-form');if(!form)return;
