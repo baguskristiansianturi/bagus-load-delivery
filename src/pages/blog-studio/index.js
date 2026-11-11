@@ -214,7 +214,13 @@ function bind() {
     const supportingImages = [...(old?.supportingImages || []), ...Array.from(document.querySelector('#pl-blog-support-input')?.files || [])];
     if (!String(data.get('title') || '').trim() || !String(data.get('description') || '').trim() || !String(data.get('body') || '').trim() || !cover) return notify('Lengkapi judul, deskripsi, gambar utama, dan isi sebelum pratinjau.', 'error');
     if (wordCount(String(data.get('description') || '')) > 85) return notify('Deskripsi maksimal 85 kata.', 'error');
-    window.__plBlogPreviewItem = { title: String(data.get('title')), description: String(data.get('description')), body: String(data.get('body')), cover, supportingImages };
+    const now = Date.now();
+    const snapshot = { id: editingId || uid(), userId: activeUser.id, title: String(data.get('title')), description: String(data.get('description')), body: String(data.get('body')), cover, supportingImages, status: 'draft', updatedAt: now, createdAt: old?.createdAt || now };
+    await saveItem(snapshot);
+    editingId = snapshot.id;
+    window.__plBlogEditingItem = snapshot;
+    window.__plBlogPreviewItem = snapshot;
+    notify('Pratinjau siap. Draft juga disimpan di perangkat ini.');
     setView('preview');
   });
   document.querySelector('#pl-blog-editor-form')?.addEventListener('submit', event => { event.preventDefault(); persistEditor('published').catch(showError); });
