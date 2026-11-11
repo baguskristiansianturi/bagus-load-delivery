@@ -1129,3 +1129,21 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - **Test route:** `https://baguskristiansianturi.github.io/pluits/#/account/blog`.
 - **Verification limits:** JavaScript syntax checks PASS for Blog Studio, account module, and router. Android browser UAT, native image picker, IndexedDB persistence after browser restart, accessibility, and actual feed/backend publication NOT TESTED. Founder acceptance NOT ACCEPTED.
 - **Next:** founder tests from Android: open Plus → Blog, select cover, enter title and 85-word description, add body and supporting images, save draft, reload/resume, preview, create local test publication, and verify it remains clearly local-only. Capture UI findings before designing backend schema/RLS/Storage contract.
+
+
+## CP-070 — Perbaikan header publik, visual beranda, dan GeoDirectory map-first (11 November 2026)
+
+- **Sumber temuan:** UAT founder pada halaman Beranda PLUITS. Header/navbar dan ikon pada perangkat mobile tampak terpotong/tidak muncul; komposisi beranda terlalu dominan teks; GeoDirectory tampil sebagai daftar kartu sehingga tidak terasa sebagai peta lokasi.
+- **Rujukan keputusan:** Business Model Master bagian 23.1 (social-first home), 28.1–28.7 (nearby, hybrid home, map/list dengan sumber hasil yang sama, personalisasi), 29 (GeoDirectory), dan 30.3 (mobile-first, visual, modular, tidak ada kontrol palsu). Tidak mengubah arah bisnis atau membuka vertical baru.
+- **Frontend IMPLEMENTED:**
+  - Entry point aplikasi sekarang memuat shared social-navigation stylesheet; header publik diberi layout eksplisit untuk desktop dan mobile; logo brand, tombol Masuk/Daftar, lima slot navigasi bawah, dan SVG icons diberi ukuran/visibilitas yang jelas.
+  - Beranda pengunjung lebih visual: hero image didahulukan pada mobile, kategori dan katalog visual tetap menggunakan foto ilustratif, dan konten publik tetap berasal dari postingan publik yang benar-benar diterbitkan.
+  - Home preview dan halaman GeoDirectory menggunakan peta sebagai tampilan utama, dengan mode daftar sebagai alternatif.
+  - Peta menggunakan MapLibre GL JS 6.17 ESM, globe projection, OpenStreetMap raster tiles dengan atribusi, touch zoom/rotation, tombol tampilan Bumi, pin dari koordinat entitas nyata, dan popup yang membuka detail tempat. Tidak ada data pin atau engagement palsu.
+  - Jika WebGL/peta tidak dapat dimuat, halaman direktori beralih ke daftar agar hasil tetap dapat diakses.
+- **Regression tests:** 19 Node tests PASS; production-surface verifier PASS. Vite production build PASS dan build output verification PASS.
+- **Commit kode:** `edfa4355ff3741fe748e562e59aa75964dcd2037`.
+- **GitHub Actions:** run `43037854332`, workflow #1351, attempt 2 — SUCCESS; production artifact uploaded dan GitHub Pages deployment dilaporkan SUCCESS.
+- **Status:** IMPLEMENTED / DEPLOYED / AUTOMATED TESTED. Android real-device visual UAT, WebGL compatibility/performance on founder's Android 8.1 device, two-finger rotation, map tile availability on mobile network, and founder acceptance remain NOT TESTED / NOT ACCEPTED.
+- **Catatan batas:** pin hanya menunjukkan koordinat/lokasi publik yang tersimpan; bukan bukti tempat sedang beroperasi atau telah diverifikasi. OpenStreetMap attribution ditampilkan; penggunaan tile provider dan kapasitas produksi harus ditinjau sebelum trafik besar.
+- **UAT berikutnya:** periksa header/logo dan lima ikon navigasi pada ponsel, geser/zoom/putar globe, ketuk pin dan buka detail, pindah ke mode daftar, serta pastikan tampilan tetap dapat dipakai bila peta tidak tersedia.
