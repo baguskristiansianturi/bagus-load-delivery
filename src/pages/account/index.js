@@ -348,21 +348,10 @@ async function feedPage(){
  if(interestQuery.error)throw interestQuery.error;
  const interests=(interestQuery.data||[]).map(x=>x.directory_categories).filter(Boolean);
  const interestSection="<section class='ua-home-interests'><div class='ua-home-section-heading'><div><span class='ua-eyebrow'>PERSONALISASI</span><h2>Minatmu</h2><p>Topik yang membantu Pluits menyusun rekomendasi.</p></div><a href='#/places'>Atur minat →</a></div>"+(interests.length?"<div class='ua-home-interest-chips'>"+interests.map(x=>"<a href='#/places'>"+esc(x.name)+"</a>").join('')+"</div>":"<div class='ua-home-interest-empty'>Belum ada minat yang dipilih. Pilih kategori di direktori agar rekomendasi tempat dan konten makin relevan. <a href='#/places'>Pilih minat</a></div>")+"</section>";
- const discoverySection=`<section class="ua-home-discovery" aria-label="Rekomendasi pengalaman di Bali">
-<div class="ua-home-location"><span class="ua-home-location-pin">⌖</span><div class="ua-home-location-copy"><small>REKOMENDASI DI SEKITAR</small><strong id="ua-home-location-label">Bali</strong></div><span class="ua-home-location-status" id="ua-home-location-status">Menyesuaikan lokasi…</span></div>
-<div class="ua-home-discovery-intro"><h2>Temukan pengalaman menarik</h2></div>
-<div class="ua-home-visual-grid">
-<a href="#/places" class="ua-home-visual-card ua-home-visual-feature"><img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=1100&q=82" alt="Pemandangan alam Bali" fetchpriority="high"><span class="ua-home-visual-shade"></span><strong>Tempat untuk dikunjungi</strong><small>Jelajahi destinasi di Bali</small></a>
-<a href="#/trip" class="ua-home-visual-card"><img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=700&q=80" alt="Aktivitas laut" loading="lazy"><span class="ua-home-visual-shade"></span><strong>Aktivitas</strong></a>
-<a href="#/places" class="ua-home-visual-card"><img src="https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=700&q=80" alt="Kuliner" loading="lazy"><span class="ua-home-visual-shade"></span><strong>Kuliner</strong></a>
-<a href="#/places" class="ua-home-visual-card"><img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=700&q=80" alt="Alam dan pantai" loading="lazy"><span class="ua-home-visual-shade"></span><strong>Alam & pantai</strong></a>
-<a href="#/places" class="ua-home-visual-card"><img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=700&q=80" alt="Gym dan kebugaran" loading="lazy"><span class="ua-home-visual-shade"></span><strong>Gym & kebugaran</strong></a>
-</div></section>`;
-const trendSection=`<section class="ua-home-trends"><div class="ua-home-section-heading"><h2>Inspirasi di Bali</h2><a href="#/discover">Jelajahi semua</a></div><div class="ua-home-trend-strip">
-<a href="#/trip"><img src="https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?auto=format&fit=crop&w=500&q=75" alt="Pantai" loading="lazy"><span><b>Liburan pantai</b><small>Tempat & pengalaman</small></span></a>
-<a href="#/trip"><img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=500&q=75" alt="Laut" loading="lazy"><span><b>Wisata laut</b><small>Aktivitas air</small></span></a>
-<a href="#/places"><img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=500&q=75" alt="Olahraga" loading="lazy"><span><b>Hidup aktif</b><small>Olahraga & kebugaran</small></span></a>
-</div></section>`;
+ const trendSection=`<section class="ua-home-trends ua-home-topten" aria-label="Sepuluh hal paling populer di Bali">
+<div class="ua-home-section-heading"><div><span class="ua-eyebrow">BALI · BERDASARKAN AKTIVITAS NYATA</span><h2>Sedang ramai di Bali</h2></div><a href="#/discover">Lihat semua</a></div>
+<div class="ua-topten-track" id="ua-home-topten-track" aria-live="polite"><div class="ua-topten-empty">Peringkat populer akan tampil di sini setelah aktivitas pengguna cukup terkumpul.</div></div>
+</section>`;
 const {data:follows,error:followError}=await supabase.from('user_follows').select('following_id').eq('follower_id',user.id).eq('status','accepted');
  if(followError)throw followError;
  const followingIds=[...new Set((follows||[]).map(x=>x.following_id).filter(Boolean))];
