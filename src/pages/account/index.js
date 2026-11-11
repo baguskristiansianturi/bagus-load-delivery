@@ -347,10 +347,10 @@ async function feedPage(){
  if(interestQuery.error)throw interestQuery.error;
  const interests=(interestQuery.data||[]).map(x=>x.directory_categories).filter(Boolean);
  const interestSection="<section class='ua-home-interests'><div class='ua-home-section-heading'><div><span class='ua-eyebrow'>PERSONALISASI</span><h2>Minatmu</h2><p>Topik yang membantu Pluits menyusun rekomendasi.</p></div><a href='#/places'>Atur minat →</a></div>"+(interests.length?"<div class='ua-home-interest-chips'>"+interests.map(x=>"<a href='#/places'>"+esc(x.name)+"</a>").join('')+"</div>":"<div class='ua-home-interest-empty'>Belum ada minat yang dipilih. Pilih kategori di direktori agar rekomendasi tempat dan konten makin relevan. <a href='#/places'>Pilih minat</a></div>")+"</section>";
- const discoverySection=`<section class="ua-home-discovery" aria-label="Rekomendasi untukmu">
+ const discoverySection=`<section class="ua-home-discovery" aria-label="Rekomendasi visual untukmu">
   <div class="ua-home-location">
-   <div class="ua-home-location-copy"><span class="ua-eyebrow">LOKASI REKOMENDASI</span><strong id="ua-home-location-label">Pilih lokasi saat ini</strong><small id="ua-home-location-note">Rekomendasi akan mengikuti tempat kamu berada, bukan hanya kota asal profil.</small></div>
-   <button type="button" id="ua-home-detect-location" class="ua-home-location-button">◎ Gunakan lokasiku</button>
+   <div class="ua-home-location-copy"><span class="ua-eyebrow">LOKASI KAMU</span><strong id="ua-home-location-label">Pilih lokasi saat ini</strong></div>
+   <button type="button" id="ua-home-detect-location" class="ua-home-location-button">◎ Lokasiku</button>
   </div>
   <div class="ua-home-region-chips" role="group" aria-label="Cakupan rekomendasi">
    <button type="button" data-home-region="current" class="is-active">Sekitarku</button>
@@ -358,15 +358,14 @@ async function feedPage(){
    <button type="button" data-home-region="Jakarta">Jakarta</button>
    <button type="button" data-home-region="Indonesia">Indonesia</button>
   </div>
-  <div class="ua-home-discovery-intro"><span class="ua-eyebrow">UNTUK KAMU</span><h2>Hal menarik di sekitarmu</h2><p>Wilayah saat ini, minat, dan aktivitasmu membantu menyusun rekomendasi.</p></div>
-  <div class="ua-home-discovery-grid">
-   <a href="#/places" class="ua-home-discovery-card"><span class="ua-home-discovery-icon">⌖</span><strong>Destinasi</strong><small>Tempat dan pengalaman menarik di wilayahmu</small><span>Jelajahi <b>→</b></span></a>
-   <a href="#/marketplace" class="ua-home-discovery-card"><span class="ua-home-discovery-icon">✳</span><strong>Makanan</strong><small>Hidangan yang sedang banyak diminati</small><span>Temukan makanan <b>→</b></span></a>
-   <a href="#/marketplace" class="ua-home-discovery-card"><span class="ua-home-discovery-icon">◇</span><strong>Produk</strong><small>Produk yang menarik perhatian pengunjung</small><span>Lihat produk <b>→</b></span></a>
-   <a href="#/places" class="ua-home-discovery-card"><span class="ua-home-discovery-icon">✣</span><strong>Jasa</strong><small>Layanan yang relevan dan banyak dicari</small><span>Temukan jasa <b>→</b></span></a>
-   <a href="#/search" class="ua-home-discovery-card ua-home-discovery-wide"><span class="ua-home-discovery-icon">▤</span><strong>Blog & topik populer</strong><small>Artikel, berita, wawasan, dan percakapan dari berbagai akun</small><span>Baca dan jelajahi <b>→</b></span></a>
+  <div class="ua-home-discovery-intro"><h2>Temukan yang menarik</h2></div>
+  <div class="ua-home-visual-grid">
+   <a href="#/places" class="ua-home-visual-card ua-home-visual-feature"><img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=1100&q=82" alt="Pemandangan destinasi tropis" fetchpriority="high"><span class="ua-home-visual-shade"></span><strong>Destinasi</strong><small>Tempat yang patut dikunjungi</small></a>
+   <a href="#/marketplace" class="ua-home-visual-card"><img src="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=700&q=80" alt="Hidangan makanan" loading="lazy"><span class="ua-home-visual-shade"></span><strong>Makanan</strong></a>
+   <a href="#/marketplace" class="ua-home-visual-card"><img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=700&q=80" alt="Produk jam tangan" loading="lazy"><span class="ua-home-visual-shade"></span><strong>Produk</strong></a>
+   <a href="#/places" class="ua-home-visual-card"><img src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=700&q=80" alt="Layanan profesional" loading="lazy"><span class="ua-home-visual-shade"></span><strong>Jasa</strong></a>
+   <a href="#/search" class="ua-home-visual-card"><img src="https://images.unsplash.com/photo-1455390582262-044c dead8028?auto=format&fit=crop&w=700&q=80" alt="Menulis dan membaca cerita" loading="lazy"><span class="ua-home-visual-shade"></span><strong>Blog & topik</strong></a>
   </div>
-  <p class="ua-home-discovery-footnote">Rekomendasi populer akan diisi dari aktivitas nyata di PLUITS. Angka pengunjung atau peringkat tidak ditampilkan sebelum datanya memadai.</p>
  </section>`;
  const {data:follows,error:followError}=await supabase.from('user_follows').select('following_id').eq('follower_id',user.id).eq('status','accepted');
  if(followError)throw followError;
