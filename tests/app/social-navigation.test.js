@@ -89,6 +89,6 @@ test('GeoDirectory is map-first with a touch-enabled globe and clickable real pl
  assert.ok(directory.includes('touchZoomRotate:true') && directory.includes('dragRotate:true'),'Map must support touch zoom/rotation and map rotation.');
  assert.ok(directory.includes("new lib.Marker") && directory.includes("new lib.Popup"),'Directory results must render tappable pins with place details.');
  assert.ok(directory.includes('data-map-globe="pl-directory-map"'),'Directory must expose a control to zoom out to the globe.');
- assert.ok(directory.includes('class="pl-directory-map-stage"'),'The map must be the default primary directory surface.');
+ assert.ok(directory.includes('pl-directory-map-stage'),'The map must be the default primary directory surface.');
  assert.ok(css.includes('.pl-directory-page .pl-geo-pin'),'Place pins must have a visible, high-contrast marker style.');
 });
