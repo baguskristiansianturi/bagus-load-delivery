@@ -15,6 +15,27 @@ const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&
 const wordCount=value=>String(value||'').trim().split(/\s+/).filter(Boolean).length;
 const uid=()=>crypto.randomUUID();
 const ext=file=>(file?.name?.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'').slice(0,6)||'jpg';
+const LEGACY_DB='pluits-blog-studio-v1',LEGACY_STORE='items';
+function legacyDb(){return new Promise((resolve,reject)=>{const req=indexedDB.open(LEGACY_DB,1);req.onupgradeneeded=()=>{if(!req.result.objectStoreNames.contains(LEGACY_STORE))req.result.createObjectStore(LEGACY_STORE,{keyPath:'id'});};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);});}
+async function migrateLegacyDrafts(){
+ if(!blogProfile)return 0;
+ const db=await legacyDb();
+ const rows=await new Promise((resolve,reject)=>{const tx=db.transaction(LEGACY_STORE,'readonly'),req=tx.objectStore(LEGACY_STORE).getAll();req.onsuccess=()=>resolve(req.result||[]);req.onerror=()=>reject(req.error);});
+ let count=0;
+ for(const item of rows.filter(x=>x.userId===activeUser.id&&!x.migratedAt)){
+  if(!item.cover||!item.title||!item.body)continue;
+  const description=String(item.description||item.title).trim().split(/\s+/).slice(0,85).join(' ');
+  const cover_path=await uploadBlogImage(item.cover,'legacy-cover'),supporting_paths=[];
+  for(const file of item.supportingImages||[])supporting_paths.push(await uploadBlogImage(file,'legacy-body'));
+  const {error}=await supabase.from('blog_posts').insert({blog_id:blogProfile.id,owner_user_id:activeUser.id,title:String(item.title).slice(0,240),description,body:String(item.body),cover_path,supporting_paths,status:'draft',visibility:'private'});
+  if(error)throw error;
+  item.migratedAt=Date.now();
+  await new Promise((resolve,reject)=>{const tx=db.transaction(LEGACY_STORE,'readwrite');tx.objectStore(LEGACY_STORE).put(item);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);});
+  count++;
+ }
+ db.close();return count;
+}
+
 async function loadBlogProfile(){const {data,error}=await supabase.from('blog_profiles').select('*').eq('owner_user_id',activeUser.id).maybeSingle();if(error)throw error;blogProfile=data;categories=[];if(blogProfile){const r=await supabase.from('blog_categories').select('*').eq('blog_id',blogProfile.id).order('sort_order').order('name');if(r.error)throw r.error;categories=r.data||[];}}
 async function getAllItems(){if(!blogProfile)return[];const {data,error}=await supabase.from('blog_posts').select('*').eq('blog_id',blogProfile.id).eq('owner_user_id',activeUser.id).order('updated_at',{ascending:false});if(error)throw error;const paths=(data||[]).flatMap(p=>[p.cover_path,...(p.supporting_paths||[])]).filter(Boolean);const urls=await createSignedUrlMap(supabase.storage,BUCKET,paths,3600);return(data||[]).map(p=>({...p,cover_url:urls.get(p.cover_path)||'',updatedAt:new Date(p.updated_at).getTime(),createdAt:new Date(p.created_at).getTime()}));}
 async function getSettings(){return blogProfile?{blogTitle:blogProfile.display_title,blogDescription:blogProfile.description,visibility:blogProfile.default_visibility}:{};}
@@ -152,7 +173,7 @@ async function persistEditor(status){
 }
 
 function bind() {
-  document.querySelector('#pl-blog-create-form')?.addEventListener('submit',async e=>{e.preventDefault();const d=new FormData(e.currentTarget),title=String(d.get('title')||'').trim();if(title.length<2||title.length>40)return notify('Nama blog harus 2–40 karakter.','error');const {data,error}=await supabase.from('blog_profiles').insert({owner_user_id:activeUser.id,display_title:title,description:String(d.get('description')||'').trim(),default_visibility:String(d.get('visibility')||'public')}).select('*').single();if(error)throw error;blogProfile=data;activeView='dashboard';notify('Ruang blog berhasil dibuat.');await render();});
+  document.querySelector('#pl-blog-create-form')?.addEventListener('submit',async e=>{e.preventDefault();const d=new FormData(e.currentTarget),title=String(d.get('title')||'').trim();if(title.length<2||title.length>40)return notify('Nama blog harus 2–40 karakter.','error');const {data,error}=await supabase.from('blog_profiles').insert({owner_user_id:activeUser.id,display_title:title,description:String(d.get('description')||'').trim(),default_visibility:String(d.get('visibility')||'public')}).select('*').single();if(error)throw error;blogProfile=data;const migrated=await migrateLegacyDrafts();activeView='dashboard';notify(migrated?migrated+' draft lama berhasil dipindahkan.':'Ruang blog berhasil dibuat.');await render();});
   document.querySelector('#pl-blog-category-form')?.addEventListener('submit',async e=>{e.preventDefault();const name=String(new FormData(e.currentTarget).get('name')||'').trim();if(!name)return;const {error}=await supabase.from('blog_categories').insert({blog_id:blogProfile.id,owner_user_id:activeUser.id,name});if(error)throw error;await loadBlogProfile();notify('Kategori ditambahkan.');await render();});
 
   document.querySelectorAll('[data-tab]').forEach(button => button.addEventListener('click', () => { activeTab = button.dataset.tab; activeView = 'dashboard'; render().catch(showError); }));
@@ -288,7 +309,9 @@ export async function mountBlogStudio() {
     const { data: profile, error } = await supabase.from('user_profiles').select('display_name,username,avatar_path').eq('id', user.id).maybeSingle();
     if (error) throw error;
     activeProfile = profile || { display_name: user.email?.split('@')[0] || 'Pengguna', username: 'pengguna' };
-    await loadBlogProfile();activeTab='posts';activeView=blogProfile?'dashboard':'setup';editingId=null;
+    await loadBlogProfile();
+    if(blogProfile){const migrated=await migrateLegacyDrafts();if(migrated)notify(migrated+' draft lama berhasil dipindahkan ke akun PLUITS.');}
+    activeTab='posts';activeView=blogProfile?'dashboard':'setup';editingId=null;
     await render();
   } catch (error) { showError(error); }
 }
