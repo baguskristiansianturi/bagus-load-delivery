@@ -2542,3 +2542,22 @@
  .ua-social-home .ua-home-compose-prompt{margin:0 0 10px;border-radius:0;border-left:0;border-right:0;background:#fff}
  .ua-social-home .ua-home-editorial,.ua-social-home .ua-home-products,.ua-social-home .ua-home-collections,.ua-social-home .ua-home-service-filters{margin-left:-12px;margin-right:-12px;padding-left:14px;padding-right:14px}
 }
+
+
+/* Visible compact home navbar on mobile and desktop */
+.ua-social-app .ua-header.ua-home-header{position:sticky;top:0;z-index:80;width:100%;max-width:1180px;margin:0 auto;padding:0 16px;background:#fff;border-bottom:1px solid #e8edef;box-sizing:border-box}
+.ua-social-app .ua-header.ua-home-header .ua-brand{display:flex!important;align-items:center;flex:0 0 38px;width:38px;height:38px;overflow:hidden}
+.ua-home-header .ua-home-profile{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;min-width:42px;height:42px;padding:3px;border:1px solid #e7eceb;border-radius:11px;color:#344c4a;background:#fff;text-decoration:none}
+.ua-home-header .ua-home-profile img,.ua-home-header .ua-home-profile .ua-avatar{width:24px;height:24px;border-radius:50%;object-fit:cover}
+.ua-home-header .ua-home-profile svg{width:20px;height:20px}
+.ua-home-header .ua-home-profile small{font-size:8px;line-height:1;color:#637574}
+.ua-home-header .ua-home-searchbar{min-width:0}
+.ua-social-app .ua-main:has(.ua-social-home){padding-top:10px}
+@media(max-width:760px){
+ .ua-social-app .ua-header.ua-home-header{height:62px;min-height:62px;padding:0 11px;gap:9px;display:flex!important}
+ .ua-social-app .ua-header.ua-home-header .ua-brand{display:flex!important;flex:0 0 34px;width:34px;height:34px}
+ .ua-home-header .ua-home-searchbar{height:40px;flex:1;padding:0 10px;font-size:10px}
+ .ua-home-header .ua-home-profile{flex:0 0 39px;width:39px;height:39px}
+ .ua-home-header .ua-home-wishlist{flex:0 0 36px;width:36px;height:36px}
+ .ua-social-app .ua-main:has(.ua-social-home){padding-top:8px}
+}
