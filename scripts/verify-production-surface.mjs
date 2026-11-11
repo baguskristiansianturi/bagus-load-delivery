@@ -160,7 +160,8 @@ for (const path of [
 
 const publicHome = read('src/pages/home/index.js');
 assert.match(publicHome, /await mountUserAccount\('explore'\)/, 'Signed-in homepage must use the canonical interactive social feed after lazy loading.');
-assert.match(publicHome, /if\(viewer\)\{history\.replaceState\(null,'',location\.pathname\+location\.search\+'#\/account\/explore'\);const \{mountUserAccount\}=await import\('\.\.\/account\/index\.js'\);await mountUserAccount\('explore'\);return;\}/, 'Signed-in homepage must lazy-load and canonicalize to the interactive Explore feed.');
+assert.match(publicHome, /if\(viewer\)\{[\s\S]*?history\.replaceState\(null,'',location\.pathname\+location\.search\+'#\/account\/explore'\);[\s\S]*?await mountUserAccount\('explore'\);[\s\S]*?return;/, 'Signed-in homepage must canonicalize to the interactive Explore feed.');
+assert.match(publicHome, /stillOnRequestedHome/, 'A delayed auth response must not replace a page after navigation away from the public home.');
 
 const inboxCss = read('src/pages/messages/messages.css');
 assert.match(inboxCss, /pl-msg-head-search/, 'Inbox must own a compact top-bar search field.');
