@@ -2306,3 +2306,6 @@
 .ua-home-visual-feature{min-height:158px}.ua-home-trend-strip{gap:7px}.ua-home-trend-strip>a{min-height:116px}
 .ua-home-trend-strip img{height:72px}.ua-social-home>.ua-explore-filters{top:60px}}
 @media(max-width:380px){.ua-home-location-status{max-width:110px}.ua-home-visual-card strong{font-size:12px}.ua-home-trend-strip b{font-size:9px}}
+
+.ua-home-profile{display:grid;place-items:center;flex:none;width:36px;height:36px;border:1px solid #e7eceb;border-radius:11px;color:#536b6b;background:#fff;text-decoration:none}
+@media(max-width:760px){.ua-home-profile{width:33px;height:33px}}
