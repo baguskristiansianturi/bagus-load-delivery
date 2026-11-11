@@ -364,7 +364,7 @@ async function feedPage(){
    <a href="#/marketplace" class="ua-home-visual-card"><img src="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=700&q=80" alt="Hidangan makanan" loading="lazy"><span class="ua-home-visual-shade"></span><strong>Makanan</strong></a>
    <a href="#/marketplace" class="ua-home-visual-card"><img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=700&q=80" alt="Produk jam tangan" loading="lazy"><span class="ua-home-visual-shade"></span><strong>Produk</strong></a>
    <a href="#/places" class="ua-home-visual-card"><img src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=700&q=80" alt="Layanan profesional" loading="lazy"><span class="ua-home-visual-shade"></span><strong>Jasa</strong></a>
-   <a href="#/search" class="ua-home-visual-card"><img src="https://images.unsplash.com/photo-1455390582262-044c dead8028?auto=format&fit=crop&w=700&q=80" alt="Menulis dan membaca cerita" loading="lazy"><span class="ua-home-visual-shade"></span><strong>Blog & topik</strong></a>
+   <a href="#/search" class="ua-home-visual-card"><img src="https://images.unsplash.com/photo-1455390582262-044cdead8028?auto=format&fit=crop&w=700&q=80" alt="Menulis dan membaca cerita" loading="lazy"><span class="ua-home-visual-shade"></span><strong>Blog & topik</strong></a>
   </div>
  </section>`;
  const {data:follows,error:followError}=await supabase.from('user_follows').select('following_id').eq('follower_id',user.id).eq('status','accepted');
