@@ -98,7 +98,11 @@ test('signed-in home leads with Bali experiences, search, wishlist and the perso
  const account=await readFile(new URL('../../src/pages/account/index.js',import.meta.url),'utf8');
  const navigation=await readFile(new URL('../../src/components/social/navigation.js',import.meta.url),'utf8');
  const css=await readFile(new URL('../../src/pages/account/user-account.css',import.meta.url),'utf8');
- assert.ok(account.includes('Top 10 Trending')&&account.includes('ua-topten-grid')&&((account.match(/class="ua-topten-card ua-topten-card-/g)||[]).length===10),'Explore must show ten individual trending items in a varied grid, not category tiles or a carousel.');
+ assert.ok(account.includes('Top 10 Trending')&&account.includes('ua-topten-grid')&&((account.match(/class="ua-topten-card ua-topten-card-/g)||[]).length===10),'Explore must show ten individual trending subjects, not category tiles.');
+ assert.ok(account.includes('function bindToptenSlider()')&&account.includes('setInterval(()=>{if(!paused&&!document.hidden)goTo(index+1);},4200)'),'Mobile Top 10 must rotate through individual trending subjects and pause while interacted with.');
+ assert.ok(account.includes('Beef Slab')&&account.includes('href="#/places?category=restaurant"'),'Tapping a trending food item must open its matching directory category.');
+ const directory=await readFile(new URL('../../src/pages/directory/index.js',import.meta.url),'utf8');
+ assert.ok(directory.includes('params.get(\'category\')')&&directory.includes('state.categories.some(x=>x.slug===requested)'),'Directory must activate the category selected by a trending card.');
  assert.ok(!account.includes('"+discoverySection+'),'Home feed must not reference the removed category-card section.');
  assert.ok(!account.includes('BERDASARKAN AKTIVITAS NYATA')&&!account.includes('aktivitas pengguna cukup terkumpul'),'Internal ranking explanations must never appear in visitor-facing copy.');
  assert.ok(navigation.includes('ua-home-searchbar')&&navigation.includes('ua-home-wishlist')&&navigation.includes('ua-home-search-prompt'),'Home header must show animated search and saved items.');
@@ -111,6 +115,7 @@ test('signed-in home leads with Bali experiences, search, wishlist and the perso
  const directory=await readFile(new URL('../../src/pages/directory/index.js',import.meta.url),'utf8');
  assert.ok(directory.includes('Tempat terdekat')&&directory.includes('distance(Number(row.distance_m)'),'Nearby places must be displayed as distance cards, not a map.');
  assert.ok(css.includes('.ua-topten-card')&&css.includes('.ua-home-searchbar')&&css.includes('.pl-home-map-chip'),'Experience cards, animated search and nearby cards must have responsive styles.');
+ assert.ok(css.includes('scroll-snap-type:x mandatory')&&css.includes('flex:0 0 100%')&&css.includes('max-width:380px'),'Mobile trending slider must fit narrow screens and support swipe snapping.');
  assert.ok(!directory.includes('id="pl-home-nearby-map"'),'Home must not render the GeoDirectory map.');
 });
 
