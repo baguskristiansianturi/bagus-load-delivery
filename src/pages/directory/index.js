@@ -13,16 +13,20 @@ const AREAS = {
   tabanan: { label: 'Tabanan', lat: -8.54, lon: 115.125 },
   singaraja: { label: 'Buleleng', lat: -8.112, lon: 115.088 }
 };
-const state = { lat: AREAS.denpasar.lat, lon: AREAS.denpasar.lon, area: 'denpasar', radius: 15000, category: '', query: '', rows: [], categories: [], map: null, markers: [], mode: 'list', personalization: true };
+const state = { lat: AREAS.denpasar.lat, lon: AREAS.denpasar.lon, area: 'denpasar', radius: 15000, category: '', query: '', rows: [], categories: [], map: null, mapTarget: null, markers: [], mode: 'map', personalization: true };
 const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const distance = value => value < 1000 ? Math.round(value) + ' m' : (value / 1000).toFixed(1).replace('.', ',') + ' km';
 const placeUrl = slug => '#/place/' + encodeURIComponent(slug);
 
 export function homeNearbySection() {
-  return `<section class="pl-nearby-home">
-    <div class="pl-nearby-heading"><div><span>GEODIRECTORY</span><h2>Temukan di sekitar</h2><p>Tempat, layanan, komunitas, dan aktivitas di wilayah pilihanmu.</p></div><a href="#/places">Jelajahi direktori <b>→</b></a></div>
-    <div class="pl-nearby-toolbar"><span class="pl-nearby-area" id="pl-home-nearby-area">⌖ Denpasar</span><a href="#/places">Ubah area & kategori</a></div>
-    <div id="pl-home-nearby" class="pl-home-nearby-grid"><div class="pl-directory-loading">Memuat tempat di sekitar…</div></div>
+  return `<section class="pl-nearby-home pl-nearby-map-home">
+    <div class="pl-nearby-heading"><div><span>GEODIRECTORY</span><h2>Jelajahi peta sekitar</h2><p>Sentuh pin untuk mengenal tempat dan lokasinya.</p></div><a href="#/places">Buka peta penuh <b>↗</b></a></div>
+    <div class="pl-map-stage pl-home-map-stage">
+      <div id="pl-home-nearby-map" class="pl-geo-map" role="region" aria-label="Peta interaktif GeoDirectory Pluits"></div>
+      <div class="pl-map-floating-top"><span id="pl-home-nearby-area">Denpasar · Bali</span><button type="button" data-map-globe="pl-home-nearby-map">◎ Bumi</button></div>
+      <div class="pl-map-touch-hint">Geser peta · Cubit untuk zoom · Putar dengan dua jari</div>
+    </div>
+    <div class="pl-home-map-results" id="pl-home-nearby-results"><span class="pl-directory-loading">Memuat titik lokasi…</span></div>
   </section>`;
 }
 
@@ -89,41 +93,67 @@ async function logActivity(action,entityId=null) {
   if(entityId){const {data:category}=await supabase.from('directory_entity_categories').select('category_id').eq('entity_id',entityId).limit(1).maybeSingle();categoryId=category?.category_id||null;}
   await supabase.from('user_activity_events').insert({user_id:data.user.id,entity_id:entityId,category_id:categoryId,action});
 }
-async function loadLeaflet() {
-  if(window.L)return window.L;
-  if(!document.querySelector('#pl-leaflet-css')) {
-    const link=document.createElement('link');link.id='pl-leaflet-css';link.rel='stylesheet';link.href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';document.head.append(link);
+async function loadMapLibre() {
+  if(window.maplibregl)return window.maplibregl;
+  if(!document.querySelector('#pl-maplibre-css')) {
+    const link=document.createElement('link');link.id='pl-maplibre-css';link.rel='stylesheet';link.href='https://unpkg.com/maplibre-gl@6.17.0/dist/maplibre-gl.css';document.head.append(link);
   }
   await new Promise((resolve,reject)=>{
-    if(window.L)return resolve();
-    const existing=document.querySelector('#pl-leaflet-js');
+    if(window.maplibregl)return resolve();
+    const existing=document.querySelector('#pl-maplibre-js');
     if(existing){existing.addEventListener('load',resolve,{once:true});existing.addEventListener('error',reject,{once:true});return;}
-    const script=document.createElement('script');script.id='pl-leaflet-js';script.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';script.onload=resolve;script.onerror=reject;document.head.append(script);
+    const script=document.createElement('script');script.id='pl-maplibre-js';script.src='https://unpkg.com/maplibre-gl@6.17.0/dist/maplibre-gl.js';script.onload=resolve;script.onerror=reject;document.head.append(script);
   });
-  return window.L;
+  if(!window.maplibregl)throw new Error('MapLibre belum tersedia');
+  return window.maplibregl;
 }
-async function drawMap(rows) {
-  const target=document.querySelector('#pl-directory-map');if(!target)return;
+function geoMapStyle() {
+  return {
+    version:8,
+    projection:{type:'globe'},
+    sources:{pluits_osm:{type:'raster',tiles:['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],tileSize:256,attribution:'© OpenStreetMap contributors',maxzoom:19}},
+    layers:[{id:'pluits-osm-raster',type:'raster',source:'pluits_osm'}]
+  };
+}
+function clearGeoMap() {
+  state.markers.forEach(marker=>marker.remove());state.markers=[];
+  if(state.map){state.map.remove();state.map=null;}
+  state.mapTarget=null;
+}
+async function drawMap(rows,targetId='pl-directory-map',{zoom=11.7,fit=true}={}) {
+  const target=document.getElementById(targetId);if(!target)return;
   try {
-    const L=await loadLeaflet();
+    const lib=await loadMapLibre();
+    if(state.map&&state.mapTarget!==targetId)clearGeoMap();
     if(!state.map) {
-      state.map=L.map(target,{scrollWheelZoom:false}).setView([state.lat,state.lon],12);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap contributors'}).addTo(state.map);
-    } else state.map.setView([state.lat,state.lon],12);
+      state.map=new lib.Map({container:target,style:geoMapStyle(),center:[state.lon,state.lat],zoom,pitch:22,bearing:-12,dragRotate:true,touchZoomRotate:true,scrollZoom:false,cooperativeGestures:true,attributionControl:true,maxPitch:58});
+      state.mapTarget=targetId;
+      state.map.addControl(new lib.NavigationControl({showCompass:true,showZoom:true,visualizePitch:true}),'bottom-right');
+      state.map.on('style.load',()=>{try{state.map?.setProjection({type:'globe'});}catch{}});
+    } else {
+      state.map.jumpTo({center:[state.lon,state.lat],zoom,pitch:22,bearing:-12});
+    }
     state.markers.forEach(marker=>marker.remove());state.markers=[];
-    rows.forEach(row=>{
-      const marker=L.marker([row.latitude,row.longitude]).addTo(state.map);
-      marker.bindPopup('<strong>'+esc(row.name)+'</strong><br><a href="'+placeUrl(row.slug)+'">Lihat detail</a>');
+    rows.filter(row=>Number.isFinite(Number(row.latitude))&&Number.isFinite(Number(row.longitude))).forEach(row=>{
+      const pin=document.createElement('button');pin.type='button';pin.className='pl-geo-pin';pin.setAttribute('aria-label','Lihat '+row.name);pin.innerHTML='<span></span>';
+      const popup=new lib.Popup({offset:22,closeButton:true,closeOnClick:false,maxWidth:'230px'}).setHTML('<div class="pl-geo-popup"><strong>'+esc(row.name)+'</strong><small>'+esc([row.locality,row.city].filter(Boolean).join(', '))+'</small><a href="'+placeUrl(row.slug)+'">Lihat tempat <b>→</b></a></div>');
+      const marker=new lib.Marker({element:pin,anchor:'bottom'}).setLngLat([Number(row.longitude),Number(row.latitude)]).setPopup(popup).addTo(state.map);
       state.markers.push(marker);
     });
-    if(rows.length) {
-      const bounds=L.latLngBounds(rows.map(row=>[row.latitude,row.longitude]));
-      state.map.fitBounds(bounds.pad(.18),{maxZoom:14});
+    if(fit&&rows.length>1) {
+      const bounds=new lib.LngLatBounds();
+      rows.forEach(row=>{if(Number.isFinite(Number(row.latitude))&&Number.isFinite(Number(row.longitude)))bounds.extend([Number(row.longitude),Number(row.latitude)]);});
+      if(!bounds.isEmpty())state.map.fitBounds(bounds,{padding:48,maxZoom:13.5,duration:0});
     }
-    setTimeout(()=>state.map.invalidateSize(),120);
-  } catch {
-    target.innerHTML='<div class="pl-directory-empty">Peta tidak dapat dimuat pada koneksi ini. Daftar tempat tetap tersedia.</div>';
+    requestAnimationFrame(()=>state.map?.resize());
+  } catch(error) {
+    target.innerHTML='<div class="pl-directory-empty">Peta 3D belum dapat dimuat pada perangkat ini. Daftar tempat tetap tersedia. <small>'+esc(error.message||'')+'</small></div>';
   }
+}
+function showGlobe(targetId='pl-directory-map') {
+  if(!state.map||state.mapTarget!==targetId)return;
+  state.map.setProjection({type:'globe'});
+  state.map.flyTo({center:[115.2167,-8.65],zoom:2.4,pitch:0,bearing:0,duration:850});
 }
 async function refreshDirectory() {
   const target=document.querySelector('#pl-directory-results');
@@ -134,7 +164,7 @@ async function refreshDirectory() {
     const [rows,interests]=await Promise.all([getNearby(),getInterestMap()]);
     state.rows=ranked(rows,interests);
     renderCards(target,state.rows);
-    if(map&&state.mode==='map')await drawMap(state.rows);
+    if(map&&state.mode==='map')await drawMap(state.rows,'pl-directory-map',{zoom:11.7,fit:true});
     const count=document.querySelector('#pl-directory-count');if(count)count.textContent=state.rows.length+' tempat ditemukan';
   } catch(error) {
     target.innerHTML='<div class="pl-directory-empty"><b>Direktori belum dapat dimuat.</b><p>Periksa koneksi lalu coba kembali.</p><small>'+esc(error.message||'')+'</small></div>';
@@ -153,7 +183,7 @@ function setMode(mode) {
   const list=document.querySelector('#pl-directory-results'),map=document.querySelector('#pl-directory-map');
   document.querySelectorAll('[data-view]').forEach(button=>button.classList.toggle('active',button.dataset.view===mode));
   if(list)list.hidden=mode!=='list';if(map)map.hidden=mode!=='map';
-  if(mode==='map')drawMap(state.rows);
+  if(mode==='map')drawMap(state.rows,'pl-directory-map',{zoom:11.7,fit:true});
 }
 async function requestLocation() {
   if(!navigator.geolocation){alert('Perangkat ini tidak mendukung lokasi. Pilih area secara manual.');return;}
@@ -171,8 +201,8 @@ export function directoryPage() {
     <main class="pl-directory-main">
       <section class="pl-directory-intro"><div><span>GEODIRECTORY PLUITS</span><h1>Temukan tempat di sekitarmu.</h1><p>Jelajahi tempat, usaha, layanan, komunitas, dan kegiatan dalam satu direktori.</p></div><div class="pl-directory-intro-actions"><button id="pl-use-location" type="button">⌖ Gunakan lokasi saya</button><label>Area<select id="pl-directory-area"><option value="denpasar">Denpasar</option><option value="current">Lokasi saya</option><option value="badung">Badung</option><option value="gianyar">Gianyar</option><option value="tabanan">Tabanan</option><option value="singaraja">Buleleng</option></select></label></div></section>
       <section class="pl-directory-search"><form id="pl-directory-search-form"><input id="pl-directory-query" type="search" placeholder="Cari pantai, masjid, restoran, sekolah, toko…" aria-label="Cari direktori"><button type="submit">Cari</button></form><div class="pl-directory-categories" id="pl-directory-categories"></div></section>
-      <details class="pl-interest-settings"><summary>Atur minat rekomendasi</summary><label class="pl-personalization-toggle"><input id="pl-personalization-toggle" type="checkbox" checked> Gunakan personalisasi adaptif</label><div id="pl-interest-options" class="pl-interest-options">Masuk untuk menyimpan minat.</div></details><section class="pl-directory-toolbar"><div><h2>Jelajahi sekitar <span id="pl-directory-area-label">Denpasar</span></h2><p id="pl-directory-count">Memuat direktori…</p></div><div class="pl-directory-view"><button type="button" class="active" data-view="list">Daftar</button><button type="button" data-view="map">Peta</button><select id="pl-directory-radius" aria-label="Jangkauan pencarian"><option value="5000">5 km</option><option value="10000">10 km</option><option value="15000" selected>15 km</option><option value="25000">25 km</option><option value="50000">50 km</option></select></div></section>
-      <section id="pl-directory-results" class="pl-directory-results"></section><div id="pl-directory-map" class="pl-directory-map" hidden></div>
+      <details class="pl-interest-settings"><summary>Atur minat rekomendasi</summary><label class="pl-personalization-toggle"><input id="pl-personalization-toggle" type="checkbox" checked> Gunakan personalisasi adaptif</label><div id="pl-interest-options" class="pl-interest-options">Masuk untuk menyimpan minat.</div></details><section class="pl-directory-toolbar"><div><h2>Jelajahi sekitar <span id="pl-directory-area-label">Denpasar</span></h2><p id="pl-directory-count">Memuat direktori…</p></div><div class="pl-directory-view"><button type="button" data-view="list">Daftar</button><button type="button" class="active" data-view="map">Peta</button><select id="pl-directory-radius" aria-label="Jangkauan pencarian"><option value="5000">5 km</option><option value="10000">10 km</option><option value="15000" selected>15 km</option><option value="25000">25 km</option><option value="50000">50 km</option></select></div></section>
+      <div class="pl-directory-map-shell"><div class="pl-map-stage pl-directory-map-stage"><div id="pl-directory-map" class="pl-geo-map" role="region" aria-label="Peta GeoDirectory interaktif"></div><div class="pl-map-floating-top"><span>Jelajahi titik lokasi</span><button type="button" data-map-globe="pl-directory-map">◎ Lihat Bumi</button></div><div class="pl-map-touch-hint">Geser · Zoom dengan dua jari · Putar peta dengan dua jari</div></div><section id="pl-directory-results" class="pl-directory-results" hidden></section></div>
       <p class="pl-directory-attribution">Data lokasi ditampilkan berdasarkan sumber dan status verifikasinya. Peta &copy; OpenStreetMap contributors.</p>
     </main>
     <footer class="pl-directory-footer">PLUITS · Social · Local Marketplace · Trip · GeoDirectory</footer>
@@ -213,6 +243,7 @@ export async function bindDirectoryPage() {
   catch(error){console.error('Pluits directory categories',error);}
   area.addEventListener('change',event=>setArea(event.target.value));
   document.querySelector('#pl-use-location')?.addEventListener('click',requestLocation);
+  document.querySelectorAll('[data-map-globe]').forEach(button=>button.addEventListener('click',()=>showGlobe(button.dataset.mapGlobe||'pl-directory-map')));
   document.querySelector('#pl-directory-radius')?.addEventListener('change',event=>{state.radius=Number(event.target.value)||15000;saveDiscoveryPreferences({search_radius_m:state.radius});refreshDirectory();});
   document.querySelector('#pl-directory-categories')?.addEventListener('click',event=>{
     const button=event.target.closest('[data-category]');if(!button)return;
@@ -239,14 +270,18 @@ export async function bindDirectoryPage() {
   await refreshDirectory();
 }
 export function bindHomeNearby({personalize=true}={}) {
-  const target=document.querySelector('#pl-home-nearby');if(!target)return;
+  const mapTarget=document.querySelector('#pl-home-nearby-map');if(!mapTarget)return;
+  const resultTarget=document.querySelector('#pl-home-nearby-results');
   if(!personalize){state.lat=AREAS.denpasar.lat;state.lon=AREAS.denpasar.lon;state.area='denpasar';state.radius=15000;state.category='';state.query='';}
   const prepare=personalize?loadDiscoveryPreferences():Promise.resolve();
-  prepare.then(()=>personalize?loadCategories():Promise.resolve()).then(()=>getNearby({lat:state.lat,lon:state.lon,limit:4,radius:state.radius})).then(async rows=>{
+  prepare.then(()=>personalize?loadCategories():Promise.resolve()).then(()=>getNearby({lat:state.lat,lon:state.lon,limit:18,radius:state.radius})).then(async rows=>{
     const interests=personalize?await getInterestMap():new Map(),items=ranked(rows,interests);
-    if(!items.length){target.innerHTML='<div class="pl-directory-empty">Belum ada tempat yang tercatat di area pilihanmu. <a href="#/places">Jelajahi direktori →</a></div>';return;}
-    target.innerHTML=items.map(row=>`<a class="pl-home-place" href="${placeUrl(row.slug)}"><span>⌖</span><div><b>${esc(row.name)}</b><small>${esc([row.locality,row.city].filter(Boolean).join(', ')||'Bali')} · ${distance(Number(row.distance_m)||0)}</small></div><i>→</i></a>`).join('');
-  }).catch(()=>{target.innerHTML='<div class="pl-directory-empty">Direktori sedang tidak dapat dimuat.</div>';});
+    const label=document.querySelector('#pl-home-nearby-area');if(label)label.textContent=(state.area?AREAS[state.area]?.label||'Area pilihan':'Lokasi pilihan')+' · Bali';
+    await drawMap(items,'pl-home-nearby-map',{zoom:11.2,fit:true});
+    if(!resultTarget)return;
+    if(!items.length){resultTarget.innerHTML='<div class="pl-directory-empty">Belum ada titik tempat publik di area ini. <a href="#/places">Buka direktori →</a></div>';return;}
+    resultTarget.innerHTML=items.slice(0,8).map(row=>'<a class="pl-home-map-chip" href="'+placeUrl(row.slug)+'"><span class="pl-home-map-chip-pin">⌖</span><span><b>'+esc(row.name)+'</b><small>'+esc([row.locality,row.city].filter(Boolean).join(', ')||'Lokasi terdaftar')+'</small></span><i>↗</i></a>').join('');
+  }).catch(()=>{if(resultTarget)resultTarget.innerHTML='<div class="pl-directory-empty">Direktori sedang tidak dapat dimuat.</div>';});
 }
 export async function placePage(slug) {
   const {data:entity,error}=await supabase.from('directory_entities').select('id,entity_type,slug,name,summary,description,status,verification_status,created_at').eq('slug',slug).eq('status','published').maybeSingle();
