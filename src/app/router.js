@@ -14,6 +14,10 @@ export async function route(homeFn){
    const renderHome=homeFn||(await import('../pages/home/index.js')).home;
    h=renderHome();
   }
+  else if(r.startsWith('@') && s[1]==='blog'){
+   h='<div class="pl-page-loading" role="status">Membuka Blog…</div>';
+   queueMicrotask(async()=>{if(version!==routeVersion)return;const mod=await import('../pages/blog-studio/index.js');if(version===routeVersion)await mod.mountPublicBlog(decodeURIComponent(r.slice(1)),decodeURIComponent(s[2]||''),decodeURIComponent(s[3]||''));});
+  }
   else if(r.startsWith('@')){
    h='<div class="pl-page-loading" role="status" aria-live="polite"><span class="pl-page-spinner" aria-hidden="true"></span><span class="pl-page-loading-label">Membuka profil</span></div>';
    queueMicrotask(async()=>{
