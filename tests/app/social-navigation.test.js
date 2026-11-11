@@ -101,8 +101,8 @@ test('signed-in home leads with Bali experiences, search, wishlist and the perso
  assert.ok(account.includes('Top 10 Trending')&&account.includes('ua-topten-grid')&&((account.match(/class="ua-topten-card ua-topten-card-/g)||[]).length===10),'Explore must show ten individual trending subjects, not category tiles.');
  assert.ok(account.includes('function bindToptenSlider()')&&account.includes('setInterval(()=>{if(!paused&&!document.hidden)goTo(index+1);},4200)'),'Mobile Top 10 must rotate through individual trending subjects and pause while interacted with.');
  assert.ok(account.includes('Beef Slab')&&account.includes('href="#/places?category=restaurant"'),'Tapping a trending food item must open its matching directory category.');
- const directory=await readFile(new URL('../../src/pages/directory/index.js',import.meta.url),'utf8');
- assert.ok(directory.includes('params.get(\'category\')')&&directory.includes('state.categories.some(x=>x.slug===requested)'),'Directory must activate the category selected by a trending card.');
+ const directorySource=await readFile(new URL('../../src/pages/directory/index.js',import.meta.url),'utf8');
+ assert.ok(directorySource.includes('params.get(\'category\')')&&directorySource.includes('state.categories.some(x=>x.slug===requested)'),'Directory must activate the category selected by a trending card.');
  assert.ok(!account.includes('"+discoverySection+'),'Home feed must not reference the removed category-card section.');
  assert.ok(!account.includes('BERDASARKAN AKTIVITAS NYATA')&&!account.includes('aktivitas pengguna cukup terkumpul'),'Internal ranking explanations must never appear in visitor-facing copy.');
  assert.ok(navigation.includes('ua-home-searchbar')&&navigation.includes('ua-home-wishlist')&&navigation.includes('ua-home-search-prompt'),'Home header must show animated search and saved items.');
