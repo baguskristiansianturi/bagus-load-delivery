@@ -238,10 +238,12 @@ export async function bindDirectoryPage() {
   document.querySelector('#pl-personalization-toggle')?.addEventListener('change',event=>{state.personalization=event.target.checked;saveDiscoveryPreferences({use_personalization:state.personalization});refreshDirectory();});
   await refreshDirectory();
 }
-export function bindHomeNearby() {
+export function bindHomeNearby({personalize=true}={}) {
   const target=document.querySelector('#pl-home-nearby');if(!target)return;
-  loadDiscoveryPreferences().then(()=>loadCategories()).then(()=>getNearby({lat:state.lat,lon:state.lon,limit:4,radius:state.radius})).then(async rows=>{
-    const interests=await getInterestMap(),items=ranked(rows,interests);
+  if(!personalize){state.lat=AREAS.denpasar.lat;state.lon=AREAS.denpasar.lon;state.area='denpasar';state.radius=15000;state.category='';state.query='';}
+  const prepare=personalize?loadDiscoveryPreferences():Promise.resolve();
+  prepare.then(()=>personalize?loadCategories():Promise.resolve()).then(()=>getNearby({lat:state.lat,lon:state.lon,limit:4,radius:state.radius})).then(async rows=>{
+    const interests=personalize?await getInterestMap():new Map(),items=ranked(rows,interests);
     if(!items.length){target.innerHTML='<div class="pl-directory-empty">Belum ada tempat yang tercatat di area pilihanmu. <a href="#/places">Jelajahi direktori →</a></div>';return;}
     target.innerHTML=items.map(row=>`<a class="pl-home-place" href="${placeUrl(row.slug)}"><span>⌖</span><div><b>${esc(row.name)}</b><small>${esc([row.locality,row.city].filter(Boolean).join(', ')||'Bali')} · ${distance(Number(row.distance_m)||0)}</small></div><i>→</i></a>`).join('');
   }).catch(()=>{target.innerHTML='<div class="pl-directory-empty">Direktori sedang tidak dapat dimuat.</div>';});
