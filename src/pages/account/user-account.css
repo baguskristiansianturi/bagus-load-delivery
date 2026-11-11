@@ -2678,3 +2678,26 @@
 .ua-social-home .pl-nearby-item-overlay b{font-size:16px;line-height:1.2}
 .ua-social-home .pl-nearby-item-overlay em{font-size:10px;line-height:1.25;gap:4px}
 .ua-social-home .pl-nearby-item-overlay em svg{width:12px;height:12px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+
+/* Mobile feed scrolling and Top 10 gesture handling */
+.ua-social-app .ua-main {
+  min-width: 0;
+  overscroll-behavior-y: auto;
+}
+.ua-social-app .ua-topten-track {
+  display: flex;
+  flex-wrap: nowrap;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x proximity;
+  scroll-behavior: auto;
+  scrollbar-width: none;
+  touch-action: pan-x pan-y;
+}
+.ua-social-app .ua-topten-track::-webkit-scrollbar {
+  display: none;
+}
