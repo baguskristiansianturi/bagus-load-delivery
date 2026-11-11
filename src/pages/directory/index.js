@@ -287,6 +287,7 @@ export function bindHomeNearby({personalize=true,location=null}={}) {
     const presentSlugs=new Set(rows.flatMap(row=>Array.isArray(row.category_slugs)?row.category_slugs:[]));
     const categories=await loadCategories();if(!isCurrent())return;
     const nearbyCategories=categories.filter(category=>presentSlugs.has(category.slug));
+    const categoryNameBySlug=new Map(nearbyCategories.map(category=>[category.slug,category.name]));
     const topicTarget=document.querySelector('#pl-home-nearby-topics');
     if(topicTarget)topicTarget.innerHTML='<a class="is-active" href="#/places">Semua</a>'+nearbyCategories.map(category=>'<a href="#/places?category='+encodeURIComponent(category.slug)+'">'+esc(category.name)+'</a>').join('');
     if(!rows.length){resultTarget.innerHTML='<div class="pl-directory-empty">Belum ada tempat terdaftar dalam radius 5 km.</div>';return;}
@@ -299,13 +300,6 @@ export function bindHomeNearby({personalize=true,location=null}={}) {
     if(postsError)throw postsError;if(!isCurrent())return;
     const entityById=new Map(items.map(row=>[row.id,row]));
     const linked=(posts||[]).map(post=>({...post,entity:entityById.get((links||[]).find(link=>link.post_id===post.id)?.entity_id)})).filter(post=>post.entity);
-    const userIds=[...new Set(linked.filter(post=>post.profile_context!=='business').map(post=>post.user_id))],storeIds=[...new Set(linked.filter(post=>post.profile_context==='business'&&post.business_store_id).map(post=>post.business_store_id))];
-    const [profiles,stores]=await Promise.all([
-      userIds.length?supabase.from('user_profiles').select('id,display_name,username').in('id',userIds):Promise.resolve({data:[],error:null}),
-      storeIds.length?supabase.from('public_business_profiles').select('id,name,username').in('id',storeIds):Promise.resolve({data:[],error:null})
-    ]);
-    if(profiles.error)throw profiles.error;if(stores.error)throw stores.error;if(!isCurrent())return;
-    const owners=new Map([...(profiles.data||[]).map(owner=>[owner.id,owner]),...(stores.data||[]).map(owner=>[owner.id,owner])]);
     const mediaPaths=linked.map(post=>post.media_path).filter(Boolean),signed=mediaPaths.length?await supabase.storage.from('pluits-user-media').createSignedUrls(mediaPaths,3600):{data:[]};
     if(!isCurrent())return;
     const imageByPath=new Map((signed.data||[]).map(file=>[file.path,file.signedUrl])),postByEntity=new Map();
@@ -313,7 +307,7 @@ export function bindHomeNearby({personalize=true,location=null}={}) {
     resultTarget.innerHTML=items.slice(0,8).map(entity=>{
       const post=postByEntity.get(entity.id),image=post?imageByPath.get(post.media_path)||'':'';
       const itemName=post?String(post.caption||'').trim().split(/\n/)[0].slice(0,76)||entity.name:entity.name;
-      const distanceLabel=distance(Number(entity.distance_m)||0),category=(entity.category_slugs||[]).slice(0,2).join(' · ');
+      const distanceLabel=distance(Number(entity.distance_m)||0),category=(entity.category_slugs||[]).map(slug=>categoryNameBySlug.get(slug)).filter(Boolean).slice(0,2).join(' · ');
       const typeLabel=entity.entity_type==='place'?'TEMPAT':entity.entity_type==='provider'?'JASA':entity.entity_type==='event'?'ACARA':'PLUITS';
       const locationText=distanceLabel+(location?' dari Anda':' dari lokasi tersimpan');
       return renderNearbyHeroCard({href:placeUrl(entity.slug),image,name:itemName,category:category||typeLabel,distanceLabel,locationText,typeLabel});
