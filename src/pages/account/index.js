@@ -347,27 +347,22 @@ async function feedPage(){
  if(interestQuery.error)throw interestQuery.error;
  const interests=(interestQuery.data||[]).map(x=>x.directory_categories).filter(Boolean);
  const interestSection="<section class='ua-home-interests'><div class='ua-home-section-heading'><div><span class='ua-eyebrow'>PERSONALISASI</span><h2>Minatmu</h2><p>Topik yang membantu Pluits menyusun rekomendasi.</p></div><a href='#/places'>Atur minat →</a></div>"+(interests.length?"<div class='ua-home-interest-chips'>"+interests.map(x=>"<a href='#/places'>"+esc(x.name)+"</a>").join('')+"</div>":"<div class='ua-home-interest-empty'>Belum ada minat yang dipilih. Pilih kategori di direktori agar rekomendasi tempat dan konten makin relevan. <a href='#/places'>Pilih minat</a></div>")+"</section>";
- const discoverySection=`<section class="ua-home-discovery" aria-label="Rekomendasi visual untukmu">
-  <div class="ua-home-location">
-   <div class="ua-home-location-copy"><span class="ua-eyebrow">LOKASI KAMU</span><strong id="ua-home-location-label">Pilih lokasi saat ini</strong></div>
-   <button type="button" id="ua-home-detect-location" class="ua-home-location-button">◎ Lokasiku</button>
-  </div>
-  <div class="ua-home-region-chips" role="group" aria-label="Cakupan rekomendasi">
-   <button type="button" data-home-region="current" class="is-active">Sekitarku</button>
-   <button type="button" data-home-region="Bali">Bali</button>
-   <button type="button" data-home-region="Jakarta">Jakarta</button>
-   <button type="button" data-home-region="Indonesia">Indonesia</button>
-  </div>
-  <div class="ua-home-discovery-intro"><h2>Temukan yang menarik</h2></div>
-  <div class="ua-home-visual-grid">
-   <a href="#/places" class="ua-home-visual-card ua-home-visual-feature"><img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=1100&q=82" alt="Pemandangan destinasi tropis" fetchpriority="high"><span class="ua-home-visual-shade"></span><strong>Destinasi</strong><small>Tempat yang patut dikunjungi</small></a>
-   <a href="#/marketplace" class="ua-home-visual-card"><img src="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=700&q=80" alt="Hidangan makanan" loading="lazy"><span class="ua-home-visual-shade"></span><strong>Makanan</strong></a>
-   <a href="#/marketplace" class="ua-home-visual-card"><img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=700&q=80" alt="Produk jam tangan" loading="lazy"><span class="ua-home-visual-shade"></span><strong>Produk</strong></a>
-   <a href="#/places" class="ua-home-visual-card"><img src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=700&q=80" alt="Layanan profesional" loading="lazy"><span class="ua-home-visual-shade"></span><strong>Jasa</strong></a>
-   <a href="#/search" class="ua-home-visual-card"><img src="https://images.unsplash.com/photo-1455390582262-044cdead8028?auto=format&fit=crop&w=700&q=80" alt="Menulis dan membaca cerita" loading="lazy"><span class="ua-home-visual-shade"></span><strong>Blog & topik</strong></a>
-  </div>
- </section>`;
- const {data:follows,error:followError}=await supabase.from('user_follows').select('following_id').eq('follower_id',user.id).eq('status','accepted');
+ const discoverySection=`<section class="ua-home-discovery" aria-label="Rekomendasi pengalaman di Bali">
+<div class="ua-home-location"><span class="ua-home-location-pin">⌖</span><div class="ua-home-location-copy"><small>REKOMENDASI DI SEKITAR</small><strong id="ua-home-location-label">Bali</strong></div><span class="ua-home-location-status" id="ua-home-location-status">Menyesuaikan lokasi…</span></div>
+<div class="ua-home-discovery-intro"><h2>Temukan pengalaman menarik</h2></div>
+<div class="ua-home-visual-grid">
+<a href="#/places" class="ua-home-visual-card ua-home-visual-feature"><img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=1100&q=82" alt="Pemandangan alam Bali" fetchpriority="high"><span class="ua-home-visual-shade"></span><strong>Tempat untuk dikunjungi</strong><small>Jelajahi destinasi di Bali</small></a>
+<a href="#/trip" class="ua-home-visual-card"><img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=700&q=80" alt="Aktivitas laut" loading="lazy"><span class="ua-home-visual-shade"></span><strong>Aktivitas</strong></a>
+<a href="#/places" class="ua-home-visual-card"><img src="https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=700&q=80" alt="Kuliner" loading="lazy"><span class="ua-home-visual-shade"></span><strong>Kuliner</strong></a>
+<a href="#/places" class="ua-home-visual-card"><img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=700&q=80" alt="Alam dan pantai" loading="lazy"><span class="ua-home-visual-shade"></span><strong>Alam & pantai</strong></a>
+<a href="#/places" class="ua-home-visual-card"><img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=700&q=80" alt="Gym dan kebugaran" loading="lazy"><span class="ua-home-visual-shade"></span><strong>Gym & kebugaran</strong></a>
+</div></section>`;
+const trendSection=`<section class="ua-home-trends"><div class="ua-home-section-heading"><h2>Ide menarik di Bali</h2><a href="#/discover">Jelajahi semua</a></div><div class="ua-home-trend-strip">
+<a href="#/trip"><img src="https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?auto=format&fit=crop&w=500&q=75" alt="Pantai" loading="lazy"><span><b>Liburan pantai</b><small>Tempat & pengalaman</small></span></a>
+<a href="#/trip"><img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=500&q=75" alt="Laut" loading="lazy"><span><b>Wisata laut</b><small>Aktivitas air</small></span></a>
+<a href="#/places"><img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=500&q=75" alt="Olahraga" loading="lazy"><span><b>Hidup aktif</b><small>Olahraga & kebugaran</small></span></a>
+</div></section>`;
+const {data:follows,error:followError}=await supabase.from('user_follows').select('following_id').eq('follower_id',user.id).eq('status','accepted');
  if(followError)throw followError;
  const followingIds=[...new Set((follows||[]).map(x=>x.following_id).filter(Boolean))];
  const {data:blocks,error:blockError}=await supabase.from('user_blocks').select('blocker_id,blocked_id').or('blocker_id.eq.'+user.id+',blocked_id.eq.'+user.id);
@@ -397,7 +392,7 @@ async function feedPage(){
  const filterNav="<nav class='ua-explore-filters' aria-label='Pilihan feed'>"+filters.map(([key,label])=>"<button type='button' data-explore-filter='"+key+"' class='"+(exploreFilter===key?'is-active':'')+"' "+(exploreFilter===key?"aria-current='true'":"")+">"+label+"</button>").join('')+"</nav>";
  const empty=exploreFilter==='following'?'Belum ada postingan terbaru dari akun yang Anda ikuti.':'Belum ada postingan publik untuk ditampilkan. Coba kembali nanti atau bagikan cerita pertama Anda.';
  const action=exploreFilter==='following'?"<a href='#/search'>Temukan akun untuk diikuti</a>":"<a href='#/account/compose'>Bagikan foto atau video</a>";
- return "<div class='ua-social-home'><div class='ua-feed-heading'><div><span class='ua-eyebrow'>PLUITS COMMUNITY</span><h1>Beranda</h1><p>Ruang personal untuk minat, tempat terdekat, teman, dan rekomendasi.</p></div><a class='ua-outline' href='#/account/compose'>＋ Buat postingan</a></div><a class='ua-feed-search ua-feed-search-row' href='#/search' aria-label='Cari di Pluits'>"+socialIcon('search',{size:18})+"<span>Cari teman, tempat, dan postingan</span></a>"+discoverySection+interestSection+storySection+filterNav+"<section class='ua-feed'>"+(sorted.length?sorted.map(post=>postCard(post)).join(''):"<div class='ua-feed-empty'><strong>"+empty+"</strong>"+action+"</div>")+"</section></div>";
+ return "<div class='ua-social-home'>"+discoverySection+trendSection+filterNav+storySection+"<section class='ua-feed'>"+(sorted.length?sorted.map(post=>postCard(post)).join(''):"<div class='ua-feed-empty'><strong>"+empty+"</strong>"+action+"</div>")+"</section>"+interestSection+"</div>";
 }
 async function reelsPage(){
  const {data:vm,error:me}=await supabase.from('post_media').select('post_id,duration_ms').eq('media_type','video').lte('duration_ms',60000).order('created_at',{ascending:false}).limit(60);if(me)throw me;
@@ -698,37 +693,18 @@ function normalizeFeedMediaFrames(root=document){
  });
 }
 function bindHomeDiscoveryLocation(){
- const label=document.querySelector('#ua-home-location-label');
- const note=document.querySelector('#ua-home-location-note');
- const detect=document.querySelector('#ua-home-detect-location');
- const regionButtons=[...document.querySelectorAll('[data-home-region]')];
- if(!label||!detect)return;
- const choose=(name,detail='Lokasi ini dipilih untuk menyusun rekomendasi Beranda.')=>{
-  label.textContent=name;note.textContent=detail;
-  regionButtons.forEach(button=>button.classList.toggle('is-active',button.dataset.homeRegion===name||button.dataset.homeRegion==='current'&&name==='Lokasi perangkat'));
- };
- regionButtons.forEach(button=>button.addEventListener('click',()=>{
-  const region=button.dataset.homeRegion;
-  if(region==='current'){label.textContent='Lokasi perangkat';note.textContent='Tekan “Gunakan lokasiku” untuk mendeteksi posisi saat ini.';regionButtons.forEach(x=>x.classList.toggle('is-active',x===button));return;}
-  choose(region,'Cakupan rekomendasi diatur secara manual. Kamu bisa menggantinya kapan saja.');
- }));
- detect.addEventListener('click',()=>{
-  if(!navigator.geolocation){note.textContent='Perangkat tidak mendukung deteksi lokasi. Pilih wilayah secara manual.';return;}
-  detect.disabled=true;detect.textContent='Mendeteksi…';note.textContent='Menunggu izin lokasi dari perangkat…';
-  navigator.geolocation.getCurrentPosition(position=>{
-   const {latitude,longitude}=position.coords;
-   window.__pluitsHomeLocation={latitude,longitude,accuracy:position.coords.accuracy,updatedAt:Date.now()};
-   label.textContent='Lokasi perangkat terdeteksi';
-   note.textContent='Posisi saat ini siap digunakan untuk rekomendasi terdekat. Lokasi profil tetap terpisah.';
-   regionButtons.forEach(x=>x.classList.toggle('is-active',x.dataset.homeRegion==='current'));
-   detect.disabled=false;detect.textContent='◎ Perbarui lokasi';
-  },error=>{
-   note.textContent=error.code===1?'Izin lokasi ditolak. Kamu tetap bisa memilih wilayah secara manual.':'Lokasi belum dapat dideteksi. Periksa pengaturan perangkat atau pilih wilayah manual.';
-   detect.disabled=false;detect.textContent='◎ Coba lagi';
-  },{enableHighAccuracy:false,timeout:10000,maximumAge:300000});
- });
+ const label=document.querySelector('#ua-home-location-label'),status=document.querySelector('#ua-home-location-status');
+ if(!label||!status)return;
+ if(window.__pluitsHomeLocation){status.textContent='Lokasi perangkat aktif';return;}
+ if(!navigator.geolocation){status.textContent='Wilayah rekomendasi: Bali';return;}
+ status.textContent='Meminta izin lokasi perangkat…';
+ navigator.geolocation.getCurrentPosition(position=>{
+  const {latitude,longitude}=position.coords;
+  window.__pluitsHomeLocation={latitude,longitude,accuracy:position.coords.accuracy,updatedAt:Date.now()};
+  label.textContent='Sekitar Anda · Bali';status.textContent='Disesuaikan dengan lokasi perangkat';
+ },error=>{status.textContent=error.code===1?'Lokasi belum diizinkan · rekomendasi Bali tetap ditampilkan':'Lokasi belum terdeteksi · rekomendasi Bali tetap ditampilkan';},{enableHighAccuracy:false,timeout:10000,maximumAge:300000});
 }
-async function mountAccount(section='profile',parameter=''){
+ async function mountAccount(section='profile',parameter=''){
  if(section!=='activity'&&activityNotificationChannel){supabase.removeChannel(activityNotificationChannel);activityNotificationChannel=null;}
  const {data:{session}}=await supabase.auth.getSession();user=session?.user||null;
  if(!user&&(section==='user'||section==='post')){
