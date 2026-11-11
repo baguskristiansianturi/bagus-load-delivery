@@ -857,3 +857,176 @@ Potensi monetisasi seperti alat bisnis lanjutan, layanan profesional, atau paket
 
 Tidak ada persetujuan untuk mengubah UI Inbox sekarang, mengubah schema/backend, menambah menu ke release aktif, atau mengubah release gate. Simpan sebagai visi dan bahan discovery jangka panjang.
 
+## IDEA-015 — Unified identity, professional publishing, and PLUITS-native business presence
+
+- **Tanggal ditemukan:** 11 November 2026.
+- **Sumber:** sharing founder tentang pengguna penikmat/penjelajah vs penyedia/pengelola; akun personal gratis; akun profesional/premium yang membuka publishing/blog dan alat usaha; satu identitas personal yang dapat mengelola toko, layanan, lembaga, atau destinasi bersama tim; aspirasi agar PLUITS menjadi rumah digital yang cukup lengkap sehingga banyak pengguna tidak perlu membuat website terpisah.
+- **Kategori:** Business Model | Identity | Account & Entitlements | Professional Profile | Publishing | Blog | Store | Services | Organization | GeoDirectory | Team Permissions | Payments | SEO.
+- **Jenis:** FOUNDER INSIGHT | PRODUCT VISION | PROPOSAL.
+- **Status:** PROPOSED / NEEDS VALIDATION — bukan keputusan final pricing, schema, implementasi, atau release scope.
+- **Keterkaitan:** IDEA-013 (Social Platform Horizon 2035), IDEA-014 (Social Workspace), D-004, D-005, D-006; Business Model Master Bagian 32–33.
+
+### A. Visi platform: pengguna memiliki kepentingan berbeda
+
+PLUITS melayani spektrum kebutuhan, bukan memaksa semua pengguna menjadi kreator atau penjual.
+
+**Penikmat / explorer**
+- Menggunakan fungsi sosial personal.
+- Menikmati foto, video, tulisan, berita, komunitas, dan percakapan.
+- Menjelajahi tempat, restoran, destinasi, toko, layanan, dan aktivitas.
+- Membaca, menyimpan, membagikan, berbelanja, memesan, atau sekadar melihat tanpa kewajiban bertransaksi.
+- Tidak perlu memahami dashboard profesional.
+
+**Penyedia / pengelola**
+- Penulis, blogger, kreator, profesional, freelancer.
+- Pemilik dan pengelola toko/brand.
+- Penyedia layanan.
+- Pengelola destinasi/tempat.
+- Media, lembaga, organisasi, komunitas, dan entitas lain.
+- Membutuhkan publishing, branding, katalog, layanan, manajemen, analytics, komunikasi, tim, transaksi, dan kontrol akses sesuai konteks.
+
+Peran tidak boleh mengunci seseorang secara permanen. Satu orang dapat menjadi explorer dalam satu perjalanan dan provider/creator dalam konteks lain. Produk perlu memunculkan alat lanjutan ketika relevan tanpa membuat pengalaman personal dasar menjadi kompleks.
+
+### B. Pisahkan identity, public entity, workspace, dan permission
+
+Usulan model konseptual:
+1. **Personal identity / account:** akun autentikasi dan pemilik/penanggung jawab manusia; memiliki ID permanen.
+2. **Public profile / entity:** objek yang dipresentasikan ke publik, misalnya profil personal, professional profile, toko, brand, organisasi/media, layanan, atau destinasi. Satu pemilik dapat mengelola lebih dari satu entitas sesuai verifikasi dan kebijakan.
+3. **Workspace:** ruang pengelolaan satu atau beberapa entitas/modul: publishing, social, store, services, destination, team, analytics.
+4. **Membership & permission:** hubungan anggota dengan entitas/workspace serta izin per tindakan dan per domain.
+5. **Entitlement / plan:** fitur dan kuota yang aktif pada akun atau entitas berdasarkan kebijakan paket, bukan jenis identitas atau hak kepemilikan.
+
+Jangan menyamakan Premium/Professional badge, verifikasi identitas, tipe entitas bisnis, dan paket berbayar. Verifikasi menyatakan pemeriksaan tertentu; subscription/entitlement menyatakan akses fitur; role menyatakan kewenangan. Keempatnya harus memiliki arti yang berbeda.
+
+### C. Satu akun personal dapat mengelola entitas profesional dan bisnis
+
+Contoh: seorang pemilik memiliki personal identity dan mengelola satu toko. Ia dapat mengundang manajer/editor:
+- Owner: mengatur kepemilikan, anggota, akses sensitif, pembayaran/pencairan, dan pengaturan utama.
+- Editor/content manager: membuat dan mengedit postingan, reels, artikel, media, serta informasi yang secara eksplisit diizinkan.
+- Store operator: mengelola katalog/pesanan sesuai batas yang diberikan.
+- Finance role: hanya untuk anggota yang diberi izin khusus; dapat dipisahkan antara melihat laporan, mengelola pembayaran, dan mengubah rekening/pencairan.
+- Moderator/agency: akses sementara/terbatas dengan audit dan kemampuan dicabut.
+
+Tidak boleh berbagi password owner. Akses ke data pelanggan, order, keuangan, rekening, refund, payout, dan perubahan kepemilikan memerlukan permission terpisah, autentikasi kuat/step-up bila relevan, audit log, dan kontrol pencabutan akses. Default permission harus least privilege.
+
+### D. Blog / publishing sebagai manfaat inti akun profesional
+
+Blog bukan sekadar tab tambahan. Ia adalah publishing platform yang terintegrasi dengan identitas, social graph, dan entitas.
+
+Kegunaan:
+- Hobi dan ekspresi personal bagi penulis yang menyukai tulisan panjang.
+- Penjelasan layanan profesional yang tidak cukup ditampung caption.
+- Storytelling dan edukasi untuk toko/brand.
+- Artikel berita, opini, liputan, dan arsip bagi media/lembaga.
+- Panduan destinasi, informasi fasilitas, pengalaman, dan cerita tempat.
+- Dokumentasi organisasi/komunitas.
+- Artikel yang terhubung secara kontekstual ke post, reel, produk, layanan, toko, destinasi, dan lokasi.
+
+Pengalaman publik:
+- Profil memiliki permukaan Posts, Reels, Articles, serta bagian lain sesuai tipe entitas/izin.
+- Artikel muncul dalam katalog visual/editorial di profil dan dapat dibagikan sebagai kartu/preview pada feed.
+- Halaman artikel tetap mempunyai reading experience mandiri yang nyaman dan dapat diakses publik sesuai audience.
+- Artikel dapat dihubungkan ke produk, layanan, toko, destinasi, atau entitas terkait tanpa memaksa semua tulisan menjadi iklan.
+- Draft dan artikel privat tidak pernah masuk feed publik, sitemap, atau mesin pencari.
+- Penulis personal tidak diwajibkan memiliki toko atau melakukan monetisasi.
+- Perlu editor yang mendukung draft, autosave, cover, body terstruktur, gambar/media, preview, kategori/tag, status publikasi, dan revisi; scope editor ditentukan melalui product discovery.
+
+### E. Aspirasi PLUITS-native presence menggantikan kebutuhan website sederhana
+
+Hipotesis jangka panjang: untuk banyak individu, profesional, UMKM, toko, penyedia jasa, kreator, destinasi, dan organisasi, profil publik + artikel + katalog + layanan + kontak + transaksi PLUITS dapat menjadi kehadiran digital utama sehingga mereka tidak perlu membangun website terpisah.
+
+Ini bukan klaim bahwa website akan hilang atau PLUITS harus menggantikan seluruh website:
+- Entitas besar dapat tetap memerlukan website/domain/infrastruktur sendiri.
+- Pengguna harus tetap dapat menghubungkan domain eksternal jika kelak didukung.
+- PLUITS harus menyediakan export/portability dan URL stabil agar pemilik tidak kehilangan seluruh jejak digital ketika berpindah platform.
+- PLUITS tidak boleh mengunci konten pemilik secara tidak adil atau membuat link eksternal tidak mungkin digunakan.
+- Posisi yang realistis: menjadi default digital home bagi banyak pengguna dan bisnis kecil, bukan satu-satunya web untuk semua orang.
+
+### F. URL publik dan SEO: rancangan awal untuk diteliti
+
+Pola contoh, bukan URL produksi yang sudah diputuskan:
+- Personal profile: https://pluits.example/@username
+- Professional/entity profile: https://pluits.example/@brandname atau route entity khusus yang konsisten.
+- Blog index: https://pluits.example/@username/blog
+- Article: https://pluits.example/@username/blog/descriptive-article-slug
+- Category: https://pluits.example/@username/blog/category-slug
+
+Aturan desain:
+- Database memakai immutable UUID/ID untuk owner, entity, dan article; username/slug hanya locator publik.
+- Slug unik pada scope yang jelas, dinormalisasi, human-readable, hyphen-separated, dan stabil.
+- Perubahan username/slug harus memiliki redirect permanen yang terkontrol dari URL lama ke URL kanonis; cegah redirect chain/loop dan jangan pernah memindahkan kepemilikan hanya berdasarkan slug.
+- Tentukan canonical URL untuk setiap halaman; hindari duplikasi karena query parameters, tracking, sorting, filter, atau route alias.
+- Public published articles harus tersedia melalui URL HTTP(S) yang dapat diakses tanpa login; private/draft/unlisted mengikuti kebijakan visibilitas dan tidak masuk sitemap.
+- Halaman publik memerlukan title dan meta description unik, heading/body yang dapat dibaca crawler, metadata penulis/penerbit, gambar representatif, canonical link, Open Graph/social preview, dan structured data yang sesuai jenis konten.
+- Gunakan HTML link yang benar (a href) untuk navigasi internal; jangan mengandalkan click handler yang tidak memiliki URL crawlable.
+- Sitemap index dan sitemap artikel/profil publik dihasilkan dari konten yang eligible, diperbarui saat publish/unpublish/delete, memiliki lastmod yang akurat, dan tidak memuat URL privat/noindex.
+- robots.txt bukan mekanisme untuk menyembunyikan data rahasia; private content harus dilindungi oleh authorization/server.
+- Search Console dan URL Inspection digunakan untuk memeriksa crawling/indexing. Sitemap submission dan structured data tidak menjamin indexing/ranking.
+- Hindari membuat ribuan thin/duplicate pages, tag kosong, pencarian internal, atau halaman profil otomatis tanpa nilai konten.
+- Pertimbangkan SSR/prerender untuk halaman publik agar HTML awal berisi konten penting, metadata, dan canonical. Jangan bergantung pada hash route untuk artikel.
+- Sediakan 404/410 yang benar untuk konten yang dihapus, dan redirect hanya jika ada pengganti relevan.
+
+Contoh URL harus diuji untuk username reserved, slug bentrok, nama entitas, multi-language, karakter Unicode, perubahan handle, moderasi, privasi, dan penghapusan akun. Domain pluits.example di atas adalah placeholder; keputusan domain produksi dilakukan terpisah.
+
+### G. Skema data konseptual awal (belum migration)
+
+Entitas yang mungkin dibutuhkan, setelah audit schema yang sudah ada:
+- profiles / auth-linked personal identity.
+- public_entities atau model profile/entity yang sesuai schema eksisting.
+- entity_memberships dan entity_permissions / role grants.
+- plans / entitlements / subscription status bila model berbayar disetujui.
+- articles dengan id, author_user_id, publisher_entity_id nullable, slug, title, excerpt, body/document, cover_media_id, status, visibility, published_at, updated_at, canonical_url (jika diperlukan), dan timestamps.
+- article_revisions / version history bila autosave/recovery dan audit menuntut.
+- article_categories, article_tags, dan relasi yang tidak menggandakan metadata.
+- article_entity_links untuk hubungan terstruktur dengan produk, layanan, toko, destinasi, dan tempat.
+- public_url_aliases / redirects untuk mempertahankan URL ketika slug/username berubah.
+- sitemap/outbox atau mekanisme invalidation/generation yang andal, bukan tabel sitemap manual yang cepat stale.
+
+Jangan membuat tabel hanya karena namanya ada dalam daftar. Audit schema, relasi, RLS, query patterns, dan domain model yang sudah berjalan terlebih dahulu. Tentukan apakah artikel merupakan content subtype dari model post yang ada atau domain editorial tersendiri dengan integrasi social feed; hindari duplikasi komentar, likes, media, moderation, identity, dan audience rules.
+
+### H. Model bisnis: manfaat dan monetisasi harus dipisahkan
+
+Akun personal gratis dapat menikmati social, discovery, reading, dan aktivitas dasar. Fitur profesional dapat menjadi paket/entitlement yang membuka alat tambahan seperti publishing workflow, team seats, analytics, store/services management, custom branding, atau kapasitas media—tetapi hanya setelah manfaat dan willingness-to-pay divalidasi.
+
+Prinsip:
+- Jangan membuat pengguna membayar untuk membaca artikel publik.
+- Jangan mengharuskan penulis personal membeli paket bisnis hanya untuk menulis.
+- Jangan mencampur verifikasi dengan pembayaran.
+- Jangan mengunci data atau identitas pemilik ketika paket berhenti.
+- Jelaskan fitur, kuota, dan batas paket dengan transparan.
+- Biaya transaksi, payment processing, payout, refund, escrow/penahanan dana, subscription, dan monetisasi kreator memerlukan model risiko, legal, operasional, serta payment-provider review tersendiri.
+- Pembayaran aman harus dirancang sesuai negara, metode pembayaran, settlement, KYC/KYB yang relevan, dispute, refund, fraud, dan perlindungan pembeli/penjual. Jangan menjanjikan escrow atau perlindungan universal tanpa penyedia dan kerangka hukum yang mendukung.
+
+### I. Validasi pasar dan risiko
+
+Uji dengan beberapa persona nyata:
+- Pembaca/penikmat yang tidak ingin mengelola apa pun.
+- Blogger/penulis independen.
+- Profesional penyedia layanan.
+- UMKM/pemilik toko dengan manajer.
+- Pengelola destinasi.
+- Media/lembaga dengan banyak editor dan approver.
+
+Pertanyaan:
+1. Apa alasan nyata mereka memilih profil/blog PLUITS dibanding website, blog host, atau social media yang sudah dipakai?
+2. Apakah mereka ingin semua konten di satu profil, atau butuh pemisahan profil personal dan entitas?
+3. Fitur blog minimum apa yang cukup untuk mulai menerbitkan tulisan berkualitas?
+4. Seberapa penting custom domain, export, newsletter, analytics, dan integrasi eksternal?
+5. Apakah pengelolaan tim dan pemisahan keuangan/operasional merupakan kebutuhan awal?
+6. Apakah paket profesional berbayar memiliki willingness-to-pay yang nyata?
+7. Bagaimana menjaga pengguna awam agar tidak kewalahan dengan tool provider?
+8. Bagaimana melindungi konsumen ketika entitas menjual produk/jasa dan memproses pembayaran?
+9. Bagaimana memitigasi spam SEO, thin content, impersonation, backlink abuse, dan konten terlarang?
+10. Bagaimana mencegah satu akun personal menjadi single point of failure bagi perusahaan yang memiliki banyak staf?
+
+### J. Prioritas dan batas implementasi
+
+- **Fokus langsung setelah sharing ini:** blog/article publishing, karena founder ingin mulai menulis dan ini dapat menjadi use case pertama untuk menguji model.
+- **Tahap awal blog:** tentukan author/owner, draft, editor, publish, public article route, URL stabil, halaman artikel publik, metadata dasar, permission/visibility, dan discovery dari profil/feed.
+- **SEO foundation:** siapkan SSR/prerender atau solusi rendering publik, canonical, sitemap, crawlable links, robots/noindex rules, metadata dan structured data yang sesuai; verifikasi dengan test dan Search Console setelah tersedia.
+- **Tahap berikutnya:** integrasi article dengan professional/entity profile, store, services, destinations, team permissions, dan analytics.
+- **Pembayaran:** desain terpisah dengan review keamanan, legal, dan payment provider sebelum transaksi nyata diaktifkan.
+- **Urutan aktif yang sudah berjalan:** jangan menghentikan penyelesaian Inbox/Social P0 tanpa keputusan founder; rencana fokus Blog adalah arah langkah berikutnya setelah prioritas aktif dituntaskan atau diubah secara eksplisit.
+
+Tidak ada persetujuan untuk mengubah schema, pricing, role production, pembayaran, atau release gate melalui catatan ini. Semua rancangan URL, tabel, paket, dan fitur di atas masih proposal dan perlu audit terhadap implementasi yang sudah ada.
+
