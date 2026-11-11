@@ -21,6 +21,7 @@ function defer(task, version, retry) {
 
 export async function route(homeFn){
  const version=++routeVersion;
+ window.__pluitsRouteVersion=version;
  try{
   const raw=(location.hash||'#/').replace(/^#\/?/,'');
   const [path,q='']=raw.split('?');
