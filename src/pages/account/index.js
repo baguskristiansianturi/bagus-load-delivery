@@ -38,7 +38,7 @@ function frame(content,active='explore',avatarUrl=''){
  const showEditProfile=active==='profile'||active==='preview';
  return `<div class="ua-app ua-social-app">
   ${renderSocialHeader({active,profileView,showEditProfile,user,profile,userAvatar,notificationCount:unreadNotificationCount})}
-   <main class="ua-main ${profileView?'ua-profile-main':''}">${content}</main>
+   <main class="ua-main ${profileView?'ua-profile-main':''} ${active==='create'?'ua-create-main':''}">${content}</main>
   ${renderSocialMobileNav({active,profileView,user,profile,userAvatar,notificationCount:unreadNotificationCount})}
      <div id="ua-toast" class="ua-toast" role="status"></div>
   <footer class="ua-footer">PLUITS · Identitas pengguna dan aktivitas komunitas</footer>
@@ -873,31 +873,38 @@ async function createPage(){
  if(entitlement.error)throw entitlement.error;if(blog.error)throw blog.error;
  const now=Date.now(),premium=entitlement.data?.plan_key==='premium'&&entitlement.data.status==='active'&&new Date(entitlement.data.starts_at).getTime()<=now&&(!entitlement.data.expires_at||new Date(entitlement.data.expires_at).getTime()>now);
  const hasBlog=!!blog.data,blogHref=hasBlog||premium?'#/account/blog':'#/account/upgrade';
- const card=(icon,title,href,kind='',meta='')=>'<a class="ua-create-card '+kind+'" href="'+href+'"><span class="ua-create-card-icon">'+socialIcon(icon,{size:22})+'</span><strong>'+title+'</strong>'+(meta?'<em>'+meta+'</em>':'')+'<span class="ua-create-card-plus" aria-hidden="true">'+socialIcon('plus',{size:15})+'</span></a>';
- const entry=(icon,title)=>'<article class="ua-create-card ua-create-entry"><span class="ua-create-card-icon">'+socialIcon(icon,{size:22})+'</span><strong>'+title+'</strong><span class="ua-create-card-plus" aria-hidden="true">'+socialIcon('plus',{size:15})+'</span></article>';
+ const daily=(icon,title,href,kind='',status='')=>'<a class="ua-create-card ua-create-daily '+kind+'" href="'+href+'"><span class="ua-create-card-icon">'+socialIcon(icon,{size:22})+'</span><strong>'+title+'</strong>'+(status?'<em>'+status+'</em>':'')+'</a>';
+ const feature=(icon,title,description,href,kind='',status='')=>{
+  const body='<span class="ua-create-card-icon">'+socialIcon(icon,{size:22})+'</span><span class="ua-create-card-copy"><strong>'+title+'</strong><small>'+description+'</small>'+(status?'<em>'+status+'</em>':'')+'</span><span class="ua-create-card-arrow" aria-hidden="true">›</span>';
+  return href?'<a class="ua-create-card ua-create-feature '+kind+'" href="'+href+'">'+body+'</a>':'<article class="ua-create-card ua-create-feature ua-create-staged '+kind+'" aria-disabled="true">'+body+'</article>';
+ };
+ const blogCard=feature('book','Buat Blog','Terbitkan cerita, pengalaman, perjalanan, dan tulisan panjang di ruang blog pribadi PLUITS.',blogHref,hasBlog?'is-blog':premium?'is-premium':'is-locked',hasBlog?'KELOLA BLOG':premium?'PREMIUM AKTIF':'');
+ const blogEntry=hasBlog||premium?blogCard:('<div class="ua-create-locked-wrap">'+blogCard+'<span class="ua-create-lock-mark" aria-label="Fitur terkunci">'+socialIcon('lock',{size:12})+'</span><span class="ua-create-premium-hint">UPGRADE KE PREMIUM</span></div>');
  return `<div class="ua-create-hub">
-  <header class="ua-create-top"><h1>Buat</h1></header>
-  <section class="ua-create-section">
-   <div class="ua-create-section-head"><h2>Konten</h2></div>
+  <header class="ua-create-top"><h1>Mau buat apa hari ini?</h1><p>Mulai dari hal sederhana, bagikan sesuatu, atau bangun kehadiranmu di PLUITS.</p></header>
+  <section class="ua-create-section ua-create-daily-section">
    <div class="ua-create-grid ua-create-social-grid">
-    ${card('camera','Story','#/account/story','is-story')}
-    ${card('image','Post','#/account/compose','is-post')}
-    ${card('reels','Reel','#/account/reel','is-reel')}
-    <div class="ua-create-card is-disabled" aria-disabled="true"><span class="ua-create-card-icon">${socialIcon('radio',{size:22})}</span><strong>Live</strong><em>COMING SOON</em></div>
+    ${daily('camera','Story','#/account/story','is-story')}
+    ${daily('image','Post','#/account/compose','is-post')}
+    ${daily('reels','Reel','#/account/reel','is-reel')}
+    <div class="ua-create-card ua-create-daily is-disabled" aria-disabled="true"><span class="ua-create-card-icon">${socialIcon('radio',{size:22})}</span><strong>Live</strong><em>COMING SOON</em></div>
    </div>
   </section>
-  <section class="ua-create-section">
-   <div class="ua-create-section-head"><h2>Penerbitan</h2></div>
-   <div class="ua-create-grid ua-create-publish-grid">
-    ${hasBlog||premium?card('book','Blog',blogHref,'is-blog',hasBlog?'KELOLA':'PREMIUM'):('<div class="ua-create-locked-wrap">'+card('book','Blog',blogHref,'is-locked')+'<span class="ua-create-lock-mark" aria-label="Fitur terkunci">'+socialIcon('lock',{size:12})+'</span><span class="ua-create-premium-hint">UPGRADE KE PREMIUM</span></div>')}
+  <section class="ua-create-section ua-create-secondary-section">
+   <div class="ua-create-section-head"><h2>Klaim & Penerbitan</h2><p>Bangun identitas dan kelola keberadaanmu di PLUITS.</p></div>
+   <div class="ua-create-feature-grid ua-create-publish-grid">
+    ${blogEntry}
+    ${feature('map-pin','Klaim Lokasi','Temukan tempat atau bisnis di peta. Jika sudah terdaftar, ajukan klaim untuk menghubungkannya dengan akun PLUITS.','#/places','is-claim')}
    </div>
   </section>
-  <section class="ua-create-section">
-   <div class="ua-create-section-head"><h2>Usaha & tempat</h2></div>
-   <div class="ua-create-grid ua-create-business-grid">
-    ${entry('map-pin','Tempat & Entitas')}
-    ${entry('store','Toko')}
-    ${entry('briefcase','Layanan')}
+  <section class="ua-create-section ua-create-secondary-section">
+   <div class="ua-create-section-head"><h2>Hubungkan Bisnis & Layanan</h2><p>Siapkan profil dan operasional usahamu dalam ekosistem PLUITS.</p></div>
+   <div class="ua-create-feature-grid ua-create-business-grid">
+    ${feature('store','Toko','Jual produk dan kelola katalog, pesanan, serta pelanggan.',null,'is-staged','DALAM PENGEMBANGAN')}
+    ${feature('utensils','Restoran','Tampilkan menu, informasi restoran, dan layanan pelanggan.',null,'is-staged','DALAM PENGEMBANGAN')}
+    ${feature('car','Transportasi','Hubungkan armada dan tawarkan layanan perjalanan.',null,'is-staged','COMING SOON')}
+    ${feature('truck','Kurir','Siapkan layanan pengiriman dan pengelolaan pesanan.',null,'is-staged','COMING SOON')}
+    ${feature('briefcase','Jasa Profesional','Tampilkan keahlian, paket layanan, dan portofolio.',null,'is-staged','DALAM PENGEMBANGAN')}
    </div>
   </section>
  </div>`;
