@@ -121,7 +121,7 @@ async function drawMap(rows,targetId='pl-directory-map',{zoom=11.7,fit=true}={})
     const lib=await loadMapLibre();
     if(state.map&&(state.mapTarget!==targetId||state.map.getContainer()!==target))clearGeoMap();
     if(!state.map) {
-      state.map=new lib.Map({container:target,style:geoMapStyle(),center:[state.lon,state.lat],zoom,pitch:22,bearing:-12,dragRotate:true,touchZoomRotate:true,scrollZoom:false,cooperativeGestures:true,attributionControl:true,maxPitch:58});
+      state.map=new lib.Map({container:target,style:geoMapStyle(),center:[state.lon,state.lat],zoom,pitch:22,bearing:-12,dragRotate:true,touchZoomRotate:true,scrollZoom:false,attributionControl:true,maxPitch:58});
       state.mapTarget=targetId;
       state.map.addControl(new lib.NavigationControl({showCompass:true,showZoom:true,visualizePitch:true}),'bottom-right');
       state.map.on('style.load',()=>{try{state.map?.setProjection({type:'globe'});}catch{}});
@@ -142,7 +142,13 @@ async function drawMap(rows,targetId='pl-directory-map',{zoom=11.7,fit=true}={})
     }
     requestAnimationFrame(()=>state.map?.resize());
   } catch(error) {
-    target.innerHTML='<div class="pl-directory-empty">Peta 3D belum dapat dimuat pada perangkat ini. Daftar tempat tetap tersedia. <small>'+esc(error.message||'')+'</small></div>';
+    target.innerHTML='<div class="pl-directory-empty">Peta interaktif belum dapat dimuat pada perangkat ini. Daftar tempat tetap tersedia. <small>'+esc(error.message||'')+'</small></div>';
+    if(targetId==='pl-directory-map'){
+      const stage=target.closest('.pl-directory-map-stage'),list=document.querySelector('#pl-directory-results');
+      if(stage)stage.hidden=true;if(list)list.hidden=false;
+      state.mode='list';
+      document.querySelectorAll('[data-view]').forEach(button=>button.classList.toggle('active',button.dataset.view==='list'));
+    }
   }
 }
 function showGlobe(targetId='pl-directory-map') {
