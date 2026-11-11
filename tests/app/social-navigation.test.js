@@ -38,7 +38,7 @@ test('public guest home and authenticated create/activity destinations remain se
  const routes=await (await import('node:fs/promises')).readFile(new URL('../../src/components/social/navigation-routes.js',import.meta.url),'utf8');
  assert.ok(home.includes("renderSocialHeader({active:'home',publicHome:true})"));
  assert.ok(home.includes("renderSocialMobileNav({active:'home',publicHome:true})"));
- assert.ok(account.includes("href='#/account/compose'") && account.includes("aria-label='Buat postingan'"));
+ assert.ok(account.includes('id="ua-story-form"') && account.includes("from('user_stories')"), "Story creation must remain available outside the Explore feed.");
  assert.ok(routes.includes("activity: '#/account/activity'"));
  assert.ok(routes.includes("create: '#/account/create'"));
 });
