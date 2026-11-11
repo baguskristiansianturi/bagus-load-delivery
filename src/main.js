@@ -50,8 +50,15 @@ window.addEventListener('hashchange', render);
 render();
 
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register(`${import.meta.env.BASE_URL}sw.js`, { scope: import.meta.env.BASE_URL })
-      .catch((error) => console.error('Pluits service worker registration failed:', error));
+  window.addEventListener('load', async () => {
+    try {
+      const registration = await navigator.serviceWorker.register(`${import.meta.env.BASE_URL}sw.js`, {
+        scope: import.meta.env.BASE_URL,
+        updateViaCache: 'none'
+      });
+      await registration.update();
+    } catch (error) {
+      console.error('Pluits service worker update failed:', error);
+    }
   });
 }
