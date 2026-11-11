@@ -112,7 +112,7 @@ function geoMapStyle() {
 }
 function clearGeoMap() {
   state.markers.forEach(marker=>marker.remove());state.markers=[];
-  if(state.map){state.map.remove();state.map=null;}state.mapTarget=null;
+  if(state.map){state.map.remove();state.map=null;}
   state.mapTarget=null;
 }
 async function drawMap(rows,targetId='pl-directory-map',{zoom=11.7,fit=true}={}) {
@@ -129,7 +129,7 @@ async function drawMap(rows,targetId='pl-directory-map',{zoom=11.7,fit=true}={})
       state.map.jumpTo({center:[state.lon,state.lat],zoom,pitch:22,bearing:-12});
     }
     state.markers.forEach(marker=>marker.remove());state.markers=[];
-    rows.filter(row=>Number.isFinite(Number(row.latitude))&&Number.isFinite(Number(row.longitude))).forEach(row=>{
+    rows.filter(row=>row.latitude!==null&&row.latitude!==undefined&&row.longitude!==null&&row.longitude!==undefined&&Number.isFinite(Number(row.latitude))&&Number.isFinite(Number(row.longitude))).forEach(row=>{
       const pin=document.createElement('button');pin.type='button';pin.className='pl-geo-pin';pin.setAttribute('aria-label','Lihat '+row.name);pin.innerHTML='<span></span>';
       const popup=new lib.Popup({offset:22,closeButton:true,closeOnClick:false,maxWidth:'230px'}).setHTML('<div class="pl-geo-popup"><strong>'+esc(row.name)+'</strong><small>'+esc([row.locality,row.city].filter(Boolean).join(', '))+'</small><a href="'+placeUrl(row.slug)+'">Lihat tempat <b>→</b></a></div>');
       const marker=new lib.Marker({element:pin,anchor:'bottom'}).setLngLat([Number(row.longitude),Number(row.latitude)]).setPopup(popup).addTo(state.map);
@@ -147,6 +147,7 @@ async function drawMap(rows,targetId='pl-directory-map',{zoom=11.7,fit=true}={})
 }
 function showGlobe(targetId='pl-directory-map') {
   if(!state.map||state.mapTarget!==targetId)return;
+  if(!state.map.isStyleLoaded()){state.map.once('load',()=>showGlobe(targetId));return;}
   state.map.setProjection({type:'globe'});
   state.map.flyTo({center:[115.2167,-8.65],zoom:2.4,pitch:0,bearing:0,duration:850});
 }
