@@ -382,7 +382,7 @@ const {data:follows,error:followError}=await supabase.from('user_follows').selec
  const filterNav="<nav class='ua-explore-filters' aria-label='Pilihan feed'>"+filters.map(([key,label])=>"<button type='button' data-explore-filter='"+key+"' class='"+(exploreFilter===key?'is-active':'')+"' "+(exploreFilter===key?"aria-current='true'":"")+">"+label+"</button>").join('')+"</nav>";
  const empty=exploreFilter==='following'?'Belum ada postingan terbaru dari akun yang Anda ikuti.':'Belum ada postingan publik untuk ditampilkan. Coba kembali nanti atau bagikan cerita pertama Anda.';
  const action=exploreFilter==='following'?"<a href='#/search'>Temukan akun untuk diikuti</a>":"<a href='#/account/compose'>Bagikan foto atau video</a>";
- return "<div class='ua-social-home'>"+discoverySection+trendSection+homeNearbySection()+filterNav+storySection+"<section class='ua-feed'>"+(sorted.length?sorted.map(post=>postCard(post)).join(''):"<div class='ua-feed-empty'><strong>"+empty+"</strong>"+action+"</div>")+"</section>"+interestSection+"</div>";
+ return "<div class='ua-social-home'>"+trendSection+homeNearbySection()+filterNav+storySection+"<section class='ua-feed'>"+(sorted.length?sorted.map(post=>postCard(post)).join(''):"<div class='ua-feed-empty'><strong>"+empty+"</strong>"+action+"</div>")+"</section>"+interestSection+"</div>";
 }
 async function reelsPage(){
  const {data:vm,error:me}=await supabase.from('post_media').select('post_id,duration_ms').eq('media_type','video').lte('duration_ms',60000).order('created_at',{ascending:false}).limit(60);if(me)throw me;
