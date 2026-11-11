@@ -1,5 +1,6 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { renderSocialHeader, renderSocialMobileNav } from '../../components/social/navigation.js';
+import { createSignedUrlMap } from '../../services/storage/signed-urls.js';
 import './blog-studio.css';
 
 const DB_URL = 'https://ytndswhqxayqpftszwfh.supabase.co';
@@ -14,6 +15,8 @@ let activeTab = 'posts';
 let activeView = 'dashboard';
 let editingId = null;
 let coverObjectUrl = '';
+let selectedCoverFile = null;
+let galleryItems = [];
 let supportingObjectUrls = [];
 let pendingSupportingFiles = [];
 let toastTimer = null;
@@ -119,6 +122,7 @@ function editorPage(item = null) {
   activeView = 'editor';
   editingId = item?.id || null;
   revokePreviews();
+  selectedCoverFile = null;
   if (item?.cover) coverObjectUrl = URL.createObjectURL(item.cover);
   const supporting = item?.supportingImages || [];
   pendingSupportingFiles = [];
@@ -129,7 +133,7 @@ function editorPage(item = null) {
     '<label class="pl-blog-field">Judul tulisan<input name="title" maxlength="140" required value="' + esc(item?.title || '') + '" placeholder="Tuliskan judul blog kamu"></label>' +
     '<label class="pl-blog-field">Deskripsi untuk kartu feed<textarea name="description" id="pl-blog-description" rows="3" required placeholder="Ringkas isi tulisan agar orang tertarik membacanya.">' + esc(item?.description || '') + '</textarea><small><span id="pl-blog-word-count">' + wordCount(item?.description || '') + '</span>/85 kata · Ditampilkan pada kartu feed dan dipotong dengan “Baca selengkapnya”.</small></label>' +
     '<section class="pl-blog-cover-field"><div><strong>Gambar utama / cover</strong><small>Dipakai sebagai thumbnail di feed, katalog Blog, dan hero tulisan.</small></div>' +
-    '<label class="pl-blog-cover-picker" for="pl-blog-cover-input">' + (coverObjectUrl ? '<img id="pl-blog-cover-preview" src="' + coverObjectUrl + '" alt="Pratinjau cover">' : '<span id="pl-blog-cover-placeholder">＋</span><b>Pilih gambar utama</b><small>JPG, PNG, atau WebP</small>') + '<input id="pl-blog-cover-input" type="file" accept="image/jpeg,image/png,image/webp"></label></section>' +
+    '<div class="pl-blog-cover-actions"><button type="button" class="pl-blog-secondary" data-open-gallery>Galeri PLUITS</button><label class="pl-blog-secondary pl-blog-phone-picker" for="pl-blog-cover-input">Galeri HP<input id="pl-blog-cover-input" type="file" accept="image/jpeg,image/png,image/webp"></label></div><div class="pl-blog-cover-picker" id="pl-blog-cover-preview-wrap">' + (coverObjectUrl ? '<img id="pl-blog-cover-preview" src="' + coverObjectUrl + '" alt="Pratinjau cover">' : '<span id="pl-blog-cover-placeholder">＋</span><b>Belum ada gambar utama</b><small>Pilih dari Galeri PLUITS atau Galeri HP</small>') + '</div></section>' +
     '<label class="pl-blog-field">Isi tulisan<textarea name="body" rows="9" required placeholder="Mulai menulis di sini. Tidak ada batas minimal kata.">' + esc(item?.body || '') + '</textarea></label>' +
     '<section class="pl-blog-support-field"><div><strong>Gambar pendukung</strong><small>Gambar ini menjadi bagian isi tulisan, bukan cover.</small></div><label class="pl-blog-support-picker" for="pl-blog-support-input">＋ Tambah gambar pendukung<input id="pl-blog-support-input" type="file" accept="image/*" multiple></label><div class="pl-blog-support-grid" id="pl-blog-support-grid">' + images + '</div></section>' +
     '<div class="pl-blog-editor-note">Draf disimpan di perangkat ini. Terbitan pada tahap uji belum tampil di feed publik atau pencarian PLUITS.</div>' +
@@ -175,7 +179,7 @@ async function persistEditor(status) {
   const coverInput = document.querySelector('#pl-blog-cover-input');
   const supportInput = document.querySelector('#pl-blog-support-input');
   const old = editingId ? (await getAllItems()).find(item => item.id === editingId) : null;
-  const cover = readFormFile(coverInput) || old?.cover || null;
+  const cover = readFormFile(coverInput) || selectedCoverFile || old?.cover || null;
   const supportingImages = [...(old?.supportingImages || [])];
   if (pendingSupportingFiles.length) supportingImages.push(...pendingSupportingFiles);
   if (!title) return notify('Judul tulisan wajib diisi.', 'error');
@@ -212,7 +216,7 @@ function bind() {
     const form = document.querySelector('#pl-blog-editor-form');
     const data = new FormData(form);
     const old = editingId ? (await getAllItems()).find(item => item.id === editingId) : null;
-    const cover = readFormFile(document.querySelector('#pl-blog-cover-input')) || old?.cover || null;
+    const cover = readFormFile(document.querySelector('#pl-blog-cover-input')) || selectedCoverFile || old?.cover || null;
     const supportingImages = [...(old?.supportingImages || []), ...pendingSupportingFiles];
     if (!String(data.get('title') || '').trim() || !String(data.get('description') || '').trim() || !String(data.get('body') || '').trim() || !cover) return notify('Lengkapi judul, deskripsi, gambar utama, dan isi sebelum pratinjau.', 'error');
     if (wordCount(String(data.get('description') || '')) > 85) return notify('Deskripsi maksimal 85 kata.', 'error');
@@ -237,8 +241,9 @@ function bind() {
     if (!file) return;
     if (!file.type.startsWith('image/')) return notify('Pilih file gambar.', 'error');
     if (coverObjectUrl) URL.revokeObjectURL(coverObjectUrl);
+    selectedCoverFile = file;
     coverObjectUrl = URL.createObjectURL(file);
-    const picker = document.querySelector('.pl-blog-cover-picker');
+    const picker = document.querySelector('#pl-blog-cover-preview-wrap');
     if (picker) {
       let preview = picker.querySelector('#pl-blog-cover-preview');
       if (!preview) {
@@ -251,6 +256,53 @@ function bind() {
       picker.querySelector('#pl-blog-cover-placeholder')?.remove();
       picker.querySelector('b')?.remove();
       picker.querySelector('small')?.remove();
+    }
+  });
+  document.querySelector('[data-open-gallery]')?.addEventListener('click', async () => {
+    const existing = document.querySelector('#pl-blog-gallery-modal');
+    if (existing) existing.remove();
+    const modal = document.createElement('div');
+    modal.id = 'pl-blog-gallery-modal';
+    modal.className = 'pl-blog-gallery-modal';
+    modal.innerHTML = '<section class="pl-blog-gallery-panel"><header><div><strong>Galeri PLUITS</strong><small>Pilih foto dari postingan milik akunmu</small></div><button type="button" data-close-gallery aria-label="Tutup">×</button></header><div class="pl-blog-gallery-grid" id="pl-blog-gallery-grid"><p>Memuat foto…</p></div></section>';
+    document.body.append(modal);
+    modal.querySelector('[data-close-gallery]').addEventListener('click',()=>modal.remove());
+    modal.addEventListener('click',event=>{if(event.target===modal)modal.remove();});
+    try {
+      const [posts, media] = await Promise.all([
+        supabase.from('user_posts').select('id,media_path,media_type,created_at').eq('user_id',activeUser.id).not('media_path','is',null).order('created_at',{ascending:false}).limit(100),
+        supabase.from('post_media').select('id,post_id,media_path,media_type,created_at').eq('user_id',activeUser.id).order('created_at',{ascending:false}).limit(150)
+      ]);
+      if(posts.error) throw posts.error;
+      if(media.error) throw media.error;
+      const candidates = [
+        ...(posts.data||[]).filter(row=>!row.media_type || row.media_type==='image').map(row=>({path:row.media_path,created_at:row.created_at})),
+        ...(media.data||[]).filter(row=>!row.media_type || row.media_type==='image').map(row=>({path:row.media_path,created_at:row.created_at}))
+      ];
+      const unique = [...new Map(candidates.filter(row=>row.path).map(row=>[row.path,row])).values()];
+      const urls = await createSignedUrlMap(supabase.storage,'pluits-user-media',unique.map(row=>row.path),1800);
+      galleryItems = unique.filter(row=>urls.has(row.path)).map(row=>({...row,url:urls.get(row.path)}));
+      const grid = modal.querySelector('#pl-blog-gallery-grid');
+      grid.innerHTML = galleryItems.length ? galleryItems.map((row,index)=>'<button type="button" class="pl-blog-gallery-item" data-gallery-index="'+index+'"><img src="'+row.url+'" alt="Foto dari postingan saya" loading="lazy"><span>Pilih foto</span></button>').join('') : '<p class="pl-blog-gallery-empty">Belum ada foto dari postingan akun ini. Kamu bisa memilih gambar dari Galeri HP.</p>';
+      grid.querySelectorAll('[data-gallery-index]').forEach(button=>button.addEventListener('click',async()=>{
+        const chosen=galleryItems[Number(button.dataset.galleryIndex)];
+        try{
+          const response=await fetch(chosen.url);
+          if(!response.ok)throw new Error('Foto tidak dapat dibuka.');
+          const blob=await response.blob();
+          selectedCoverFile=new File([blob],'pluits-gallery-'+Date.now()+'.'+((blob.type.split('/')[1]||'jpg').replace('jpeg','jpg')),{type:blob.type||'image/jpeg'});
+          if(coverObjectUrl)URL.revokeObjectURL(coverObjectUrl);
+          coverObjectUrl=URL.createObjectURL(selectedCoverFile);
+          const wrap=document.querySelector('#pl-blog-cover-preview-wrap');
+          wrap.innerHTML='<img id="pl-blog-cover-preview" src="'+coverObjectUrl+'" alt="Pratinjau cover">';
+          document.querySelector('#pl-blog-cover-input').value='';
+          modal.remove();
+          notify('Foto dari Galeri PLUITS dipilih untuk cover blog.');
+        }catch(error){notify(error.message||'Foto gagal dipilih.','error');}
+      }));
+    } catch(error) {
+      modal.querySelector('#pl-blog-gallery-grid').innerHTML='<p class="pl-blog-gallery-empty">Galeri PLUITS belum dapat dimuat. Kamu masih bisa memilih gambar dari Galeri HP.</p>';
+      console.error('PLUITS media gallery:',error);
     }
   });
   document.querySelector('#pl-blog-support-input')?.addEventListener('change', event => {
