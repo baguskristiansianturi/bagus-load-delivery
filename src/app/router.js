@@ -10,7 +10,7 @@ export async function route(homeFn){
   const s=path.split('/').filter(Boolean),r=s[0],v=s[1],p=new URLSearchParams(q);
   let h;
 
-  if(!r||['home','feed','beranda'].includes(r)){
+  if(!r||['home','feed','beranda','guest'].includes(r)){
    const renderHome=homeFn||(await import('../pages/home/index.js')).home;
    h=renderHome();
   }
