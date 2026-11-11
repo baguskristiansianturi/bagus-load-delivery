@@ -16,6 +16,7 @@ import {listPrivateDrafts,getPrivateDraft,savePrivateDraft,deletePrivateDraft} f
 import {getMediaMime,getMediaExtension,validateMediaFile,getVideoDuration} from '../../features/media/media-types.js';
 import {createMediaUploader} from '../../features/media/storage-upload.js';
 import {createSignedUrlMap} from '../../services/storage/signed-urls.js';
+import {homeNearbySection,bindHomeNearby} from '../directory/index.js';
 
 const SUPABASE_URL='https://ytndswhqxayqpftszwfh.supabase.co';
 const SUPABASE_KEY='sb_publishable_kOUbKBYg88nXgz8FQRSnvA_k0hvKY65';
@@ -392,7 +393,7 @@ const {data:follows,error:followError}=await supabase.from('user_follows').selec
  const filterNav="<nav class='ua-explore-filters' aria-label='Pilihan feed'>"+filters.map(([key,label])=>"<button type='button' data-explore-filter='"+key+"' class='"+(exploreFilter===key?'is-active':'')+"' "+(exploreFilter===key?"aria-current='true'":"")+">"+label+"</button>").join('')+"</nav>";
  const empty=exploreFilter==='following'?'Belum ada postingan terbaru dari akun yang Anda ikuti.':'Belum ada postingan publik untuk ditampilkan. Coba kembali nanti atau bagikan cerita pertama Anda.';
  const action=exploreFilter==='following'?"<a href='#/search'>Temukan akun untuk diikuti</a>":"<a href='#/account/compose'>Bagikan foto atau video</a>";
- return "<div class='ua-social-home'>"+discoverySection+trendSection+filterNav+storySection+"<section class='ua-feed'>"+(sorted.length?sorted.map(post=>postCard(post)).join(''):"<div class='ua-feed-empty'><strong>"+empty+"</strong>"+action+"</div>")+"</section>"+interestSection+"</div>";
+ return "<div class='ua-social-home'>"+discoverySection+trendSection+homeNearbySection()+filterNav+storySection+"<section class='ua-feed'>"+(sorted.length?sorted.map(post=>postCard(post)).join(''):"<div class='ua-feed-empty'><strong>"+empty+"</strong>"+action+"</div>")+"</section>"+interestSection+"</div>";
 }
 async function reelsPage(){
  const {data:vm,error:me}=await supabase.from('post_media').select('post_id,duration_ms').eq('media_type','video').lte('duration_ms',60000).order('created_at',{ascending:false}).limit(60);if(me)throw me;
@@ -695,14 +696,16 @@ function normalizeFeedMediaFrames(root=document){
 function bindHomeDiscoveryLocation(){
  const label=document.querySelector('#ua-home-location-label'),status=document.querySelector('#ua-home-location-status');
  if(!label||!status)return;
- if(window.__pluitsHomeLocation){status.textContent='Lokasi perangkat aktif';return;}
- if(!navigator.geolocation){status.textContent='Wilayah rekomendasi: Bali';return;}
+ const loadNearby=location=>bindHomeNearby({location:location||null,personalize:true});
+ if(window.__pluitsHomeLocation){status.textContent='Lokasi perangkat aktif';loadNearby(window.__pluitsHomeLocation);return;}
+ if(!navigator.geolocation){status.textContent='Aktifkan lokasi untuk rekomendasi terdekat';loadNearby(null);return;}
  status.textContent='Meminta izin lokasi perangkat…';
  navigator.geolocation.getCurrentPosition(position=>{
-  const {latitude,longitude}=position.coords;
-  window.__pluitsHomeLocation={latitude,longitude,accuracy:position.coords.accuracy,updatedAt:Date.now()};
-  label.textContent='Sekitar Anda · Bali';status.textContent='Disesuaikan dengan lokasi perangkat';
- },error=>{status.textContent=error.code===1?'Lokasi belum diizinkan · rekomendasi Bali tetap ditampilkan':'Lokasi belum terdeteksi · rekomendasi Bali tetap ditampilkan';},{enableHighAccuracy:false,timeout:10000,maximumAge:300000});
+  const {latitude,longitude,accuracy}=position.coords,location={latitude,longitude,accuracy,updatedAt:Date.now()};
+  window.__pluitsHomeLocation=location;label.textContent='Lokasi Anda';status.textContent='GPS aktif · radius awal 5 km';loadNearby(location);
+ },error=>{
+  status.textContent=error.code===1?'Izin lokasi belum diberikan · aktifkan untuk melihat jarak akurat':'Lokasi belum terdeteksi · aktifkan lokasi untuk rekomendasi terdekat';loadNearby(null);
+ },{enableHighAccuracy:true,timeout:15000,maximumAge:120000});
 }
  async function mountAccount(section='profile',parameter=''){
  if(section!=='activity'&&activityNotificationChannel){supabase.removeChannel(activityNotificationChannel);activityNotificationChannel=null;}
