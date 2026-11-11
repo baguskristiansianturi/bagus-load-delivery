@@ -282,3 +282,8 @@ assert.equal(getRoute('inbox', false), ROUTES.login, 'Anonymous Inbox must route
 assert.deepEqual(NAVIGATION_CONTEXTS.social, ['home','discover','create','inbox','profile']);
 assert.deepEqual(NAVIGATION_CONTEXTS.inbox, ['home','discover','create','activity','profile']);
 assert.throws(() => getRoute('unknown'), /Unknown PLUITS route/);
+
+const accountSource = read('src/pages/account/index.js');
+assert.ok(accountSource.includes(".eq('moderation_status','published').order('created_at',{ascending:false}).limit(30)"), 'Home feed must bound initial posts for mobile performance.');
+assert.ok(accountSource.includes(".eq('visibility','public').order('created_at',{ascending:false}).limit(12)"), 'Home stories must bound initial items for mobile performance.');
+assert.ok(accountSource.includes(".lte('duration_ms',60000).order('created_at',{ascending:false}).limit(60)"), 'Reels discovery must bound initial media lookup.');
