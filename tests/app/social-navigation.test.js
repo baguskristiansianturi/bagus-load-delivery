@@ -98,7 +98,7 @@ test('signed-in home leads with Bali experiences, search, wishlist and the perso
  const account=await readFile(new URL('../../src/pages/account/index.js',import.meta.url),'utf8');
  const navigation=await readFile(new URL('../../src/components/social/navigation.js',import.meta.url),'utf8');
  const css=await readFile(new URL('../../src/pages/account/user-account.css',import.meta.url),'utf8');
- assert.ok(account.includes('>Trending</h2>')&&account.includes('ua-topten-card'),'Home must lead discovery with image-led Trending cards.');
+ assert.ok(account.includes('Top 10 Trending')&&account.includes('ua-topten-grid')&&((account.match(/class="ua-topten-card ua-topten-card-/g)||[]).length===10),'Explore must show ten individual trending items in a varied grid, not category tiles or a carousel.');
  assert.ok(!account.includes('"+discoverySection+'),'Home feed must not reference the removed category-card section.');
  assert.ok(!account.includes('BERDASARKAN AKTIVITAS NYATA')&&!account.includes('aktivitas pengguna cukup terkumpul'),'Internal ranking explanations must never appear in visitor-facing copy.');
  assert.ok(navigation.includes('ua-home-searchbar')&&navigation.includes('ua-home-wishlist')&&navigation.includes('ua-home-search-prompt'),'Home header must show animated search and saved items.');
