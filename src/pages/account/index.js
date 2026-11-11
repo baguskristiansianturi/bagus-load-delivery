@@ -381,7 +381,7 @@ const {data:follows,error:followError}=await supabase.from('user_follows').selec
  const inferredTags=new Map();
  const activityPosts=hydrated.filter(post=>followingIds.includes(post.user_id));
  (activityPosts.length?activityPosts:hydrated).forEach(post=>(post.tags||[]).forEach(raw=>{
-  const slug=String(raw||'').toLowerCase().replace(/^#/,'').trim().replace(/\\s+/g,'-');
+  const slug=String(raw||'').toLowerCase().replace(/^#/,'').trim().replace(/\s+/g,'-');
   if(!slug||slug.length>36)return;
   inferredTags.set(slug,(inferredTags.get(slug)||0)+1);
  }));
@@ -389,7 +389,7 @@ const {data:follows,error:followError}=await supabase.from('user_follows').selec
  const recommendationTopics=interests.length?interests:inferredTopics;
  const topicSections=recommendationTopics.map(topic=>{
   const slug=String(topic.slug||'').toLowerCase();
-  const matching=hydrated.filter(post=>(post.tags||[]).some(tag=>String(tag).toLowerCase().replace(/^#/,'').trim().replace(/\\s+/g,'-')===slug)).slice(0,8);
+  const matching=hydrated.filter(post=>(post.tags||[]).some(tag=>String(tag).toLowerCase().replace(/^#/,'').trim().replace(/\s+/g,'-')===slug)).slice(0,8);
   if(!matching.length)return '';
   const topicId='ua-topic-'+slug.replace(/[^a-z0-9-]/g,'-');
   return "<section class='ua-home-topic' id='"+esc(topicId)+"'><div class='ua-home-section-heading'><div><h3>"+esc(topic.name)+"</h3></div><a href='#/places?category="+encodeURIComponent(slug)+"'>Lihat semua ↗</a></div><div class='ua-home-topic-carousel'>"+matching.map(postCard).join('')+"</div></section>";
