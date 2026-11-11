@@ -1163,3 +1163,17 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - **Batas verifikasi:** build/test tidak membuktikan email benar-benar terkirim atau setiap halaman berhasil dibuka di perangkat founder. Bila Supabase menolak redirect, detail error sekarang akan ditampilkan; URL aplikasi yang harus diizinkan adalah `https://baguskristiansianturi.github.io/pluits/`.
 - **UAT berikutnya:** uji `#/account/register` dari sesi login aktif dan dari mode guest, lalu uji beberapa route utama (Beranda, Jelajah, GeoDirectory, Marketplace, Trip, Pesan, Profil). Catat teks error yang muncul bila ada route masih gagal.
 
+
+
+## CP-072 — Page/component ownership boundaries and isolated workspace sidebars (12 November 2026)
+
+- **Founder direction:** setiap halaman navigasi harus memiliki struktur modular; layout, sidebar, komponen, style, dan perilaku harus mempunyai pemilik yang jelas agar perubahan satu halaman tidak merusak halaman lain.
+- **Architecture contract:** menambahkan audit route-to-page/component ownership, target folder convention, change-scope contract, dan urutan migrasi bertahap di `docs/pluits/PAGE-COMPONENT-OWNERSHIP-AUDIT-2026-11-12.md`. Memperbarui `FRONTEND-MODULE-MAP.md`, `FRONTEND-MODULE-CONTRACTS.md`, route registry, dan `AGENTS.md`.
+- **Frontend IMPLEMENTED:** Seller Center / Brand workspace sidebar dan mobile tabs diekstrak ke `src/features/seller/seller-navigation.js`; Inbox conversation sidebar diekstrak ke `src/features/inbox/inbox-sidebar.js`. Page controllers tetap memiliki data fetching, state, dan event binding. Social navigation tetap komponen bersama yang terpisah.
+- **Top 10 regression compatibility:** mempertahankan class hook `ua-topten-grid` bersama track class; pengujian diperbarui agar memverifikasi pointer interaction, jeda resume 3,6 detik, dan autoplay berbasis timeout.
+- **Automated verification:** production surface/backend contract tests PASS; Node tests PASS; Vite production build PASS; build output verification PASS.
+- **Commit terakhir:** `5084c10e070f8ad88c161c64e42447bc0042c597`.
+- **GitHub Actions:** run `43120973094`, workflow #1497 — SUCCESS; artifact upload dan GitHub Pages deployment step SUCCESS.
+- **Status:** OWNERSHIP RULES DOCUMENTED / TWO SIDEBAR COMPONENTS EXTRACTED / AUTOMATED TESTED / DEPLOYED.
+- **Belum selesai:** Account, Marketplace, Trip, Seller Center dan Inbox controllers masih memuat bagian komposisi/perilaku yang perlu dipecah bertahap. Audit CSS per komponen, seluruh halaman/section, visual regression dan Android real-device UAT belum selesai. Jangan menyebut seluruh aplikasi sepenuhnya modular atau founder-accepted.
+- **Urutan berikutnya:** lanjutkan pemisahan Inbox (header, online contacts, conversation list, chat panel, composer), Seller Center (store switcher, dashboard widgets, product/category/inventory/delivery/settings), lalu Account, Marketplace, Trip, Directory, Blog, Help, Misc dan Admin sesuai ownership audit. Kerjakan satu pemilik modul per perubahan dan uji sibling routes.
