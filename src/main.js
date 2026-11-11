@@ -29,6 +29,7 @@ presenceDb.auth.onAuthStateChange((_event, session) => {
 import './style.css';
 import './styles/brand.css';
 import './styles/page-transitions.css';
+import './styles/social-navigation.css';
 import '../styles/home-layout.css';
 import { route } from './app/router.js';
 import { home, bindHome } from './pages/home/index.js';
