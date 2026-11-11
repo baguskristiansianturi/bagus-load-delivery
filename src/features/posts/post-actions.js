@@ -1,9 +1,9 @@
 const paths = {
-  like: '<path d="M20.4 8.8c0 5-8.4 10-8.4 10s-8.4-5-8.4-10A4.7 4.7 0 0 1 8.3 4c1.5 0 2.9.8 3.7 2.1A4.4 4.4 0 0 1 15.7 4a4.7 4.7 0 0 1 4.7 4.8Z"/>',
-  comment: '<path d="M20 11.3a7.3 7.3 0 0 1-7.3 7.3H5l1-3.2a7.3 7.3 0 1 1 14-4.1Z"/>',
-  share: '<path d="m21 3-7.2 18-3.5-7.3L3 10.2 21 3Z"/><path d="m10.3 13.7 4.8-4.8"/>',
+  like: '<path d="M20.8 8.8c0 5.2-8.8 10.1-8.8 10.1S3.2 14 3.2 8.8A4.8 4.8 0 0 1 8 4a5.1 5.1 0 0 1 4 2.1A5.1 5.1 0 0 1 16 4a4.8 4.8 0 0 1 4.8 4.8Z"/>',
+  comment: '<path d="M20.2 11.4a7.7 7.7 0 0 1-7.7 7.7 8 8 0 0 1-3.2-.7L4 20l1.6-4.3a7.7 7.7 0 1 1 14.6-4.3Z"/>',
+  share: '<path d="M22 2 15 22l-4-8-8-4 19-8Z"/><path d="m22 2-11 12"/>',
   save: '<path d="M6 4.8A1.8 1.8 0 0 1 7.8 3h8.4A1.8 1.8 0 0 1 18 4.8V21l-6-4-6 4V4.8Z"/>'
-};
+};;
 function icon(name) {
   return '<svg class="pl-post-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' + paths[name] + '</svg>';
 }
