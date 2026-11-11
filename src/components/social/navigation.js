@@ -54,13 +54,14 @@ export function renderSocialMobileNav({ active = 'home', profileView = false, us
     { key: 'home', href: publicHome ? ROUTES.publicHome : getRoute('home', Boolean(user)), label: 'Beranda', icon: 'home' },
     { key: 'discover', href: ROUTES.discover, label: 'Jelajah', icon: 'compass' },
     { key: 'create', href: getRoute('create', Boolean(user)), label: 'Buat', icon: 'plus' },
-    isInbox ? { key: 'activity', href: getRoute('activity', Boolean(user)), label: 'Notifikasi', icon: 'bell' } : { key: 'messages', href: publicHome ? '#/help' : getRoute('inbox', Boolean(user)), label: publicHome ? 'Bantuan' : 'Pesan', icon: 'message' },
-    { key: 'profile', href: publicHome ? ROUTES.login : profileHref, label: publicHome ? 'Masuk' : 'Profil', icon: 'user', avatar: publicHome ? '' : userAvatar }
+    isInbox ? { key: 'activity', href: getRoute('activity', Boolean(user)), label: 'Notifikasi', icon: 'bell' } : { key: 'messages', href: publicHome ? '#/help' : getRoute('inbox', Boolean(user)), label: 'Pesan', icon: 'message' },
+    { key: 'profile', href: publicHome ? ROUTES.login : profileHref, label: 'Profil', icon: 'user', avatar: publicHome ? '' : userAvatar }
   ];
   return `<nav class="${navClass}" aria-label="Navigasi utama Pluits">${items.map(item => {
     const iconMarkup = item.avatar || socialIcon(item.icon, { size: 22 });
+    const itemLabel = publicHome && item.key === 'messages' ? 'Bantuan' : publicHome && item.key === 'profile' ? 'Masuk' : item.label;
     const badge = item.key === 'activity' ? notificationCount : item.key === 'messages' ? messageCount : 0;
     const isActive = activeKey === item.key;
-    return `<a class="${[item.key === 'create' ? 'pl-home-create' : isActive ? 'active' : '',item.key === 'activity' ? 'pl-mobile-activity' : '',item.key === 'messages' ? 'pl-mobile-inbox' : '',item.key === 'profile' ? 'pl-mobile-profile' : ''].filter(Boolean).join(' ')}" href="${item.href}" aria-label="${item.label}" ${isActive?'aria-current="page"':''}>${item.key === 'create' ? '<span class="pl-create-orb">'+socialIcon(item.icon,{size:25})+'</span>' : iconMarkup}<small>${item.label}</small>${badge ? '<i class="pl-nav-unread">'+(badge>99?'99+':badge)+'</i>' : ''}</a>`;
+    return `<a class="${[item.key === 'create' ? 'pl-home-create' : isActive ? 'active' : '',item.key === 'activity' ? 'pl-mobile-activity' : '',item.key === 'messages' ? 'pl-mobile-inbox' : '',item.key === 'profile' ? 'pl-mobile-profile' : ''].filter(Boolean).join(' ')}" href="${item.href}" aria-label="${itemLabel}" ${isActive?'aria-current="page"':''}>${item.key === 'create' ? '<span class="pl-create-orb">'+socialIcon(item.icon,{size:25})+'</span>' : iconMarkup}<small>${itemLabel}</small>${badge ? '<i class="pl-nav-unread">'+(badge>99?'99+':badge)+'</i>' : ''}</a>`;
   }).join('')}</nav>`;
 }
