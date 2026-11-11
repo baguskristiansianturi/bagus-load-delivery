@@ -34,12 +34,12 @@ export function home(){
 export async function bindHome(){
  const guestMode=(location.hash||'').startsWith('#/guest');
  const target=document.querySelector('#pl-public-feed');if(!target)return;
- bindHomeNearby({personalize:!guestMode});
  try{
   const {data:{user:actualViewer}}=await db.auth.getUser();
   const viewer=guestMode?null:actualViewer;
   // Authenticated users must use the canonical interactive feed, not the guest-only duplicate.
   if(viewer){history.replaceState(null,'',location.pathname+location.search+'#/account/explore');const {mountUserAccount}=await import('../account/index.js');await mountUserAccount('explore');return;}
+  bindHomeNearby({personalize:false});
   const headerActions=document.querySelector('.pl-social-header-actions');
   if(viewer&&!guestMode&&headerActions){
    const {data:me}=await db.from('user_profiles').select('display_name,username,avatar_path').eq('id',viewer.id).maybeSingle();
