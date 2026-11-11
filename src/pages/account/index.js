@@ -2,6 +2,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import {socialIcon} from '../../components/common/social-icons.js';
 import {renderBrandLogo} from '../../components/common/brand.js';
 import {renderPostActions} from '../../features/posts/post-actions.js';
+import {renderTopTenSection} from '../../features/discovery/top-ten-cards.js';
 import '../../features/posts/post-actions.css';
 import {renderSocialHeader,renderSocialMobileNav} from '../../components/social/navigation.js';
 import {updateSEO} from '../seo.js';
@@ -347,21 +348,7 @@ async function feedPage(){
  const interestQuery=await supabase.from('user_interest_preferences').select('preference,directory_categories(name,slug)').eq('user_id',user.id);
  if(interestQuery.error)throw interestQuery.error;
  const interests=(interestQuery.data||[]).map(x=>x.directory_categories).filter(Boolean);
- const trendSection=`<section class="ua-home-trends ua-home-topten" aria-label="Top 10 Trending">
-<div class="ua-home-section-heading"><div><span class="ua-eyebrow">EXPLORE PLUITS</span><h2>Top 10 Trending</h2></div><a href="#/discover">Lihat semua <b>↗</b></a></div>
-<div class="ua-topten-grid" id="ua-home-topten-grid">
-<a class="ua-topten-card ua-topten-card-1" href="#/places?category=restaurant"><img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=1000&q=85" alt="Hidangan kuliner khas" fetchpriority="high"><span class="ua-topten-copy"><strong>Babi Guling Bu Coco</strong><em>⌖ Kuta</em><small>Kuliner</small></span></a>
-<a class="ua-topten-card ua-topten-card-2" href="#/places?category=restaurant"><img src="https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?auto=format&fit=crop&w=1000&q=85" alt="Hidangan beef steak" loading="lazy"><span class="ua-topten-copy"><strong>Beef Slab</strong><em>⌖ Seminyak</em><small>Kuliner</small></span></a>
-<a class="ua-topten-card ua-topten-card-3" href="#/places?category=beach"><img src="https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?auto=format&fit=crop&w=850&q=85" alt="Suasana pantai" loading="lazy"><span class="ua-topten-copy"><strong>Atlas Beach Club</strong><em>⌖ Canggu</em><small>Destinasi</small></span></a>
-<a class="ua-topten-card ua-topten-card-4" href="#/trip"><img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=850&q=85" alt="Aktivitas menyelam di laut" loading="lazy"><span class="ua-topten-copy"><strong>Diving Nusa Penida</strong><em>⌖ Nusa Penida</em><small>Aktivitas</small></span></a>
-<a class="ua-topten-card ua-topten-card-5" href="#/places"><img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=850&q=85" alt="Pemandangan Ubud dan Bali" loading="lazy"><span class="ua-topten-copy"><strong>Jelajah Ubud</strong><em>⌖ Ubud</em><small>Destinasi</small></span></a>
-<a class="ua-topten-card ua-topten-card-6" href="#/places"><img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=850&q=85" alt="Hiburan dan musik" loading="lazy"><span class="ua-topten-copy"><strong>Tari Kecak Uluwatu</strong><em>⌖ Uluwatu</em><small>Hiburan</small></span></a>
-<a class="ua-topten-card ua-topten-card-7" href="#/trip"><img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=850&q=85" alt="Laut biru dan pantai" loading="lazy"><span class="ua-topten-copy"><strong>Lovina Dolphin Tour</strong><em>⌖ Lovina</em><small>Aktivitas</small></span></a>
-<a class="ua-topten-card ua-topten-card-8" href="#/marketplace"><img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=850&q=85" alt="Produk jam tangan" loading="lazy"><span class="ua-topten-copy"><strong>Casio Vintage Watch</strong><em>⌖ Denpasar</em><small>Produk</small></span></a>
-<a class="ua-topten-card ua-topten-card-9" href="#/places"><img src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=850&q=85" alt="Layanan dan komunitas" loading="lazy"><span class="ua-topten-copy"><strong>Private Bali Driver</strong><em>⌖ Bali</em><small>Layanan</small></span></a>
-<a class="ua-topten-card ua-topten-card-10" href="#/trip"><img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=850&q=85" alt="Perjalanan alam" loading="lazy"><span class="ua-topten-copy"><strong>Air Terjun Sekumpul</strong><em>⌖ Buleleng</em><small>Pengalaman</small></span></a>
-</div>
-</section>`;
+ const trendSection=renderTopTenSection();
 const {data:follows,error:followError}=await supabase.from('user_follows').select('following_id').eq('follower_id',user.id).eq('status','accepted');
  if(followError)throw followError;
  const followingIds=[...new Set((follows||[]).map(x=>x.following_id).filter(Boolean))];
@@ -763,10 +750,10 @@ function bindHomeDiscoveryLocation(){
  if(!prompt)return;
  const loadNearby=location=>bindHomeNearby({location:location||null,personalize:true});
  if(window.__pluitsHomeLocation){
-  startHomeSearchPrompt('Welcome to '+(window.__pluitsHomeCity||'Bali'));loadNearby(window.__pluitsHomeLocation);return;
+  startHomeSearchPrompt('Welcome to '+(window.__pluitsHomeCity||'area Anda'));loadNearby(window.__pluitsHomeLocation);return;
  }
  startHomeSearchPrompt('Mendeteksi lokasi Anda…');
- if(!navigator.geolocation){prompt.textContent='Aktifkan lokasi · Bali, Indonesia';loadNearby(null);return;}
+ if(!navigator.geolocation){prompt.textContent='Izinkan lokasi perangkat untuk rekomendasi sekitar Anda';loadNearby(null);return;}
  navigator.geolocation.getCurrentPosition(position=>{
   const {latitude,longitude,accuracy}=position.coords,location={latitude,longitude,accuracy,updatedAt:Date.now()};
   window.__pluitsHomeLocation=location;fetch('https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat='+encodeURIComponent(latitude)+'&lon='+encodeURIComponent(longitude),{headers:{'Accept-Language':'id'}}).then(response=>response.ok?response.json():null).then(place=>{const address=place?.address||{},city=address.city||address.town||address.village||address.county||address.state||'area Anda';window.__pluitsHomeCity=city;startHomeSearchPrompt('Welcome to '+city);refreshHomeLocalProducts(city);}).catch(()=>startHomeSearchPrompt('Welcome to area Anda'));loadNearby(location);
