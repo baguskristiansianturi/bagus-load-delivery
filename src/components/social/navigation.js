@@ -12,7 +12,7 @@ export function renderSocialHeader({ active = 'explore', profileView = false, sh
           <a href="${ROUTES.places}">Tempat</a>
           <a href="${ROUTES.marketplace}">Marketplace</a>
           <a href="${ROUTES.trip}">Trip</a>
-          <a href="${ROUTES.reels}">Reels</a>
+          <a href="${ROUTES.discover}">Jelajah</a>
         </nav>
         <div class="pl-social-header-actions">
           <a href="#/account/login">Masuk</a>
