@@ -718,3 +718,142 @@ Arah ini harus tetap berangkat dari masalah manusia, termasuk perjalanan Ibu Nia
 
 Tidak ada persetujuan untuk implementasi sekarang, perubahan schema, pengaktifan iklan, pembuatan algoritma baru, atau perubahan release gate. Ide ini disimpan sebagai bahan riset dan diskusi lanjutan.
 
+## IDEA-014 — PLUITS Social Workspace: persistent social presence inside a professional desktop
+
+- **Tanggal ditemukan:** 11 November 2026.
+- **Sumber:** sharing founder tentang pengalaman personal sebagai blogger/penulis, bekerja dan mengelola usaha melalui banyak aplikasi/browser, serta imajinasi satu ruang desktop PLUITS yang menyatukan pekerjaan aktif dan kehidupan sosial.
+- **Kategori:** Product Vision | Desktop UX | Social Workspace | Creator Tools | Articles | Store Management | Services | Messaging | Notifications | Presence.
+- **Jenis:** FOUNDER INSIGHT | OBSERVATION | PROPOSAL.
+- **Status:** PROPOSED / NEEDS VALIDATION — belum menjadi keputusan implementasi atau perubahan release scope.
+- **Keterkaitan:** IDEA-013 (Social Platform Horizon 2035), D-001, D-002, D-004, D-006. Tidak mengubah prioritas pengerjaan Social P0/Inbox.
+
+### A. Masalah dan motivasi founder
+
+Founder membayangkan pengguna profesional yang duduk di kafe dengan laptop: mengerjakan pekerjaan atau proyek, mengelola toko dan layanan, memantau aktivitas sosial, menulis artikel/blog, membuat atau menyiapkan media visual, serta berkomunikasi dengan relasi—tanpa harus membuka banyak aplikasi dan browser terpisah.
+
+Pengalaman personal founder sebagai blogger/penulis menjadi akar visi: dahulu orang menulis dan saling membaca/berkomentar karena senang berbagi cerita, bukan semata mengejar SEO, desain, views, atau format video. PLUITS harus memberi ruang bagi motivasi intrinsik tersebut, sekaligus menyediakan alat yang membuat karya dan aktivitas dapat terhubung ke kebutuhan nyata.
+
+Founder ingin membangun produk yang terlebih dahulu benar-benar berguna bagi dirinya. Asumsi bahwa ada banyak orang lain di dunia dengan kebutuhan serupa harus diperlakukan sebagai hipotesis yang perlu diuji, bukan bukti ukuran pasar.
+
+### B. Visi: Social Workspace
+
+**PLUITS Social Workspace** adalah konsep ruang kerja digital yang menjaga kehidupan sosial tetap hadir ketika pengguna sedang produktif. Bukan sekadar dashboard admin, dan bukan sekadar feed media sosial.
+
+Pengguna dapat:
+- Menulis, menyimpan draft, mengedit, dan menerbitkan artikel.
+- Mengelola toko, katalog, produk, pesanan, dan pelanggan sesuai hak akses.
+- Mengelola layanan atau proyek.
+- Menyiapkan media/gambar dan materi pendukung.
+- Memantau pesan, notifikasi, teman/relasi, komunitas, serta aktivitas yang relevan.
+- Mengambil jeda dari pekerjaan untuk membaca, berinteraksi, dan menjelajahi konten.
+- Melanjutkan ke transaksi atau tindakan nyata di PLUITS bila memang dibutuhkan.
+
+Tujuan utamanya mengurangi perpindahan konteks dan duplikasi pekerjaan, bukan memaksa semua fitur masuk ke satu layar yang padat.
+
+### C. Konsep desktop tiga wilayah
+
+**1. Panel kiri — Workspace Control**
+- Identitas/brand PLUITS dan pemilih konteks/workspace.
+- Modul atau proyek yang sedang aktif.
+- Navigasi kontekstual untuk modul aktif: misalnya Article Studio saat menulis, Store Manager saat mengelola toko, atau Services Manager saat mengelola layanan.
+- Kontrol global yang konsisten: pesan, notifikasi, aktivitas, pengaturan, dan akses modul.
+- Panel dapat diperkecil, diperluas, atau disembunyikan sesuai kebutuhan.
+- Kontrol modul aktif dapat mengambil area atas panel; kontrol global dan modul lain tetap tersedia di bawah/kelompok navigasi yang jelas.
+
+**2. Area tengah — Active Workspace**
+- Area terbesar untuk pekerjaan utama saat itu.
+- Contoh: editor artikel, manajemen produk, pesanan, layanan, proyek, media library, desain, atau analitik.
+- Mendukung tab/dokumen kerja dan perpindahan konteks yang cepat bila sesuai.
+- Dapat diperluas menjadi fokus penuh; jangan memaksa semua aktivitas menggunakan split pane.
+- Perlu autosave/draft dan pemulihan kerja untuk aktivitas yang mendukungnya.
+
+**3. Panel kanan — Social & Live Context**
+- Teman/relasi yang sedang aktif sesuai izin privasi.
+- Pesan dan aktivitas terbaru.
+- Aktivitas toko/pelanggan yang relevan bagi pengguna yang berwenang.
+- Komunitas dan rekomendasi konten.
+- Notifikasi kontekstual dan social context.
+- Dapat ditutup atau diubah ukurannya ketika pengguna membutuhkan ruang/fokus.
+
+Tiga wilayah adalah pola desktop profesional yang dapat dikonfigurasi, bukan layout wajib untuk setiap pengguna atau setiap halaman. Ukuran panel, urutan, visibilitas, dan konteks harus dapat disesuaikan. Jangan mengorbankan area kerja utama.
+
+### D. Persistent Social Presence
+
+Hipotesis utama: pengguna yang sedang bekerja di PLUITS tetap menjadi bagian dari kehidupan sosial PLUITS; ia tidak harus meninggalkan aplikasi untuk menulis atau mengelola bisnis.
+
+Pertimbangkan status presence yang bermakna dan dapat dikendalikan:
+- **Online:** terhubung/aktif baru-baru ini, dengan definisi yang transparan.
+- **Available:** bersedia menerima interaksi.
+- **Focus:** sedang berkonsentrasi; notifikasi nonpenting dapat ditunda.
+- **Away:** tidak aktif sementara.
+
+Presence tidak boleh disimpulkan sebagai kesediaan untuk membalas pesan. Pengguna harus dapat menyembunyikan status online, memilih audiens, mengatur jam fokus, dan mengendalikan notifikasi. Jangan menampilkan aktivitas rinci seperti dokumen yang sedang diedit atau pelanggan yang sedang dilihat kepada relasi tanpa izin eksplisit.
+
+### E. Desktop pro dan pengalaman pengguna awam
+
+Founder menyadari desktop workspace dapat tampak kompleks bagi pengguna awam. Karena itu, usulan produk:
+- **Simple mode / everyday mode:** feed, pesan, profil, dan aktivitas dengan navigasi sederhana.
+- **Workspace mode / pro mode:** ruang kerja tiga wilayah dan alat produktivitas yang lebih lengkap.
+- Peralihan mode mudah ditemukan; pengguna tidak harus memahami istilah teknis.
+- Fitur lanjutan muncul bertahap sesuai kebutuhan/role, bukan sekaligus.
+- Pengaturan default sederhana; pengguna berpengalaman dapat menyesuaikan panel dan workspace.
+- Workspace yang kompleks tidak boleh menjadi syarat untuk menikmati fungsi sosial dasar.
+
+Jangan membangun dua aplikasi yang berbeda. Mode adalah presentasi dan kemampuan yang sesuai konteks di atas fondasi identitas, konten, notifikasi, permission, dan data yang konsisten.
+
+### F. Mobile bukan desktop yang diperkecil
+
+Desktop adalah ruang kerja multi-panel untuk sesi produktif. Mobile harus tetap cepat, langsung, dan fokus pada satu tugas/arus utama. Pada layar kecil:
+- Prioritaskan satu tugas utama pada satu waktu.
+- Panel sosial menjadi drawer, sheet, atau navigasi ringkas bila dibutuhkan.
+- Notifikasi dan pesan mudah dijangkau tanpa mengganggu aktivitas.
+- Jangan memaksakan tiga kolom atau miniatur dashboard desktop.
+- Sinkronisasi draft, status, dan konteks kerja lintas perangkat perlu diteliti.
+
+### G. Prinsip produk dan arsitektur yang perlu diuji
+
+- Satu identitas pengguna dengan role, permission, dan konteks workspace yang jelas.
+- Modul social, editorial, commerce, services, media, messaging, dan notifications saling terhubung melalui kontrak yang stabil; tidak berarti semua domain harus digabung dalam satu tabel atau service.
+- Workspace adalah lapisan pengalaman/orchestration; bukan duplikasi database setiap modul.
+- Deep link dan kemampuan melanjutkan pekerjaan pada konteks yang tepat.
+- Autosave, draft recovery, activity history, dan sinkronisasi lintas perangkat untuk pekerjaan yang sesuai.
+- Notifikasi harus diprioritaskan dan dapat diatur: urgent, direct/social, transactional, informational, serta digest/focus.
+- Role toko/organisasi menentukan informasi pelanggan dan aktivitas bisnis apa yang boleh terlihat.
+- Kinerja, aksesibilitas keyboard, responsivitas, keamanan sesi, dan perlindungan data menjadi syarat dasar desktop.
+- Hindari real-time presence atau live activity yang menguras baterai/bandwidth atau mengungkap informasi sensitif tanpa manfaat jelas.
+
+### H. Model bisnis dan proposisi nilai
+
+Potensi nilai bukan hanya iklan atau transaksi. Workspace dapat meningkatkan retensi dan kedalaman penggunaan karena pengguna kembali untuk menyelesaikan pekerjaan, memelihara relasi, dan mengelola aktivitasnya.
+
+Segmen yang perlu diteliti:
+- Penulis/blogger dan kreator yang mengelola karya sekaligus komunitas.
+- Pemilik toko kecil/menengah yang mengelola katalog dan pelanggan.
+- Penyedia layanan dan pekerja independen.
+- Pengelola komunitas/organisasi.
+- Pengguna sosial biasa yang sesekali membutuhkan alat produktivitas.
+
+Potensi monetisasi seperti alat bisnis lanjutan, layanan profesional, atau paket workspace adalah hipotesis. Jangan mengunci paywall, subscription, biaya transaksi, atau pembagian pendapatan sebelum kebutuhan dan willingness-to-pay divalidasi. Fungsi sosial inti dan kemampuan menulis dasar tidak boleh otomatis dibuat kelas dua.
+
+### I. Validasi sebelum desain/implementasi
+
+1. Wawancarai blogger/penulis, pemilik toko, penyedia layanan, dan pengguna sosial biasa tentang perpindahan konteks aplikasi saat ini.
+2. Uji prototipe desktop tiga panel dengan beberapa pekerjaan nyata (menulis artikel, mengelola pesanan, membalas pesan).
+3. Ukur waktu penyelesaian tugas, jumlah perpindahan konteks, tingkat kesalahan, beban kognitif, dan kepuasan.
+4. Uji simple mode dibanding workspace mode dengan pengguna awam dan profesional.
+5. Validasi apakah panel kanan benar-benar membantu atau justru mengganggu fokus.
+6. Validasi status presence, privasi, dan pengaturan notifikasi melalui skenario sensitif.
+7. Uji laptop dengan resolusi dan ukuran layar berbeda; uji keyboard dan aksesibilitas.
+8. Uji sinkronisasi pekerjaan desktop ke mobile dan pemulihan draft.
+9. Validasi demand pasar dan willingness-to-pay; jangan menyimpulkan ukuran pasar dari preferensi founder saja.
+
+### J. Batas roadmap
+
+- **Pekerjaan aktif sekarang:** selesaikan halaman Pesan/Inbox dan Social First Release sesuai prioritas; IDEA-014 tidak mengalihkan fokus.
+- **Riset berikutnya:** petakan persona penulis, pemilik toko, penyedia layanan, dan kebutuhan workspace.
+- **Desain konsep:** buat prototipe desktop tiga panel dan mode sederhana; validasi sebelum menetapkan navigasi final.
+- **Arsitektur:** identifikasi kontrak antar modul, permission, presence, notification center, deep links, draft persistence, dan sinkronisasi.
+- **Implementasi:** hanya setelah keputusan produk dan scope disetujui secara terpisah.
+
+Tidak ada persetujuan untuk mengubah UI Inbox sekarang, mengubah schema/backend, menambah menu ke release aktif, atau mengubah release gate. Simpan sebagai visi dan bahan discovery jangka panjang.
+
