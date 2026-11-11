@@ -330,7 +330,7 @@ export function bindHomeNearby({personalize=true,location=null}={}) {
       const distanceLabel=distance(Number(entity.distance_m)||0),category=(entity.category_slugs||[]).slice(0,2).join(' · ');
       const typeLabel=entity.entity_type==='place'?'TEMPAT':entity.entity_type==='provider'?'JASA':entity.entity_type==='event'?'ACARA':'PLUITS';
       const locationText=distanceLabel+(location?' dari Anda':' dari pusat area');
-      return '<a class="pl-nearby-item-card" href="'+placeUrl(entity.slug)+'"><span class="pl-nearby-item-visual">'+(image?'<img src="'+esc(image)+'" alt="'+esc(itemName)+'" loading="lazy">':'<span class="pl-nearby-item-placeholder">'+typeLabel+'</span>')+'<span class="pl-nearby-item-shade"></span><span class="pl-nearby-item-overlay"><small>'+esc(category||typeLabel)+'</small><b>'+esc(itemName)+'</b><em><span aria-hidden="true">⌖</span> '+locationText+'</em></span></span></a>';
+      return '<a class="pl-nearby-item-card" href="'+placeUrl(entity.slug)+'"><span class="pl-nearby-item-visual">'+(image?'<img src="'+esc(image)+'" alt="'+esc(itemName)+'" loading="lazy">':'<span class="pl-nearby-item-placeholder">'+typeLabel+'</span>')+'<span class="pl-nearby-item-shade"></span><span class="pl-nearby-item-overlay"><small>'+esc(category||typeLabel)+'</small><b>'+esc(itemName)+'</b><em><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10.2c0 5.1-8 11-8 11s-8-5.9-8-11a8 8 0 1 1 16 0Z"></path><circle cx="12" cy="10" r="2.5"></circle></svg> '+locationText+'</em></span></span></a>';
     }).join('');
   }).catch(()=>{resultTarget.innerHTML='<div class="pl-directory-empty">Tempat terdekat belum dapat dimuat.</div>';});
 }
