@@ -932,3 +932,15 @@ Spesifikasi lengkap, user journey, dashboard, status, URL, acceptance criteria d
 - Perubahan ini adalah keputusan UX/produk. Sampai backend contract, RLS, dan negative tests tersedia, jangan mengklaim semua pengaturan visibilitas profil sudah aman atau aktif. Pengujian Android dua akun tetap menjadi gate penerimaan.
 
 **Batas status:** bagian ini menetapkan arah produk, bukan klaim bahwa deteksi AI, copyright takedown, watermark, screenshot protection, Top 10, online presence, friend-only inbox, atau penghapusan akun otomatis telah tersedia.
+
+
+### 33.13 Blog sebagai format karya dalam Social Media
+- Blog adalah format penerbitan di dalam ekosistem Social Media Pluits, bukan akun atau aplikasi terpisah. Pengguna dapat menulis cerita pendek, puisi, diary, pengalaman, dan tulisan panjang; tidak ada kewajiban jumlah kata minimum.
+- Pintu masuk pembuatan tulisan berada di tombol **Buat (+)** bersama Story, Post, Reel, dan Live. Modul Blog menyediakan tiga ruang pengelolaan: Postingan, Draft, dan Pengaturan.
+- Satu tulisan memiliki **judul**, **deskripsi/ringkasan kartu maksimal 85 kata**, **gambar utama/cover**, dan **isi tulisan**. Judul, ringkasan, dan cover menjadi metadata utama kartu di feed/katalog; ringkasan yang dipotong menampilkan kelanjutan “Baca selengkapnya”.
+- Cover yang dipilih penulis adalah gambar utama untuk thumbnail feed, katalog Blog, dan hero halaman tulisan. Gambar pendukung di dalam tulisan adalah media terpisah dan tidak menggantikan cover.
+- Editor mobile harus nyaman digunakan dari handphone: satu kolom, kontrol mudah dijangkau, draf dapat dilanjutkan, dan tidak memaksakan panjang tulisan. Artikel editorial yang lebih terstruktur dapat dikembangkan sebagai format/jenis tulisan lanjutan tanpa membuat identitas penulis atau blog kedua.
+- Ruang Blog mengikuti identitas akun PLUITS. Nama ruang dan deskripsinya dapat diatur; bukan akun baru. Pengaturan profil Blog terpisah dari metadata deskripsi tiap tulisan.
+- Pengaturan audience/privasi harus mendukung publik, pengikut, dan privat. Konten privat tidak boleh muncul di pencarian, feed publik, katalog publik, atau URL yang dapat diakses pengguna lain. Draft selalu privat.
+- Monetisasi/Premium entitlement bukan bagian dari gate desain awal; desain dan pengujian UX awal menganggap semua akun dapat mengakses modul. Aturan paket/kuota ditentukan kemudian dan tidak boleh mengubah identitas dasar penulis.
+- **Batas implementasi uji awal:** sebelum kontrak data, Storage, RLS, dan publikasi backend siap, penyimpanan lokal hanya boleh diberi label sebagai uji lokal pada perangkat. UI tidak boleh mengklaim tulisan sudah tampil di feed publik, pencarian, atau profil publik.
