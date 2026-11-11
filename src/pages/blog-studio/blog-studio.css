@@ -44,3 +44,5 @@
 .pl-blog-error{padding:30px 18px}
 @media(min-width:761px){.pl-blog-studio .pl-blog-main{padding:30px 24px 60px}.pl-blog-item{display:grid;grid-template-columns:220px 1fr}.pl-blog-item-cover{height:100%;min-height:180px}.pl-blog-editor-actions{bottom:12px}}
 @media(max-width:380px){.pl-blog-studio .pl-blog-main{padding-left:13px;padding-right:13px}.pl-blog-page-head h1{font-size:22px}.pl-blog-compact{padding:0 10px;font-size:11px}}
+
+.pl-blog-read-more{display:inline-block;margin-top:5px;color:#087f88;font-size:11px;font-weight:800}.pl-blog-preview-action{justify-self:start;border:0;background:transparent;color:#087f88;padding:4px 0;font-size:12px;font-weight:800;cursor:pointer}
