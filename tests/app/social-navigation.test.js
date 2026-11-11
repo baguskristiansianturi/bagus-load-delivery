@@ -115,7 +115,7 @@ test('signed-in home leads with Bali experiences, search, wishlist and the perso
  assert.ok(account.includes('window.__pluitsHomeLocation'),'Detected device location must be kept separate from profile location.');
  assert.ok(account.includes('ua-home-trends')&&account.includes('ua-explore-filters'),'Experience discovery and feed choices must precede friend posts.');
  assert.ok(account.includes('homeNearbySection')&&account.includes('bindHomeNearby'),'Home must use live nearby results.');
- assert.ok(account.includes('Topik sedang ramai')&&account.includes('Mungkin Anda Suka')&&account.includes('Kumpulan')&&account.includes('Layanan PLUITS'),'Home must continue from the Beranda feed into trending topics, product recommendations, service collections and PLUITS service filters.');
+ assert.ok(account.includes('Topik sedang ramai')&&account.includes('Produk Lokal')&&account.includes('Kumpulan')&&account.includes('Layanan PLUITS'),'Home must continue from the Beranda feed into trending topics, product recommendations, service collections and PLUITS service filters.');
  assert.ok(account.includes('⌖ Kuta')&&account.includes('ua-topten-copy'),'Top 10 hero cards must show the title, location pin and category over the image.');
  const nearbySource=await readFile(new URL('../../src/pages/directory/index.js',import.meta.url),'utf8');
  assert.ok(nearbySource.includes('Di sekitar Anda')&&nearbySource.includes('radius=3000')&&nearbySource.includes('pl-nearby-item-card')&&nearbySource.includes('user_post_directory_entities')&&nearbySource.includes('ownerName'),'Nearby discovery must show compact item/story cards with the owner and linked place, not generic category or store tiles.');
