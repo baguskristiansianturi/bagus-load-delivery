@@ -99,6 +99,7 @@ test('signed-in home leads with Bali experiences, search, wishlist and the perso
  const navigation=await readFile(new URL('../../src/components/social/navigation.js',import.meta.url),'utf8');
  const css=await readFile(new URL('../../src/pages/account/user-account.css',import.meta.url),'utf8');
  assert.ok(account.includes('Sedang ramai di Bali')&&account.includes('ua-home-topten'),'Home must lead discovery with a Top 10 popular experience module.');
+ assert.ok(!account.includes('"+discoverySection+'),'Home feed must not reference the removed category-card section.');
  assert.ok(account.includes('BALI · BERDASARKAN AKTIVITAS NYATA'),'Popularity labels must be grounded in real activity data.');
  assert.ok(navigation.includes('ua-home-searchbar')&&navigation.includes('ua-home-wishlist')&&navigation.includes('ua-home-search-prompt'),'Home header must show animated search and saved items.');
  assert.ok(account.includes('Jelajahi kuliner yang ramai di Bali')&&account.includes('startHomeSearchPrompt'),'Search prompt must rotate typed discovery suggestions.');
