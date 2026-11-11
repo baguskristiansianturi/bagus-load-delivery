@@ -901,9 +901,9 @@ async function createPage(){
    <div class="ua-create-section-head"><h2>Hubungkan Bisnis & Layanan</h2><p>Siapkan profil dan operasional usahamu dalam ekosistem PLUITS.</p></div>
    <div class="ua-create-feature-grid ua-create-business-grid">
     ${feature('store','Toko','Jual produk dan kelola katalog, pesanan, serta pelanggan.',null,'is-staged','DALAM PENGEMBANGAN')}
-    ${feature('utensils','Restoran','Tampilkan menu, informasi restoran, dan layanan pelanggan.',null,'is-staged','DALAM PENGEMBANGAN')}
-    ${feature('car','Transportasi','Hubungkan armada dan tawarkan layanan perjalanan.',null,'is-staged','COMING SOON')}
-    ${feature('truck','Kurir','Siapkan layanan pengiriman dan pengelolaan pesanan.',null,'is-staged','COMING SOON')}
+    ${feature('home','Restoran','Tampilkan menu, informasi restoran, dan layanan pelanggan.',null,'is-staged','DALAM PENGEMBANGAN')}
+    ${feature('compass','Transportasi','Hubungkan armada dan tawarkan layanan perjalanan.',null,'is-staged','COMING SOON')}
+    ${feature('send','Kurir','Siapkan layanan pengiriman dan pengelolaan pesanan.',null,'is-staged','COMING SOON')}
     ${feature('briefcase','Jasa Profesional','Tampilkan keahlian, paket layanan, dan portofolio.',null,'is-staged','DALAM PENGEMBANGAN')}
    </div>
   </section>
