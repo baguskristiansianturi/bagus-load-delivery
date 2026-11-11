@@ -145,3 +145,5 @@
  .pl-directory-page .pl-map-touch-hint{left:9px;bottom:9px;font-size:8px}
  .pl-directory-page .pl-directory-map-shell{gap:8px}
 }
+
+.pl-directory-page .pl-map-stage{position:relative;isolation:isolate;overflow:hidden}
