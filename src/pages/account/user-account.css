@@ -2233,3 +2233,13 @@
  .ua-home-discovery-icon{width:29px;height:29px;font-size:16px}
 }
 @media(prefers-reduced-motion:reduce){.ua-home-discovery-card{transition:none}}
+
+
+/* Profile settings are anchored to the cover so the three-dot action stays visible on mobile. */
+.ua-profile-card .ua-cover .ua-profile-menu{position:absolute;top:12px;right:12px;z-index:8}
+.ua-profile-card .ua-cover .ua-profile-menu .pl-social-menu-trigger{width:38px;height:38px;border-color:rgba(255,255,255,.8);background:rgba(255,255,255,.96);box-shadow:0 2px 9px rgba(20,35,55,.14);color:#20374a}
+.ua-profile-card .ua-cover .ua-profile-menu .pl-social-menu-panel{top:calc(100% + 7px);right:0}
+@media(max-width:760px){
+ .ua-profile-card .ua-cover .ua-profile-menu{top:9px;right:10px}
+ .ua-profile-card .ua-cover .ua-profile-menu .pl-social-menu-trigger{width:36px;height:36px}
+}
