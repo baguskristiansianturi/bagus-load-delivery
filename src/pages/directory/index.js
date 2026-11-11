@@ -217,12 +217,13 @@ async function saveDiscoveryPreferences(patch){
 async function loadDiscoveryPreferences(){
  const {data:auth}=await supabase.auth.getUser();if(!auth?.user)return;
  const {data}=await supabase.from('user_discovery_preferences').select('preferred_city,search_radius_m,use_personalization').eq('user_id',auth.user.id).maybeSingle();
- if(!data)return;
+ if(!data)return false;
  state.radius=data.search_radius_m||state.radius;state.personalization=data.use_personalization!==false;
  const match=Object.entries(AREAS).find(([,area])=>area.label.toLowerCase()===String(data.preferred_city||'').toLowerCase());
  if(match){state.area=match[0];state.lat=match[1].lat;state.lon=match[1].lon;const select=document.querySelector('#pl-directory-area');if(select)select.value=match[0];const label=document.querySelector('#pl-directory-area-label');if(label)label.textContent=match[1].label;const homeLabel=document.querySelector('#pl-home-nearby-area');if(homeLabel)homeLabel.textContent='⌖ '+match[1].label;}
  const radius=document.querySelector('#pl-directory-radius');if(radius)radius.value=String(state.radius);
  const toggle=document.querySelector('#pl-personalization-toggle');if(toggle)toggle.checked=state.personalization;
+ return Boolean(match);
 }
 async function bindInterestSettings(){
  const target=document.querySelector('#pl-interest-options');if(!target)return;
@@ -271,15 +272,20 @@ export async function bindDirectoryPage() {
   document.querySelector('#pl-personalization-toggle')?.addEventListener('change',event=>{state.personalization=event.target.checked;saveDiscoveryPreferences({use_personalization:state.personalization});refreshDirectory();});
   await refreshDirectory();
 }
-export function bindHomeNearby({personalize=true}={}) {
+export function bindHomeNearby({personalize=true,location=null}={}) {
   const mapTarget=document.querySelector('#pl-home-nearby-map');if(!mapTarget)return;
   const resultTarget=document.querySelector('#pl-home-nearby-results');
   document.querySelector('[data-map-globe="pl-home-nearby-map"]')?.addEventListener('click',()=>showGlobe('pl-home-nearby-map'));
-  if(!personalize){state.lat=AREAS.denpasar.lat;state.lon=AREAS.denpasar.lon;state.area='denpasar';state.radius=15000;state.category='';state.query='';}
-  const prepare=personalize?loadDiscoveryPreferences():Promise.resolve();
-  prepare.then(()=>personalize?loadCategories():Promise.resolve()).then(()=>getNearby({lat:state.lat,lon:state.lon,limit:18,radius:state.radius})).then(async rows=>{
+  state.radius=5000;state.category='';state.query='';
+  if(location&&Number.isFinite(location.latitude)&&Number.isFinite(location.longitude)){state.lat=location.latitude;state.lon=location.longitude;state.area='';}
+  const prepare=location?Promise.resolve(true):personalize?loadDiscoveryPreferences():Promise.resolve(false);
+  prepare.then(hasSavedArea=>{
+    if(!location&&!hasSavedArea){if(resultTarget)resultTarget.innerHTML='<div class="pl-directory-empty">Aktifkan izin lokasi untuk melihat tempat terdekat dengan jarak akurat. <a href="#/places">Buka direktori →</a></div>';return null;}
+    return (personalize?loadCategories():Promise.resolve()).then(()=>getNearby({lat:state.lat,lon:state.lon,limit:18,radius:5000}));
+  }).then(async rows=>{
+    if(!rows)return;
     const interests=personalize?await getInterestMap():new Map(),items=ranked(rows,interests);
-    const label=document.querySelector('#pl-home-nearby-area');if(label)label.textContent=(state.area?AREAS[state.area]?.label||'Area pilihan':'Lokasi pilihan')+' · Bali';
+    const label=document.querySelector('#pl-home-nearby-area');if(label)label.textContent=location?'Lokasi perangkat · radius 5 km':(state.area?AREAS[state.area]?.label||'Area pilihan':'Area pilihan')+' · Bali';
     await drawMap(items,'pl-home-nearby-map',{zoom:11.2,fit:true});
     if(!resultTarget)return;
     if(!items.length){resultTarget.innerHTML='<div class="pl-directory-empty">Belum ada titik tempat publik di area ini. <a href="#/places">Buka direktori →</a></div>';return;}
