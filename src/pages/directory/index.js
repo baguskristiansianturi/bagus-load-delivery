@@ -180,9 +180,9 @@ function setArea(value) {
 }
 function setMode(mode) {
   state.mode=mode;
-  const list=document.querySelector('#pl-directory-results'),map=document.querySelector('#pl-directory-map');
+  const list=document.querySelector('#pl-directory-results'),map=document.querySelector('#pl-directory-map'),stage=map?.closest('.pl-directory-map-stage');
   document.querySelectorAll('[data-view]').forEach(button=>button.classList.toggle('active',button.dataset.view===mode));
-  if(list)list.hidden=mode!=='list';if(map)map.hidden=mode!=='map';
+  if(list)list.hidden=mode!=='list';if(stage)stage.hidden=mode!=='map';
   if(mode==='map')drawMap(state.rows,'pl-directory-map',{zoom:11.7,fit:true});
 }
 async function requestLocation() {
@@ -272,6 +272,7 @@ export async function bindDirectoryPage() {
 export function bindHomeNearby({personalize=true}={}) {
   const mapTarget=document.querySelector('#pl-home-nearby-map');if(!mapTarget)return;
   const resultTarget=document.querySelector('#pl-home-nearby-results');
+  document.querySelector('[data-map-globe="pl-home-nearby-map"]')?.addEventListener('click',()=>showGlobe('pl-home-nearby-map'));
   if(!personalize){state.lat=AREAS.denpasar.lat;state.lon=AREAS.denpasar.lon;state.area='denpasar';state.radius=15000;state.category='';state.query='';}
   const prepare=personalize?loadDiscoveryPreferences():Promise.resolve();
   prepare.then(()=>personalize?loadCategories():Promise.resolve()).then(()=>getNearby({lat:state.lat,lon:state.lon,limit:18,radius:state.radius})).then(async rows=>{
