@@ -2482,3 +2482,16 @@
 @media(max-width:380px){
  .ua-social-home .ua-topten-card,.ua-social-home .ua-topten-card-1{height:238px;min-height:238px}
 }
+
+/* Untukmu: compact, image-led recommendation cards; no interest setup prompts. */
+.ua-home-topic-carousel{gap:9px}
+.ua-home-topic-carousel>.ua-post-card,
+.ua-home-recommendation-carousel>.ua-post-card{flex:0 0 184px;width:184px;max-width:184px;scroll-snap-align:start}
+.ua-home-interests>.ua-home-section-heading{margin-bottom:11px}
+.ua-home-interests>.ua-home-section-heading h2{margin:0;font-size:20px}
+.ua-home-topic .ua-home-section-heading{margin-bottom:9px}
+.ua-home-topic .ua-home-section-heading h3{font-size:15px}
+@media(max-width:380px){
+ .ua-home-topic-carousel>.ua-post-card,
+ .ua-home-recommendation-carousel>.ua-post-card{flex-basis:172px;width:172px;max-width:172px}
+}
