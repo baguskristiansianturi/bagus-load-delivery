@@ -1116,3 +1116,16 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - **Commit:** `ea983f83fb6ae17147c6048ffbc6f3886350bd81`; **Actions:** [42818616779 SUCCESS](https://github.com/baguskristiansianturi/pluits/actions/runs/42818616779); **live:** `https://baguskristiansianturi.github.io/pluits/?v=ea983f8`.
 - **Not accepted / not tested:** Android actual gallery upload/video playback, two-account social relationship/DM journeys, offline reconnect behavior, full SOC/GDT negative RLS matrix, physical-device latency, founder UI/UX UAT.
 - **Next gate:** use a cost-approved Supabase development branch to apply the reviewed RLS candidate and run negative access tests. In parallel, founder performs Android UAT on the deployed Social flows. No Café/Resto or additional Trip/Marketplace scope until Social release acceptance.
+
+
+## CP-069 — Mobile Blog Studio prototype (11 November 2026)
+- **Founder decision:** D-008; Business Model Master Bagian 33.13.
+- **Scope:** menambahkan pilihan Blog ke tombol Buat (+), route `#/account/blog`, dashboard Postingan/Draft/Pengaturan, dan editor mobile.
+- **Editor:** judul wajib, deskripsi kartu wajib maksimal 85 kata, cover utama wajib, isi tulisan tanpa minimum kata, gambar pendukung terpisah, pratinjau, simpan draft, dan terbitan uji lokal.
+- **Storage/status:** metadata dan gambar disimpan pada IndexedDB perangkat/browser per user_id. Tidak ada Supabase DDL, RLS, Storage, Auth, atau data produksi yang diubah. Tombol Terbitkan hanya menyimpan terbitan uji lokal dan UI memberi tahu bahwa konten belum tampil di feed publik/pencarian.
+- **Files:** `src/pages/blog-studio/index.js`, `src/pages/blog-studio/blog-studio.css`, `src/pages/account/index.js`, `src/app/router.js`.
+- **Commit:** `c5a319797be3662925c00d42b78796be6a3a532c`.
+- **Actions:** run `43018386051`, workflow #1284, conclusion SUCCESS. Production-surface guard and Vite production build SUCCESS; Pages deployment SUCCESS.
+- **Test route:** `https://baguskristiansianturi.github.io/pluits/#/account/blog`.
+- **Verification limits:** JavaScript syntax checks PASS for Blog Studio, account module, and router. Android browser UAT, native image picker, IndexedDB persistence after browser restart, accessibility, and actual feed/backend publication NOT TESTED. Founder acceptance NOT ACCEPTED.
+- **Next:** founder tests from Android: open Plus → Blog, select cover, enter title and 85-word description, add body and supporting images, save draft, reload/resume, preview, create local test publication, and verify it remains clearly local-only. Capture UI findings before designing backend schema/RLS/Storage contract.
