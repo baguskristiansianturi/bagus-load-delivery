@@ -401,7 +401,7 @@ const {data:follows,error:followError}=await supabase.from('user_follows').selec
  const empty=exploreFilter==='following'?'Belum ada postingan terbaru dari akun yang Anda ikuti.':'Belum ada postingan publik untuk ditampilkan. Coba kembali nanti atau bagikan cerita pertama Anda.';
  const action=exploreFilter==='following'?"<a href='#/search'>Temukan akun untuk diikuti</a>":"<a href='#/account/compose'>Bagikan foto atau video</a>";
  const homeHeading="<section class='ua-home-following'><div class='ua-home-section-heading'><div><span class='ua-eyebrow'>KOMUNITAS</span><h2>Beranda</h2><p>Postingan terbaru dari akun yang Anda ikuti.</p></div></div>"+filterNav+"</section>";
- return "<div class='ua-social-home'>"+trendSection+interestSection+homeHeading+"<section class='ua-feed'>"+(sorted.length?sorted.map(post=>postCard(post)).join(''):"<div class='ua-feed-empty'><strong>"+empty+"</strong>"+action+"</div>")+"</section>"+homeNearbySection()+"</div>";
+ return "<div class='ua-social-home'>"+trendSection+homeNearbySection()+interestSection+homeHeading+"<section class='ua-feed'>"+(sorted.length?sorted.map(post=>postCard(post)).join(''):"<div class='ua-feed-empty'><strong>"+empty+"</strong>"+action+"</div>")+"</section></div>";
 }
 async function reelsPage(){
  const {data:vm,error:me}=await supabase.from('post_media').select('post_id,duration_ms').eq('media_type','video').lte('duration_ms',60000).order('created_at',{ascending:false}).limit(60);if(me)throw me;
