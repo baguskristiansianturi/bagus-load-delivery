@@ -168,3 +168,20 @@
 .pl-nearby-map-home .maplibregl-ctrl-group button{width:31px;height:31px}
 .pl-nearby-map-home .maplibregl-ctrl-attrib{font-size:8px}
 @media(max-width:760px){.pl-nearby-map-home .pl-home-map-stage{height:290px;border-radius:14px}}
+
+
+/* Small discovery cards directly beneath the Top 10 hero. */
+.pl-nearby-home{min-width:0;margin:14px 0 18px;padding:0;border:0;background:transparent}
+.pl-nearby-home .pl-nearby-heading{display:flex;align-items:center;justify-content:space-between;margin:0 0 9px}
+.pl-nearby-home .pl-nearby-heading h2{margin:0;font-size:18px;font-weight:780;color:#20343a;letter-spacing:-.025em}
+.pl-nearby-home .pl-nearby-heading>a{font-size:10px;color:#168d91;font-weight:750;text-decoration:none}
+.pl-home-map-results{display:flex;gap:9px;overflow-x:auto;overflow-y:hidden;padding:1px 1px 8px;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.pl-home-map-results::-webkit-scrollbar{display:none}
+.pl-nearby-item-card{display:flex;flex:0 0 148px;width:148px;min-width:0;flex-direction:column;overflow:hidden;border:1px solid #e8edef;border-radius:13px;background:#fff;color:#24363c;text-decoration:none;scroll-snap-align:start}
+.pl-nearby-item-card>img,.pl-nearby-item-placeholder{display:block;width:100%;height:104px;object-fit:cover;background:#eef5f4}
+.pl-nearby-item-placeholder{display:grid;place-items:center;color:#168d91;font-size:12px;font-weight:850;letter-spacing:.12em}
+.pl-nearby-item-copy{display:flex;min-width:0;flex-direction:column;gap:4px;padding:9px}
+.pl-nearby-item-copy small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#168d91;font-size:9px;font-weight:750}
+.pl-nearby-item-copy b{display:-webkit-box;overflow:hidden;-webkit-line-clamp:2;-webkit-box-orient:vertical;min-height:30px;font-size:11px;line-height:1.35;color:#24363c}
+.pl-nearby-item-copy em{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#829095;font-size:8px;font-style:normal}
+@media(min-width:761px){.pl-home-map-results{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));overflow:visible}.pl-nearby-item-card{width:100%;min-width:0}}
