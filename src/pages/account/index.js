@@ -348,9 +348,14 @@ async function feedPage(){
  if(interestQuery.error)throw interestQuery.error;
  const interests=(interestQuery.data||[]).map(x=>x.directory_categories).filter(Boolean);
  const interestSection="<section class='ua-home-interests'><div class='ua-home-section-heading'><div><span class='ua-eyebrow'>PERSONALISASI</span><h2>Minatmu</h2><p>Topik yang membantu Pluits menyusun rekomendasi.</p></div><a href='#/places'>Atur minat →</a></div>"+(interests.length?"<div class='ua-home-interest-chips'>"+interests.map(x=>"<a href='#/places'>"+esc(x.name)+"</a>").join('')+"</div>":"<div class='ua-home-interest-empty'>Belum ada minat yang dipilih. Pilih kategori di direktori agar rekomendasi tempat dan konten makin relevan. <a href='#/places'>Pilih minat</a></div>")+"</section>";
- const trendSection=`<section class="ua-home-trends ua-home-topten" aria-label="Sepuluh hal paling populer di Bali">
-<div class="ua-home-section-heading"><div><span class="ua-eyebrow">BALI · BERDASARKAN AKTIVITAS NYATA</span><h2>Sedang ramai di Bali</h2></div><a href="#/discover">Lihat semua</a></div>
-<div class="ua-topten-track" id="ua-home-topten-track" aria-live="polite"><div class="ua-topten-empty">Peringkat populer akan tampil di sini setelah aktivitas pengguna cukup terkumpul.</div></div>
+ const trendSection=`<section class="ua-home-trends ua-home-topten" aria-label="Trending di Pluits">
+<div class="ua-home-section-heading"><div><span class="ua-eyebrow">EXPLORE PLUITS</span><h2>Trending</h2></div><a href="#/discover">Jelajahi semua <b>↗</b></a></div>
+<div class="ua-topten-track" id="ua-home-topten-track">
+<a class="ua-topten-card ua-topten-card-feature" href="#/places?category=restaurant" style="--trend-image:url('https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=1000&q=85')"><span class="ua-topten-tag">Kuliner</span><strong>Temukan rasa yang sedang dicari</strong><small>Jelajahi tempat makan</small></a>
+<a class="ua-topten-card" href="#/places?category=tourist-attraction" style="--trend-image:url('https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=800&q=85')"><span class="ua-topten-tag">Destinasi</span><strong>Tempat untuk dikunjungi</strong><small>Jelajahi destinasi</small></a>
+<a class="ua-topten-card" href="#/trip" style="--trend-image:url('https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?auto=format&fit=crop&w=800&q=85')"><span class="ua-topten-tag">Aktivitas</span><strong>Rencanakan pengalaman baru</strong><small>Jelajahi aktivitas</small></a>
+<a class="ua-topten-card" href="#/discover" style="--trend-image:url('https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=800&q=85')"><span class="ua-topten-tag">Hiburan</span><strong>Temukan yang menarik</strong><small>Lihat inspirasi terbaru</small></a>
+</div>
 </section>`;
 const {data:follows,error:followError}=await supabase.from('user_follows').select('following_id').eq('follower_id',user.id).eq('status','accepted');
  if(followError)throw followError;
@@ -368,21 +373,11 @@ const {data:follows,error:followError}=await supabase.from('user_follows').selec
   :exploreFilter==='latest'?[...hydrated].sort((a,b)=>new Date(b.created_at)-new Date(a.created_at))
   :exploreFilter==='popular'?[...hydrated].sort((a,b)=>(b.likes*2+b.comments*3)-(a.likes*2+a.comments*3)||new Date(b.created_at)-new Date(a.created_at))
   :[...hydrated].sort((a,b)=>score(b)-score(a)||new Date(b.created_at)-new Date(a.created_at));
- const storyIds=[...followingIds,user.id];
- let storyRows=[];
- if(storyIds.length){const q=await supabase.from('user_stories').select('id,user_id,media_path,media_type,caption,visibility,created_at,expires_at').in('user_id',storyIds).gt('expires_at',new Date().toISOString()).eq('visibility','public').order('created_at',{ascending:false}).limit(12);if(q.error)throw q.error;storyRows=q.data||[];}
- const ownerIds=[...new Set(storyRows.map(s=>s.user_id))];
- const profiles=ownerIds.length?await supabase.from('user_profiles').select('id,display_name,username,avatar_path').in('id',ownerIds):{data:[],error:null};
- if(profiles.error)throw profiles.error;
- const pmap=new Map((profiles.data||[]).map(p=>[p.id,p]));
- const stories=await Promise.all(storyRows.filter(s=>!blockedIds.includes(s.user_id)).map(async s=>{const owner=pmap.get(s.user_id)||{};return {...s,owner,mediaUrl:await signed(s.media_path),avatarUrl:owner.avatar_path?await signed(owner.avatar_path):''};}));
- const storyCards=stories.map(s=>"<button type='button' class='ua-story-item' data-story-url='"+esc(s.mediaUrl||'')+"' data-story-type='"+esc(s.media_type)+"' data-story-owner='"+esc(s.owner.display_name||'Pengguna Pluits')+"' data-story-caption='"+esc(s.caption||"")+"'><span class='ua-story-ring'>"+(s.avatarUrl?"<img src='"+esc(s.avatarUrl)+"' alt=''>":"<b>PL</b>")+"</span><small>"+esc(s.owner.display_name||'Pluits')+"</small></button>").join('');
- const storySection="<section class='ua-stories-block'><div class='ua-stories-head'><strong>Stories</strong><a href='#/account/compose' aria-label='Buat postingan'>＋</a></div><div class='ua-story-strip'><a class='ua-story-item ua-story-own' href='#/account/story'><span class='ua-story-ring'>"+avatar(await signed(profile?.avatar_path),profile?.display_name||'Anda')+"<i>＋</i></span><small>Cerita Anda</small></a>"+(storyCards||"<span class='ua-story-empty'>Belum ada cerita baru</span>")+"</div></section>";
  const filters=[['recommended','Untuk Anda'],['following','Mengikuti'],['latest','Terbaru'],['popular','Populer']];
  const filterNav="<nav class='ua-explore-filters' aria-label='Pilihan feed'>"+filters.map(([key,label])=>"<button type='button' data-explore-filter='"+key+"' class='"+(exploreFilter===key?'is-active':'')+"' "+(exploreFilter===key?"aria-current='true'":"")+">"+label+"</button>").join('')+"</nav>";
  const empty=exploreFilter==='following'?'Belum ada postingan terbaru dari akun yang Anda ikuti.':'Belum ada postingan publik untuk ditampilkan. Coba kembali nanti atau bagikan cerita pertama Anda.';
  const action=exploreFilter==='following'?"<a href='#/search'>Temukan akun untuk diikuti</a>":"<a href='#/account/compose'>Bagikan foto atau video</a>";
- return "<div class='ua-social-home'>"+trendSection+homeNearbySection()+filterNav+storySection+"<section class='ua-feed'>"+(sorted.length?sorted.map(post=>postCard(post)).join(''):"<div class='ua-feed-empty'><strong>"+empty+"</strong>"+action+"</div>")+"</section>"+interestSection+"</div>";
+ return "<div class='ua-social-home'>"+trendSection+homeNearbySection()+filterNav+"<section class='ua-feed'>"+(sorted.length?sorted.map(post=>postCard(post)).join(''):"<div class='ua-feed-empty'><strong>"+empty+"</strong>"+action+"</div>")+"</section>"+interestSection+"</div>";
 }
 async function reelsPage(){
  const {data:vm,error:me}=await supabase.from('post_media').select('post_id,duration_ms').eq('media_type','video').lte('duration_ms',60000).order('created_at',{ascending:false}).limit(60);if(me)throw me;
