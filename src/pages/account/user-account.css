@@ -2243,3 +2243,34 @@
  .ua-profile-card .ua-cover .ua-profile-menu{top:9px;right:10px}
  .ua-profile-card .ua-cover .ua-profile-menu .pl-social-menu-trigger{width:36px;height:36px}
 }
+
+/* Visual-first home discovery: real photography carries the category navigation. */
+.ua-home-discovery{padding:0 14px 18px;margin:0 0 14px;border-bottom:7px solid #f4f7f7}
+.ua-home-location{display:flex;flex-direction:row;align-items:center;padding:10px 12px;border:1px solid #e7efed;border-radius:13px;background:#fff}
+.ua-home-location-copy{gap:2px}
+.ua-home-location-copy strong{font-size:13px}
+.ua-home-location-copy small{display:none}
+.ua-home-location-button{align-self:center;min-height:34px}
+.ua-home-region-chips{margin:0 -14px;padding:10px 14px 13px}
+.ua-home-discovery-intro{margin:0 0 10px}
+.ua-home-discovery-intro h2{font-size:18px;letter-spacing:-.035em;color:#1f3035}
+.ua-home-visual-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:124px;gap:9px}
+.ua-home-visual-card{position:relative;display:flex;flex-direction:column;justify-content:flex-end;min-width:0;overflow:hidden;border-radius:13px;background:#dce7e4;color:#fff;text-decoration:none;isolation:isolate}
+.ua-home-visual-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;transition:transform .35s ease}
+.ua-home-visual-card:active img{transform:scale(1.035)}
+.ua-home-visual-shade{position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,transparent 25%,rgba(8,24,27,.68) 100%)}
+.ua-home-visual-card strong{padding:0 12px 5px;font-size:15px;line-height:1.2;letter-spacing:-.02em;text-shadow:0 1px 8px #0005}
+.ua-home-visual-card small{padding:0 12px 12px;font-size:9px;color:#f0f5f4}
+.ua-home-visual-feature{grid-column:1/-1;grid-row:span 1;min-height:148px}
+.ua-home-visual-feature strong{font-size:20px;padding-left:15px}
+.ua-home-visual-feature small{font-size:10px;padding-left:15px}
+@media(min-width:761px){
+ .ua-home-visual-grid{grid-template-columns:1.35fr 1fr 1fr;grid-auto-rows:155px}
+ .ua-home-visual-feature{grid-column:span 1;grid-row:span 2;min-height:319px}
+ .ua-home-visual-card strong{font-size:17px}
+}
+@media(max-width:380px){
+ .ua-home-visual-grid{grid-auto-rows:112px;gap:7px}
+ .ua-home-visual-feature{min-height:132px}
+}
+@media(prefers-reduced-motion:reduce){.ua-home-visual-card img{transition:none}}
