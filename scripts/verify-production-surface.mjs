@@ -260,7 +260,7 @@ assert.match(postLayoutCss, /pluits-heart-core 1\.18s/, 'Main heart animation mu
 assert.ok(read('src/main.js').includes("history.replaceState(null, '', location.pathname + location.search + '#/')"), 'Legacy home aliases must normalize to the canonical public home URL.');
 assert.ok(read('src/pages/home/index.js').includes("'#/account/explore'"), 'Authenticated users must land on the canonical Explore feed URL.');
 
-assert.ok(read('src/pages/account/index.js').includes('renderReelCard(post,{user,avatar,esc,socialIcon})'),'Reels must use its dedicated feature renderer.');
+assert.ok(read('src/pages/account/index.js').includes('sorted.map(post=>postCard(post)).join(\'\')'),'The home feed must use the defined post-card renderer, not the Reel-only renderer.');
 assert.ok(read('src/pages/account/index.js').includes('accept="video/*,.mp4,.m4v,.mov,.webm,.3gp,.3gpp,.3g2,.3gp2"'),'Reel picker must request common Android video formats explicitly.');
 assert.ok(read('src/features/reels/reel-card.js').includes('ua-reel-stage'),'Reel card module must own its stage.');
 assert.ok(read('src/features/reels/reels.css').includes('aspect-ratio:9/16'),'Reel layout must preserve vertical framing.');
