@@ -16,6 +16,7 @@ import {listPrivateDrafts,getPrivateDraft,savePrivateDraft,deletePrivateDraft} f
 import {getMediaMime,getMediaExtension,validateMediaFile,getVideoDuration} from '../../features/media/media-types.js';
 import {createMediaUploader} from '../../features/media/storage-upload.js';
 import {createSignedUrlMap} from '../../services/storage/signed-urls.js';
+import {bindHomeNearby,homeNearbySection} from '../directory/index.js';
 
 const SUPABASE_URL='https://ytndswhqxayqpftszwfh.supabase.co';
 const SUPABASE_KEY='sb_publishable_kOUbKBYg88nXgz8FQRSnvA_k0hvKY65';
@@ -334,6 +335,11 @@ async function hydratePosts(rows){
   });
  }
 async function feedPage(){
+ const interestQuery=await supabase.from('user_interest_preferences').select('preference,directory_categories(name,slug)').eq('user_id',user.id).eq('source','explicit');
+ if(interestQuery.error)throw interestQuery.error;
+ const interests=(interestQuery.data||[]).map(x=>x.directory_categories).filter(Boolean);
+ const interestSection="<section class='ua-home-interests'><div class='ua-home-section-heading'><div><span class='ua-eyebrow'>PERSONALISASI</span><h2>Minatmu</h2><p>Topik yang membantu Pluits menyusun rekomendasi.</p></div><a href='#/places'>Atur minat →</a></div>"+(interests.length?"<div class='ua-home-interest-chips'>"+interests.map(x=>"<a href='#/places'>"+esc(x.name)+"</a>").join('')+"</div>":"<div class='ua-home-interest-empty'>Belum ada minat yang dipilih. Pilih kategori di direktori agar rekomendasi tempat dan konten makin relevan. <a href='#/places'>Pilih minat</a></div>")+"</section>";
+ const nearbySection="<section class='ua-home-nearby'><div class='ua-home-section-heading'><div><span class='ua-eyebrow'>GEODIRECTORY</span><h2>Di sekitarmu</h2><p>Tempat dan layanan yang bisa kamu jelajahi.</p></div><a href='#/places'>Lihat semua →</a></div>"+homeNearbySection()+"</section>";
  const {data:follows,error:followError}=await supabase.from('user_follows').select('following_id').eq('follower_id',user.id).eq('status','accepted');
  if(followError)throw followError;
  const followingIds=[...new Set((follows||[]).map(x=>x.following_id).filter(Boolean))];
@@ -363,7 +369,7 @@ async function feedPage(){
  const filterNav="<nav class='ua-explore-filters' aria-label='Pilihan feed'>"+filters.map(([key,label])=>"<button type='button' data-explore-filter='"+key+"' class='"+(exploreFilter===key?'is-active':'')+"' "+(exploreFilter===key?"aria-current='true'":"")+">"+label+"</button>").join('')+"</nav>";
  const empty=exploreFilter==='following'?'Belum ada postingan terbaru dari akun yang Anda ikuti.':'Belum ada postingan publik untuk ditampilkan. Coba kembali nanti atau bagikan cerita pertama Anda.';
  const action=exploreFilter==='following'?"<a href='#/search'>Temukan akun untuk diikuti</a>":"<a href='#/account/compose'>Bagikan foto atau video</a>";
- return "<div class='ua-social-home'><div class='ua-feed-heading'><div><span class='ua-eyebrow'>PLUITS COMMUNITY</span><h1>Beranda</h1><p>Postingan terbaru dari akun yang Anda ikuti dan rekomendasi komunitas.</p></div><a class='ua-outline' href='#/account/compose'>＋ Buat postingan</a></div><a class='ua-feed-search ua-feed-search-row' href='#/search' aria-label='Cari di Pluits'>"+socialIcon('search',{size:18})+"<span>Cari teman, tempat, dan postingan</span></a>"+storySection+filterNav+"<section class='ua-feed'>"+(sorted.length?sorted.map(post=>renderReelCard(post,{user,avatar,esc,socialIcon})).join(''):"<div class='ua-feed-empty'><strong>"+empty+"</strong>"+action+"</div>")+"</section></div>";
+ return "<div class='ua-social-home'><div class='ua-feed-heading'><div><span class='ua-eyebrow'>PLUITS COMMUNITY</span><h1>Beranda</h1><p>Ruang personal untuk minat, tempat terdekat, teman, dan rekomendasi.</p></div><a class='ua-outline' href='#/account/compose'>＋ Buat postingan</a></div><a class='ua-feed-search ua-feed-search-row' href='#/search' aria-label='Cari di Pluits'>"+socialIcon('search',{size:18})+"<span>Cari teman, tempat, dan postingan</span></a>"+interestSection+nearbySection+storySection+filterNav+"<section class='ua-feed'>"+(sorted.length?sorted.map(post=>renderReelCard(post,{user,avatar,esc,socialIcon})).join(''):"<div class='ua-feed-empty'><strong>"+empty+"</strong>"+action+"</div>")+"</section></div>";
 }
 async function reelsPage(){
  const {data:vm,error:me}=await supabase.from('post_media').select('post_id,duration_ms').eq('media_type','video').lte('duration_ms',60000).order('created_at',{ascending:false}).limit(160);if(me)throw me;
@@ -681,6 +687,7 @@ async function mountAccount(section='profile',parameter=''){
   const headerAvatar=await signed(profile.avatar_path);const app=document.querySelector('#app');const navActive=section==='profile'?(parameter==='edit'?'profile-edit':'profile'):section==='preview'?'preview':section==='explore'?'explore':section==='reels'?'reels':['create','compose','reel','story'].includes(section)?'create':section==='post'?'post':section==='activity'?'activity':section==='addresses'?'addresses':'account';app.classList.remove('pl-page-enter');app.innerHTML=frame(page,navActive,headerAvatar);requestAnimationFrame(()=>app.classList.add('pl-page-enter'));
   document.querySelector('#ua-logout')?.addEventListener('click',async()=>{await supabase.auth.signOut();user=null;profile=null;authScreen('login');});
   bindAccountContext({db:supabase,user,ctx:accountContext,profile,refresh:mountAccount});
+  if(section==='explore')bindHomeNearby({personalize:true});
   bindProfileMenu();
   if(section==='security')bindAccountSecurity(supabase,user);
   document.querySelector('#ua-settings-logout')?.addEventListener('click',async()=>{await supabase.auth.signOut();user=null;profile=null;location.hash='/account/login';});
