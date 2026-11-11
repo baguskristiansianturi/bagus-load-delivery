@@ -33,13 +33,24 @@ export function home(){
  ${renderSocialMobileNav({active:'home',publicHome:true})}</div>`;
 }
 export async function bindHome(){
- const guestMode=(location.hash||'').startsWith('#/guest');
- const target=document.querySelector('#pl-public-feed');if(!target)return;
+ const requestHash=location.hash||'#/';
+ const routeVersion=window.__pluitsRouteVersion||0;
+ const stillOnRequestedHome=()=>((location.hash||'#/')===requestHash)&&((window.__pluitsRouteVersion||0)===routeVersion);
+ const guestMode=requestHash.startsWith('#/guest');
+ const target=document.querySelector('#pl-public-feed');if(!target||!stillOnRequestedHome())return;
  try{
   const {data:{user:actualViewer}}=await db.auth.getUser();
+  if(!stillOnRequestedHome())return;
   const viewer=guestMode?null:actualViewer;
-  // Authenticated users must use the canonical interactive feed, not the guest-only duplicate.
-  if(viewer){history.replaceState(null,'',location.pathname+location.search+'#/account/explore');const {mountUserAccount}=await import('../account/index.js');await mountUserAccount('explore');return;}
+  // Signed-in visitors enter the single canonical Explore feed. A delayed auth
+  // response must never replace a page opened after the visitor left Home.
+  if(viewer){
+   history.replaceState(null,'',location.pathname+location.search+'#/account/explore');
+   const {mountUserAccount}=await import('../account/index.js');
+   if(location.hash!=='#/account/explore')return;
+   await mountUserAccount('explore');
+   return;
+  }
   bindHomeNearby({personalize:false});
   const headerActions=document.querySelector('.pl-social-header-actions');
   if(viewer&&!guestMode&&headerActions){
