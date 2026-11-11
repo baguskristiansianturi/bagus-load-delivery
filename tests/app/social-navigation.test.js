@@ -122,7 +122,7 @@ test('signed-in home leads with Bali experiences, search, wishlist and the perso
  assert.ok(topTen.includes('⌖ ')&&topTen.includes('ua-topten-copy')&&topTen.includes('TOP_TEN_DEMO_ITEMS'),'Top 10 cards must be an isolated, explicitly demo-only image presentation module.');
  const nearbySource=await readFile(new URL('../../src/pages/directory/index.js',import.meta.url),'utf8');
  const nearbyCards=await readFile(new URL('../../src/features/discovery/nearby-card.js',import.meta.url),'utf8');
- assert.ok(nearbySource.includes('Di sekitar Anda')&&nearbySource.includes('radius=5000')&&nearbySource.includes('user_post_directory_entities')&&nearbySource.includes('presentSlugs')&&nearbySource.includes('nearbyCategories'),'Nearby categories must be derived from published entities actually returned inside the user's radius.');
+ assert.ok(nearbySource.includes('Di sekitar Anda')&&nearbySource.includes('radius=5000')&&nearbySource.includes('user_post_directory_entities')&&nearbySource.includes('presentSlugs')&&nearbySource.includes('nearbyCategories'),'Nearby categories must be derived from published entities actually returned inside the radius.');
  assert.ok(nearbySource.includes('renderNearbyHeroCard')&&nearbyCards.includes('pl-nearby-item-card'),'Nearby hero cards must use their isolated presentation component.');
  assert.ok(!nearbySource.includes("lat=AREAS.denpasar.lat")&&!nearbySource.includes("'denpasar', radius=15000"),'Nearby discovery must not silently default to Denpasar coordinates.');
  assert.ok(account.includes('enableHighAccuracy:true'),'Home must request precise GPS for accurate nearby distance.');
