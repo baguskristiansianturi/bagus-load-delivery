@@ -94,9 +94,9 @@ function editorPage(item = null) {
   revokePreviews();
   selectedCoverFile = null;
   if (item?.cover_url) coverObjectUrl = item.cover_url;
-  const supporting = item?.supportingImages || [];
+  const supporting = item?.supporting_urls || [];
   pendingSupportingFiles = [];
-  supportingObjectUrls = supporting.map(file => URL.createObjectURL(file));
+  supportingObjectUrls = [...supporting];
   const images = supporting.map((file, index) => '<div class="pl-blog-support-tile"><img src="' + supportingObjectUrls[index] + '" alt="Gambar pendukung ' + (index + 1) + '"><button type="button" data-remove-support="' + index + '" aria-label="Hapus gambar">×</button></div>').join('');
   return header(item ? 'Lanjutkan tulisan' : 'Tulis Blog', 'Buat cerita dengan nyaman dari handphone.') +
     '<form id="pl-blog-editor-form" class="pl-blog-editor-form">' +
