@@ -28,3 +28,14 @@ Before edits, identify owner, public contract, route consumers, CSS selectors, s
 
 ## Migration order
 1. Canonical route registry. 2. Split social header and bottom nav with compatibility exports. 3. Design tokens/layout primitives. 4. Isolated Profile Hero. 5. Isolated Inbox. 6. Account controller decomposition. 7. Store/Wishlist/Checkout shells. 8. Route and visual regression. 9. Capacitor adapter when browser flows are stable.
+
+
+## Page and component ownership (mandatory)
+
+- Every canonical route has one page controller under src/pages/<page>/. The route registry is the source of truth; aliases do not create new page modules.
+- The page controller composes its workspace layout and feature components. It must not become the owner of unrelated UI or shared destinations.
+- Each workspace owns its own sidebar/header/tabs/layout. Seller Center navigation is features/seller; Inbox conversation navigation is features/inbox; global social navigation is components/social. Never reuse a whole sidebar from another workspace because it looks similar.
+- Feature renderers are presentational unless their feature contract explicitly owns behavior. Parent page owns data fetching and state; feature owns its own internal UI state only where documented.
+- Component CSS belongs to the component/feature namespace. Truly global styles belong in src/styles. Do not append cross-page CSS patches.
+- Before a new page is created, choose its canonical route, page folder, layout owner, feature owner, service dependencies and tests. Add the route to PAGE-ROUTE-AND-SECTION-REGISTRY.md and update FRONTEND-MODULE-MAP.md.
+- Read PAGE-COMPONENT-OWNERSHIP-AUDIT-2026-11-12.md before decomposing or adding page modules.
