@@ -105,3 +105,15 @@ test('signed-in home presents location-aware discovery categories without fake p
  assert.ok(css.includes('.ua-home-discovery-grid')&&css.includes('@media(max-width:760px)'),'Discovery cards must have a mobile-first responsive layout.');
  assert.ok(css.includes('prefers-reduced-motion:reduce'),'Discovery tap transitions must respect reduced-motion preferences.');
 });
+
+
+test('profile keeps the three-dot settings menu visible on the cover on mobile',async()=>{
+ const nav=await readFile(new URL('../../src/components/social/navigation.js',import.meta.url),'utf8');
+ const account=await readFile(new URL('../../src/pages/account/index.js',import.meta.url),'utf8');
+ const css=await readFile(new URL('../../src/pages/account/user-account.css',import.meta.url),'utf8');
+ assert.ok(nav.includes("${profileView?'':"),'Profile view must not render a duplicate header menu.');
+ assert.ok(account.includes('ua-profile-menu')&&account.includes('Pengaturan profil'),'Profile cover must contain its own settings trigger.');
+ assert.ok(account.includes('Pusat Pengaturan')&&account.includes('Edit profil'),'The three-dot menu must retain both settings destinations.');
+ assert.ok(css.includes('.ua-profile-card .ua-cover .ua-profile-menu'),'Profile menu must be anchored visibly to the cover.');
+ assert.ok(css.includes('@media(max-width:760px)'),'Profile menu must have a mobile layout rule.');
+});
