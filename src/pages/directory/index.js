@@ -23,7 +23,7 @@ export function homeNearbySection() {
     <div class="pl-nearby-heading"><div><span>GEODIRECTORY</span><h2>Jelajahi peta sekitar</h2><p>Sentuh pin untuk mengenal tempat dan lokasinya.</p></div><a href="#/places">Buka peta penuh <b>↗</b></a></div>
     <div class="pl-map-stage pl-home-map-stage">
       <div id="pl-home-nearby-map" class="pl-geo-map" role="region" aria-label="Peta interaktif GeoDirectory Pluits"></div>
-      <div class="pl-map-floating-top"><span id="pl-home-nearby-area">Denpasar · Bali</span><button type="button" data-map-globe="pl-home-nearby-map">◎ Bumi</button></div>
+      <div class="pl-map-floating-top"><span id="pl-home-nearby-area">Menyesuaikan lokasi perangkat</span><button type="button" data-map-globe="pl-home-nearby-map">◎ Bumi</button></div>
       <div class="pl-map-touch-hint">Geser peta · Cubit untuk zoom · Putar dengan dua jari</div>
     </div>
     <div class="pl-home-map-results" id="pl-home-nearby-results"><span class="pl-directory-loading">Memuat titik lokasi…</span></div>
@@ -285,11 +285,11 @@ export function bindHomeNearby({personalize=true,location=null}={}) {
   }).then(async rows=>{
     if(!rows)return;
     const interests=personalize?await getInterestMap():new Map(),items=ranked(rows,interests);
-    const label=document.querySelector('#pl-home-nearby-area');if(label)label.textContent=location?'Lokasi perangkat · radius 5 km':(state.area?AREAS[state.area]?.label||'Area pilihan':'Area pilihan')+' · Bali';
+    const label=document.querySelector('#pl-home-nearby-area');if(label){const detectedArea=items[0]?.locality||items[0]?.district||items[0]?.city;label.textContent=location?(detectedArea?detectedArea+' · radius 5 km':'Sekitar lokasi perangkat · 5 km'):(state.area?AREAS[state.area]?.label||'Area pilihan':'Area pilihan')+' · Bali';}
     await drawMap(items,'pl-home-nearby-map',{zoom:11.2,fit:true});
     if(!resultTarget)return;
     if(!items.length){resultTarget.innerHTML='<div class="pl-directory-empty">Belum ada titik tempat publik di area ini. <a href="#/places">Buka direktori →</a></div>';return;}
-    resultTarget.innerHTML=items.slice(0,8).map(row=>'<a class="pl-home-map-chip" href="'+placeUrl(row.slug)+'"><span class="pl-home-map-chip-pin">⌖</span><span><b>'+esc(row.name)+'</b><small>'+esc([row.locality,row.city].filter(Boolean).join(', ')||'Lokasi terdaftar')+'</small></span><i>↗</i></a>').join('');
+    resultTarget.innerHTML=items.slice(0,8).map(row=>'<a class="pl-home-map-chip" href="'+placeUrl(row.slug)+'"><span class="pl-home-map-chip-pin">⌖</span><span><b>'+esc(row.name)+'</b><small>'+esc([row.locality,row.city].filter(Boolean).join(', ')||'Lokasi terdaftar')+' · '+distance(Number(row.distance_m)||0)+' dari Anda</small></span><i>↗</i></a>').join('');
   }).catch(()=>{if(resultTarget)resultTarget.innerHTML='<div class="pl-directory-empty">Direktori sedang tidak dapat dimuat.</div>';});
 }
 export async function placePage(slug) {
