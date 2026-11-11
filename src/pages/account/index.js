@@ -682,18 +682,40 @@ function normalizeFeedMediaFrames(root=document){
   }
  });
 }
+let homeSearchTypingTimer=null,homeSearchCycleTimer=null;
+function startHomeSearchPrompt(locationText='Bali, Indonesia'){
+ const prompt=document.querySelector('#ua-home-search-prompt');if(!prompt)return;
+ if(homeSearchTypingTimer)clearInterval(homeSearchTypingTimer);
+ if(homeSearchCycleTimer)clearTimeout(homeSearchCycleTimer);
+ const phrases=['Jelajahi kuliner yang ramai di Bali','Temukan aktivitas menarik di sekitar','Apa yang sedang populer hari ini?','Jelajahi tempat dan cerita di Bali'];
+ prompt.classList.remove('is-typing');prompt.textContent=locationText;
+ let phraseIndex=0;
+ const typeNext=()=>{
+  const phrase=phrases[phraseIndex%phrases.length];let index=0;prompt.textContent='';prompt.classList.add('is-typing');
+  homeSearchTypingTimer=setInterval(()=>{
+   index++;prompt.textContent=phrase.slice(0,index);
+   if(index>=phrase.length){clearInterval(homeSearchTypingTimer);homeSearchTypingTimer=null;homeSearchCycleTimer=setTimeout(()=>{
+    let erase=phrase.length;
+    homeSearchTypingTimer=setInterval(()=>{erase--;prompt.textContent=phrase.slice(0,Math.max(0,erase));if(erase<=0){clearInterval(homeSearchTypingTimer);homeSearchTypingTimer=null;prompt.classList.remove('is-typing');phraseIndex++;homeSearchCycleTimer=setTimeout(typeNext,250);}},28);
+   },2100);}
+  },48);
+ };
+ homeSearchCycleTimer=setTimeout(typeNext,2300);
+}
 function bindHomeDiscoveryLocation(){
- const label=document.querySelector('#ua-home-location-label'),status=document.querySelector('#ua-home-location-status');
- if(!label||!status)return;
+ const prompt=document.querySelector('#ua-home-search-prompt');
+ if(!prompt)return;
  const loadNearby=location=>bindHomeNearby({location:location||null,personalize:true});
- if(window.__pluitsHomeLocation){status.textContent='Lokasi perangkat aktif';loadNearby(window.__pluitsHomeLocation);return;}
- if(!navigator.geolocation){status.textContent='Aktifkan lokasi untuk rekomendasi terdekat';loadNearby(null);return;}
- status.textContent='Meminta izin lokasi perangkat…';
+ if(window.__pluitsHomeLocation){
+  startHomeSearchPrompt('Lokasi terdeteksi · Bali, Indonesia');loadNearby(window.__pluitsHomeLocation);return;
+ }
+ startHomeSearchPrompt('Mendeteksi lokasi perangkat…');
+ if(!navigator.geolocation){prompt.textContent='Aktifkan lokasi · Bali, Indonesia';loadNearby(null);return;}
  navigator.geolocation.getCurrentPosition(position=>{
   const {latitude,longitude,accuracy}=position.coords,location={latitude,longitude,accuracy,updatedAt:Date.now()};
-  window.__pluitsHomeLocation=location;label.textContent='Lokasi Anda';status.textContent='GPS aktif · radius awal 5 km';loadNearby(location);
+  window.__pluitsHomeLocation=location;startHomeSearchPrompt('Lokasi terdeteksi · Bali, Indonesia');loadNearby(location);
  },error=>{
-  status.textContent=error.code===1?'Izin lokasi belum diberikan · aktifkan untuk melihat jarak akurat':'Lokasi belum terdeteksi · aktifkan lokasi untuk rekomendasi terdekat';loadNearby(null);
+  prompt.textContent=error.code===1?'Lokasi belum diizinkan · Bali, Indonesia':'Lokasi belum terdeteksi · Bali, Indonesia';loadNearby(null);
  },{enableHighAccuracy:true,timeout:15000,maximumAge:120000});
 }
  async function mountAccount(section='profile',parameter=''){
