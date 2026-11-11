@@ -358,7 +358,7 @@ async function feedPage(){
 <a href="#/places" class="ua-home-visual-card"><img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=700&q=80" alt="Alam dan pantai" loading="lazy"><span class="ua-home-visual-shade"></span><strong>Alam & pantai</strong></a>
 <a href="#/places" class="ua-home-visual-card"><img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=700&q=80" alt="Gym dan kebugaran" loading="lazy"><span class="ua-home-visual-shade"></span><strong>Gym & kebugaran</strong></a>
 </div></section>`;
-const trendSection=`<section class="ua-home-trends"><div class="ua-home-section-heading"><h2>Ide menarik di Bali</h2><a href="#/discover">Jelajahi semua</a></div><div class="ua-home-trend-strip">
+const trendSection=`<section class="ua-home-trends"><div class="ua-home-section-heading"><h2>Inspirasi di Bali</h2><a href="#/discover">Jelajahi semua</a></div><div class="ua-home-trend-strip">
 <a href="#/trip"><img src="https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?auto=format&fit=crop&w=500&q=75" alt="Pantai" loading="lazy"><span><b>Liburan pantai</b><small>Tempat & pengalaman</small></span></a>
 <a href="#/trip"><img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=500&q=75" alt="Laut" loading="lazy"><span><b>Wisata laut</b><small>Aktivitas air</small></span></a>
 <a href="#/places"><img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=500&q=75" alt="Olahraga" loading="lazy"><span><b>Hidup aktif</b><small>Olahraga & kebugaran</small></span></a>
