@@ -12,6 +12,6 @@ const TOP_TEN_DEMO_ITEMS=[
 ];
 export function renderTopTenSection(items=TOP_TEN_DEMO_ITEMS){
  const cards=items.map(item=>'<a class="ua-topten-card '+item.className+'" href="'+item.href+'"><img src="https://images.unsplash.com/'+item.image+'?auto=format&fit=crop&w='+item.width+'&q=85" alt="'+item.alt+'" '+(item.priority?'fetchpriority="high"':'loading="lazy"')+'><span class="ua-topten-copy"><strong>'+item.title+'</strong><em>⌖ '+item.location+'</em><small>'+item.category+'</small></span></a>').join('');
- return '<section class="ua-home-trends ua-home-topten" aria-label="Top 10 Trending"><div class="ua-home-section-heading"><div><span class="ua-eyebrow">EXPLORE PLUITS</span><h2>Top 10 Trending</h2></div><a href="#/search">Lihat semua <b>↗</b></a></div><div class="ua-topten-grid" id="ua-home-topten-grid">'+cards+'</div></section>';
+ return '<section class="ua-home-trends ua-home-topten" aria-label="Top 10 Trending"><div class="ua-home-section-heading"><div><span class="ua-eyebrow">EXPLORE PLUITS</span><h2>Top 10 Trending</h2></div><a href="#/search">Lihat semua <b>↗</b></a></div><div class="ua-topten-track" id="ua-home-topten-grid">'+cards+'</div></section>';
 }
 export {TOP_TEN_DEMO_ITEMS};
