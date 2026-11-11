@@ -872,6 +872,7 @@ function createPage(){
   <a class="ua-create-option" href="#/account/compose"><span class="ua-create-icon">${socialIcon('image',{size:24})}</span><strong>Post</strong><small>Foto, video, atau cerita yang tersimpan di profil.</small><span class="ua-create-arrow">›</span></a>
   <a class="ua-create-option" href="#/account/reel"><span class="ua-create-icon">${socialIcon('reels',{size:24})}</span><strong>Reel</strong><small>Video pendek tunggal maksimal 60 detik.</small><span class="ua-create-arrow">›</span></a>
   <div class="ua-create-option is-staged"><span class="ua-create-icon">${socialIcon('radio',{size:24})}</span><strong>Live</strong><small>Siaran langsung disiapkan pada tahap berikutnya.</small><span class="ua-create-stage">Segera</span></div>
+  <a class="ua-create-option" href="#/account/blog"><span class="ua-create-icon">${socialIcon('book',{size:24})}</span><strong>Blog</strong><small>Tulis cerita, puisi, pengalaman, atau catatanmu.</small><span class="ua-create-arrow">›</span></a>
  </section>`;
 }
 async function storyComposePage(){
