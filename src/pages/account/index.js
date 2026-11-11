@@ -880,11 +880,10 @@ async function createPage(){
    ${card('camera','Story','Momen foto atau video yang tampil selama 24 jam.','#/account/story','AKTIF','is-story')}
    ${card('image','Post','Bagikan foto, video, dan cerita di profilmu.','#/account/compose','AKTIF','is-post')}
    ${card('reels','Reel','Video pendek tunggal hingga 60 detik.','#/account/reel','AKTIF','is-reel')}
-   <div class="ua-create-card is-disabled" aria-disabled="true"><span class="ua-create-card-icon">${socialIcon('radio',{size:25})}</span><span class="ua-create-card-copy"><strong>Live</strong><small>Siaran langsung dan interaksi real-time.</small><em>DALAM PERSIAPAN</em></span><span class="ua-create-card-arrow">⌁</span></div>
+   <div class="ua-create-card is-disabled" aria-disabled="true"><span class="ua-create-card-icon">${socialIcon('radio',{size:25})}</span><span class="ua-create-card-copy"><strong>Live</strong><small>Siaran langsung dan interaksi real-time.</small><em>COMING SOON</em></span><span class="ua-create-card-arrow">⌁</span></div>
   </div></section>
   <section class="ua-create-section ua-create-publishing"><div class="ua-create-section-head"><div><span class="ua-eyebrow">PENERBITAN & PERSONAL BRAND</span><h2>Bangun ruang ceritamu</h2><p>Publikasikan tulisan dan pengalaman dengan identitas blog sendiri.</p></div></div>
-   ${card('book','Blog','Ruang khusus untuk catatan, puisi, pengalaman, dan artikel.',blogHref,hasBlog?'KELOLA BLOG':premium?'PREMIUM AKTIF':'UPGRADE PREMIUM',hasBlog||premium?'is-blog':'is-locked')}
-   ${!hasBlog&&!premium?'<p class="ua-create-premium-hint">'+socialIcon('lock',{size:15})+' Blog merupakan fitur Premium. Upgrade akun untuk mulai membuat ruang blog.</p>':''}
+   ${hasBlog||premium?card('book','Blog','Ruang khusus untuk catatan, puisi, pengalaman, dan artikel.',blogHref,hasBlog?'KELOLA BLOG':'PREMIUM AKTIF','is-blog'):('<div class="ua-create-locked-wrap">'+card('book','Blog','Ruang khusus untuk catatan, puisi, pengalaman, dan artikel.',blogHref,'','is-locked')+'<span class="ua-create-lock-mark" aria-label="Fitur terkunci">'+socialIcon('lock',{size:14})+'</span><p class="ua-create-premium-hint">UPGRADE KE PREMIUM</p></div>')}
   </section>
   <footer class="ua-create-foot"><span>Semua konten tetap berada dalam kendali privasi akunmu.</span><a href="#/account/drafts">Lihat draf tersimpan →</a></footer>
  </div>`;
