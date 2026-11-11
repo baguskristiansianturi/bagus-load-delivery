@@ -27,7 +27,7 @@ const uploadMediaFile=createMediaUploader({supabase,bucket:BUCKET,supabaseUrl:SU
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmtDate=v=>new Date(v).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'});
 const initials=v=>String(v||'P').trim().slice(0,1).toUpperCase();
-let trendSliderTimer=null,user=null,profile=null,profileReels=[],addresses=[],noticeTimer=null,leafletMap=null,leafletMarker=null,exploreFilter='recommended',reelsFilter='recommended',activityNotificationChannel=null,unreadNotificationCount=0,currentComposeDraft=null,profileMenuBound=false,accountContext={active:'personal',professional:null,stores:[],prefs:{}};
+let trendSliderTimer=null,trendSliderVisibilityHandler=null,user=null,profile=null,profileReels=[],addresses=[],noticeTimer=null,leafletMap=null,leafletMarker=null,exploreFilter='recommended',reelsFilter='recommended',activityNotificationChannel=null,unreadNotificationCount=0,currentComposeDraft=null,profileMenuBound=false,accountContext={active:'personal',professional:null,stores:[],prefs:{}};
 
 function notify(message,type='success'){
  const el=document.querySelector('#ua-toast');if(!el)return;
@@ -1151,6 +1151,7 @@ function bindFollowActions(){
  }));
 }
 function bindToptenSlider(){
+ if(trendSliderVisibilityHandler){document.removeEventListener('visibilitychange',trendSliderVisibilityHandler);trendSliderVisibilityHandler=null;}
  if(trendSliderTimer){clearTimeout(trendSliderTimer);trendSliderTimer=null;}
  const track=document.querySelector('#ua-home-topten-grid');
  if(!track||!window.matchMedia('(max-width:760px)').matches)return;
@@ -1210,10 +1211,11 @@ function bindToptenSlider(){
  track.addEventListener('mouseleave',endInteraction);
  track.addEventListener('focusin',beginInteraction);
  track.addEventListener('focusout',endInteraction);
- document.addEventListener('visibilitychange',()=>{
+ trendSliderVisibilityHandler=()=>{
   if(document.hidden){stopAuto();return;}
   if(!interacting)scheduleAuto(1200);
- });
+ };
+ document.addEventListener('visibilitychange',trendSliderVisibilityHandler);
  scheduleAuto(4200);
 }
 function bindExploreFilters(){
