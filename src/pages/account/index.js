@@ -351,7 +351,7 @@ async function feedPage(){
  const available=(rows||[]).filter(p=>!blockedIds.includes(p.user_id));
  const hydrated=await hydratePosts(available);
  const interestSlugs=new Set(interests.map(x=>String(x.slug||'').toLowerCase()));
- const score=p=>{const age=Math.max(0,(Date.now()-new Date(p.created_at).getTime())/3600000),tags=(p.tags||[]).map(x=>String(x).toLowerCase().replace(/^#/,'').replaceAll(' ','-')),interestMatch=tags.filter(tag=>interestSlugs.has(tag)).length;return (followingIds.includes(p.user_id)?80:0)+interestMatch*28+36*Math.exp(-age/72)+Math.min(45,(p.likes||0)*1.5+(p.comments||0)*2.5);};
+ const score=p=>{const age=Math.max(0,(Date.now()-new Date(p.created_at).getTime())/3600000),tags=(p.tags||[]).map(x=>String(x).toLowerCase().replace(/^#/,'').replace(/ /g,'-')),interestMatch=tags.filter(tag=>interestSlugs.has(tag)).length;return (followingIds.includes(p.user_id)?80:0)+interestMatch*28+36*Math.exp(-age/72)+Math.min(45,(p.likes||0)*1.5+(p.comments||0)*2.5);};
  let sorted=exploreFilter==='following'?hydrated.filter(p=>followingIds.includes(p.user_id)).sort((a,b)=>new Date(b.created_at)-new Date(a.created_at))
   :exploreFilter==='latest'?[...hydrated].sort((a,b)=>new Date(b.created_at)-new Date(a.created_at))
   :exploreFilter==='popular'?[...hydrated].sort((a,b)=>(b.likes*2+b.comments*3)-(a.likes*2+a.comments*3)||new Date(b.created_at)-new Date(a.created_at))
