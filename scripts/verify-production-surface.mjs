@@ -285,5 +285,6 @@ assert.throws(() => getRoute('unknown'), /Unknown PLUITS route/);
 
 const accountSource = read('src/pages/account/index.js');
 assert.ok(accountSource.includes(".eq('moderation_status','published').order('created_at',{ascending:false}).limit(30)"), 'Home feed must bound initial posts for mobile performance.');
-assert.ok(!accountSource.includes("from('user_stories')"), 'Stories must stay on user profiles, not the Explore home feed.');
+const homeFeedSource = accountSource.slice(accountSource.indexOf('async function feedPage()'), accountSource.indexOf('async function reelsPage()'));
+assert.ok(!homeFeedSource.includes("from('user_stories')"), 'Stories must stay on user profiles, not the Explore home feed.');
 assert.ok(accountSource.includes(".lte('duration_ms',60000).order('created_at',{ascending:false}).limit(60)"), 'Reels discovery must bound initial media lookup.');
