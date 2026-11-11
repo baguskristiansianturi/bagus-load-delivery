@@ -3,3 +3,6 @@
 .ua-social-app .pl-post-actions button:focus-visible{outline:2px solid #315d7b;outline-offset:3px;border-radius:5px}
 .ua-social-app .pl-post-actions button:active{transform:scale(.96)}
 .ua-social-app .pl-post-actions .ua-login-action{font-size:11px}
+
+.ua-social-app .ua-post-date{display:block;margin-top:1px;color:#89949b;font-size:10px;line-height:1.25;font-weight:450;white-space:nowrap}
+.ua-social-app .ua-post-meta{color:#73818a;font-size:10px;line-height:1.25}
