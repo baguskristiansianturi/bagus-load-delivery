@@ -36,3 +36,15 @@ Read before editing. Existing owners remain during incremental migration; target
 - Preserve legacy entry points until every importer and route test migrates.
 
 See `docs/pluits/PLUITS-APPLICATION-ARCHITECTURE.md` and `docs/pluits/FRONTEND-MODULE-CONTRACTS.md`.
+
+
+## Page/component ownership audit — 12 November 2026
+
+See [PAGE-COMPONENT-OWNERSHIP-AUDIT-2026-11-12.md](./PAGE-COMPONENT-OWNERSHIP-AUDIT-2026-11-12.md) for the complete route-to-page inventory, layout/sidebar ownership matrix, target folder convention, change-scope contract and incremental migration order.
+
+Current concrete extractions:
+- Seller Center / Brand workspace navigation: `src/features/seller/seller-navigation.js`. Seller page owns data/state and binds the returned `data-tab` controls.
+- Inbox conversation sidebar: `src/features/inbox/inbox-sidebar.js`. Messages page owns conversation data/state and binds `data-inbox-tab`.
+- Social global navigation remains `src/components/social/navigation.js`; do not duplicate it inside page workspaces.
+
+Important: this is an incremental migration. Account, Marketplace, Trip, Seller Center and Inbox controllers still contain substantial page-level composition/behavior. A folder existing does not mean that page is fully modular. Follow the audit's migration order and do not mass-move files.
