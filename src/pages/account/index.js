@@ -340,7 +340,27 @@ async function feedPage(){
  if(interestQuery.error)throw interestQuery.error;
  const interests=(interestQuery.data||[]).map(x=>x.directory_categories).filter(Boolean);
  const interestSection="<section class='ua-home-interests'><div class='ua-home-section-heading'><div><span class='ua-eyebrow'>PERSONALISASI</span><h2>Minatmu</h2><p>Topik yang membantu Pluits menyusun rekomendasi.</p></div><a href='#/places'>Atur minat →</a></div>"+(interests.length?"<div class='ua-home-interest-chips'>"+interests.map(x=>"<a href='#/places'>"+esc(x.name)+"</a>").join('')+"</div>":"<div class='ua-home-interest-empty'>Belum ada minat yang dipilih. Pilih kategori di direktori agar rekomendasi tempat dan konten makin relevan. <a href='#/places'>Pilih minat</a></div>")+"</section>";
- const nearbySection="<section class='ua-home-nearby'>"+homeNearbySection()+"</section>";
+ const discoverySection=`<section class="ua-home-discovery" aria-label="Rekomendasi untukmu">
+  <div class="ua-home-location">
+   <div class="ua-home-location-copy"><span class="ua-eyebrow">LOKASI REKOMENDASI</span><strong id="ua-home-location-label">Pilih lokasi saat ini</strong><small id="ua-home-location-note">Rekomendasi akan mengikuti tempat kamu berada, bukan hanya kota asal profil.</small></div>
+   <button type="button" id="ua-home-detect-location" class="ua-home-location-button">◎ Gunakan lokasiku</button>
+  </div>
+  <div class="ua-home-region-chips" role="group" aria-label="Cakupan rekomendasi">
+   <button type="button" data-home-region="current" class="is-active">Sekitarku</button>
+   <button type="button" data-home-region="Bali">Bali</button>
+   <button type="button" data-home-region="Jakarta">Jakarta</button>
+   <button type="button" data-home-region="Indonesia">Indonesia</button>
+  </div>
+  <div class="ua-home-discovery-intro"><span class="ua-eyebrow">UNTUK KAMU</span><h2>Hal menarik di sekitarmu</h2><p>Wilayah saat ini, minat, dan aktivitasmu membantu menyusun rekomendasi.</p></div>
+  <div class="ua-home-discovery-grid">
+   <a href="#/places" class="ua-home-discovery-card"><span class="ua-home-discovery-icon">⌖</span><strong>Destinasi</strong><small>Tempat dan pengalaman menarik di wilayahmu</small><span>Jelajahi <b>→</b></span></a>
+   <a href="#/marketplace" class="ua-home-discovery-card"><span class="ua-home-discovery-icon">✳</span><strong>Makanan</strong><small>Hidangan yang sedang banyak diminati</small><span>Temukan makanan <b>→</b></span></a>
+   <a href="#/marketplace" class="ua-home-discovery-card"><span class="ua-home-discovery-icon">◇</span><strong>Produk</strong><small>Produk yang menarik perhatian pengunjung</small><span>Lihat produk <b>→</b></span></a>
+   <a href="#/places" class="ua-home-discovery-card"><span class="ua-home-discovery-icon">✣</span><strong>Jasa</strong><small>Layanan yang relevan dan banyak dicari</small><span>Temukan jasa <b>→</b></span></a>
+   <a href="#/search" class="ua-home-discovery-card ua-home-discovery-wide"><span class="ua-home-discovery-icon">▤</span><strong>Blog & topik populer</strong><small>Artikel, berita, wawasan, dan percakapan dari berbagai akun</small><span>Baca dan jelajahi <b>→</b></span></a>
+  </div>
+  <p class="ua-home-discovery-footnote">Rekomendasi populer akan diisi dari aktivitas nyata di PLUITS. Angka pengunjung atau peringkat tidak ditampilkan sebelum datanya memadai.</p>
+ </section>`;
  const {data:follows,error:followError}=await supabase.from('user_follows').select('following_id').eq('follower_id',user.id).eq('status','accepted');
  if(followError)throw followError;
  const followingIds=[...new Set((follows||[]).map(x=>x.following_id).filter(Boolean))];
@@ -371,7 +391,7 @@ async function feedPage(){
  const filterNav="<nav class='ua-explore-filters' aria-label='Pilihan feed'>"+filters.map(([key,label])=>"<button type='button' data-explore-filter='"+key+"' class='"+(exploreFilter===key?'is-active':'')+"' "+(exploreFilter===key?"aria-current='true'":"")+">"+label+"</button>").join('')+"</nav>";
  const empty=exploreFilter==='following'?'Belum ada postingan terbaru dari akun yang Anda ikuti.':'Belum ada postingan publik untuk ditampilkan. Coba kembali nanti atau bagikan cerita pertama Anda.';
  const action=exploreFilter==='following'?"<a href='#/search'>Temukan akun untuk diikuti</a>":"<a href='#/account/compose'>Bagikan foto atau video</a>";
- return "<div class='ua-social-home'><div class='ua-feed-heading'><div><span class='ua-eyebrow'>PLUITS COMMUNITY</span><h1>Beranda</h1><p>Ruang personal untuk minat, tempat terdekat, teman, dan rekomendasi.</p></div><a class='ua-outline' href='#/account/compose'>＋ Buat postingan</a></div><a class='ua-feed-search ua-feed-search-row' href='#/search' aria-label='Cari di Pluits'>"+socialIcon('search',{size:18})+"<span>Cari teman, tempat, dan postingan</span></a>"+interestSection+nearbySection+storySection+filterNav+"<section class='ua-feed'>"+(sorted.length?sorted.map(post=>renderReelCard(post,{user,avatar,esc,socialIcon})).join(''):"<div class='ua-feed-empty'><strong>"+empty+"</strong>"+action+"</div>")+"</section></div>";
+ return "<div class='ua-social-home'><div class='ua-feed-heading'><div><span class='ua-eyebrow'>PLUITS COMMUNITY</span><h1>Beranda</h1><p>Ruang personal untuk minat, tempat terdekat, teman, dan rekomendasi.</p></div><a class='ua-outline' href='#/account/compose'>＋ Buat postingan</a></div><a class='ua-feed-search ua-feed-search-row' href='#/search' aria-label='Cari di Pluits'>"+socialIcon('search',{size:18})+"<span>Cari teman, tempat, dan postingan</span></a>"+discoverySection+interestSection+storySection+filterNav+"<section class='ua-feed'>"+(sorted.length?sorted.map(post=>renderReelCard(post,{user,avatar,esc,socialIcon})).join(''):"<div class='ua-feed-empty'><strong>"+empty+"</strong>"+action+"</div>")+"</section></div>";
 }
 async function reelsPage(){
  const {data:vm,error:me}=await supabase.from('post_media').select('post_id,duration_ms').eq('media_type','video').lte('duration_ms',60000).order('created_at',{ascending:false}).limit(160);if(me)throw me;
@@ -671,6 +691,37 @@ function normalizeFeedMediaFrames(root=document){
   }
  });
 }
+function bindHomeDiscoveryLocation(){
+ const label=document.querySelector('#ua-home-location-label');
+ const note=document.querySelector('#ua-home-location-note');
+ const detect=document.querySelector('#ua-home-detect-location');
+ const regionButtons=[...document.querySelectorAll('[data-home-region]')];
+ if(!label||!detect)return;
+ const choose=(name,detail='Lokasi ini dipilih untuk menyusun rekomendasi Beranda.')=>{
+  label.textContent=name;note.textContent=detail;
+  regionButtons.forEach(button=>button.classList.toggle('is-active',button.dataset.homeRegion===name||button.dataset.homeRegion==='current'&&name==='Lokasi perangkat'));
+ };
+ regionButtons.forEach(button=>button.addEventListener('click',()=>{
+  const region=button.dataset.homeRegion;
+  if(region==='current'){label.textContent='Lokasi perangkat';note.textContent='Tekan “Gunakan lokasiku” untuk mendeteksi posisi saat ini.';regionButtons.forEach(x=>x.classList.toggle('is-active',x===button));return;}
+  choose(region,'Cakupan rekomendasi diatur secara manual. Kamu bisa menggantinya kapan saja.');
+ }));
+ detect.addEventListener('click',()=>{
+  if(!navigator.geolocation){note.textContent='Perangkat tidak mendukung deteksi lokasi. Pilih wilayah secara manual.';return;}
+  detect.disabled=true;detect.textContent='Mendeteksi…';note.textContent='Menunggu izin lokasi dari perangkat…';
+  navigator.geolocation.getCurrentPosition(position=>{
+   const {latitude,longitude}=position.coords;
+   window.__pluitsHomeLocation={latitude,longitude,accuracy:position.coords.accuracy,updatedAt:Date.now()};
+   label.textContent='Lokasi perangkat terdeteksi';
+   note.textContent='Posisi saat ini siap digunakan untuk rekomendasi terdekat. Lokasi profil tetap terpisah.';
+   regionButtons.forEach(x=>x.classList.toggle('is-active',x.dataset.homeRegion==='current'));
+   detect.disabled=false;detect.textContent='◎ Perbarui lokasi';
+  },error=>{
+   note.textContent=error.code===1?'Izin lokasi ditolak. Kamu tetap bisa memilih wilayah secara manual.':'Lokasi belum dapat dideteksi. Periksa pengaturan perangkat atau pilih wilayah manual.';
+   detect.disabled=false;detect.textContent='◎ Coba lagi';
+  },{enableHighAccuracy:false,timeout:10000,maximumAge:300000});
+ });
+}
 async function mountAccount(section='profile',parameter=''){
  if(section!=='activity'&&activityNotificationChannel){supabase.removeChannel(activityNotificationChannel);activityNotificationChannel=null;}
  const {data:{session}}=await supabase.auth.getSession();user=session?.user||null;
@@ -690,7 +741,8 @@ async function mountAccount(section='profile',parameter=''){
   const headerAvatar=await signed(profile.avatar_path);const app=document.querySelector('#app');const navActive=section==='profile'?(parameter==='edit'?'profile-edit':'profile'):section==='preview'?'preview':section==='explore'?'explore':section==='reels'?'reels':['create','compose','reel','story'].includes(section)?'create':section==='post'?'post':section==='activity'?'activity':section==='addresses'?'addresses':'account';app.classList.remove('pl-page-enter');app.innerHTML=frame(page,navActive,headerAvatar);requestAnimationFrame(()=>app.classList.add('pl-page-enter'));
   document.querySelector('#ua-logout')?.addEventListener('click',async()=>{await supabase.auth.signOut();user=null;profile=null;authScreen('login');});
   bindAccountContext({db:supabase,user,ctx:accountContext,profile,refresh:mountAccount});
-  if(section==='explore')bindHomeNearby({personalize:true});
+  if(section==='explore'){bindHomeDiscoveryLocation();}
+
   bindProfileMenu();
   if(section==='security')bindAccountSecurity(supabase,user);
   document.querySelector('#ua-settings-logout')?.addEventListener('click',async()=>{await supabase.auth.signOut();user=null;profile=null;location.hash='/account/login';});
