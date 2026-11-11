@@ -339,7 +339,7 @@ async function feedPage(){
  if(interestQuery.error)throw interestQuery.error;
  const interests=(interestQuery.data||[]).map(x=>x.directory_categories).filter(Boolean);
  const interestSection="<section class='ua-home-interests'><div class='ua-home-section-heading'><div><span class='ua-eyebrow'>PERSONALISASI</span><h2>Minatmu</h2><p>Topik yang membantu Pluits menyusun rekomendasi.</p></div><a href='#/places'>Atur minat →</a></div>"+(interests.length?"<div class='ua-home-interest-chips'>"+interests.map(x=>"<a href='#/places'>"+esc(x.name)+"</a>").join('')+"</div>":"<div class='ua-home-interest-empty'>Belum ada minat yang dipilih. Pilih kategori di direktori agar rekomendasi tempat dan konten makin relevan. <a href='#/places'>Pilih minat</a></div>")+"</section>";
- const nearbySection="<section class='ua-home-nearby'><div class='ua-home-section-heading'><div><span class='ua-eyebrow'>GEODIRECTORY</span><h2>Di sekitarmu</h2><p>Tempat dan layanan yang bisa kamu jelajahi.</p></div><a href='#/places'>Lihat semua →</a></div>"+homeNearbySection()+"</section>";
+ const nearbySection="<section class='ua-home-nearby'>"+homeNearbySection()+"</section>";
  const {data:follows,error:followError}=await supabase.from('user_follows').select('following_id').eq('follower_id',user.id).eq('status','accepted');
  if(followError)throw followError;
  const followingIds=[...new Set((follows||[]).map(x=>x.following_id).filter(Boolean))];
