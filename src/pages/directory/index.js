@@ -1,5 +1,6 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import './directory.css';
+import {renderNearbyHeroCard} from '../../features/discovery/nearby-card.js';
 
 const supabase = createClient(
   'https://ytndswhqxayqpftszwfh.supabase.co',
@@ -28,7 +29,7 @@ export function homeNearbySection() {
 }
 
 async function getNearby({lat=state.lat,lon=state.lon,category=state.category,query=state.query,radius=state.radius,limit=12}={}) {
-  if(!Number.isFinite(Number(lat))||!Number.isFinite(Number(lon)))return [];
+  if(lat===null||lon===null||lat===undefined||lon===undefined||!Number.isFinite(Number(lat))||!Number.isFinite(Number(lon)))return [];
   const {data,error}=await supabase.rpc('directory_nearby',{
     p_lat:lat,p_lon:lon,p_radius_m:radius,p_limit:limit,
     p_category_slug:category||null,p_query:query||null
@@ -315,7 +316,7 @@ export function bindHomeNearby({personalize=true,location=null}={}) {
       const distanceLabel=distance(Number(entity.distance_m)||0),category=(entity.category_slugs||[]).slice(0,2).join(' · ');
       const typeLabel=entity.entity_type==='place'?'TEMPAT':entity.entity_type==='provider'?'JASA':entity.entity_type==='event'?'ACARA':'PLUITS';
       const locationText=distanceLabel+(location?' dari Anda':' dari lokasi tersimpan');
-      return '<a class="pl-nearby-item-card" href="'+placeUrl(entity.slug)+'"><span class="pl-nearby-item-visual">'+(image?'<img src="'+esc(image)+'" alt="'+esc(itemName)+'" loading="lazy">':'<span class="pl-nearby-item-placeholder">'+typeLabel+'</span>')+'<span class="pl-nearby-item-shade"></span><span class="pl-nearby-item-overlay"><small>'+esc(category||typeLabel)+'</small><b>'+esc(itemName)+'</b><em><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10.2c0 5.1-8 11-8 11s-8-5.9-8-11a8 8 0 1 1 16 0Z"></path><circle cx="12" cy="10" r="2.5"></circle></svg> '+locationText+'</em></span></span></a>';
+      return renderNearbyHeroCard({href:placeUrl(entity.slug),image,name:itemName,category:category||typeLabel,distanceLabel,locationText,typeLabel});
     }).join('');
   }).catch(error=>{if(isCurrent()){console.error('PLUITS nearby discovery failed',error);resultTarget.innerHTML='<div class="pl-directory-empty">Tempat terdekat belum dapat dimuat.</div>'; }});
 }
