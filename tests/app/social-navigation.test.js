@@ -98,16 +98,19 @@ test('signed-in home leads with Bali experiences, search, wishlist and the perso
  const account=await readFile(new URL('../../src/pages/account/index.js',import.meta.url),'utf8');
  const navigation=await readFile(new URL('../../src/components/social/navigation.js',import.meta.url),'utf8');
  const css=await readFile(new URL('../../src/pages/account/user-account.css',import.meta.url),'utf8');
- for(const label of ['Tempat untuk dikunjungi','Aktivitas','Kuliner','Alam & pantai','Gym & kebugaran'])assert.ok(account.includes(label),label+' experience card must be present.');
- assert.ok(navigation.includes('ua-home-searchbar')&&navigation.includes('ua-home-wishlist'),'Home header must lead with search and saved items.');
+ assert.ok(account.includes('Sedang ramai di Bali')&&account.includes('ua-home-topten'),'Home must lead discovery with a Top 10 popular experience module.');
+ assert.ok(account.includes('BALI · BERDASARKAN AKTIVITAS NYATA'),'Popularity labels must be grounded in real activity data.');
+ assert.ok(navigation.includes('ua-home-searchbar')&&navigation.includes('ua-home-wishlist')&&navigation.includes('ua-home-search-prompt'),'Home header must show animated search and saved items.');
+ assert.ok(account.includes('Jelajahi kuliner yang ramai di Bali')&&account.includes('startHomeSearchPrompt'),'Search prompt must rotate typed discovery suggestions.');
  assert.ok(account.includes('navigator.geolocation.getCurrentPosition'),'Home must request device location when no current location is available.');
  assert.ok(account.includes('window.__pluitsHomeLocation'),'Detected device location must be kept separate from profile location.');
  assert.ok(account.includes('ua-home-trends')&&account.includes('ua-explore-filters'),'Experience discovery and feed choices must precede friend posts.');
- assert.ok(account.includes('homeNearbySection')&&account.includes('bindHomeNearby'),'Home must use live GeoDirectory nearby results.');
+ assert.ok(account.includes('homeNearbySection')&&account.includes('bindHomeNearby'),'Home must use live nearby results.');
  assert.ok(account.includes('enableHighAccuracy:true'),'Home must request precise GPS for accurate nearby distance.');
-
- assert.ok(account.includes('ua-home-visual-card')&&account.includes('images.unsplash.com'),'Home discovery must use photographic visual cards.');
- assert.ok(css.includes('.ua-home-visual-grid')&&css.includes('@media(max-width:380px)'),'Visual discovery cards must have a mobile-first responsive layout.');
+ const directory=await readFile(new URL('../../src/pages/directory/index.js',import.meta.url),'utf8');
+ assert.ok(directory.includes('Jarak dari lokasi perangkat, tanpa peta')&&directory.includes('distance(Number(row.distance_m)'),'Nearby places must be displayed as distance cards, not a map.');
+ assert.ok(css.includes('.ua-topten-card')&&css.includes('.ua-home-searchbar')&&css.includes('.pl-home-map-chip'),'Experience cards, animated search and nearby cards must have responsive styles.');
+ assert.ok(!directory.includes('id="pl-home-nearby-map"'),'Home must not render the GeoDirectory map.');
 });
 
 
