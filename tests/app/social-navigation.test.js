@@ -32,12 +32,16 @@ test('shared header does not render a second profile avatar target',()=>{
  assert.doesNotMatch(html,/class="ua-header-profile"/);
 });
 
-test('home sidebar activity and create actions use their own canonical destinations',async()=>{
- const source=await (await import('node:fs/promises')).readFile(new URL('../../src/pages/home/index.js',import.meta.url),'utf8');
- assert.match(source,/href="\$\{ROUTES\.activity\}">♡ <span>Aktivitas/);
- assert.match(source,/href="\$\{ROUTES\.create\}">＋ <span>Buat postingan/);
+test('public guest home and authenticated create/activity destinations remain separate',async()=>{
+ const home=await (await import('node:fs/promises')).readFile(new URL('../../src/pages/home/index.js',import.meta.url),'utf8');
+ const account=await (await import('node:fs/promises')).readFile(new URL('../../src/pages/account/index.js',import.meta.url),'utf8');
+ const routes=await (await import('node:fs/promises')).readFile(new URL('../../src/components/social/navigation-routes.js',import.meta.url),'utf8');
+ assert.match(home,/renderSocialHeader\\(\\{active:'home',publicHome:true\\}\\)/);
+ assert.match(home,/renderSocialMobileNav\\(\\{active:'home',publicHome:true\\}\\)/);
+ assert.match(account,/href='#\\/account\\/compose'[^>]*aria-label='Buat postingan'/);
+ assert.match(routes,/activity: '#\\/account\\/activity'/);
+ assert.match(routes,/create: '#\\/account\\/create'/);
 });
-
 test('profile hero has isolated responsive layouts for desktop, mobile and narrow phones',async()=>{
  const css=await (await import('node:fs/promises')).readFile(new URL('../../src/features/profile/profile-hero.css',import.meta.url),'utf8');
  assert.match(css,/grid-template-columns:112px minmax\(0,1fr\)/);
