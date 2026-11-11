@@ -103,6 +103,9 @@ test('signed-in home leads with Bali experiences, search, wishlist and the perso
  assert.ok(account.includes('navigator.geolocation.getCurrentPosition'),'Home must request device location when no current location is available.');
  assert.ok(account.includes('window.__pluitsHomeLocation'),'Detected device location must be kept separate from profile location.');
  assert.ok(account.includes('ua-home-trends')&&account.includes('ua-explore-filters'),'Experience discovery and feed choices must precede friend posts.');
+ assert.ok(account.includes('homeNearbySection')&&account.includes('bindHomeNearby'),'Home must use live GeoDirectory nearby results.');
+ assert.ok(account.includes('enableHighAccuracy:true'),'Home must request precise GPS for accurate nearby distance.');
+
  assert.ok(account.includes('ua-home-visual-card')&&account.includes('images.unsplash.com'),'Home discovery must use photographic visual cards.');
  assert.ok(css.includes('.ua-home-visual-grid')&&css.includes('@media(max-width:380px)'),'Visual discovery cards must have a mobile-first responsive layout.');
 });
