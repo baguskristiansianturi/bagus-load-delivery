@@ -98,13 +98,14 @@ test('signed-in home leads with Bali experiences, search, wishlist and the perso
  const account=await readFile(new URL('../../src/pages/account/index.js',import.meta.url),'utf8');
  const navigation=await readFile(new URL('../../src/components/social/navigation.js',import.meta.url),'utf8');
  const css=await readFile(new URL('../../src/pages/account/user-account.css',import.meta.url),'utf8');
- assert.ok(account.includes('Top 10 Trending')&&account.includes('ua-topten-grid')&&((account.match(/class="ua-topten-card ua-topten-card-/g)||[]).length===10),'Explore must show ten individual trending subjects, not category tiles.');
+ const topTen=await readFile(new URL('../../src/features/discovery/top-ten-cards.js',import.meta.url),'utf8');
+ assert.ok(topTen.includes('Top 10 Trending')&&topTen.includes('ua-topten-grid')&&((topTen.match(/className:'ua-topten-card-/g)||[]).length===10),'Explore must show ten individual trending subjects, not category tiles.');
  assert.ok(account.includes('function bindToptenSlider()')&&account.includes('setInterval(()=>{if(!paused&&!document.hidden)goTo(index+1);},4200)'),'Mobile Top 10 must rotate through individual trending subjects and pause while interacted with.');
  assert.ok(account.includes("exploreFilter='recommended'")&&account.includes("ua-home-following")&&account.includes("Mengikuti")&&account.includes("Untuk Anda"),'The Beranda feed must lead with posts from followed accounts.');
  assert.ok(account.includes('ua-home-topic-carousel')&&account.includes('ua-home-compose-prompt')&&!account.includes('REKOMENDASI PERSONAL')&&!account.includes('Atur minat')&&!account.includes('Pilih minat'),'Untukmu must show automatic recommendation cards without setup instructions or extra explanatory copy.');
  assert.ok(account.includes('trendSection+homeNearbySection()+homeHeading'),'The page hierarchy must place Di sekitar Anda cards directly below Top 10, before Untukmu and Beranda.');
 
- assert.ok(account.includes('Beef Slab')&&account.includes('href="#/places?category=restaurant"'),'Tapping a trending food item must open its matching directory category.');
+ assert.ok(topTen.includes("title:'Beef Slab'")&&topTen.includes("href:'#/places?category=restaurant'"),'Tapping a trending food item must open its matching directory category.');
  const directorySource=await readFile(new URL('../../src/pages/directory/index.js',import.meta.url),'utf8');
  assert.ok(directorySource.includes('params.get(\'category\')')&&directorySource.includes('state.categories.some(x=>x.slug===requested)'),'Directory must activate the category selected by a trending card.');
  assert.ok(!account.includes('"+discoverySection+'),'Home feed must not reference the removed category-card section.');
@@ -116,7 +117,6 @@ test('signed-in home leads with Bali experiences, search, wishlist and the perso
  assert.ok(account.includes('renderTopTenSection')&&account.includes('ua-explore-filters'),'Explore must compose the isolated Top 10 module before feed filters.');
  assert.ok(account.includes('homeNearbySection')&&account.includes('bindHomeNearby'),'Home must use live nearby results.');
  assert.ok(account.includes('Ramai di komunitas')&&account.includes('Produk Lokal')&&account.includes('Kumpulan')&&account.includes('Layanan PLUITS'),'Home must continue from the Beranda feed into trending topics, product recommendations, service collections and PLUITS service filters.');
- const topTen=await readFile(new URL('../../src/features/discovery/top-ten-cards.js',import.meta.url),'utf8');
  assert.ok(topTen.includes('⌖ ')&&topTen.includes('ua-topten-copy')&&topTen.includes('TOP_TEN_DEMO_ITEMS'),'Top 10 cards must be an isolated, explicitly demo-only image presentation module.');
  const nearbySource=await readFile(new URL('../../src/pages/directory/index.js',import.meta.url),'utf8');
  const nearbyCards=await readFile(new URL('../../src/features/discovery/nearby-card.js',import.meta.url),'utf8');
