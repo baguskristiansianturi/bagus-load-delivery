@@ -1,4 +1,4 @@
-const BRAND_LOGO_SRC = `${import.meta.env.BASE_URL}assets/brand/pluits-logo.png`;
+const BRAND_LOGO_SRC = '/pluits/assets/brand/pluits-logo.png';
 
 /**
  * Render the canonical PLUITS image mark.
