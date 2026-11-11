@@ -607,3 +607,114 @@ In an emergency, a person may have no mobile data quota, no internet connection,
 
 ### Decision boundary
 This is an unapproved research idea. Do not add native dependencies, change app packaging, request Bluetooth/Wi-Fi permissions, alter the business model, or advertise offline emergency messaging until the founder approves a tested technical direction and a safety/privacy design.
+
+## IDEA-013 — Social platform horizon 2035: multi-format identity, editorial publishing, and contextual local discovery
+
+- **Tanggal ditemukan:** 11 November 2026.
+- **Sumber:** sharing founder tentang merancang PLUITS seolah kebutuhan sosial tahun 2035, mempertahankan budaya membaca/menulis, menggabungkan feed sosial dengan discovery lokal, artikel, tempat, dan bisnis.
+- **Kategori:** Social Media | Product Vision | Content | Articles | Creator Economy | GeoDirectory | Discovery | Advertising | Recommendation.
+- **Jenis:** OBSERVATION | HYPOTHESIS | PROPOSAL.
+- **Status:** PROPOSED / NEEDS VALIDATION — bukan keputusan implementasi atau perubahan release scope.
+- **Keterkaitan keputusan aktif:** D-001, D-002, D-004, D-006; Business Model Master Bagian 1, 23, dan 32–33. Tidak menggantikan Social Media P0 atau release gate.
+
+### A. Visi produk: membangun pengalaman sosial jangka panjang
+
+PLUITS dirancang bukan hanya untuk meniru pola media sosial tahun 2026, tetapi agar fondasi produknya tetap relevan menghadapi perubahan perilaku dan teknologi menuju 2035. Produk boleh memperkenalkan pola baru, tetapi manfaat dasarnya harus langsung dipahami manusia hari ini. Jangan menambahkan kompleksitas futuristik yang tidak menyelesaikan masalah nyata.
+
+Prinsip yang diuji:
+- Teknologi dan format dapat berkembang tanpa mengharuskan pengguna mempelajari ulang seluruh aplikasi.
+- Satu identitas pengguna dapat menampung hubungan sosial, aktivitas, karya, dan kontribusi yang relevan dengan izin serta privasi yang jelas.
+- Pengguna tidak dipaksa menjadi video creator, penjual, atau pembeli agar dianggap bernilai.
+- Konten sosial, pengetahuan, penemuan lokal, dan transaksi saling terhubung tetapi tidak dicampur menjadi satu ranking atau satu model data.
+- Pengalaman sosial harus tetap bernilai bahkan saat pengguna tidak berbelanja atau bepergian.
+
+### B. Penulis dan artikel sebagai ekspresi inti, bukan fitur kelas dua
+
+Founder mengamati bahwa budaya blogger/penulis tampak kurang terlihat di tengah dominasi video, tetapi kebiasaan membaca dan menulis tidak hilang. Sebagian orang menulis karena minat, dokumentasi, pengetahuan, ekspresi, atau kebutuhan membangun portofolio, terlepas dari jumlah pembaca.
+
+**Hipotesis:** PLUITS dapat memberi rumah yang layak bagi penulis dan pembaca di dalam platform sosial yang sama, tanpa memaksa mereka mengubah karya menjadi video atau materi promosi.
+
+Usulan pengalaman:
+- Satu profil, beberapa bentuk ekspresi: Posts, Reels/Video, Articles, dan About.
+- Artikel adalah format konten kelas satu yang dapat diterbitkan, disimpan sebagai draft, diedit, dibaca, dibagikan, dikomentari, dan ditemukan sesuai kontrol visibilitas.
+- Artikel dapat berupa catatan pendek/panjang, pengalaman, perjalanan, ulasan, opini, pengetahuan, dokumentasi komunitas, dan tulisan personal.
+- Artikel publik memiliki URL permanen yang dapat dibagikan dan berpotensi diindeks mesin pencari; pembaca publik tidak harus login untuk membaca. Aksi yang membutuhkan identitas tetap meminta login.
+- Profil dapat mengarsipkan karya penulis agar pembaca dapat menjelajahi tulisan berdasarkan penulis/topik/waktu.
+- Artikel tidak wajib memiliki produk, tautan affiliate, transaksi, atau video.
+- Pengalaman membaca harus mengutamakan tipografi, struktur heading, gambar, aksesibilitas, kecepatan, dan kenyamanan layar kecil.
+- Creator/author analytics dan monetisasi dapat diteliti kemudian; jangan menjanjikan pendapatan atau menetapkan skema bagi hasil sebelum validasi.
+
+Batas teknis yang perlu diteliti: apakah artikel merupakan content type dari sistem post yang sama dengan renderer/editor khusus, atau entitas editorial terpisah yang terhubung ke profil dan feed. Hindari duplikasi identitas, komentar, like, moderation, media, dan permission.
+
+### C. Home dan Explore sebagai discovery berlapis
+
+Usulan founder: beranda tidak hanya menampilkan postingan dan iklan; pengguna juga dapat menemukan tempat, restoran, destinasi, artikel populer, kegiatan, komunitas, dan informasi lokal dalam kartu/carousel yang ramah layar ponsel.
+
+Arah eksplorasi:
+- **Home:** tetap menjadi feed sosial kanonis yang mengutamakan orang yang diikuti dan konten yang relevan. Sisipkan modul discovery kontekstual secara terukur di antara konten, bukan mengubah beranda menjadi dashboard katalog atau papan iklan.
+- **Explore:** menjadi ruang penemuan yang lebih luas dan eksplisit: orang/kreator, konten, artikel, topik, komunitas, tempat, bisnis, dan aktivitas lokal.
+- **Local Pulse (nama kerja):** modul discovery wilayah yang membantu pengguna menemukan hal menarik di sekitar atau lokasi pilihan. Modul dapat berupa kartu tempat, restoran, destinasi, event, dan cerita lokal; carousel horizontal cocok diuji di mobile, tetapi bukan satu-satunya pola layout.
+- **Reading / Articles:** permukaan editorial untuk tulisan baru, populer, pilihan topik, dan penulis yang relevan. Popularitas tidak hanya berdasarkan views; kualitas dan keragaman perlu diteliti.
+- **Communities:** kegiatan, pengumuman, dan percakapan komunitas/organisasi yang relevan.
+- **Business discovery:** profil dan layanan bisnis lokal yang dapat ditemukan secara organik, tanpa membuat semua postingan menjadi promosi.
+- **Sponsored content:** diberi label jelas dan dibedakan dari rekomendasi organik.
+
+Home/Explore tidak harus menampilkan semua modul pada setiap sesi. Frekuensi, posisi, kepadatan, personalisasi, dan kemampuan pengguna mengatur minat harus diuji agar pengalaman tidak terasa penuh, repetitif, atau didominasi kartu komersial.
+
+### D. Local Pulse: jangan mengarang sinyal "ramai"
+
+Local Pulse adalah hipotesis discovery, bukan klaim real-time yang sudah tersedia. PLUITS wajib membedakan sinyal berikut:
+1. **Sedang ramai sekarang:** hanya jika ada sumber real-time yang sah, cukup akurat, memiliki ambang agregasi privasi, dan dapat dijelaskan.
+2. **Populer di wilayah ini:** sinyal historis/berperiode dari aktivitas berkualitas yang relevan, bukan klaim sedang penuh.
+3. **Banyak dibicarakan:** percakapan/unggahan publik yang memenuhi ambang dan moderasi; bukan bukti kunjungan.
+4. **Sering disimpan/dikunjungi:** masing-masing hanya jika event yang sah tersedia dan definisi metrik jelas.
+5. **Direkomendasikan untuk Anda:** relevansi minat/lokasi yang dipilih; bukan klaim popularitas.
+
+Like, impressions, atau jumlah posting tidak boleh sendirian menjadi bukti bahwa restoran sedang ramai. Jangan menampilkan jumlah orang di lokasi, live presence, atau heatmap individu tanpa dasar data, persetujuan, perlindungan privasi, dan review risiko. Lokasi presisi tidak boleh dibuka secara default. Sediakan pilihan lokasi manual; jangan memaksa GPS.
+
+### E. Prinsip ranking dan monetisasi yang harus dipisahkan
+
+- Social feed ranking bertujuan menjaga relevansi hubungan/konten dan pengalaman pengguna.
+- Editorial/article discovery menilai relevansi topik, kualitas pengalaman baca, freshness, keragaman penulis, dan sinyal negatif; jangan hanya mengejar clickbait/views.
+- Local discovery menilai relevansi geografis, kualitas informasi, status verifikasi, kesegaran data, dan bukti yang sesuai jenis klaim.
+- Search menjawab maksud dan filter eksplisit pengguna.
+- Sponsored placement adalah inventori berbayar yang ditandai jelas; pembayaran tidak boleh menyamar sebagai ranking organik atau klaim kualitas.
+- Economic attribution/affiliate/transaksi tetap terpisah dari social ranking; pengguna tidak harus bertransaksi agar kontennya dihargai.
+- Pengguna perlu kontrol minat/topik/lokasi dan feedback seperti tidak tertarik/sembunyikan/laporkan; dampak personalisasi perlu dapat dievaluasi.
+
+Potensi pendapatan yang dapat diteliti: iklan/sponsor yang relevan, promosi lokal, layanan bisnis, dan mekanisme monetisasi kreator/penulis. Ini bukan persetujuan tarif, komisi, subscription, atau pembagian pendapatan. Jangan mengoptimalkan feed demi iklan dengan mengorbankan trust dan retensi jangka panjang.
+
+### F. Hubungan dengan model bisnis dan cerita pengguna
+
+Arah ini harus tetap berangkat dari masalah manusia, termasuk perjalanan Ibu Nia sebagai contoh kebutuhan nyata, bukan dari daftar fitur atau teknologi. Uji apakah:
+- Orang yang tidak membuat video tetap menemukan tempat untuk berekspresi dan membangun karya.
+- Pembaca menemukan tulisan yang berguna tanpa harus berpindah aplikasi.
+- Pengguna lokal menemukan tempat/aktivitas yang relevan tanpa klaim palsu tentang keramaian.
+- Bisnis lokal memperoleh discovery yang adil tanpa harus membeli semua jangkauan.
+- Kreator dan penulis memperoleh identitas serta arsip karya yang berkelanjutan.
+- Komunitas dan organisasi dapat berbagi informasi tanpa konten mereka tenggelam oleh materi komersial.
+
+### G. Risiko, pertanyaan riset, dan validasi
+
+1. Apakah Home dan Explore memiliki tujuan yang cukup berbeda sehingga pengguna memahami keduanya?
+2. Seberapa sering modul carousel muncul sebelum feed terasa seperti portal iklan?
+3. Apakah artikel perlu editor terstruktur, draft/autosave, cover, kategori/tag, seri, reading time, canonical URL, SEO metadata, dan komentar?
+4. Bagaimana menjaga kualitas artikel tanpa membuat proses penerbitan berat atau mematikan tulisan personal?
+5. Apa sinyal lokal yang tersedia dan sah untuk setiap label Local Pulse?
+6. Bagaimana mengurangi manipulasi check-in, review, views, saves, dan aktivitas lokasi?
+7. Bagaimana penulis/kreator memperoleh manfaat ekonomi tanpa membayar untuk ranking atau memaksa transaksi?
+8. Bagaimana rekomendasi menjaga keragaman penulis, topik, wilayah, dan sumber?
+9. Bagaimana pengguna mengontrol personalisasi, lokasi, sponsored content, dan kategori yang tidak ingin dilihat?
+10. Bagaimana akses publik dan SEO artikel diseimbangkan dengan profil privat, penghapusan, hak cipta, moderasi, dan privasi?
+11. Metrik apa yang membuktikan manfaat: meaningful reading, return readership, saves, follows, kualitas interaksi, local discovery actions, laporan negatif, dan kepuasan pengguna—bukan hanya time spent?
+
+### H. Tahapan dan batas implementasi
+
+- **Sekarang / Social P0:** tuntaskan Inbox dan seluruh Social First Release yang sudah disepakati; jangan mengalihkan fokus pengerjaan aktif ke vertical baru.
+- **Discovery research:** petakan kebutuhan Home vs Explore, format artikel, Local Pulse, sumber data, privasi, dan metrik. Uji dengan prototipe/riset pengguna sebelum perubahan arsitektur.
+- **Social foundation increment:** bila disetujui, mulai dari dukungan artikel sebagai ekspresi konten yang menyatu dengan identitas/feed tanpa merusak post/video yang ada.
+- **Discovery increment:** uji modul lokal dan editorial secara bertahap dengan data yang tersedia; jangan menyatakan "live/ramai" sebelum ada bukti.
+- **Business/monetization increment:** lakukan setelah kualitas discovery, trust, dan demand terbukti; pricing dan revenue-share perlu keputusan terpisah.
+
+Tidak ada persetujuan untuk implementasi sekarang, perubahan schema, pengaktifan iklan, pembuatan algoritma baru, atau perubahan release gate. Ide ini disimpan sebagai bahan riset dan diskusi lanjutan.
+
