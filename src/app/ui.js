@@ -1,3 +1,5 @@
+import {renderBrandLogo} from '../components/common/brand.js';
+
 export const icon={
  location:`<svg viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12Z"/><circle cx="12" cy="9" r="2.2"/></svg>`,
  truck:`<svg viewBox="0 0 24 24"><path d="M3 6h11v10H3zM14 10h4l3 3v3h-7z"/><circle cx="7" cy="18" r="1.8"/><circle cx="18" cy="18" r="1.8"/></svg>`,
@@ -13,7 +15,7 @@ export const icon={
  check:`<svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></svg>`
 };
 function header(title='Pluits'){
- return `<header class="site-header app-market-header sticky-header"><div class="topbar"><div class="header-inner"><a class="brand" href="#/">PLUITS <small>INDONESIA</small></a><nav class="primary-links"><a href="#/">Social</a><a href="#/places">GeoDirectory</a><a href="#/marketplace">Marketplace</a><a href="#/trip">Trip</a><a href="#/account/profile">Akun</a></nav></div></div></header>`;
+ return `<header class="site-header app-market-header sticky-header"><div class="topbar"><div class="header-inner">${renderBrandLogo({className:'brand',size:40,label:'Beranda PLUITS'})}<nav class="primary-links"><a href="#/">Social</a><a href="#/places">GeoDirectory</a><a href="#/marketplace">Marketplace</a><a href="#/trip">Trip</a><a href="#/account/profile">Akun</a></nav></div></div></header>`;
 }
 export function shell(content,title='Pluits',options={}){
  const pageTitle=String(title||'Pluits');
@@ -27,4 +29,4 @@ export function nav(){
 export function pageHeading(k,t,p='',action=''){return `<section class="page-heading"><div class="page-heading-copy"><span class="eyebrow">${k}</span><h1>${t}</h1>${p?`<p>${p}</p>`:''}</div>${action}</section>`;}
 export function hero(k,t,p=''){return `<section class="page-hero"><span class="eyebrow">${k}</span><h1>${t}</h1><p>${p}</p></section>`;}
 export function toast(t){const x=document.createElement('div');x.className='pluits-toast';x.textContent=t;document.body.append(x);setTimeout(()=>x.remove(),1800);}
-export function footer(){return `<footer class="site-footer"><div class="footer-main"><div class="footer-container"><div class="footer-brand"><a href="#/" class="brand footer-logo">PLUITS INDONESIA</a><p>Temukan komunitas, tempat, usaha lokal, dan pengalaman perjalanan.</p></div><div class="footer-column"><h3>Jelajahi</h3><a href="#/places">GeoDirectory</a><a href="#/marketplace">Marketplace</a><a href="#/trip">Trip</a></div><div class="footer-column"><h3>Akun</h3><a href="#/account/profile">Profil</a><a href="#/market-orders">Pesanan</a><a href="#/messages">Pesan</a></div><div class="footer-column"><h3>Bantuan</h3><a href="#/help">Pusat Bantuan</a><a href="#/guidelines">Pedoman Komunitas</a><a href="#/terms">Syarat & Ketentuan</a><a href="#/privacy">Privasi</a></div></div></div><div class="footer-bottom"><div class="footer-container footer-bottom-inner"><strong>© 2026 Pluits Indonesia</strong><span>One identity · Connected experiences</span></div></div></footer>`;}
+export function footer(){return `<footer class="site-footer"><div class="footer-main"><div class="footer-container"><div class="footer-brand">${renderBrandLogo({className:'brand footer-logo',size:46,label:'Beranda PLUITS'})}<p>Temukan komunitas, tempat, usaha lokal, dan pengalaman perjalanan.</p></div><div class="footer-column"><h3>Jelajahi</h3><a href="#/places">GeoDirectory</a><a href="#/marketplace">Marketplace</a><a href="#/trip">Trip</a></div><div class="footer-column"><h3>Akun</h3><a href="#/account/profile">Profil</a><a href="#/market-orders">Pesanan</a><a href="#/messages">Pesan</a></div><div class="footer-column"><h3>Bantuan</h3><a href="#/help">Pusat Bantuan</a><a href="#/guidelines">Pedoman Komunitas</a><a href="#/terms">Syarat & Ketentuan</a><a href="#/privacy">Privasi</a></div></div></div><div class="footer-bottom"><div class="footer-container footer-bottom-inner"><strong>© 2026 Pluits Indonesia</strong><span>One identity · Connected experiences</span></div></div></footer>`;}

@@ -36,6 +36,16 @@
 - **Dampak:** Tidak boleh reset, seed data palsu, menghapus data, atau melakukan perubahan berisiko tanpa otorisasi eksplisit dan rencana rollback.
 - **Status implementasi:** Berlaku untuk seluruh pekerjaan.
 
+## D-007 — Logo gambar asli sebagai identitas visual kanonis PLUITS
+- **Tanggal keputusan:** 11 November 2026
+- **Status:** DECIDED
+- **Founder approval:** eksplisit dalam arahan founder 11 November 2026.
+- **Konteks:** Identitas PLUITS perlu konsisten di seluruh halaman tanpa mengandalkan tulisan wordmark pada setiap header.
+- **Keputusan final:** Gunakan file gambar logo PLUITS asli yang diberikan founder sebagai satu-satunya simbol logo aplikasi. Pertahankan bentuk dan warna gambar; gunakan PNG berlatar transparan agar dapat ditempatkan di permukaan terang maupun gelap. Header, shell, navigasi merek, favicon, dan ikon instalasi PWA memakai aset gambar terpusat. Tulisan “PLUITS” hanya digunakan saat konteks memang membutuhkan nama merek sebagai teks, misalnya judul, metadata, deskripsi, atau penyebutan produk.
+- **Dampak frontend:** Aset disimpan di `public/assets/brand/pluits-logo.png`; renderer bersama di `src/components/common/brand.js`; styling bersama di `src/styles/brand.css`. Semua header merek menggunakan renderer yang sama. Backend/Supabase tidak menyimpan aset statis ini.
+- **Batas:** Tidak menggambar ulang, memodifikasi bentuk, mengganti warna, atau membuat versi huruf P generik. Tidak mengubah warna seluruh aplikasi secara otomatis; warna logo menjadi aksen identitas, bukan alasan untuk mewarnai semua permukaan.
+- **Status implementasi:** IN PROGRESS; build, deployment, dan Android UAT diverifikasi terpisah.
+
 ## Template entri baru
 
 Salin untuk keputusan berikutnya:

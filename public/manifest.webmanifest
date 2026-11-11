@@ -12,9 +12,9 @@
   "theme_color": "#172b45",
   "icons": [
     {
-      "src": "/pluits/favicon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
+      "src": "/pluits/assets/brand/pluits-logo.png",
+      "sizes": "256x256",
+      "type": "image/png",
       "purpose": "any"
     }
   ]

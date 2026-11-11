@@ -1,6 +1,7 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import './messages.css';
 import { socialIcon } from '../../components/common/social-icons.js';
+import {renderBrandLogo} from '../../components/common/brand.js';
 import { renderSocialMobileNav } from '../../components/social/navigation.js';
 
 const db = createClient('https://ytndswhqxayqpftszwfh.supabase.co', 'sb_publishable_kOUbKBYg88nXgz8FQRSnvA_k0hvKY65');
@@ -124,7 +125,7 @@ function emptyStateMarkup({variant='message',title,description,action=''}) {
 export function messagesPage() {
   return `<main class="pl-msg ua-social-app">
     <header class="pl-msg-head">
-      <a href="#/account/explore" class="pl-msg-brand" aria-label="PLUITS Beranda">PLUITS</a>
+      ${renderBrandLogo({href:'#/account/explore',className:'pl-msg-brand',size:36,label:'PLUITS Beranda'})}
       <form id="pl-msg-search" class="pl-msg-head-search" role="search">
         <div class="pl-msg-search-field"><span class="pl-msg-search-symbol">${socialIcon('search',{size:18})}</span><input name="q" type="search" placeholder="Cari orang…" autocomplete="off" aria-label="Cari berdasarkan nama atau nama pengguna"></div>
         <button type="submit" aria-label="Search">${socialIcon('search',{size:18})}</button>

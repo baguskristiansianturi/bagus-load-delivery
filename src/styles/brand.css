@@ -1,0 +1,50 @@
+/* One canonical image asset for every PLUITS brand placement. */
+.pluits-brand-mark {
+  display: inline-flex !important;
+  width: var(--brand-size, 40px) !important;
+  height: var(--brand-size, 40px) !important;
+  min-width: var(--brand-size, 40px);
+  min-height: var(--brand-size, 40px);
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: inherit;
+  line-height: 0;
+  text-decoration: none;
+  overflow: visible;
+}
+.pluits-brand-mark > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: contain;
+  object-position: center;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  filter: none;
+}
+.pluits-brand-mark.pl-social-brand,
+.pluits-brand-mark.ua-brand,
+.pluits-brand-mark.pluits-brand,
+.pluits-brand-mark.pl-trip-brand,
+.pluits-brand-mark.pl-market-brand,
+.pluits-brand-mark.pl-msg-brand,
+.pluits-brand-mark.brand {
+  font-size: 0 !important;
+  letter-spacing: 0 !important;
+  text-indent: 0 !important;
+  white-space: nowrap;
+}
+.pluits-brand-mark.footer-logo { margin-right: 0; }
+@media (max-width: 760px) {
+  .ua-social-app .pluits-brand-mark.ua-brand { --brand-size: 34px; }
+  .ua-social-app .pluits-brand-mark.pl-social-brand { --brand-size: 34px; }
+}

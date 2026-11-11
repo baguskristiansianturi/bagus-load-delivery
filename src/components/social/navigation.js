@@ -1,11 +1,12 @@
 import { socialIcon } from '../common/social-icons.js';
+import { renderBrandLogo } from '../common/brand.js';
 import { ROUTES, getRoute } from './navigation-routes.js';
 
 export function renderSocialHeader({ active = 'explore', profileView = false, showEditProfile = profileView, user, profile, userAvatar = '', notificationCount = 0, publicHome = false } = {}) {
   if (publicHome) {
     return `
       <header class="pl-social-header">
-        <a class="pl-social-brand" href="#/">PLUITS</a>
+        ${renderBrandLogo({className:'pl-social-brand',size:38,label:'Beranda PLUITS'})}
         <nav aria-label="Navigasi Pluits">
           <a class="${active === 'home' ? 'selected' : ''}" href="#/">Beranda</a>
           <a href="${ROUTES.places}">Tempat</a>
@@ -22,7 +23,7 @@ export function renderSocialHeader({ active = 'explore', profileView = false, sh
 
   return `
     <header class="ua-header pl-social-header">
-      <a class="ua-brand" href="${ROUTES.home}">PLUITS<span>INDONESIA</span></a>
+      ${renderBrandLogo({href:ROUTES.home,className:'ua-brand',size:38,label:'Beranda PLUITS'})}
       <nav aria-label="Navigasi Pluits">
         <a class="${active === 'explore' ? 'active' : ''}" href="${ROUTES.home}">Beranda</a>
         <a href="${ROUTES.places}">Tempat</a>

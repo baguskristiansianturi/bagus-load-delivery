@@ -1,4 +1,5 @@
 import './seller.css';
+import {renderBrandLogo} from '../../components/common/brand.js';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 const SUPABASE_URL = 'https://ytndswhqxayqpftszwfh.supabase.co';
@@ -12,7 +13,7 @@ let activeTab = 'overview';
 
 function shell(content,user=null){
  return `<main class="pluits-shell">
-  <header class="pluits-top"><a class="pluits-brand" href="#/">PLUITS<span>INDONESIA</span></a><div>${user?'<a href="#/account/compose" class="pluits-ghost">Buat konten</a> <a href="#/account/profile" class="pluits-ghost">Akun Pluits</a> <button id="pluits-signout" class="pluits-ghost">Keluar</button>':'<a href="#/" class="pluits-ghost">Kembali ke beranda</a>'}</div></header>
+  <header class="pluits-top">${renderBrandLogo({className:'pluits-brand',size:40,label:'Beranda PLUITS'})}<div>${user?'<a href="#/account/compose" class="pluits-ghost">Buat konten</a> <a href="#/account/profile" class="pluits-ghost">Akun Pluits</a> <button id="pluits-signout" class="pluits-ghost">Keluar</button>':'<a href="#/" class="pluits-ghost">Kembali ke beranda</a>'}</div></header>
   ${content}
   <footer class="pluits-foot">PLUITS · Platform perdagangan dan kebutuhan konstruksi</footer>
  </main>`;

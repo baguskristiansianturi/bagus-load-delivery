@@ -1,5 +1,6 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import {socialIcon} from '../../components/common/social-icons.js';
+import {renderBrandLogo} from '../../components/common/brand.js';
 import {renderPostActions} from '../../features/posts/post-actions.js';
 import '../../features/posts/post-actions.css';
 import {renderSocialHeader,renderSocialMobileNav} from '../../components/social/navigation.js';
@@ -45,7 +46,7 @@ function frame(content,active='explore',avatarUrl=''){
 }
 function authScreen(mode='login'){
  const signup=mode==='register';
- document.querySelector('#app').innerHTML=`<div class="ua-app ua-auth-app"><header class="ua-header"><a class="ua-brand" href="#/">PLUITS<span>INDONESIA</span></a><a href="#/" class="ua-logout">Kembali</a></header>
+ document.querySelector('#app').innerHTML=`<div class="ua-app ua-auth-app"><header class="ua-header">${renderBrandLogo({className:'ua-brand',size:38,label:'Beranda PLUITS'})}<a href="#/" class="ua-logout">Kembali</a></header>
  <main class="ua-auth-wrap"><section class="ua-auth-copy"><span class="ua-eyebrow">PLUITS COMMUNITY</span><h1>Belanja, berbagi, dan membangun reputasi dalam satu akun.</h1><p>Mulai sebagai pengguna Pluits. Daftar dengan email aktif, konfirmasi akun, lengkapi profil, lalu bagikan cerita pertama Anda.</p><div class="ua-auth-points"><span>Profil pribadi dan privasi</span><span>Alamat tersimpan secara privat</span><span>Foto, video, dan Explore</span></div></section>
  <form id="ua-auth-form" class="ua-panel ua-auth-form"><span class="ua-eyebrow">${signup?'BUAT AKUN':'SELAMAT DATANG'}</span><h2>${signup?'Daftar Pluits':'Masuk ke Pluits'}</h2>
  ${signup?'<label>Nama tampilan<input name="full_name" required maxlength="80" autocomplete="name" placeholder="Nama yang ingin ditampilkan"></label>':''}
