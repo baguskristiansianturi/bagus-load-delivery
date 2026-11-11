@@ -86,9 +86,12 @@ assert.match(messages, /recipient_user_id/, 'Offline new-conversation drafts mus
 assert.match(messages, /pl-msg-menu-toggle/, 'Inbox header must expose the requested three-dot settings menu.');
 assert.match(messages, /pl-msg-head-search/, 'Inbox header must keep friend search in the center.');
 assert.match(messages, /renderSocialMobileNav\(\{active:'messages'/, 'Inbox must reuse the canonical social navigation component.');
-assert.match(messages, /data-inbox-tab="primary"/, 'Inbox must expose the Primary category.');
-assert.match(messages, /data-inbox-tab="requests"/, 'Inbox must expose the Requests category.');
-assert.match(messages, /data-inbox-tab="blocked"/, 'Inbox must expose the Blocked category.');
+const inboxSidebar = read('src/features/inbox/inbox-sidebar.js');
+assert.match(messages, /renderInboxSidebar\(\)/, 'Inbox page must compose its own isolated sidebar feature.');
+assert.match(inboxSidebar, /data-inbox-tab="primary"/, 'Inbox sidebar must expose the Primary category.');
+assert.match(inboxSidebar, /data-inbox-tab="requests"/, 'Inbox sidebar must expose the Requests category.');
+assert.match(inboxSidebar, /data-inbox-tab="blocked"/, 'Inbox sidebar must expose the Blocked category.');
+assert.doesNotMatch(messages, /<aside class="pl-msg-sidebar"/, 'Inbox page must not duplicate its sidebar markup.');
 assert.match(messages, /Cari berdasarkan nama atau nama pengguna/, 'Inbox header search must be discoverable.');
 assert.match(messages, /display_name\.ilike/, 'Inbox search must match display names as well as usernames.');
 assert.match(messages, /classList\.toggle\('has-many'/, 'Online carousel must switch to partial overlap for larger friend sets.');
@@ -274,6 +277,13 @@ assert.ok(read('src/pages/account/index.js').includes('accept="video/*,.mp4,.m4v
 assert.ok(read('src/features/reels/reel-card.js').includes('ua-reel-stage'),'Reel card module must own its stage.');
 assert.ok(read('src/features/reels/reels.css').includes('aspect-ratio:9/16'),'Reel layout must preserve vertical framing.');
 assert.ok(read('src/features/media/storage-upload.js').includes('storage/v1/upload/resumable'),'Media storage upload must be isolated.');
+
+const sellerNavigation = read('src/features/seller/seller-navigation.js');
+const sellerPage = read('src/pages/seller/index.js');
+assert.match(sellerPage, /renderSellerNavigation\(\{user,activeTab,tabs\}\)/, 'Seller page must compose its isolated workspace navigation.');
+assert.match(sellerNavigation, /class="pluits-sidebar"/, 'Seller navigation feature must own its desktop sidebar.');
+assert.match(sellerNavigation, /class="pluits-mobile-tabs"/, 'Seller navigation feature must own its mobile tabs.');
+assert.doesNotMatch(sellerPage, /<aside class="pluits-sidebar"/, 'Seller page must not duplicate its sidebar markup.');
 console.log('Production surface verification passed: Android media detection, mobile Reel module, Marketplace, Trip, DM, account and notification contracts.');
 
 const postActionFeature = read('src/features/posts/post-actions.js');
