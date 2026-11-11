@@ -677,7 +677,7 @@ async function mountAccount(section='profile',parameter=''){
   await loadProfile();accountContext=await loadAccountContext(supabase,user);
   unreadNotificationCount=await countUnreadActivity();
   if(section==='profile')updateSEO({title:profile.display_name+' (@'+profile.username+') — Pluits',description:(profile.bio||'Profil komunitas '+profile.display_name+' di Pluits.').slice(0,160),path:'#/@'+encodeURIComponent(profile.username)});
-  const page=section==='explore'?await feedPage():section==='activity'?await notificationPage():section==='reels'?await reelsPage():section==='create'?createPage():section==='story'?await storyComposePage():section==='live'?livePage():section==='saved'?await savedPage():section==='reel'?await composePage('', 'reel'):section==='compose'?await composePage(parameter):section==='drafts'?await draftsPage():section==='addresses'?await addressPage():section==='wallet'?await walletPage():section==='post'?await postDetailPage(parameter||location.hash.split('/')[3]||''):section==='user'?await publicProfilePage(parameter):section==='followers'?await followListPage('followers'):section==='following'?await followListPage('following'):section==='requests'?await followListPage('followers'):section==='preview'?await profilePage(true):section==='profile'?await profilePage(false,parameter==='edit'):section==='professional'?professionalPage(accountContext,profile):section==='professional-create'?professionalFormPage(accountContext,profile):section==='settings'?settingsHubPage():section==='security'?await accountSecurityPage(supabase,user):section==='blocked'?await blockedAccountsPage():section==='content-settings'?await accountSettingsPage(supabase,user):await profilePage();
+  const page=section==='explore'?await feedPage():section==='activity'?await notificationPage():section==='reels'?await reelsPage():section==='create'?await createPage():section==='upgrade'?upgradePage():section==='story'?await storyComposePage():section==='live'?livePage():section==='saved'?await savedPage():section==='reel'?await composePage('', 'reel'):section==='compose'?await composePage(parameter):section==='drafts'?await draftsPage():section==='addresses'?await addressPage():section==='wallet'?await walletPage():section==='post'?await postDetailPage(parameter||location.hash.split('/')[3]||''):section==='user'?await publicProfilePage(parameter):section==='followers'?await followListPage('followers'):section==='following'?await followListPage('following'):section==='requests'?await followListPage('followers'):section==='preview'?await profilePage(true):section==='profile'?await profilePage(false,parameter==='edit'):section==='professional'?professionalPage(accountContext,profile):section==='professional-create'?professionalFormPage(accountContext,profile):section==='settings'?settingsHubPage():section==='security'?await accountSecurityPage(supabase,user):section==='blocked'?await blockedAccountsPage():section==='content-settings'?await accountSettingsPage(supabase,user):await profilePage();
   const headerAvatar=await signed(profile.avatar_path);const app=document.querySelector('#app');const navActive=section==='profile'?(parameter==='edit'?'profile-edit':'profile'):section==='preview'?'preview':section==='explore'?'explore':section==='reels'?'reels':['create','compose','reel','story'].includes(section)?'create':section==='post'?'post':section==='activity'?'activity':section==='addresses'?'addresses':'account';app.classList.remove('pl-page-enter');app.innerHTML=frame(page,navActive,headerAvatar);requestAnimationFrame(()=>app.classList.add('pl-page-enter'));
   document.querySelector('#ua-logout')?.addEventListener('click',async()=>{await supabase.auth.signOut();user=null;profile=null;authScreen('login');});
   bindAccountContext({db:supabase,user,ctx:accountContext,profile,refresh:mountAccount});
@@ -865,16 +865,34 @@ function bindStories(){
   });
  });
 }
-function createPage(){
- return `<div class="ua-page-heading"><div><span class="ua-eyebrow">KREASI PLUITS</span><h1>Buat sesuatu</h1><p>Pilih format yang ingin Anda bagikan.</p></div></div>
- <section class="ua-create-grid">
-  <a class="ua-create-option" href="#/account/story"><span class="ua-create-icon">${socialIcon('camera',{size:24})}</span><strong>Story</strong><small>Foto atau video yang tampil selama 24 jam.</small><span class="ua-create-arrow">›</span></a>
-  <a class="ua-create-option" href="#/account/compose"><span class="ua-create-icon">${socialIcon('image',{size:24})}</span><strong>Post</strong><small>Foto, video, atau cerita yang tersimpan di profil.</small><span class="ua-create-arrow">›</span></a>
-  <a class="ua-create-option" href="#/account/reel"><span class="ua-create-icon">${socialIcon('reels',{size:24})}</span><strong>Reel</strong><small>Video pendek tunggal maksimal 60 detik.</small><span class="ua-create-arrow">›</span></a>
-  <div class="ua-create-option is-staged"><span class="ua-create-icon">${socialIcon('radio',{size:24})}</span><strong>Live</strong><small>Siaran langsung disiapkan pada tahap berikutnya.</small><span class="ua-create-stage">Segera</span></div>
-  <a class="ua-create-option" href="#/account/blog"><span class="ua-create-icon">${socialIcon('book',{size:24})}</span><strong>Blog</strong><small>Tulis cerita, puisi, pengalaman, atau catatanmu.</small><span class="ua-create-arrow">›</span></a>
- </section>`;
+async function createPage(){
+ const [entitlement,blog]=await Promise.all([
+  supabase.from('account_feature_entitlements').select('plan_key,status,starts_at,expires_at').eq('user_id',user.id).eq('feature_key','blog_studio').maybeSingle(),
+  supabase.from('blog_profiles').select('id,display_title,slug').eq('owner_user_id',user.id).maybeSingle()
+ ]);
+ if(entitlement.error)throw entitlement.error;if(blog.error)throw blog.error;
+ const now=Date.now(),premium=entitlement.data?.plan_key==='premium'&&entitlement.data.status==='active'&&new Date(entitlement.data.starts_at).getTime()<=now&&(!entitlement.data.expires_at||new Date(entitlement.data.expires_at).getTime()>now);
+ const hasBlog=!!blog.data,blogHref=hasBlog||premium?'#/account/blog':'#/account/upgrade';
+ const card=(icon,title,desc,href,meta,kind='')=>'<a class="ua-create-card '+kind+'" href="'+href+'"><span class="ua-create-card-icon">'+socialIcon(icon,{size:25})+'</span><span class="ua-create-card-copy"><strong>'+title+'</strong><small>'+desc+'</small><em>'+meta+'</em></span><span class="ua-create-card-arrow">↗</span></a>';
+ return `<div class="ua-create-hub">
+  <header class="ua-create-hero"><div><span class="ua-eyebrow">PLUITS CREATION STUDIO</span><h1>Buat sesuatu yang berarti.</h1><p>Bagikan momen, ceritakan pengalaman, dan bangun ruang kreatifmu di Pluits.</p></div><div class="ua-create-hero-mark">${socialIcon('plus',{size:30})}</div></header>
+  <section class="ua-create-section"><div class="ua-create-section-head"><div><span class="ua-eyebrow">KONTEN SOSIAL</span><h2>Mulai dari sebuah momen</h2><p>Format yang bisa langsung kamu gunakan.</p></div></div><div class="ua-create-grid">
+   ${card('camera','Story','Momen foto atau video yang tampil selama 24 jam.','#/account/story','AKTIF','is-story')}
+   ${card('image','Post','Bagikan foto, video, dan cerita di profilmu.','#/account/compose','AKTIF','is-post')}
+   ${card('reels','Reel','Video pendek tunggal hingga 60 detik.','#/account/reel','AKTIF','is-reel')}
+   <div class="ua-create-card is-disabled" aria-disabled="true"><span class="ua-create-card-icon">${socialIcon('radio',{size:25})}</span><span class="ua-create-card-copy"><strong>Live</strong><small>Siaran langsung dan interaksi real-time.</small><em>DALAM PERSIAPAN</em></span><span class="ua-create-card-arrow">⌁</span></div>
+  </div></section>
+  <section class="ua-create-section ua-create-publishing"><div class="ua-create-section-head"><div><span class="ua-eyebrow">PENERBITAN & PERSONAL BRAND</span><h2>Bangun ruang ceritamu</h2><p>Publikasikan tulisan dan pengalaman dengan identitas blog sendiri.</p></div></div>
+   ${card('book','Blog','Ruang khusus untuk catatan, puisi, pengalaman, dan artikel.',blogHref,hasBlog?'KELOLA BLOG':premium?'PREMIUM AKTIF':'UPGRADE PREMIUM',hasBlog||premium?'is-blog':'is-locked')}
+   ${!hasBlog&&!premium?'<p class="ua-create-premium-hint">'+socialIcon('lock',{size:15})+' Blog merupakan fitur Premium. Upgrade akun untuk mulai membuat ruang blog.</p>':''}
+  </section>
+  <footer class="ua-create-foot"><span>Semua konten tetap berada dalam kendali privasi akunmu.</span><a href="#/account/drafts">Lihat draf tersimpan →</a></footer>
+ </div>`;
 }
+function upgradePage(){
+ return `<div class="ua-upgrade-page"><a class="ua-upgrade-back" href="#/account/create">‹ Kembali ke Buat</a><section class="ua-upgrade-hero"><span class="ua-eyebrow">PLUITS MEMBERSHIP</span><div class="ua-upgrade-symbol">${socialIcon('sparkles',{size:28})}</div><h1>Lebih banyak ruang untuk berkarya.</h1><p>Dengan PLUITS Premium, kamu dapat membuat ruang Blog sendiri dan menerbitkan tulisan dengan identitas yang konsisten.</p><span class="ua-upgrade-plan">PREMIUM</span></section><section class="ua-upgrade-feature"><div><span class="ua-eyebrow">FITUR PREMIUM</span><h2>Blog Studio</h2><p>Kelola ruang blog, buat kategori, simpan draft di akun, dan terbitkan tulisan dengan alamat khusus.</p></div><span class="ua-upgrade-feature-icon">${socialIcon('book',{size:25})}</span></section><div class="ua-upgrade-status"><strong>Upgrade Premium</strong><p>Pengaturan hak akses Premium sudah disiapkan. Pembayaran dan aktivasi paket otomatis belum tersedia, jadi akun belum akan dikenakan biaya dari halaman ini.</p><span>AKTIVASI PAKET MENYUSUL</span></div><a class="ua-primary ua-upgrade-cta" href="#/account/create">Kembali ke pilihan kreasi</a></div>`;
+}
+
 async function storyComposePage(){
  const {data:contentPrefs,error}=await supabase.from('account_content_preferences').select('story_default_visibility').eq('user_id',user.id).maybeSingle();
  if(error)throw error;
