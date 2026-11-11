@@ -269,16 +269,16 @@ export async function bindDirectoryPage() {
 }
 export function bindHomeNearby({personalize=true,location=null}={}) {
   const resultTarget=document.querySelector('#pl-home-nearby-results');if(!resultTarget)return;
-  state.radius=5000;state.category='';state.query='';
+  state.radius=3000;state.category='';state.query='';
   if(location&&Number.isFinite(location.latitude)&&Number.isFinite(location.longitude)){state.lat=location.latitude;state.lon=location.longitude;state.area='';}
   const prepare=location?Promise.resolve(true):personalize?loadDiscoveryPreferences():Promise.resolve(false);
   prepare.then(hasSavedArea=>{
     if(!location&&!hasSavedArea){resultTarget.innerHTML='<div class="pl-directory-empty">Izinkan lokasi perangkat untuk melihat tempat terdekat dengan jarak yang akurat.</div>';return null;}
-    return (personalize?loadCategories():Promise.resolve()).then(()=>getNearby({lat:state.lat,lon:state.lon,limit:8,radius:5000}));
+    return (personalize?loadCategories():Promise.resolve()).then(()=>getNearby({lat:state.lat,lon:state.lon,limit:8,radius:3000}));
   }).then(async rows=>{
     if(!rows)return;
     const interests=personalize?await getInterestMap():new Map(),items=ranked(rows,interests);
-    if(!items.length){resultTarget.innerHTML='<div class="pl-directory-empty">Belum ada tempat terdaftar dalam radius 5 km.</div>';return;}
+    if(!items.length){resultTarget.innerHTML='<div class="pl-directory-empty">Belum ada tempat terdaftar dalam radius 3 km.</div>';return;}
     const nearbyIds=items.slice(0,8).map(row=>row.id);
     const {data:links,error:linksError}=await supabase.from('user_post_directory_entities').select('entity_id,post_id,created_at').in('entity_id',nearbyIds).order('created_at',{ascending:false}).limit(40);
     if(linksError)throw linksError;
