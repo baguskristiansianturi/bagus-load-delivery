@@ -11,12 +11,12 @@
   padding: 0 !important;
   border: 0 !important;
   border-radius: 0 !important;
-  background: #fff !important;
+  background: transparent !important;
   box-shadow: none !important;
   color: inherit;
   line-height: 0;
   text-decoration: none;
-  overflow: hidden;
+  overflow: visible;
 }
 .pluits-brand-mark > img {
   display: block;
