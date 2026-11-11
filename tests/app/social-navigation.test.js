@@ -72,3 +72,23 @@ test('Inbox requests an isolated five-column navigation layout',async()=>{
  assert.match(css,/\.pl-msg \.pl-msg-mobile-nav\{display:grid!important/);
  assert.match(css,/grid-template-columns:repeat\(5,minmax\(0,1fr\)\)/);
 });
+
+test('public home loads the real navigation layer and exposes visible mobile icons',async()=>{
+ const main=await readFile(new URL('../../src/main.js',import.meta.url),'utf8');
+ const css=await readFile(new URL('../../styles/home-layout.css',import.meta.url),'utf8');
+ assert.ok(main.includes("import './styles/social-navigation.css'"),'Shared navigation stylesheet must be loaded from the application entry point.');
+ assert.ok(css.includes('.pl-public-home>.pl-social-header'),'Public header must have an explicit visible layout.');
+ assert.ok(css.includes('.pl-public-home .pl-social-mobile-nav>a .pl-icon'),'Public mobile navigation SVG icons must have explicit dimensions and visibility.');
+ assert.ok(css.includes('.pl-public-home .pl-public-hero-visual{order:-1}'),'Mobile public home must lead with imagery rather than a wall of text.');
+});
+test('GeoDirectory is map-first with a touch-enabled globe and clickable real place pins',async()=>{
+ const directory=await readFile(new URL('../../src/pages/directory/index.js',import.meta.url),'utf8');
+ const css=await readFile(new URL('../../src/pages/directory/directory.css',import.meta.url),'utf8');
+ assert.ok(directory.includes("import('https://unpkg.com/maplibre-gl@6.17.0/dist/maplibre-gl.mjs')"),'MapLibre v6 must load through its supported ESM CDN entry.');
+ assert.ok(directory.includes("projection:{type:'globe'}"),'GeoDirectory must use a globe projection.');
+ assert.ok(directory.includes('touchZoomRotate:true') && directory.includes('dragRotate:true'),'Map must support touch zoom/rotation and map rotation.');
+ assert.ok(directory.includes("new lib.Marker") && directory.includes("new lib.Popup"),'Directory results must render tappable pins with place details.');
+ assert.ok(directory.includes('data-map-globe="pl-directory-map"'),'Directory must expose a control to zoom out to the globe.');
+ assert.ok(directory.includes('class="pl-directory-map-stage"'),'The map must be the default primary directory surface.');
+ assert.ok(css.includes('.pl-directory-page .pl-geo-pin'),'Place pins must have a visible, high-contrast marker style.');
+});
