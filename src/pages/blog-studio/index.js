@@ -131,6 +131,7 @@ function editorPage(item = null) {
     '<label class="pl-blog-field">Isi tulisan<textarea name="body" rows="9" required placeholder="Mulai menulis di sini. Tidak ada batas minimal kata.">' + esc(item?.body || '') + '</textarea></label>' +
     '<section class="pl-blog-support-field"><div><strong>Gambar pendukung</strong><small>Gambar ini menjadi bagian isi tulisan, bukan cover.</small></div><label class="pl-blog-support-picker" for="pl-blog-support-input">＋ Tambah gambar pendukung<input id="pl-blog-support-input" type="file" accept="image/*" multiple></label><div class="pl-blog-support-grid" id="pl-blog-support-grid">' + images + '</div></section>' +
     '<div class="pl-blog-editor-note">Draf disimpan di perangkat ini. Terbitan pada tahap uji belum tampil di feed publik atau pencarian PLUITS.</div>' +
+    '<button type="button" class="pl-blog-preview-action" data-action="preview">Lihat pratinjau tulisan</button>' +
     '<div class="pl-blog-editor-actions"><button type="button" class="pl-blog-secondary" data-action="save-draft">Simpan Draft</button><button type="submit" class="pl-blog-primary" data-submit-publish>Terbitkan</button></div></form>';
 }
 async function previewPage(item) {
@@ -205,6 +206,17 @@ function bind() {
     await deleteItem(button.dataset.id); notify('Tulisan dihapus dari perangkat.'); render().catch(showError);
   }));
   document.querySelector('[data-action="save-draft"]')?.addEventListener('click', () => persistEditor('draft').catch(showError));
+  document.querySelector('[data-action="preview"]')?.addEventListener('click', async () => {
+    const form = document.querySelector('#pl-blog-editor-form');
+    const data = new FormData(form);
+    const old = editingId ? (await getAllItems()).find(item => item.id === editingId) : null;
+    const cover = readFormFile(document.querySelector('#pl-blog-cover-input')) || old?.cover || null;
+    const supportingImages = [...(old?.supportingImages || []), ...Array.from(document.querySelector('#pl-blog-support-input')?.files || [])];
+    if (!String(data.get('title') || '').trim() || !String(data.get('description') || '').trim() || !String(data.get('body') || '').trim() || !cover) return notify('Lengkapi judul, deskripsi, gambar utama, dan isi sebelum pratinjau.', 'error');
+    if (wordCount(String(data.get('description') || '')) > 85) return notify('Deskripsi maksimal 85 kata.', 'error');
+    window.__plBlogPreviewItem = { title: String(data.get('title')), description: String(data.get('description')), body: String(data.get('body')), cover, supportingImages };
+    setView('preview');
+  });
   document.querySelector('#pl-blog-editor-form')?.addEventListener('submit', event => { event.preventDefault(); persistEditor('published').catch(showError); });
   document.querySelector('#pl-blog-description')?.addEventListener('input', event => {
     const count = wordCount(event.target.value);
