@@ -20,7 +20,7 @@ const placeUrl = slug => '#/place/' + encodeURIComponent(slug);
 
 export function homeNearbySection() {
   return `<section class="pl-nearby-home" aria-label="Tempat terdekat">
-    <div class="pl-nearby-heading"><div><span>DI SEKITAR LOKASI ANDA</span><h2>Tempat terdekat</h2><p>Jarak dari lokasi perangkat, tanpa peta.</p></div><a href="#/places">Jelajahi semua <b>↗</b></a></div>
+    <div class="pl-nearby-heading"><div><span>DI SEKITAR ANDA</span><h2>Tempat terdekat</h2></div><a href="#/places">Jelajahi semua <b>↗</b></a></div>
     <div class="pl-home-map-results" id="pl-home-nearby-results"><span class="pl-directory-loading">Mencari tempat di sekitar Anda…</span></div>
   </section>`;
 }
