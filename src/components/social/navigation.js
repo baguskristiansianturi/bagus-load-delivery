@@ -26,8 +26,8 @@ export function renderSocialHeader({ active = 'explore', profileView = false, sh
       <header class="ua-header pl-social-header ua-home-header">
         ${renderBrandLogo({href:ROUTES.home,className:'ua-brand',size:34,label:'Beranda PLUITS'})}
         <a class="ua-home-searchbar" href="#/search" aria-label="Cari di PLUITS">${socialIcon('search',{size:17})}<span id="ua-home-search-prompt" data-location-text>Memeriksa lokasi…</span></a>
-        <a class="ua-home-profile" href="${ROUTES.profile}" aria-label="Profil">${socialIcon('user',{size:19})}</a>
         <a class="ua-home-wishlist" href="${ROUTES.saved}" aria-label="Tersimpan" title="Tersimpan">${socialIcon('bookmark',{size:21})}</a>
+        <a class="ua-home-profile" href="${ROUTES.profile}" aria-label="Profil">${socialIcon('user',{size:19})}</a>
       </header>`;
   }
 
