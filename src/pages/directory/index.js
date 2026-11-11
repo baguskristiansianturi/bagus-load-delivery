@@ -274,7 +274,7 @@ export function bindHomeNearby({personalize=true,location=null}={}) {
   const prepare=location?Promise.resolve(true):personalize?loadDiscoveryPreferences():Promise.resolve(false);
   prepare.then(hasSavedArea=>{
     if(!location&&!hasSavedArea){resultTarget.innerHTML='<div class="pl-directory-empty">Izinkan lokasi perangkat untuk melihat tempat terdekat dengan jarak yang akurat.</div>';return null;}
-    return (personalize?loadCategories():Promise.resolve()).then(()=>getNearby({lat:state.lat,lon:state.lon,limit:8,radius:3000}));
+    return (personalize?loadCategories():Promise.resolve()).then(()=>getNearby({lat:state.lat,lon:state.lon,limit:8,radius:5000}));
   }).then(async rows=>{
     if(!rows)return;
     const interests=personalize?await getInterestMap():new Map(),items=ranked(rows,interests);
@@ -298,15 +298,14 @@ export function bindHomeNearby({personalize=true,location=null}={}) {
     const mediaPaths=linked.map(post=>post.media_path).filter(Boolean);
     const signed=mediaPaths.length?await supabase.storage.from('pluits-user-media').createSignedUrls(mediaPaths,3600):{data:[]};
     const imageByPath=new Map((signed.data||[]).map(file=>[file.path,file.signedUrl]));
-    const cards=linked.slice(0,8);
-    if(!cards.length){resultTarget.innerHTML='<div class="pl-directory-empty">Belum ada cerita atau produk dari tempat terdekat.</div>';return;}
-    resultTarget.innerHTML=cards.map(post=>{
-      const owner=owners.get(post.profile_context==='business'?post.business_store_id:post.user_id);
-      const ownerName=owner?.name||owner?.display_name||'Pengelola tempat';
-      const image=imageByPath.get(post.media_path)||'';
-      const itemName=String(post.caption||'').trim().split(/\\n/)[0].slice(0,76)||post.entity.name;
-      const distanceLabel=distance(Number(post.entity.distance_m)||0);
-      return '<a class="pl-nearby-item-card" href="'+placeUrl(post.entity.slug)+'">'+(image?'<img src="'+esc(image)+'" alt="'+esc(itemName)+'" loading="lazy">':'<span class="pl-nearby-item-placeholder">PLUITS</span>')+'<span class="pl-nearby-item-copy"><small>'+esc(ownerName)+'</small><b>'+esc(itemName)+'</b><em>'+esc(post.entity.name)+' · '+distanceLabel+(location?' dari Anda':' dari pusat area')+'</em></span></a>';
+    const postByEntity=new Map();linked.forEach(post=>{if(!postByEntity.has(post.entity.id))postByEntity.set(post.entity.id,post);});
+    resultTarget.innerHTML=items.slice(0,8).map(entity=>{
+      const post=postByEntity.get(entity.id),owner=post?owners.get(post.profile_context==='business'?post.business_store_id:post.user_id):null;
+      const ownerName=owner?.name||owner?.display_name||'Tempat & layanan terdekat';
+      const image=post?imageByPath.get(post.media_path)||'':'';
+      const itemName=post?String(post.caption||'').trim().split(/\\n/)[0].slice(0,76)||entity.name:entity.name;
+      const distanceLabel=distance(Number(entity.distance_m)||0),category=(entity.category_slugs||[]).slice(0,2).join(' · ');
+      return '<a class="pl-nearby-item-card" href="'+placeUrl(entity.slug)+'">'+(image?'<img src="'+esc(image)+'" alt="'+esc(itemName)+'" loading="lazy">':'<span class="pl-nearby-item-placeholder">'+(entity.entity_type==='place'?'TEMPAT':entity.entity_type==='provider'?'JASA':entity.entity_type==='event'?'ACARA':'PLUITS')+'</span>')+'<span class="pl-nearby-item-copy"><small>'+esc(ownerName)+'</small><b>'+esc(itemName)+'</b><em>'+esc(category||entity.entity_type)+' · '+distanceLabel+(location?' dari Anda':' dari pusat area')+'</em></span></a>';
     }).join('');
   }).catch(()=>{resultTarget.innerHTML='<div class="pl-directory-empty">Tempat terdekat belum dapat dimuat.</div>';});
 }
