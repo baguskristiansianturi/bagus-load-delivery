@@ -38,6 +38,8 @@ test('public guest home and authenticated create/activity destinations remain se
  const routes=await (await import('node:fs/promises')).readFile(new URL('../../src/components/social/navigation-routes.js',import.meta.url),'utf8');
  assert.ok(home.includes("renderSocialHeader({active:'home',publicHome:true})"));
  assert.ok(home.includes("renderSocialMobileNav({active:'home',publicHome:true})"));
+ assert.ok(home.includes('stillOnRequestedHome'),'A delayed public-home auth response must not overwrite a route the visitor opened afterward.');
+ assert.ok(home.includes('requestHash')&&home.includes('routeVersion'),'Public-home auth routing must be bound to the original route generation.');
  assert.ok(account.includes('id="ua-story-form"') && account.includes("from('user_stories')"), "Story creation must remain available outside the Explore feed.");
  assert.ok(routes.includes("activity: '#/account/activity'"));
  assert.ok(routes.includes("create: '#/account/create'"));
