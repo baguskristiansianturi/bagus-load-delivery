@@ -171,7 +171,8 @@ assert.match(sharedDesign, /--pl-color-line/, 'Social UI must use shared spacing
 const socialHome = read('src/pages/account/index.js');
 const sharedHeader = read('src/components/social/navigation.js');
 assert.ok(sharedHeader.includes("getRoute('profile', Boolean(user))"), 'Header avatar must resolve the canonical profile route.');
-assert.ok(sharedHeader.includes('pl-social-menu-trigger') && sharedHeader.includes('Pusat Pengaturan') && sharedHeader.includes('ROUTES.settings'), 'Profile menu must be the single entry point for account settings.');
+assert.ok(sharedHeader.includes('pl-social-menu-trigger') && sharedHeader.includes('Pusat Pengaturan') && sharedHeader.includes('ROUTES.settings'), 'Shared account menu must expose the canonical settings route.');
+assert.ok(sharedHeader.includes("profileView?'':") && socialHome.includes('ua-profile-menu'), 'Profile settings must be anchored visibly to the profile cover, not duplicated in the global header.');
 assert.ok(sharedHeader.includes('showEditProfile') && socialHome.includes("section==='profile'?(parameter==='edit'?'profile-edit':'profile')"), 'Edit profile must only appear in the three-dot menu on the profile view, not throughout settings pages.');
 assert.ok(socialHome.includes('function createPage()') && socialHome.includes('function storyComposePage()'), 'Bottom create flow must expose Story/Post/Reel/Live entry selection.');
 assert.ok(socialHome.includes("section==='saved'?await savedPage()"), 'Saved items route must be available to the signed-in owner.');
