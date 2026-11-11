@@ -2427,14 +2427,24 @@
 .ua-social-home .ua-topten-card-1 .ua-topten-copy strong{font-size:clamp(19px,2.3vw,25px);max-width:340px}
 .ua-social-home .ua-topten-card-4,.ua-social-home .ua-topten-card-7{grid-row:span 2}
 @media(max-width:760px){
- .ua-social-home .ua-topten-grid{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:142px;gap:9px}
- .ua-social-home .ua-topten-card-1{grid-column:span 2;grid-row:span 2}
- .ua-social-home .ua-topten-card-4,.ua-social-home .ua-topten-card-7{grid-row:span 1}
- .ua-social-home .ua-topten-copy{left:11px;right:9px;bottom:11px}
- .ua-social-home .ua-topten-copy strong{font-size:13px}
- .ua-social-home .ua-topten-card-1 .ua-topten-copy strong{font-size:20px}
+ .ua-social-home{width:100%;max-width:100%;min-width:0;overflow:hidden}
+ .ua-social-home .ua-home-topten{width:calc(100% + 24px);max-width:none;margin:12px -12px 20px;padding:14px 12px 16px;overflow:hidden}
+ .ua-social-home .ua-home-section-heading{min-width:0;align-items:center}
+ .ua-social-home .ua-home-section-heading>div{min-width:0}
+ .ua-social-home .ua-home-section-heading>a{flex:none}
+ .ua-social-home .ua-topten-grid{display:flex;width:100%;min-width:0;gap:10px;overflow-x:auto;overflow-y:hidden;padding:0 1px 5px;scroll-snap-type:x mandatory;scroll-behavior:smooth;overscroll-behavior-x:contain;touch-action:pan-x;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+ .ua-social-home .ua-topten-grid::-webkit-scrollbar{display:none}
+ .ua-social-home .ua-topten-card,.ua-social-home .ua-topten-card-1{display:block;position:relative;flex:0 0 100%;width:100%;height:clamp(220px,64vw,290px);min-height:220px;max-height:290px;grid-column:auto;grid-row:auto;scroll-snap-align:center;border-radius:16px}
+ .ua-social-home .ua-topten-card img{width:100%;height:100%;object-fit:cover}
+ .ua-social-home .ua-topten-copy{left:16px;right:16px;bottom:16px;gap:6px}
+ .ua-social-home .ua-topten-copy small{font-size:10px}
+ .ua-social-home .ua-topten-copy strong,.ua-social-home .ua-topten-card-1 .ua-topten-copy strong{font-size:clamp(20px,5.5vw,26px);max-width:90%}
+ .ua-social-home .ua-topten-copy em{font-size:11px}
+ .ua-social-home .pl-nearby-home{width:100%;min-width:0}
+ .ua-social-home .pl-home-map-results{grid-template-columns:minmax(0,1fr)}
 }
-@media(max-width:360px){
- .ua-social-home .ua-topten-grid{grid-auto-rows:128px;gap:7px}
- .ua-social-home .ua-topten-copy strong{font-size:12px}
+@media(max-width:380px){
+ .ua-social-home .ua-home-topten{padding-left:10px;padding-right:10px}
+ .ua-social-home .ua-topten-card,.ua-social-home .ua-topten-card-1{height:220px;min-height:220px}
+ .ua-social-home .ua-topten-copy strong,.ua-social-home .ua-topten-card-1 .ua-topten-copy strong{font-size:19px}
 }
