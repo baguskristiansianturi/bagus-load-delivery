@@ -34,3 +34,11 @@ If a mismatch is discovered, document it and propose the smallest safe correctio
 
 ## Evidence
 Record exact commit SHA, workflow run, build/test result, deployment result, and UAT state. Distinguish IMPLEMENTED, DEPLOYED, TESTED, and ACCEPTED. A successful deployment is not proof of Android UAT.
+
+
+## Page/component ownership — mandatory
+- Before adding or changing a navigation page, read docs/pluits/PAGE-COMPONENT-OWNERSHIP-AUDIT-2026-11-12.md and docs/pluits/FRONTEND-MODULE-CONTRACTS.md.
+- Every canonical route must have one explicit page owner; each workspace owns its own layout and sidebar. Seller Center navigation and Inbox conversation sidebar are separate feature components.
+- Never edit a sibling page's component or CSS as a side effect. Shared component changes require a consumer audit.
+- Keep page composition in pages/, behavior-rich domain UI in features/, true shared primitives in components/, backend communication in services/, and only truly global rules in styles/.
+- Do not declare the application fully modular until the route/component/style/service ownership audit and regression tests support that claim.
