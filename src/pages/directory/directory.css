@@ -147,3 +147,24 @@
 }
 
 .pl-directory-page .pl-map-stage{position:relative;isolation:isolate;overflow:hidden}
+
+
+/* Reusable map styles for public and signed-in home previews. */
+.pl-nearby-map-home .pl-map-stage{position:relative;isolation:isolate;overflow:hidden;border:1px solid #dce8e8;border-radius:18px;background:#e8eff0}
+.pl-nearby-map-home .pl-geo-map{position:absolute;inset:0;width:100%;height:100%;background:#e7eff0}
+.pl-nearby-map-home .pl-home-map-stage{height:320px}
+.pl-nearby-map-home .pl-map-floating-top{position:absolute;z-index:5;top:10px;left:10px;right:10px;display:flex;justify-content:space-between;align-items:center;gap:8px;pointer-events:none}
+.pl-nearby-map-home .pl-map-floating-top>*{pointer-events:auto}
+.pl-nearby-map-home .pl-map-floating-top>span,.pl-nearby-map-home .pl-map-floating-top>button{min-height:34px;display:inline-flex;align-items:center;padding:0 11px;border:1px solid #ffffffd9;border-radius:999px;background:#ffffffed;color:#34494e;font-size:10px;font-weight:750;box-shadow:0 3px 12px #20383b16}
+.pl-nearby-map-home .pl-map-floating-top>button{color:#168f87}
+.pl-nearby-map-home .pl-map-touch-hint{position:absolute;z-index:5;left:10px;bottom:10px;padding:7px 10px;border-radius:999px;background:#ffffffed;color:#536970;font-size:9px;box-shadow:0 3px 12px #20383b16;pointer-events:none}
+.pl-nearby-map-home .pl-geo-pin{display:grid;place-items:center;width:30px;height:30px;padding:0;border:3px solid #fff;border-radius:50% 50% 50% 7px;background:#168f87;box-shadow:0 3px 12px #183b3d55;transform:rotate(-45deg)}
+.pl-nearby-map-home .pl-geo-pin span{width:7px;height:7px;border-radius:50%;background:#fff}
+.pl-nearby-map-home .pl-geo-popup{display:grid;gap:5px;color:#263b40}
+.pl-nearby-map-home .pl-geo-popup strong{font-size:13px}
+.pl-nearby-map-home .pl-geo-popup small{font-size:10px;color:#77868a}
+.pl-nearby-map-home .pl-geo-popup a{font-size:11px;color:#168f87;font-weight:800}
+.pl-nearby-map-home .maplibregl-ctrl-group{overflow:hidden;border:0!important;border-radius:9px!important;box-shadow:0 3px 12px #20383b20!important}
+.pl-nearby-map-home .maplibregl-ctrl-group button{width:31px;height:31px}
+.pl-nearby-map-home .maplibregl-ctrl-attrib{font-size:8px}
+@media(max-width:760px){.pl-nearby-map-home .pl-home-map-stage{height:290px;border-radius:14px}}
