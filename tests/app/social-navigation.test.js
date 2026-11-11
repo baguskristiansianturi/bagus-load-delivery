@@ -100,6 +100,10 @@ test('signed-in home leads with Bali experiences, search, wishlist and the perso
  const css=await readFile(new URL('../../src/pages/account/user-account.css',import.meta.url),'utf8');
  assert.ok(account.includes('Top 10 Trending')&&account.includes('ua-topten-grid')&&((account.match(/class="ua-topten-card ua-topten-card-/g)||[]).length===10),'Explore must show ten individual trending subjects, not category tiles.');
  assert.ok(account.includes('function bindToptenSlider()')&&account.includes('setInterval(()=>{if(!paused&&!document.hidden)goTo(index+1);},4200)'),'Mobile Top 10 must rotate through individual trending subjects and pause while interacted with.');
+ assert.ok(account.includes("exploreFilter='following'")&&account.includes("ua-home-following")&&account.includes("Postingan terbaru dari akun yang Anda ikuti."),'The Beranda feed must lead with posts from followed accounts.');
+ assert.ok(account.includes('ua-home-topic-carousel')&&account.includes('REKOMENDASI PERSONAL')&&account.includes('Pilih topik'),'Personalized recommendations must appear as topic-based carousels between Top 10 and Beranda.');
+ assert.ok(account.includes('"+trendSection+interestSection+homeHeading+')||account.includes('trendSection+interestSection+homeHeading'),'The page hierarchy must be Top 10, Untuk Anda, then Beranda.');
+
  assert.ok(account.includes('Beef Slab')&&account.includes('href="#/places?category=restaurant"'),'Tapping a trending food item must open its matching directory category.');
  const directorySource=await readFile(new URL('../../src/pages/directory/index.js',import.meta.url),'utf8');
  assert.ok(directorySource.includes('params.get(\'category\')')&&directorySource.includes('state.categories.some(x=>x.slug===requested)'),'Directory must activate the category selected by a trending card.');
