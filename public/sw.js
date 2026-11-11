@@ -1,9 +1,9 @@
-const CACHE_NAME = 'pluits-shell-v3';
+const CACHE_NAME = 'pluits-shell-v4';
 const APP_SHELL = [
   '/pluits/',
   '/pluits/index.html',
   '/pluits/manifest.webmanifest',
-  '/pluits/favicon.svg'
+  '/pluits/assets/brand/pluits-logo.png'
 ];
 
 self.addEventListener('install', (event) => {

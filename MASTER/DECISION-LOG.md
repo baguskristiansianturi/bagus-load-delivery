@@ -44,7 +44,7 @@
 - **Keputusan final:** Gunakan file gambar logo PLUITS asli yang diberikan founder sebagai satu-satunya simbol logo aplikasi. Pertahankan bentuk dan warna gambar; gunakan PNG berlatar transparan agar dapat ditempatkan di permukaan terang maupun gelap. Header, shell, navigasi merek, favicon, dan ikon instalasi PWA memakai aset gambar terpusat. Tulisan “PLUITS” hanya digunakan saat konteks memang membutuhkan nama merek sebagai teks, misalnya judul, metadata, deskripsi, atau penyebutan produk.
 - **Dampak frontend:** Aset disimpan di `public/assets/brand/pluits-logo.png`; renderer bersama di `src/components/common/brand.js`; styling bersama di `src/styles/brand.css`. Semua header merek menggunakan renderer yang sama. Backend/Supabase tidak menyimpan aset statis ini.
 - **Batas:** Tidak menggambar ulang, memodifikasi bentuk, mengganti warna, atau membuat versi huruf P generik. Tidak mengubah warna seluruh aplikasi secara otomatis; warna logo menjadi aksen identitas, bukan alasan untuk mewarnai semua permukaan.
-- **Status implementasi:** IN PROGRESS; build, deployment, dan Android UAT diverifikasi terpisah.
+- **Status implementasi:** DEPLOYED pada commit `24f9a848f0a2d0c9c326cfa05f8686000da32766`; GitHub Actions #1271 sukses (test, Vite build, artifact, Pages deploy). Android UAT: NOT TESTED.
 
 ## Template entri baru
 
