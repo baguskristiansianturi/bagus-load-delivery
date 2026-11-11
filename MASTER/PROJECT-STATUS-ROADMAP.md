@@ -1147,3 +1147,19 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - **Status:** IMPLEMENTED / DEPLOYED / AUTOMATED TESTED. Android real-device visual UAT, WebGL compatibility/performance on founder's Android 8.1 device, two-finger rotation, map tile availability on mobile network, and founder acceptance remain NOT TESTED / NOT ACCEPTED.
 - **Catatan batas:** pin hanya menunjukkan koordinat/lokasi publik yang tersimpan; bukan bukti tempat sedang beroperasi atau telah diverifikasi. OpenStreetMap attribution ditampilkan; penggunaan tile provider dan kapasitas produksi harus ditinjau sebelum trafik besar.
 - **UAT berikutnya:** periksa header/logo dan lima ikon navigasi pada ponsel, geser/zoom/putar globe, ketuk pin dan buka detail, pindah ke mode daftar, serta pastikan tampilan tetap dapat dipakai bila peta tidak tersedia.
+
+
+## CP-071 — Perbaikan pendaftaran personal dan penanganan kegagalan navigasi (11 November 2026)
+
+- **Sumber temuan:** Founder UAT melaporkan akun personal tidak dapat dibuat dan banyak navigasi berakhir pada halaman gagal dimuat.
+- **Diagnosis yang terverifikasi:** route `#/account/register` masuk ke `mountAccount()`. Sebelumnya, saat sesi Supabase masih aktif (termasuk saat menggunakan mode samaran/guest yang hanya mengubah tampilan), fungsi langsung melanjutkan ke halaman profil dan tidak pernah menampilkan formulir daftar. Ini membuat jalur pendaftaran tidak dapat dipakai dari sesi yang masih aktif.
+- **Pemeriksaan backend:** proyek Supabase PLUITS berstatus ACTIVE_HEALTHY. Kebijakan RLS `user_profiles_insert_self` mengizinkan INSERT untuk role authenticated dengan `id = auth.uid()`. Log Auth yang diperiksa belum menunjukkan event signup baru; karena itu email delivery, redirect allowlist, dan penyelesaian pendaftaran live belum dapat dinyatakan lulus.
+- **Frontend IMPLEMENTED:** route register sekarang selalu menampilkan formulir pendaftaran meskipun sesi lama masih ada; redirect email konfirmasi dibangun dari Vite `BASE_URL` agar kembali ke subpath GitHub Pages PLUITS; `mountUserAccount()` mengembalikan Promise agar kegagalan dapat ditangkap router.
+- **Navigasi IMPLEMENTED:** seluruh deferred route mount/bind utama kini melewati penanganan error terpusat. Jika modul gagal di-load atau inisialisasi gagal, halaman menampilkan detail error yang aman untuk dibaca dan tombol coba lagi, bukan hanya pesan generik. Route detail GeoDirectory juga termasuk.
+- **Regression tests:** 21 Node tests PASS; production-surface verifier PASS; Vite production build PASS; Pages artifact upload dan deployment PASS.
+- **Commit:** `25bce5be5b988cec75d06c671ca832588dca7f84`.
+- **GitHub Actions:** run `43040667493`, workflow #1356 — SUCCESS.
+- **Status:** FRONTEND FIX IMPLEMENTED / DEPLOYED / AUTOMATED TESTED. Signup end-to-end dengan alamat email baru, pengiriman email konfirmasi, redirect allowlist Supabase, dan founder Android UAT tetap NOT TESTED.
+- **Batas verifikasi:** build/test tidak membuktikan email benar-benar terkirim atau setiap halaman berhasil dibuka di perangkat founder. Bila Supabase menolak redirect, detail error sekarang akan ditampilkan; URL aplikasi yang harus diizinkan adalah `https://baguskristiansianturi.github.io/pluits/`.
+- **UAT berikutnya:** uji `#/account/register` dari sesi login aktif dan dari mode guest, lalu uji beberapa route utama (Beranda, Jelajah, GeoDirectory, Marketplace, Trip, Pesan, Profil). Catat teks error yang muncul bila ada route masih gagal.
+
