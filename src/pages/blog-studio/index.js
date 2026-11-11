@@ -310,6 +310,10 @@ export async function mountBlogStudio() {
     if (error) throw error;
     activeProfile = profile || { display_name: user.email?.split('@')[0] || 'Pengguna', username: 'pengguna' };
     await loadBlogProfile();
+    const {data:access,error:accessError}=await supabase.from('account_feature_entitlements').select('plan_key,status,starts_at,expires_at').eq('user_id',user.id).eq('feature_key','blog_studio').maybeSingle();
+    if(accessError)throw accessError;
+    const now=Date.now(),hasPremium=access?.plan_key==='premium'&&access.status==='active'&&new Date(access.starts_at).getTime()<=now&&(!access.expires_at||new Date(access.expires_at).getTime()>now);
+    if(!blogProfile&&!hasPremium){location.hash='#/account/upgrade';return;}
     if(blogProfile){const migrated=await migrateLegacyDrafts();if(migrated)notify(migrated+' draft lama berhasil dipindahkan ke akun PLUITS.');}
     activeTab='posts';activeView=blogProfile?'dashboard':'setup';editingId=null;
     await render();
