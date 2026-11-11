@@ -20,7 +20,8 @@ const placeUrl = slug => '#/place/' + encodeURIComponent(slug);
 
 export function homeNearbySection() {
   return `<section class="pl-nearby-home" aria-label="Tempat terdekat">
-    <div class="pl-nearby-heading"><div><h2>Di sekitar Anda</h2></div><a href="#/places">Lihat semua <b>↗</b></a></div>
+    <div class="pl-nearby-heading"><h2>Di sekitar Anda</h2><a href="#/places">Lihat semua <b>↗</b></a></div>
+    <nav class="pl-nearby-topic-carousel" id="pl-home-nearby-topics" aria-label="Kategori di sekitar Anda"><a href="#/places">Semua</a></nav>
     <div class="pl-home-map-results" id="pl-home-nearby-results"><span class="pl-directory-loading">Mencari tempat di sekitar Anda…</span></div>
   </section>`;
 }
@@ -274,7 +275,29 @@ export function bindHomeNearby({personalize=true,location=null}={}) {
   const prepare=location?Promise.resolve(true):personalize?loadDiscoveryPreferences():Promise.resolve(false);
   prepare.then(hasSavedArea=>{
     if(!location&&!hasSavedArea){resultTarget.innerHTML='<div class="pl-directory-empty">Izinkan lokasi perangkat untuk melihat tempat terdekat dengan jarak yang akurat.</div>';return null;}
-    return (personalize?loadCategories():Promise.resolve()).then(()=>getNearby({lat:state.lat,lon:state.lon,limit:8,radius:5000}));
+    return (personalize?loadCategories():Promise.resolve()).then(()=>{
+      const topicTarget=document.querySelector('#pl-home-nearby-topics');
+      if(topicTarget){
+        const city=String(window.__pluitsHomeCity||'Bali').trim();
+        const definitions=[
+          {match:/souvenir|gift|oleh.?oleh/,label:'Oleh-oleh khas '+city},
+          {match:/cafe|coffee/,label:'Kafe'},
+          {match:/restaurant|food|kuliner/,label:'Restoran'},
+          {match:/beach.?club/,label:'Beach club'},
+          {match:/beach|pantai/,label:'Pantai'},
+          {match:/tourist|attraction|wisata/,label:'Wisata'},
+          {match:/hotel|accommodation|akomodasi/,label:'Akomodasi'},
+          {match:/retail|store|shop|toko/,label:'Toko lokal'}
+        ];
+        const chips=definitions.map(def=>{
+          const category=state.categories.find(item=>def.match.test(String(item.slug||'')+' '+String(item.name||'')));
+          return category?{slug:category.slug,label:def.label}:null;
+        }).filter(Boolean);
+        const unique=chips.filter((item,index)=>chips.findIndex(other=>other.slug===item.slug)===index).slice(0,8);
+        topicTarget.innerHTML='<a class="is-active" href="#/places">Semua</a>'+unique.map(item=>'<a href="#/places?category='+encodeURIComponent(item.slug)+'">'+esc(item.label)+'</a>').join('');
+      }
+      return getNearby({lat:state.lat,lon:state.lon,limit:8,radius:5000});
+    });
   }).then(async rows=>{
     if(!rows)return;
     const interests=personalize?await getInterestMap():new Map(),items=ranked(rows,interests);
