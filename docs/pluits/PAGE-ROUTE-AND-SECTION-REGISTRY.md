@@ -140,3 +140,7 @@ An empty placeholder must not be imported by the router and must not display a f
 ## 7. Updating this registry
 
 Update this file in the same change that adds/removes/renames a canonical route or moves page ownership. Record aliases separately. Never label an alias as a second page. Mark page completeness separately from route existence.
+
+
+## 7. Page/component ownership standard
+The route inventory above must be read together with [PAGE-COMPONENT-OWNERSHIP-AUDIT-2026-11-12.md](./PAGE-COMPONENT-OWNERSHIP-AUDIT-2026-11-12.md). The audit defines the page layout, sidebar and feature ownership boundaries, plus the required process for adding a new page. A route alias must never receive a duplicate page controller.
