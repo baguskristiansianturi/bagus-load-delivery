@@ -26,7 +26,7 @@ const uploadMediaFile=createMediaUploader({supabase,bucket:BUCKET,supabaseUrl:SU
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmtDate=v=>new Date(v).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'});
 const initials=v=>String(v||'P').trim().slice(0,1).toUpperCase();
-let trendSliderTimer=null,user=null,profile=null,profileReels=[],addresses=[],noticeTimer=null,leafletMap=null,leafletMarker=null,exploreFilter='following',reelsFilter='recommended',activityNotificationChannel=null,unreadNotificationCount=0,currentComposeDraft=null,profileMenuBound=false,accountContext={active:'personal',professional:null,stores:[],prefs:{}};
+let trendSliderTimer=null,user=null,profile=null,profileReels=[],addresses=[],noticeTimer=null,leafletMap=null,leafletMarker=null,exploreFilter='recommended',reelsFilter='recommended',activityNotificationChannel=null,unreadNotificationCount=0,currentComposeDraft=null,profileMenuBound=false,accountContext={active:'personal',professional:null,stores:[],prefs:{}};
 
 function notify(message,type='success'){
  const el=document.querySelector('#ua-toast');if(!el)return;
@@ -396,13 +396,13 @@ const {data:follows,error:followError}=await supabase.from('user_follows').selec
  }).join('');
  const recommendationCards=sorted.slice(0,8);
  const interestSection=(topicSections|| (recommendationCards.length?"<div class='ua-home-topic-carousel ua-home-recommendation-carousel'>"+recommendationCards.map(postCard).join('')+"</div>":""));
- const filters=[['following','Mengikuti'],['recommended','Untuk Anda'],['latest','Terbaru'],['popular','Populer']];
+ const filters=[['recommended','Untuk Anda'],['following','Mengikuti'],['latest','Terbaru'],['popular','Populer']];
  const filterNav="<nav class='ua-explore-filters' aria-label='Pilihan beranda'>"+filters.map(([key,label])=>"<button type='button' data-explore-filter='"+key+"' class='"+(exploreFilter===key?'is-active':'')+"' "+(exploreFilter===key?"aria-current='true'":"")+">"+label+"</button>").join('')+"</nav>";
- const empty=exploreFilter==='following'?'Belum ada postingan terbaru dari akun yang Anda ikuti.':'Belum ada postingan publik untuk ditampilkan. Coba kembali nanti atau bagikan cerita pertama Anda.';
- const action=exploreFilter==='following'?"<a href='#/search'>Temukan akun untuk diikuti</a>":"<a href='#/account/compose'>Bagikan foto atau video</a>";
- const homeHeading="<section class='ua-home-following'><div class='ua-home-section-heading'><div><h2>Beranda</h2></div></div>"+filterNav+"</section>";
+ const empty=exploreFilter==='following'?'Belum ada postingan dari akun yang Anda ikuti. Temukan orang dan akun yang menarik untuk mulai mengikuti.':'Belum ada postingan publik untuk ditampilkan. Jadilah yang pertama berbagi cerita di PLUITS.';
+ const action=exploreFilter==='following'?"<a href='#/search'>Temukan orang untuk diikuti</a>":"<a href='#/account/compose'>Buat postingan pertama</a>";
+ const homeHeading="<section class='ua-home-following'><div class='ua-home-section-heading'><div><h2>Beranda</h2><p>Cerita dari orang yang Anda ikuti dan hal menarik untuk ditemukan.</p></div><a href='#/account/compose'>＋ Buat Post</a></div>"+filterNav+"</section>";
  const trendingPosts=[...hydrated].sort((a,b)=>(b.likes*2+b.comments*3)-(a.likes*2+a.comments*3)||new Date(b.created_at)-new Date(a.created_at)).slice(0,6);
- const topicTrending="<section class='ua-home-editorial'><div class='ua-home-section-heading'><div><h2>Topik sedang ramai</h2><small>Artikel &amp; Blog</small></div><a href='#/blog'>Lihat semua ↗</a></div><div class='ua-home-topic-carousel'>"+(trendingPosts.length?trendingPosts.map(postCard).join(''):"<a class='ua-home-editorial-empty' href='#/blog'>Jelajahi artikel dan cerita di PLUITS ↗</a>")+"</div></section>";
+ const topicTrending="<section class='ua-home-editorial'><div class='ua-home-section-heading'><div><h2>Ramai di komunitas</h2><small>Postingan yang sedang mendapat perhatian</small></div><a href='#/account/explore'>Lihat beranda ↗</a></div><div class='ua-home-topic-carousel'>"+(trendingPosts.length?trendingPosts.map(postCard).join(''):"<a class='ua-home-editorial-empty' href='#/account/compose'>Mulai percakapan dengan membagikan cerita ↗</a>")+"</div></section>";
  let productCards='';
  try{
   const {data:products,error:productError}=await supabase.from('public_marketplace_products').select('id,store_name,name,variant_id,online_price,discount_price').order('name').limit(8);
@@ -418,7 +418,7 @@ const {data:follows,error:followError}=await supabase.from('user_follows').selec
  const maybeLike="<section class='ua-home-products'><div class='ua-home-section-heading'><div><h2>Produk Lokal</h2><small>Temukan produk pilihan dari penjual lokal melalui Marketplace PLUITS.</small></div><a href='#/marketplace'>Lihat semua ↗</a></div><div class='ua-home-product-row'>"+(productCards||"<a class='ua-home-product-empty' href='#/marketplace'>Jelajahi produk di Marketplace ↗</a>")+"</div></section>";
  const collections="<section class='ua-home-collections'><div class='ua-home-section-heading'><div><h2>Kumpulan</h2><small>Jasa dan layanan pilihan</small></div><a href='#/places'>Jelajahi ↗</a></div><div class='ua-home-collection-row'><a href='#/places?category=professional-service'><span>✳</span><b>Jasa profesional</b></a><a href='#/places?category=transport'><span>⌁</span><b>Transportasi lokal</b></a><a href='#/trip'><span>◷</span><b>Aktivitas &amp; pengalaman</b></a><a href='#/marketplace'><span>◇</span><b>Produk lokal</b></a></div></section>";
  const serviceFilters="<section class='ua-home-service-filters'><div class='ua-home-section-heading'><div><h2>Layanan PLUITS</h2></div></div><div class='ua-home-service-chip-row'><a href='#/places?category=accommodation'>Akomodasi</a><a href='#/trip'>Tiket</a><a href='#/places?category=transport'>Transportasi</a><a href='#/places?category=professional-service'>Jasa</a></div></section>";
- return "<div class='ua-social-home'>"+trendSection+homeNearbySection()+homeHeading+"<section class='ua-home-interests'><div class='ua-home-section-heading'><div><h3>Untuk Anda</h3></div></div>"+interestSection+"</section><section class='ua-feed'>"+(sorted.length?sorted.map(post=>postCard(post)).join(''):"<div class='ua-feed-empty'><strong>"+empty+"</strong>"+action+"</div>")+"</section>"+topicTrending+maybeLike+collections+serviceFilters+"</div>";
+ return "<div class='ua-social-home'>"+trendSection+homeNearbySection()+homeHeading+"<a class='ua-home-compose-prompt' href='#/account/compose'><span class='ua-home-compose-avatar'>"+esc(initials(profile?.display_name||user?.email||'P'))+"</span><span>Apa yang ingin Anda bagikan?</span><b>＋</b></a><section class='ua-feed'>"+(sorted.length?sorted.map(post=>postCard(post)).join(''):"<div class='ua-feed-empty'><strong>"+empty+"</strong>"+action+"</div>")+"</section>"+topicTrending+maybeLike+collections+serviceFilters+"</div>";
 }
 async function reelsPage(){
  const {data:vm,error:me}=await supabase.from('post_media').select('post_id,duration_ms').eq('media_type','video').lte('duration_ms',60000).order('created_at',{ascending:false}).limit(60);if(me)throw me;
