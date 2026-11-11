@@ -1,22 +1,22 @@
 /* One canonical image asset for every PLUITS brand placement. */
 .pluits-brand-mark {
   display: inline-flex !important;
-  width: var(--brand-size, 40px) !important;
-  height: var(--brand-size, 40px) !important;
-  min-width: var(--brand-size, 40px);
-  min-height: var(--brand-size, 40px);
-  flex: 0 0 auto;
+  width: var(--brand-size, 42px) !important;
+  height: var(--brand-size, 42px) !important;
+  min-width: var(--brand-size, 42px);
+  min-height: var(--brand-size, 42px);
+  flex: 0 0 var(--brand-size, 42px);
   align-items: center;
   justify-content: center;
   padding: 0 !important;
   border: 0 !important;
   border-radius: 0 !important;
-  background: transparent !important;
+  background: #fff !important;
   box-shadow: none !important;
   color: inherit;
   line-height: 0;
   text-decoration: none;
-  overflow: visible;
+  overflow: hidden;
 }
 .pluits-brand-mark > img {
   display: block;
