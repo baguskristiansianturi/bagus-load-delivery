@@ -16,7 +16,6 @@ import {listPrivateDrafts,getPrivateDraft,savePrivateDraft,deletePrivateDraft} f
 import {getMediaMime,getMediaExtension,validateMediaFile,getVideoDuration} from '../../features/media/media-types.js';
 import {createMediaUploader} from '../../features/media/storage-upload.js';
 import {createSignedUrlMap} from '../../services/storage/signed-urls.js';
-import {bindHomeNearby,homeNearbySection} from '../directory/index.js';
 
 const SUPABASE_URL='https://ytndswhqxayqpftszwfh.supabase.co';
 const SUPABASE_KEY='sb_publishable_kOUbKBYg88nXgz8FQRSnvA_k0hvKY65';
