@@ -36,13 +36,12 @@ export function renderSocialHeader({ active = 'explore', profileView = false, sh
         <a class="${active === 'activity' ? 'active' : ''} pl-nav-activity" href="${ROUTES.activity}" aria-label="Aktivitas">${socialIcon('bell', { size: 17 })}<span>Aktivitas</span>${notificationCount ? '<i class="pl-nav-unread">'+(notificationCount>99?'99+':notificationCount)+'</i>' : ''}</a>
         <a class="${profileView ? 'active' : ''}" href="${ROUTES.profile}">Profil</a>
       </nav>
-      <div class="pl-social-header-menu">
+      ${profileView?'':`<div class="pl-social-header-menu">
         <button class="pl-social-menu-trigger" type="button" aria-label="Menu profil" aria-expanded="false" aria-controls="pl-account-menu"><span aria-hidden="true">•••</span></button>
         <div class="pl-social-menu-panel" id="pl-account-menu" hidden>
-          ${showEditProfile?`<a href="${ROUTES.editProfile}">${socialIcon('edit',{size:17})}<span>Edit profil</span></a>`:''}
           <a href="${ROUTES.settings}">${socialIcon('settings',{size:17})}<span>Pusat Pengaturan</span></a>
         </div>
-      </div>
+      </div>`}
     </header>`;
 }
 
