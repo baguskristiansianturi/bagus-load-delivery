@@ -3,6 +3,7 @@ import './messages.css';
 import { socialIcon } from '../../components/common/social-icons.js';
 import {renderBrandLogo} from '../../components/common/brand.js';
 import { renderSocialMobileNav } from '../../components/social/navigation.js';
+import { renderInboxSidebar } from '../../features/inbox/inbox-sidebar.js';
 
 const db = createClient('https://ytndswhqxayqpftszwfh.supabase.co', 'sb_publishable_kOUbKBYg88nXgz8FQRSnvA_k0hvKY65');
 const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
@@ -144,14 +145,7 @@ export function messagesPage() {
         <div id="pl-msg-people-strip" class="pl-msg-people-strip"><span class="pl-msg-people-loading">Memuat kontak…</span></div>
       </section>
       <div class="pl-msg-layout" id="pl-msg-layout">
-        <aside class="pl-msg-sidebar">
-          <nav class="pl-msg-inbox-tabs" aria-label="Kategori pesan" role="tablist">
-            <button type="button" class="is-active" data-inbox-tab="primary" role="tab" aria-selected="true">Utama</button>
-            <button type="button" data-inbox-tab="requests" role="tab" aria-selected="false">Permintaan</button>
-            <button type="button" data-inbox-tab="blocked" role="tab" aria-selected="false">Diblokir</button>
-          </nav>
-          <div id="pl-msg-conversations"><p class="pl-msg-empty">Memuat percakapan…</p></div>
-        </aside>
+        ${renderInboxSidebar()}
         <section class="pl-msg-chat" id="pl-msg-chat">${emptyStateMarkup({variant:'message',title:'Pesan Anda dimulai di sini',description:'Pilih percakapan di sebelah kiri atau cari seseorang untuk mulai mengirim pesan.'})}</section>
       </div>
       <p class="pl-msg-offline-note">If your connection drops, outgoing messages are saved on this device and retried when you are back online. A message is not sent until the server confirms it.</p>
