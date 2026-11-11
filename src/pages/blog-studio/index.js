@@ -1,4 +1,5 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { createMediaUploader } from '../../features/media/storage-upload.js';
 import { renderSocialHeader, renderSocialMobileNav } from '../../components/social/navigation.js';
 import { createSignedUrlMap } from '../../services/storage/signed-urls.js';
 import './blog-studio.css';
@@ -6,52 +7,21 @@ import './blog-studio.css';
 const DB_URL = 'https://ytndswhqxayqpftszwfh.supabase.co';
 const DB_KEY = 'sb_publishable_kOUbKBYg88nXgz8FQRSnvA_k0hvKY65';
 const supabase = createClient(DB_URL, DB_KEY);
-const DB_NAME = 'pluits-blog-studio-v1';
-const STORE = 'items';
-const SETTINGS = 'settings';
-let activeUser = null;
-let activeProfile = null;
-let activeTab = 'posts';
-let activeView = 'dashboard';
-let editingId = null;
-let coverObjectUrl = '';
-let selectedCoverFile = null;
-let galleryItems = [];
-let supportingObjectUrls = [];
-let pendingSupportingFiles = [];
-let toastTimer = null;
-
-const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
-const wordCount = value => String(value || '').trim().split(/\s+/).filter(Boolean).length;
-const uid = () => crypto.randomUUID();
-
-function openDb() {
-  return new Promise((resolve, reject) => {
-    const request = indexedDB.open(DB_NAME, 1);
-    request.onupgradeneeded = () => {
-      const db = request.result;
-      if (!db.objectStoreNames.contains(STORE)) db.createObjectStore(STORE, { keyPath: 'id' });
-      if (!db.objectStoreNames.contains(SETTINGS)) db.createObjectStore(SETTINGS, { keyPath: 'userId' });
-    };
-    request.onsuccess = () => resolve(request.result);
-    request.onerror = () => reject(request.error);
-  });
-}
-async function storeRecord(storeName, mode, action) {
-  const db = await openDb();
-  return new Promise((resolve, reject) => {
-    const tx = db.transaction(storeName, mode);
-    const request = action(tx.objectStore(storeName));
-    tx.oncomplete = () => { db.close(); resolve(request?.result); };
-    tx.onerror = () => { db.close(); reject(tx.error); };
-    tx.onabort = () => { db.close(); reject(tx.error); };
-  });
-}
-const getAllItems = async () => (await storeRecord(STORE, 'readonly', store => store.getAll()) || []).filter(item => item.userId === activeUser.id);
-const saveItem = item => storeRecord(STORE, 'readwrite', store => store.put(item));
-const deleteItem = id => storeRecord(STORE, 'readwrite', store => store.delete(id));
-const getSettings = async () => (await storeRecord(SETTINGS, 'readonly', store => store.get(activeUser.id))) || {};
-const saveSettings = settings => storeRecord(SETTINGS, 'readwrite', store => store.put({ ...settings, userId: activeUser.id }));
+const BUCKET='pluits-user-media';
+const uploadMedia=createMediaUploader({supabase,bucket:BUCKET,supabaseUrl:DB_URL,publishableKey:DB_KEY});
+let blogProfile=null,categories=[];
+let activeUser=null,activeProfile=null,activeTab='posts',activeView='dashboard',editingId=null,coverObjectUrl='',selectedCoverFile=null,galleryItems=[],supportingObjectUrls=[],pendingSupportingFiles=[],toastTimer=null;
+const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+const wordCount=value=>String(value||'').trim().split(/\\s+/).filter(Boolean).length;
+const uid=()=>crypto.randomUUID();
+const ext=file=>(file?.name?.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'').slice(0,6)||'jpg';
+async function loadBlogProfile(){const {data,error}=await supabase.from('blog_profiles').select('*').eq('owner_user_id',activeUser.id).maybeSingle();if(error)throw error;blogProfile=data;categories=[];if(blogProfile){const r=await supabase.from('blog_categories').select('*').eq('blog_id',blogProfile.id).order('sort_order').order('name');if(r.error)throw r.error;categories=r.data||[];}}
+async function getAllItems(){if(!blogProfile)return[];const {data,error}=await supabase.from('blog_posts').select('*').eq('blog_id',blogProfile.id).eq('owner_user_id',activeUser.id).order('updated_at',{ascending:false});if(error)throw error;const paths=(data||[]).flatMap(p=>[p.cover_path,...(p.supporting_paths||[])]).filter(Boolean);const urls=await createSignedUrlMap(supabase.storage,BUCKET,paths,3600);return(data||[]).map(p=>({...p,cover_url:urls.get(p.cover_path)||'',updatedAt:new Date(p.updated_at).getTime(),createdAt:new Date(p.created_at).getTime()}));}
+async function getSettings(){return blogProfile?{blogTitle:blogProfile.display_title,blogDescription:blogProfile.description,visibility:blogProfile.default_visibility}:{};}
+async function saveSettings(v){const {data,error}=await supabase.from('blog_profiles').update({display_title:v.blogTitle,description:v.blogDescription,default_visibility:v.visibility}).eq('id',blogProfile.id).eq('owner_user_id',activeUser.id).select('*').single();if(error)throw error;blogProfile=data;}
+async function deleteItem(id){return supabase.from('blog_posts').delete().eq('id',id).eq('owner_user_id',activeUser.id);}
+async function uploadBlogImage(file,kind){if(!file)return null;if(file.size>12*1024*1024)throw Error('Gambar maksimal 12 MB.');const path=activeUser.id+'/blogs/'+blogProfile.id+'/'+uid()+'-'+kind+'.'+ext(file);await uploadMedia(file,path,file.type||'image/jpeg');return path;}
+async function setupPage(){return header('Buat ruang blog','Buat ruang blog terlebih dahulu sebelum mulai menulis.')+'<form id="pl-blog-create-form" class="pl-blog-settings-form"><label>Nama blog<input name="title" required minlength="2" maxlength="40" placeholder="Contoh: Catatan Harianku"><small>2–40 karakter. URL otomatis dibuat dari nama blog.</small></label><label>Deskripsi blog<textarea name="description" rows="3" maxlength="180"></textarea></label><label>Visibilitas<select name="visibility"><option value="public">Publik</option><option value="private">Privat</option></select></label><button class="pl-blog-primary" type="submit">Buat Blog</button></form>';}
 
 function notify(message, type = 'success') {
   const el = document.querySelector('#pl-blog-toast');
@@ -91,7 +61,7 @@ function tabs() {
 async function dashboardPage() {
   activeView = 'dashboard';
   const [items, settings] = await Promise.all([getAllItems(), getSettings()]);
-  const visible = items.filter(item => activeTab === 'drafts' ? item.status === 'draft' : activeTab === 'posts' ? item.status === 'published' : false).sort((a,b) => b.updatedAt - a.updatedAt);
+  const visible = items.filter(item => activeTab === 'drafts' ? item.status === 'draft' : activeTab === 'posts' ? item.status === 'published' : false);
   const name = activeProfile?.display_name || 'Penulis Pluits';
   const blogTitle = settings.blogTitle || ('Blog ' + name);
   const description = settings.blogDescription || 'Ruang untuk menyimpan cerita, pengalaman, dan karya.';
@@ -99,15 +69,15 @@ async function dashboardPage() {
   let body = '';
   if (activeTab === 'settings') {
     body = '<form id="pl-blog-settings-form" class="pl-blog-settings-form">' +
-      '<label>Nama ruang blog<input name="blogTitle" maxlength="70" value="' + esc(settings.blogTitle || '') + '" placeholder="Contoh: Catatan Perjalanan"></label>' +
+      '<label>Nama ruang blog<input name="blogTitle" required minlength="2" maxlength="40" value="' + esc(settings.blogTitle || '') + '" placeholder="Contoh: Catatan Perjalanan"><small>2–40 karakter. URL otomatis mengikuti nama blog.</small></label>' +
       '<label>Deskripsi blog<textarea name="blogDescription" rows="3" maxlength="220">' + esc(settings.blogDescription || '') + '</textarea><small>Deskripsi ruang blog, bukan deskripsi setiap tulisan.</small></label>' +
       '<label>Visibilitas default<select name="visibility"><option value="public" ' + ((settings.visibility || 'public') === 'public' ? 'selected' : '') + '>Publik</option><option value="followers" ' + (settings.visibility === 'followers' ? 'selected' : '') + '>Pengikut saja</option><option value="private" ' + (settings.visibility === 'private' ? 'selected' : '') + '>Privat</option></select></label>' +
-      '<p class="pl-blog-local-note">Pengaturan ini masih tersimpan lokal di perangkat untuk tahap pengujian editor.</p><button class="pl-blog-primary" type="submit">Simpan pengaturan</button></form>';
+      '<p class="pl-blog-local-note">URL blog dibuat otomatis dari username dan nama blog.</p><button class="pl-blog-primary" type="submit">Simpan pengaturan</button></form><section class="pl-blog-settings-form"><strong>Kategori tulisan</strong><div class="pl-blog-category-list">'+(categories.map(x=>'<span>'+esc(x.name)+'</span>').join('')||'<small>Belum ada kategori.</small>')+'</div><form id="pl-blog-category-form"><label>Tambah kategori<input name="name" maxlength="40" required></label><button class="pl-blog-secondary" type="submit">Tambah Kategori</button></form></section>';
   } else if (!visible.length) {
     body = '<section class="pl-blog-empty"><div class="pl-blog-empty-icon">✎</div><h3>' + (activeTab === 'drafts' ? 'Belum ada draft' : 'Belum ada tulisan') + '</h3><p>' + (activeTab === 'drafts' ? 'Tulisan yang kamu simpan sebagai draft akan muncul di sini.' : 'Mulai dengan menulis cerita, puisi, pengalaman, atau catatan singkat pertamamu.') + '</p><button type="button" class="pl-blog-primary" data-action="new">Tulis Blog</button></section>';
   } else {
     body = '<div class="pl-blog-list">' + visible.map(item => {
-      const cover = item.cover ? URL.createObjectURL(item.cover) : '';
+      const cover = item.cover_url || '';
       const desc = esc(item.description || '');
       return '<article class="pl-blog-item" data-item-id="' + item.id + '">' +
         (cover ? '<img class="pl-blog-item-cover" src="' + cover + '" alt="Cover ' + esc(item.title) + '">' : '<div class="pl-blog-item-cover pl-blog-no-cover">Belum ada cover</div>') +
@@ -123,28 +93,28 @@ function editorPage(item = null) {
   editingId = item?.id || null;
   revokePreviews();
   selectedCoverFile = null;
-  if (item?.cover) coverObjectUrl = URL.createObjectURL(item.cover);
+  if (item?.cover_url) coverObjectUrl = item.cover_url;
   const supporting = item?.supportingImages || [];
   pendingSupportingFiles = [];
   supportingObjectUrls = supporting.map(file => URL.createObjectURL(file));
   const images = supporting.map((file, index) => '<div class="pl-blog-support-tile"><img src="' + supportingObjectUrls[index] + '" alt="Gambar pendukung ' + (index + 1) + '"><button type="button" data-remove-support="' + index + '" aria-label="Hapus gambar">×</button></div>').join('');
   return header(item ? 'Lanjutkan tulisan' : 'Tulis Blog', 'Buat cerita dengan nyaman dari handphone.') +
     '<form id="pl-blog-editor-form" class="pl-blog-editor-form">' +
-    '<label class="pl-blog-field">Judul tulisan<input name="title" maxlength="140" required value="' + esc(item?.title || '') + '" placeholder="Tuliskan judul blog kamu"></label>' +
+    '<label class="pl-blog-field">Judul tulisan<input name="title" maxlength="140" required value="' + esc(item?.title || '') + '" placeholder="Tuliskan judul blog kamu"></label>' + '<label class="pl-blog-field">Kategori<select name="category_id"><option value="">Tanpa kategori</option>' + categories.map(c => '<option value="' + c.id + '" ' + (item?.category_id===c.id?'selected':'') + '>' + esc(c.name) + '</option>').join('') + '</select></label>' +
     '<label class="pl-blog-field">Deskripsi untuk kartu feed<textarea name="description" id="pl-blog-description" rows="3" required placeholder="Ringkas isi tulisan agar orang tertarik membacanya.">' + esc(item?.description || '') + '</textarea><small><span id="pl-blog-word-count">' + wordCount(item?.description || '') + '</span>/85 kata · Ditampilkan pada kartu feed dan dipotong dengan “Baca selengkapnya”.</small></label>' +
     '<section class="pl-blog-cover-field"><div><strong>Gambar utama / cover</strong><small>Dipakai sebagai thumbnail di feed, katalog Blog, dan hero tulisan.</small></div>' +
     '<div class="pl-blog-cover-actions"><button type="button" class="pl-blog-secondary" data-open-gallery>Galeri PLUITS</button><label class="pl-blog-secondary pl-blog-phone-picker" for="pl-blog-cover-input">Galeri HP<input id="pl-blog-cover-input" type="file" accept="image/jpeg,image/png,image/webp"></label></div><div class="pl-blog-cover-picker" id="pl-blog-cover-preview-wrap">' + (coverObjectUrl ? '<img id="pl-blog-cover-preview" src="' + coverObjectUrl + '" alt="Pratinjau cover">' : '<span id="pl-blog-cover-placeholder">＋</span><b>Belum ada gambar utama</b><small>Pilih dari Galeri PLUITS atau Galeri HP</small>') + '</div></section>' +
     '<label class="pl-blog-field">Isi tulisan<textarea name="body" rows="9" required placeholder="Mulai menulis di sini. Tidak ada batas minimal kata.">' + esc(item?.body || '') + '</textarea></label>' +
     '<section class="pl-blog-support-field"><div><strong>Gambar pendukung</strong><small>Gambar ini menjadi bagian isi tulisan, bukan cover.</small></div><label class="pl-blog-support-picker" for="pl-blog-support-input">＋ Tambah gambar pendukung<input id="pl-blog-support-input" type="file" accept="image/*" multiple></label><div class="pl-blog-support-grid" id="pl-blog-support-grid">' + images + '</div></section>' +
-    '<div class="pl-blog-editor-note">Draf disimpan di perangkat ini. Terbitan pada tahap uji belum tampil di feed publik atau pencarian PLUITS.</div>' +
+    '<div class="pl-blog-editor-note">Draft dan tulisan disimpan di akun PLUITS melalui Supabase.</div>' +
     '<button type="button" class="pl-blog-preview-action" data-action="preview">Lihat pratinjau tulisan</button>' +
     '<div class="pl-blog-editor-actions"><button type="button" class="pl-blog-secondary" data-action="save-draft">Simpan Draft</button><button type="submit" class="pl-blog-primary" data-submit-publish>Terbitkan</button></div></form>';
 }
 async function previewPage(item) {
   activeView = 'preview';
   revokePreviews();
-  const cover = item.cover ? URL.createObjectURL(item.cover) : '';
-  const support = (item.supportingImages || []).map(file => '<img src="' + URL.createObjectURL(file) + '" alt="Gambar pendukung">').join('');
+  const cover = item.cover_url || '';
+  const support = (item.supporting_urls || []).map(url => '<img src="' + url + '" alt="Gambar pendukung">').join('');
   return header('Pratinjau tulisan', 'Tampilan lokal sebelum dibagikan.') +
     '<article class="pl-blog-reading-preview">' + (cover ? '<img class="pl-blog-reading-cover" src="' + cover + '" alt="">' : '') +
     '<div class="pl-blog-reading-meta">' + avatarMarkup() + '<div><b>' + esc(activeProfile?.display_name || 'Penulis') + '</b><small>@' + esc(activeProfile?.username || 'akun-pluits') + '</small></div></div>' +
@@ -156,7 +126,8 @@ async function render() {
   const app = document.querySelector('#app');
   if (!app) return;
   let content = '';
-  if (activeView === 'editor') content = editorPage(window.__plBlogEditingItem || null);
+  if (activeView === 'setup') content = await setupPage();
+  else if (activeView === 'editor') content = editorPage(window.__plBlogEditingItem || null);
   else if (activeView === 'preview') content = await previewPage(window.__plBlogPreviewItem);
   else content = await dashboardPage();
   app.innerHTML = shell(content);
@@ -169,47 +140,29 @@ function showError(error) {
   if (app) app.innerHTML = '<div class="pl-blog-error"><h1>Blog belum dapat dibuka</h1><p>' + esc(error?.message || 'Terjadi kesalahan.') + '</p><a href="#/account/create">Kembali</a></div>';
 }
 function readFormFile(input) { return input?.files?.[0] || null; }
-async function persistEditor(status) {
-  const form = document.querySelector('#pl-blog-editor-form');
-  if (!form) return;
-  const data = new FormData(form);
-  const title = String(data.get('title') || '').trim();
-  const description = String(data.get('description') || '').trim();
-  const body = String(data.get('body') || '').trim();
-  const coverInput = document.querySelector('#pl-blog-cover-input');
-  const supportInput = document.querySelector('#pl-blog-support-input');
-  const old = editingId ? (await getAllItems()).find(item => item.id === editingId) : null;
-  const cover = readFormFile(coverInput) || selectedCoverFile || old?.cover || null;
-  const supportingImages = [...(old?.supportingImages || [])];
-  if (pendingSupportingFiles.length) supportingImages.push(...pendingSupportingFiles);
-  if (!title) return notify('Judul tulisan wajib diisi.', 'error');
-  if (!description) return notify('Deskripsi untuk kartu feed wajib diisi.', 'error');
-  if (wordCount(description) > 85) return notify('Deskripsi maksimal 85 kata.', 'error');
-  if (!cover) return notify('Pilih gambar utama sebelum menyimpan tulisan.', 'error');
-  if (!body) return notify('Isi tulisan belum boleh kosong.', 'error');
-  if (cover.size > 12 * 1024 * 1024) return notify('Cover maksimal 12 MB untuk tahap uji.', 'error');
-  if (supportingImages.some(file => file.size > 12 * 1024 * 1024)) return notify('Setiap gambar pendukung maksimal 12 MB.', 'error');
-  const now = Date.now();
-  const item = { id: editingId || uid(), userId: activeUser.id, title, description, body, cover, supportingImages, status, updatedAt: now, createdAt: old?.createdAt || now };
-  await saveItem(item);
-  editingId = item.id;
-  window.__plBlogEditingItem = item;
-  notify(status === 'draft' ? 'Draft tersimpan di perangkat ini.' : 'Terbitan uji tersimpan di perangkat ini. Belum tampil di feed publik.');
-  if (status === 'published') { activeTab = 'posts'; activeView = 'dashboard'; revokePreviews(); }
-  else { activeTab = 'drafts'; activeView = 'dashboard'; revokePreviews(); }
-  await render();
+async function persistEditor(status){
+ const form=document.querySelector('#pl-blog-editor-form');if(!form)return;const d=new FormData(form),title=String(d.get('title')||'').trim(),description=String(d.get('description')||'').trim(),body=String(d.get('body')||'').trim();
+ if(!title||!description||!body)return notify('Judul, deskripsi, dan isi wajib diisi.','error');if(wordCount(description)>85)return notify('Deskripsi maksimal 85 kata.','error');
+ let old=null;if(editingId){const r=await supabase.from('blog_posts').select('*').eq('id',editingId).eq('owner_user_id',activeUser.id).single();if(r.error)throw r.error;old=r.data;}
+ const file=readFormFile(document.querySelector('#pl-blog-cover-input'))||selectedCoverFile;let coverPath=old?.cover_path||null;if(file)coverPath=await uploadBlogImage(file,'cover');if(!coverPath)return notify('Pilih gambar utama sebelum menyimpan.','error');
+ const support=[...(old?.supporting_paths||[])];for(const f of pendingSupportingFiles)support.push(await uploadBlogImage(f,'body'));
+ const now=new Date().toISOString(),payload={blog_id:blogProfile.id,owner_user_id:activeUser.id,title,description,body,cover_path:coverPath,supporting_paths:support,status,visibility:String(d.get('visibility')||'public'),category_id:String(d.get('category_id')||'')||null,updated_at:now,published_at:status==='published'?(old?.published_at||now):old?.published_at||null};
+ const q=editingId?supabase.from('blog_posts').update(payload).eq('id',editingId).eq('owner_user_id',activeUser.id):supabase.from('blog_posts').insert(payload);const {data,error}=await q.select('*').single();if(error)throw error;
+ editingId=data.id;notify(status==='draft'?'Draft tersimpan di akun PLUITS.':'Tulisan berhasil diterbitkan.');activeTab=status==='draft'?'drafts':'posts';activeView='dashboard';revokePreviews();await render();
 }
+
 function bind() {
+  document.querySelector('#pl-blog-create-form')?.addEventListener('submit',async e=>{e.preventDefault();const d=new FormData(e.currentTarget),title=String(d.get('title')||'').trim();if(title.length<2||title.length>40)return notify('Nama blog harus 2–40 karakter.','error');const {data,error}=await supabase.from('blog_profiles').insert({owner_user_id:activeUser.id,display_title:title,description:String(d.get('description')||'').trim(),default_visibility:String(d.get('visibility')||'public')}).select('*').single();if(error)throw error;blogProfile=data;activeView='dashboard';notify('Ruang blog berhasil dibuat.');await render();});
+  document.querySelector('#pl-blog-category-form')?.addEventListener('submit',async e=>{e.preventDefault();const name=String(new FormData(e.currentTarget).get('name')||'').trim();if(!name)return;const {error}=await supabase.from('blog_categories').insert({blog_id:blogProfile.id,owner_user_id:activeUser.id,name});if(error)throw error;await loadBlogProfile();notify('Kategori ditambahkan.');await render();});
+
   document.querySelectorAll('[data-tab]').forEach(button => button.addEventListener('click', () => { activeTab = button.dataset.tab; activeView = 'dashboard'; render().catch(showError); }));
   document.querySelectorAll('[data-action="new"]').forEach(button => button.addEventListener('click', () => { editingId = null; window.__plBlogEditingItem = null; revokePreviews(); setView('editor'); }));
   document.querySelectorAll('[data-action="edit"]').forEach(button => button.addEventListener('click', async () => {
-    const item = (await getAllItems()).find(row => row.id === button.dataset.id);
-    if (!item) return notify('Tulisan tidak ditemukan.', 'error');
-    window.__plBlogEditingItem = item; editingId = item.id; setView('editor');
+    const {data:item,error}=await supabase.from('blog_posts').select('*').eq('id',button.dataset.id).eq('owner_user_id',activeUser.id).single();if(error)throw error;const urls=await createSignedUrlMap(supabase.storage,BUCKET,[item.cover_path,...(item.supporting_paths||[])],3600);item.cover_url=urls.get(item.cover_path)||'';item.supporting_urls=(item.supporting_paths||[]).map(p=>urls.get(p)).filter(Boolean);window.__plBlogEditingItem=item;editingId=item.id;setView('editor');
   }));
   document.querySelectorAll('[data-action="delete"]').forEach(button => button.addEventListener('click', async () => {
-    if (!confirm('Hapus tulisan uji ini dari perangkat?')) return;
-    await deleteItem(button.dataset.id); notify('Tulisan dihapus dari perangkat.'); render().catch(showError);
+    if (!confirm('Hapus tulisan ini dari akun PLUITS?')) return;
+    const result=await deleteItem(button.dataset.id);if(result.error)throw result.error;notify('Tulisan dihapus.');render().catch(showError);
   }));
   document.querySelector('[data-action="save-draft"]')?.addEventListener('click', () => persistEditor('draft').catch(showError));
   document.querySelector('[data-action="preview"]')?.addEventListener('click', async () => {
@@ -328,8 +281,7 @@ function bind() {
   document.querySelector('#pl-blog-settings-form')?.addEventListener('submit', async event => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    await saveSettings({ blogTitle: String(data.get('blogTitle') || '').trim(), blogDescription: String(data.get('blogDescription') || '').trim(), visibility: String(data.get('visibility') || 'public') });
-    notify('Pengaturan blog tersimpan di perangkat ini.');
+    const title=String(data.get('blogTitle')||'').trim();if(title.length<2||title.length>40)return notify('Nama blog harus 2–40 karakter.','error');await saveSettings({blogTitle:title,blogDescription:String(data.get('blogDescription')||'').trim(),visibility:String(data.get('visibility')||'public')});notify('Pengaturan blog tersimpan. URL otomatis diperbarui.');await loadBlogProfile();await render();
   });
   document.querySelector('[data-action="back-editor"]')?.addEventListener('click', () => setView('editor'));
 }
@@ -341,7 +293,18 @@ export async function mountBlogStudio() {
     const { data: profile, error } = await supabase.from('user_profiles').select('display_name,username,avatar_path').eq('id', user.id).maybeSingle();
     if (error) throw error;
     activeProfile = profile || { display_name: user.email?.split('@')[0] || 'Pengguna', username: 'pengguna' };
-    activeTab = 'posts'; activeView = 'dashboard'; editingId = null;
+    await loadBlogProfile();activeTab='posts';activeView=blogProfile?'dashboard':'setup';editingId=null;
     await render();
   } catch (error) { showError(error); }
+}
+
+export async function mountPublicBlog(username,blogSlug,postSlug=''){
+ try{
+  const {data:route,error}=await supabase.from('blog_public_routes').select('*').eq('username',username).eq('slug',blogSlug).maybeSingle();if(error)throw error;if(!route||route.default_visibility!=='public')throw Error('Blog tidak ditemukan.');
+  let q=supabase.from('blog_posts').select('id,title,slug,description,body,cover_path,supporting_paths,published_at').eq('blog_id',route.blog_id).eq('status','published').eq('visibility','public');if(postSlug)q=q.eq('slug',postSlug);
+  const {data,error:pe}=await q.order('published_at',{ascending:false});if(pe)throw pe;if(postSlug&&!data?.length)throw Error('Tulisan tidak ditemukan.');
+  const rows=data||[],paths=rows.flatMap(x=>[x.cover_path,...(x.supporting_paths||[])]),urls=await createSignedUrlMap(supabase.storage,BUCKET,paths,3600),base='/@'+encodeURIComponent(username)+'/blog/'+encodeURIComponent(blogSlug);
+  const html='<main class="pl-blog-public"><header><a href="#/">PLUITS</a><span>@'+esc(username)+'</span></header><section class="pl-blog-public-head"><span>RUANG BLOG</span><h1>'+esc(route.display_title)+'</h1><p>'+esc(route.description||'')+'</p></section>'+(postSlug?(()=>{const p=rows[0];return '<article class="pl-blog-public-article">'+(urls.get(p.cover_path)?'<img class="pl-blog-reading-cover" src="'+urls.get(p.cover_path)+'" alt="">':'')+'<h1>'+esc(p.title)+'</h1><p>'+esc(p.description)+'</p><div class="pl-blog-reading-body">'+esc(p.body).replace(/\n/g,'<br>')+'</div>'+(p.supporting_paths||[]).map(x=>urls.get(x)?'<img class="pl-blog-public-support" src="'+urls.get(x)+'" alt="">':'').join('')+'<a href="#'+base+'">Semua tulisan</a></article>';})():'<section class="pl-blog-public-list">'+(rows.map(p=>'<a class="pl-blog-public-card" href="#'+base+'/'+encodeURIComponent(p.slug)+'">'+(urls.get(p.cover_path)?'<img src="'+urls.get(p.cover_path)+'" alt="">':'')+'<div><h2>'+esc(p.title)+'</h2><p>'+esc(p.description)+'</p><span>Baca selengkapnya</span></div></a>').join('')||'<p>Belum ada tulisan publik.</p>')+'</section>')+'<footer>PLUITS · '+esc(route.display_title)+'</footer></main>';
+  document.querySelector('#app').innerHTML=html;
+ }catch(error){const app=document.querySelector('#app');if(app)app.innerHTML='<main class="pl-blog-public"><a href="#/">PLUITS</a><h1>Blog tidak tersedia</h1><p>'+esc(error.message)+'</p></main>';}
 }
