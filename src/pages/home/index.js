@@ -32,6 +32,7 @@ export function home(){
  ${renderSocialMobileNav({active:'home',publicHome:true})}</div>`;
 }
 export async function bindHome(){
+ const guestMode=(location.hash||'').startsWith('#/guest');
  const target=document.querySelector('#pl-public-feed');if(!target)return;
  bindHomeNearby();
  try{
@@ -39,7 +40,7 @@ export async function bindHome(){
   // Authenticated users must use the canonical interactive feed, not the guest-only duplicate.
   if(viewer&&!((location.hash||'').startsWith('#/guest'))){history.replaceState(null,'',location.pathname+location.search+'#/account/explore');const {mountUserAccount}=await import('../account/index.js');await mountUserAccount('explore');return;}
   const headerActions=document.querySelector('.pl-social-header-actions');
-  if(viewer&&headerActions){
+  if(viewer&&!guestMode&&headerActions){
    const {data:me}=await db.from('user_profiles').select('display_name,username,avatar_path').eq('id',viewer.id).maybeSingle();
    const photo=await mediaUrl(me?.avatar_path);
    const label=safe(me?.display_name||viewer.email||'Profil');
