@@ -13,7 +13,8 @@ const AREAS = {
   tabanan: { label: 'Tabanan', lat: -8.54, lon: 115.125 },
   singaraja: { label: 'Buleleng', lat: -8.112, lon: 115.088 }
 };
-const state = { lat: AREAS.denpasar.lat, lon: AREAS.denpasar.lon, area: 'denpasar', radius: 15000, category: '', query: '', rows: [], categories: [], map: null, mapTarget: null, markers: [], mode: 'map', personalization: true };
+const state = { lat: null, lon: null, area: '', radius: 15000, category: '', query: '', rows: [], categories: [], map: null, mapTarget: null, markers: [], mode: 'map', personalization: true };
+let homeNearbyRequest=0;
 const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const distance = value => value < 1000 ? Math.round(value) + ' m' : (value / 1000).toFixed(1).replace('.', ',') + ' km';
 const placeUrl = slug => '#/place/' + encodeURIComponent(slug);
@@ -27,6 +28,7 @@ export function homeNearbySection() {
 }
 
 async function getNearby({lat=state.lat,lon=state.lon,category=state.category,query=state.query,radius=state.radius,limit=12}={}) {
+  if(!Number.isFinite(Number(lat))||!Number.isFinite(Number(lon)))return [];
   const {data,error}=await supabase.rpc('directory_nearby',{
     p_lat:lat,p_lon:lon,p_radius_m:radius,p_limit:limit,
     p_category_slug:category||null,p_query:query||null
@@ -270,69 +272,52 @@ export async function bindDirectoryPage() {
 }
 export function bindHomeNearby({personalize=true,location=null}={}) {
   const resultTarget=document.querySelector('#pl-home-nearby-results');if(!resultTarget)return;
+  const requestId=++homeNearbyRequest,routeHash=window.location.hash;
+  const isCurrent=()=>requestId===homeNearbyRequest&&resultTarget.isConnected&&window.location.hash===routeHash;
   state.radius=5000;state.category='';state.query='';
   if(location&&Number.isFinite(location.latitude)&&Number.isFinite(location.longitude)){state.lat=location.latitude;state.lon=location.longitude;state.area='';}
   const prepare=location?Promise.resolve(true):personalize?loadDiscoveryPreferences():Promise.resolve(false);
   prepare.then(hasSavedArea=>{
+    if(!isCurrent())return null;
     if(!location&&!hasSavedArea){resultTarget.innerHTML='<div class="pl-directory-empty">Izinkan lokasi perangkat untuk melihat tempat terdekat dengan jarak yang akurat.</div>';return null;}
-    return (personalize?loadCategories():Promise.resolve()).then(()=>{
-      const topicTarget=document.querySelector('#pl-home-nearby-topics');
-      if(topicTarget){
-        const city=String(window.__pluitsHomeCity||'Bali').trim();
-        const definitions=[
-          {match:/souvenir|gift|oleh.?oleh/,label:'Oleh-oleh khas '+city},
-          {match:/cafe|coffee/,label:'Kafe'},
-          {match:/restaurant|food|kuliner/,label:'Restoran'},
-          {match:/beach.?club/,label:'Beach club'},
-          {match:/beach|pantai/,label:'Pantai'},
-          {match:/tourist|attraction|wisata/,label:'Wisata'},
-          {match:/hotel|accommodation|akomodasi/,label:'Akomodasi'},
-          {match:/retail|store|shop|toko/,label:'Toko lokal'}
-        ];
-        const chips=definitions.map(def=>{
-          const category=state.categories.find(item=>def.match.test(String(item.slug||'')+' '+String(item.name||'')));
-          return category?{slug:category.slug,label:def.label}:null;
-        }).filter(Boolean);
-        const unique=chips.filter((item,index)=>chips.findIndex(other=>other.slug===item.slug)===index).slice(0,8);
-        topicTarget.innerHTML='<a class="is-active" href="#/places">Semua</a>'+unique.map(item=>'<a href="#/places?category='+encodeURIComponent(item.slug)+'">'+esc(item.label)+'</a>').join('');
-      }
-      return getNearby({lat:state.lat,lon:state.lon,limit:8,radius:5000});
-    });
+    return getNearby({lat:state.lat,lon:state.lon,limit:24,radius:5000});
   }).then(async rows=>{
-    if(!rows)return;
-    const interests=personalize?await getInterestMap():new Map(),items=ranked(rows,interests);
-    if(!items.length){resultTarget.innerHTML='<div class="pl-directory-empty">Belum ada tempat terdaftar dalam radius 5 km.</div>';return;}
-    const nearbyIds=items.slice(0,8).map(row=>row.id);
+    if(!rows||!isCurrent())return;
+    const presentSlugs=new Set(rows.flatMap(row=>Array.isArray(row.category_slugs)?row.category_slugs:[]));
+    const categories=await loadCategories();if(!isCurrent())return;
+    const nearbyCategories=categories.filter(category=>presentSlugs.has(category.slug));
+    const topicTarget=document.querySelector('#pl-home-nearby-topics');
+    if(topicTarget)topicTarget.innerHTML='<a class="is-active" href="#/places">Semua</a>'+nearbyCategories.map(category=>'<a href="#/places?category='+encodeURIComponent(category.slug)+'">'+esc(category.name)+'</a>').join('');
+    if(!rows.length){resultTarget.innerHTML='<div class="pl-directory-empty">Belum ada tempat terdaftar dalam radius 5 km.</div>';return;}
+    const interests=personalize?await getInterestMap():new Map();if(!isCurrent())return;
+    const items=ranked(rows,interests),nearbyIds=items.slice(0,8).map(row=>row.id);
     const {data:links,error:linksError}=await supabase.from('user_post_directory_entities').select('entity_id,post_id,created_at').in('entity_id',nearbyIds).order('created_at',{ascending:false}).limit(40);
-    if(linksError)throw linksError;
+    if(linksError)throw linksError;if(!isCurrent())return;
     const postIds=[...new Set((links||[]).map(link=>link.post_id))];
     const {data:posts,error:postsError}=postIds.length?await supabase.from('user_posts').select('id,user_id,caption,media_path,media_type,profile_context,business_store_id,created_at').in('id',postIds).eq('visibility','public').eq('moderation_status','published').order('created_at',{ascending:false}).limit(24):{data:[],error:null};
-    if(postsError)throw postsError;
+    if(postsError)throw postsError;if(!isCurrent())return;
     const entityById=new Map(items.map(row=>[row.id,row]));
     const linked=(posts||[]).map(post=>({...post,entity:entityById.get((links||[]).find(link=>link.post_id===post.id)?.entity_id)})).filter(post=>post.entity);
-    const userIds=[...new Set(linked.filter(post=>post.profile_context!=='business').map(post=>post.user_id))];
-    const storeIds=[...new Set(linked.filter(post=>post.profile_context==='business'&&post.business_store_id).map(post=>post.business_store_id))];
+    const userIds=[...new Set(linked.filter(post=>post.profile_context!=='business').map(post=>post.user_id))],storeIds=[...new Set(linked.filter(post=>post.profile_context==='business'&&post.business_store_id).map(post=>post.business_store_id))];
     const [profiles,stores]=await Promise.all([
       userIds.length?supabase.from('user_profiles').select('id,display_name,username').in('id',userIds):Promise.resolve({data:[],error:null}),
       storeIds.length?supabase.from('public_business_profiles').select('id,name,username').in('id',storeIds):Promise.resolve({data:[],error:null})
     ]);
-    if(profiles.error)throw profiles.error;if(stores.error)throw stores.error;
+    if(profiles.error)throw profiles.error;if(stores.error)throw stores.error;if(!isCurrent())return;
     const owners=new Map([...(profiles.data||[]).map(owner=>[owner.id,owner]),...(stores.data||[]).map(owner=>[owner.id,owner])]);
-    const mediaPaths=linked.map(post=>post.media_path).filter(Boolean);
-    const signed=mediaPaths.length?await supabase.storage.from('pluits-user-media').createSignedUrls(mediaPaths,3600):{data:[]};
-    const imageByPath=new Map((signed.data||[]).map(file=>[file.path,file.signedUrl]));
-    const postByEntity=new Map();linked.forEach(post=>{if(!postByEntity.has(post.entity.id))postByEntity.set(post.entity.id,post);});
+    const mediaPaths=linked.map(post=>post.media_path).filter(Boolean),signed=mediaPaths.length?await supabase.storage.from('pluits-user-media').createSignedUrls(mediaPaths,3600):{data:[]};
+    if(!isCurrent())return;
+    const imageByPath=new Map((signed.data||[]).map(file=>[file.path,file.signedUrl])),postByEntity=new Map();
+    linked.forEach(post=>{if(!postByEntity.has(post.entity.id))postByEntity.set(post.entity.id,post);});
     resultTarget.innerHTML=items.slice(0,8).map(entity=>{
-      const post=postByEntity.get(entity.id),owner=post?owners.get(post.profile_context==='business'?post.business_store_id:post.user_id):null;
-      const ownerName=owner?.name||owner?.display_name||'Tempat & layanan terdekat';
-      const image=post?imageByPath.get(post.media_path)||'':'';
-      const itemName=post?String(post.caption||'').trim().split(/\\n/)[0].slice(0,76)||entity.name:entity.name;
+      const post=postByEntity.get(entity.id),image=post?imageByPath.get(post.media_path)||'':'';
+      const itemName=post?String(post.caption||'').trim().split(/\n/)[0].slice(0,76)||entity.name:entity.name;
       const distanceLabel=distance(Number(entity.distance_m)||0),category=(entity.category_slugs||[]).slice(0,2).join(' · ');
       const typeLabel=entity.entity_type==='place'?'TEMPAT':entity.entity_type==='provider'?'JASA':entity.entity_type==='event'?'ACARA':'PLUITS';
-      const locationText=distanceLabel+(location?' dari Anda':' dari pusat area');
+      const locationText=distanceLabel+(location?' dari Anda':' dari lokasi tersimpan');
       return '<a class="pl-nearby-item-card" href="'+placeUrl(entity.slug)+'"><span class="pl-nearby-item-visual">'+(image?'<img src="'+esc(image)+'" alt="'+esc(itemName)+'" loading="lazy">':'<span class="pl-nearby-item-placeholder">'+typeLabel+'</span>')+'<span class="pl-nearby-item-shade"></span><span class="pl-nearby-item-overlay"><small>'+esc(category||typeLabel)+'</small><b>'+esc(itemName)+'</b><em><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10.2c0 5.1-8 11-8 11s-8-5.9-8-11a8 8 0 1 1 16 0Z"></path><circle cx="12" cy="10" r="2.5"></circle></svg> '+locationText+'</em></span></span></a>';
     }).join('');
-  }).catch(()=>{resultTarget.innerHTML='<div class="pl-directory-empty">Tempat terdekat belum dapat dimuat.</div>';});
+  }).catch(error=>{if(isCurrent()){console.error('PLUITS nearby discovery failed',error);resultTarget.innerHTML='<div class="pl-directory-empty">Tempat terdekat belum dapat dimuat.</div>'; }});
 }
 export async function placePage(slug) {
   const {data:entity,error}=await supabase.from('directory_entities').select('id,entity_type,slug,name,summary,description,status,verification_status,created_at').eq('slug',slug).eq('status','published').maybeSingle();
