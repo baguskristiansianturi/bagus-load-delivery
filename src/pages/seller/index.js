@@ -1,5 +1,6 @@
 import './seller.css';
 import {renderBrandLogo} from '../../components/common/brand.js';
+import {renderSellerNavigation} from '../../features/seller/seller-navigation.js';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 const SUPABASE_URL = 'https://ytndswhqxayqpftszwfh.supabase.co';
@@ -84,7 +85,7 @@ function storeOnboarding(user,isAdditional=false){
 }
 async function dashboard(user,stores){
  const tabs=[['overview','Ringkasan'],['orders','Pesanan'],['products','Produk & gambar'],['categories','Kategori'],['inventory','Persediaan'],['delivery','Pengiriman'],['profile','Profil toko'],['settings','Pengaturan']];
- const nav=tabs.map(([id,label])=>`<button data-tab="${id}" class="${activeTab===id?'active':''}">${label}</button>`).join('');
+
  const {count:productCount}=await supabase.from('products').select('*',{count:'exact',head:true}).eq('store_id',activeStore.id);
  const {count:categoryCount}=await supabase.from('product_categories').select('*',{count:'exact',head:true}).eq('store_id',activeStore.id);
  let body='';
@@ -98,7 +99,7 @@ async function dashboard(user,stores){
  if(activeTab==='settings')body=await settingsPanel();
  document.querySelector('#app').innerHTML=shell(`
  <section class="pluits-dashboard-head"><div><span class="pluits-eyebrow">SELLER WORKSPACE</span><h1>${esc(activeStore.name)}</h1><p>@${esc(activeStore.username)} · ${esc(activeStore.business_type)} · ${esc(activeStore.public_city)}</p></div><span class="pluits-owner-pill">OWNER ACCOUNT</span></section><p id="pluits-notice" class="pluits-notice" role="status" aria-live="polite"></p>
- <div class="pluits-dashboard"><aside class="pluits-sidebar"><div class="pluits-user"><b>${esc(user.user_metadata?.full_name||user.email)}</b><small>${esc(user.email)}</small></div><nav>${nav}</nav><div class="pluits-sidebar-foot">PLUITS INDONESIA<br><small>Seller Center v0.1</small></div></aside><section class="pluits-content">${body}</section></div><nav class="pluits-mobile-tabs" aria-label="Menu Seller Center">${nav}</nav>`,user);
+ <div class="pluits-dashboard">${renderSellerNavigation({user,activeTab,tabs})}<section class="pluits-content">${body}</section></div>`,user);
  document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>{activeTab=b.dataset.tab;dashboard(user,stores)}));
  const storeHead=document.querySelector('.pluits-dashboard-head');
  if(storeHead){
