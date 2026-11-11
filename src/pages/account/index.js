@@ -334,7 +334,7 @@ async function hydratePosts(rows){
    return {...p,owner,media,tagged:(tagsByPost.get(p.id)||[]).map(t=>pmap.get(t.tagged_user_id)).filter(Boolean),mediaUrl:media[0]?.url||'',avatarUrl:mediaUrls.get(owner.avatar_path)||'',likes:likeCounts.get(p.id)||0,liked:likedPosts.has(p.id),comments:commentCounts.get(p.id)||0,saved:saved.has(p.id)};
   });
  }
-async function feedPage(){
+async async function feedPage(){
  const interestQuery=await supabase.from('user_interest_preferences').select('preference,directory_categories(name,slug)').eq('user_id',user.id).eq('source','explicit');
  if(interestQuery.error)throw interestQuery.error;
  const interests=(interestQuery.data||[]).map(x=>x.directory_categories).filter(Boolean);
