@@ -9,10 +9,11 @@ export function home(){
  const guestMode=(location.hash||'').startsWith('#/guest');
  const image=(id)=>'https://images.unsplash.com/'+id+'?auto=format&fit=crop&w=900&q=82';
  const destinations=[
-  ['Pantai & alam','photo-1507525428034-b723cf961d3e','Temukan destinasi menarik'],
-  ['Kuliner & kafe','photo-1517248135467-4c7edcad34c4','Jelajahi tempat makan'],
-  ['Belanja & toko','photo-1441986300917-64674bd600d8','Temukan produk lokal'],
-  ['Aktivitas & trip','photo-1476514525535-07fb3b4ae5f1','Rencanakan pengalaman']
+  ['Destinasi','photo-1507525428034-b723cf961d3e','Tempat dan pengalaman menarik','places'],
+  ['Makanan','photo-1517248135467-4c7edcad34c4','Hidangan yang sedang diminati','marketplace'],
+  ['Produk','photo-1441986300917-64674bd600d8','Produk yang menarik perhatian','marketplace'],
+  ['Jasa','photo-1521737711867-e3b97375f902','Layanan yang mungkin dibutuhkan','places'],
+  ['Blog & topik','photo-1470252649378-9c29740c9fa8','Artikel dan topik dari berbagai akun','search']
  ];
  return `<div class="pl-social-home pl-public-home">
  ${renderSocialHeader({active:'home',publicHome:true})}
@@ -21,8 +22,8 @@ export function home(){
    <div class="pl-public-hero-copy"><span class="pl-public-eyebrow">SOCIAL · LOCAL · DISCOVERY</span><h1>Temukan dunia di sekitarmu.</h1><p>Jelajahi tempat, cerita, komunitas, produk, dan layanan. Semua terhubung dalam satu ruang.</p><form class="pl-public-search" action="#/search"><span>⌕</span><input aria-label="Cari di Pluits" placeholder="Cari tempat, orang, produk, atau cerita…"><button type="submit">Cari</button></form><div class="pl-public-hero-links"><a href="#/places">Jelajahi direktori</a><a href="#/search">Temukan cerita <span>→</span></a></div></div>
    <div class="pl-public-hero-visual"><img src="${image('photo-1518837695005-2083093ee35b')}" alt="Pemandangan pantai dan laut" fetchpriority="high"><div class="pl-public-hero-note"><b>Lebih dari sekadar sosial.</b><span>Orang · Tempat · Pengalaman · Usaha</span></div></div>
   </section>
-  <section class="pl-public-section pl-public-discover"><div class="pl-public-section-head"><div><span class="pl-public-eyebrow">JELAJAHI PLUITS</span><h2>Ada banyak hal untuk ditemukan.</h2><p>Mulai dari tempat terdekat hingga pengalaman baru.</p></div><a href="#/places">Buka direktori →</a></div>
-   <div class="pl-public-category-grid">${destinations.map(([label,id,desc])=>`<a class="pl-public-category" href="#/places"><img src="${image(id)}" alt="" loading="lazy"><span class="pl-public-category-shade"></span><span class="pl-public-category-copy"><b>${label}</b><small>${desc}</small></span></a>`).join('')}</div>
+  <section class="pl-public-section pl-public-discover"><div class="pl-public-section-head"><div><span class="pl-public-eyebrow">JELAJAHI PLUITS</span><h2>Temukan hal menarik di PLUITS.</h2><p>Destinasi, makanan, produk, jasa, dan topik dari seluruh wilayah.</p></div><a href="#/places">Buka direktori →</a></div>
+   <div class="pl-public-category-grid">${destinations.map(([label,id,desc,route])=>`<a class="pl-public-category" href="#/${route}"><img src="${image(id)}" alt="" loading="lazy"><span class="pl-public-category-shade"></span><span class="pl-public-category-copy"><b>${label}</b><small>${desc}</small></span></a>`).join('')}</div>
   </section>
   <section class="pl-public-section pl-public-nearby"><div class="pl-public-section-head"><div><span class="pl-public-eyebrow">GEO DIRECTORY</span><h2>Temukan yang dekat denganmu.</h2><p>Tempat, restoran, fasilitas umum, dan penyedia layanan.</p></div><a href="#/places">Lihat semua tempat →</a></div>${homeNearbySection()}</section>
   <section class="pl-public-section pl-public-stories"><div class="pl-public-section-head"><div><span class="pl-public-eyebrow">KONTEN KOMUNITAS</span><h2>Cerita dari berbagai sudut pandang.</h2><p>Foto, tulisan, video, dan pengalaman yang dibagikan komunitas.</p></div><a href="#/search">Jelajahi konten →</a></div><div class="pl-public-story-feature"><img src="${image('photo-1470252649378-9c29740c9fa8')}" alt="Pemandangan alam saat matahari terbit" loading="lazy"><div><span class="pl-public-eyebrow">STORY · POST · REEL</span><h3>Temukan inspirasi dari pengalaman nyata.</h3><p>Jelajahi konten publik sekarang. Bergabunglah untuk berbagi cerita dan berinteraksi.</p><a href="#/search">Mulai menjelajah →</a></div></div><div id="pl-public-feed"><div class="pl-feed-loading">Memuat postingan publik…</div></div></section>
