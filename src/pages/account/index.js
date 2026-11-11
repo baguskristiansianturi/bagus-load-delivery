@@ -405,17 +405,18 @@ const {data:follows,error:followError}=await supabase.from('user_follows').selec
  const topicTrending="<section class='ua-home-editorial'><div class='ua-home-section-heading'><div><h2>Ramai di komunitas</h2><small>Postingan yang sedang mendapat perhatian</small></div><a href='#/account/explore'>Lihat beranda ↗</a></div><div class='ua-home-topic-carousel'>"+(trendingPosts.length?trendingPosts.map(postCard).join(''):"<a class='ua-home-editorial-empty' href='#/account/compose'>Mulai percakapan dengan membagikan cerita ↗</a>")+"</div></section>";
  let productCards='';
  try{
-  const {data:products,error:productError}=await supabase.from('public_marketplace_products').select('id,store_name,name,variant_id,online_price,discount_price').order('name').limit(8);
+  const {data:products,error:productError}=await supabase.from('public_marketplace_products').select('id,store_id,store_name,name,variant_id,online_price,discount_price').order('name').limit(40);
   if(productError)throw productError;
-  const ids=[...new Set((products||[]).map(p=>p.id))];
+  const storeIds=[...new Set((products||[]).map(p=>p.store_id).filter(Boolean))];const {data:localStores,error:storeError}=storeIds.length?await supabase.from('public_marketplace_stores').select('id,public_city,public_area').in('id',storeIds):{data:[],error:null};if(storeError)throw storeError;const cityKey=String(window.__pluitsHomeCity||'Bali').toLocaleLowerCase('id');const localStoreIds=new Set((localStores||[]).filter(store=>String(store.public_city||'').toLocaleLowerCase('id').includes(cityKey)||cityKey.includes(String(store.public_city||'').toLocaleLowerCase('id'))).map(store=>store.id));const localProducts=(products||[]).filter(p=>localStoreIds.has(p.store_id)).slice(0,8);
+  const ids=[...new Set(localProducts.map(p=>p.id))];
   const {data:images}=ids.length?await supabase.from('product_images').select('product_id,storage_path,sort_order').in('product_id',ids).order('sort_order',{ascending:true}):{data:[]};
   const paths=[...new Set((images||[]).map(x=>x.storage_path).filter(Boolean))];
   const {data:signed}=paths.length?await supabase.storage.from('pluits-store-media').createSignedUrls(paths,3600):{data:[]};
   const urls=new Map((signed||[]).map(x=>[x.path,x.signedUrl])),first=new Map();
   (images||[]).forEach(x=>{if(!first.has(x.product_id))first.set(x.product_id,urls.get(x.storage_path)||'');});
-  productCards=(products||[]).map(p=>"<a class='ua-home-product-card' href='#/market-product/"+encodeURIComponent(p.variant_id)+"'>"+(first.get(p.id)?"<img src='"+esc(first.get(p.id))+"' alt='"+esc(p.name)+"' loading='lazy'>":"<span class='ua-home-product-placeholder'>PLUITS</span>")+"<span><small>"+esc(p.store_name||'Penjual PLUITS')+"</small><b>"+esc(p.name)+"</b><strong>"+rupiah(p.discount_price||p.online_price)+"</strong></span></a>").join('');
+  productCards=localProducts.map(p=>"<a class='ua-home-product-card' href='#/market-product/"+encodeURIComponent(p.variant_id)+"'>"+(first.get(p.id)?"<img src='"+esc(first.get(p.id))+"' alt='"+esc(p.name)+"' loading='lazy'>":"<span class='ua-home-product-placeholder'>PLUITS</span>")+"<span><small>"+esc(p.store_name||'Penjual PLUITS')+"</small><b>"+esc(p.name)+"</b><strong>"+rupiah(p.discount_price||p.online_price)+"</strong></span></a>").join('');
  }catch(error){console.warn('PLUITS home product recommendations',error);}
- const maybeLike="<section class='ua-home-products'><div class='ua-home-section-heading'><div><h2>Produk Lokal</h2><small>Temukan produk pilihan dari penjual lokal melalui Marketplace PLUITS.</small></div><a href='#/marketplace'>Lihat semua ↗</a></div><div class='ua-home-product-row'>"+(productCards||"<a class='ua-home-product-empty' href='#/marketplace'>Jelajahi produk di Marketplace ↗</a>")+"</div></section>";
+ const maybeLike="<section class='ua-home-products'><div class='ua-home-section-heading'><div><h2>Produk Lokal</h2><small>Produk dari penjual di <span data-home-location-city>Bali</span>, dipilih dari yang ramai dan sesuai minat Anda.</small></div><a href='#/marketplace'>Lihat semua ↗</a></div><div class='ua-home-product-row'>"+(productCards||"<a class='ua-home-product-empty' href='#/marketplace'>Jelajahi produk di Marketplace ↗</a>")+"</div></section>";
  const collections="<section class='ua-home-collections'><div class='ua-home-section-heading'><div><h2>Kumpulan</h2><small>Jasa dan layanan pilihan</small></div><a href='#/places'>Jelajahi ↗</a></div><div class='ua-home-collection-row'><a href='#/places?category=professional-service'><span>✳</span><b>Jasa profesional</b></a><a href='#/places?category=transport'><span>⌁</span><b>Transportasi lokal</b></a><a href='#/trip'><span>◷</span><b>Aktivitas &amp; pengalaman</b></a><a href='#/marketplace'><span>◇</span><b>Produk lokal</b></a></div></section>";
  const serviceFilters="<section class='ua-home-service-filters'><div class='ua-home-section-heading'><div><h2>Layanan PLUITS</h2></div></div><div class='ua-home-service-chip-row'><a href='#/places?category=accommodation'>Akomodasi</a><a href='#/trip'>Tiket</a><a href='#/places?category=transport'>Transportasi</a><a href='#/places?category=professional-service'>Jasa</a></div></section>";
  return "<div class='ua-social-home'>"+trendSection+homeNearbySection()+homeHeading+"<a class='ua-home-compose-prompt' href='#/account/compose'><span class='ua-home-compose-avatar'>"+esc(initials(profile?.display_name||user?.email||'P'))+"</span><span>Apa yang ingin Anda bagikan?</span><b>＋</b></a><section class='ua-feed'>"+(sorted.length?sorted.map(post=>postCard(post)).join(''):"<div class='ua-feed-empty'><strong>"+empty+"</strong>"+action+"</div>")+"</section>"+topicTrending+maybeLike+collections+serviceFilters+"</div>";
@@ -719,11 +720,11 @@ function normalizeFeedMediaFrames(root=document){
  });
 }
 let homeSearchTypingTimer=null,homeSearchCycleTimer=null;
-function startHomeSearchPrompt(locationText='Bali, Indonesia'){
+function startHomeSearchPrompt(locationText='Welcome to Bali'){
  const prompt=document.querySelector('#ua-home-search-prompt');if(!prompt)return;
  if(homeSearchTypingTimer)clearInterval(homeSearchTypingTimer);
  if(homeSearchCycleTimer)clearTimeout(homeSearchCycleTimer);
- const phrases=['Jelajahi kuliner yang ramai di Bali','Temukan aktivitas menarik di sekitar','Apa yang sedang populer hari ini?','Jelajahi tempat dan cerita di Bali'];
+ const city=String(locationText||'Welcome to Bali').replace(/^Welcome to /i,'').split(',')[0].trim()||'Bali';const phrases=['Temukan yang menarik di '+city,'Jelajahi kuliner di '+city,'Apa yang sedang ramai di '+city,'Tempat dan cerita dari '+city];
  prompt.classList.remove('is-typing');prompt.textContent=locationText;
  let phraseIndex=0;
  const typeNext=()=>{
@@ -743,15 +744,15 @@ function bindHomeDiscoveryLocation(){
  if(!prompt)return;
  const loadNearby=location=>bindHomeNearby({location:location||null,personalize:true});
  if(window.__pluitsHomeLocation){
-  startHomeSearchPrompt('Lokasi terdeteksi · Bali, Indonesia');loadNearby(window.__pluitsHomeLocation);return;
+  startHomeSearchPrompt('Welcome to '+(window.__pluitsHomeCity||'Bali'));loadNearby(window.__pluitsHomeLocation);return;
  }
- startHomeSearchPrompt('Mendeteksi lokasi perangkat…');
+ startHomeSearchPrompt('Mendeteksi lokasi Anda…');
  if(!navigator.geolocation){prompt.textContent='Aktifkan lokasi · Bali, Indonesia';loadNearby(null);return;}
  navigator.geolocation.getCurrentPosition(position=>{
   const {latitude,longitude,accuracy}=position.coords,location={latitude,longitude,accuracy,updatedAt:Date.now()};
-  window.__pluitsHomeLocation=location;startHomeSearchPrompt('Lokasi terdeteksi · Bali, Indonesia');loadNearby(location);
+  window.__pluitsHomeLocation=location;fetch('https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat='+encodeURIComponent(latitude)+'&lon='+encodeURIComponent(longitude),{headers:{'Accept-Language':'id'}}).then(response=>response.ok?response.json():null).then(place=>{const address=place?.address||{},city=address.city||address.town||address.village||address.county||address.state||'area Anda';window.__pluitsHomeCity=city;startHomeSearchPrompt('Welcome to '+city);document.querySelectorAll('[data-home-location-city]').forEach(el=>el.textContent=city);}).catch(()=>startHomeSearchPrompt('Welcome to area Anda'));loadNearby(location);
  },error=>{
-  prompt.textContent=error.code===1?'Lokasi belum diizinkan · Bali, Indonesia':'Lokasi belum terdeteksi · Bali, Indonesia';loadNearby(null);
+  prompt.textContent=error.code===1?'Izinkan lokasi untuk pengalaman lokal':'Lokasi belum terdeteksi';loadNearby(null);
  },{enableHighAccuracy:true,timeout:15000,maximumAge:120000});
 }
  async function mountAccount(section='profile',parameter=''){
