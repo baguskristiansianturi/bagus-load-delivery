@@ -87,12 +87,12 @@ export async function route(homeFn){
   }
   else if(r==='place'){
    h='<div class="pl-page-loading" role="status" aria-live="polite"><span class="pl-page-spinner" aria-hidden="true"></span><span class="pl-page-loading-label">Membuka tempat</span></div>';
-   queueMicrotask(async()=>{
+   defer(async()=>{
     const mod=await import('../pages/directory/index.js');
     const content=s[2]==='claim'?await mod.claimPage(v||''):await mod.placePage(v||'');
     const app=document.querySelector('#app');
-    if(app&&version===routeVersion){app.classList.remove('pl-page-enter');app.innerHTML=content;mod.bindPlacePage();requestAnimationFrame(()=>app.classList.add('pl-page-enter'));}
-   });
+    if(app&&version===routeVersion){app.classList.remove('pl-page-enter');app.innerHTML=content;await mod.bindPlacePage();requestAnimationFrame(()=>app.classList.add('pl-page-enter'));}
+   },version,()=>route(homeFn));
   }
   else if(r==='search'){
    const mod=await import('../pages/search/discovery.js');h=mod.discoverySearch(p.get('q')||'');defer(()=>mod.bindDiscoverySearch(),version,()=>route(homeFn));
