@@ -2005,7 +2005,7 @@
 .ua-create-card.is-disabled>strong{color:#89939e}
 .ua-create-card.is-disabled em{position:absolute;left:64px;bottom:9px;margin:0;color:#929ba4;font-size:8px;font-style:normal;font-weight:800;letter-spacing:.08em}
 .ua-create-card.is-disabled{padding-bottom:20px}
-.ua-create-publish-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+.ua-create-publish-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 .ua-create-locked-wrap{position:relative;min-width:0}
 .ua-create-locked-wrap .ua-create-card{width:100%;border-color:#e6e2ef;background:#fff}
 .ua-create-locked-wrap .ua-create-card-icon{background:#f3f0f8;color:#75649a}
