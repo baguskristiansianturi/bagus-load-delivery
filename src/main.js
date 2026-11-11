@@ -42,7 +42,7 @@ function render() {
     path = '';
   }
   route(home);
-  if (!path) queueMicrotask(bindHome);
+  if (!path || path === 'guest') queueMicrotask(bindHome);
 }
 
 window.addEventListener('hashchange', render);
