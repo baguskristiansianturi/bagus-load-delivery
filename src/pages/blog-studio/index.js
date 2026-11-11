@@ -107,7 +107,7 @@ async function dashboardPage() {
       const desc = esc(item.description || '');
       return '<article class="pl-blog-item" data-item-id="' + item.id + '">' +
         (cover ? '<img class="pl-blog-item-cover" src="' + cover + '" alt="Cover ' + esc(item.title) + '">' : '<div class="pl-blog-item-cover pl-blog-no-cover">Belum ada cover</div>') +
-        '<div class="pl-blog-item-copy"><span class="pl-blog-item-status">' + (item.status === 'draft' ? 'DRAFT' : 'TERBITAN UJI LOKAL') + '</span><h3>' + esc(item.title) + '</h3><p>' + desc + '</p><small>' + new Date(item.updatedAt).toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' }) + '</small>' +
+        '<div class="pl-blog-item-copy"><span class="pl-blog-item-status">' + (item.status === 'draft' ? 'DRAFT' : 'TERBITAN UJI LOKAL') + '</span><h3>' + esc(item.title) + '</h3><p>' + desc + '</p><span class="pl-blog-read-more">Baca selengkapnya</span><small>' + new Date(item.updatedAt).toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' }) + '</small>' +
         '<div class="pl-blog-item-actions"><button type="button" data-action="edit" data-id="' + item.id + '">Lanjutkan</button><button type="button" data-action="delete" data-id="' + item.id + '">Hapus</button></div></div></article>';
     }).join('') + '</div>';
   }
@@ -127,7 +127,7 @@ function editorPage(item = null) {
     '<label class="pl-blog-field">Judul tulisan<input name="title" maxlength="140" required value="' + esc(item?.title || '') + '" placeholder="Tuliskan judul blog kamu"></label>' +
     '<label class="pl-blog-field">Deskripsi untuk kartu feed<textarea name="description" id="pl-blog-description" rows="3" required placeholder="Ringkas isi tulisan agar orang tertarik membacanya.">' + esc(item?.description || '') + '</textarea><small><span id="pl-blog-word-count">' + wordCount(item?.description || '') + '</span>/85 kata · Ditampilkan pada kartu feed dan dipotong dengan “Baca selengkapnya”.</small></label>' +
     '<section class="pl-blog-cover-field"><div><strong>Gambar utama / cover</strong><small>Dipakai sebagai thumbnail di feed, katalog Blog, dan hero tulisan.</small></div>' +
-    '<label class="pl-blog-cover-picker" for="pl-blog-cover-input">' + (coverObjectUrl ? '<img id="pl-blog-cover-preview" src="' + coverObjectUrl + '" alt="Pratinjau cover">' : '<span id="pl-blog-cover-placeholder">＋</span><b>Pilih gambar utama</b><small>JPG, PNG, atau WebP</small>') + '<input id="pl-blog-cover-input" type="file" accept="image/jpeg,image/png,image/webp" required></label></section>' +
+    '<label class="pl-blog-cover-picker" for="pl-blog-cover-input">' + (coverObjectUrl ? '<img id="pl-blog-cover-preview" src="' + coverObjectUrl + '" alt="Pratinjau cover">' : '<span id="pl-blog-cover-placeholder">＋</span><b>Pilih gambar utama</b><small>JPG, PNG, atau WebP</small>') + '<input id="pl-blog-cover-input" type="file" accept="image/jpeg,image/png,image/webp"></label></section>' +
     '<label class="pl-blog-field">Isi tulisan<textarea name="body" rows="9" required placeholder="Mulai menulis di sini. Tidak ada batas minimal kata.">' + esc(item?.body || '') + '</textarea></label>' +
     '<section class="pl-blog-support-field"><div><strong>Gambar pendukung</strong><small>Gambar ini menjadi bagian isi tulisan, bukan cover.</small></div><label class="pl-blog-support-picker" for="pl-blog-support-input">＋ Tambah gambar pendukung<input id="pl-blog-support-input" type="file" accept="image/*" multiple></label><div class="pl-blog-support-grid" id="pl-blog-support-grid">' + images + '</div></section>' +
     '<div class="pl-blog-editor-note">Draf disimpan di perangkat ini. Terbitan pada tahap uji belum tampil di feed publik atau pencarian PLUITS.</div>' +
@@ -219,8 +219,19 @@ function bind() {
     if (coverObjectUrl) URL.revokeObjectURL(coverObjectUrl);
     coverObjectUrl = URL.createObjectURL(file);
     const picker = document.querySelector('.pl-blog-cover-picker');
-    if (picker) picker.innerHTML = '<img id="pl-blog-cover-preview" src="' + coverObjectUrl + '" alt="Pratinjau cover"><input id="pl-blog-cover-input" type="file" accept="image/jpeg,image/png,image/webp">';
-    document.querySelector('#pl-blog-cover-input')?.addEventListener('change', arguments.callee);
+    if (picker) {
+      let preview = picker.querySelector('#pl-blog-cover-preview');
+      if (!preview) {
+        preview = document.createElement('img');
+        preview.id = 'pl-blog-cover-preview';
+        preview.alt = 'Pratinjau cover';
+        picker.prepend(preview);
+      }
+      preview.src = coverObjectUrl;
+      picker.querySelector('#pl-blog-cover-placeholder')?.remove();
+      picker.querySelector('b')?.remove();
+      picker.querySelector('small')?.remove();
+    }
   });
   document.querySelector('#pl-blog-support-input')?.addEventListener('change', event => {
     const files = Array.from(event.target.files || []);
