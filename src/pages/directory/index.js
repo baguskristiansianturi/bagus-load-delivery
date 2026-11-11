@@ -237,7 +237,7 @@ async function bindInterestSettings(){
 }
 export async function bindDirectoryPage() {
   const area=document.querySelector('#pl-directory-area');if(!area)return;
-  try {await loadCategories();document.querySelector('#pl-directory-categories').innerHTML=categoryChips();}
+  try {await loadCategories();const params=new URLSearchParams((location.hash.split('?')[1]||''));const requested=params.get('category')||'';state.category=state.categories.some(x=>x.slug===requested)?requested:'';document.querySelector('#pl-directory-categories').innerHTML=categoryChips();}
   catch(error){console.error('Pluits directory categories',error);}
   area.addEventListener('change',event=>setArea(event.target.value));
   document.querySelector('#pl-use-location')?.addEventListener('click',requestLocation);
