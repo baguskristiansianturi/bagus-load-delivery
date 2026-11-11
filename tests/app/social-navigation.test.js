@@ -109,8 +109,8 @@ test('signed-in home leads with Bali experiences, search, wishlist and the perso
  assert.ok(directorySource.includes('params.get(\'category\')')&&directorySource.includes('state.categories.some(x=>x.slug===requested)'),'Directory must activate the category selected by a trending card.');
  assert.ok(!account.includes('"+discoverySection+'),'Home feed must not reference the removed category-card section.');
  assert.ok(!account.includes('BERDASARKAN AKTIVITAS NYATA')&&!account.includes('aktivitas pengguna cukup terkumpul'),'Internal ranking explanations must never appear in visitor-facing copy.');
- assert.ok(navigation.includes('ua-home-searchbar')&&navigation.includes('ua-home-wishlist')&&navigation.includes('ua-home-search-prompt'),'Home header must show animated search and saved items.');
- assert.ok(account.includes('Jelajahi kuliner yang ramai di Bali')&&account.includes('startHomeSearchPrompt'),'Search prompt must rotate typed discovery suggestions.');
+ assert.ok(navigation.includes('ua-home-searchbar')&&navigation.includes('ua-home-wishlist')&&navigation.includes('ua-home-search-prompt')&&navigation.includes('ua-home-profile')&&navigation.includes('user?ROUTES.profile:ROUTES.login'),'Home header must show search, saved items and a right-side profile/login action.');
+ assert.ok(account.includes("startHomeSearchPrompt('Welcome to '+city)")&&account.includes('nominatim.openstreetmap.org/reverse'),'Search prompt must welcome users using their detected current city.');
  assert.ok(account.includes('navigator.geolocation.getCurrentPosition'),'Home must request device location when no current location is available.');
  assert.ok(account.includes('window.__pluitsHomeLocation'),'Detected device location must be kept separate from profile location.');
  assert.ok(account.includes('ua-home-trends')&&account.includes('ua-explore-filters'),'Experience discovery and feed choices must precede friend posts.');
@@ -118,7 +118,7 @@ test('signed-in home leads with Bali experiences, search, wishlist and the perso
  assert.ok(account.includes('Ramai di komunitas')&&account.includes('Produk Lokal')&&account.includes('Kumpulan')&&account.includes('Layanan PLUITS'),'Home must continue from the Beranda feed into trending topics, product recommendations, service collections and PLUITS service filters.');
  assert.ok(account.includes('⌖ Kuta')&&account.includes('ua-topten-copy'),'Top 10 hero cards must show the title, location pin and category over the image.');
  const nearbySource=await readFile(new URL('../../src/pages/directory/index.js',import.meta.url),'utf8');
- assert.ok(nearbySource.includes('Di sekitar Anda')&&nearbySource.includes('radius=3000')&&nearbySource.includes('pl-nearby-item-card')&&nearbySource.includes('user_post_directory_entities')&&nearbySource.includes('ownerName'),'Nearby discovery must show compact item/story cards with the owner and linked place, not generic category or store tiles.');
+ assert.ok(nearbySource.includes('Di sekitar Anda')&&nearbySource.includes('radius=5000')&&nearbySource.includes('pl-nearby-item-card')&&nearbySource.includes('user_post_directory_entities')&&nearbySource.includes('ownerName'),'Nearby discovery must show compact item/story cards with the owner and linked place, not generic category or store tiles.');
  assert.ok(account.includes('enableHighAccuracy:true'),'Home must request precise GPS for accurate nearby distance.');
  const directory=await readFile(new URL('../../src/pages/directory/index.js',import.meta.url),'utf8');
  assert.ok(directory.includes('Tempat terdekat')&&directory.includes('distance(Number(row.distance_m)'),'Nearby places must be displayed as distance cards, not a map.');
