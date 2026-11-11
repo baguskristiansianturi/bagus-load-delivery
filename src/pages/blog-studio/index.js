@@ -71,7 +71,7 @@ async function dashboardPage() {
     body = '<form id="pl-blog-settings-form" class="pl-blog-settings-form">' +
       '<label>Nama ruang blog<input name="blogTitle" required minlength="2" maxlength="40" value="' + esc(settings.blogTitle || '') + '" placeholder="Contoh: Catatan Perjalanan"><small>2–40 karakter. URL otomatis mengikuti nama blog.</small></label>' +
       '<label>Deskripsi blog<textarea name="blogDescription" rows="3" maxlength="220">' + esc(settings.blogDescription || '') + '</textarea><small>Deskripsi ruang blog, bukan deskripsi setiap tulisan.</small></label>' +
-      '<label>Visibilitas default<select name="visibility"><option value="public" ' + ((settings.visibility || 'public') === 'public' ? 'selected' : '') + '>Publik</option><option value="followers" ' + (settings.visibility === 'followers' ? 'selected' : '') + '>Pengikut saja</option><option value="private" ' + (settings.visibility === 'private' ? 'selected' : '') + '>Privat</option></select></label>' +
+      '<label>Visibilitas default<select name="visibility"><option value="public" ' + ((settings.visibility || 'public') === 'public' ? 'selected' : '') + '>Publik</option><option value="private" ' + (settings.visibility === 'private' ? 'selected' : '') + '>Privat</option></select></label>' +
       '<p class="pl-blog-local-note">URL blog dibuat otomatis dari username dan nama blog.</p><button class="pl-blog-primary" type="submit">Simpan pengaturan</button></form><section class="pl-blog-settings-form"><strong>Kategori tulisan</strong><div class="pl-blog-category-list">'+(categories.map(x=>'<span>'+esc(x.name)+'</span>').join('')||'<small>Belum ada kategori.</small>')+'</div><form id="pl-blog-category-form"><label>Tambah kategori<input name="name" maxlength="40" required></label><button class="pl-blog-secondary" type="submit">Tambah Kategori</button></form></section>';
   } else if (!visible.length) {
     body = '<section class="pl-blog-empty"><div class="pl-blog-empty-icon">✎</div><h3>' + (activeTab === 'drafts' ? 'Belum ada draft' : 'Belum ada tulisan') + '</h3><p>' + (activeTab === 'drafts' ? 'Tulisan yang kamu simpan sebagai draft akan muncul di sini.' : 'Mulai dengan menulis cerita, puisi, pengalaman, atau catatan singkat pertamamu.') + '</p><button type="button" class="pl-blog-primary" data-action="new">Tulis Blog</button></section>';
@@ -81,7 +81,7 @@ async function dashboardPage() {
       const desc = esc(item.description || '');
       return '<article class="pl-blog-item" data-item-id="' + item.id + '">' +
         (cover ? '<img class="pl-blog-item-cover" src="' + cover + '" alt="Cover ' + esc(item.title) + '">' : '<div class="pl-blog-item-cover pl-blog-no-cover">Belum ada cover</div>') +
-        '<div class="pl-blog-item-copy"><span class="pl-blog-item-status">' + (item.status === 'draft' ? 'DRAFT' : 'TERBITAN UJI LOKAL') + '</span><h3>' + esc(item.title) + '</h3><p>' + desc + '</p><span class="pl-blog-read-more">Baca selengkapnya</span><small>' + new Date(item.updatedAt).toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' }) + '</small>' +
+        '<div class="pl-blog-item-copy"><span class="pl-blog-item-status">' + (item.status === 'draft' ? 'DRAFT' : 'DITERBITKAN') + '</span><h3>' + esc(item.title) + '</h3><p>' + desc + '</p><span class="pl-blog-read-more">Baca selengkapnya</span><small>' + new Date(item.updatedAt).toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' }) + '</small>' +
         '<div class="pl-blog-item-actions"><button type="button" data-action="edit" data-id="' + item.id + '">Lanjutkan</button><button type="button" data-action="delete" data-id="' + item.id + '">Hapus</button></div></div></article>';
     }).join('') + '</div>';
   }
@@ -166,20 +166,15 @@ function bind() {
   }));
   document.querySelector('[data-action="save-draft"]')?.addEventListener('click', () => persistEditor('draft').catch(showError));
   document.querySelector('[data-action="preview"]')?.addEventListener('click', async () => {
-    const form = document.querySelector('#pl-blog-editor-form');
-    const data = new FormData(form);
-    const old = editingId ? (await getAllItems()).find(item => item.id === editingId) : null;
-    const cover = readFormFile(document.querySelector('#pl-blog-cover-input')) || selectedCoverFile || old?.cover || null;
-    const supportingImages = [...(old?.supportingImages || []), ...pendingSupportingFiles];
-    if (!String(data.get('title') || '').trim() || !String(data.get('description') || '').trim() || !String(data.get('body') || '').trim() || !cover) return notify('Lengkapi judul, deskripsi, gambar utama, dan isi sebelum pratinjau.', 'error');
-    if (wordCount(String(data.get('description') || '')) > 85) return notify('Deskripsi maksimal 85 kata.', 'error');
-    const now = Date.now();
-    const snapshot = { id: editingId || uid(), userId: activeUser.id, title: String(data.get('title')), description: String(data.get('description')), body: String(data.get('body')), cover, supportingImages, status: 'draft', updatedAt: now, createdAt: old?.createdAt || now };
-    await saveItem(snapshot);
-    editingId = snapshot.id;
-    window.__plBlogEditingItem = snapshot;
-    window.__plBlogPreviewItem = snapshot;
-    notify('Pratinjau siap. Draft juga disimpan di perangkat ini.');
+    const form=document.querySelector('#pl-blog-editor-form'),data=new FormData(form);
+    const title=String(data.get('title')||'').trim(),description=String(data.get('description')||'').trim(),body=String(data.get('body')||'').trim();
+    const old=editingId?(await supabase.from('blog_posts').select('cover_path').eq('id',editingId).single()).data:null;
+    const file=readFormFile(document.querySelector('#pl-blog-cover-input'))||selectedCoverFile;
+    let coverUrl=file?URL.createObjectURL(file):'';
+    if(!coverUrl&&old?.cover_path)coverUrl=(await createSignedUrlMap(supabase.storage,BUCKET,[old.cover_path],3600)).get(old.cover_path)||'';
+    if(!title||!description||!body||!coverUrl)return notify('Lengkapi judul, deskripsi, isi, dan cover untuk pratinjau.','error');
+    if(wordCount(description)>85)return notify('Deskripsi maksimal 85 kata.','error');
+    window.__plBlogPreviewItem={title,description,body,cover_url:coverUrl,supporting_urls:[]};
     setView('preview');
   });
   document.querySelector('#pl-blog-editor-form')?.addEventListener('submit', event => { event.preventDefault(); persistEditor('published').catch(showError); });
