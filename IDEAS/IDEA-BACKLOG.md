@@ -1030,3 +1030,181 @@ Pertanyaan:
 
 Tidak ada persetujuan untuk mengubah schema, pricing, role production, pembayaran, atau release gate melalui catatan ini. Semua rancangan URL, tabel, paket, dan fitur di atas masih proposal dan perlu audit terhadap implementasi yang sudah ada.
 
+## IDEA-016 — PLUITS-native discovery, social article distribution, and differentiated provider algorithms
+
+- **Tanggal ditemukan:** 11 November 2026.
+- **Sumber:** founder clarification that blog/article is primarily a publisher format inside PLUITS, not primarily a Google-search landing page; internal discovery and social recommendation are the priority; articles can be boosted for in-platform reach; ranking should emphasize meaningful human interaction/helpfulness rather than reading duration; publishers, stores, services, destinations and personal creators require different distribution models; AI writing assistance and fair rights-claim processes.
+- **Kategori:** Feed Ranking | Discovery | Articles | Publishing | Ads & Boost | Commerce Discovery | Local Discovery | UGC | AI Assistance | Content Integrity | Copyright & Moderation.
+- **Jenis:** FOUNDER INSIGHT | PRODUCT VISION | PROPOSAL.
+- **Status:** PROPOSED / NEEDS VALIDATION — no ranking formula, ad product, moderation policy, or production change approved.
+- **Keterkaitan:** IDEA-013, IDEA-015, D-001, D-004, D-006; prior Ibu Nia user-journey/product-discovery work.
+
+### A. Core product position: PLUITS is the primary discovery pool
+
+The blog is a publishing format inside PLUITS. Its primary product purpose is to let people and entities publish long-form stories, explanations, news, opinions, guides, and experiences that can be discovered in the social ecosystem. It is not primarily an attempt to become a Google-indexed article farm or a replacement for search engines.
+
+Users may encounter articles while browsing photos, posts, reels, communities, profiles, topics, or recommendations. The article can be opened for deeper reading, but the platform's primary success is meaningful discovery, social interaction, and useful connections inside PLUITS.
+
+External search visibility is optional and controlled by publication visibility/indexing settings and platform eligibility. Publicly accessible does not automatically mean guaranteed Google indexing. Private, restricted, draft, and unlisted content must not leak through sitemap, public feeds, metadata, or search endpoints.
+
+### B. Article distribution and ranking
+
+Articles are social content, not ranked primarily by dwell time. Candidate ranking signals:
+- Explicit positive reactions and their quality/context.
+- Meaningful comments and healthy discussion, not raw comment volume.
+- Shares and recommendations by people.
+- Saves/bookmarks and later return value.
+- Follows or meaningful connection after discovery.
+- User feedback such as helpful/relevant/not interested.
+- Topic, language, location (when relevant and permitted), and declared interests.
+- Relationship to followed publishers, authors, communities, and entities.
+- Freshness when the subject is time-sensitive.
+- Content integrity, originality signals, safety, policy compliance, and confidence.
+- Negative feedback, hides, reports, spam indicators, and coordinated manipulation.
+
+Reading duration may be used as a limited diagnostic signal (e.g., detect immediate bounce or measure usability), but should not be the principal objective or be optimized to maximize time spent. Avoid treating raw engagement as proof of quality: controversy, outrage, spam, engagement bait, and coordinated activity can inflate interactions.
+
+The system should distinguish:
+- **Following distribution:** updates from accounts/entities a user intentionally follows, subject to user controls and relevance/freshness.
+- **Recommendation distribution:** discovery beyond the follow graph based on user interests and content value.
+- **Trending/popular:** time-bounded and context-aware, with anti-manipulation controls.
+- **Paid boost:** clearly labeled sponsored distribution, separate from organic ranking and with campaign transparency.
+
+Do not guarantee FYP or reach. Creators/publishers should receive understandable insights, not promises of virality.
+
+### C. Differentiated distribution by content/provider type
+
+A shared discovery infrastructure can support different candidate generation, ranking, and conversion objectives. Do not use one ranking formula for every object.
+
+**Personal posts and reels**
+- Primarily social graph, explicit interests, content format preference, and recommendations.
+- Followers can receive posts/reels from accounts they follow, with user controls and feed design.
+- Recommendation beyond followers must be relevant and safety-aware.
+
+**Articles, publishers, media, and news**
+- Followers of a publisher can receive its eligible publications.
+- Articles may be recommended to non-followers based on subject relevance, meaningful interaction, freshness (especially news), source/context, and integrity.
+- Long-form writing is a first-class format, including personal diaries, family travel, reflections, essays, and hobby writing.
+- Not every article must be newsworthy, SEO-optimized, commercial, or designed for maximum engagement.
+- Publisher identity and author attribution should be clear; organizations can manage publishing through authorized team roles.
+
+**Stores and products**
+- A store/product should not automatically broadcast every catalog change as a social post to all followers.
+- Discovery should respond to shopping intent, category, availability, price/quality signals, location/shipping context, user preferences, and trustworthy reviews.
+- Product promotion is a separate, clearly disclosed paid option.
+- Commerce ranking must not let payment silently override relevance, safety, or user choice.
+
+**Services and professionals**
+- Discovery based on service need, category, geography where relevant, qualifications/portfolio, availability, transparent pricing where applicable, reviews, responsiveness, and trust.
+- Providers should not be forced into a publisher-style follower feed to be discoverable.
+
+**Destinations, places, and local businesses**
+- Discovery can combine geodirectory facts, location, interests, availability/hours when verified, visitor experiences, UGC, and official provider information.
+- Separate official facts from user-generated experiences and sponsored placement.
+- Local relevance must respect location permissions and user controls.
+
+**Communities and organizations**
+- Distribution follows membership, explicit subscriptions, topic relevance, and community moderation rules.
+- Organizational notices should be distinguished from ordinary social content.
+
+### D. Paid boost and monetization
+
+Publishers, stores, service providers, and destination operators may pay to expand eligible reach within PLUITS. This is a possible revenue source, not an approved launch feature.
+
+Principles:
+- Paid reach is always clearly labeled (e.g., Sponsored/Promoted).
+- Paid distribution never masquerades as organic recommendation.
+- Campaign setup specifies audience, geography, duration, budget, objectives, and content eligibility.
+- Provide spending limits, receipts, reporting, and controls to stop campaigns.
+- Do not sell sensitive personal attributes or expose private user behavior to advertisers.
+- Do not guarantee views, sales, or FYP placement.
+- Organic distribution remains available; payment must not be required to reach existing followers under the product's stated feed model.
+- Ranking and ad delivery must protect users from excessive repetition and low-quality campaigns.
+- Validate advertiser demand, pricing, fraud controls, and legal obligations before implementation.
+
+### E. User-generated experience and the Ibu Nia journey
+
+Example: a person stays at a hotel and shares a genuine story, photo, or review. PLUITS may connect the experience to:
+- The original author and post/article.
+- The place/hotel's geodirectory profile.
+- Official hotel information and services.
+- Other visitor experiences, with appropriate context.
+- Nearby destinations or services.
+
+The hotel should not have to pay for the existence of a genuine user story. The provider can separately promote its official profile or campaign, but paid promotion must not alter the truth or provenance of the user's experience. Do not imply a customer endorses a provider without consent. Provide correction/report flows for inaccurate or harmful claims, while protecting legitimate criticism and authentic experience.
+
+### F. AI writing assistance and content integrity
+
+AI may assist users with brainstorming, outlines, grammar, translation, summarization, rewriting, accessibility, and drafting. The user remains in control of publication and is responsible for claims and rights in submitted material.
+
+- Do not automatically punish content solely because AI assistance is detected or suspected.
+- Avoid unreliable binary "AI-generated" detection as a moderation verdict.
+- Consider optional, contextual disclosure where it materially affects trust (e.g., synthetic media, impersonation, fabricated reporting), without stigmatizing ordinary writing assistance.
+- Detect likely duplicate/reused content as a review/ranking integrity signal, not an automatic guilt verdict.
+- Similarity may be legitimate: quotation, common facts, syndicated/licensed news, references, templates, or independent coverage of the same event.
+- Provide reporting, evidence review, appeal, and proportional enforcement.
+- Do not reward mass-generated low-value duplicates or spam merely because they trigger engagement.
+
+### G. Images, copyright, and rights claims
+
+An image found through Google or another search engine is not automatically free to reuse. PLUITS should not automatically punish every uploader based only on image similarity or a weak automated match.
+
+Proposed process:
+1. Allow uploaders to identify source/license/ownership where appropriate.
+2. Provide a clear copyright/rights complaint mechanism.
+3. Request reasonable evidence and identify the specific material/URL.
+4. Review claims consistently, including authorized representatives and licensing context.
+5. Notify the affected uploader and provide an appropriate response/counter-notice or appeal process where legally applicable.
+6. Restrict/remove material when required by law or platform policy; apply repeat-infringer rules proportionately.
+7. Keep audit trails and protect the complainant's and uploader's personal information.
+
+Do not promise that PLUITS will never moderate or remove material. The founder's desired principle is not to shame or automatically punish ordinary users; it does not override copyright law, safety obligations, privacy, or valid takedown requirements.
+
+### H. Product and integrity metrics
+
+Measure more than raw views or time spent:
+- Meaningful positive interactions per eligible impression.
+- Helpful/save/share/follow actions with quality and abuse adjustments.
+- User-reported relevance and satisfaction.
+- Healthy discussion and report/hide rates.
+- Repeat readership and creator/publisher retention.
+- Diversity of creators and topics discovered.
+- Follower feed reliability and user control.
+- Provider discovery-to-contact/booking/purchase outcomes where appropriate.
+- Sponsored vs organic clarity, ad frequency, and user feedback.
+- Spam, coordinated engagement, duplicate-content abuse, copyright complaints, and moderation appeal outcomes.
+
+Metrics differ by content type. A useful service listing may succeed through a qualified contact or booking, not likes. A personal essay may succeed through saves and thoughtful conversation, not immediate sales.
+
+### I. UX and policy implications
+
+- Let users tune followed content, recommendations, topics, and sponsored content separately.
+- Explain why a recommendation appears in understandable language.
+- Provide "not interested", mute, hide, block, report, and topic controls.
+- Keep paid content visibly distinct from organic content.
+- Preserve authorship and source attribution when content is shared/reposted.
+- Distinguish official entity information from user-generated claims and experiences.
+- Support personal writing without demanding commercial intent, SEO optimization, or video format.
+- Avoid forcing every provider into the same account/publishing workflow; apply entity type, role, and permissions.
+- Do not expose private profile or behavioral data to a business merely because it has a professional account.
+
+### J. Research and implementation boundary
+
+Research:
+1. Interview readers, writers, publishers, stores, service providers, and destination operators.
+2. Prototype article cards in feed, article detail, publisher profile, and Explore.
+3. Test follower distribution vs recommendation distribution with user controls.
+4. Test whether comments/saves/helpful feedback are better quality signals than dwell time.
+5. Design ranking safeguards against engagement bait, bots, brigading, and paid manipulation.
+6. Test distinct product/service/destination discovery journeys.
+7. Define advertising labels, campaign controls, billing, and privacy before boost launch.
+8. Review copyright, privacy, defamation, consumer protection, and platform obligations for target jurisdictions.
+9. Define ranking transparency, appeals, moderation operations, and creator analytics.
+10. Validate that a personal diary or family travel blog can thrive without business/SEO pressure.
+
+Implementation boundary:
+- This idea does not authorize changing current Inbox/Social P0 work.
+- Blog/article publishing remains a proposed next product focus, subject to audit of current repository and Supabase schema.
+- Ranking, paid boost, AI moderation, copyright tooling, and payments are separate future workstreams requiring product/security/legal design.
+- No production schema, ranking formula, ad campaign, moderation rule, or release gate is changed by this idea.
+
