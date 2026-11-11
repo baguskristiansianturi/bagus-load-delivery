@@ -407,7 +407,7 @@ const {data:follows,error:followError}=await supabase.from('user_follows').selec
  try{
   const {data:products,error:productError}=await supabase.from('public_marketplace_products').select('id,store_id,store_name,name,variant_id,online_price,discount_price').order('name').limit(40);
   if(productError)throw productError;
-  const storeIds=[...new Set((products||[]).map(p=>p.store_id).filter(Boolean))];const {data:localStores,error:storeError}=storeIds.length?await supabase.from('public_marketplace_stores').select('id,public_city,public_area').in('id',storeIds):{data:[],error:null};if(storeError)throw storeError;const cityKey=String(window.__pluitsHomeCity||'Bali').toLocaleLowerCase('id');const localStoreIds=new Set((localStores||[]).filter(store=>String(store.public_city||'').toLocaleLowerCase('id').includes(cityKey)||cityKey.includes(String(store.public_city||'').toLocaleLowerCase('id'))).map(store=>store.id));const localProducts=(products||[]).filter(p=>localStoreIds.has(p.store_id)).slice(0,8);
+  const storeIds=[...new Set((products||[]).map(p=>p.store_id).filter(Boolean))];const {data:localStores,error:storeError}=storeIds.length?await supabase.from('public_marketplace_stores').select('id,public_city,public_area').in('id',storeIds):{data:[],error:null};if(storeError)throw storeError;const cityKey=String(window.__pluitsHomeCity||'').toLocaleLowerCase('id');const localStoreIds=new Set(cityKey?(localStores||[]).filter(store=>String(store.public_city||'').toLocaleLowerCase('id').includes(cityKey)||cityKey.includes(String(store.public_city||'').toLocaleLowerCase('id'))).map(store=>store.id):[]);const localProducts=(products||[]).filter(p=>localStoreIds.has(p.store_id)).slice(0,8);
   const ids=[...new Set(localProducts.map(p=>p.id))];
   const {data:images}=ids.length?await supabase.from('product_images').select('product_id,storage_path,sort_order').in('product_id',ids).order('sort_order',{ascending:true}):{data:[]};
   const paths=[...new Set((images||[]).map(x=>x.storage_path).filter(Boolean))];
@@ -739,6 +739,21 @@ function startHomeSearchPrompt(locationText='Welcome to Bali'){
  };
  homeSearchCycleTimer=setTimeout(typeNext,2300);
 }
+async function refreshHomeLocalProducts(city){
+ const target=document.querySelector('.ua-home-product-row');if(!target||!city)return;
+ try{
+  const {data:products,error}=await supabase.from('public_marketplace_products').select('id,store_id,store_name,name,variant_id,online_price,discount_price').order('name').limit(60);if(error)throw error;
+  const storeIds=[...new Set((products||[]).map(p=>p.store_id).filter(Boolean))];
+  const {data:stores,error:storeError}=storeIds.length?await supabase.from('public_marketplace_stores').select('id,public_city,public_area').in('id',storeIds):{data:[],error:null};if(storeError)throw storeError;
+  const key=String(city).toLocaleLowerCase('id'),localIds=new Set((stores||[]).filter(x=>String(x.public_city||'').toLocaleLowerCase('id').includes(key)||key.includes(String(x.public_city||'').toLocaleLowerCase('id'))).map(x=>x.id));
+  const local=(products||[]).filter(p=>localIds.has(p.store_id)).slice(0,8),ids=local.map(p=>p.id);
+  const {data:images}=ids.length?await supabase.from('product_images').select('product_id,storage_path,sort_order').in('product_id',ids).order('sort_order',{ascending:true}):{data:[]};
+  const paths=[...new Set((images||[]).map(x=>x.storage_path).filter(Boolean))],{data:signed}=paths.length?await supabase.storage.from('pluits-store-media').createSignedUrls(paths,3600):{data:[]};
+  const urls=new Map((signed||[]).map(x=>[x.path,x.signedUrl])),first=new Map();(images||[]).forEach(x=>{if(!first.has(x.product_id))first.set(x.product_id,urls.get(x.storage_path)||'');});
+  target.innerHTML=local.length?local.map(p=>"<a class='ua-home-product-card' href='#/market-product/"+encodeURIComponent(p.variant_id)+"'>"+(first.get(p.id)?"<img src='"+esc(first.get(p.id))+"' alt='"+esc(p.name)+"' loading='lazy'>":"<span class='ua-home-product-placeholder'>PLUITS</span>")+"<span><small>"+esc(p.store_name||'Penjual lokal')+"</small><b>"+esc(p.name)+"</b><strong>"+rupiah(p.discount_price||p.online_price)+"</strong></span></a>").join(''):"<a class='ua-home-product-empty' href='#/marketplace'>Belum ada produk dari penjual di "+esc(city)+". Jelajahi Marketplace ↗</a>";
+  document.querySelectorAll('[data-home-location-city]').forEach(el=>el.textContent=city);
+ }catch(error){console.warn('PLUITS local marketplace refresh',error);}
+}
 function bindHomeDiscoveryLocation(){
  const prompt=document.querySelector('#ua-home-search-prompt');
  if(!prompt)return;
@@ -750,7 +765,7 @@ function bindHomeDiscoveryLocation(){
  if(!navigator.geolocation){prompt.textContent='Aktifkan lokasi · Bali, Indonesia';loadNearby(null);return;}
  navigator.geolocation.getCurrentPosition(position=>{
   const {latitude,longitude,accuracy}=position.coords,location={latitude,longitude,accuracy,updatedAt:Date.now()};
-  window.__pluitsHomeLocation=location;fetch('https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat='+encodeURIComponent(latitude)+'&lon='+encodeURIComponent(longitude),{headers:{'Accept-Language':'id'}}).then(response=>response.ok?response.json():null).then(place=>{const address=place?.address||{},city=address.city||address.town||address.village||address.county||address.state||'area Anda';window.__pluitsHomeCity=city;startHomeSearchPrompt('Welcome to '+city);document.querySelectorAll('[data-home-location-city]').forEach(el=>el.textContent=city);}).catch(()=>startHomeSearchPrompt('Welcome to area Anda'));loadNearby(location);
+  window.__pluitsHomeLocation=location;fetch('https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat='+encodeURIComponent(latitude)+'&lon='+encodeURIComponent(longitude),{headers:{'Accept-Language':'id'}}).then(response=>response.ok?response.json():null).then(place=>{const address=place?.address||{},city=address.city||address.town||address.village||address.county||address.state||'area Anda';window.__pluitsHomeCity=city;startHomeSearchPrompt('Welcome to '+city);refreshHomeLocalProducts(city);}).catch(()=>startHomeSearchPrompt('Welcome to area Anda'));loadNearby(location);
  },error=>{
   prompt.textContent=error.code===1?'Izinkan lokasi untuk pengalaman lokal':'Lokasi belum terdeteksi';loadNearby(null);
  },{enableHighAccuracy:true,timeout:15000,maximumAge:120000});
