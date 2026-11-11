@@ -104,3 +104,15 @@ Salin untuk keputusan berikutnya:
 - **Batas:** penghapusan akun setelah 12 bulan tidak aktif masih dipertimbangkan; belum disetujui. Definisi friend, SLA takedown/banding, retensi bukti, metode/vendor deteksi, dan detail hukum perlu spesifikasi.
 - **Dokumen otoritatif:** Business Model Master Bagian 33; SOP Social Content & Trust Operations; Social Content Trust Technical Spec.
 - **Status implementasi:** dokumentasi dan Help Center frontend dimulai; backend trust/safety NOT STARTED; dokumen legal DRAFT/LEGAL REVIEW REQUIRED.
+
+
+## D-008 — Blog mobile-first sebagai format karya Social Media
+- **Tanggal keputusan:** 11 November 2026
+- **Status:** DECIDED
+- **Founder approval:** eksplisit dalam arahan founder 11 November 2026 untuk mulai membuat dan menguji Blog di mobile.
+- **Konteks:** PLUITS perlu memberi ruang bagi blogger, penulis puisi, diary, catatan singkat, dan penikmat tulisan, tanpa memaksa mereka menjadi kreator komersial. Penulisan harus mudah dari handphone.
+- **Keputusan final:** Blog menjadi format konten di dalam Social Media dan masuk melalui tombol Buat (+). Modul Blog memiliki Postingan, Draft, dan Pengaturan. Setiap tulisan mempunyai judul, deskripsi kartu maksimal 85 kata, cover utama, isi tulisan tanpa batas minimum kata, dan gambar pendukung yang terpisah dari cover. Cover menjadi thumbnail feed/katalog dan hero tulisan; ringkasan kartu yang terpotong menawarkan “Baca selengkapnya”. Identitas blog tetap mengikuti akun PLUITS, dengan nama/deskripsi ruang blog yang dapat diatur secara opsional. Audience blog/tulisan dirancang untuk publik, pengikut, dan privat.
+- **Batas:** tidak ada perubahan schema, RLS, Storage, Auth, atau publikasi backend dalam increment uji awal. Penyimpanan lokal harus diberi label lokal; tidak boleh mengklaim terbit ke feed/search publik. Aturan Premium/entitlement ditunda.
+- **Dampak:** frontend mobile-first Blog Studio; kontrak data artikel, Storage, privacy/RLS, pencarian, feed cards, profil Blog, dan publikasi backend menjadi tahap lanjutan setelah validasi UX.
+- **Dokumen otoritatif:** Business Model Master Bagian 33.13.
+- **Status implementasi:** frontend Blog Studio uji lokal IMPLEMENTED dan DEPLOYED; backend publication NOT IMPLEMENTED; Android founder UAT NOT TESTED; ACCEPTANCE PENDING.
