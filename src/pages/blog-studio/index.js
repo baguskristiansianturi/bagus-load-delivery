@@ -15,6 +15,7 @@ let activeView = 'dashboard';
 let editingId = null;
 let coverObjectUrl = '';
 let supportingObjectUrls = [];
+let pendingSupportingFiles = [];
 let toastTimer = null;
 
 const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
@@ -120,6 +121,7 @@ function editorPage(item = null) {
   revokePreviews();
   if (item?.cover) coverObjectUrl = URL.createObjectURL(item.cover);
   const supporting = item?.supportingImages || [];
+  pendingSupportingFiles = [];
   supportingObjectUrls = supporting.map(file => URL.createObjectURL(file));
   const images = supporting.map((file, index) => '<div class="pl-blog-support-tile"><img src="' + supportingObjectUrls[index] + '" alt="Gambar pendukung ' + (index + 1) + '"><button type="button" data-remove-support="' + index + '" aria-label="Hapus gambar">×</button></div>').join('');
   return header(item ? 'Lanjutkan tulisan' : 'Tulis Blog', 'Buat cerita dengan nyaman dari handphone.') +
@@ -175,7 +177,7 @@ async function persistEditor(status) {
   const old = editingId ? (await getAllItems()).find(item => item.id === editingId) : null;
   const cover = readFormFile(coverInput) || old?.cover || null;
   const supportingImages = [...(old?.supportingImages || [])];
-  if (supportInput?.files?.length) supportingImages.push(...Array.from(supportInput.files));
+  if (pendingSupportingFiles.length) supportingImages.push(...pendingSupportingFiles);
   if (!title) return notify('Judul tulisan wajib diisi.', 'error');
   if (!description) return notify('Deskripsi untuk kartu feed wajib diisi.', 'error');
   if (wordCount(description) > 85) return notify('Deskripsi maksimal 85 kata.', 'error');
@@ -211,7 +213,7 @@ function bind() {
     const data = new FormData(form);
     const old = editingId ? (await getAllItems()).find(item => item.id === editingId) : null;
     const cover = readFormFile(document.querySelector('#pl-blog-cover-input')) || old?.cover || null;
-    const supportingImages = [...(old?.supportingImages || []), ...Array.from(document.querySelector('#pl-blog-support-input')?.files || [])];
+    const supportingImages = [...(old?.supportingImages || []), ...pendingSupportingFiles];
     if (!String(data.get('title') || '').trim() || !String(data.get('description') || '').trim() || !String(data.get('body') || '').trim() || !cover) return notify('Lengkapi judul, deskripsi, gambar utama, dan isi sebelum pratinjau.', 'error');
     if (wordCount(String(data.get('description') || '')) > 85) return notify('Deskripsi maksimal 85 kata.', 'error');
     const now = Date.now();
@@ -253,8 +255,23 @@ function bind() {
   });
   document.querySelector('#pl-blog-support-input')?.addEventListener('change', event => {
     const files = Array.from(event.target.files || []);
-    if (files.some(file => !file.type.startsWith('image/'))) return notify('Hanya gambar yang dapat ditambahkan.', 'error');
-    if (files.length) notify(files.length + ' gambar dipilih. Gambar akan tersimpan saat draft disimpan.');
+    if (files.some(file => !file.type.startsWith('image/'))) { event.target.value = ''; return notify('Hanya gambar yang dapat ditambahkan.', 'error'); }
+    if (files.some(file => file.size > 12 * 1024 * 1024)) { event.target.value = ''; return notify('Setiap gambar pendukung maksimal 12 MB.', 'error'); }
+    pendingSupportingFiles = [...pendingSupportingFiles, ...files];
+    const grid = document.querySelector('#pl-blog-support-grid');
+    if (grid) files.forEach((file, index) => {
+      const url = URL.createObjectURL(file);
+      supportingObjectUrls.push(url);
+      const tile = document.createElement('div');
+      tile.className = 'pl-blog-support-tile';
+      const img = document.createElement('img');
+      img.src = url;
+      img.alt = 'Gambar pendukung ' + (grid.children.length + 1);
+      tile.append(img);
+      grid.append(tile);
+    });
+    event.target.value = '';
+    if (files.length) notify(files.length + ' gambar ditambahkan. Simpan draft agar gambar tersimpan.');
   });
   document.querySelector('#pl-blog-settings-form')?.addEventListener('submit', async event => {
     event.preventDefault();
