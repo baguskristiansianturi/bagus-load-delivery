@@ -94,16 +94,17 @@ test('GeoDirectory is map-first with a touch-enabled globe and clickable real pl
 });
 
 
-test('signed-in home presents location-aware discovery categories without fake popularity metrics',async()=>{
+test('signed-in home leads with Bali experiences, search, wishlist and the personal feed',async()=>{
  const account=await readFile(new URL('../../src/pages/account/index.js',import.meta.url),'utf8');
+ const navigation=await readFile(new URL('../../src/components/social/navigation.js',import.meta.url),'utf8');
  const css=await readFile(new URL('../../src/pages/account/user-account.css',import.meta.url),'utf8');
- for(const label of ['Destinasi','Makanan','Produk','Jasa','Blog & topik'])assert.ok(account.includes(label),label+' visual discovery category must be present.');
- assert.ok(account.includes('ua-home-detect-location'),'Home must provide an explicit location permission action.');
- assert.ok(account.includes('navigator.geolocation.getCurrentPosition'),'Current device location must be requested only after a user action.');
- assert.ok(account.includes('window.__pluitsHomeLocation'),'Detected location must be kept distinct from profile location.');
- assert.ok(account.includes('ua-home-visual-card')&&account.includes('images.unsplash.com'),'Home discovery must use photographic visual cards, not text-only links.');
+ for(const label of ['Tempat untuk dikunjungi','Aktivitas','Kuliner','Alam & pantai','Gym & kebugaran'])assert.ok(account.includes(label),label+' experience card must be present.');
+ assert.ok(navigation.includes('ua-home-searchbar')&&navigation.includes('ua-home-wishlist'),'Home header must lead with search and saved items.');
+ assert.ok(account.includes('navigator.geolocation.getCurrentPosition'),'Home must request device location when no current location is available.');
+ assert.ok(account.includes('window.__pluitsHomeLocation'),'Detected device location must be kept separate from profile location.');
+ assert.ok(account.includes('ua-home-trends')&&account.includes('ua-explore-filters'),'Experience discovery and feed choices must precede friend posts.');
+ assert.ok(account.includes('ua-home-visual-card')&&account.includes('images.unsplash.com'),'Home discovery must use photographic visual cards.');
  assert.ok(css.includes('.ua-home-visual-grid')&&css.includes('@media(max-width:380px)'),'Visual discovery cards must have a mobile-first responsive layout.');
- assert.ok(css.includes('prefers-reduced-motion:reduce'),'Discovery tap transitions must respect reduced-motion preferences.');
 });
 
 
