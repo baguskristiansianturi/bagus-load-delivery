@@ -2641,3 +2641,40 @@
  .ua-social-app .ua-post-caption{padding:0 12px 8px}
  .ua-social-app .ua-post-menu-wrap{margin-left:auto}
 }
+
+/* Final polish: nearby sits directly on the page; the cards carry the visual weight. */
+.ua-social-home .pl-nearby-home,
+.ua-social-home .ua-home-nearby .pl-nearby-home{
+ background:transparent!important;border:0!important;box-shadow:none!important;
+ padding:0!important;border-radius:0!important
+}
+.ua-social-home .pl-nearby-home .pl-nearby-heading{margin-bottom:5px}
+.ua-social-home .pl-nearby-topic-carousel{
+ gap:6px;padding:7px 0 9px;margin:0;scrollbar-width:none
+}
+.ua-social-home .pl-nearby-topic-carousel>a{
+ padding:5px 10px;border-width:1px;border-radius:999px;
+ font-size:10px;line-height:1.2;font-weight:620;min-height:27px;
+ display:inline-flex;align-items:center
+}
+.ua-social-home .pl-nearby-topic-carousel>a.is-active{font-weight:700}
+/* Soft dark glass/scrim behind white card copy: readable over bright or dark photos. */
+.ua-social-home .pl-nearby-item-shade{
+ background:linear-gradient(180deg,rgba(9,22,27,0) 28%,rgba(9,22,27,.08) 48%,rgba(8,18,23,.72) 100%)
+}
+.ua-social-home .pl-nearby-item-overlay{
+ isolation:isolate;left:13px;right:13px;bottom:12px;gap:4px;padding:0
+}
+.ua-social-home .pl-nearby-item-overlay:before{
+ content:"";position:absolute;z-index:-1;left:-13px;right:-13px;top:-24px;bottom:-12px;
+ background:linear-gradient(180deg,rgba(8,18,23,0),rgba(8,18,23,.18) 24%,rgba(8,18,23,.64) 100%);
+ -webkit-backdrop-filter:blur(9px);backdrop-filter:blur(9px);
+ border-radius:0 0 16px 16px;pointer-events:none
+}
+.ua-social-home .pl-nearby-item-overlay small{
+ padding:3px 7px;border-color:#ffffff45;background:rgba(15,35,39,.28);
+ font-size:8px;line-height:1.2;letter-spacing:.035em
+}
+.ua-social-home .pl-nearby-item-overlay b{font-size:16px;line-height:1.2}
+.ua-social-home .pl-nearby-item-overlay em{font-size:10px;line-height:1.25;gap:4px}
+.ua-social-home .pl-nearby-item-overlay em svg{width:12px;height:12px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
