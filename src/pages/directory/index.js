@@ -20,7 +20,7 @@ const placeUrl = slug => '#/place/' + encodeURIComponent(slug);
 
 export function homeNearbySection() {
   return `<section class="pl-nearby-home" aria-label="Tempat terdekat">
-    <div class="pl-nearby-heading"><div><span>DI SEKITAR ANDA</span><h2>Tempat terdekat</h2></div><a href="#/places">Jelajahi semua <b>↗</b></a></div>
+    <div class="pl-nearby-heading"><div><h2>Di sekitar Anda</h2></div><a href="#/places">Lihat semua <b>↗</b></a></div>
     <div class="pl-home-map-results" id="pl-home-nearby-results"><span class="pl-directory-loading">Mencari tempat di sekitar Anda…</span></div>
   </section>`;
 }
@@ -279,7 +279,35 @@ export function bindHomeNearby({personalize=true,location=null}={}) {
     if(!rows)return;
     const interests=personalize?await getInterestMap():new Map(),items=ranked(rows,interests);
     if(!items.length){resultTarget.innerHTML='<div class="pl-directory-empty">Belum ada tempat terdaftar dalam radius 5 km.</div>';return;}
-    resultTarget.innerHTML=items.slice(0,8).map(row=>'<a class="pl-home-map-chip" href="'+placeUrl(row.slug)+'"><span class="pl-home-map-chip-pin">⌖</span><span><b>'+esc(row.name)+'</b><small>'+esc([row.locality,row.city].filter(Boolean).join(', ')||'Lokasi terdaftar')+' · '+distance(Number(row.distance_m)||0)+(location?' dari Anda':' dari pusat area')+'</small></span><i>↗</i></a>').join('');
+    const nearbyIds=items.slice(0,8).map(row=>row.id);
+    const {data:links,error:linksError}=await supabase.from('user_post_directory_entities').select('entity_id,post_id,created_at').in('entity_id',nearbyIds).order('created_at',{ascending:false}).limit(40);
+    if(linksError)throw linksError;
+    const postIds=[...new Set((links||[]).map(link=>link.post_id))];
+    const {data:posts,error:postsError}=postIds.length?await supabase.from('user_posts').select('id,user_id,caption,media_path,media_type,profile_context,business_store_id,created_at').in('id',postIds).eq('visibility','public').eq('moderation_status','published').order('created_at',{ascending:false}).limit(24):{data:[],error:null};
+    if(postsError)throw postsError;
+    const entityById=new Map(items.map(row=>[row.id,row]));
+    const linked=(posts||[]).map(post=>({...post,entity:entityById.get((links||[]).find(link=>link.post_id===post.id)?.entity_id)})).filter(post=>post.entity);
+    const userIds=[...new Set(linked.filter(post=>post.profile_context!=='business').map(post=>post.user_id))];
+    const storeIds=[...new Set(linked.filter(post=>post.profile_context==='business'&&post.business_store_id).map(post=>post.business_store_id))];
+    const [profiles,stores]=await Promise.all([
+      userIds.length?supabase.from('user_profiles').select('id,display_name,username').in('id',userIds):Promise.resolve({data:[],error:null}),
+      storeIds.length?supabase.from('public_business_profiles').select('id,name,username').in('id',storeIds):Promise.resolve({data:[],error:null})
+    ]);
+    if(profiles.error)throw profiles.error;if(stores.error)throw stores.error;
+    const owners=new Map([...(profiles.data||[]).map(owner=>[owner.id,owner]),...(stores.data||[]).map(owner=>[owner.id,owner])]);
+    const mediaPaths=linked.map(post=>post.media_path).filter(Boolean);
+    const signed=mediaPaths.length?await supabase.storage.from('pluits-user-media').createSignedUrls(mediaPaths,3600):{data:[]};
+    const imageByPath=new Map((signed.data||[]).map(file=>[file.path,file.signedUrl]));
+    const cards=linked.slice(0,8);
+    if(!cards.length){resultTarget.innerHTML='<div class="pl-directory-empty">Belum ada cerita atau produk dari tempat terdekat.</div>';return;}
+    resultTarget.innerHTML=cards.map(post=>{
+      const owner=owners.get(post.profile_context==='business'?post.business_store_id:post.user_id);
+      const ownerName=owner?.name||owner?.display_name||'Pengelola tempat';
+      const image=imageByPath.get(post.media_path)||'';
+      const itemName=String(post.caption||'').trim().split(/\\n/)[0].slice(0,76)||post.entity.name;
+      const distanceLabel=distance(Number(post.entity.distance_m)||0);
+      return '<a class="pl-nearby-item-card" href="'+placeUrl(post.entity.slug)+'">'+(image?'<img src="'+esc(image)+'" alt="'+esc(itemName)+'" loading="lazy">':'<span class="pl-nearby-item-placeholder">PLUITS</span>')+'<span class="pl-nearby-item-copy"><small>'+esc(ownerName)+'</small><b>'+esc(itemName)+'</b><em>'+esc(post.entity.name)+' · '+distanceLabel+(location?' dari Anda':' dari pusat area')+'</em></span></a>';
+    }).join('');
   }).catch(()=>{resultTarget.innerHTML='<div class="pl-directory-empty">Tempat terdekat belum dapat dimuat.</div>';});
 }
 export async function placePage(slug) {
