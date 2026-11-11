@@ -2576,3 +2576,32 @@
  .ua-social-home>.ua-feed{width:100%;max-width:none}
  .ua-social-home>.ua-feed>.ua-post-card{width:100%;border-radius:12px}
 }
+
+/* Nearby discovery uses an actual horizontal card rail on mobile.
+   Older account-home grid overrides were shrinking image cards to 148px and stacking them. */
+@media(max-width:760px){
+ .ua-social-home .pl-nearby-home{width:100%;min-width:0;box-sizing:border-box}
+ .ua-social-home .pl-nearby-home .pl-nearby-heading{display:flex;flex-direction:row;align-items:center;justify-content:space-between;gap:10px}
+ .ua-social-home .pl-nearby-home .pl-nearby-heading>div{min-width:0}
+ .ua-social-home .pl-nearby-home .pl-nearby-heading>a{flex:none;white-space:nowrap}
+ .ua-social-home .pl-home-map-results{
+  display:flex!important;flex-direction:row;flex-wrap:nowrap;align-items:stretch;
+  width:100%;min-width:0;gap:12px;margin:0;padding:8px 2px 12px;
+  overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;
+  overscroll-behavior-x:contain;touch-action:pan-x;-webkit-overflow-scrolling:touch;
+  scrollbar-width:none
+ }
+ .ua-social-home .pl-home-map-results::-webkit-scrollbar{display:none}
+ .ua-social-home .pl-home-map-results>.pl-nearby-item-card{
+  display:flex;flex:0 0 min(78vw,280px);width:min(78vw,280px);min-width:0;
+  max-width:280px;box-sizing:border-box;scroll-snap-align:start
+ }
+ .ua-social-home .pl-home-map-results>.pl-nearby-item-card>img,
+ .ua-social-home .pl-home-map-results>.pl-nearby-item-card>.pl-nearby-item-placeholder{
+  width:100%;height:150px;flex:none;object-fit:cover
+ }
+}
+@media(min-width:761px){
+ .ua-social-home .pl-home-map-results{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+ .ua-social-home .pl-home-map-results>.pl-nearby-item-card{width:100%;min-width:0;max-width:none}
+}
