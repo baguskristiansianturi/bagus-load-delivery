@@ -66,7 +66,8 @@ function authScreen(mode='login'){
    if(signup&&password!==String(form.get('confirm_password'))){note.className='ua-form-note is-error';note.textContent='Konfirmasi password tidak sama. Periksa kembali kedua kolom password.';btn.disabled=false;btn.textContent='Buat akun';return;}
    if(signup){
     const full_name=String(form.get('full_name')).trim();
-    const emailRedirectTo=window.location.origin+window.location.pathname;
+    const appBase=new URL(import.meta.env.BASE_URL||'/',window.location.origin).toString();
+    const emailRedirectTo=appBase;
     const {data,error}=await supabase.auth.signUp({email,password,options:{data:{full_name},emailRedirectTo}});
     if(error)throw error;
     if(!data.session){
@@ -679,7 +680,8 @@ async function mountAccount(section='profile',parameter=''){
    document.querySelector('#app').innerHTML=frame(page,'explore');return;
   }catch(err){document.querySelector('#app').innerHTML='<div class="ua-panel ua-error"><h1>Konten tidak tersedia</h1><p>'+esc(err.message)+'</p><a href="#/">Kembali</a></div>';return;}
  }
- if(!user){authScreen(section==='register'?'register':'login');return;}
+ if(section==='register'){authScreen('register');return;}
+ if(!user){authScreen('login');return;}
  try{
   await loadProfile();accountContext=await loadAccountContext(supabase,user);
   unreadNotificationCount=await countUnreadActivity();
@@ -1246,4 +1248,4 @@ async function loadComments(postId,box){
  box.querySelector('.ua-comment-form')?.addEventListener('submit',e=>{e.preventDefault();submitComment(e.currentTarget);});
  box.querySelectorAll('[data-reply-form]').forEach(form=>form.addEventListener('submit',e=>{e.preventDefault();submitComment(form,form.dataset.replyForm);}));
 }
-export function mountUserAccount(section='profile',parameter=''){mountAccount(section,parameter);}
+export function mountUserAccount(section='profile',parameter=''){return mountAccount(section,parameter);}
