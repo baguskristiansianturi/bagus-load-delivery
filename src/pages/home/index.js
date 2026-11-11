@@ -34,7 +34,7 @@ export function home(){
 export async function bindHome(){
  const guestMode=(location.hash||'').startsWith('#/guest');
  const target=document.querySelector('#pl-public-feed');if(!target)return;
- bindHomeNearby();
+ bindHomeNearby({personalize:!guestMode});
  try{
   const {data:{user:actualViewer}}=await db.auth.getUser();
   const viewer=guestMode?null:actualViewer;
