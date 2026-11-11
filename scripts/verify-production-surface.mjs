@@ -31,6 +31,14 @@ for (const path of retiredFiles) {
   assert.equal(existsSync(path), false, `Retired demo module returned: ${path}`);
 }
 
+const serviceWorker = read('public/sw.js');
+assert.match(serviceWorker, /caches\.keys\(\)/, 'Service worker must inspect old caches on activation.');
+assert.match(serviceWorker, /caches\.delete\(key\)/, 'Service worker must remove obsolete app-shell caches.');
+assert.doesNotMatch(serviceWorker, /cache\.addAll|cache\.put|respondWith/, 'Service worker must not persist stale app-shell or asset responses.');
+const appEntry = read('src/main.js');
+assert.match(appEntry, /updateViaCache:\s*'none'/, 'Service worker update checks must bypass the browser HTTP cache.');
+assert.match(appEntry, /registration\.update\(\)/, 'App entry must explicitly check for the latest service worker.');
+
 const androidVideoCases=[[{name:'VID_20261110.mp4',type:'application/octet-stream',size:1024},'video/mp4'],[{name:'VID_20261110.mp4',type:'image/jpeg',size:1024},'video/mp4'],[{name:'clip.m4v',type:'video/x-m4v',size:1024},'video/mp4'],[{name:'clip.mov',type:'video/quicktime',size:1024},'video/quicktime'],[{name:'clip.3gp',type:'',size:1024},'video/3gpp'],[{name:'clip.3g2',type:'application/octet-stream',size:1024},'video/3gpp2'],[{name:'clip.webm',type:'application/octet-stream',size:1024},'video/webm']];
 for(const [file,expected] of androidVideoCases){assert.equal(getMediaMime(file),expected,'Android video MIME fallback must use filename extensions.');assert.equal(validateMediaFile(file).valid,true,'Supported mobile video must pass validation.');}
 assert.equal(getMediaMime({name:'unknown.bin',type:'application/octet-stream',size:1}),'','Unknown binary files must remain rejected.');
