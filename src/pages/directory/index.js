@@ -94,18 +94,13 @@ async function logActivity(action,entityId=null) {
   await supabase.from('user_activity_events').insert({user_id:data.user.id,entity_id:entityId,category_id:categoryId,action});
 }
 async function loadMapLibre() {
-  if(window.maplibregl)return window.maplibregl;
+  if(window.__pluitsMapLibre)return window.__pluitsMapLibre;
   if(!document.querySelector('#pl-maplibre-css')) {
     const link=document.createElement('link');link.id='pl-maplibre-css';link.rel='stylesheet';link.href='https://unpkg.com/maplibre-gl@6.17.0/dist/maplibre-gl.css';document.head.append(link);
   }
-  await new Promise((resolve,reject)=>{
-    if(window.maplibregl)return resolve();
-    const existing=document.querySelector('#pl-maplibre-js');
-    if(existing){existing.addEventListener('load',resolve,{once:true});existing.addEventListener('error',reject,{once:true});return;}
-    const script=document.createElement('script');script.id='pl-maplibre-js';script.src='https://unpkg.com/maplibre-gl@6.17.0/dist/maplibre-gl.js';script.onload=resolve;script.onerror=reject;document.head.append(script);
-  });
-  if(!window.maplibregl)throw new Error('MapLibre belum tersedia');
-  return window.maplibregl;
+  const lib=await import('https://unpkg.com/maplibre-gl@6.17.0/dist/maplibre-gl.mjs');
+  window.__pluitsMapLibre=lib;
+  return lib;
 }
 function geoMapStyle() {
   return {
@@ -117,14 +112,14 @@ function geoMapStyle() {
 }
 function clearGeoMap() {
   state.markers.forEach(marker=>marker.remove());state.markers=[];
-  if(state.map){state.map.remove();state.map=null;}
+  if(state.map){state.map.remove();state.map=null;}state.mapTarget=null;
   state.mapTarget=null;
 }
 async function drawMap(rows,targetId='pl-directory-map',{zoom=11.7,fit=true}={}) {
   const target=document.getElementById(targetId);if(!target)return;
   try {
     const lib=await loadMapLibre();
-    if(state.map&&state.mapTarget!==targetId)clearGeoMap();
+    if(state.map&&(state.mapTarget!==targetId||state.map.getContainer()!==target))clearGeoMap();
     if(!state.map) {
       state.map=new lib.Map({container:target,style:geoMapStyle(),center:[state.lon,state.lat],zoom,pitch:22,bearing:-12,dragRotate:true,touchZoomRotate:true,scrollZoom:false,cooperativeGestures:true,attributionControl:true,maxPitch:58});
       state.mapTarget=targetId;
