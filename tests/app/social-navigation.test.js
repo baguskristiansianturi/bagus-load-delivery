@@ -92,3 +92,16 @@ test('GeoDirectory is map-first with a touch-enabled globe and clickable real pl
  assert.ok(directory.includes('pl-directory-map-stage'),'The map must be the default primary directory surface.');
  assert.ok(css.includes('.pl-directory-page .pl-geo-pin'),'Place pins must have a visible, high-contrast marker style.');
 });
+
+
+test('signed-in home presents location-aware discovery categories without fake popularity metrics',async()=>{
+ const account=await readFile(new URL('../../src/pages/account/index.js',import.meta.url),'utf8');
+ const css=await readFile(new URL('../../src/pages/account/user-account.css',import.meta.url),'utf8');
+ for(const label of ['Destinasi','Makanan','Produk','Jasa','Blog & topik populer'])assert.ok(account.includes(label),label+' discovery category must be present.');
+ assert.ok(account.includes('ua-home-detect-location'),'Home must provide an explicit location permission action.');
+ assert.ok(account.includes('navigator.geolocation.getCurrentPosition'),'Current device location must be requested only after a user action.');
+ assert.ok(account.includes('window.__pluitsHomeLocation'),'Detected location must be kept distinct from profile location.');
+ assert.ok(account.includes('Angka pengunjung atau peringkat tidak ditampilkan'),'The UI must not invent popularity counts or rankings.');
+ assert.ok(css.includes('.ua-home-discovery-grid')&&css.includes('@media(max-width:760px)'),'Discovery cards must have a mobile-first responsive layout.');
+ assert.ok(css.includes('prefers-reduced-motion:reduce'),'Discovery tap transitions must respect reduced-motion preferences.');
+});
