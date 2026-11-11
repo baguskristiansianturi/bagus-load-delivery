@@ -54,8 +54,8 @@ export function renderSocialMobileNav({ active = 'home', profileView = false, us
     { key: 'home', href: publicHome ? ROUTES.publicHome : getRoute('home', Boolean(user)), label: 'Beranda', icon: 'home' },
     { key: 'discover', href: ROUTES.discover, label: 'Jelajah', icon: 'compass' },
     { key: 'create', href: getRoute('create', Boolean(user)), label: 'Buat', icon: 'plus' },
-    isInbox ? { key: 'activity', href: getRoute('activity', Boolean(user)), label: 'Notifikasi', icon: 'bell' } : { key: 'messages', href: getRoute('inbox', Boolean(user)), label: 'Pesan', icon: 'message' },
-    { key: 'profile', href: profileHref, label: 'Profil', icon: 'user', avatar: userAvatar }
+    isInbox ? { key: 'activity', href: getRoute('activity', Boolean(user)), label: 'Notifikasi', icon: 'bell' } : { key: 'messages', href: publicHome ? '#/help' : getRoute('inbox', Boolean(user)), label: publicHome ? 'Bantuan' : 'Pesan', icon: 'message' },
+    { key: 'profile', href: publicHome ? ROUTES.login : profileHref, label: publicHome ? 'Masuk' : 'Profil', icon: 'user', avatar: publicHome ? '' : userAvatar }
   ];
   return `<nav class="${navClass}" aria-label="Navigasi utama Pluits">${items.map(item => {
     const iconMarkup = item.avatar || socialIcon(item.icon, { size: 22 });
