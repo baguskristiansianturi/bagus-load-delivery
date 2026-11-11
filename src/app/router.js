@@ -109,6 +109,10 @@ export async function route(homeFn){
    h='<div class="pl-page-loading" role="status" aria-live="polite"><span class="pl-page-spinner" aria-hidden="true"></span><span class="pl-page-loading-label">Menyiapkan pengaturan</span></div>';
    queueMicrotask(async()=>{if(version!==routeVersion)return;const {mountUserAccount}=await import('../pages/account/index.js');if(version===routeVersion)mountUserAccount('settings');});
   }
+  else if(r==='account'&&v==='blog'){
+   h='<div class="pl-page-loading" role="status" aria-live="polite"><span class="pl-page-spinner" aria-hidden="true"></span><span class="pl-page-loading-label">Membuka Blog</span></div>';
+   queueMicrotask(async()=>{if(version!==routeVersion)return;const mod=await import('../pages/blog-studio/index.js');if(version===routeVersion)await mod.mountBlogStudio();});
+  }
   else if(r==='account'){
    h='<div class="pl-page-loading" role="status" aria-live="polite"><span class="pl-page-spinner" aria-hidden="true"></span><span class="pl-page-loading-label">Menyiapkan halaman</span></div>';
    queueMicrotask(async()=>{if(version!==routeVersion)return;const {mountUserAccount}=await import('../pages/account/index.js');if(version===routeVersion)mountUserAccount(v||'explore',s[2]||'');});
