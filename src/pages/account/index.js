@@ -1,4 +1,5 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { mountRegisterPage } from '../../features/auth/register.js';
 import {socialIcon} from '../../components/common/social-icons.js';
 import {renderBrandLogo} from '../../components/common/brand.js';
 import {renderPostActions} from '../../features/posts/post-actions.js';
@@ -46,60 +47,31 @@ function frame(content,active='explore',avatarUrl=''){
  </div>`;
 }
 function authScreen(mode='login'){
- const signup=mode==='register';
- document.querySelector('#app').innerHTML=`<div class="ua-app ua-auth-app"><header class="ua-header">${renderBrandLogo({className:'ua-brand',size:38,label:'Beranda PLUITS'})}<a href="#/" class="ua-logout">Kembali</a></header>
- <main class="ua-auth-wrap"><section class="ua-auth-copy"><span class="ua-eyebrow">PLUITS COMMUNITY</span><h1>Belanja, berbagi, dan membangun reputasi dalam satu akun.</h1><p>Mulai sebagai pengguna Pluits. Daftar dengan email aktif, konfirmasi akun, lengkapi profil, lalu bagikan cerita pertama Anda.</p><div class="ua-auth-points"><span>Profil pribadi dan privasi</span><span>Alamat tersimpan secara privat</span><span>Foto, video, dan Explore</span></div></section>
- <form id="ua-auth-form" class="ua-panel ua-auth-form"><span class="ua-eyebrow">${signup?'BUAT AKUN':'SELAMAT DATANG'}</span><h2>${signup?'Daftar Pluits':'Masuk ke Pluits'}</h2>
- ${signup?'<label>Nama tampilan<input name="full_name" required maxlength="80" autocomplete="name" placeholder="Nama yang ingin ditampilkan"></label>':''}
- <label>Email<input name="email" type="email" required autocomplete="email" inputmode="email" placeholder="nama@email.com"></label>
- <label>Password<input name="password" type="password" required minlength="8" autocomplete="${signup?'new-password':'current-password'}" placeholder="Minimal 8 karakter"></label>
- ${signup?'<label>Ulangi password<input name="confirm_password" type="password" required minlength="8" autocomplete="new-password" placeholder="Masukkan ulang password"></label>':''}
- <button class="ua-primary" type="submit">${signup?'Buat akun':'Masuk'}</button><p id="ua-auth-notice" class="ua-form-note"></p>
- <p class="ua-auth-switch">${signup?'Sudah punya akun?':'Belum punya akun?'} <a href="#/account/${signup?'login':'register'}">${signup?'Masuk':'Daftar'}</a></p>
- </form></main><footer class="ua-footer">PLUITS INDONESIA</footer></div>`;
- document.querySelector('#ua-auth-form').addEventListener('submit',async e=>{
+ if(mode==='register'){
+  mountRegisterPage({supabase,onAuthenticated:()=>{location.hash='#/account/explore';}});
+  return;
+ }
+ const app=document.querySelector('#app');
+ app.innerHTML='<div class="ua-app ua-auth-app"><header class="ua-header">'+renderBrandLogo({className:'ua-brand',size:38,label:'Beranda PLUITS'})+'<a href="#/" class="ua-logout">Kembali</a></header>'+
+ '<main class="ua-auth-wrap"><section class="ua-auth-copy"><span class="ua-eyebrow">PLUITS COMMUNITY</span><h1>Belanja, berbagi, dan membangun reputasi dalam satu akun.</h1><p>Masuk untuk melanjutkan aktivitas dan mengelola identitasmu di Pluits.</p></section>'+
+ '<form id="ua-auth-form" class="ua-panel ua-auth-form"><span class="ua-eyebrow">SELAMAT DATANG</span><h2>Masuk ke Pluits</h2>'+
+ '<label>Email<input name="email" type="email" required autocomplete="email" inputmode="email" placeholder="nama@email.com"></label>'+
+ '<label>Password<input name="password" type="password" required autocomplete="current-password" placeholder="Password akun"></label>'+
+ '<button class="ua-primary" type="submit">Masuk</button><p id="ua-auth-notice" class="ua-form-note" role="status" aria-live="polite"></p>'+
+ '<p class="ua-auth-switch">Belum punya akun? <a href="#/account/register">Daftar</a></p></form></main><footer class="ua-footer">PLUITS INDONESIA</footer></div>';
+ app.querySelector('#ua-auth-form').addEventListener('submit',async e=>{
   e.preventDefault();
-  const form=new FormData(e.currentTarget),btn=e.currentTarget.querySelector('button'),note=document.querySelector('#ua-auth-notice');
-  btn.disabled=true;btn.textContent=signup?'Mengirim pendaftaran…':'Memeriksa akun…';note.className='ua-form-note is-loading';note.setAttribute('role','status');note.setAttribute('aria-live','polite');note.textContent=signup?'Menghubungi server Pluits dan meminta email konfirmasi. Mohon tunggu, jangan tekan tombol lagi.':'Sedang memeriksa email dan password…';
+  const form=new FormData(e.currentTarget),btn=e.currentTarget.querySelector('button'),note=app.querySelector('#ua-auth-notice');
+  const email=String(form.get('email')||'').trim().toLowerCase(),password=String(form.get('password')||'');
+  btn.disabled=true;btn.textContent='Memeriksa akun…';note.className='ua-form-note is-loading';note.textContent='Sedang memeriksa email dan password…';
   try{
-   const email=String(form.get('email')).trim().toLowerCase(),password=String(form.get('password'));
-   if(signup&&password!==String(form.get('confirm_password'))){note.className='ua-form-note is-error';note.textContent='Konfirmasi password tidak sama. Periksa kembali kedua kolom password.';btn.disabled=false;btn.textContent='Buat akun';return;}
-   if(signup){
-    const full_name=String(form.get('full_name')).trim();
-    const appBase=new URL(import.meta.env.BASE_URL||'/',window.location.origin).toString();
-    const emailRedirectTo=appBase;
-    const {data,error}=await supabase.auth.signUp({email,password,options:{data:{full_name},emailRedirectTo}});
-    if(error)throw error;
-    if(!data.session){
-     note.className='ua-form-note is-pending';
-     note.innerHTML='<strong>Pendaftaran diterima — konfirmasi masih menunggu.</strong><span>Server menerima permintaan pendaftaran. Ini belum membuktikan email sudah sampai ke inbox. Periksa alamat email, Inbox, Spam, dan Promosi.</span><span id="ua-resend-status" class="ua-resend-status">Status: menunggu email konfirmasi.</span><button type="button" id="ua-resend-confirm" class="ua-link-button">Kirim ulang email konfirmasi</button>';
-     btn.textContent='Menunggu konfirmasi';
-     const resend=document.querySelector('#ua-resend-confirm');
-     resend?.addEventListener('click',async()=>{
-      if(!resend||resend.disabled)return;
-      resend.disabled=true;resend.textContent='Sedang meminta pengiriman…';
-      const status=document.querySelector('#ua-resend-status');
-      if(status)status.textContent='Status: permintaan pengiriman ulang sedang diproses.';
-      try{
-       const {error:resendError}=await supabase.auth.resend({type:'signup',email,options:{emailRedirectTo}});
-       if(resendError)throw resendError;
-       if(status)status.textContent='Status: permintaan diterima server. Email belum dapat dipastikan sampai; periksa Inbox dan Spam.';
-       resend.textContent='Permintaan terkirim ke server';
-      }catch(err){
-       const msg=String(err?.message||'').toLowerCase();
-       if(status)status.textContent=msg.includes('rate limit')||msg.includes('too many')?'Status: dibatasi sementara oleh server. Tunggu sebelum mencoba lagi.':('Status: belum berhasil meminta email — '+(err.message||'kesalahan tidak diketahui'));
-       resend.textContent='Coba lagi nanti';
-       if(!msg.includes('rate limit')&&!msg.includes('too many'))resend.disabled=false;
-      }
-     });
-     return;
-    }
-   }else{const {error}=await supabase.auth.signInWithPassword({email,password});if(error)throw error;}
-   const requestedSection=(location.hash.split('/')[2]||'explore');await mountAccount(['login','register'].includes(requestedSection)?'explore':requestedSection);
+   const {error}=await supabase.auth.signInWithPassword({email,password});
+   if(error)throw error;
+   await mountAccount('explore');
   }catch(err){
-   const msg=String(err?.message||'');
-   note.className='ua-form-note is-error';note.textContent=(/rate limit|too many requests|over_email_send_rate_limit/i.test(msg)?'Pengiriman email sedang dibatasi oleh server. Jangan daftar ulang berkali-kali; tunggu sampai batas kirim berakhir. ': '')+(msg||'Tidak dapat memproses akun.');
-   btn.disabled=false;btn.textContent=signup?'Buat akun':'Masuk';
+   note.className='ua-form-note is-error';
+   note.textContent=err?.message||'Tidak dapat memproses akun.';
+   btn.disabled=false;btn.textContent='Masuk';
   }
  });
 }

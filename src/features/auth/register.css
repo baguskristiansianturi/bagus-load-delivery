@@ -1,0 +1,80 @@
+.pl-register-page,.pl-register-page *{box-sizing:border-box}
+.pl-register-page{min-height:100dvh;padding:0 24px 18px;background:linear-gradient(145deg,#f8fafb 0%,#f2f6f7 55%,#edf4f4 100%);color:#172b35;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;display:flex;flex-direction:column}
+.pl-register-header{width:min(1120px,100%);height:68px;margin:0 auto;border-bottom:1px solid #e4eaec;display:flex;align-items:center;justify-content:space-between;flex:none}
+.pl-register-logo{display:inline-flex;align-items:center;text-decoration:none}
+.pl-register-brand{display:inline-flex;align-items:center}
+.pl-register-back{font-size:12px;font-weight:650;color:#667983;text-decoration:none}
+.pl-register-back:hover,.pl-register-login a:hover,.pl-register-consent a:hover{text-decoration:underline}
+.pl-register-main{width:min(1040px,100%);margin:auto;display:grid;grid-template-columns:minmax(0,1fr) minmax(360px,440px);align-items:center;gap:clamp(38px,7vw,96px);padding:42px 0}
+.pl-register-story{max-width:510px}
+.pl-register-eyebrow,.pl-register-step{font-size:10px;letter-spacing:.15em;font-weight:800;color:#3d8584}
+.pl-register-story h1{max-width:490px;margin:14px 0;font-size:clamp(34px,4.4vw,52px);line-height:1.08;letter-spacing:-.055em;color:#17333b}
+.pl-register-story>p{max-width:450px;margin:0;color:#71828a;font-size:14px;line-height:1.8}
+.pl-register-story ul{display:grid;gap:14px;margin:28px 0 0;padding:0;list-style:none;color:#52666e;font-size:12px}
+.pl-register-story li{display:flex;align-items:center;gap:10px}
+.pl-register-story li span{width:21px;height:21px;display:grid;place-items:center;border-radius:50%;background:#e0efed;color:#287b78;font-weight:900}
+.pl-register-card{width:100%;padding:30px;background:#fff;border:1px solid #e4eaec;border-radius:20px;box-shadow:0 18px 55px rgba(26,55,62,.07)}
+.pl-register-card-head{margin-bottom:22px}
+.pl-register-card-head h2{margin:8px 0 6px;font-size:28px;line-height:1.15;letter-spacing:-.04em;color:#18333b}
+.pl-register-card-head p{margin:0;color:#788991;font-size:12px;line-height:1.6}
+.pl-register-form{display:grid;gap:8px}
+.pl-register-form>label:not(.pl-register-consent){margin-top:5px;color:#42575f;font-size:11px;font-weight:750}
+.pl-register-form input:not([type=checkbox]){width:100%;min-width:0;height:48px;padding:0 13px;border:1px solid #dce5e7;border-radius:10px;background:#fff;color:#19343b;font:inherit;font-size:14px;outline:none;transition:border-color .16s,box-shadow .16s}
+.pl-register-form input::placeholder{color:#a0adb1}
+.pl-register-form input:focus{border-color:#398d89;box-shadow:0 0 0 3px rgba(57,141,137,.12)}
+.pl-register-password-wrap{position:relative}
+.pl-register-password-wrap input{padding-right:90px!important}
+.pl-register-show{position:absolute;top:0;right:4px;height:48px;padding:0 10px;border:0;background:transparent;color:#367d7b;font:inherit;font-size:11px;font-weight:750;cursor:pointer}
+.pl-register-help{margin:-1px 0 4px;color:#8a999e;font-size:10px;line-height:1.5}
+.pl-register-consent{display:flex;align-items:flex-start;gap:9px;margin:8px 0 2px;color:#74838a;font-size:10px;line-height:1.55}
+.pl-register-consent input{width:16px;height:16px;flex:none;margin:1px 0 0;accent-color:#318783}
+.pl-register-consent a{color:#347c79;font-weight:750;text-decoration:none}
+.pl-register-submit,.pl-register-secondary{width:100%;min-height:48px;border:0;border-radius:10px;background:#236f70;color:#fff;font:inherit;font-size:12px;font-weight:800;cursor:pointer;transition:background .16s,transform .16s}
+.pl-register-submit:hover:not(:disabled){background:#195d60}
+.pl-register-submit:disabled{opacity:.6;cursor:wait}
+.pl-register-message{display:none;margin:3px 0;padding:10px 11px;border-radius:9px;font-size:11px;line-height:1.55;overflow-wrap:anywhere}
+.pl-register-message:not(:empty){display:block}
+.pl-register-message.is-error{background:#fff1f0;color:#9a3d3a;border:1px solid #f0d8d5}
+.pl-register-message.is-info{background:#eff5f6;color:#4f6870}
+.pl-register-message.is-success{background:#edf7f3;color:#2d6b56}
+.pl-register-login{text-align:center;margin:19px 0 0;color:#78878c;font-size:11px}
+.pl-register-login a{color:#276f70;font-weight:800;text-decoration:none}
+.pl-register-security{text-align:center;margin:14px 0 0;color:#9aa6aa;font-size:9px}
+.pl-register-pending{text-align:center}
+.pl-register-pending[hidden],.pl-register-form[hidden]{display:none!important}
+.pl-register-mail-icon{width:52px;height:52px;margin:0 auto 16px;display:grid;place-items:center;border-radius:16px;background:#eaf4f2;color:#317d79;font-size:25px}
+.pl-register-pending h3{margin:8px 0;font-size:24px;letter-spacing:-.035em;color:#18333b}
+.pl-register-pending>p{color:#71838a;font-size:12px;line-height:1.6}
+.pl-register-pending>strong{display:block;margin:10px 0 16px;padding:11px 12px;border-radius:9px;background:#f3f7f7;color:#28575a;font-size:12px;overflow-wrap:anywhere}
+.pl-register-pending ol{display:grid;gap:8px;margin:0 0 18px;padding-left:20px;text-align:left;color:#62757c;font-size:11px;line-height:1.5}
+.pl-register-secondary{background:#236f70}
+.pl-register-secondary:disabled{opacity:.6;cursor:wait}
+.pl-register-text-button{margin-top:12px;border:0;background:none;color:#367d7b;font:inherit;font-size:11px;font-weight:750;cursor:pointer}
+.pl-register-footer{width:min(1120px,100%);margin:auto auto 0;padding:16px 0 0;border-top:1px solid #e4eaec;color:#9aa6aa;font-size:9px;letter-spacing:.08em;text-align:center}
+@media(max-width:760px){
+ .pl-register-page{padding:0 14px 14px;background:#f7f9fa}
+ .pl-register-header{height:58px}
+ .pl-register-back{font-size:11px}
+ .pl-register-main{width:min(440px,100%);display:block;margin:0 auto;padding:clamp(20px,5vh,42px) 0 24px}
+ .pl-register-story{display:none}
+ .pl-register-card{padding:clamp(18px,5vw,24px);border-radius:16px;box-shadow:0 10px 30px rgba(26,55,62,.055)}
+ .pl-register-card-head{margin-bottom:17px}
+ .pl-register-card-head h2{font-size:25px}
+ .pl-register-form{gap:7px}
+ .pl-register-form input:not([type=checkbox]){height:47px;font-size:16px}
+ .pl-register-show{height:47px}
+ .pl-register-submit,.pl-register-secondary{min-height:48px}
+ .pl-register-consent{font-size:10px}
+ .pl-register-footer{padding-top:12px}
+}
+@media(max-height:720px) and (max-width:760px){
+ .pl-register-main{padding-top:12px;padding-bottom:14px}
+ .pl-register-card{padding:17px 15px}
+ .pl-register-card-head{margin-bottom:12px}
+ .pl-register-card-head h2{font-size:22px;margin:5px 0}
+ .pl-register-form input:not([type=checkbox]){height:43px}
+ .pl-register-show{height:43px}
+ .pl-register-footer{padding-top:9px}
+}
+@media(min-width:761px) and (max-height:720px){.pl-register-main{padding:20px 0}}
+@media(prefers-reduced-motion:reduce){.pl-register-page *{transition:none!important}}
