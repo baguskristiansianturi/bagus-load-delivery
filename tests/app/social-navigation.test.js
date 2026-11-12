@@ -82,12 +82,12 @@ test('Inbox requests an isolated five-column navigation layout',async()=>{
 test('public home loads the real navigation layer and exposes visible mobile icons',async()=>{
  const main=await readFile(new URL('../../src/main.js',import.meta.url),'utf8');
  const css=await readFile(new URL('../../styles/home-layout.css',import.meta.url),'utf8');
+ const home=await readFile(new URL('../../src/pages/home/index.js',import.meta.url),'utf8');
  assert.ok(main.includes("import './styles/social-navigation.css'"),'Shared navigation stylesheet must be loaded from the application entry point.');
  const navbarCss=await readFile(new URL('../../src/features/public-home/navbar.css',import.meta.url),'utf8');
  assert.ok(navbarCss.includes('.pl-public-home>.pl-public-navbar'),'Public guest navbar must have one explicit isolated surface.');
  assert.ok(css.includes('.pl-public-home .pl-social-mobile-nav>a .pl-icon'),'Public mobile navigation SVG icons must have explicit dimensions and visibility.');
  const navbar=await readFile(new URL('../../src/features/public-home/navbar.js',import.meta.url),'utf8');
- const navbarCss=await readFile(new URL('../../src/features/public-home/navbar.css',import.meta.url),'utf8');
  assert.ok(navbar.includes('🇮🇩')&&navbar.includes('🇬🇧')&&navbar.includes("?'Daftar':'Sign up'"),'Guest navbar must default to Indonesian and offer English.');
  assert.ok(navbar.includes("data-public-action=\"wishlist\"")&&navbar.includes("data-public-action=\"cart\""),'Wishlist and cart must be actionable controls.');
  assert.ok(navbar.includes("location.hash='#/account/login'"),'Opening wishlist or cart as a guest must request login.');
