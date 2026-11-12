@@ -908,3 +908,33 @@
     height:min(28vw,96px);
   }
 }
+
+
+/* Story carousel: larger first circle stays fully visible; the next one peeks in. */
+@media(max-width:760px){
+  .ua-social-home .ua-circle-story-track{
+    gap:2px;
+    padding:8px 10px 12px;
+    scroll-snap-type:x proximity;
+    scroll-padding-left:10px;
+    overscroll-behavior-x:contain;
+    -webkit-overflow-scrolling:touch;
+  }
+  .ua-social-home .ua-story-group{
+    flex:0 0 116px;
+    gap:5px;
+    scroll-snap-align:start;
+  }
+  .ua-social-home .ua-story-group .ua-story-ring{
+    width:112px;
+    height:112px;
+  }
+  .ua-social-home .ua-story-group>strong{max-width:112px}
+}
+@media(max-width:380px){
+  .ua-social-home .ua-story-group{flex-basis:112px}
+  .ua-social-home .ua-story-group .ua-story-ring{width:108px;height:108px}
+}
+@media(prefers-reduced-motion:reduce){
+  .ua-social-home .ua-circle-story-track{scroll-behavior:auto}
+}
