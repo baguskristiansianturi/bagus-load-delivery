@@ -173,6 +173,17 @@ const publicHome = read('src/pages/home/index.js');
 assert.match(publicHome, /await mountUserAccount\('explore'\)/, 'Signed-in homepage must use the canonical interactive social feed after lazy loading.');
 assert.match(publicHome, /if\(viewer\)\{[\s\S]*?history\.replaceState\(null,'',location\.pathname\+location\.search\+'#\/account\/explore'\);[\s\S]*?await mountUserAccount\('explore'\);[\s\S]*?return;/, 'Signed-in homepage must canonicalize to the interactive Explore feed.');
 assert.match(publicHome, /stillOnRequestedHome/, 'A delayed auth response must not replace a page after navigation away from the public home.');
+assert.doesNotMatch(publicHome, /history\\.replaceState/, 'Public homepage must never silently redirect signed-in visitors into an account page.');
+assert.match(publicHome, /Keep the public homepage stable for signed-in and guest visitors alike/, 'Public homepage must remain the same route for signed-in and guest visitors.');
+const mainEntry = read('src/main.js');
+assert.match(mainEntry, /let renderSequence = 0/, 'Application route rendering must use a monotonic render sequence.');
+assert.match(mainEntry, /await route\\(home\\)/, 'Homepage hydration must wait for the active route render.');
+assert.match(mainEntry, /sequence !== renderSequence/, 'Stale route completions must not hydrate or overwrite a newer page.');
+const manifest = JSON.parse(read('public/manifest.webmanifest'));
+assert.ok(manifest.icons.some(icon => icon.src === '/pluits/assets/brand/pluits-logo.svg' && icon.type === 'image/svg+xml'), 'Installed app icon must use the canonical transparent SVG logo.');
+assert.doesNotMatch(read('index.html') + read('public/manifest.webmanifest'), /pluits-logo\\.png/, 'App shell must not reference the missing legacy PNG logo.');
+assert.doesNotMatch(read('src/pages/account/index.js'), /import ['"]\\.\\.\\/\\.\\.\\/styles\\/social-navigation\\.css['"]/, 'Account pages must not import the global navigation stylesheet twice.');
+
 
 const inboxCss = read('src/pages/messages/messages.css');
 assert.match(inboxCss, /pl-msg-head-search/, 'Inbox must own a compact top-bar search field.');
