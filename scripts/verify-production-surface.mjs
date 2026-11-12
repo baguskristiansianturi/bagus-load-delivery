@@ -237,8 +237,8 @@ const discovery = read('src/pages/search/discovery.js');
 assert.ok(discovery.includes("renderSocialMobileNav({active:'discover'})"), 'Explore must reuse the shared five-item social navigation.');
 assert.ok(discovery.includes('social-navigation.css'), 'Explore must load shared social navigation styles.');
 const discoveryCss = read('src/pages/search/discovery.css');
-assert.ok(discoveryCss.includes('grid-template-columns: repeat(3, minmax(0, 1fr))'), 'Explore must use a fluid three-column mobile grid.');
-assert.ok(discoveryCss.includes('aspect-ratio: 1 / 1'), 'Explore media tiles must preserve a square responsive ratio.');
+assert.ok(discoveryCss.includes('.ds-feed{display:flex;flex-direction:column;gap:12px}'), 'Jelajah must render a mixed public content feed.');
+assert.ok(discoveryCss.includes('.ds-post-card') && discoveryCss.includes('.ds-post-media'), 'Jelajah cards must preserve mixed text and media content.');
 assert.match(discoveryCss, /safe-area-inset-bottom/, 'Explore bottom navigation must respect device safe areas.');
 
 const profileSource = read('src/pages/account/index.js');
