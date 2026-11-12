@@ -965,3 +965,70 @@
   .ua-social-home .ua-story-group{flex-basis:124px}
   .ua-social-home .ua-story-group .ua-story-ring{width:116px;height:116px}
 }
+
+
+/* Circle mobile feed: native social-feed rhythm with true viewport-width posts. */
+@media(max-width:760px){
+  .ua-social-home>.ua-feed{
+    position:relative;
+    left:50%;
+    width:100vw;
+    max-width:none;
+    margin-left:-50vw;
+    margin-right:-50vw;
+    padding:0;
+    gap:0;
+  }
+  .ua-social-home>.ua-feed>.ua-post-card{
+    display:block;
+    width:100%;
+    max-width:none;
+    min-width:0;
+    margin:0;
+    overflow:hidden;
+    border:0;
+    border-bottom:1px solid #e9eeee;
+    border-radius:0;
+    background:#fff;
+    box-shadow:none;
+  }
+  .ua-social-home>.ua-feed>.ua-post-card .ua-post-head{
+    padding:12px 15px;
+  }
+  .ua-social-home>.ua-feed>.ua-post-card .ua-media{
+    width:100%;
+    max-height:none;
+    border-radius:0;
+  }
+  .ua-social-home>.ua-feed>.ua-post-card .ua-media img,
+  .ua-social-home>.ua-feed>.ua-post-card .ua-media video{
+    display:block;
+    width:100%;
+    max-width:100%;
+    max-height: min(78vh,720px);
+    object-fit:contain;
+    border-radius:0;
+  }
+  .ua-social-home>.ua-feed>.ua-post-card .ua-media-gallery{
+    width:100%;
+    gap:0;
+    padding:0;
+    border-radius:0;
+  }
+  .ua-social-home>.ua-feed>.ua-post-card .ua-gallery-item{
+    flex-basis:100%;
+    border-radius:0;
+  }
+  .ua-social-home>.ua-feed>.ua-post-card .ua-gallery-item img,
+  .ua-social-home>.ua-feed>.ua-post-card .ua-gallery-item video{
+    width:100%;
+    max-height:min(78vh,720px);
+    object-fit:contain;
+    border-radius:0;
+  }
+  .ua-social-home>.ua-feed>.ua-post-card .ua-post-caption,
+  .ua-social-home>.ua-feed>.ua-post-card .ua-comments{
+    padding-left:15px;
+    padding-right:15px;
+  }
+}
