@@ -1032,3 +1032,45 @@
     padding-right:15px;
   }
 }
+
+
+/* Final mobile corrections: align the feed to the viewport, tighten Stories. */
+@media(max-width:760px){
+  .ua-social-home>.ua-feed{
+    position:relative;
+    left:50%;
+    width:100vw;
+    max-width:100vw;
+    transform:translateX(-50%);
+    margin:0;
+    padding:0;
+    gap:0;
+  }
+  .ua-social-home>.ua-feed>.ua-post-card{
+    width:100%;
+    max-width:100%;
+    margin:0;
+    border-radius:0;
+  }
+  .ua-social-home .ua-circle-story-track{
+    gap:0;
+    padding-left:8px;
+    padding-right:8px;
+    scroll-padding-left:8px;
+    scroll-padding-right:8px;
+    scroll-snap-type:x proximity;
+  }
+  .ua-social-home .ua-story-group{
+    flex:0 0 120px;
+    gap:3px;
+  }
+  .ua-social-home .ua-story-group .ua-story-ring{
+    width:116px;
+    height:116px;
+  }
+  .ua-social-home .ua-story-group>strong{max-width:116px}
+}
+@media(max-width:380px){
+  .ua-social-home .ua-story-group{flex-basis:116px}
+  .ua-social-home .ua-story-group .ua-story-ring{width:112px;height:112px}
+}
