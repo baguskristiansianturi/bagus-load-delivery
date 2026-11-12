@@ -15,9 +15,15 @@ test('public app download section presents Android and iOS as coming soon withou
 test('guest homepage places the modular app download section after the signup CTA and before footer',async()=>{
  const home=await readFile(new URL('../../src/pages/home/index.js',import.meta.url),'utf8');
  assert.ok(home.includes("import {renderAppDownload} from '../../features/app-download/app-download.js';"));
- const cta=home.indexOf('class="pl-public-join"');
+ const join=await readFile(new URL('../../src/features/public-home/join.js',import.meta.url),'utf8');
+ const footerModule=await readFile(new URL('../../src/features/public-home/footer.js',import.meta.url),'utf8');
+ assert.ok(home.includes("import {renderPublicJoin} from '../../features/public-home/join.js';"));
+ assert.ok(home.includes("import {renderPublicFooter} from '../../features/public-home/footer.js';"));
+ const cta=home.indexOf('${renderPublicJoin()}');
  const download=home.indexOf('${renderAppDownload()}');
- const footer=home.indexOf('<footer class="pl-social-footer">');
+ const footer=home.indexOf('${renderPublicFooter()}');
+ assert.ok(join.includes('class="pl-public-join"'));
+ assert.ok(footerModule.includes('class="pl-social-footer"'));
  assert.ok(cta>=0&&download>cta&&footer>download,'Download section must sit after join CTA and before the public footer.');
 });
 
