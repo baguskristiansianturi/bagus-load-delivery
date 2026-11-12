@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {renderSocialHeader,renderSocialMobileNav} from '../../src/components/social/navigation.js';
 import {ROUTES} from '../../src/components/social/navigation-routes.js';
+import {CIRCLE_DEMO_PEOPLE,renderPeopleRecommendations} from '../../src/features/discovery/people-recommendations.js';
 import {readFile} from 'node:fs/promises';
 
 test('canonical destinations keep home, inbox and profile on separate routes',()=>{
@@ -181,4 +182,22 @@ test('Circle category filtering normalizes tags with spaces to the same slug as 
  const account=await readFile(new URL('../../src/pages/account/index.js',import.meta.url),'utf8');
  assert.match(account,/replace\(\/\\s\+\/g,'-'\)===exploreCategory/);
  assert.ok(account.includes("const slug=String(raw||'').toLowerCase().replace(/^#/,'').trim().replace(/\\s+/g,'-')"));
+});
+
+test('Circle UI demo provides ten sample profiles without persisting fake accounts',()=>{
+ assert.equal(CIRCLE_DEMO_PEOPLE.length,10);
+ const html=renderPeopleRecommendations({demoPeople:CIRCLE_DEMO_PEOPLE.slice(0,8)});
+ assert.equal((html.match(/class="ua-people-card ua-people-card-demo"/g)||[]).length,8);
+ assert.match(html,/DEMO UI/);
+ assert.match(html,/data-people-demo-follow/);
+ assert.doesNotMatch(html,/data-people-follow=/);
+});
+
+test('Circle uses demo content only below ten registered profiles and keeps section surfaces transparent',async()=>{
+ const account=await readFile(new URL('../../src/pages/account/index.js',import.meta.url),'utf8');
+ const css=await readFile(new URL('../../src/pages/account/circle-experience.css',import.meta.url),'utf8');
+ assert.match(account,/registeredProfileCount<10/);
+ assert.match(account,/CIRCLE_DEMO_PEOPLE\.slice\(0,Math\.max\(0,10-renderedStoryCount\)\)/);
+ assert.match(account,/data-demo-story='true'/);
+ assert.match(css,/\.ua-circle-stories,.ua-social-home \.ua-people-recommendations\{[^}]*background:transparent/);
 });
