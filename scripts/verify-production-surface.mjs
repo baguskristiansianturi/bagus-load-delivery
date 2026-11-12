@@ -209,7 +209,7 @@ assert.ok(socialHome.includes("event.target.closest('.pl-social-menu-trigger')")
 const profileHeroStyles = read('src/features/profile/profile-hero.css');
 assert.ok(profileHeroStyles.includes('.ua-profile-main .ua-cover{display:none!important}'), 'Profile hero must keep its intended cover-free layout.');
 const navigationStyles = read('src/styles/social-navigation.css');
-assert.ok(navigationStyles.includes('.ua-social-app .pl-social-header > .pluits-brand-mark.ua-brand') && navigationStyles.includes('flex: 0 0 34px !important'), 'Signed-in header logo must use a fixed, unclipped mobile box.');
+assert.ok(navigationStyles.includes('.ua-social-app .pl-social-header > .pluits-brand-mark.ua-brand') && navigationStyles.includes('flex: 0 0 38px !important') && navigationStyles.includes('flex: 0 0 30px !important') && navigationStyles.includes('overflow: visible !important'), 'Signed-in header logo must use a fixed, unclipped box with responsive desktop/mobile sizing.');
 assert.ok(sharedHeader.includes('showEditProfile') && socialHome.includes("section==='profile'?(parameter==='edit'?'profile-edit':'profile')"), 'Edit profile must only appear in the three-dot menu on the profile view, not throughout settings pages.');
 assert.ok(socialHome.includes('function createPage()') && socialHome.includes('function storyComposePage()'), 'Bottom create flow must expose Story/Post/Reel/Live entry selection.');
 assert.ok(socialHome.includes("section==='saved'?await savedPage()"), 'Saved items route must be available to the signed-in owner.');
