@@ -21,10 +21,12 @@ test('new accounts and mutual connections receive ranking priority',()=>{
 });
 test('recommendation renderer has a truthful empty state and profile actions',()=>{
  assert.match(renderPeopleRecommendations({people:[]}),/Belum ada rekomendasi akun baru/);
- const html=renderPeopleRecommendations({people:[{...profile('new'),isNew:true}]});
+ const html=renderPeopleRecommendations({people:[{...profile('new'),isNew:true,public_city:'Jakarta'}]});
  assert.match(html,/Orang yang Mungkin Anda Kenal/);
  assert.match(html,/>NEW</);
+ assert.match(html,/From Jakarta/);
  assert.doesNotMatch(html,/@new/);
+ assert.doesNotMatch(html,/<a class="ua-people-profile"/);
  assert.ok(html.includes('<span aria-hidden="true">+</span>'));
  assert.match(html,/data-people-follow="new"/);
 });

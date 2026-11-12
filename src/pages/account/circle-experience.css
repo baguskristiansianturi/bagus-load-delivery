@@ -729,3 +729,50 @@
 @media(max-width:380px){
  .ua-social-home .ua-people-card{flex-basis:156px;height:238px;min-height:238px}
 }
+
+
+/* Circle recommendation cards: keep the uploaded source image intact and animate only its presentation. */
+.ua-social-home .ua-people-cover img{
+ object-fit:cover;
+ object-position:center 27%;
+ transform:scale(1) translateZ(0);
+ transform-origin:center 42%;
+ transition:transform 240ms cubic-bezier(.2,.7,.25,1);
+ backface-visibility:hidden;
+}
+.ua-social-home .ua-people-card{cursor:default}
+@media(hover:hover) and (pointer:fine){
+ .ua-social-home .ua-people-card:hover .ua-people-cover img{
+  transform:scale(1.045) translateZ(0);
+ }
+}
+.ua-social-home .ua-people-card:active .ua-people-cover img{
+ transform:scale(1.035) translateZ(0);
+}
+.ua-social-home .ua-people-overlay{
+ background:linear-gradient(
+  180deg,
+  rgba(4,15,17,0) 46%,
+  rgba(4,15,17,.06) 57%,
+  rgba(4,15,17,.27) 70%,
+  rgba(4,15,17,.66) 86%,
+  rgba(4,15,17,.82) 100%
+ );
+}
+.ua-social-home .ua-people-profile strong{font-size:13px;line-height:1.2}
+.ua-social-home .ua-people-meta{margin-top:4px;font-size:9px;line-height:1.25}
+.ua-social-home .ua-people-meta small{
+ display:block;
+ overflow:hidden;
+ color:rgba(255,255,255,.9);
+ font-size:9px;
+ line-height:1.25;
+ text-overflow:ellipsis;
+ white-space:nowrap;
+}
+.ua-social-home .ua-people-follow{touch-action:manipulation}
+@media(prefers-reduced-motion:reduce){
+ .ua-social-home .ua-people-cover img{transition:none}
+ .ua-social-home .ua-people-card:hover .ua-people-cover img,
+ .ua-social-home .ua-people-card:active .ua-people-cover img{transform:none}
+}
