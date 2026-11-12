@@ -1301,7 +1301,7 @@ function bindStoryAutoScroll(){
   if(frame!==null){cancelAnimationFrame(frame);frame=null;}
   if(settleTimer){clearTimeout(settleTimer);settleTimer=null;}
  };
- const schedule=(delay=6500)=>{
+ const schedule=(delay=1800)=>{
   if(timer){clearTimeout(timer);timer=null;}
   if(interacting||document.hidden)return;
   timer=setTimeout(()=>{
@@ -1319,9 +1319,9 @@ function bindStoryAutoScroll(){
     :0;
    const from=track.scrollLeft;
    const distance=target-from;
-   if(Math.abs(distance)<2){schedule(6500);return;}
+   if(Math.abs(distance)<2){schedule(1800);return;}
    autoScrolling=true;
-   const duration=1350;
+   const duration=750;
    const started=performance.now();
    const animate=now=>{
     if(!autoScrolling||interacting){frame=null;return;}
@@ -1332,7 +1332,7 @@ function bindStoryAutoScroll(){
     track.scrollLeft=from+distance*eased;
     if(progress<1){frame=requestAnimationFrame(animate);return;}
     frame=null;autoScrolling=false;
-    schedule(6500);
+    schedule(1800);
    };
    frame=requestAnimationFrame(animate);
   },delay);
@@ -1347,7 +1347,7 @@ function bindStoryAutoScroll(){
  const end=()=>{
   interacting=false;
   if(timer){clearTimeout(timer);timer=null;}
-  timer=setTimeout(()=>{timer=null;schedule(6500);},900);
+  timer=setTimeout(()=>{timer=null;schedule(1800);},900);
  };
  track.addEventListener('pointerdown',begin,{passive:true});
  track.addEventListener('pointerup',end,{passive:true});
@@ -1363,13 +1363,13 @@ function bindStoryAutoScroll(){
   if(interacting)return;
   if(timer){clearTimeout(timer);timer=null;}
   if(settleTimer)clearTimeout(settleTimer);
-  settleTimer=setTimeout(()=>{settleTimer=null;schedule(6500);},260);
+  settleTimer=setTimeout(()=>{settleTimer=null;schedule(1800);},260);
  },{passive:true});
  track.addEventListener('mouseenter',begin);
  track.addEventListener('mouseleave',end);
  track.addEventListener('focusin',begin);
  track.addEventListener('focusout',end);
- schedule(6500);
+ schedule(1800);
 }
 function bindToptenSlider(){
  if(trendSliderVisibilityHandler){document.removeEventListener('visibilitychange',trendSliderVisibilityHandler);trendSliderVisibilityHandler=null;}
