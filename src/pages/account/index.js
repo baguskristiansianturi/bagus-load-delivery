@@ -411,17 +411,20 @@ async function feedPage(){
  const storyProfileResult=storyProfileIds.length?await supabase.from('user_profiles').select('id,display_name,avatar_path,visibility').in('id',storyProfileIds).eq('visibility','public'):{data:[],error:null};
  if(storyProfileResult.error)throw storyProfileResult.error;
  const storyProfiles=storyProfileResult.data||[];
- const [storyMediaUrls,storyAvatarUrls]=await Promise.all([
+ const [storyMediaUrls,storyAvatarUrls,storyFramesResult]=await Promise.all([
   createSignedUrlMap(supabase.storage,BUCKET,visibleStories.map(story=>story.media_path).filter(Boolean),1800),
-  createSignedUrlMap(supabase.storage,BUCKET,storyProfiles.map(person=>person.avatar_path).filter(Boolean),3600)
+  createSignedUrlMap(supabase.storage,BUCKET,storyProfiles.map(person=>person.avatar_path).filter(Boolean),3600),
+  storyProfileIds.length?supabase.from('user_profile_image_frames').select('user_id,avatar_x,avatar_y,avatar_zoom').in('user_id',storyProfileIds):{data:[],error:null}
  ]);
+ if(storyFramesResult.error)throw storyFramesResult.error;
+ const storyImageFrames=new Map((storyFramesResult.data||[]).map(frame=>[frame.user_id,frame]));
  const storyCards=[...storyOwners.entries()].map(([ownerId,items])=>{
   const owner=storyProfiles.find(person=>person.id===ownerId);if(!owner)return '';
   const ready=items.map(story=>({...story,url:storyMediaUrls.get(story.media_path)||''})).filter(story=>story.url);
   if(!ready.length)return '';
   const name=esc(owner.display_name||'Pengguna PLUITS'),avatarUrl=storyAvatarUrls.get(owner.avatar_path)||'';
   const payload=esc(JSON.stringify(ready.map(story=>({url:story.url,type:story.media_type,caption:story.caption||'',createdAt:story.created_at}))));
-  return "<button type='button' class='ua-story-group' data-story-items='"+payload+"' data-story-owner='"+esc(owner.display_name||'Pengguna PLUITS')+"' aria-label='Lihat Story "+name+"'><span class='ua-story-ring'><span class='ua-story-avatar'>"+(avatarUrl?"<img src='"+esc(avatarUrl)+"' alt='' loading='lazy'>":"<b>"+esc(initials(owner.display_name))+"</b>")+"</span></span><strong>"+name+"</strong><small>"+ready.length+" Story</small></button>";
+  return "<button type='button' class='ua-story-group' data-story-items='"+payload+"' data-story-owner='"+esc(owner.display_name||'Pengguna PLUITS')+"' aria-label='Lihat Story "+name+"'><span class='ua-story-ring'><span class='ua-story-avatar'>"+(avatarUrl?"<img src='"+esc(avatarUrl)+"' alt='' loading='lazy' style='"+esc(profileImageFrameCss(storyImageFrames.get(ownerId)||{},'avatar'))+"'>":"<b>"+esc(initials(owner.display_name))+"</b>")+"</span></span><strong>"+name+"</strong><small>"+ready.length+" Story</small></button>";
  }).filter(Boolean).join('');
  const renderedStoryCount=(storyCards.match(/class='ua-story-group/g)||[]).length;
  const demoStoryCards=showCircleDemo?CIRCLE_DEMO_PEOPLE.slice(0,Math.max(0,10-renderedStoryCount)).map((person,index)=>{
