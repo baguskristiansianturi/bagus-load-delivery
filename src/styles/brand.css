@@ -74,15 +74,3 @@
     transform: none !important;
   }
 }
-
-/* Optional shared PLUITS wordmark; icon-only placements keep their current geometry. */
-.pluits-brand-wordmark {
-  display: inline-block;
-  margin-left: 9px;
-  color: #263d43;
-  font-size: 15px;
-  font-weight: 850;
-  letter-spacing: .105em;
-  line-height: 1;
-  white-space: nowrap;
-}

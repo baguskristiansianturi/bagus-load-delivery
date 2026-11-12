@@ -1,12 +1,11 @@
 .pl-register-page,.pl-register-page *{box-sizing:border-box}
-.pl-register-page{min-height:100vh;min-height:100svh;width:100%;padding:0 24px 18px;background:linear-gradient(145deg,#f8fafb 0%,#f2f6f7 55%,#edf4f4 100%);color:#172b35;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;display:flex;flex-direction:column}
+.pl-register-page{min-height:100dvh;padding:0 24px 18px;background:linear-gradient(145deg,#f8fafb 0%,#f2f6f7 55%,#edf4f4 100%);color:#172b35;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;display:flex;flex-direction:column}
 .pl-register-header{width:min(1120px,100%);height:68px;margin:0 auto;border-bottom:1px solid #e4eaec;display:flex;align-items:center;justify-content:space-between;flex:none}
-.pl-register-logo{display:inline-flex;align-items:center;text-decoration:none;gap:0;flex:none}
-.pl-register-logo .pluits-brand-wordmark{font-size:15px;letter-spacing:.11em;color:#29434a}
+.pl-register-logo{display:inline-flex;align-items:center;text-decoration:none}
 .pl-register-brand{display:inline-flex;align-items:center}
 .pl-register-back{font-size:12px;font-weight:650;color:#667983;text-decoration:none}
 .pl-register-back:hover,.pl-register-login a:hover,.pl-register-consent a:hover{text-decoration:underline}
-.pl-register-main{width:min(1040px,100%);flex:1 0 auto;margin:auto;display:grid;grid-template-columns:minmax(0,1fr) minmax(360px,440px);align-items:center;gap:clamp(38px,7vw,96px);padding:42px 0}
+.pl-register-main{width:min(1040px,100%);margin:auto;display:grid;grid-template-columns:minmax(0,1fr) minmax(360px,440px);align-items:center;gap:clamp(38px,7vw,96px);padding:42px 0}
 .pl-register-story{max-width:510px}
 .pl-register-eyebrow,.pl-register-step{font-size:10px;letter-spacing:.15em;font-weight:800;color:#3d8584}
 .pl-register-story h1{max-width:490px;margin:14px 0;font-size:clamp(34px,4.4vw,52px);line-height:1.08;letter-spacing:-.055em;color:#17333b}
@@ -56,8 +55,7 @@
  .pl-register-page{padding:0 14px 14px;background:#f7f9fa}
  .pl-register-header{height:58px}
  .pl-register-back{font-size:11px}
- .pl-register-logo .pluits-brand-wordmark{font-size:14px;margin-left:7px}
- .pl-register-main{width:min(440px,100%);display:flex;flex:1 0 auto;align-items:center;justify-content:center;margin:0 auto;padding:clamp(12px,3svh,28px) 0}
+ .pl-register-main{width:min(440px,100%);display:block;margin:0 auto;padding:clamp(20px,5vh,42px) 0 24px}
  .pl-register-story{display:none}
  .pl-register-card{padding:clamp(18px,5vw,24px);border-radius:16px;box-shadow:0 10px 30px rgba(26,55,62,.055)}
  .pl-register-card-head{margin-bottom:17px}

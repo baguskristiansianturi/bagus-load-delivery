@@ -27,10 +27,10 @@ test('registration is delegated to its own feature and remains reachable before 
   assert.match(feature, /wordmark:\s*true/);
   assert.doesNotMatch(feature, /<a class=\\"pl-register-logo[^>]*>['\\s\\S]*renderBrandLogo/);
   assert.match(brand, /pluits-brand-wordmark/);
-  assert.match(brandCss, /\\.pluits-brand-wordmark/);
+  assert.ok(brandCss.includes('.pluits-brand-wordmark'));
   assert.match(registerCss, /min-height:100vh;min-height:100svh/);
   assert.match(registerCss, /flex:1 0 auto/);
-  assert.doesNotMatch(registerCss, /overflow-y\\s*:\\s*hidden/);
+  assert.ok(!/overflow-y\s*:\s*hidden/.test(registerCss));
 });
 
 test('registration styling is isolated from other account and public pages', async () => {

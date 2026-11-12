@@ -16,9 +16,9 @@ export function mountRegisterPage({ supabase, onAuthenticated }) {
   if (!app) return;
   const appBase = new URL(import.meta.env.BASE_URL || '/', window.location.origin).toString();
   app.innerHTML = '<div class="pl-register-page">' +
-    '<header class="pl-register-header">' +
-    renderBrandLogo({ className: 'pl-register-logo pl-register-brand', size: 29, label: 'PLUITS, kembali ke beranda', wordmark: true }) +
-    '<a class="pl-register-back" href="#/">Kembali ke beranda</a></header>' +
+    '<header class="pl-register-header"><a class="pl-register-logo" href="#/" aria-label="Pluits, kembali ke beranda">' +
+    renderBrandLogo({ className: 'pl-register-brand', size: 34, label: 'Pluits' }) +
+    '</a><a class="pl-register-back" href="#/">Kembali ke beranda</a></header>' +
     '<main class="pl-register-main">' +
     '<aside class="pl-register-story"><span class="pl-register-eyebrow">SATU AKUN · BANYAK KEMUNGKINAN</span>' +
     '<h1>Mulai terhubung dengan dunia di sekitarmu.</h1>' +

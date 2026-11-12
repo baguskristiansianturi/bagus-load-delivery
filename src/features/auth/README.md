@@ -2,7 +2,7 @@
 
 Ownership: guest account creation route #/account/register.
 
-- register.js owns registration markup, form validation, Supabase sign-up request, pending-email state and resend action. Its header uses the shared global PLUITS brand renderer with the canonical logo asset and wordmark; sidebar placements may remain icon-only.
+- register.js owns registration markup, form validation, Supabase sign-up request, pending-email state and resend action.
 - register.css owns all registration-page presentation under the .pl-register-page namespace.
 - src/pages/account/index.js remains the route/session controller and delegates only the register screen to this feature.
 - Sign-in remains in the account controller and shares the existing Supabase Auth identity.
@@ -17,9 +17,3 @@ Ownership: guest account creation route #/account/register.
 - Resend errors and provider rate limits are surfaced without claiming delivery.
 - Public email delivery requires custom SMTP in Supabase. The built-in SMTP service is restricted to project team addresses and is not suitable for public production traffic.
 - SMS verification is intentionally not presented until a paid/selected SMS provider is configured and tested.
-
-## Responsive viewport behavior
-
-- The page uses the stable small viewport height (`100svh`) with a `100vh` fallback so the initial layout accounts for visible mobile browser controls.
-- The page has a minimum height rather than a fixed height. Short content fits the viewport without artificial vertical scrolling; if text, validation feedback, zoom, or a short landscape screen makes content taller, the document grows and remains vertically scrollable instead of clipping controls.
-- Registration styles remain scoped to `.pl-register-page`; no global body overflow lock is applied.
