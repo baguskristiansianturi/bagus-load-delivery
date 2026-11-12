@@ -30,3 +30,10 @@ The carousel is followed by the existing composer and up to 30 feed posts. The f
 - Automated ranking tests cover privacy/relationship exclusions, new-account boost, mutual connections and empty/rendered UI.
 - CI must run npm test, production build and GitHub Pages deployment.
 - Founder Android UAT remains the acceptance gate for visual/interaction review and real follow behavior.
+
+
+## Release evidence — 12 November 2026
+- Commit: `3a1f1ebea9ca74c6995f2b336b1cc1ced9429ba0`.
+- GitHub Actions: run [43231833638](https://github.com/baguskristiansianturi/pluits/actions/runs/43231833638) — SUCCESS; automated tests, Vite production build, Pages artifact upload and deployment all passed.
+- Deployed URL: https://baguskristiansianturi.github.io/pluits/.
+- Founder Android visual and interaction UAT: NOT TESTED; deployment success is not acceptance.

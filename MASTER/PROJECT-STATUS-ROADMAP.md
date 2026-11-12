@@ -1195,5 +1195,5 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - **Scope:** After the existing Di Sekitar Anda section, add the People You May Know carousel, including a new-account discovery boost; keep the existing Beranda filters and composer; show up to 30 feed posts, followed by Temukan Lebih Banyak.
 - **Backend contract:** Read existing public profiles, accepted follow edges and the viewer's block/relationship rows under current RLS. Follow uses the existing user_follows triggers. No schema migration, RPC, contact upload, phone matching, or production data seeding.
 - **Performance bounds:** 60 profile candidates, 300 mutual edges, 10 rendered recommendations, 60 feed candidates, maximum 30 hydrated posts, batched signed avatar URLs.
-- **Status:** IMPLEMENTED IN SOURCE; CI/deployment and founder Android UAT are recorded separately after verification.
+- **Status:** DEPLOYED. Commit `3a1f1ebea9ca74c6995f2b336b1cc1ced9429ba0`; GitHub Actions run [43231833638](https://github.com/baguskristiansianturi/pluits/actions/runs/43231833638) succeeded: `npm test`, Vite production build, Pages artifact upload, and deployment. Founder Android visual/interaction UAT remains NOT TESTED / pending.
 - **Technical specification:** [Home People Recommendations & Feed Increment](../docs/pluits/HOME-PEOPLE-RECOMMENDATIONS-TECH-SPEC-2026-11-12.md).
