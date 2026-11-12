@@ -23,6 +23,8 @@ test('recommendation renderer has a truthful empty state and profile actions',()
  assert.match(renderPeopleRecommendations({people:[]}),/Belum ada rekomendasi akun baru/);
  const html=renderPeopleRecommendations({people:[{...profile('new'),isNew:true}]});
  assert.match(html,/Orang yang Mungkin Anda Kenal/);
- assert.match(html,/Baru bergabung/);
+ assert.match(html,/>NEW</);
+ assert.doesNotMatch(html,/@new/);
+ assert.match(html,/>\\+<\\/span>/);
  assert.match(html,/data-people-follow="new"/);
 });
