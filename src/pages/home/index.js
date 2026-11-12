@@ -42,15 +42,8 @@ export async function bindHome(){
   const {data:{user:actualViewer}}=await db.auth.getUser();
   if(!stillOnRequestedHome())return;
   const viewer=guestMode?null:actualViewer;
-  // Signed-in visitors enter the single canonical Explore feed. A delayed auth
-  // response must never replace a page opened after the visitor left Home.
-  if(viewer){
-   history.replaceState(null,'',location.pathname+location.search+'#/account/explore');
-   const {mountUserAccount}=await import('../account/index.js');
-   if(location.hash!=='#/account/explore')return;
-   await mountUserAccount('explore');
-   return;
-  }
+  // Keep the public homepage stable for signed-in and guest visitors alike.
+  // Account Explore is opened only through its explicit navigation route.
   bindHomeNearby({personalize:false});
   const headerActions=document.querySelector('.pl-social-header-actions');
   if(viewer&&!guestMode&&headerActions){
