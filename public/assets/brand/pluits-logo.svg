@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 1280" role="img" aria-labelledby="title">
+  <title id="title">PLUITS</title>
+  <defs>
+    <linearGradient id="pluitsTeal" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#18c8b5"/>
+      <stop offset="1" stop-color="#08ad9e"/>
+    </linearGradient>
+  </defs>
+  <path fill="url(#pluitsTeal)" fill-rule="evenodd" d="M640 40C361 40 130 270 130 550V1210Q130 1250 170 1250H380Q420 1250 420 1210V1048C485 1078 558 1095 640 1095C922 1095 1150 867 1150 585C1150 285 930 40 640 40ZM640 340A210 210 0 1 1 640 760A210 210 0 1 1 640 340Z"/>
+</svg>
