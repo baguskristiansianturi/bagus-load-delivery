@@ -28,7 +28,7 @@ test('app download spacing and tablet layout stay responsive without excess mobi
  assert.ok(css.includes('.pl-public-home{padding-bottom:0!important}'), 'Root padding must not duplicate the content clearance.');
  const layout=await readFile(new URL('../../styles/home-layout.css',import.meta.url),'utf8');
  assert.ok(layout.includes('.pl-public-home .pl-public-shell{padding:8px 0 calc(64px + env(safe-area-inset-bottom))}'), 'The homepage content must reserve one controlled clearance for the fixed bottom navigation.');
- assert.ok(css.includes('.pl-public-home .pl-app-download{padding-bottom:calc(84px + env(safe-area-inset-bottom))}'), 'The final app download card must remain clear of the fixed mobile navigation.');
+ assert.ok(css.includes('.pl-public-home .pl-app-download{padding-bottom:0}'), 'The app download section must not add a second navigation-sized blank area; the public shell owns that clearance.');
 });
 
 
@@ -45,5 +45,5 @@ test('mobile join and download cards have breathing room above the fixed navigat
  const css=await readFile(new URL('../../src/features/app-download/app-download.css',import.meta.url),'utf8');
  const layout=await readFile(new URL('../../styles/home-layout.css',import.meta.url),'utf8');
  assert.ok(layout.includes('.pl-public-home .pl-public-join{margin-bottom:20px}'), 'The join card must be separated from the download card.');
- assert.ok(css.includes('padding-bottom:calc(84px + env(safe-area-inset-bottom))'), 'The download card must have safe space above the bottom navigation.');
+ assert.ok(css.includes('padding-bottom:0}'), 'The download section must end with a normal gap; the shell already reserves navigation clearance.');
 });
