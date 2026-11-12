@@ -88,7 +88,8 @@ test('public home loads the real navigation layer and exposes visible mobile ico
  assert.ok(navbarCss.includes('.pl-public-home>.pl-public-navbar'),'Public guest navbar must have one explicit isolated surface.');
  assert.ok(css.includes('.pl-public-home .pl-social-mobile-nav>a .pl-icon'),'Public mobile navigation SVG icons must have explicit dimensions and visibility.');
  const navbar=await readFile(new URL('../../src/features/public-home/navbar.js',import.meta.url),'utf8');
- assert.ok(navbar.includes('🇮🇩')&&navbar.includes('🇬🇧')&&navbar.includes("?'Daftar':'Sign up'"),'Guest navbar must default to Indonesian and offer English.');
+ assert.ok(navbar.includes("const locale=localStorage.getItem('pluits-public-locale')==='en'?'en':'id'")&&navbar.includes('pl-public-flag-id')&&navbar.includes('pl-public-flag-en'),'Guest navbar must default to Indonesian and offer English with rectangular flag controls.');
+ assert.ok(!navbar.includes('Daftar')&&!navbar.includes('Sign up'),'Guest navbar must not duplicate registration links already available in bottom navigation.');
  assert.ok(navbar.includes("data-public-action=\"wishlist\"")&&navbar.includes("data-public-action=\"cart\""),'Wishlist and cart must be actionable controls.');
  assert.ok(navbar.includes("location.hash='#/account/login'"),'Opening wishlist or cart as a guest must request login.');
  assert.ok(navbarCss.includes('.pl-public-home>.pl-public-navbar')&&navbarCss.includes('border:0'),'Guest navbar must use one clean surface without borders.');
