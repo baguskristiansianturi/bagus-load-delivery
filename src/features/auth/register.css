@@ -159,3 +159,17 @@
  .pl-auth-page .pl-register-form{gap:10px}
  .pl-auth-page .pl-auth-tabs{margin-bottom:6px}
 }
+
+
+/* Give the account eyebrow more top breathing room and add a distinct copyright footer. */
+.pl-auth-page .pl-register-card{padding-top:38px}
+.pl-auth-page .pl-register-card-head{padding-top:2px}
+.pl-auth-page .pl-register-footer{padding:16px 0 4px;line-height:1.7}
+.pl-auth-page .pl-register-footer .pl-register-copyright{display:block;margin-top:4px;color:#aab4b8;font-size:9px;letter-spacing:.035em}
+@media(max-width:760px){
+ .pl-auth-page .pl-register-card{padding-top:30px}
+ .pl-auth-page .pl-register-footer{padding-top:14px}
+}
+@media(max-height:720px) and (max-width:760px){
+ .pl-auth-page .pl-register-card{padding-top:23px}
+}
