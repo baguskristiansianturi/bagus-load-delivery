@@ -1,0 +1,20 @@
+/* Public guest navbar — one surface, no nested backgrounds or stacked header layers. */
+.pl-public-home>.pl-public-navbar{position:sticky;top:0;z-index:320;display:flex;align-items:center;justify-content:space-between;gap:16px;width:100%;height:62px;min-height:62px;box-sizing:border-box;padding:0 max(16px,calc((100vw - 1180px)/2));margin:0;background:#fff;border:0;box-shadow:0 2px 10px rgba(24,48,54,.045)}
+.pl-public-navbar-brand{display:inline-flex;align-items:center;gap:7px;min-width:0;text-decoration:none}
+.pl-public-navbar-brand .pl-public-navbar-mark{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;min-width:30px;flex:0 0 30px;overflow:visible}
+.pl-public-navbar-brand .pl-public-navbar-mark img{display:block;width:30px;height:30px;max-width:none;object-fit:contain}
+.pl-public-navbar-brand>span{color:#7c898d;font-size:16px;font-weight:650;letter-spacing:-.045em;line-height:1}
+.pl-public-navbar-actions{display:flex;align-items:center;justify-content:flex-end;gap:clamp(11px,2vw,22px);min-width:0}
+.pl-public-navbar-actions button,.pl-public-navbar-actions a{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:5px;min-width:36px;min-height:40px;padding:0;background:transparent;border:0;border-radius:0;box-shadow:none;color:#34474c;text-decoration:none;cursor:pointer;font:inherit}
+.pl-public-navbar-actions .pl-public-language{min-width:45px;gap:5px;color:#65757a;font-size:11px;font-weight:650}
+.pl-public-navbar-actions .pl-public-flag{font-size:16px;line-height:1}
+.pl-public-navbar-actions .pl-public-icon-action .pl-icon{width:20px;height:20px;min-width:20px;min-height:20px;stroke-width:1.8}
+.pl-public-navbar-actions .pl-public-register{min-width:auto;min-height:36px;color:#34474c;font-size:12px;font-weight:700;white-space:nowrap}
+.pl-public-cart-count{position:absolute;top:1px;right:-7px;display:inline-flex;align-items:center;justify-content:center;min-width:15px;height:15px;padding:0 3px;border-radius:99px;background:#168f87;color:#fff;font-size:9px;font-weight:750;line-height:1}
+.pl-public-cart-count[hidden]{display:none}
+.pl-public-navbar-actions button:focus-visible,.pl-public-navbar-actions a:focus-visible{outline:2px solid rgba(22,143,135,.4);outline-offset:3px}
+.pl-public-toast{position:fixed;z-index:1000;left:50%;bottom:calc(82px + env(safe-area-inset-bottom));transform:translate(-50%,8px);opacity:0;pointer-events:none;padding:8px 12px;background:#263b40;color:#fff;border-radius:6px;font-size:11px;line-height:1.3;box-shadow:0 5px 18px rgba(0,0,0,.14);transition:opacity .16s ease,transform .16s ease}
+.pl-public-toast.is-visible{opacity:1;transform:translate(-50%,0)}
+@media(min-width:761px){.pl-public-home>.pl-public-navbar{height:68px;min-height:68px}.pl-public-navbar-actions{gap:22px}}
+@media(max-width:390px){.pl-public-home>.pl-public-navbar{padding-inline:12px;gap:8px}.pl-public-navbar-brand{gap:5px}.pl-public-navbar-brand>span{font-size:15px}.pl-public-navbar-actions{gap:9px}.pl-public-navbar-actions .pl-public-language{min-width:40px;font-size:10px}.pl-public-navbar-actions .pl-public-icon-action .pl-icon{width:19px;height:19px;min-width:19px;min-height:19px}}
+@media(prefers-reduced-motion:reduce){.pl-public-toast{transition:none}}
