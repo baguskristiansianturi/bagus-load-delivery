@@ -199,5 +199,5 @@ test('Circle uses demo content only below ten registered profiles and keeps sect
  assert.match(account,/registeredProfileCount<10/);
  assert.match(account,/CIRCLE_DEMO_PEOPLE\.slice\(0,Math\.max\(0,10-renderedStoryCount\)\)/);
  assert.match(account,/data-demo-story='true'/);
- assert.match(css,/\\.ua-social-home \\.ua-circle-stories,\\.ua-social-home \\.ua-people-recommendations\\{[^}]*background:transparent/);
+ assert.match(css,/\.ua-social-home \.ua-circle-stories,\.ua-social-home \.ua-people-recommendations\{[^}]*background:transparent/);
 });
