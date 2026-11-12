@@ -426,18 +426,18 @@
  .ua-social-app .pl-social-header-menu{flex:0 0 34px;margin-left:0!important}
  .ua-social-app .pl-social-header-menu .pl-social-menu-trigger{width:34px;height:34px}
  .ua-social-app .pl-social-mobile-actions{flex:0 0 auto;gap:4px}
- .ua-social-app .pl-social-mobile-actions a{width:30px;min-width:30px;height:36px;min-height:36px;flex:0 0 30px}
- .ua-social-app .pl-social-mobile-actions .pl-icon{width:21px;height:21px}
- .ua-social-app .pl-social-header>.ua-header-profile{width:32px;height:32px;flex:0 0 32px}
+ .ua-social-app .pl-social-mobile-actions a{width:48px;min-width:48px;height:48px;min-height:48px;flex:0 0 48px}
+ .ua-social-app .pl-social-mobile-actions .pl-icon{width:22px;height:22px}
+ .ua-social-app .pl-social-header>.ua-header-profile{width:40px;height:40px;flex:0 0 40px}
  .ua-social-app .pl-social-mobile-nav>.pl-mobile-activity{position:relative;overflow:visible}
  .ua-social-app .pl-social-mobile-nav>.pl-mobile-activity .pl-nav-unread{top:2px;right:calc(50% - 19px)}
 }
 @media(max-width:350px){
  .ua-social-app .pl-social-header{gap:5px;padding-inline:8px}
  .ua-social-app .pl-social-mobile-actions{gap:1px}
- .ua-social-app .pl-social-mobile-actions a{width:27px;min-width:27px;flex-basis:27px}
+ .ua-social-app .pl-social-mobile-actions a{width:44px;min-width:44px;height:44px;min-height:44px;flex-basis:44px}
  .ua-social-app .pl-social-header-menu,.ua-social-app .pl-social-header-menu .pl-social-menu-trigger{width:32px;flex-basis:32px}
- .ua-social-app .pl-social-header>.ua-header-profile{width:29px;height:29px;flex-basis:29px}
+ .ua-social-app .pl-social-header>.ua-header-profile{width:36px;height:36px;flex-basis:36px}
 }
 
 /* PLUITS mobile primary navigation v2: exactly five destinations, profile stays in header. */
