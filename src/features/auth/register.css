@@ -193,3 +193,12 @@
  .pl-auth-page .pl-register-login{margin-top:19px}
  .pl-auth-page .pl-register-security{margin-top:20px}
 }
+
+
+/* Separate the phone sign-in link from the social provider buttons. */
+.pl-auth-page .pl-auth-phone{margin-top:18px;padding:7px 4px 3px;line-height:1.6}
+.pl-auth-page .pl-auth-social-note{margin-top:12px;line-height:1.8}
+@media(max-width:760px){
+ .pl-auth-page .pl-auth-phone{margin-top:19px;padding-top:8px}
+ .pl-auth-page .pl-auth-social-note{margin-top:13px;line-height:1.8}
+}
