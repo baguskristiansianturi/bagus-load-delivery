@@ -96,8 +96,8 @@ export function mountAuthPage({ supabase, mode = 'login', onAuthenticated }) {
     try {
       if (isPhone) {
         if (!phoneOtpSent) {
-          pendingPhone = String(values.get('phone') || '').replace(/[\\s()-]/g, '');
-          if (!/^\\+[1-9]\\d{7,14}$/.test(pendingPhone)) throw new Error('Gunakan format internasional, contoh +628123456789.');
+          pendingPhone = String(values.get('phone') || '').replace(/[\s()-]/g, '');
+          if (!/^\+[1-9]\d{7,14}$/.test(pendingPhone)) throw new Error('Gunakan format internasional, contoh +628123456789.');
           const { error } = await supabase.auth.signInWithOtp({ phone: pendingPhone });
           if (error) throw error;
           phoneOtpSent = true;
