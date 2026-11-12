@@ -16,7 +16,7 @@
 .ua-people-reason{background:#f5f7f8;color:#74838a;font-weight:650}
 .ua-people-meta{min-height:24px;margin-top:5px;color:#89969b;font-size:10px}
 .ua-people-meta small{font-size:10px}
-.ua-people-follow{width:100%;min-height:34px;margin-top:auto;border:0;border-radius:9px;background:#20b8ae;color:#fff;font:700 11px inherit;cursor:pointer}
+.ua-people-follow{width:100%;min-height:34px;margin-top:auto;border:0;border-radius:9px;background:#20b8ae;color:#fff;font:inherit;font-size:11px;font-weight:700;cursor:pointer}
 .ua-people-follow[aria-pressed=true]{border:1px solid #dce9e7;background:#f1f6f5;color:#52666a}
 .ua-people-follow:disabled{opacity:.65;cursor:wait}
 .ua-people-empty{padding:15px;border:1px dashed #dce5e5;border-radius:12px;background:#fafcfc;color:#7c8b90;font-size:11px;line-height:1.55}

@@ -357,10 +357,13 @@ async function feedPage(){
  if(followingIds.length){
   const mutualResult=await supabase.from('user_follows').select('follower_id,following_id').in('following_id',followingIds).eq('status','accepted').limit(300);
   if(mutualResult.error)throw mutualResult.error;
-  mutualCounts=(mutualResult.data||[]).reduce((counts,edge)=>{
-   if(edge.follower_id!==user.id)counts[edge.follower_id]=(counts[edge.follower_id]||0)+1;
-   return counts;
-  },{});
+  const mutualSets=new Map();
+  (mutualResult.data||[]).forEach(edge=>{
+   if(edge.follower_id===user.id)return;
+   if(!mutualSets.has(edge.follower_id))mutualSets.set(edge.follower_id,new Set());
+   mutualSets.get(edge.follower_id).add(edge.following_id);
+  });
+  mutualCounts=Object.fromEntries([...mutualSets].map(([id,connections])=>[id,connections.size]));
  }
  const people=rankPeopleRecommendations({
   profiles:profileResult.data||[],viewerId:user.id,followingIds,blockedIds,relationships,mutualCounts,
