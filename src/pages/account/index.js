@@ -29,7 +29,7 @@ const uploadMediaFile=createMediaUploader({supabase,bucket:BUCKET,supabaseUrl:SU
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmtDate=v=>new Date(v).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'});
 const initials=v=>String(v||'P').trim().slice(0,1).toUpperCase();
-let trendSliderTimer=null,trendSliderVisibilityHandler=null,user=null,profile=null,profileReels=[],addresses=[],noticeTimer=null,leafletMap=null,leafletMarker=null,exploreFilter='recommended',reelsFilter='recommended',activityNotificationChannel=null,unreadNotificationCount=0,currentComposeDraft=null,profileMenuBound=false,accountContext={active:'personal',professional:null,stores:[],prefs:{}};
+let trendSliderTimer=null,trendSliderVisibilityHandler=null,user=null,profile=null,profileReels=[],addresses=[],noticeTimer=null,leafletMap=null,leafletMarker=null,exploreFilter='all',exploreCategory='all',reelsFilter='recommended',activityNotificationChannel=null,unreadNotificationCount=0,currentComposeDraft=null,profileMenuBound=false,accountContext={active:'personal',professional:null,stores:[],prefs:{}};
 
 function notify(message,type='success'){
  const el=document.querySelector('#ua-toast');if(!el)return;
@@ -381,7 +381,9 @@ async function feedPage(){
  const storyOwners=new Map();
  visibleStories.forEach(story=>{if(!storyOwners.has(story.user_id))storyOwners.set(story.user_id,[]);storyOwners.get(story.user_id).push(story);});
  const storyProfileIds=[...storyOwners.keys()];
- const storyProfiles=(profileResult.data||[]).filter(person=>storyProfileIds.includes(person.id));
+ const storyProfileResult=storyProfileIds.length?await supabase.from('user_profiles').select('id,display_name,avatar_path,visibility').in('id',storyProfileIds).eq('visibility','public'):{data:[],error:null};
+ if(storyProfileResult.error)throw storyProfileResult.error;
+ const storyProfiles=storyProfileResult.data||[];
  const [storyMediaUrls,storyAvatarUrls]=await Promise.all([
   createSignedUrlMap(supabase.storage,BUCKET,visibleStories.map(story=>story.media_path).filter(Boolean),1800),
   createSignedUrlMap(supabase.storage,BUCKET,storyProfiles.map(person=>person.avatar_path).filter(Boolean),3600)
@@ -397,9 +399,8 @@ async function feedPage(){
  const storiesSection="<section class='ua-circle-stories' aria-labelledby='ua-circle-stories-title'><div class='ua-circle-section-heading'><div><h2 id='ua-circle-stories-title'>Cerita circle</h2><p>Momen terbaru dari teman yang Anda ikuti.</p></div></div>"+(storyCards?"<div class='ua-circle-story-track'>"+storyCards+"</div>":"<div class='ua-circle-story-empty'>Belum ada Story teman yang aktif. Cerita dari circle Anda akan muncul di sini.</div>")+"</section>";
  const interestSlugs=new Set(interests.map(x=>String(x.slug||'').toLowerCase()));
  const score=p=>{const age=Math.max(0,(Date.now()-new Date(p.created_at).getTime())/3600000),tags=(p.tags||[]).map(x=>String(x).toLowerCase().replace(/^#/,'').replace(/ /g,'-')),interestMatch=tags.filter(tag=>interestSlugs.has(tag)).length;return (followingIds.includes(p.user_id)?80:0)+interestMatch*28+36*Math.exp(-age/72)+Math.min(45,(p.likes||0)*1.5+(p.comments||0)*2.5);};
- let sorted=exploreFilter==='following'?hydrated.filter(p=>followingIds.includes(p.user_id)).sort((a,b)=>new Date(b.created_at)-new Date(a.created_at))
-  :exploreFilter==='latest'?[...hydrated].sort((a,b)=>new Date(b.created_at)-new Date(a.created_at))
-  :exploreFilter==='popular'?[...hydrated].sort((a,b)=>(b.likes*2+b.comments*3)-(a.likes*2+a.comments*3)||new Date(b.created_at)-new Date(a.created_at))
+ let sorted=exploreFilter==='latest'?[...hydrated].sort((a,b)=>new Date(b.created_at)-new Date(a.created_at))
+  :exploreFilter==='random'?[...hydrated].sort(()=>Math.random()-.5)
   :[...hydrated].sort((a,b)=>score(b)-score(a)||new Date(b.created_at)-new Date(a.created_at));
  const inferredTags=new Map();
  const activityPosts=hydrated.filter(post=>followingIds.includes(post.user_id));
@@ -419,10 +420,13 @@ async function feedPage(){
  }).join('');
  const recommendationCards=sorted.slice(0,8);
  const interestSection=(topicSections|| (recommendationCards.length?"<div class='ua-home-topic-carousel ua-home-recommendation-carousel'>"+recommendationCards.map(postCard).join('')+"</div>":""));
- const filters=[['recommended','Untuk Anda'],['following','Mengikuti'],['latest','Terbaru'],['popular','Populer']];
- const filterNav="<nav class='ua-explore-filters' aria-label='Pilihan beranda'>"+filters.map(([key,label])=>"<button type='button' data-explore-filter='"+key+"' class='"+(exploreFilter===key?'is-active':'')+"' "+(exploreFilter===key?"aria-current='true'":"")+">"+label+"</button>").join('')+"</nav>";
- const empty=exploreFilter==='following'?'Belum ada postingan dari akun yang Anda ikuti. Temukan orang dan akun yang menarik untuk mulai mengikuti.':'Belum ada postingan publik untuk ditampilkan. Jadilah yang pertama berbagi cerita di PLUITS.';
- const action=exploreFilter==='following'?"<a href='#/search'>Temukan orang untuk diikuti</a>":"<a href='#/account/compose'>Buat postingan pertama</a>";
+ const categoryOptions=[...new Map([...interests,...inferredTopics].filter(Boolean).map(topic=>[String(topic.slug||'').toLowerCase(),topic])).values()];
+ if(exploreCategory!=='all')sorted=sorted.filter(post=>(post.tags||[]).some(tag=>String(tag).toLowerCase().replace(/^#/,'').trim().replace(/\\s+/g,'-')===exploreCategory));
+ const filters=[['all','Semua'],['latest','Terbaru'],['random','Acak']];
+ const categorySelect="<label class='ua-explore-category-label'><span>Kategori</span><select data-explore-category aria-label='Pilih kategori postingan'><option value='all' "+(exploreCategory==='all'?'selected':'')+">Semua kategori</option>"+categoryOptions.map(topic=>"<option value='"+esc(topic.slug)+"' "+(exploreCategory===String(topic.slug).toLowerCase()?'selected':'')+">"+esc(topic.name)+"</option>").join('')+"</select></label>";
+ const filterNav="<nav class='ua-explore-filters' aria-label='Urutan postingan'>"+filters.map(([key,label])=>"<button type='button' data-explore-filter='"+key+"' class='"+(exploreFilter===key?'is-active':'')+"' "+(exploreFilter===key?"aria-current='true'":"")+">"+label+"</button>").join('')+categorySelect+"</nav>";
+ const empty='Belum ada postingan yang cocok dengan pilihan ini.';
+ const action="<a href='#/account/compose'>Buat postingan pertama</a>";
  const homeHeading="<section class='ua-home-following'><div class='ua-home-section-heading'><div><h2>Postingan</h2><p>Semua cerita dari circle dan topik yang Anda minati.</p></div></div>"+filterNav+"</section>";
  const circleHeading="<section class='ua-circle-intro'><span class='ua-eyebrow'>RUANG PERSONAL PLUITS</span><h1>Circle Anda</h1><p>Terhubung dengan teman, lingkungan, dan hal-hal yang Anda minati.</p></section>";
  const discoverMore="<section class='ua-home-discover-more'><div class='ua-home-section-heading'><div><h2>Temukan Lebih Banyak</h2><small>Perluas koneksi dan temukan cerita baru di PLUITS.</small></div></div><div class='ua-home-discover-links'><a href='#/search'><span>Orang &amp; komunitas</span><b>Jelajahi ↗</b></a><a href='#/places'><span>Tempat dan lingkungan</span><b>Jelajahi ↗</b></a></div></section>";
@@ -1004,8 +1008,9 @@ function bindStories(){
     const video=overlay.querySelector('video');if(video)video.addEventListener('ended',()=>{if(index<items.length-1){index++;render();}});
    };
    render();document.body.appendChild(overlay);
-   overlay.addEventListener('click',event=>{if(event.target===overlay||event.target.closest('[data-story-close]'))overlay.remove();});
-   const keyHandler=event=>{if(event.key==='Escape'){overlay.remove();document.removeEventListener('keydown',keyHandler);}else if(event.key==='ArrowRight'&&index<items.length-1){index++;render();}else if(event.key==='ArrowLeft'&&index>0){index--;render();}};
+   const close=()=>{overlay.remove();document.removeEventListener('keydown',keyHandler);};
+   overlay.addEventListener('click',event=>{if(event.target===overlay||event.target.closest('[data-story-close]'))close();});
+   const keyHandler=event=>{if(event.key==='Escape')close();else if(event.key==='ArrowRight'&&index<items.length-1){index++;render();}else if(event.key==='ArrowLeft'&&index>0){index--;render();}};
    document.addEventListener('keydown',keyHandler);
   });
  });
@@ -1300,9 +1305,12 @@ function bindToptenSlider(){
 }
 function bindExploreFilters(){
  document.querySelectorAll('[data-explore-filter]').forEach(button=>button.addEventListener('click',async()=>{
-  const next=button.dataset.exploreFilter;if(!['recommended','following','latest','popular'].includes(next)||next===exploreFilter)return;
+  const next=button.dataset.exploreFilter;if(!['all','latest','random'].includes(next)||next===exploreFilter)return;
   exploreFilter=next;await mountAccount('explore');
  }));
+ document.querySelector('[data-explore-category]')?.addEventListener('change',async event=>{
+  exploreCategory=String(event.currentTarget.value||'all');await mountAccount('explore');
+ });
 }
 function bindReelsPlayback(){document.querySelectorAll('[data-reels-filter]').forEach(btn=>btn.addEventListener('click',()=>{reelsFilter=btn.dataset.reelsFilter;mountAccount('reels');}));const feed=document.querySelector('.ua-reels-feed');if(!feed)return;feed.querySelectorAll('[data-reel-toggle]').forEach(b=>b.addEventListener('click',()=>{const v=b.closest('.ua-reel-stage')?.querySelector('[data-reel-video]');if(v){if(v.paused)v.play().catch(()=>{});else v.pause();}}));feed.querySelectorAll('[data-reel-video]').forEach(v=>{v.addEventListener('play',()=>{const b=v.closest('.ua-reel-stage')?.querySelector('[data-reel-toggle]');if(b){b.textContent='Ⅱ';b.setAttribute('aria-label','Jeda video');}});v.addEventListener('pause',()=>{const b=v.closest('.ua-reel-stage')?.querySelector('[data-reel-toggle]');if(b){b.textContent='▶';b.setAttribute('aria-label','Putar video');}});});if(!('IntersectionObserver'in window))return;const videos=[...feed.querySelectorAll('[data-reel-video]')];let active=null;const io=new IntersectionObserver(es=>es.forEach(e=>{const v=e.target;if(e.isIntersecting&&e.intersectionRatio>=.72){if(active&&active!==v)active.pause();active=v;v.muted=true;v.loop=true;v.playsInline=true;v.play().catch(()=>{});}else if(e.intersectionRatio<.25){v.pause();if(active===v)active=null;}}),{threshold:[0,.25,.72,1]});videos.forEach(v=>{v.playsInline=true;v.preload='metadata';io.observe(v);});}
 function bindPostActions(){

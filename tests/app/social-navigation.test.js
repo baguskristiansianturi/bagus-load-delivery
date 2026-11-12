@@ -14,7 +14,7 @@ test('canonical destinations keep home, inbox and profile on separate routes',()
 
 test('signed-in social bottom navigation points to the intended pages',()=>{
  const html=renderSocialMobileNav({active:'home',user:{id:'u1'}});
- assert.match(html,/href="#\/account\/explore"[^>]*aria-label="Beranda"/);
+ assert.match(html,/href="#\/account\/explore"[^>]*aria-label="Circle"/);
  assert.match(html,/href="#\/inbox"[^>]*aria-label="Pesan"/);
  assert.match(html,/href="#\/account\/profile"[^>]*aria-label="Profil"/);
 });
@@ -160,4 +160,10 @@ test('profile keeps the three-dot settings menu visible on the profile card on m
  assert.ok(account.includes('Pusat Pengaturan')&&account.includes('Edit profil'),'The three-dot menu must retain both settings destinations.');
  assert.ok(css.includes('.ua-profile-card>.ua-profile-menu{position:absolute'),'Profile menu must be anchored directly to the visible profile card.');
  assert.ok(css.includes('@media(max-width:760px)'),'Profile menu must have a mobile layout rule.');
+});
+
+test('Circle feed controls expose all, latest, random and category filtering',async()=>{
+ const account=await readFile(new URL('../../src/pages/account/index.js',import.meta.url),'utf8');
+ assert.ok(account.includes("['all','Semua']")&&account.includes("['latest','Terbaru']")&&account.includes("['random','Acak']")&&account.includes('data-explore-category'));
+ assert.ok(account.includes("exploreCategory=String(event.currentTarget.value||'all')"));
 });
