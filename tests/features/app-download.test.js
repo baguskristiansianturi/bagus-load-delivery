@@ -20,3 +20,11 @@ test('guest homepage places the modular app download section after the signup CT
  const footer=home.indexOf('<footer class="pl-social-footer">');
  assert.ok(cta>=0&&download>cta&&footer>download,'Download section must sit after join CTA and before the public footer.');
 });
+
+test('app download spacing and tablet layout stay responsive without excess mobile page clearance',async()=>{
+ const css=await readFile(new URL('../../src/features/app-download/app-download.css',import.meta.url),'utf8');
+ assert.ok(css.includes('@media (min-width:761px) and (max-width:900px)'), 'Tablet layout breakpoint must be present.');
+ assert.ok(css.includes('grid-template-columns:repeat(2,minmax(0,1fr))'), 'Tablet store cards must share a balanced two-column row.');
+ assert.ok(css.includes('.pl-social-home.pl-public-home{padding-bottom:calc(60px + env(safe-area-inset-bottom))!important}'), 'Mobile page clearance must match the fixed navigation height.');
+ assert.ok(css.includes('.pl-public-home .pl-app-download{padding-bottom:12px}'), 'Mobile app download section must not leave an oversized gap before navigation.');
+});
