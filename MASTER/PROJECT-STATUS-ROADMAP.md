@@ -1197,3 +1197,15 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - **Performance bounds:** 60 profile candidates, 300 mutual edges, 10 rendered recommendations, 60 feed candidates, maximum 30 hydrated posts, batched signed avatar URLs.
 - **Status:** DEPLOYED. Commit `3a1f1ebea9ca74c6995f2b336b1cc1ced9429ba0`; GitHub Actions run [43231833638](https://github.com/baguskristiansianturi/pluits/actions/runs/43231833638) succeeded: `npm test`, Vite production build, Pages artifact upload, and deployment. Founder Android visual/interaction UAT remains NOT TESTED / pending.
 - **Technical specification:** [Home People Recommendations & Feed Increment](../docs/pluits/HOME-PEOPLE-RECOMMENDATIONS-TECH-SPEC-2026-11-12.md).
+
+
+## 12 November 2026 — Circle & Jelajah experience increment
+- Product decision: D-009; Business Model Master Bagian 33.14.
+- Circle: signed-in feed label and page heading changed to Circle Anda; order is followed Story carousel, people recommendations, then post feed; filters Semua/Terbaru/Acak/Kategori remain sticky; local discovery modules remain below the feed.
+- Story source/security: existing user_stories table only; active public Stories from accepted followed accounts; blocked relationships excluded; RLS remains authoritative; signed media URLs. No schema migration or production data mutation.
+- Jelajah: #/search now renders a mixed public post feed (text/photo/video), dynamic tag categories, trending/latest/random sorting, author profile links, and blocked-author filtering for authenticated viewers.
+- Integrity: demo-only Top 10 cards are no longer rendered as live Circle trending. Real area Top 10 and event ranking remain NOT IMPLEMENTED.
+- Tests/build: GitHub Actions run 1642 (43243601266) succeeded on commit 9ccd13050541bd1fb5bd423a1f6479f898d0e118; production verification, automated tests, Vite build, output verification, Pages artifact upload and deployment passed.
+- Status: IMPLEMENTED, DEPLOYED. Android UAT NOT TESTED; founder ACCEPTANCE PENDING.
+- Known gaps: Story seen receipts/counts/reactions/comments/replies and notification deep links; profile-owned Story management; social-proof cards; real area Top 10/important-event ranking; AI moderation pipelines; business request workspace; user feedback center. These are not represented as active features.
+- Technical spec: docs/pluits/CIRCLE-AND-JELAJAH-EXPERIENCE-2026-11-12.md.

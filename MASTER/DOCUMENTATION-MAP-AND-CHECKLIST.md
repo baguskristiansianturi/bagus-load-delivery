@@ -90,3 +90,12 @@ Aturan tambahan:
 - Penghapusan otomatis akun setelah 12 bulan tidak aktif masih proposal dan tidak boleh diterapkan atau dipublikasikan sebagai aturan aktif.
 - Halaman #/privacy, #/terms, dan #/guidelines menampilkan status draft; bukan dokumen legal final.
 - Help Center route #/help harus menampilkan status ketersediaan yang jujur dan tidak menjanjikan kontrol backend yang belum tersedia.
+
+
+## Circle & Jelajah (12 November 2026)
+| Dokumen | Fungsi | Status |
+|---|---|---|
+| docs/pluits/CIRCLE-AND-JELAJAH-EXPERIENCE-2026-11-12.md | UX order, privacy boundaries, ranking limits, acceptance criteria and deployment evidence | Circle/Jelajah frontend deployed; Android UAT pending |
+| src/pages/account/index.js | Signed-in Circle composition and data orchestration | Existing account controller; incremental update |
+| src/pages/search/discovery.js | Public mixed-content Jelajah feed | Implemented; bounded candidate-window ranking |
+| src/components/social/navigation.js | Shared Circle/Jelajah navigation labels and desktop links | Implemented |

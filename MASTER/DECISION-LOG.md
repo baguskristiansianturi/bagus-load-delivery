@@ -116,3 +116,22 @@ Salin untuk keputusan berikutnya:
 - **Dampak:** frontend mobile-first Blog Studio; kontrak data artikel, Storage, privacy/RLS, pencarian, feed cards, profil Blog, dan publikasi backend menjadi tahap lanjutan setelah validasi UX.
 - **Dokumen otoritatif:** Business Model Master Bagian 33.13.
 - **Status implementasi:** frontend Blog Studio uji lokal IMPLEMENTED dan DEPLOYED; backend publication NOT IMPLEMENTED; Android founder UAT NOT TESTED; ACCEPTANCE PENDING.
+
+
+## D-009 — Circle dan Jelajah sebagai pengalaman utama Social Media
+- Tanggal keputusan: 12 November 2026
+- Status: DECIDED
+- Founder approval: eksplisit sebelum implementasi pada sesi 12 November 2026.
+- Konteks: Istilah Beranda terasa seperti halaman website. Pengguna membutuhkan ruang personal yang berbeda dari penemuan konten publik.
+- Keputusan final:
+  1. Feed pengguna yang masuk bernama Circle. Isinya menggabungkan teman/following, Story circle, rekomendasi orang, postingan, lokasi/lingkungan, usaha/produk lokal, layanan, artikel/blog, dan minat.
+  2. Circle menampilkan urutan judul/deskripsi, Story teman, Orang yang Mungkin Anda Kenal, lalu postingan. Toolbar Semua/Terbaru/Acak/Kategori tetap sticky. Circle tidak menampilkan tombol membuat Story sendiri pada baris Story.
+  3. Jelajah menjadi feed publik lintas akun dan entitas. Konten publik dapat ditemukan; alasan ranking dan aturan kelayakan membedakan distribusi Circle dan Jelajah.
+  4. Social proof pada kartu tempat/produk/layanan hanya boleh menyatakan kunjungan, pembelian, atau penggunaan jasa jika ada bukti yang sesuai dan izin berbagi. Sinyal GPS tidak cukup.
+  5. Peristiwa penting dan bencana membutuhkan ranking khusus yang mempertimbangkan kepentingan publik dan verifikasi. Materi grafis/eksploitasi korban tetap dibatasi.
+  6. Ranking live tidak boleh menggunakan data demo. Top 10 demo-only disembunyikan sampai sumber ranking nyata tersedia.
+  7. Trust, keamanan, dan UX lebih penting daripada pertumbuhan akun tanpa kontrol; AI moderasi harus dilengkapi review manusia, alasan tindakan, dan jalur banding.
+- Batas implementasi: deployment ini mengimplementasikan layout Circle, Story publik dari akun yang diikuti, filter, rekomendasi orang, dan mixed public feed Jelajah. Story receipts/metrics/replies, social-proof labels, area Top 10, important-event ranking, AI moderation pipeline, Business operations, dan feedback center belum diimplementasikan.
+- Dampak teknis: pisahkan strategi ranking Circle/Jelajah/important events; pertahankan satu sumber konten kanonis; pisahkan service, ranking, data, dan presentation; gunakan RLS dan consent untuk social proof.
+- Dokumen otoritatif: Business Model Master Bagian 33.14 dan docs/pluits/CIRCLE-AND-JELAJAH-EXPERIENCE-2026-11-12.md.
+- Status implementasi: Circle/Jelajah UI IMPLEMENTED/DEPLOYED; Android UAT NOT TESTED; founder acceptance PENDING.
