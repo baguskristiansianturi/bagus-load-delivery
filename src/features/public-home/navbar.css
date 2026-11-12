@@ -75,3 +75,160 @@
  .pl-public-navbar-actions .pl-public-register{width:52px;min-width:52px;font-size:12px}
 }
 @media(prefers-reduced-motion:reduce){.pl-public-toast{transition:none}}
+
+
+/* MOBILE ONLY — public guest navbar. Keep brand at the physical left edge
+   and all controls grouped at the right with finger-sized hit areas. */
+@media (max-width: 760px) {
+  .pl-public-home > header.pl-public-navbar {
+    display:flex !important;
+    position:sticky !important;
+    top:0 !important;
+    left:0 !important;
+    right:0 !important;
+    width:100% !important;
+    height:60px !important;
+    min-height:60px !important;
+    max-height:60px !important;
+    box-sizing:border-box !important;
+    padding:0 12px !important;
+    margin:0 !important;
+    gap:0 !important;
+    justify-content:space-between !important;
+    align-items:center !important;
+    background:#fff !important;
+    border:0 !important;
+    box-shadow:0 1px 7px rgba(24,48,54,.045) !important;
+  }
+  .pl-public-home > header.pl-public-navbar > .pl-public-navbar-brand {
+    display:inline-flex !important;
+    flex:0 0 auto !important;
+    align-items:center !important;
+    justify-content:flex-start !important;
+    gap:1px !important;
+    width:auto !important;
+    min-width:0 !important;
+    margin:0 !important;
+    padding:0 !important;
+  }
+  .pl-public-home > header.pl-public-navbar > .pl-public-navbar-brand > .pl-public-navbar-mark {
+    display:inline-flex !important;
+    flex:0 0 30px !important;
+    width:30px !important;
+    min-width:30px !important;
+    height:30px !important;
+    min-height:30px !important;
+    margin:0 !important;
+    padding:0 !important;
+  }
+  .pl-public-home > header.pl-public-navbar > .pl-public-navbar-brand > .pl-public-navbar-mark > img {
+    display:block !important;
+    width:30px !important;
+    height:30px !important;
+    max-width:none !important;
+    object-fit:contain !important;
+  }
+  .pl-public-home > header.pl-public-navbar > .pl-public-navbar-brand > span {
+    display:block !important;
+    margin:0 !important;
+    padding:0 !important;
+    color:#78868a !important;
+    font-size:14px !important;
+    font-weight:650 !important;
+    line-height:1 !important;
+    letter-spacing:-.045em !important;
+    white-space:nowrap !important;
+  }
+  .pl-public-home > header.pl-public-navbar > .pl-public-navbar-actions {
+    display:flex !important;
+    flex:0 0 auto !important;
+    align-items:center !important;
+    justify-content:flex-end !important;
+    gap:2px !important;
+    width:auto !important;
+    min-width:0 !important;
+    margin:0 0 0 auto !important;
+    padding:0 !important;
+  }
+  .pl-public-home > header.pl-public-navbar > .pl-public-navbar-actions > button,
+  .pl-public-home > header.pl-public-navbar > .pl-public-navbar-actions > a {
+    display:inline-flex !important;
+    flex:0 0 44px !important;
+    width:44px !important;
+    min-width:44px !important;
+    max-width:44px !important;
+    height:44px !important;
+    min-height:44px !important;
+    max-height:44px !important;
+    box-sizing:border-box !important;
+    align-items:center !important;
+    justify-content:center !important;
+    margin:0 !important;
+    padding:0 !important;
+    border:0 !important;
+    border-radius:0 !important;
+    background:transparent !important;
+    box-shadow:none !important;
+  }
+  .pl-public-home > header.pl-public-navbar > .pl-public-navbar-actions > .pl-public-language {
+    flex-basis:46px !important;
+    width:46px !important;
+    min-width:46px !important;
+    max-width:46px !important;
+    gap:3px !important;
+    font-size:10px !important;
+  }
+  .pl-public-home > header.pl-public-navbar > .pl-public-navbar-actions .pl-public-flag {
+    font-size:16px !important;
+  }
+  .pl-public-home > header.pl-public-navbar > .pl-public-navbar-actions > .pl-public-icon-action > .pl-icon {
+    display:block !important;
+    flex:0 0 22px !important;
+    width:22px !important;
+    min-width:22px !important;
+    height:22px !important;
+    min-height:22px !important;
+    stroke-width:1.85 !important;
+  }
+  .pl-public-home > header.pl-public-navbar > .pl-public-navbar-actions > .pl-public-register {
+    flex-basis:50px !important;
+    width:50px !important;
+    min-width:50px !important;
+    max-width:50px !important;
+    font-size:12px !important;
+    font-weight:700 !important;
+    white-space:nowrap !important;
+  }
+}
+@media (max-width: 360px) {
+  .pl-public-home > header.pl-public-navbar { padding-inline:10px !important; }
+  .pl-public-home > header.pl-public-navbar > .pl-public-navbar-brand > .pl-public-navbar-mark,
+  .pl-public-home > header.pl-public-navbar > .pl-public-navbar-brand > .pl-public-navbar-mark > img {
+    width:28px !important;
+    min-width:28px !important;
+    flex-basis:28px !important;
+    height:28px !important;
+    min-height:28px !important;
+  }
+  .pl-public-home > header.pl-public-navbar > .pl-public-navbar-brand { gap:0 !important; }
+  .pl-public-home > header.pl-public-navbar > .pl-public-navbar-actions { gap:0 !important; }
+  .pl-public-home > header.pl-public-navbar > .pl-public-navbar-actions > button,
+  .pl-public-home > header.pl-public-navbar > .pl-public-navbar-actions > a {
+    flex-basis:42px !important;
+    width:42px !important;
+    min-width:42px !important;
+    max-width:42px !important;
+  }
+  .pl-public-home > header.pl-public-navbar > .pl-public-navbar-actions > .pl-public-language {
+    flex-basis:44px !important;
+    width:44px !important;
+    min-width:44px !important;
+    max-width:44px !important;
+  }
+  .pl-public-home > header.pl-public-navbar > .pl-public-navbar-actions > .pl-public-register {
+    flex-basis:48px !important;
+    width:48px !important;
+    min-width:48px !important;
+    max-width:48px !important;
+  }
+}
