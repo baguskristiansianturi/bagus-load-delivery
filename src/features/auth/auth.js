@@ -20,21 +20,22 @@ export function mountAuthPage({ supabase, mode = 'login', onAuthenticated }) {
   const isRegister = safeMode === 'register';
   const isForgot = safeMode === 'forgot';
   const isReset = safeMode === 'reset';
-  const title = isRegister ? 'Daftar gratis' : isForgot ? 'Pulihkan akun' : isReset ? 'Buat password baru' : 'Masuk ke Pluits';
-  const intro = isRegister ? 'Mulai dengan tiga informasi dasar. Detail profil bisa ditambahkan nanti.' : isForgot ? 'Masukkan email akunmu. Kami akan mengirim tautan untuk mengatur ulang password.' : isReset ? 'Gunakan password baru yang kuat untuk mengamankan akunmu.' : 'Masuk untuk melanjutkan aktivitas dan mengelola identitasmu di Pluits.';
-  const switcher = isForgot || isReset ? '' : '<nav class="pl-auth-tabs" aria-label="Jenis akses"><a href="#/account/auth?mode=login" class="' + (!isRegister ? 'is-active' : '') + '">Masuk</a><a href="#/account/auth?mode=register" class="' + (isRegister ? 'is-active' : '') + '">Daftar</a></nav>';
+  const isPhone = safeMode === 'phone';
+  const title = isRegister ? 'Daftar gratis' : isForgot ? 'Pulihkan akun' : isReset ? 'Buat password baru' : isPhone ? 'Masuk dengan nomor telepon' : 'Masuk ke Pluits';
+  const intro = isRegister ? 'Mulai dengan tiga informasi dasar. Detail profil bisa ditambahkan nanti.' : isForgot ? 'Masukkan email akunmu. Kami akan mengirim tautan untuk mengatur ulang password.' : isReset ? 'Gunakan password baru yang kuat untuk mengamankan akunmu.' : isPhone ? 'Masukkan nomor telepon dengan kode negara, lalu verifikasi kode OTP.' : 'Masuk untuk melanjutkan aktivitas dan mengelola identitasmu di Pluits.';
+  const switcher = isForgot || isReset || isPhone ? '' : '<nav class="pl-auth-tabs" aria-label="Jenis akses"><a href="#/account/auth?mode=login" class="' + (!isRegister ? 'is-active' : '') + '">Masuk</a><a href="#/account/auth?mode=register" class="' + (isRegister ? 'is-active' : '') + '">Daftar</a></nav>';
   let fields = '';
   if (isRegister) {
-    fields = '<label for="pl-auth-name">Nama tampilan</label><input id="pl-auth-name" name="full_name" type="text" autocomplete="name" maxlength="80" minlength="2" placeholder="Nama yang ingin ditampilkan" required>' +
-      '<label for="pl-auth-email">Alamat email</label><input id="pl-auth-email" name="email" type="email" autocomplete="email" inputmode="email" autocapitalize="none" spellcheck="false" placeholder="nama@email.com" required>' +
-      '<label for="pl-auth-password">Password</label><div class="pl-register-password-wrap"><input id="pl-auth-password" name="password" type="password" autocomplete="new-password" minlength="8" placeholder="Minimal 8 karakter" required><button class="pl-register-show" type="button" data-toggle-password aria-label="Tampilkan password" aria-pressed="false">Lihat</button></div>' +
+    fields = '<div class="pl-auth-field"><label for="pl-auth-name">Nama tampilan</label><input id="pl-auth-name" name="full_name" type="text" autocomplete="name" maxlength="80" minlength="2" placeholder="Nama yang ingin ditampilkan" required></div>' +
+      '<div class="pl-auth-field"><label for="pl-auth-email">Alamat email</label><input id="pl-auth-email" name="email" type="email" autocomplete="email" inputmode="email" autocapitalize="none" spellcheck="false" placeholder="nama@email.com" required></div>' +
+      '<div class="pl-auth-field"><label for="pl-auth-password">Password</label><div class="pl-register-password-wrap"><input id="pl-auth-password" name="password" type="password" autocomplete="new-password" minlength="8" placeholder="Minimal 8 karakter" required><button class="pl-register-show" type="button" data-toggle-password aria-label="Tampilkan password" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>'
       '<small class="pl-register-help">Gunakan minimal 8 karakter. Jangan gunakan password yang sama dengan akun penting lainnya.</small>' +
       '<label class="pl-register-consent"><input name="terms" type="checkbox" required><span>Saya menyetujui <a href="#/terms">Ketentuan Layanan</a> dan telah membaca <a href="#/privacy">Kebijakan Privasi</a> Pluits.</span></label>';
   } else if (isReset) {
-    fields = '<label for="pl-auth-password">Password baru</label><div class="pl-register-password-wrap"><input id="pl-auth-password" name="password" type="password" autocomplete="new-password" minlength="8" placeholder="Minimal 8 karakter" required><button class="pl-register-show" type="button" data-toggle-password aria-label="Tampilkan password" aria-pressed="false">Lihat</button></div><small class="pl-register-help">Gunakan password baru yang tidak dipakai di akun lain.</small>';
+    fields = '<div class="pl-auth-field"><label for="pl-auth-password">Password baru</label><div class="pl-register-password-wrap"><input id="pl-auth-password" name="password" type="password" autocomplete="new-password" minlength="8" placeholder="Minimal 8 karakter" required><button class="pl-register-show" type="button" data-toggle-password aria-label="Tampilkan password" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div><small class="pl-register-help">Gunakan password baru yang tidak dipakai di akun lain.</small>';
   } else {
-    fields = '<label for="pl-auth-email">Alamat email</label><input id="pl-auth-email" name="email" type="email" autocomplete="email" inputmode="email" autocapitalize="none" spellcheck="false" placeholder="nama@email.com" required>' +
-      (isForgot ? '' : '<label for="pl-auth-password">Password</label><div class="pl-register-password-wrap"><input id="pl-auth-password" name="password" type="password" autocomplete="current-password" placeholder="Password akun" required><button class="pl-register-show" type="button" data-toggle-password aria-label="Tampilkan password" aria-pressed="false">Lihat</button></div>');
+    fields = '<div class="pl-auth-field"><label for="pl-auth-email">Alamat email</label><input id="pl-auth-email" name="email" type="email" autocomplete="email" inputmode="email" autocapitalize="none" spellcheck="false" placeholder="nama@email.com" required></div>' +
+      (isForgot ? '' : '<div class="pl-auth-field"><label for="pl-auth-password">Password</label><div class="pl-register-password-wrap"><input id="pl-auth-password" name="password" type="password" autocomplete="current-password" placeholder="Password akun" required><button class="pl-register-show" type="button" data-toggle-password aria-label="Tampilkan password" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>');
   }
   const buttonText = isRegister ? 'Buat akun' : isForgot ? 'Kirim tautan pemulihan' : isReset ? 'Simpan password baru' : 'Masuk';
   app.innerHTML = '<div class="pl-register-page pl-auth-page"><header class="pl-register-header">' +
@@ -53,13 +54,17 @@ export function mountAuthPage({ supabase, mode = 'login', onAuthenticated }) {
   const message = app.querySelector('#pl-auth-message');
   const submit = form.querySelector('[type="submit"]');
   const showMessage = (target, text, type = 'error') => { target.textContent = text; target.className = 'pl-register-message is-' + type; };
-  app.querySelector('[data-toggle-password]')?.addEventListener('click', (event) => {
+  app.querySelectorAll('[data-toggle-password]').forEach((toggle) => toggle.addEventListener('click', (event) => {
     const button = event.currentTarget, input = form.querySelector('input[name="password"]');
     const reveal = input.type === 'password'; input.type = reveal ? 'text' : 'password';
-    button.textContent = reveal ? 'Sembunyikan' : 'Lihat';
     button.setAttribute('aria-label', reveal ? 'Sembunyikan password' : 'Tampilkan password');
     button.setAttribute('aria-pressed', String(reveal));
-  });
+  }));
+  app.querySelectorAll('[data-provider]').forEach((button) => button.addEventListener('click', async () => {
+    button.disabled = true;
+    try { const { error } = await supabase.auth.signInWithOAuth({ provider: button.dataset.provider, options: { redirectTo: appBase } }); if (error) throw error; }
+    catch (error) { showMessage(message, friendlyError(error)); button.disabled = false; }
+  }));
   const resend = app.querySelector('#pl-auth-resend');
   let pendingEmail = '';
   resend?.addEventListener('click', async () => {
