@@ -55,7 +55,7 @@ export function mountAuthPage({ supabase, mode = 'login', onAuthenticated }) {
 
   const identityInput = app.querySelector('#pl-auth-email');
   if (identityInput && !isForgot && !isRegister) {
-    const examples = ['Email', 'Nomor telepon', 'Nama pengguna'];
+    const examples = ['Email', '+628123456789', '@nama_pengguna'];
     let exampleIndex = 0, characterIndex = 0, deleting = false;
     const typeNext = () => {
       if (!identityInput.isConnected || identityInput.value) return;
@@ -68,7 +68,7 @@ export function mountAuthPage({ supabase, mode = 'login', onAuthenticated }) {
       window.setTimeout(typeNext, delay);
     };
     window.setTimeout(typeNext, 350);
-    identityInput.addEventListener('input', () => { if (identityInput.value) identityInput.placeholder = 'Email, nomor HP, atau nama pengguna'; });
+    identityInput.addEventListener('input', () => { if (identityInput.value) identityInput.placeholder = 'Email / +628123456789 / @nama_pengguna'; });
   }
   const form = app.querySelector('#pl-auth-form');
   const message = app.querySelector('#pl-auth-message');
