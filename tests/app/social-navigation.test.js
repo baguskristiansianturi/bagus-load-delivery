@@ -133,7 +133,9 @@ test('signed-in home leads with Bali experiences, search, wishlist and the perso
  assert.ok(account.includes('window.__pluitsHomeLocation'),'Detected device location must be kept separate from profile location.');
  assert.ok(account.includes('renderTopTenSection')&&account.includes('ua-explore-filters'),'Explore must compose the isolated Top 10 module before feed filters.');
  assert.ok(account.includes('homeNearbySection')&&account.includes('bindHomeNearby'),'Home must use live nearby results.');
- assert.ok(account.includes('Ramai di komunitas')&&account.includes('Produk Lokal')&&account.includes('Kumpulan')&&account.includes('Layanan PLUITS'),'Home must continue from the Beranda feed into trending topics, product recommendations, service collections and PLUITS service filters.');
+ assert.ok(account.includes('Temukan Lebih Banyak')&&account.includes('Produk Lokal')&&account.includes('Kumpulan')&&account.includes('Layanan PLUITS'),'Home must continue from the 30-post feed into discovery, product recommendations, service collections and PLUITS service filters.');
+ assert.ok(account.includes('trendSection+homeNearbySection()+homeHeading+peopleSection'),'People recommendations must appear immediately after Di sekitar Anda and the Beranda heading.');
+ assert.ok(account.includes('.slice(0,30)'),'The signed-in home must cap rendered post hydration at 30 items.');
  assert.ok(topTen.includes('⌖ ')&&topTen.includes('ua-topten-copy')&&topTen.includes('TOP_TEN_DEMO_ITEMS'),'Top 10 cards must be an isolated, explicitly demo-only image presentation module.');
  const nearbySource=await readFile(new URL('../../src/pages/directory/index.js',import.meta.url),'utf8');
  const nearbyCards=await readFile(new URL('../../src/features/discovery/nearby-card.js',import.meta.url),'utf8');
