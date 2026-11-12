@@ -232,3 +232,24 @@
     max-width:48px !important;
   }
 }
+
+/* Final mobile guest navbar refinements: PLUITS wordmark and marketplace controls. */
+.pl-public-navbar-brand>span{font-size:16px;font-weight:650}
+.pl-public-flag{display:inline-block;width:18px;height:12px;flex:0 0 18px;position:relative;overflow:hidden;border-radius:1px;box-shadow:0 0 0 .5px rgba(30,50,55,.16)}
+.pl-public-flag-id{background:linear-gradient(to bottom,#e32636 0 50%,#fff 50% 100%)}
+.pl-public-flag-en{background:
+ linear-gradient(33deg,transparent 43%,#fff 43% 48%,#c8102e 48% 53%,#fff 53% 58%,transparent 58%),
+ linear-gradient(-33deg,transparent 43%,#fff 43% 48%,#c8102e 48% 53%,#fff 53% 58%,transparent 58%),
+ linear-gradient(to right,transparent 39%,#fff 39% 61%,transparent 61%),
+ linear-gradient(to bottom,transparent 30%,#fff 30% 70%,transparent 70%),
+ linear-gradient(to right,transparent 44%,#c8102e 44% 56%,transparent 56%),
+ linear-gradient(to bottom,transparent 39%,#c8102e 39% 61%,transparent 61%),
+ #012169}
+@media(max-width:760px){
+ .pl-public-home>header.pl-public-navbar>.pl-public-navbar-brand>span{font-size:16px!important}
+ .pl-public-home>header.pl-public-navbar>.pl-public-navbar-actions{gap:0!important}
+ .pl-public-home>header.pl-public-navbar>.pl-public-navbar-actions>.pl-public-language{flex:0 0 42px!important;width:42px!important;min-width:42px!important;max-width:42px!important;gap:3px!important}
+ .pl-public-home>header.pl-public-navbar>.pl-public-navbar-actions>.pl-public-icon-action{flex:0 0 44px!important;width:44px!important;min-width:44px!important;max-width:44px!important}
+ .pl-public-home>header.pl-public-navbar>.pl-public-navbar-actions>.pl-public-icon-action>.pl-icon{width:23px!important;height:23px!important;min-width:23px!important;min-height:23px!important;flex-basis:23px!important;stroke-width:1.8!important}
+ .pl-public-home>header.pl-public-navbar>.pl-public-navbar-actions>.pl-public-register{display:none!important}
+}
