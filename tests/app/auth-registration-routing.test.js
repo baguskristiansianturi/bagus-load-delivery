@@ -4,16 +4,20 @@ import { readFile } from 'node:fs/promises';
 
 test('registration is delegated to its own feature and remains reachable before the session gate', async () => {
   const account = await readFile(new URL('../../src/pages/account/index.js', import.meta.url), 'utf8');
-  const feature = await readFile(new URL('../../src/features/auth/register.js', import.meta.url), 'utf8');
+  const feature = await readFile(new URL('../../src/features/auth/auth.js', import.meta.url), 'utf8');
   const brand = await readFile(new URL('../../src/components/common/brand.js', import.meta.url), 'utf8');
   const brandCss = await readFile(new URL('../../src/styles/brand.css', import.meta.url), 'utf8');
   const registerCss = await readFile(new URL('../../src/features/auth/register.css', import.meta.url), 'utf8');
   const mount = account.slice(account.indexOf('async function mountAccount('), account.indexOf('function bindWallet('));
-  const registerGate = mount.indexOf("if(section==='register'){authScreen('register');return;}");
+  const registerGate = mount.indexOf("if(['auth','register','login'].includes(section))");
   const sessionGate = mount.indexOf("if(!user){authScreen('login');return;}");
   assert.ok(registerGate >= 0);
   assert.ok(sessionGate > registerGate);
-  assert.match(account, /mountRegisterPage/);
+  assert.match(account, /mountAuthPage/);
+  assert.match(feature, /resetPasswordForEmail/);
+  assert.match(feature, /updateUser\(\{ password \}\)/);
+  assert.match(feature, /signInWithPassword/);
+  assert.match(feature, /account\/auth\?mode=forgot/);
   assert.match(feature, /supabase\.auth\.signUp/);
   assert.match(feature, /supabase\.auth\.resend/);
   assert.match(feature, /emailRedirectTo:\s*appBase/);

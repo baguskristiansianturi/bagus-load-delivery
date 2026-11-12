@@ -29,7 +29,7 @@ export function bindPublicNavbar(){
    const languageButton=header.querySelector('.pl-public-language'),label=header.querySelector('[data-public-locale-label]');
    if(languageButton){languageButton.querySelector('.pl-public-flag')?.classList.toggle('pl-public-flag-id',next==='id');languageButton.querySelector('.pl-public-flag')?.classList.toggle('pl-public-flag-en',next==='en');}if(label)label.textContent=next.toUpperCase();
    toast(next==='id'?'Bahasa Indonesia dipilih':'English selected');
-   }else if(action==='wishlist'||action==='cart'){location.hash='#/account/auth?mode=login';}
+   }else if(action==='wishlist'||action==='cart'){location.hash='#/account/login';}
  });
  updateCart();
  window.addEventListener('pluits:guest-cart-updated',updateCart);
