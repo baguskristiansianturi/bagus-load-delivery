@@ -48,7 +48,3 @@ Current concrete extractions:
 - Social global navigation remains `src/components/social/navigation.js`; do not duplicate it inside page workspaces.
 
 Important: this is an incremental migration. Account, Marketplace, Trip, Seller Center and Inbox controllers still contain substantial page-level composition/behavior. A folder existing does not mean that page is fully modular. Follow the audit's migration order and do not mass-move files.
-
-## Public homepage composition — 12 November 2026
-
-`src/features/public-home/layout.js` is the page-owned composition layer. `src/pages/home/index.js` owns route/auth/data behavior only. See `src/features/public-home/README.md` and `docs/pluits/PAGE-COMPONENT-OWNERSHIP-AUDIT-2026-11-12.md` for the component ownership table. Public navbar/search behavior must not leak into Marketplace, Trip, Directory or signed-in social workspaces.

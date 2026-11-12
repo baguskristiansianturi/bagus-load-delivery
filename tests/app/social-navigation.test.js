@@ -36,10 +36,12 @@ test('guest root stays public while signed-in root opens the canonical Explore w
  const home=await (await import('node:fs/promises')).readFile(new URL('../../src/pages/home/index.js',import.meta.url),'utf8');
  const account=await (await import('node:fs/promises')).readFile(new URL('../../src/pages/account/index.js',import.meta.url),'utf8');
  const routes=await (await import('node:fs/promises')).readFile(new URL('../../src/components/social/navigation-routes.js',import.meta.url),'utf8');
- assert.ok(home.includes('renderPublicNavbar()'));
+ const layout=await (await import('node:fs/promises')).readFile(new URL('../../src/features/public-home/layout.js',import.meta.url),'utf8');
+ assert.ok(home.includes('renderPublicHomeLayout('));
  assert.ok(home.includes('bindPublicNavbar()'));
- assert.ok(home.includes("import {renderPublicNavbar,bindPublicNavbar} from '../../features/public-home/navbar.js';"));
- assert.ok(home.includes("renderSocialMobileNav({active:'home',publicHome:true})"));
+ assert.ok(home.includes("import {renderPublicHomeLayout} from '../../features/public-home/layout.js';"));
+ assert.ok(layout.includes("import {renderPublicNavbar} from './navbar.js';")&&layout.includes('renderPublicNavbar()'));
+ assert.ok(layout.includes("renderSocialMobileNav({active:'home',publicHome:true})"));
  assert.ok(home.includes('stillOnRequestedHome'),'A delayed public-home auth response must not overwrite a route the visitor opened afterward.');
  assert.ok(home.includes('requestHash')&&home.includes('routeVersion'),'Public-home auth routing must be bound to the original route generation.');
   assert.match(home,/if\(actualViewer&&!guestMode\)/,'A signed-in visitor at the root must be sent to the authenticated workspace.');

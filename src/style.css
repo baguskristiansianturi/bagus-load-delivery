@@ -20,16 +20,6 @@
 
   --container: 1200px;
 
-  /* Shared interaction geometry for page-owned components. */
-  --ui-icon-size: 20px;
-  --ui-icon-size-nav: 22px;
-  --ui-touch-target: 44px;
-  --ui-search-height: 46px;
-  --ui-public-header-height: 60px;
-  --ui-public-header-height-wide: 68px;
-  --ui-font-label: 0.75rem;
-  --ui-font-caption: 0.6875rem;
-
   --shadow-sm: 0 4px 16px rgba(19, 39, 31, 0.06);
   --shadow: 0 12px 35px rgba(19, 39, 31, 0.09);
 
