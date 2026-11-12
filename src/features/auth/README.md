@@ -1,25 +1,13 @@
-# Registration feature
+# PLUITS central authentication
 
-Ownership: guest account creation route #/account/register.
+All guest authentication entry points use the single feature at `#/account/auth?mode=...`.
 
-- register.js owns registration markup, form validation, Supabase sign-up request, pending-email state and resend action. Its header uses the shared global PLUITS brand renderer with the canonical logo asset and wordmark; sidebar placements may remain icon-only.
-- register.css owns all registration-page presentation under the .pl-register-page namespace.
-- src/pages/account/index.js remains the route/session controller and delegates only the register screen to this feature.
-- Sign-in remains in the account controller and shares the existing Supabase Auth identity.
-- The form collects display name, email and password only. Profile details and phone number are completed later in account settings.
-- Email confirmation returns to the app base URL configured by Vite. A successful email confirmation causes the existing guest homepage/session flow to route authenticated users into Explore.
-
-## Verification and rollout
-
-- Browser form validation and server validation both apply.
-- Password is not requested twice; a reveal control is available.
-- Pending confirmation state distinguishes an accepted request from confirmed delivery.
-- Resend errors and provider rate limits are surfaced without claiming delivery.
-- Public email delivery requires custom SMTP in Supabase. The built-in SMTP service is restricted to project team addresses and is not suitable for public production traffic.
-- SMS verification is intentionally not presented until a paid/selected SMS provider is configured and tested.
-
-## Responsive viewport behavior
-
-- The page uses the stable small viewport height (`100svh`) with a `100vh` fallback so the initial layout accounts for visible mobile browser controls.
-- The page has a minimum height rather than a fixed height. Short content fits the viewport without artificial vertical scrolling; if text, validation feedback, zoom, or a short landscape screen makes content taller, the document grows and remains vertically scrollable instead of clipping controls.
-- Registration styles remain scoped to `.pl-register-page`; no global body overflow lock is applied.
+- `mode=login`: email/password sign-in.
+- `mode=register`: display name, email, password, terms consent, and email confirmation.
+- `mode=forgot`: request a Supabase password-recovery email.
+- `mode=reset`: set a new password after the recovery callback.
+- Legacy `#/login`, `#/register`, `#/account/login`, and `#/account/register` routes remain compatible and render the same central screen.
+- The approved registration visual system remains owned by `register.css`; auth modes share its responsive shell and card.
+- Password recovery redirects to the app root with `?auth=reset`; the router recognizes Supabase recovery callbacks and opens the reset form.
+- Public email delivery still requires custom SMTP in Supabase. Do not claim production email delivery until SMTP is configured and tested.
+- SMS verification remains out of the initial signup flow until a provider is configured and tested.

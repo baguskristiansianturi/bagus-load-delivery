@@ -1,0 +1,116 @@
+import { renderBrandLogo } from '../../components/common/brand.js';
+import './register.css';
+
+const friendlyError = (error) => {
+  const message = String(error?.message || '').toLowerCase();
+  if (/email address not authorized|not authorized/.test(message)) return 'Server email Supabase belum diatur untuk mengirim ke alamat publik. Admin perlu mengaktifkan SMTP khusus sebelum pendaftaran umum dibuka.';
+  if (/already registered|user already exists/.test(message)) return 'Email ini sudah terdaftar. Silakan masuk atau gunakan pemulihan password.';
+  if (/invalid login credentials/.test(message)) return 'Email atau password belum cocok. Periksa kembali atau gunakan Lupa password.';
+  if (/password.*(weak|short)|weak password/.test(message)) return 'Password terlalu mudah ditebak. Gunakan minimal 8 karakter.';
+  if (/rate limit|too many requests|over_email_send_rate_limit/.test(message)) return 'Permintaan terlalu sering. Tunggu sebentar sebelum mencoba lagi.';
+  if (/invalid email/.test(message)) return 'Format email belum benar. Periksa kembali alamat email Anda.';
+  return error?.message || 'Permintaan belum berhasil. Periksa koneksi lalu coba lagi.';
+};
+
+export function mountAuthPage({ supabase, mode = 'login', onAuthenticated }) {
+  const app = document.querySelector('#app');
+  if (!app) return;
+  const appBase = new URL(import.meta.env.BASE_URL || '/', window.location.origin).toString();
+  const safeMode = ['login', 'register', 'forgot', 'reset'].includes(mode) ? mode : 'login';
+  const isRegister = safeMode === 'register';
+  const isForgot = safeMode === 'forgot';
+  const isReset = safeMode === 'reset';
+  const title = isRegister ? 'Daftar gratis' : isForgot ? 'Pulihkan akun' : isReset ? 'Buat password baru' : 'Masuk ke Pluits';
+  const intro = isRegister ? 'Mulai dengan tiga informasi dasar. Detail profil bisa ditambahkan nanti.' : isForgot ? 'Masukkan email akunmu. Kami akan mengirim tautan untuk mengatur ulang password.' : isReset ? 'Gunakan password baru yang kuat untuk mengamankan akunmu.' : 'Masuk untuk melanjutkan aktivitas dan mengelola identitasmu di Pluits.';
+  const switcher = isForgot || isReset ? '' : '<nav class="pl-auth-tabs" aria-label="Jenis akses"><a href="#/account/auth?mode=login" class="' + (!isRegister ? 'is-active' : '') + '">Masuk</a><a href="#/account/auth?mode=register" class="' + (isRegister ? 'is-active' : '') + '">Daftar</a></nav>';
+  let fields = '';
+  if (isRegister) {
+    fields = '<label for="pl-auth-name">Nama tampilan</label><input id="pl-auth-name" name="full_name" type="text" autocomplete="name" maxlength="80" minlength="2" placeholder="Nama yang ingin ditampilkan" required>' +
+      '<label for="pl-auth-email">Alamat email</label><input id="pl-auth-email" name="email" type="email" autocomplete="email" inputmode="email" autocapitalize="none" spellcheck="false" placeholder="nama@email.com" required>' +
+      '<label for="pl-auth-password">Password</label><div class="pl-register-password-wrap"><input id="pl-auth-password" name="password" type="password" autocomplete="new-password" minlength="8" placeholder="Minimal 8 karakter" required><button class="pl-register-show" type="button" data-toggle-password aria-label="Tampilkan password" aria-pressed="false">Lihat</button></div>' +
+      '<small class="pl-register-help">Gunakan minimal 8 karakter. Jangan gunakan password yang sama dengan akun penting lainnya.</small>' +
+      '<label class="pl-register-consent"><input name="terms" type="checkbox" required><span>Saya menyetujui <a href="#/terms">Ketentuan Layanan</a> dan telah membaca <a href="#/privacy">Kebijakan Privasi</a> Pluits.</span></label>';
+  } else if (isReset) {
+    fields = '<label for="pl-auth-password">Password baru</label><div class="pl-register-password-wrap"><input id="pl-auth-password" name="password" type="password" autocomplete="new-password" minlength="8" placeholder="Minimal 8 karakter" required><button class="pl-register-show" type="button" data-toggle-password aria-label="Tampilkan password" aria-pressed="false">Lihat</button></div><small class="pl-register-help">Gunakan password baru yang tidak dipakai di akun lain.</small>';
+  } else {
+    fields = '<label for="pl-auth-email">Alamat email</label><input id="pl-auth-email" name="email" type="email" autocomplete="email" inputmode="email" autocapitalize="none" spellcheck="false" placeholder="nama@email.com" required>' +
+      (isForgot ? '' : '<label for="pl-auth-password">Password</label><div class="pl-register-password-wrap"><input id="pl-auth-password" name="password" type="password" autocomplete="current-password" placeholder="Password akun" required><button class="pl-register-show" type="button" data-toggle-password aria-label="Tampilkan password" aria-pressed="false">Lihat</button></div>');
+  }
+  const buttonText = isRegister ? 'Buat akun' : isForgot ? 'Kirim tautan pemulihan' : isReset ? 'Simpan password baru' : 'Masuk';
+  app.innerHTML = '<div class="pl-register-page pl-auth-page"><header class="pl-register-header">' +
+    renderBrandLogo({ className: 'pl-register-logo pl-register-brand', size: 29, label: 'PLUITS, kembali ke beranda', wordmark: true }) +
+    '<a class="pl-register-back" href="#/">Kembali ke beranda</a></header><main class="pl-register-main">' +
+    '<aside class="pl-register-story"><span class="pl-register-eyebrow">SATU AKUN · BANYAK KEMUNGKINAN</span><h1>Mulai terhubung dengan dunia di sekitarmu.</h1>' +
+    '<p>Temukan tempat, kenali komunitas, bagikan pengalaman, dan bangun identitasmu di Pluits.</p><ul><li><span>✓</span> Satu akun untuk seluruh pengalaman Pluits</li><li><span>✓</span> Kendali privasi ada di tanganmu</li><li><span>✓</span> Profil bisa dilengkapi kapan saja</li></ul></aside>' +
+    '<section class="pl-register-card" aria-labelledby="pl-auth-title"><div class="pl-register-card-head"><span class="pl-register-step">PLUITS ACCOUNT</span><h2 id="pl-auth-title">' + title + '</h2><p>' + intro + '</p></div>' +
+    switcher + '<form id="pl-auth-form" class="pl-register-form" novalidate>' + fields +
+    '<p id="pl-auth-message" class="pl-register-message" role="status" aria-live="polite"></p><button class="pl-register-submit" type="submit">' + buttonText + '</button></form>' +
+    '<section id="pl-auth-pending" class="pl-register-pending" aria-live="polite" hidden><div class="pl-register-mail-icon" aria-hidden="true">✉</div><span class="pl-register-step">SATU LANGKAH LAGI</span><h3>Periksa email kamu</h3><p>Permintaan konfirmasi akun dikirim untuk:</p><strong id="pl-auth-pending-email"></strong><ol><li>Buka email dari Pluits/Supabase.</li><li>Tekan tombol konfirmasi.</li><li>Kamu akan kembali ke Pluits.</li></ol><p id="pl-auth-pending-message" class="pl-register-message" role="status"></p><button id="pl-auth-resend" class="pl-register-secondary" type="button">Kirim ulang email</button></section>' +
+    (isRegister ? '<p class="pl-register-login">Sudah punya akun? <a href="#/account/auth?mode=login">Masuk</a></p>' : isForgot || isReset ? '<p class="pl-register-login"><a href="#/account/auth?mode=login">Kembali ke Masuk</a></p>' : '<p class="pl-register-login"><a href="#/account/auth?mode=forgot">Lupa password?</a></p><p class="pl-register-login">Belum punya akun? <a href="#/account/auth?mode=register">Daftar</a></p>') +
+    '<p class="pl-register-security">Satu pusat akun untuk seluruh pengalaman Pluits.</p></section></main><footer class="pl-register-footer">PLUITS · Akunmu, kendalimu.</footer></div>';
+
+  const form = app.querySelector('#pl-auth-form');
+  const message = app.querySelector('#pl-auth-message');
+  const submit = form.querySelector('[type="submit"]');
+  const showMessage = (target, text, type = 'error') => { target.textContent = text; target.className = 'pl-register-message is-' + type; };
+  app.querySelector('[data-toggle-password]')?.addEventListener('click', (event) => {
+    const button = event.currentTarget, input = form.querySelector('input[name="password"]');
+    const reveal = input.type === 'password'; input.type = reveal ? 'text' : 'password';
+    button.textContent = reveal ? 'Sembunyikan' : 'Lihat';
+    button.setAttribute('aria-label', reveal ? 'Sembunyikan password' : 'Tampilkan password');
+    button.setAttribute('aria-pressed', String(reveal));
+  });
+  const resend = app.querySelector('#pl-auth-resend');
+  let pendingEmail = '';
+  resend?.addEventListener('click', async () => {
+    if (!pendingEmail || resend.disabled) return;
+    resend.disabled = true; resend.textContent = 'Meminta pengiriman…';
+    try {
+      const { error } = await supabase.auth.resend({ type: 'signup', email: pendingEmail, options: { emailRedirectTo: appBase } });
+      if (error) throw error;
+      showMessage(app.querySelector('#pl-auth-pending-message'), 'Permintaan diterima server. Email belum tentu langsung masuk; periksa Inbox dan Spam.', 'success');
+      resend.textContent = 'Permintaan terkirim';
+    } catch (error) {
+      showMessage(app.querySelector('#pl-auth-pending-message'), friendlyError(error));
+      resend.disabled = false; resend.textContent = 'Coba kirim ulang';
+    }
+  });
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault(); message.textContent = '';
+    if (!form.reportValidity()) return;
+    const values = new FormData(form), email = String(values.get('email') || '').trim().toLowerCase(), password = String(values.get('password') || '');
+    const fullName = String(values.get('full_name') || '').trim();
+    if (isRegister && fullName.length < 2) { showMessage(message, 'Nama tampilan minimal 2 karakter.'); return; }
+    if ((isRegister || isReset) && password.length < 8) { showMessage(message, 'Password minimal 8 karakter.'); return; }
+    submit.disabled = true; submit.textContent = 'Memproses…';
+    showMessage(message, 'Menghubungi sistem akun Pluits…', 'info');
+    try {
+      if (isRegister) {
+        const { data, error } = await supabase.auth.signUp({ email, password, options: { data: { full_name: fullName }, emailRedirectTo: appBase } });
+        if (error) throw error;
+        if (data.session) { onAuthenticated?.(); return; }
+        pendingEmail = email;
+        app.querySelector('#pl-auth-pending-email').textContent = email;
+        form.hidden = true; app.querySelector('#pl-auth-pending').hidden = false; message.textContent = '';
+      } else if (isForgot) {
+        const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: appBase + '?auth=reset' });
+        if (error) throw error;
+        showMessage(message, 'Jika email tersebut terdaftar, tautan pemulihan akan dikirim. Periksa Inbox dan Spam.', 'success');
+        submit.textContent = 'Permintaan terkirim';
+      } else if (isReset) {
+        const { error } = await supabase.auth.updateUser({ password });
+        if (error) throw error;
+        showMessage(message, 'Password berhasil diperbarui. Silakan masuk dengan password baru.', 'success');
+        submit.textContent = 'Password diperbarui';
+        setTimeout(() => { if (location.hash.includes('/account/auth')) location.hash = '#/account/auth?mode=login'; }, 1400);
+      } else {
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+        onAuthenticated?.();
+      }
+    } catch (error) {
+      showMessage(message, friendlyError(error));
+      submit.disabled = false; submit.textContent = isRegister ? 'Buat akun' : isForgot ? 'Kirim tautan pemulihan' : isReset ? 'Simpan password baru' : 'Masuk';
+    }
+  });
+}

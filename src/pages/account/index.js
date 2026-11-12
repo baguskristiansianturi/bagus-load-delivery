@@ -1,5 +1,5 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-import { mountRegisterPage } from '../../features/auth/register.js';
+import { mountAuthPage } from '../../features/auth/auth.js';
 import {socialIcon} from '../../components/common/social-icons.js';
 import {renderBrandLogo} from '../../components/common/brand.js';
 import {renderPostActions} from '../../features/posts/post-actions.js';
@@ -47,10 +47,8 @@ function frame(content,active='explore',avatarUrl=''){
  </div>`;
 }
 function authScreen(mode='login'){
- if(mode==='register'){
-  mountRegisterPage({supabase,onAuthenticated:()=>{location.hash='#/account/explore';}});
-  return;
- }
+ mountAuthPage({supabase,mode,onAuthenticated:()=>{location.hash='#/account/explore';}});
+ return;
  const app=document.querySelector('#app');
  app.innerHTML='<div class="ua-app ua-auth-app"><header class="ua-header">'+renderBrandLogo({className:'ua-brand',size:38,label:'Beranda PLUITS'})+'<a href="#/" class="ua-logout">Kembali</a></header>'+
  '<main class="ua-auth-wrap"><section class="ua-auth-copy"><span class="ua-eyebrow">PLUITS COMMUNITY</span><h1>Belanja, berbagi, dan membangun reputasi dalam satu akun.</h1><p>Masuk untuk melanjutkan aktivitas dan mengelola identitasmu di Pluits.</p></section>'+
@@ -767,7 +765,7 @@ async function mountAccount(section='profile',parameter=''){
    const page=section==='user'?await publicProfilePage(parameter):await postDetailPage(parameter||location.hash.split('/')[3]||'');if(!isCurrent())return;
    document.querySelector('#app').innerHTML=frame(page,'explore');return;
   }
-  if(section==='register'){authScreen('register');return;}
+  if(['auth','register','login'].includes(section)){authScreen(section==='auth'?parameter:section);return;}
   if(!user){authScreen('login');return;}
   await loadProfile();if(!isCurrent())return;
   accountContext=await loadAccountContext(supabase,user);if(!isCurrent())return;

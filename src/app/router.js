@@ -23,6 +23,12 @@ export async function route(homeFn){
  const version=++routeVersion;
  window.__pluitsRouteVersion=version;
  try{
+  const recoveryHash=location.hash||'';
+  const recoveryMode=new URLSearchParams(location.search).get('auth')==='reset'||recoveryHash.includes('type=recovery');
+  if(recoveryMode){
+   defer(async()=>{const {mountUserAccount}=await import('../pages/account/index.js');await mountUserAccount('auth','reset');},version,()=>route(homeFn));
+   return;
+  }
   const raw=(location.hash||'#/').replace(/^#\/?/,'');
   const [path,q='']=raw.split('?');
   const s=path.split('/').filter(Boolean),r=s[0],v=s[1],p=new URLSearchParams(q);
@@ -109,7 +115,7 @@ export async function route(homeFn){
   }
   else if(['login','register'].includes(r)){
    h='<div class="pl-page-loading" role="status" aria-live="polite"><span class="pl-page-spinner" aria-hidden="true"></span><span class="pl-page-loading-label">Menyiapkan halaman</span></div>';
-   defer(async()=>{const {mountUserAccount}=await import('../pages/account/index.js');await mountUserAccount(r);},version,()=>route(homeFn));
+   defer(async()=>{const {mountUserAccount}=await import('../pages/account/index.js');await mountUserAccount('auth',p.get('mode')||r);},version,()=>route(homeFn));
   }
   else if(['blog','guides','article'].includes(r)){
    const mod=await import('../pages/blog/index.js');h=mod.blog(['article','guides'].includes(r)?v:'');
@@ -122,6 +128,10 @@ export async function route(homeFn){
   }
   else if(['promo','about','contact','reviews','recent'].includes(r)){
    const mod=await import('../pages/misc/index.js');h=mod.misc(r);
+  }
+  else if(r==='account'&&v==='auth'){
+   h='<div class="pl-page-loading" role="status">Menyiapkan pusat akun…</div>';
+   defer(async()=>{const {mountUserAccount}=await import('../pages/account/index.js');await mountUserAccount('auth',p.get('mode')||'login');},version,()=>route(homeFn));
   }
   else if(r==='account'&&v==='settings'){
    h='<div class="pl-page-loading" role="status" aria-live="polite"><span class="pl-page-spinner" aria-hidden="true"></span><span class="pl-page-loading-label">Menyiapkan pengaturan</span></div>';
