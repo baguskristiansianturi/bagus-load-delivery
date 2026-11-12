@@ -19,7 +19,7 @@ import {loadAccountContext,contextHeader,professionalPage,professionalFormPage,a
 import {listPrivateDrafts,getPrivateDraft,savePrivateDraft,deletePrivateDraft} from './drafts.js';
 import {getMediaMime,getMediaExtension,validateMediaFile,getVideoDuration} from '../../features/media/media-types.js';
 import {createMediaUploader} from '../../features/media/storage-upload.js';
-import {createSignedUrlMap} from '../../services/storage/signed-urls.js';
+import {createSignedUrlMap,createProfileImageUrlMap} from '../../services/storage/signed-urls.js';
 import {homeNearbySection,bindHomeNearby} from '../directory/index.js';
 
 const SUPABASE_URL='https://ytndswhqxayqpftszwfh.supabase.co';
@@ -374,7 +374,7 @@ async function feedPage(){
  });
  const available=(postsResult.data||[]).filter(p=>!blockedIds.includes(p.user_id)).slice(0,30);
  const [peopleAvatarUrls,hydrated]=await Promise.all([
-  createSignedUrlMap(supabase.storage,BUCKET,people.map(person=>person.avatar_path).filter(Boolean),3600),
+  createProfileImageUrlMap(supabase.storage,BUCKET,people.map(person=>person.avatar_path).filter(Boolean),3600),
   hydratePosts(available)
  ]);
  const registeredProfileCount=registeredProfilesResult.count??0;

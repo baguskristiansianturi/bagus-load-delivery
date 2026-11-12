@@ -20,3 +20,23 @@ export async function createSignedUrlMap(storage,bucket,paths,expiresIn=3600,bat
  }
  return urls;
 }
+
+
+/**
+ * Create sharp, consistently sized portrait URLs for profile cards.
+ * Keeps the original upload untouched; if Storage image rendering is unavailable,
+ * gracefully falls back to the original signed image URL.
+ */
+export async function createProfileImageUrlMap(storage,bucket,paths,expiresIn=3600){
+ const unique=[...new Set((paths||[]).filter(path=>typeof path==='string'&&path.trim()).map(path=>path.trim()))];
+ const urls=new Map();
+ await Promise.all(unique.map(async path=>{
+  const optimized=await storage.from(bucket).createSignedUrl(path,expiresIn,{
+   transform:{width:640,height:960,resize:'cover',quality:88}
+  });
+  if(!optimized.error&&optimized.data?.signedUrl){urls.set(path,optimized.data.signedUrl);return;}
+  const fallback=await storage.from(bucket).createSignedUrl(path,expiresIn);
+  if(!fallback.error&&fallback.data?.signedUrl)urls.set(path,fallback.data.signedUrl);
+ }));
+ return urls;
+}
