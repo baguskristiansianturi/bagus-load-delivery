@@ -27,6 +27,16 @@ test('app download spacing and tablet layout stay responsive without excess mobi
  assert.ok(css.includes('grid-template-columns:repeat(2,minmax(0,1fr))'), 'Tablet store cards must share a balanced two-column row.');
  assert.ok(css.includes('.pl-public-home{padding-bottom:0!important}'), 'Root padding must not duplicate the content clearance.');
  const layout=await readFile(new URL('../../styles/home-layout.css',import.meta.url),'utf8');
- assert.ok(layout.includes('.pl-public-home .pl-public-shell{padding:8px 0 64px}'), 'The homepage content must reserve one controlled clearance for the fixed bottom navigation.');
+ assert.ok(layout.includes('.pl-public-home .pl-public-shell{padding:8px 0 calc(64px + env(safe-area-inset-bottom))}'), 'The homepage content must reserve one controlled clearance for the fixed bottom navigation.');
  assert.ok(css.includes('.pl-public-home .pl-app-download{padding-bottom:12px}'), 'Mobile app download section must not leave an oversized gap before navigation.');
+});
+
+
+test('public guest homepage keeps a consistent mobile visual rhythm and light interaction states',async()=>{
+ const layout=await readFile(new URL('../../styles/home-layout.css',import.meta.url),'utf8');
+ assert.ok(layout.includes('--pl-public-space-4:16px'), 'Mobile spacing tokens must use a consistent scale.');
+ assert.ok(layout.includes('.pl-public-home .pl-public-section-head h2{font-size:20px;line-height:1.24'), 'Section headings must have a deliberate mobile hierarchy.');
+ assert.ok(layout.includes('.pl-public-home .pl-social-mobile-nav>a .pl-icon{width:22px!important;height:22px!important'), 'Mobile navigation icons must share one visual size.');
+ assert.ok(layout.includes('.pl-public-category:active'), 'Cards must provide lightweight touch feedback.');
+ assert.ok(layout.includes('@media(prefers-reduced-motion:reduce)'), 'Touch feedback must respect reduced-motion preferences.');
 });
