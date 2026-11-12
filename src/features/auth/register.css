@@ -451,3 +451,167 @@
  .pl-auth-mode-login .pl-auth-phone{margin-top:5px}
  .pl-auth-mode-login .pl-register-footer{padding-top:5px}
 }
+
+
+/* Final login polish: human copy, clear availability, and a deliberate page ending. */
+.pl-auth-mode-login.pl-register-page{
+  padding-bottom:0;
+  min-height:100vh;
+  min-height:100svh;
+}
+.pl-auth-mode-login .pl-register-main{
+  flex:1 0 auto;
+  padding-top:clamp(22px,3.5vh,38px);
+  padding-bottom:clamp(18px,2.8vh,28px);
+}
+.pl-auth-mode-login .pl-register-card-head{gap:8px;margin-bottom:19px}
+.pl-auth-mode-login .pl-register-card-head>.pl-register-step{
+  font-size:9px;
+  letter-spacing:.13em;
+}
+.pl-auth-mode-login .pl-register-card-head>p{
+  max-width:32em;
+  font-size:12px;
+  line-height:1.7;
+}
+.pl-auth-mode-login .pl-auth-provider-grid .pl-auth-provider{
+  position:relative;
+  min-height:46px;
+  justify-content:flex-start;
+  padding:0 12px;
+  gap:9px;
+  text-align:left;
+}
+.pl-auth-mode-login .pl-auth-provider-icon{
+  width:20px;
+  height:20px;
+  flex:0 0 20px;
+}
+.pl-auth-mode-login .pl-auth-provider>span{font-size:11px;font-weight:700}
+.pl-auth-mode-login .pl-auth-provider-status{
+  max-width:76px;
+  font-size:8px;
+  line-height:1.25;
+  color:#829196;
+}
+.pl-auth-mode-login .pl-auth-provider.is-unavailable{
+  opacity:1;
+  border-color:rgba(39,67,78,.075);
+  background:rgba(247,249,249,.9);
+  color:#89969a;
+  cursor:not-allowed;
+}
+.pl-auth-mode-login .pl-auth-provider.is-unavailable .pl-auth-provider-icon{opacity:.72}
+.pl-auth-mode-login .pl-auth-phone.is-unavailable{
+  color:#788b90;
+  cursor:default;
+  text-decoration:none;
+}
+.pl-auth-mode-login .pl-auth-inline-status{
+  margin-left:7px;
+  padding:3px 7px;
+  background:rgba(32,184,174,.10);
+  color:#648d89;
+  font-size:8px;
+  letter-spacing:0;
+}
+.pl-auth-mode-login .pl-auth-social-note{
+  max-width:34em;
+  margin:2px auto 0;
+  color:#9aa6aa;
+  font-size:9px;
+  line-height:1.65;
+  text-align:center;
+}
+.pl-auth-mode-login .pl-auth-social-note a{
+  color:#718b8b;
+  font-weight:650;
+  text-decoration:none;
+}
+.pl-auth-mode-login .pl-auth-social-note a:hover{color:var(--pl-auth-accent-strong)}
+.pl-auth-mode-login .pl-auth-invite{
+  display:inline-flex;
+  justify-self:center;
+  align-items:center;
+  gap:7px;
+  margin-top:1px;
+  padding:6px 10px;
+  color:#6c8588;
+  font-size:10px;
+  font-weight:700;
+}
+.pl-auth-mode-login .pl-auth-invite svg{
+  width:14px;
+  height:14px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.5;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+.pl-auth-mode-login .pl-register-login{
+  margin-top:14px;
+  line-height:1.6;
+}
+.pl-auth-mode-login .pl-register-security{
+  margin-top:11px;
+  font-size:9px;
+  line-height:1.5;
+}
+.pl-auth-mode-login .pl-register-footer{
+  flex:none;
+  width:min(1120px,100%);
+  margin:0 auto 0;
+  padding:8px 0 max(2px,env(safe-area-inset-bottom));
+  border-top:0;
+  line-height:1.2;
+  text-align:center;
+}
+.pl-auth-mode-login .pl-register-footer .pl-register-copyright{
+  display:block;
+  margin:0;
+  color:#a6b0b4;
+  font-size:9px;
+  letter-spacing:.025em;
+}
+@media(max-width:760px){
+  .pl-auth-mode-login.pl-register-page{padding:0 15px 0}
+  .pl-auth-mode-login .pl-register-header{flex:none}
+  .pl-auth-mode-login .pl-register-main{
+    flex:1 0 auto;
+    padding:clamp(16px,2.6svh,24px) 0 clamp(13px,2svh,19px);
+  }
+  .pl-auth-mode-login .pl-register-card{padding:21px 19px}
+  .pl-auth-mode-login .pl-register-card-head{gap:7px;margin-bottom:17px}
+  .pl-auth-mode-login .pl-auth-tabs{margin-bottom:12px}
+  .pl-auth-mode-login .pl-register-form{gap:10px}
+  .pl-auth-mode-login .pl-auth-social{margin-top:15px;gap:9px}
+  .pl-auth-mode-login .pl-auth-provider-grid{gap:8px}
+  .pl-auth-mode-login .pl-auth-provider-grid .pl-auth-provider{
+    min-height:44px;
+    padding:0 9px;
+    gap:7px;
+  }
+  .pl-auth-mode-login .pl-auth-provider-status{max-width:68px;font-size:7px}
+  .pl-auth-mode-login .pl-auth-social-note{margin-top:1px;font-size:8.5px}
+  .pl-auth-mode-login .pl-auth-phone{margin-top:10px;padding:4px}
+  .pl-auth-mode-login .pl-register-login{margin-top:12px}
+  .pl-auth-mode-login .pl-register-security{margin-top:9px}
+  .pl-auth-mode-login .pl-register-footer{
+    padding:7px 0 max(2px,env(safe-area-inset-bottom));
+  }
+}
+@media(max-width:380px){
+  .pl-auth-mode-login .pl-register-card{padding:19px 16px}
+  .pl-auth-mode-login .pl-auth-provider-grid .pl-auth-provider{padding-inline:7px;gap:6px}
+  .pl-auth-mode-login .pl-auth-provider-status{max-width:62px;font-size:6.5px}
+}
+@media(max-height:720px) and (max-width:760px){
+  .pl-auth-mode-login .pl-register-main{align-items:flex-start;padding:10px 0 12px}
+  .pl-auth-mode-login .pl-register-card{padding:17px 16px}
+  .pl-auth-mode-login .pl-register-card-head{margin-bottom:13px}
+  .pl-auth-mode-login .pl-register-form{gap:8px}
+  .pl-auth-mode-login .pl-auth-social{margin-top:11px;gap:7px}
+  .pl-auth-mode-login .pl-auth-provider-grid .pl-auth-provider{min-height:40px}
+  .pl-auth-mode-login .pl-register-footer{padding-top:6px}
+}
