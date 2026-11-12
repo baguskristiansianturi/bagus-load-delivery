@@ -18,7 +18,7 @@ export function bindPublicNavbar(){
  header.dataset.bound='true';
  const readItems=key=>{try{const value=JSON.parse(localStorage.getItem(key)||'[]');return Array.isArray(value)?value:[];}catch{return [];}};
  const readCart=()=>readItems('pluits_market_cart_v1').reduce((n,item)=>n+Math.max(0,Number(item.quantity)||0),0);
- const readWishlist=()=>readItems('pluits_market_wishlist_v1').length;
+ const readWishlist=()=>readItems('pluits_market_wishlist_v1').length+readItems('pluits-guest-wishlist').length;
  const paintBadge=(selector,count)=>{const badge=header.querySelector(selector);if(!badge)return;badge.textContent=count>99?'99+':String(count);badge.hidden=count<1;};
  const updateCart=()=>{paintBadge('[data-public-cart-count]',readCart());paintBadge('[data-public-wishlist-count]',readWishlist());};
  const toast=message=>{let node=document.querySelector('.pl-public-toast');if(!node){node=document.createElement('div');node.className='pl-public-toast';node.setAttribute('role','status');node.setAttribute('aria-live','polite');document.body.append(node);}node.textContent=message;node.classList.add('is-visible');clearTimeout(node._hideTimer);node._hideTimer=setTimeout(()=>node.classList.remove('is-visible'),2200);};
@@ -29,8 +29,7 @@ export function bindPublicNavbar(){
    const languageButton=header.querySelector('.pl-public-language'),label=header.querySelector('[data-public-locale-label]');
    if(languageButton){languageButton.querySelector('.pl-public-flag')?.classList.toggle('pl-public-flag-id',next==='id');languageButton.querySelector('.pl-public-flag')?.classList.toggle('pl-public-flag-en',next==='en');}if(label)label.textContent=next.toUpperCase();
    toast(next==='id'?'Bahasa Indonesia dipilih':'English selected');
-  }else if(action==='wishlist'){const count=readWishlist();toast(count?count+' produk tersimpan di wishlist':'Wishlist kamu masih kosong');}
-  else if(action==='cart'){const count=readCart();if(count)location.hash='#/market-cart';else toast('Keranjang kamu masih kosong');}
+   }else if(action==='wishlist'||action==='cart'){location.hash='#/account/login';}
  });
  updateCart();
  window.addEventListener('pluits:guest-cart-updated',updateCart);
