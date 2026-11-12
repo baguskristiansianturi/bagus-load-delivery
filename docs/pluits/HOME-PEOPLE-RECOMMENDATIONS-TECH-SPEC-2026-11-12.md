@@ -8,7 +8,7 @@ After the existing nearby section, retain the Beranda heading and filters, then 
 The carousel is followed by the existing composer and up to 30 feed posts. The feed fetches a bounded 60 newest candidate rows, removes blocked authors, then hydrates at most 30 posts. A compact **Temukan Lebih Banyak** section follows the feed. Existing downstream local marketplace and service sections remain unchanged.
 
 ## Recommendation signals in this increment
-- Accepted follow graph: mutual connection count (only aggregate count is shown; names are not disclosed).
+- Accepted follow graph: shared-follow network count (only an aggregate count is shown; names are not disclosed).
 - Public profile city/province: coarse area relevance only.
 - user_profiles.created_at: new-account boost for 14 days plus a 30-day freshness decay.
 - Existing relationships, blocks, self, and non-public profiles are excluded.

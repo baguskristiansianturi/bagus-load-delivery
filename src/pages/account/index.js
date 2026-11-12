@@ -338,18 +338,18 @@ async function hydratePosts(rows){
   });
  }
 async function feedPage(){
- const interestQuery=await supabase.from('user_interest_preferences').select('preference,directory_categories(name,slug)').eq('user_id',user.id);
- if(interestQuery.error)throw interestQuery.error;
- const interests=(interestQuery.data||[]).map(x=>x.directory_categories).filter(Boolean);
  const trendSection=renderTopTenSection();
- const [followsResult,blocksResult,profileResult,relationshipResult]=await Promise.all([
+ const [interestQuery,followsResult,blocksResult,profileResult,relationshipResult,postsResult]=await Promise.all([
+  supabase.from('user_interest_preferences').select('preference,directory_categories(name,slug)').eq('user_id',user.id),
   supabase.from('user_follows').select('following_id').eq('follower_id',user.id).eq('status','accepted'),
   supabase.from('user_blocks').select('blocker_id,blocked_id').or('blocker_id.eq.'+user.id+',blocked_id.eq.'+user.id),
   supabase.from('user_profiles').select('id,display_name,username,avatar_path,public_city,public_province,visibility,created_at').eq('visibility','public').neq('id',user.id).order('created_at',{ascending:false}).limit(60),
-  supabase.from('user_follows').select('follower_id,following_id,status').or('follower_id.eq.'+user.id+',following_id.eq.'+user.id)
+  supabase.from('user_follows').select('follower_id,following_id,status').or('follower_id.eq.'+user.id+',following_id.eq.'+user.id),
+  supabase.from('user_posts').select('*').eq('visibility','public').eq('moderation_status','published').order('created_at',{ascending:false}).limit(60)
  ]);
- const queryError=followsResult.error||blocksResult.error||profileResult.error||relationshipResult.error;
+ const queryError=interestQuery.error||followsResult.error||blocksResult.error||profileResult.error||relationshipResult.error||postsResult.error;
  if(queryError)throw queryError;
+ const interests=(interestQuery.data||[]).map(x=>x.directory_categories).filter(Boolean);
  const followingIds=[...new Set((followsResult.data||[]).map(x=>x.following_id).filter(Boolean))];
  const blockedIds=(blocksResult.data||[]).map(x=>x.blocker_id===user.id?x.blocked_id:x.blocker_id);
  const relationships=relationshipResult.data||[];
@@ -369,12 +369,12 @@ async function feedPage(){
   profiles:profileResult.data||[],viewerId:user.id,followingIds,blockedIds,relationships,mutualCounts,
   city:window.__pluitsHomeCity||profile?.public_city||'',province:profile?.public_province||''
  });
- const peopleAvatarUrls=await createSignedUrlMap(supabase.storage,BUCKET,people.map(person=>person.avatar_path).filter(Boolean),3600);
+ const available=(postsResult.data||[]).filter(p=>!blockedIds.includes(p.user_id)).slice(0,30);
+ const [peopleAvatarUrls,hydrated]=await Promise.all([
+  createSignedUrlMap(supabase.storage,BUCKET,people.map(person=>person.avatar_path).filter(Boolean),3600),
+  hydratePosts(available)
+ ]);
  const peopleSection=renderPeopleRecommendations({people,avatarUrls:peopleAvatarUrls});
- const {data:rows,error}=await supabase.from('user_posts').select('*').eq('visibility','public').eq('moderation_status','published').order('created_at',{ascending:false}).limit(60);
- if(error)throw error;
- const available=(rows||[]).filter(p=>!blockedIds.includes(p.user_id)).slice(0,30);
- const hydrated=await hydratePosts(available);
  const interestSlugs=new Set(interests.map(x=>String(x.slug||'').toLowerCase()));
  const score=p=>{const age=Math.max(0,(Date.now()-new Date(p.created_at).getTime())/3600000),tags=(p.tags||[]).map(x=>String(x).toLowerCase().replace(/^#/,'').replace(/ /g,'-')),interestMatch=tags.filter(tag=>interestSlugs.has(tag)).length;return (followingIds.includes(p.user_id)?80:0)+interestMatch*28+36*Math.exp(-age/72)+Math.min(45,(p.likes||0)*1.5+(p.comments||0)*2.5);};
  let sorted=exploreFilter==='following'?hydrated.filter(p=>followingIds.includes(p.user_id)).sort((a,b)=>new Date(b.created_at)-new Date(a.created_at))
