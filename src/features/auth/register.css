@@ -134,3 +134,28 @@
  .pl-auth-page .pl-auth-social{margin-top:12px;gap:7px}
  .pl-auth-page .pl-register-login{margin-top:11px}
 }
+
+
+/* Clearer hierarchy and breathing room from the account label to the form. */
+.pl-auth-page .pl-register-card-head{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;margin-bottom:24px}
+.pl-auth-page .pl-register-card-head>.pl-register-step{display:block;line-height:1.5;margin-bottom:1px}
+.pl-auth-page .pl-register-card-head h2{margin:0;line-height:1.2}
+.pl-auth-page .pl-register-card-head>p{margin:0;line-height:1.75;max-width:38em}
+.pl-auth-page .pl-auth-tabs{margin:0 0 8px}
+.pl-auth-page .pl-register-form{gap:14px}
+.pl-auth-page .pl-auth-field{padding-top:9px}
+.pl-auth-page .pl-register-help{margin:0;line-height:1.65}
+.pl-auth-page .pl-register-consent{margin:3px 0 1px;line-height:1.65}
+.pl-auth-page .pl-register-message{margin:0 0 2px}
+.pl-auth-page .pl-register-submit{margin-top:3px}
+@media(max-width:760px){
+ .pl-auth-page .pl-register-card-head{gap:9px;margin-bottom:22px}
+ .pl-auth-page .pl-register-form{gap:13px}
+ .pl-auth-page .pl-auth-field{padding-top:9px}
+ .pl-auth-page .pl-auth-tabs{margin-bottom:9px}
+}
+@media(max-height:720px) and (max-width:760px){
+ .pl-auth-page .pl-register-card-head{gap:7px;margin-bottom:17px}
+ .pl-auth-page .pl-register-form{gap:10px}
+ .pl-auth-page .pl-auth-tabs{margin-bottom:6px}
+}
