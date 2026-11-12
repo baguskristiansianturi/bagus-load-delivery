@@ -35,7 +35,8 @@ export function renderSocialHeader({ active = 'explore', profileView = false, sh
     <header class="ua-header pl-social-header">
       ${renderBrandLogo({href:ROUTES.home,className:'ua-brand',size:38,label:'Beranda PLUITS'})}
       <nav aria-label="Navigasi Pluits">
-        <a class="${active === 'explore' ? 'active' : ''}" href="${ROUTES.home}">Beranda</a>
+        <a class="${active === 'explore' ? 'active' : ''}" href="${ROUTES.home}">Circle</a>
+        <a href="${ROUTES.discover}">Jelajah</a>
         <a href="${ROUTES.places}">Tempat</a>
         <a href="${ROUTES.marketplace}">Marketplace</a>
         <a href="${ROUTES.trip}">Trip</a>
@@ -62,7 +63,7 @@ export function renderSocialMobileNav({ active = 'home', profileView = false, us
   const activeKey = active === 'home' || active === 'explore' ? 'home' : active === 'discover' ? 'discover' : active === 'profile-edit' || active === 'profile' || active === 'preview' ? 'profile' : active;
   const profileHref = getRoute('profile', Boolean(user));
   const items = [
-    { key: 'home', href: publicHome ? ROUTES.publicHome : getRoute('home', Boolean(user)), label: 'Beranda', icon: 'home' },
+    { key: 'home', href: publicHome ? ROUTES.publicHome : getRoute('home', Boolean(user)), label: publicHome ? 'Beranda' : 'Circle', icon: 'users' },
     { key: 'discover', href: ROUTES.discover, label: 'Jelajah', icon: 'compass' },
     { key: 'create', href: getRoute('create', Boolean(user)), label: 'Buat', icon: 'plus' },
     isInbox ? { key: 'activity', href: getRoute('activity', Boolean(user)), label: 'Notifikasi', icon: 'bell' } : { key: 'messages', href: publicHome ? '#/help' : getRoute('inbox', Boolean(user)), label: 'Pesan', icon: 'message' },

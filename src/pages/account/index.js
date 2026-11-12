@@ -339,15 +339,16 @@ async function hydratePosts(rows){
  }
 async function feedPage(){
  const trendSection=renderTopTenSection();
- const [interestQuery,followsResult,blocksResult,profileResult,relationshipResult,postsResult]=await Promise.all([
+ const [interestQuery,followsResult,blocksResult,profileResult,relationshipResult,postsResult,storiesResult]=await Promise.all([
   supabase.from('user_interest_preferences').select('preference,directory_categories(name,slug)').eq('user_id',user.id),
   supabase.from('user_follows').select('following_id').eq('follower_id',user.id).eq('status','accepted'),
   supabase.from('user_blocks').select('blocker_id,blocked_id').or('blocker_id.eq.'+user.id+',blocked_id.eq.'+user.id),
   supabase.from('user_profiles').select('id,display_name,username,avatar_path,public_city,public_province,visibility,created_at').eq('visibility','public').neq('id',user.id).order('created_at',{ascending:false}).limit(60),
   supabase.from('user_follows').select('follower_id,following_id,status').or('follower_id.eq.'+user.id+',following_id.eq.'+user.id),
-  supabase.from('user_posts').select('*').eq('visibility','public').eq('moderation_status','published').order('created_at',{ascending:false}).limit(60)
+  supabase.from('user_posts').select('*').eq('visibility','public').eq('moderation_status','published').order('created_at',{ascending:false}).limit(60),
+  supabase.from('user_stories').select('id,user_id,media_path,media_type,caption,created_at,expires_at').eq('visibility','public').gt('expires_at',new Date().toISOString()).order('created_at',{ascending:false}).limit(60)
  ]);
- const queryError=interestQuery.error||followsResult.error||blocksResult.error||profileResult.error||relationshipResult.error||postsResult.error;
+ const queryError=interestQuery.error||followsResult.error||blocksResult.error||profileResult.error||relationshipResult.error||postsResult.error||storiesResult.error;
  if(queryError)throw queryError;
  const interests=(interestQuery.data||[]).map(x=>x.directory_categories).filter(Boolean);
  const followingIds=[...new Set((followsResult.data||[]).map(x=>x.following_id).filter(Boolean))];
@@ -375,6 +376,25 @@ async function feedPage(){
   hydratePosts(available)
  ]);
  const peopleSection=renderPeopleRecommendations({people,avatarUrls:peopleAvatarUrls});
+ const followedSet=new Set(followingIds);
+ const visibleStories=(storiesResult.data||[]).filter(story=>followedSet.has(story.user_id)&&!blockedIds.includes(story.user_id));
+ const storyOwners=new Map();
+ visibleStories.forEach(story=>{if(!storyOwners.has(story.user_id))storyOwners.set(story.user_id,[]);storyOwners.get(story.user_id).push(story);});
+ const storyProfileIds=[...storyOwners.keys()];
+ const storyProfiles=(profileResult.data||[]).filter(person=>storyProfileIds.includes(person.id));
+ const [storyMediaUrls,storyAvatarUrls]=await Promise.all([
+  createSignedUrlMap(supabase.storage,BUCKET,visibleStories.map(story=>story.media_path).filter(Boolean),1800),
+  createSignedUrlMap(supabase.storage,BUCKET,storyProfiles.map(person=>person.avatar_path).filter(Boolean),3600)
+ ]);
+ const storyCards=[...storyOwners.entries()].map(([ownerId,items])=>{
+  const owner=storyProfiles.find(person=>person.id===ownerId);if(!owner)return '';
+  const ready=items.map(story=>({...story,url:storyMediaUrls.get(story.media_path)||''})).filter(story=>story.url);
+  if(!ready.length)return '';
+  const name=esc(owner.display_name||'Pengguna PLUITS'),avatarUrl=storyAvatarUrls.get(owner.avatar_path)||'';
+  const payload=esc(JSON.stringify(ready.map(story=>({url:story.url,type:story.media_type,caption:story.caption||'',createdAt:story.created_at}))));
+  return "<button type='button' class='ua-story-group' data-story-items='"+payload+"' data-story-owner='"+esc(owner.display_name||'Pengguna PLUITS')+"' aria-label='Lihat Story "+name+"'><span class='ua-story-ring'><span class='ua-story-avatar'>"+(avatarUrl?"<img src='"+esc(avatarUrl)+"' alt='' loading='lazy'>":"<b>"+esc(initials(owner.display_name))+"</b>")+"</span></span><strong>"+name+"</strong><small>"+ready.length+" Story</small></button>";
+ }).filter(Boolean).join('');
+ const storiesSection="<section class='ua-circle-stories' aria-labelledby='ua-circle-stories-title'><div class='ua-circle-section-heading'><div><h2 id='ua-circle-stories-title'>Cerita circle</h2><p>Momen terbaru dari teman yang Anda ikuti.</p></div></div>"+(storyCards?"<div class='ua-circle-story-track'>"+storyCards+"</div>":"<div class='ua-circle-story-empty'>Belum ada Story teman yang aktif. Cerita dari circle Anda akan muncul di sini.</div>")+"</section>";
  const interestSlugs=new Set(interests.map(x=>String(x.slug||'').toLowerCase()));
  const score=p=>{const age=Math.max(0,(Date.now()-new Date(p.created_at).getTime())/3600000),tags=(p.tags||[]).map(x=>String(x).toLowerCase().replace(/^#/,'').replace(/ /g,'-')),interestMatch=tags.filter(tag=>interestSlugs.has(tag)).length;return (followingIds.includes(p.user_id)?80:0)+interestMatch*28+36*Math.exp(-age/72)+Math.min(45,(p.likes||0)*1.5+(p.comments||0)*2.5);};
  let sorted=exploreFilter==='following'?hydrated.filter(p=>followingIds.includes(p.user_id)).sort((a,b)=>new Date(b.created_at)-new Date(a.created_at))
@@ -403,7 +423,8 @@ async function feedPage(){
  const filterNav="<nav class='ua-explore-filters' aria-label='Pilihan beranda'>"+filters.map(([key,label])=>"<button type='button' data-explore-filter='"+key+"' class='"+(exploreFilter===key?'is-active':'')+"' "+(exploreFilter===key?"aria-current='true'":"")+">"+label+"</button>").join('')+"</nav>";
  const empty=exploreFilter==='following'?'Belum ada postingan dari akun yang Anda ikuti. Temukan orang dan akun yang menarik untuk mulai mengikuti.':'Belum ada postingan publik untuk ditampilkan. Jadilah yang pertama berbagi cerita di PLUITS.';
  const action=exploreFilter==='following'?"<a href='#/search'>Temukan orang untuk diikuti</a>":"<a href='#/account/compose'>Buat postingan pertama</a>";
- const homeHeading="<section class='ua-home-following'><div class='ua-home-section-heading'><div><h2>Beranda</h2><p>Cerita dari orang yang Anda ikuti dan hal menarik untuk ditemukan.</p></div><a href='#/account/compose'>＋ Buat Post</a></div>"+filterNav+"</section>";
+ const homeHeading="<section class='ua-home-following'><div class='ua-home-section-heading'><div><h2>Postingan</h2><p>Semua cerita dari circle dan topik yang Anda minati.</p></div></div>"+filterNav+"</section>";
+ const circleHeading="<section class='ua-circle-intro'><span class='ua-eyebrow'>RUANG PERSONAL PLUITS</span><h1>Circle Anda</h1><p>Terhubung dengan teman, lingkungan, dan hal-hal yang Anda minati.</p></section>";
  const discoverMore="<section class='ua-home-discover-more'><div class='ua-home-section-heading'><div><h2>Temukan Lebih Banyak</h2><small>Perluas koneksi dan temukan cerita baru di PLUITS.</small></div></div><div class='ua-home-discover-links'><a href='#/search'><span>Orang &amp; komunitas</span><b>Jelajahi ↗</b></a><a href='#/places'><span>Tempat dan lingkungan</span><b>Jelajahi ↗</b></a></div></section>";
  let productCards='';
  try{
@@ -421,7 +442,7 @@ async function feedPage(){
  const maybeLike="<section class='ua-home-products'><div class='ua-home-section-heading'><div><h2>Produk Lokal</h2><small>Produk dari penjual di <span data-home-location-city>Bali</span>, dipilih dari yang ramai dan sesuai minat Anda.</small></div><a href='#/marketplace'>Lihat semua ↗</a></div><div class='ua-home-product-row'>"+(productCards||"<a class='ua-home-product-empty' href='#/marketplace'>Jelajahi produk di Marketplace ↗</a>")+"</div></section>";
  const collections="<section class='ua-home-collections'><div class='ua-home-section-heading'><div><h2>Kumpulan</h2><small>Jasa dan layanan pilihan</small></div><a href='#/places'>Jelajahi ↗</a></div><div class='ua-home-collection-row'><a href='#/places?category=professional-service'><span>✳</span><b>Jasa profesional</b></a><a href='#/places?category=transport'><span>⌁</span><b>Transportasi lokal</b></a><a href='#/trip'><span>◷</span><b>Aktivitas &amp; pengalaman</b></a><a href='#/marketplace'><span>◇</span><b>Produk lokal</b></a></div></section>";
  const serviceFilters="<section class='ua-home-service-filters'><div class='ua-home-section-heading'><div><h2>Layanan PLUITS</h2></div></div><div class='ua-home-service-chip-row'><a href='#/places?category=accommodation'>Akomodasi</a><a href='#/trip'>Tiket</a><a href='#/places?category=transport'>Transportasi</a><a href='#/places?category=professional-service'>Jasa</a></div></section>";
- return "<div class='ua-social-home'>"+trendSection+homeNearbySection()+homeHeading+peopleSection+"<a class='ua-home-compose-prompt' href='#/account/compose'><span class='ua-home-compose-avatar'>"+esc(initials(profile?.display_name||user?.email||'P'))+"</span><span>Apa yang ingin Anda bagikan?</span><b>＋</b></a><section class='ua-feed'>"+(sorted.length?sorted.map(post=>postCard(post)).join(''):"<div class='ua-feed-empty'><strong>"+empty+"</strong>"+action+"</div>")+"</section>"+discoverMore+maybeLike+collections+serviceFilters+"</div>";
+ return "<div class='ua-social-home'>"+circleHeading+storiesSection+peopleSection+homeHeading+"<a class='ua-home-compose-prompt' href='#/account/compose'><span class='ua-home-compose-avatar'>"+esc(initials(profile?.display_name||user?.email||'P'))+"</span><span>Apa yang ingin Anda bagikan?</span><b>＋</b></a><section class='ua-feed'>"+(sorted.length?sorted.map(post=>postCard(post)).join(''):"<div class='ua-feed-empty'><strong>"+empty+"</strong>"+action+"</div>")+"</section>"+trendSection+homeNearbySection()+discoverMore+maybeLike+collections+serviceFilters+"</div>";
 }
 async function reelsPage(){
  const {data:vm,error:me}=await supabase.from('post_media').select('post_id,duration_ms').eq('media_type','video').lte('duration_ms',60000).order('created_at',{ascending:false}).limit(60);if(me)throw me;
@@ -968,6 +989,26 @@ function bindCompose(){
  });
 }
 function bindStories(){
+ document.querySelectorAll('.ua-story-group').forEach(button=>{
+  button.addEventListener('click',()=>{
+   let items=[];try{items=JSON.parse(button.dataset.storyItems||'[]');}catch{}
+   if(!items.length)return;
+   let index=0;
+   const overlay=document.createElement('div');overlay.className='ua-story-viewer ua-story-viewer-sequence';
+   const render=()=>{
+    const item=items[index],media=item.type==='video'?"<video src='"+esc(item.url)+"' autoplay controls playsinline preload='metadata'></video>":"<img src='"+esc(item.url)+"' alt='Story dari "+esc(button.dataset.storyOwner||'circle')+"'>";
+    overlay.innerHTML="<div class='ua-story-viewer-card'><div class='ua-story-progress'>"+items.map((_,i)=>"<span class='"+(i<index?'is-done':i===index?'is-active':'')+"'><i></i></span>").join('')+"</div><button type='button' class='ua-story-viewer-close' data-story-close aria-label='Tutup Story'>×</button><button type='button' class='ua-story-step ua-story-prev' aria-label='Story sebelumnya'></button><button type='button' class='ua-story-step ua-story-next' aria-label='Story berikutnya'></button><div class='ua-story-viewer-media'>"+media+"</div><div class='ua-story-viewer-caption'><strong>"+esc(button.dataset.storyOwner||'Pengguna Pluits')+"</strong>"+(item.caption?"<p>"+esc(item.caption)+"</p>":"")+"</div></div>";
+    overlay.querySelector('.ua-story-prev').disabled=index===0;overlay.querySelector('.ua-story-next').disabled=index===items.length-1;
+    overlay.querySelector('.ua-story-prev').onclick=()=>{if(index>0){index--;render();}};
+    overlay.querySelector('.ua-story-next').onclick=()=>{if(index<items.length-1){index++;render();}};
+    const video=overlay.querySelector('video');if(video)video.addEventListener('ended',()=>{if(index<items.length-1){index++;render();}});
+   };
+   render();document.body.appendChild(overlay);
+   overlay.addEventListener('click',event=>{if(event.target===overlay||event.target.closest('[data-story-close]'))overlay.remove();});
+   const keyHandler=event=>{if(event.key==='Escape'){overlay.remove();document.removeEventListener('keydown',keyHandler);}else if(event.key==='ArrowRight'&&index<items.length-1){index++;render();}else if(event.key==='ArrowLeft'&&index>0){index--;render();}};
+   document.addEventListener('keydown',keyHandler);
+  });
+ });
  document.querySelectorAll('.ua-story-item').forEach(button=>{
   button.addEventListener('click',()=>{
    const url=button.dataset.storyUrl||'';

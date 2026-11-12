@@ -582,3 +582,37 @@
     flex-basis: 34px !important;
   }
 }
+
+
+/* Circle page composition: friend stories and sticky feed controls. */
+.ua-circle-intro{margin:8px 0 14px;padding:18px 16px 10px;background:transparent}
+.ua-circle-intro h1{margin:3px 0 5px;color:#20313b;font-size:25px;line-height:1.15;letter-spacing:-.04em}
+.ua-circle-intro p{margin:0;color:#78858d;font-size:12px;line-height:1.55}
+.ua-circle-stories{margin:0 0 14px;padding:12px 14px 14px;border-top:1px solid #edf0f2;border-bottom:1px solid #edf0f2;background:#fff}
+.ua-circle-section-heading{margin:0 0 11px}
+.ua-circle-section-heading h2{margin:0;color:#263a45;font-size:16px;font-weight:750}
+.ua-circle-section-heading p{margin:4px 0 0;color:#849096;font-size:11px}
+.ua-circle-story-track{display:flex;gap:15px;overflow-x:auto;padding:2px 1px 5px;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.ua-circle-story-track::-webkit-scrollbar{display:none}
+.ua-story-group{display:flex;flex:0 0 68px;min-width:0;flex-direction:column;align-items:center;gap:5px;padding:0;border:0;background:transparent;color:#34434b;font:inherit;cursor:pointer;scroll-snap-align:start}
+.ua-story-ring{display:grid;width:62px;height:62px;padding:3px;place-items:center;border:2px solid #18aaa1;border-radius:50%}
+.ua-story-avatar{display:grid;width:100%;height:100%;overflow:hidden;place-items:center;border-radius:50%;background:#f1f5f5;color:#168d86}
+.ua-story-avatar img{width:100%;height:100%;object-fit:cover}
+.ua-story-avatar b{font-size:20px}
+.ua-story-group strong{max-width:68px;overflow:hidden;color:#34434b;font-size:10px;font-weight:700;text-overflow:ellipsis;white-space:nowrap}
+.ua-story-group small{color:#89969b;font-size:9px}
+.ua-circle-story-empty{padding:12px;border:1px dashed #e3e9e9;border-radius:11px;color:#849096;font-size:11px;line-height:1.5}
+.ua-social-home .ua-home-following{position:sticky;top:54px;z-index:180;margin:0 -1px 12px;padding:10px 12px 8px;border-top:1px solid #edf0f2;border-bottom:1px solid #e8edef;background:rgba(255,255,255,.97);backdrop-filter:blur(12px)}
+.ua-social-home .ua-home-following .ua-home-section-heading{margin:0 0 8px}
+.ua-social-home .ua-explore-filters{display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.ua-social-home .ua-explore-filters::-webkit-scrollbar{display:none}
+.ua-social-home .ua-explore-filters button{flex:0 0 auto}
+.ua-story-viewer-sequence .ua-story-progress{position:absolute;z-index:3;top:12px;left:12px;right:12px;display:flex;gap:4px}
+.ua-story-progress>span{height:3px;flex:1;overflow:hidden;border-radius:9px;background:rgba(255,255,255,.35)}
+.ua-story-progress>span.is-done,.ua-story-progress>span.is-active{background:#fff}
+.ua-story-viewer-sequence .ua-story-viewer-card{position:relative}
+.ua-story-step{position:absolute;z-index:4;top:54px;bottom:75px;width:35%;border:0;background:transparent}
+.ua-story-prev{left:0}.ua-story-next{right:0}
+.ua-story-step:disabled{pointer-events:none}
+@media(max-width:760px){.ua-circle-intro{margin:4px -12px 8px;padding:17px 14px 8px}.ua-circle-stories{margin:0 -12px 12px;padding:13px 14px;border-right:0;border-left:0}.ua-social-home .ua-home-following{top:54px;margin-inline:-12px;padding-inline:14px}}
+@media(min-width:761px){.ua-circle-intro{padding-inline:0}.ua-circle-stories{border-radius:14px}.ua-social-home .ua-home-following{top:72px;border-radius:12px}}
