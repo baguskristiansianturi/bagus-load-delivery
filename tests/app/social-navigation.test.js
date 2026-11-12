@@ -36,7 +36,9 @@ test('guest root stays public while signed-in root opens the canonical Explore w
  const home=await (await import('node:fs/promises')).readFile(new URL('../../src/pages/home/index.js',import.meta.url),'utf8');
  const account=await (await import('node:fs/promises')).readFile(new URL('../../src/pages/account/index.js',import.meta.url),'utf8');
  const routes=await (await import('node:fs/promises')).readFile(new URL('../../src/components/social/navigation-routes.js',import.meta.url),'utf8');
- assert.ok(home.includes("renderSocialHeader({active:'home',publicHome:true})"));
+ assert.ok(home.includes('renderPublicNavbar()'));
+ assert.ok(home.includes('bindPublicNavbar()'));
+ assert.ok(home.includes("import {renderPublicNavbar,bindPublicNavbar} from '../../features/public-home/navbar.js';"));
  assert.ok(home.includes("renderSocialMobileNav({active:'home',publicHome:true})"));
  assert.ok(home.includes('stillOnRequestedHome'),'A delayed public-home auth response must not overwrite a route the visitor opened afterward.');
  assert.ok(home.includes('requestHash')&&home.includes('routeVersion'),'Public-home auth routing must be bound to the original route generation.');
@@ -81,8 +83,15 @@ test('public home loads the real navigation layer and exposes visible mobile ico
  const main=await readFile(new URL('../../src/main.js',import.meta.url),'utf8');
  const css=await readFile(new URL('../../styles/home-layout.css',import.meta.url),'utf8');
  assert.ok(main.includes("import './styles/social-navigation.css'"),'Shared navigation stylesheet must be loaded from the application entry point.');
- assert.ok(css.includes('.pl-public-home>.pl-social-header'),'Public header must have an explicit visible layout.');
+ assert.ok(css.includes('.pl-public-home>.pl-public-navbar'),'Public guest navbar must have one explicit isolated surface.');
  assert.ok(css.includes('.pl-public-home .pl-social-mobile-nav>a .pl-icon'),'Public mobile navigation SVG icons must have explicit dimensions and visibility.');
+ const navbar=await readFile(new URL('../../src/features/public-home/navbar.js',import.meta.url),'utf8');
+ const navbarCss=await readFile(new URL('../../src/features/public-home/navbar.css',import.meta.url),'utf8');
+ assert.ok(navbar.includes('🇮🇩')&&navbar.includes('🇬🇧')&&navbar.includes("?'Daftar':'Sign up'"),'Guest navbar must default to Indonesian and offer English.');
+ assert.ok(navbar.includes("data-public-action=\"wishlist\"")&&navbar.includes("data-public-action=\"cart\""),'Wishlist and cart must be actionable controls.');
+ assert.ok(navbar.includes("location.hash='#/account/login'"),'Opening wishlist or cart as a guest must request login.');
+ assert.ok(navbarCss.includes('.pl-public-home>.pl-public-navbar')&&navbarCss.includes('border:0'),'Guest navbar must use one clean surface without borders.');
+ assert.ok(home.includes("localStorage.setItem('pluits-guest-wishlist'"),'Guest post saves must persist locally without requiring login.');
  assert.ok(css.includes('.pl-public-home .pl-public-hero-visual{order:-1}'),'Mobile public home must lead with imagery rather than a wall of text.');
 });
 test('GeoDirectory is map-first with a touch-enabled globe and clickable real place pins',async()=>{
