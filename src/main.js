@@ -34,16 +34,25 @@ import '../styles/home-layout.css';
 import { route } from './app/router.js';
 import { home, bindHome } from './pages/home/index.js';
 
-function render() {
-  const hash = location.hash || '#/';
-  let path = hash.replace(/^#\/?/, '').split('?')[0].replace(/\/$/, '');
+let renderSequence = 0;
+
+async function render() {
+  const sequence = ++renderSequence;
+  const initialHash = location.hash || '#/';
+  let path = initialHash.replace(/^#\/?/, '').split('?')[0].replace(/\/$/, '');
   // Keep one canonical URL for the public home; older aliases resolve to #/.
   if (['home', 'feed', 'beranda'].includes(path)) {
     history.replaceState(null, '', location.pathname + location.search + '#/');
     path = '';
   }
-  route(home);
-  if (!path || path === 'guest') queueMicrotask(bindHome);
+  const expectedHash = location.hash || '#/';
+  await route(home);
+  // A delayed route or auth lookup must never paint the previous page over
+  // the page the visitor has navigated to in the meantime.
+  if (sequence !== renderSequence || (location.hash || '#/') !== expectedHash) return;
+  if ((!path || path === 'guest') && document.querySelector('#pl-public-feed')) {
+    await bindHome();
+  }
 }
 
 window.addEventListener('hashchange', render);
