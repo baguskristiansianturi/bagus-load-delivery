@@ -872,7 +872,7 @@ async function mountAccount(section='profile',parameter=''){
   normalizeFeedMediaFrames(document);bindPostGalleries();
   if(section==='post'){const focusId=parameter||location.hash.split('/')[3]||'';requestAnimationFrame(()=>document.getElementById('ua-post-focus-'+focusId)?.scrollIntoView({block:'start',behavior:'auto'}));}
   bindProfileTabs();bindNotificationActions();if(section==='drafts')bindDrafts();
-  bindProfile();bindCompose();bindStoryCompose();bindStories();bindExploreFilters();bindPeopleRecommendationActions();bindToptenSlider();bindAddresses();bindWallet();bindPostActions();bindFollowActions();
+  bindProfile();bindCompose();bindStoryCompose();bindStories();bindStoryAutoScroll();bindExploreFilters();bindPeopleRecommendationActions();bindToptenSlider();bindAddresses();bindWallet();bindPostActions();bindFollowActions();
   if(section==='blocked')bindBlockedAccounts();if(section==='reels')bindReelsPlayback();if(section==='addresses')initMap();
  }catch(err){
   if(!isCurrent())return;
@@ -1290,6 +1290,48 @@ function bindFollowActions(){
   notify(incoming ? "Pengikut dihapus." : "Anda berhenti mengikuti akun ini.");
   await mountAccount(incoming ? "followers" : "following");
  }));
+}
+function bindStoryAutoScroll(){
+ const track=document.querySelector('.ua-circle-story-track');
+ if(!track||!window.matchMedia('(max-width:760px)').matches||window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+ const cards=[...track.querySelectorAll('.ua-story-group')];if(cards.length<2)return;
+ let timer=null,resumeTimer=null,settleTimer=null,interacting=false,autoScrolling=false;
+ const stop=()=>{if(timer){clearTimeout(timer);timer=null;}if(resumeTimer){clearTimeout(resumeTimer);resumeTimer=null;}};
+ const schedule=(delay=5200)=>{
+  stop();if(interacting||document.hidden)return;
+  timer=setTimeout(()=>{
+   if(interacting||document.hidden)return;
+   const max=track.scrollWidth-track.clientWidth;
+   if(max<=4)return;
+   const first=cards[0],step=first.getBoundingClientRect().width+2;
+   if(track.scrollLeft+track.clientWidth>=track.scrollWidth-12){
+    track.scrollTo({left:0,behavior:'smooth'});
+   }else{
+    autoScrolling=true;
+    track.scrollBy({left:step,behavior:'smooth'});
+   }
+   clearTimeout(settleTimer);
+   settleTimer=setTimeout(()=>{autoScrolling=false;schedule(5200);},1900);
+  },delay);
+ };
+ const begin=()=>{interacting=true;stop();if(autoScrolling){track.scrollTo({left:track.scrollLeft,behavior:'auto'});autoScrolling=false;clearTimeout(settleTimer);}};
+ const end=()=>{interacting=false;schedule(4200);};
+ track.addEventListener('pointerdown',begin,{passive:true});
+ track.addEventListener('pointerup',end,{passive:true});
+ track.addEventListener('pointercancel',end,{passive:true});
+ track.addEventListener('touchcancel',end,{passive:true});
+ track.addEventListener('wheel',begin,{passive:true});
+ track.addEventListener('scroll',()=>{
+  if(autoScrolling)return;
+  stop();clearTimeout(settleTimer);
+  settleTimer=setTimeout(()=>{if(!interacting)schedule(4200);},220);
+ },{passive:true});
+ track.addEventListener('mouseenter',begin);
+ track.addEventListener('mouseleave',end);
+ track.addEventListener('focusin',begin);
+ track.addEventListener('focusout',end);
+ document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();else if(!interacting)schedule(1400);});
+ schedule(5200);
 }
 function bindToptenSlider(){
  if(trendSliderVisibilityHandler){document.removeEventListener('visibilitychange',trendSliderVisibilityHandler);trendSliderVisibilityHandler=null;}
