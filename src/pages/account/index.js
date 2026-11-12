@@ -4,7 +4,7 @@ import {socialIcon} from '../../components/common/social-icons.js';
 import {renderBrandLogo} from '../../components/common/brand.js';
 import {renderPostActions} from '../../features/posts/post-actions.js';
 import {renderTopTenSection} from '../../features/discovery/top-ten-cards.js';
-import {rankPeopleRecommendations,renderPeopleRecommendations} from '../../features/discovery/people-recommendations.js';
+import {rankPeopleRecommendations,renderPeopleRecommendations,CIRCLE_DEMO_PEOPLE} from '../../features/discovery/people-recommendations.js';
 import '../../features/discovery/people-recommendations.css';
 import '../../features/posts/post-actions.css';
 import {renderSocialHeader,renderSocialMobileNav} from '../../components/social/navigation.js';
@@ -340,16 +340,17 @@ async function hydratePosts(rows){
  }
 async function feedPage(){
  const trendSection=renderTopTenSection();
- const [interestQuery,followsResult,blocksResult,profileResult,relationshipResult,postsResult,storiesResult]=await Promise.all([
+ const [interestQuery,followsResult,blocksResult,profileResult,relationshipResult,postsResult,storiesResult,registeredProfilesResult]=await Promise.all([
   supabase.from('user_interest_preferences').select('preference,directory_categories(name,slug)').eq('user_id',user.id),
   supabase.from('user_follows').select('following_id').eq('follower_id',user.id).eq('status','accepted'),
   supabase.from('user_blocks').select('blocker_id,blocked_id').or('blocker_id.eq.'+user.id+',blocked_id.eq.'+user.id),
   supabase.from('user_profiles').select('id,display_name,username,avatar_path,public_city,public_province,visibility,created_at').eq('visibility','public').neq('id',user.id).order('created_at',{ascending:false}).limit(60),
   supabase.from('user_follows').select('follower_id,following_id,status').or('follower_id.eq.'+user.id+',following_id.eq.'+user.id),
   supabase.from('user_posts').select('*').eq('visibility','public').eq('moderation_status','published').order('created_at',{ascending:false}).limit(60),
-  supabase.from('user_stories').select('id,user_id,media_path,media_type,caption,created_at,expires_at').eq('visibility','public').gt('expires_at',new Date().toISOString()).order('created_at',{ascending:false}).limit(60)
+  supabase.from('user_stories').select('id,user_id,media_path,media_type,caption,created_at,expires_at').eq('visibility','public').gt('expires_at',new Date().toISOString()).order('created_at',{ascending:false}).limit(60),
+  supabase.from('user_profiles').select('id',{count:'exact',head:true})
  ]);
- const queryError=interestQuery.error||followsResult.error||blocksResult.error||profileResult.error||relationshipResult.error||postsResult.error||storiesResult.error;
+ const queryError=interestQuery.error||followsResult.error||blocksResult.error||profileResult.error||relationshipResult.error||postsResult.error||storiesResult.error||registeredProfilesResult.error;
  if(queryError)throw queryError;
  const interests=(interestQuery.data||[]).map(x=>x.directory_categories).filter(Boolean);
  const followingIds=[...new Set((followsResult.data||[]).map(x=>x.following_id).filter(Boolean))];
@@ -376,7 +377,10 @@ async function feedPage(){
   createSignedUrlMap(supabase.storage,BUCKET,people.map(person=>person.avatar_path).filter(Boolean),3600),
   hydratePosts(available)
  ]);
- const peopleSection=renderPeopleRecommendations({people,avatarUrls:peopleAvatarUrls});
+ const registeredProfileCount=registeredProfilesResult.count??0;
+ const showCircleDemo=registeredProfileCount<10;
+ const demoPeople=showCircleDemo?CIRCLE_DEMO_PEOPLE.slice(0,Math.max(0,10-people.length)):[];
+ const peopleSection=renderPeopleRecommendations({people,avatarUrls:peopleAvatarUrls,demoPeople});
  const followedSet=new Set(followingIds);
  const visibleStories=(storiesResult.data||[]).filter(story=>followedSet.has(story.user_id)&&!blockedIds.includes(story.user_id));
  const storyOwners=new Map();
@@ -397,7 +401,11 @@ async function feedPage(){
   const payload=esc(JSON.stringify(ready.map(story=>({url:story.url,type:story.media_type,caption:story.caption||'',createdAt:story.created_at}))));
   return "<button type='button' class='ua-story-group' data-story-items='"+payload+"' data-story-owner='"+esc(owner.display_name||'Pengguna PLUITS')+"' aria-label='Lihat Story "+name+"'><span class='ua-story-ring'><span class='ua-story-avatar'>"+(avatarUrl?"<img src='"+esc(avatarUrl)+"' alt='' loading='lazy'>":"<b>"+esc(initials(owner.display_name))+"</b>")+"</span></span><strong>"+name+"</strong><small>"+ready.length+" Story</small></button>";
  }).filter(Boolean).join('');
- const storiesSection="<section class='ua-circle-stories' aria-labelledby='ua-circle-stories-title'><div class='ua-circle-section-heading'><div><h2 id='ua-circle-stories-title'>Cerita dari circle</h2><p>Lihat momen terbaru dari orang-orang yang Anda ikuti.</p></div></div>"+(storyCards?"<div class='ua-circle-story-track'>"+storyCards+"</div>":"<div class='ua-circle-story-empty'>Belum ada Story teman yang aktif. Cerita dari circle Anda akan muncul di sini.</div>")+"</section>";
+ const demoStoryCards=showCircleDemo?CIRCLE_DEMO_PEOPLE.slice(0,Math.max(0,10-storyOwners.size)).map((person,index)=>{
+  const payload=esc(JSON.stringify([{url:person.avatarUrl,type:'image',caption:['Menikmati hari yang cerah.','Sedikit cerita dari sekitar.','Momen sederhana hari ini.','Berbagi inspirasi dan suasana.','Hari yang penuh warna.'][index%5],createdAt:new Date(Date.now()-index*3600000).toISOString()}]));
+  return "<button type='button' class='ua-story-group ua-story-group-demo' data-story-items='"+payload+"' data-story-owner='"+esc(person.name)+"' data-demo-story='true' aria-label='Lihat contoh Story "+esc(person.name)+"'><span class='ua-story-ring'><span class='ua-story-avatar'><img src='"+esc(person.avatarUrl)+"' alt='Foto contoh "+esc(person.name)+"' loading='lazy'></span></span><strong>"+esc(person.name)+"</strong><small>Story demo</small><span class='ua-demo-chip'>Contoh</span></button>";
+ }).join(''):'';
+ const storiesSection="<section class='ua-circle-stories' aria-labelledby='ua-circle-stories-title'><div class='ua-circle-section-heading'><div><h2 id='ua-circle-stories-title'>Cerita dari circle</h2><p>Lihat momen terbaru dari orang-orang yang Anda ikuti.</p></div>"+(showCircleDemo?"<span class='ua-demo-tag'>DEMO UI</span>":"")+"</div>"+(storyCards||demoStoryCards?"<div class='ua-circle-story-track'>"+storyCards+demoStoryCards+"</div>":"<div class='ua-circle-story-empty'>Belum ada Story teman yang aktif. Cerita dari circle Anda akan muncul di sini.</div>")+"</section>";
  const interestSlugs=new Set(interests.map(x=>String(x.slug||'').toLowerCase()));
  const score=p=>{const age=Math.max(0,(Date.now()-new Date(p.created_at).getTime())/3600000),tags=(p.tags||[]).map(x=>String(x).toLowerCase().replace(/^#/,'').replace(/ /g,'-')),interestMatch=tags.filter(tag=>interestSlugs.has(tag)).length;return (followingIds.includes(p.user_id)?80:0)+interestMatch*28+36*Math.exp(-age/72)+Math.min(45,(p.likes||0)*1.5+(p.comments||0)*2.5);};
  let sorted=exploreFilter==='latest'?[...hydrated].sort((a,b)=>new Date(b.created_at)-new Date(a.created_at))
@@ -1002,7 +1010,7 @@ function bindStories(){
    const overlay=document.createElement('div');overlay.className='ua-story-viewer ua-story-viewer-sequence';
    const render=()=>{
     const item=items[index],media=item.type==='video'?"<video src='"+esc(item.url)+"' autoplay controls playsinline preload='metadata'></video>":"<img src='"+esc(item.url)+"' alt='Story dari "+esc(button.dataset.storyOwner||'circle')+"'>";
-    overlay.innerHTML="<div class='ua-story-viewer-card'><div class='ua-story-progress'>"+items.map((_,i)=>"<span class='"+(i<index?'is-done':i===index?'is-active':'')+"'><i></i></span>").join('')+"</div><button type='button' class='ua-story-viewer-close' data-story-close aria-label='Tutup Story'>×</button><button type='button' class='ua-story-step ua-story-prev' aria-label='Story sebelumnya'></button><button type='button' class='ua-story-step ua-story-next' aria-label='Story berikutnya'></button><div class='ua-story-viewer-media'>"+media+"</div><div class='ua-story-viewer-caption'><strong>"+esc(button.dataset.storyOwner||'Pengguna Pluits')+"</strong>"+(item.caption?"<p>"+esc(item.caption)+"</p>":"")+"</div></div>";
+    overlay.innerHTML="<div class='ua-story-viewer-card'><div class='ua-story-progress'>"+items.map((_,i)=>"<span class='"+(i<index?'is-done':i===index?'is-active':'')+"'><i></i></span>").join('')+"</div><button type='button' class='ua-story-viewer-close' data-story-close aria-label='Tutup Story'>×</button><button type='button' class='ua-story-step ua-story-prev' aria-label='Story sebelumnya'></button><button type='button' class='ua-story-step ua-story-next' aria-label='Story berikutnya'></button><div class='ua-story-viewer-media'>"+media+"</div><div class='ua-story-viewer-caption'><strong>"+esc(button.dataset.storyOwner||'Pengguna Pluits')+"</strong>"+(item.caption?"<p>"+esc(item.caption)+"</p>":"")+(button.dataset.demoStory==="true"?"<small class='ua-story-demo-note'>Pratinjau Story · data demo</small>":"")+"</div></div>";
     overlay.querySelector('.ua-story-prev').disabled=index===0;overlay.querySelector('.ua-story-next').disabled=index===items.length-1;
     overlay.querySelector('.ua-story-prev').onclick=()=>{if(index>0){index--;render();}};
     overlay.querySelector('.ua-story-next').onclick=()=>{if(index<items.length-1){index++;render();}};
@@ -1175,6 +1183,7 @@ function bindAddresses(){
  }));
 }
 function bindPeopleRecommendationActions(){
+ document.querySelectorAll('[data-people-demo-follow]').forEach(button=>button.addEventListener('click',()=>{const followed=button.getAttribute('aria-pressed')==='true';button.setAttribute('aria-pressed',String(!followed));button.textContent=followed?'Ikuti · demo':'Mengikuti · demo';}));
  document.querySelectorAll('[data-people-follow]').forEach(button=>button.addEventListener('click',async()=>{
   if(button.disabled)return;
   const target=button.dataset.peopleFollow,state=button.dataset.followState||'';
