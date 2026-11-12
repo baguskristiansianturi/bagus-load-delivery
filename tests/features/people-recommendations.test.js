@@ -25,6 +25,6 @@ test('recommendation renderer has a truthful empty state and profile actions',()
  assert.match(html,/Orang yang Mungkin Anda Kenal/);
  assert.match(html,/>NEW</);
  assert.doesNotMatch(html,/@new/);
- assert.match(html,/>\\+<\\/span>/);
+ assert.ok(html.includes('<span aria-hidden="true">+</span>'));
  assert.match(html,/data-people-follow="new"/);
 });
