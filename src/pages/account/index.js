@@ -224,7 +224,13 @@ async function profilePage(preview=false,editMode=false){
   <div class="ua-preview-status">${profile.visibility==='public'?'Profil Anda bersifat publik.':'Profil Anda privat. Pengunjung lain tidak dapat melihat postingan Anda.'}</div>
   <section class="ua-profile-card ua-public-profile">
    <div class="ua-cover ${coverUrl?'has-cover':'no-cover'}" ${coverUrl?`style="background-image:url('${coverUrl}')"`:''}>${coverUrl?'<span>PLUITS PROFILE</span>':''}</div>
-   <div class="ua-profile-content"><div class="ua-profile-avatar">${avatar(avatarUrl,profile.display_name,'large')}</div>
+   <div class="ua-profile-content">   <div class="pl-social-header-menu ua-profile-menu">
+    <button class="pl-social-menu-trigger" type="button" aria-label="Menu profil" aria-expanded="false" aria-controls="pl-account-menu"><span aria-hidden="true">•••</span></button>
+    <div class="pl-social-menu-panel" id="pl-account-menu" hidden>
+     <a href="#/account/profile/edit">${socialIcon('edit',{size:17})}<span>Edit profil</span></a>
+     <a href="#/account/settings">${socialIcon('settings',{size:17})}<span>Pusat Pengaturan</span></a>
+    </div>
+   </div><div class="ua-profile-avatar">${avatar(avatarUrl,profile.display_name,'large')}</div>
     <div class="ua-profile-identity"><h2>${esc(profile.display_name)}</h2><div class="ua-username">@${esc(profile.username)}</div><div class="ua-location">${profile.public_city&&profile.public_province?'⌖ '+esc(profile.public_city)+', '+esc(profile.public_province):''}</div><p>${esc(profile.bio||'Bio belum ditambahkan.')}</p></div>
     <div class="ua-profile-count"><strong>${visiblePosts.length}</strong><span>Postingan publik</span></div>
    </div>
@@ -236,22 +242,14 @@ async function profilePage(preview=false,editMode=false){
  return `
  <section class="ua-profile-card">
   <div class="ua-cover ${coverUrl?'has-cover':'no-cover'}" ${coverUrl?`style="background-image:url('${coverUrl}')"`:''}>
-   <div class="pl-social-header-menu ua-profile-menu">
-    <button class="pl-social-menu-trigger" type="button" aria-label="Menu profil" aria-expanded="false" aria-controls="pl-account-menu"><span aria-hidden="true">•••</span></button>
-    <div class="pl-social-menu-panel" id="pl-account-menu" hidden>
-     <a href="#/account/profile/edit">${socialIcon('edit',{size:17})}<span>Edit profil</span></a>
-     <a href="#/account/settings">${socialIcon('settings',{size:17})}<span>Pusat Pengaturan</span></a>
-    </div>
-   </div>
-   <div class="pl-social-header-menu ua-profile-menu">
-    <button class="pl-social-menu-trigger" type="button" aria-label="Menu profil" aria-expanded="false" aria-controls="pl-account-menu"><span aria-hidden="true">•••</span></button>
-    <div class="pl-social-menu-panel" id="pl-account-menu" hidden>
-     <a href="#/account/profile/edit">${socialIcon('edit',{size:17})}<span>Edit profil</span></a>
-     <a href="#/account/settings">${socialIcon('settings',{size:17})}<span>Pusat Pengaturan</span></a>
-    </div>
-   </div>
   </div>
-  <div class="ua-profile-content"><div class="ua-profile-avatar">${avatar(avatarUrl,profile.display_name,'large')}</div>
+  <div class="ua-profile-content">   <div class="pl-social-header-menu ua-profile-menu">
+    <button class="pl-social-menu-trigger" type="button" aria-label="Menu profil" aria-expanded="false" aria-controls="pl-account-menu"><span aria-hidden="true">•••</span></button>
+    <div class="pl-social-menu-panel" id="pl-account-menu" hidden>
+     <a href="#/account/profile/edit">${socialIcon('edit',{size:17})}<span>Edit profil</span></a>
+     <a href="#/account/settings">${socialIcon('settings',{size:17})}<span>Pusat Pengaturan</span></a>
+    </div>
+   </div><div class="ua-profile-avatar">${avatar(avatarUrl,profile.display_name,'large')}</div>
    <div class="ua-profile-identity"><div class="ua-profile-name-row"><div><h2>${esc(profile.display_name)}</h2><div class="ua-username">@${esc(profile.username)}</div></div></div><p>${esc(profile.bio||'Bio belum ditambahkan.')}</p><div class="ua-location">${profile.public_city&&profile.public_province?'⌖ '+esc(profile.public_city)+', '+esc(profile.public_province):''}</div><div class="ua-profile-stats"><a href="#profile-posts"><strong>${ownPosts.length}</strong><span>Postingan</span></a><a href="#/account/followers"><strong>${followersCount.count||0}</strong><span>Pengikut</span></a><a href="#/account/following"><strong>${followingCount.count||0}</strong><span>Mengikuti</span></a></div><a class="ua-profile-story-link" href="#/account/story">＋ Tambah Story</a></div>
   </div>
  </section>
@@ -262,6 +260,52 @@ async function profilePage(preview=false,editMode=false){
   ${ownPosts.length?postGrid(ownPosts):'<div class="ua-empty"><strong>Belum ada postingan</strong><p>Bagikan foto atau video pertama melalui tombol Buat pada navigasi utama.</p></div>'}
  </section>
 `;
+}
+
+function bindProfileMenu(){
+ if(profileMenuBound)return;
+ profileMenuBound=true;
+ document.addEventListener('click',event=>{
+  const trigger=event.target.closest('.pl-social-menu-trigger');
+  const activeMenu=trigger?.closest('.pl-social-header-menu');
+  if(activeMenu){
+   event.preventDefault();
+   event.stopPropagation();
+   const panel=activeMenu.querySelector('.pl-social-menu-panel');
+   if(!panel)return;
+   const shouldOpen=panel.hidden;
+   document.querySelectorAll('.pl-social-header-menu .pl-social-menu-panel').forEach(item=>{item.hidden=true;});
+   document.querySelectorAll('.pl-social-header-menu .pl-social-menu-trigger').forEach(item=>item.setAttribute('aria-expanded','false'));
+   panel.hidden=!shouldOpen;
+   trigger.setAttribute('aria-expanded',String(shouldOpen));
+   return;
+  }
+  const link=event.target.closest('.pl-social-menu-panel a');
+  if(link){
+   const menu=link.closest('.pl-social-header-menu');
+   const panel=menu?.querySelector('.pl-social-menu-panel');
+   const button=menu?.querySelector('.pl-social-menu-trigger');
+   if(panel)panel.hidden=true;
+   if(button)button.setAttribute('aria-expanded','false');
+   return;
+  }
+  document.querySelectorAll('.pl-social-header-menu').forEach(menu=>{
+   if(menu.contains(event.target))return;
+   const panel=menu.querySelector('.pl-social-menu-panel');
+   const button=menu.querySelector('.pl-social-menu-trigger');
+   if(panel)panel.hidden=true;
+   if(button)button.setAttribute('aria-expanded','false');
+  });
+ });
+ document.addEventListener('keydown',event=>{
+  if(event.key!=='Escape')return;
+  document.querySelectorAll('.pl-social-header-menu').forEach(menu=>{
+   const panel=menu.querySelector('.pl-social-menu-panel');
+   const button=menu.querySelector('.pl-social-menu-trigger');
+   if(panel)panel.hidden=true;
+   if(button)button.setAttribute('aria-expanded','false');
+  });
+ });
 }
 
 function bindProfileMenu(){
