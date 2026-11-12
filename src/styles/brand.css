@@ -47,12 +47,12 @@
 @media (max-width: 760px) {
   .ua-social-app .pluits-brand-mark.ua-brand,
   .ua-social-app .pluits-brand-mark.pl-social-brand {
-    --brand-size: 34px;
-    width: 34px !important;
-    height: 34px !important;
-    min-width: 34px !important;
-    min-height: 34px !important;
-    flex: 0 0 34px !important;
+    --brand-size: 30px;
+    width: 30px !important;
+    height: 30px !important;
+    min-width: 30px !important;
+    min-height: 30px !important;
+    flex: 0 0 30px !important;
     display: inline-flex !important;
     align-self: center;
     overflow: visible !important;
