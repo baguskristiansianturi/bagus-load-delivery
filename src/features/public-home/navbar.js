@@ -4,7 +4,7 @@ import {renderBrandLogo} from '../../components/common/brand.js';
 export function renderPublicNavbar(){
  const locale=localStorage.getItem('pluits-public-locale')==='en'?'en':'id';
  return `<header class="pl-public-navbar" aria-label="PLUITS">
-  <div class="pl-public-navbar-brand">${renderBrandLogo({className:'pl-public-navbar-mark',size:30,label:'PLUITS beranda'})}<span>pluits</span></div>
+  <div class="pl-public-navbar-brand">${renderBrandLogo({className:'pl-public-navbar-mark',size:30,label:'PLUITS beranda'})}<span>Pluits</span></div>
   <div class="pl-public-navbar-actions">
    <button class="pl-public-language" type="button" data-public-action="language" aria-label="Ganti bahasa" title="Bahasa"><span class="pl-public-flag pl-public-flag-${locale}" aria-hidden="true"></span><span data-public-locale-label>${locale.toUpperCase()}</span></button>
    <button class="pl-public-icon-action" type="button" data-public-action="wishlist" aria-label="Wishlist" title="Wishlist">${socialIcon('heart',{size:22})}</button>
