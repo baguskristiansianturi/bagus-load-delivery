@@ -615,3 +615,25 @@
   .pl-auth-mode-login .pl-auth-provider-grid .pl-auth-provider{min-height:40px}
   .pl-auth-mode-login .pl-register-footer{padding-top:6px}
 }
+
+
+/* Login/register tabs: active brand fill, calm navy hover for inactive tab. */
+.pl-auth-mode-login .pl-auth-tabs a.is-active,
+.pl-auth-mode-login .pl-auth-tabs a.is-active:hover,
+.pl-auth-mode-login .pl-auth-tabs a.is-active:focus-visible{
+  color:#fff;
+  background:#20b8ae;
+  border-color:transparent;
+  box-shadow:0 2px 8px rgba(32,184,174,.2);
+}
+.pl-auth-mode-login .pl-auth-tabs a:not(.is-active){
+  color:#849198;
+  background:transparent;
+  box-shadow:none;
+}
+.pl-auth-mode-login .pl-auth-tabs a:not(.is-active):hover,
+.pl-auth-mode-login .pl-auth-tabs a:not(.is-active):focus-visible{
+  color:#203746;
+  background:#eef1f2;
+  box-shadow:inset 0 0 0 1px rgba(32,55,70,.035);
+}
