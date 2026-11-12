@@ -401,7 +401,8 @@ async function feedPage(){
   const payload=esc(JSON.stringify(ready.map(story=>({url:story.url,type:story.media_type,caption:story.caption||'',createdAt:story.created_at}))));
   return "<button type='button' class='ua-story-group' data-story-items='"+payload+"' data-story-owner='"+esc(owner.display_name||'Pengguna PLUITS')+"' aria-label='Lihat Story "+name+"'><span class='ua-story-ring'><span class='ua-story-avatar'>"+(avatarUrl?"<img src='"+esc(avatarUrl)+"' alt='' loading='lazy'>":"<b>"+esc(initials(owner.display_name))+"</b>")+"</span></span><strong>"+name+"</strong><small>"+ready.length+" Story</small></button>";
  }).filter(Boolean).join('');
- const renderedStoryCount=(storyCards.match(/class='ua-story-group/g)||[]).length;\n const demoStoryCards=showCircleDemo?CIRCLE_DEMO_PEOPLE.slice(0,Math.max(0,10-renderedStoryCount)).map((person,index)=>{
+ const renderedStoryCount=(storyCards.match(/class='ua-story-group/g)||[]).length;
+ const demoStoryCards=showCircleDemo?CIRCLE_DEMO_PEOPLE.slice(0,Math.max(0,10-renderedStoryCount)).map((person,index)=>{
   const payload=esc(JSON.stringify([{url:person.avatarUrl,type:'image',caption:['Menikmati hari yang cerah.','Sedikit cerita dari sekitar.','Momen sederhana hari ini.','Berbagi inspirasi dan suasana.','Hari yang penuh warna.'][index%5],createdAt:new Date(Date.now()-index*3600000).toISOString()}]));
   return "<button type='button' class='ua-story-group ua-story-group-demo' data-story-items='"+payload+"' data-story-owner='"+esc(person.name)+"' data-demo-story='true' aria-label='Lihat contoh Story "+esc(person.name)+"'><span class='ua-story-ring'><span class='ua-story-avatar'><img src='"+esc(person.avatarUrl)+"' alt='Foto contoh "+esc(person.name)+"' loading='lazy'></span></span><strong>"+esc(person.name)+"</strong><small>Story demo</small><span class='ua-demo-chip'>Contoh</span></button>";
  }).join(''):'';
