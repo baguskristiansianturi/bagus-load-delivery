@@ -34,3 +34,16 @@ export function bindPublicNavbar(){
  window.addEventListener('pluits:guest-cart-updated',updateCart);
  window.addEventListener('storage',updateCart);
 }
+
+export function addPublicGuestCartItem(item){
+ if(!item||item.id===undefined||item.id===null)return false;
+ let items=[];try{items=JSON.parse(localStorage.getItem('pluits-guest-cart')||'[]');if(!Array.isArray(items))items=[];}catch{}
+ const id=String(item.id),quantity=Math.max(1,Number(item.quantity)||1),existing=items.find(entry=>String(entry.id)===id);
+ if(existing)existing.quantity=Math.max(0,Number(existing.quantity)||0)+quantity;
+ else items.push({id,quantity});
+ localStorage.setItem('pluits-guest-cart',JSON.stringify(items));
+ window.dispatchEvent(new Event('pluits:guest-cart-updated'));
+ let toast=document.querySelector('.pl-public-toast');if(!toast){toast=document.createElement('div');toast.className='pl-public-toast';toast.setAttribute('role','status');document.body.append(toast);}
+ toast.textContent='Berhasil ditambahkan ke keranjang';toast.classList.add('is-visible');clearTimeout(toast._hideTimer);toast._hideTimer=setTimeout(()=>toast.classList.remove('is-visible'),2200);
+ return true;
+}
