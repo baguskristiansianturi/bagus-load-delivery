@@ -881,3 +881,30 @@
     height:min(25vw,88px);
   }
 }
+
+
+/* Refine Story spacing: maximize circle size while keeping three columns visible. */
+@media(max-width:760px){
+  .ua-social-home .ua-circle-story-track{
+    gap:2px;
+    padding-left:2px;
+    padding-right:2px;
+  }
+  .ua-social-home .ua-story-group{
+    flex:0 0 calc((100vw - 12px) / 3);
+    gap:5px;
+  }
+  .ua-social-home .ua-story-group .ua-story-ring{
+    width:min(28vw,100px);
+    height:min(28vw,100px);
+  }
+}
+@media(max-width:380px){
+  .ua-social-home .ua-story-group{
+    flex-basis:calc((100vw - 12px) / 3);
+  }
+  .ua-social-home .ua-story-group .ua-story-ring{
+    width:min(28vw,96px);
+    height:min(28vw,96px);
+  }
+}
