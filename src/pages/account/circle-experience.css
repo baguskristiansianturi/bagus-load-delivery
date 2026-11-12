@@ -817,3 +817,67 @@
   .ua-social-home .ua-story-group{flex-basis:140px}
   .ua-social-home .ua-story-group .ua-story-ring{width:132px;height:132px}
 }
+
+
+/* Mobile home: edge-to-edge discovery, Story row sized for three visible circles. */
+@media(max-width:760px){
+  .ua-social-home .ua-home-trends,
+  .ua-social-home .ua-circle-stories,
+  .ua-social-home>.ua-feed{
+    width:calc(100% + 28px);
+    margin-left:-14px;
+    margin-right:-14px;
+  }
+  .ua-social-home .ua-home-trends{
+    padding-left:14px;
+    padding-right:14px;
+  }
+  .ua-social-home .ua-circle-stories{
+    padding-left:0;
+    padding-right:0;
+  }
+  .ua-social-home .ua-circle-section-heading{
+    padding-left:14px;
+    padding-right:14px;
+  }
+  .ua-social-home .ua-circle-story-track{
+    display:flex;
+    gap:4px;
+    width:100%;
+    margin:0;
+    padding:4px 8px 10px;
+    overflow-x:auto;
+  }
+  .ua-social-home .ua-story-group{
+    flex:0 0 calc((100vw - 32px) / 3);
+    gap:6px;
+  }
+  .ua-social-home .ua-story-group .ua-story-ring{
+    width:min(25vw,92px);
+    height:min(25vw,92px);
+  }
+  .ua-social-home .ua-story-group>strong{
+    max-width:100%;
+    font-size:10px;
+  }
+  .ua-social-home>.ua-feed{
+    gap:0;
+    padding:0;
+  }
+  .ua-social-home>.ua-feed .ua-post-card{
+    width:100%;
+    margin-left:0;
+    margin-right:0;
+    border-left:0;
+    border-right:0;
+    border-radius:0;
+    box-shadow:none;
+  }
+}
+@media(max-width:380px){
+  .ua-social-home .ua-story-group{flex-basis:calc((100vw - 24px) / 3)}
+  .ua-social-home .ua-story-group .ua-story-ring{
+    width: min(25vw,88px);
+    height:min(25vw,88px);
+  }
+}
