@@ -174,3 +174,10 @@ test('Circle header exposes desktop Circle and Jelajah links while retaining mob
  assert.ok(nav.includes('ua-home-desktop-nav')&&nav.includes('Circle</a>')&&nav.includes('Jelajah</a>'));
  assert.match(css,/\.ua-social-app \.ua-home-desktop-nav/);
 });
+
+
+test('Circle category filtering normalizes tags with spaces to the same slug as category options',async()=>{
+ const account=await readFile(new URL('../../src/pages/account/index.js',import.meta.url),'utf8');
+ assert.match(account,/replace\(\/\\s\+\/g,'-'\)===exploreCategory/);
+ assert.ok(account.includes("const slug=String(raw||'').toLowerCase().replace(/^#/,'').trim().replace(/\\s+/g,'-')"));
+});

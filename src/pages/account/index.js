@@ -421,7 +421,7 @@ async function feedPage(){
  const recommendationCards=sorted.slice(0,8);
  const interestSection=(topicSections|| (recommendationCards.length?"<div class='ua-home-topic-carousel ua-home-recommendation-carousel'>"+recommendationCards.map(postCard).join('')+"</div>":""));
  const categoryOptions=[...new Map([...interests,...inferredTopics].filter(Boolean).map(topic=>[String(topic.slug||'').toLowerCase(),topic])).values()];
- if(exploreCategory!=='all')sorted=sorted.filter(post=>(post.tags||[]).some(tag=>String(tag).toLowerCase().replace(/^#/,'').trim().replace(/\\s+/g,'-')===exploreCategory));
+ if(exploreCategory!=='all')sorted=sorted.filter(post=>(post.tags||[]).some(tag=>String(tag).toLowerCase().replace(/^#/,'').trim().replace(/\s+/g,'-')===exploreCategory));
  const filters=[['all','Semua'],['latest','Terbaru'],['random','Acak']];
  const categorySelect="<label class='ua-explore-category-label'><span>Kategori</span><select data-explore-category aria-label='Pilih kategori postingan'><option value='all' "+(exploreCategory==='all'?'selected':'')+">Semua kategori</option>"+categoryOptions.map(topic=>"<option value='"+esc(topic.slug)+"' "+(exploreCategory===String(topic.slug).toLowerCase()?'selected':'')+">"+esc(topic.name)+"</option>").join('')+"</select></label>";
  const filterNav="<nav class='ua-explore-filters' aria-label='Urutan postingan'>"+filters.map(([key,label])=>"<button type='button' data-explore-filter='"+key+"' class='"+(exploreFilter===key?'is-active':'')+"' "+(exploreFilter===key?"aria-current='true'":"")+">"+label+"</button>").join('')+categorySelect+"</nav>";
