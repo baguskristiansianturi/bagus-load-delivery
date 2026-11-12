@@ -10,11 +10,11 @@ const initials=value=>String(value||'P').trim().slice(0,1).toUpperCase();
 const dateLabel=value=>{const date=new Date(value);return Number.isFinite(date.getTime())?new Intl.DateTimeFormat('id-ID',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}).format(date):''};
 
 export function discoverySearch(q=''){
- return \`<div class="ds-page">
+ return `<div class="ds-page">
   <header class="ds-top">
    <a href="#/account/explore" aria-label="Kembali ke Circle">‹</a>
    <div class="ds-title"><strong>Jelajah</strong><small>Temukan apa yang sedang terjadi di PLUITS</small></div>
-   <form id="ds-form" class="ds-search"><span>⌕</span><input id="ds-query" value="\${esc(q)}" placeholder="Cari konten, orang, atau topik…" aria-label="Cari"><button aria-label="Cari">⌕</button></form>
+   <form id="ds-form" class="ds-search"><span>⌕</span><input id="ds-query" value="${esc(q)}" placeholder="Cari konten, orang, atau topik…" aria-label="Cari"><button aria-label="Cari">⌕</button></form>
   </header>
   <main class="ds-main">
    <section class="ds-intro"><h1>Jelajah</h1><p>Konten publik dari personal, kreator, pemilik usaha, penyedia layanan, komunitas, dan berbagai entitas.</p></section>
@@ -22,8 +22,8 @@ export function discoverySearch(q=''){
    <nav class="ds-chips" id="ds-chips" aria-label="Kategori konten"><button data-cat="all" class="selected">Semua</button></nav>
    <section class="ds-feed-wrap"><div class="ds-feed" id="ds-feed" aria-label="Feed publik"></div><div class="ds-loading" id="ds-loading" role="status">Memuat konten publik…</div></section>
   </main>
-  \${renderSocialMobileNav({active:'discover'})}
- </div>\`;
+  ${renderSocialMobileNav({active:'discover'})}
+ </div>`;
 }
 
 async function feed(){
