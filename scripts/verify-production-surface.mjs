@@ -113,6 +113,14 @@ assert.match(navigation, /label: 'Profil'/, 'Profile must remain the fifth mobil
 assert.match(navigation, /pl-create-orb/, 'The center Create action must have a dedicated visual treatment.');
 assert.doesNotMatch(navigation, /label: 'Reels'/, 'Reels must be created from the central Create action, not consume a navigation slot.');
 
+const profileHeader = renderSocialHeader({ active: 'profile', profileView: true, user: { id: 'test-user' }, profile: {} });
+assert.match(profileHeader, /aria-label="Menu profil"/, 'Profile header must keep the three-dot menu visible.');
+assert.match(profileHeader, /href="#\\/account\\/settings"/, 'Profile menu must provide access to Account Settings.');
+assert.match(profileHeader, /href="#\\/account\\/profile\\/edit"/, 'Profile menu must provide access to Edit Profile.');
+const brandStyles = read('src/styles/brand.css');
+assert.match(brandStyles, /pluits-brand-mark\\.ua-brand[\\s\\S]*display: inline-flex !important/, 'Mobile account headers must not hide the canonical PLUITS logo.');
+assert.match(brandStyles, /object-fit: contain !important/, 'The original PLUITS logo must remain fully visible without cropping.');
+
 const signedInHeader = renderSocialHeader({ active: 'explore', user: { id: 'test-user' }, profile: {}, userAvatar: '<span>U</span>', notificationCount: 3 });
 const signedInMobileNav = renderSocialMobileNav({ active: 'explore', user: { id: 'test-user' }, profile: {}, userAvatar: '<span>U</span>', notificationCount: 3 });
 const publicMobileNav = renderSocialMobileNav({ active: 'home', publicHome: true });
