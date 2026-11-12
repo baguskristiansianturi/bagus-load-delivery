@@ -28,7 +28,7 @@ test('app download spacing and tablet layout stay responsive without excess mobi
  assert.ok(css.includes('.pl-public-home{padding-bottom:0!important}'), 'Root padding must not duplicate the content clearance.');
  const layout=await readFile(new URL('../../styles/home-layout.css',import.meta.url),'utf8');
  assert.ok(layout.includes('.pl-public-home .pl-public-shell{padding:8px 0 calc(64px + env(safe-area-inset-bottom))}'), 'The homepage content must reserve one controlled clearance for the fixed bottom navigation.');
- assert.ok(css.includes('.pl-public-home .pl-app-download{padding-bottom:12px}'), 'Mobile app download section must not leave an oversized gap before navigation.');
+ assert.ok(css.includes('.pl-public-home .pl-app-download{padding-bottom:calc(84px + env(safe-area-inset-bottom))}'), 'The final app download card must remain clear of the fixed mobile navigation.');
 });
 
 
@@ -41,10 +41,9 @@ test('public guest homepage keeps a consistent mobile visual rhythm and light in
  assert.ok(layout.includes('@media(prefers-reduced-motion:reduce)'), 'Touch feedback must respect reduced-motion preferences.');
 });
 
-test('mobile store cards keep visible spacing from each other and the fixed bottom navigation',async()=>{
+test('mobile join and download cards have breathing room above the fixed navigation',async()=>{
  const css=await readFile(new URL('../../src/features/app-download/app-download.css',import.meta.url),'utf8');
- const mobile=css.slice(css.lastIndexOf('/* Mobile: separate the two store cards'));
- assert.ok(mobile.includes('gap:16px'), 'The two store cards must have a clear gap on mobile.');
- assert.ok(mobile.includes('padding:0 0 26px'), 'The download section must leave breathing room after the final card.');
- assert.ok(mobile.includes('margin:0'), 'Store cards must not introduce inconsistent default margins.');
+ const layout=await readFile(new URL('../../styles/home-layout.css',import.meta.url),'utf8');
+ assert.ok(layout.includes('.pl-public-home .pl-public-join{margin-bottom:20px}'), 'The join card must be separated from the download card.');
+ assert.ok(css.includes('padding-bottom:calc(84px + env(safe-area-inset-bottom))'), 'The download card must have safe space above the bottom navigation.');
 });
