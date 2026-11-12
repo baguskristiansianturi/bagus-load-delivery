@@ -335,7 +335,7 @@
  outline-offset:3px;
 }
 @media(max-width:760px){
- .pl-public-home .pl-public-shell{padding:8px 0 64px}
+ .pl-public-home .pl-public-shell{padding:8px 0 calc(64px + env(safe-area-inset-bottom))}
  .pl-public-home .pl-public-hero{gap:14px;padding:8px 0 22px}
  .pl-public-home .pl-public-hero-visual>img{height:230px}
  .pl-public-home .pl-public-hero-copy{padding:0 16px}
@@ -384,7 +384,7 @@
  .pl-public-home{padding-bottom:0!important}
 }
 @media(max-width:380px){
- .pl-public-home .pl-public-shell{padding-bottom:60px}
+ .pl-public-home .pl-public-shell{padding-bottom:calc(60px + env(safe-area-inset-bottom))}
  .pl-public-home .pl-public-section{padding-inline:14px}
  .pl-public-home .pl-public-section-head h2{font-size:19px}
  .pl-public-home .pl-public-category{height:146px}
