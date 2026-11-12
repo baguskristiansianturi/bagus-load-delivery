@@ -16,7 +16,6 @@ const safe=v=>String(v??'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&g
 export function home(){
  const guestMode=(location.hash||'').startsWith('#/guest');
  const image=(id)=>'https://images.unsplash.com/'+id+'?auto=format&fit=crop&w=900&q=82';
- const image=(id)=>'https://images.unsplash.com/'+id+'?auto=format&fit=crop&w=900&q=82';
  return `<div class="pl-social-home pl-public-home">
  ${renderSocialHeader({active:'home',publicHome:true})}
  <main class="pl-public-shell">
