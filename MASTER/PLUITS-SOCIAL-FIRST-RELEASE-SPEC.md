@@ -88,6 +88,16 @@ Settings are grouped and modular; each section has a single owner module and may
 - Photos/video: open the native picker from the user's action. Browser file picker permissions are managed by the browser/Android; do not claim the website can pre-grant gallery permission.
 - Camera/microphone: request only when a recording feature is actually used.
 
+### 4.1 Non-destructive profile image framing
+
+- Keep one original uploaded image in Storage. Avatar and Circle card presentation settings must never rewrite or permanently crop the source file.
+- Persist independent normalized focus/zoom settings in `public.user_profile_image_frames`: `avatar_x/avatar_y/avatar_zoom` and `card_x/card_y/card_zoom`.
+- Focus coordinates are percentages (0–100); zoom is bounded (1.00–2.50). The owner can edit them in Profile → Edit Profile with separate avatar and 2:3 Circle card previews.
+- Public profile card framing is readable only when the associated profile is public; private profiles remain visible only under the same relationship/owner visibility rules as their profile. Writes are owner-only through RLS.
+- Circle cards use the original signed image URL and CSS object-position/zoom, with lazy loading. Do not depend on Supabase Storage image transformations for this path because that feature is plan-gated; never silently replace the original source with a transformed crop.
+- When a profile photo changes, keep framing metadata as the user's preferred composition unless the owner resets it. Every image surface may choose its own frame; changing the circular avatar must not change the Circle card frame.
+- Acceptance: avatar and card sliders preview independently; values persist after reload; public cards apply card framing; source media path remains unchanged; mobile and desktop preserve sharpness within the available source resolution.
+
 ## 5. Music, rights, and recommendation integrity
 
 - Never copy, download, rip, or rehost commercial songs without a license covering Pluits' use.

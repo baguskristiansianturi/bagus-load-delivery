@@ -135,3 +135,11 @@ Salin untuk keputusan berikutnya:
 - Dampak teknis: pisahkan strategi ranking Circle/Jelajah/important events; pertahankan satu sumber konten kanonis; pisahkan service, ranking, data, dan presentation; gunakan RLS dan consent untuk social proof.
 - Dokumen otoritatif: Business Model Master Bagian 33.14 dan docs/pluits/CIRCLE-AND-JELAJAH-EXPERIENCE-2026-11-12.md.
 - Status implementasi: Circle/Jelajah UI IMPLEMENTED/DEPLOYED; Android UAT NOT TESTED; founder acceptance PENDING.
+
+
+## 2026-11-13 — Profile image framing is presentation metadata
+
+- DECIDED: PLUITS keeps the original uploaded profile image unchanged and stores independent framing metadata for the circular avatar and Circle recommendation card.
+- IMPLEMENTED: `user_profile_image_frames` with bounded focus coordinates and zoom for avatar/card; owner-only writes; public read limited to public profiles; profile editor previews and independent sliders; Circle reads card framing only for recommended public profiles.
+- CONSTRAINT: use the original signed Storage object URL and browser-side framing. Supabase Storage image transformation is not a dependency for this flow because it is plan-gated.
+- NOT TESTED: Android device UAT, multiple source-image aspect ratios, and two-account RLS verification. GitHub Actions and database advisors must be checked against the implementation commit before marking DEPLOYED.

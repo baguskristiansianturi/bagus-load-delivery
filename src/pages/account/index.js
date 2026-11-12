@@ -11,6 +11,7 @@ import {renderSocialHeader,renderSocialMobileNav} from '../../components/social/
 import {updateSEO} from '../seo.js';
 import './user-account.css';
 import './circle-experience.css';
+import '../../features/profile/image-framing.css';
 import '../../features/profile/profile-hero.css';
 import '../../features/reels/reels.css';
 import {accountSecurityPage,bindAccountSecurity} from './security-settings.js';
@@ -21,7 +22,6 @@ import {getMediaMime,getMediaExtension,validateMediaFile,getVideoDuration} from 
 import {createMediaUploader} from '../../features/media/storage-upload.js';
 import {createSignedUrlMap} from '../../services/storage/signed-urls.js';
 import {DEFAULT_PROFILE_IMAGE_FRAME,normalizeProfileImageFrame,profileImageFrameCss,readProfileImageFrame} from '../../features/profile/image-framing.js';
-import '../../features/profile/image-framing.css';
 import {homeNearbySection,bindHomeNearby} from '../directory/index.js';
 
 const SUPABASE_URL='https://ytndswhqxayqpftszwfh.supabase.co';
