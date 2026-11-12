@@ -482,3 +482,75 @@
 
 
 @media (max-width:760px){.ua-social-app .pl-social-mobile-nav>a{flex:1 1 20%;min-width:0;position:relative;overflow:visible}.ua-social-app .pl-social-mobile-nav .pl-mobile-profile .pl-icon{border-radius:50%}.ua-social-app .pl-social-mobile-nav .pl-nav-unread{top:2px;right:calc(50% - 21px)}}
+
+/* Profile controls live in the visible identity row; the profile hero intentionally hides its cover. */
+.ua-social-app .ua-profile-main .ua-profile-content { position: relative; }
+.ua-social-app .ua-profile-main .ua-profile-content > .ua-profile-menu {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 35;
+  display: inline-flex;
+  width: auto;
+  height: auto;
+  flex: 0 0 auto;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.ua-social-app .ua-profile-main .ua-profile-identity { padding-right: 48px !important; }
+.ua-social-app .ua-profile-main .ua-profile-menu .pl-social-menu-trigger {
+  width: 38px;
+  height: 38px;
+  border-color: #e4e9ef;
+  background: #fff;
+  color: #26384c;
+  box-shadow: 0 2px 9px rgba(20,35,55,.10);
+}
+.ua-social-app .ua-profile-main .ua-profile-menu .pl-social-menu-panel {
+  top: calc(100% + 7px);
+  right: 0;
+}
+@media (max-width: 760px) {
+  .ua-social-app .ua-profile-main .ua-profile-content > .ua-profile-menu { top: 12px; right: 12px; }
+  .ua-social-app .ua-profile-main .ua-profile-identity { padding-right: 46px !important; }
+  .ua-social-app .ua-profile-main .ua-profile-menu .pl-social-menu-trigger { width: 36px; height: 36px; }
+}
+
+/* Keep the canonical image mark in a fixed, unclipped box in the signed-in header. */
+.ua-social-app .pl-social-header > .pluits-brand-mark.ua-brand {
+  display: inline-flex !important;
+  width: 38px !important;
+  height: 38px !important;
+  min-width: 38px !important;
+  min-height: 38px !important;
+  flex: 0 0 38px !important;
+  flex-grow: 0 !important;
+  flex-shrink: 0 !important;
+  overflow: visible !important;
+  padding: 0 !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+.ua-social-app .pl-social-header > .pluits-brand-mark.ua-brand > img {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  max-height: none !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  clip-path: none !important;
+  transform: none !important;
+  border-radius: 0 !important;
+}
+@media (max-width: 760px) {
+  .ua-social-app .pl-social-header > .pluits-brand-mark.ua-brand {
+    width: 34px !important;
+    height: 34px !important;
+    min-width: 34px !important;
+    min-height: 34px !important;
+    flex: 0 0 34px !important;
+  }
+}
