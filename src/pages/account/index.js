@@ -11,7 +11,6 @@ import '../../features/profile/profile-hero.css';
 import '../../features/reels/reels.css';
 import {accountSecurityPage,bindAccountSecurity} from './security-settings.js';
 import '../../styles/social-components.css';
-import '../../styles/social-navigation.css';
 import {loadAccountContext,contextHeader,professionalPage,professionalFormPage,accountSettingsPage,bindAccountContext} from './account-context.js';
 import {listPrivateDrafts,getPrivateDraft,savePrivateDraft,deletePrivateDraft} from './drafts.js';
 import {getMediaMime,getMediaExtension,validateMediaFile,getVideoDuration} from '../../features/media/media-types.js';
