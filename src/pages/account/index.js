@@ -308,34 +308,6 @@ function bindProfileMenu(){
  });
 }
 
-function bindProfileMenu(){
- const trigger=document.querySelector('.pl-social-menu-trigger'),panel=document.querySelector('#pl-account-menu');
- if(!trigger||!panel)return;
- const close=()=>{panel.hidden=true;trigger.setAttribute('aria-expanded','false');};
- trigger.addEventListener('click',event=>{
-  event.stopPropagation();
-  const open=panel.hidden;
-  panel.hidden=!open;
-  trigger.setAttribute('aria-expanded',String(open));
- });
- panel.addEventListener('click',event=>{if(event.target.closest('a'))close();});
- if(!profileMenuBound){
-  document.addEventListener('click',event=>{
-   const menu=document.querySelector('.pl-social-header-menu');
-   if(menu&&!menu.contains(event.target)){
-    const current=menu.querySelector('.pl-social-menu-panel'),button=menu.querySelector('.pl-social-menu-trigger');
-    if(current&&button){current.hidden=true;button.setAttribute('aria-expanded','false');}
-   }
-  });
-  document.addEventListener('keydown',event=>{
-   if(event.key!=='Escape')return;
-   const menu=document.querySelector('.pl-social-header-menu');
-   const current=menu?.querySelector('.pl-social-menu-panel'),button=menu?.querySelector('.pl-social-menu-trigger');
-   if(current&&button){current.hidden=true;button.setAttribute('aria-expanded','false');button.focus();}
-  });
-  profileMenuBound=true;
- }
-}
 function bindProfileTabs(){
  const nav=document.querySelector('.ua-profile-tabs'),panel=document.querySelector('#ua-profile-tab-content');
  if(!nav||!panel)return;
