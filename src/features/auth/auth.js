@@ -36,7 +36,7 @@ export function mountAuthPage({ supabase, mode = 'login', onAuthenticated }) {
   } else if (isReset) {
     fields = '<div class="pl-auth-field"><label for="pl-auth-password">Password baru</label><div class="pl-register-password-wrap"><input id="pl-auth-password" name="password" type="password" autocomplete="new-password" minlength="8" placeholder="Minimal 8 karakter" required><button class="pl-register-show" type="button" data-toggle-password aria-label="Tampilkan password" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div><small class="pl-register-help">Gunakan password baru yang tidak dipakai di akun lain.</small>';
   } else {
-    fields = '<div class="pl-auth-field"><label for="pl-auth-email">Alamat email</label><input id="pl-auth-email" name="email" type="email" autocomplete="email" inputmode="email" autocapitalize="none" spellcheck="false" placeholder="nama@email.com" required></div>' +
+    fields = '<div class="pl-auth-field"><label for="pl-auth-email">' + (isForgot ? 'Alamat email' : 'Email / Nomor telepon') + '</label><input id="pl-auth-email" name="email" type="' + (isForgot ? 'email' : 'text') + '" autocomplete="' + (isForgot ? 'email' : 'username') + '" inputmode="' + (isForgot ? 'email' : 'text') + '" autocapitalize="none" spellcheck="false" placeholder="' + (isForgot ? 'nama@email.com' : 'nama@email.com atau +628123456789') + '" required></div>' +
       (isForgot ? '' : '<div class="pl-auth-field"><label for="pl-auth-password">Password</label><div class="pl-register-password-wrap"><input id="pl-auth-password" name="password" type="password" autocomplete="current-password" placeholder="Password akun" required><button class="pl-register-show" type="button" data-toggle-password aria-label="Tampilkan password" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>');
   }
   const buttonText = isRegister ? 'Buat akun' : isForgot ? 'Kirim tautan pemulihan' : isReset ? 'Simpan password baru' : isPhone ? 'Kirim kode OTP' : 'Masuk';
@@ -133,7 +133,11 @@ export function mountAuthPage({ supabase, mode = 'login', onAuthenticated }) {
         submit.textContent = 'Password diperbarui';
         setTimeout(() => { if (location.hash.includes('/account/auth')) location.hash = '#/account/auth?mode=login'; }, 1400);
       } else {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        const identity = String(values.get('email') || '').trim();
+        const phone = identity.replace(/[\\s()-]/g, '');
+        const isPhoneIdentity = /^\\+[1-9]\\d{7,14}$/.test(phone);
+        const credentials = isPhoneIdentity ? { phone, password } : { email: identity.toLowerCase(), password };
+        const { error } = await supabase.auth.signInWithPassword(credentials);
         if (error) throw error;
         onAuthenticated?.();
       }
