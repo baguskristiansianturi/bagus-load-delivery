@@ -13,7 +13,7 @@ test('all app icon references resolve to the one public canonical PLUITS SVG',as
  assert.match(brand,/BRAND_LOGO_SRC = '\/pluits\/assets\/brand\/pluits-logo\.svg'/);
  assert.match(index,/rel="icon"[^>]+\/pluits\/assets\/brand\/pluits-logo\.svg/);
  assert.match(manifest,/"src": "\/pluits\/assets\/brand\/pluits-logo\.svg"/);
- assert.match(logo,/<svg[\s\S]*<path[\s\S]*#18c8b5[\s\S]*<\/svg>/);
+ assert.match(logo,/<svg[\s\S]*#18c8b5[\s\S]*<path[\s\S]*<\/svg>/);
  assert.equal(oldSvg,null,'The old root-level logo copy must not remain in the repository.');
 });
 
