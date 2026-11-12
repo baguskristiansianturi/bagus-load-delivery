@@ -131,7 +131,8 @@ test('signed-in home leads with Bali experiences, search, wishlist and the perso
  assert.ok(account.includes("startHomeSearchPrompt('Welcome to '+city)")&&account.includes('nominatim.openstreetmap.org/reverse'),'Search prompt must welcome users using their detected current city.');
  assert.ok(account.includes('navigator.geolocation.getCurrentPosition'),'Home must request device location when no current location is available.');
  assert.ok(account.includes('window.__pluitsHomeLocation'),'Detected device location must be kept separate from profile location.');
- assert.ok(account.includes('ua-explore-filters')&&!account.includes(')+trendSection+homeNearbySection()'),'Circle must use sticky post filters; demo-only Top 10 content must not be presented as live trending.');
+ assert.ok(account.includes('ua-explore-filters')&&account.includes('trendSection+homeNearbySection()+circleHeading'),'Circle must retain the existing Trending and nearby sections before the newly added Circle experience.');
+ assert.ok((account.match(/homeNearbySection\(\)/g)||[]).length===1,'The nearby section must appear once, above Circle content, not be duplicated after the feed.');
  assert.ok(account.includes('homeNearbySection')&&account.includes('bindHomeNearby'),'Home must use live nearby results.');
  assert.ok(account.includes('Temukan Lebih Banyak')&&account.includes('Produk Lokal')&&account.includes('Kumpulan')&&account.includes('Layanan PLUITS'),'Home must continue from the 30-post feed into discovery, product recommendations, service collections and PLUITS service filters.');
  assert.ok(account.includes('circleHeading+storiesSection+peopleSection+homeHeading'),'People recommendations must appear after Circle stories and before the post feed.');
