@@ -114,9 +114,7 @@ assert.match(navigation, /pl-create-orb/, 'The center Create action must have a 
 assert.doesNotMatch(navigation, /label: 'Reels'/, 'Reels must be created from the central Create action, not consume a navigation slot.');
 
 const profileHeader = renderSocialHeader({ active: 'profile', profileView: true, user: { id: 'test-user' }, profile: {} });
-assert.match(profileHeader, /aria-label="Menu profil"/, 'Profile header must keep the three-dot menu visible.');
-assert.match(profileHeader, /href="#\/account\/settings"/, 'Profile menu must provide access to Account Settings.');
-assert.match(profileHeader, /href="#\/account\/profile\/edit"/, 'Profile menu must provide access to Edit Profile.');
+assert.doesNotMatch(profileHeader, /aria-label="Menu profil"/, 'Profile actions must live in the visible profile content, not a hidden shared header slot.');
 const brandStyles = read('src/styles/brand.css');
 assert.match(brandStyles, /pluits-brand-mark\.ua-brand[\s\S]*display: inline-flex !important/, 'Mobile account headers must not hide the canonical PLUITS logo.');
 assert.match(brandStyles, /object-fit: contain !important/, 'The original PLUITS logo must remain fully visible without cropping.');
