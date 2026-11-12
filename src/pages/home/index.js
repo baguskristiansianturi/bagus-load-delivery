@@ -46,15 +46,7 @@ export async function bindHome(){
    if(stillOnRequestedHome())location.hash='#/account/explore';
    return;
   }
-  const viewer=null;
   bindHomeNearby({personalize:false});
-  const headerActions=document.querySelector('.pl-social-header-actions');
-  if(viewer&&!guestMode&&headerActions){
-   const {data:me}=await db.from('user_profiles').select('display_name,username,avatar_path').eq('id',viewer.id).maybeSingle();
-   const photo=await mediaUrl(me?.avatar_path);
-   const label=safe(me?.display_name||viewer.email||'Profil');
-   headerActions.innerHTML='<a class="pl-header-profile" href="#/account/profile" aria-label="Buka profil saya">' +(photo?'<img src="'+photo+'" alt="">':'<b>'+label.slice(0,1).toUpperCase()+'</b>')+'</a><a href="#/account/activity" aria-label="Aktivitas">♡</a><a class="pl-social-signup" href="#/account/settings">Pengaturan</a>';
-  }
 
   const {data:rows,error}=await db.from('user_posts').select('id,user_id,caption,media_path,media_type,tags,created_at,profile_context,professional_profile_id,business_store_id').eq('visibility','public').eq('moderation_status','published').order('created_at',{ascending:false}).limit(30);
   if(error)throw error;
