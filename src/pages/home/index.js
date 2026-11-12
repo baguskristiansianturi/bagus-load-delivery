@@ -3,6 +3,7 @@ import {renderSocialHeader,renderSocialMobileNav} from '../../components/social/
 import {ROUTES} from '../../components/social/navigation-routes.js';
 import {homeNearbySection,bindHomeNearby} from '../directory/index.js';
 import {createSignedUrlMap} from '../../services/storage/signed-urls.js';
+import {renderAppDownload} from '../../features/app-download/app-download.js';
 const db=createClient('https://ytndswhqxayqpftszwfh.supabase.co','sb_publishable_kOUbKBYg88nXgz8FQRSnvA_k0hvKY65');
 const safe=v=>String(v??'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
 export function home(){
@@ -29,6 +30,7 @@ export function home(){
   <section class="pl-public-section pl-public-stories"><div class="pl-public-section-head"><div><span class="pl-public-eyebrow">KONTEN KOMUNITAS</span><h2>Cerita dari berbagai sudut pandang.</h2><p>Foto, tulisan, video, dan pengalaman yang dibagikan komunitas.</p></div><a href="#/search">Jelajahi konten →</a></div><div class="pl-public-story-feature"><img src="${image('photo-1470252649378-9c29740c9fa8')}" alt="Pemandangan alam saat matahari terbit" loading="lazy"><div><span class="pl-public-eyebrow">STORY · POST · REEL</span><h3>Temukan inspirasi dari pengalaman nyata.</h3><p>Jelajahi konten publik sekarang. Bergabunglah untuk berbagi cerita dan berinteraksi.</p><a href="#/search">Mulai menjelajah →</a></div></div><div id="pl-public-feed"><div class="pl-feed-loading">Memuat postingan publik…</div></div></section>
   <section class="pl-public-section pl-public-market"><div class="pl-public-section-head"><div><span class="pl-public-eyebrow">LOCAL COMMERCE</span><h2>Usaha dan layanan dalam satu ekosistem.</h2><p>Kenali penyedia, lihat produk, dan temukan layanan yang kamu butuhkan.</p></div><a href="#/marketplace">Jelajahi marketplace →</a></div><div class="pl-public-market-grid"><a href="#/marketplace"><img src="${image('photo-1542838132-92c53300491e')}" alt="Produk bahan pangan segar" loading="lazy"><b>Toko & produk</b><small>Temukan produk dari berbagai usaha.</small></a><a href="#/places"><img src="${image('photo-1552566626-52f8b828add9')}" alt="Interior restoran" loading="lazy"><b>Restoran & kafe</b><small>Kenali tempat dan pengalaman kuliner.</small></a><a href="#/places"><img src="${image('photo-1530789253388-582c481c54b0')}" alt="Perjalanan dan destinasi" loading="lazy"><b>Transportasi & trip</b><small>Jelajahi perjalanan dan aktivitas.</small></a><a href="#/places"><img src="${image('photo-1521737711867-e3b97375f902')}" alt="Tim profesional bekerja" loading="lazy"><b>Jasa profesional</b><small>Temukan keahlian dan layanan.</small></a></div></section>
   <section class="pl-public-join"><div><span class="pl-public-eyebrow">JADILAH BAGIAN DARI PLUITS</span><h2>Punya cerita, tempat, atau usaha untuk dibagikan?</h2><p>Buat akun gratis dan mulai membangun kehadiranmu di PLUITS.</p></div><a href="#/account/register">Daftar gratis <span>→</span></a></section>
+  ${renderAppDownload()}
  </main><footer class="pl-social-footer">PLUITS INDONESIA · Social · Local Commerce · Discovery</footer>
  ${renderSocialMobileNav({active:'home',publicHome:true})}</div>`;
 }
