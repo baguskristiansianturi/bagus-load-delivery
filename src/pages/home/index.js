@@ -1,7 +1,7 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import {renderSocialMobileNav} from '../../components/social/navigation.js';
 import {renderPublicNavbar,bindPublicNavbar} from '../../features/public-home/navbar.js';
-import './navbar.css';
+import '../../features/public-home/navbar.css';
 import {ROUTES} from '../../components/social/navigation-routes.js';
 import {homeNearbySection,bindHomeNearby} from '../directory/index.js';
 import {createSignedUrlMap} from '../../services/storage/signed-urls.js';
