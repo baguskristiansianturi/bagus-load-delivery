@@ -276,3 +276,22 @@
   flex-basis:40px!important;width:40px!important;min-width:40px!important;max-width:40px!important;
  }
 }
+
+
+/* Soft circular icon surfaces and discreet live-count indicators. */
+@media(max-width:760px){
+ .pl-public-home>header.pl-public-navbar>.pl-public-navbar-actions>.pl-public-icon-action{position:relative!important}
+ .pl-public-home>header.pl-public-navbar>.pl-public-navbar-actions>.pl-public-icon-action:before{
+  content:"";position:absolute;width:34px;height:34px;border-radius:50%;background:#f4f8f7;
+  border:1px solid #e8efed;box-sizing:border-box;transition:background .18s ease,border-color .18s ease,transform .18s ease;
+ }
+ .pl-public-home>header.pl-public-navbar>.pl-public-navbar-actions>.pl-public-icon-action>.pl-icon{position:relative;z-index:1}
+ .pl-public-home>header.pl-public-navbar>.pl-public-navbar-actions>.pl-public-icon-action:active:before{background:#eaf4f2;transform:scale(.94)}
+ .pl-public-cart-count{z-index:2;top:1px!important;right:0!important;min-width:15px!important;height:15px!important;padding:0 3px!important;border:1.5px solid #fff!important;border-radius:99px!important;background:#168f87!important;color:#fff!important;font-size:9px!important;font-weight:750!important;box-shadow:0 1px 3px rgba(20,75,70,.12)}
+ .pl-public-wishlist-action.has-saved>.pl-icon{fill:#168f87!important;stroke:#168f87!important}
+ .pl-public-wishlist-action.has-saved:before{background:#edf7f5!important;border-color:#d8ebe7!important}
+}
+@media(prefers-reduced-motion:no-preference){
+ .pl-public-wishlist-action.is-confirmed>.pl-icon{animation:pl-wishlist-confirm .32s ease}
+ @keyframes pl-wishlist-confirm{0%{transform:scale(1)}45%{transform:scale(1.18)}100%{transform:scale(1)}}
+}

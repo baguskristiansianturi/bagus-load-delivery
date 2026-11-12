@@ -7,7 +7,7 @@ export function renderPublicNavbar(){
   <div class="pl-public-navbar-brand">${renderBrandLogo({className:'pl-public-navbar-mark',size:30,label:'PLUITS beranda'})}<span>Pluits</span></div>
   <div class="pl-public-navbar-actions">
    <button class="pl-public-language" type="button" data-public-action="language" aria-label="Ganti bahasa" title="Bahasa"><span class="pl-public-flag pl-public-flag-${locale}" aria-hidden="true"></span><span data-public-locale-label>${locale.toUpperCase()}</span></button>
-   <button class="pl-public-icon-action" type="button" data-public-action="wishlist" aria-label="Wishlist" title="Wishlist">${socialIcon('heart',{size:22})}</button>
+   <button class="pl-public-icon-action pl-public-wishlist-action" type="button" data-public-action="wishlist" aria-label="Wishlist" title="Wishlist">${socialIcon('heart',{size:22})}<span class="pl-public-cart-count pl-public-wishlist-count" data-public-wishlist-count hidden>0</span></button>
    <button class="pl-public-icon-action pl-public-cart-action" type="button" data-public-action="cart" aria-label="Keranjang" title="Keranjang">${socialIcon('shopping-cart',{size:22,className:'pl-icon-cart-facing-in'})}<span class="pl-public-cart-count" data-public-cart-count hidden>0</span></button>
   </div>
  </header>`;
@@ -26,10 +26,13 @@ export function bindPublicNavbar(){
    const languageButton=header.querySelector('.pl-public-language'),label=header.querySelector('[data-public-locale-label]');
    if(languageButton){languageButton.querySelector('.pl-public-flag')?.classList.toggle('pl-public-flag-id',next==='id');languageButton.querySelector('.pl-public-flag')?.classList.toggle('pl-public-flag-en',next==='en');}if(label)label.textContent=next.toUpperCase();
    toast(next==='id'?'Bahasa Indonesia dipilih':'English selected');
-  }else if(action==='wishlist'||action==='cart'){location.hash='#/account/login';}
+  }else if(action==='wishlist'){const count=readWishlist();toast(count?count+' produk tersimpan di wishlist':'Wishlist kamu masih kosong');}
+  else if(action==='cart'){const count=readCart();if(count)location.hash='#/market-cart';else toast('Keranjang kamu masih kosong');}
  });
  updateCart();
  window.addEventListener('pluits:guest-cart-updated',updateCart);
+ window.addEventListener('pluits:market-cart-updated',updateCart);
+ window.addEventListener('pluits:wishlist-updated',updateCart);
  window.addEventListener('storage',updateCart);
 }
 
