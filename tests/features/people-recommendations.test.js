@@ -30,3 +30,12 @@ test('recommendation renderer has a truthful empty state and profile actions',()
  assert.ok(html.includes('<span aria-hidden="true">+</span>'));
  assert.match(html,/data-people-follow="new"/);
 });
+
+test('profile image framing is independent, bounded, and applied to recommendation cards',async()=>{
+ const {normalizeProfileImageFrame,profileImageFrameCss}=await import('../../src/features/profile/image-framing.js');
+ const normalized=normalizeProfileImageFrame({avatar_x:140,avatar_y:-10,avatar_zoom:3,card_x:25,card_y:60,card_zoom:1.2});
+ assert.deepEqual(normalized,{avatar_x:100,avatar_y:0,avatar_zoom:2.5,card_x:25,card_y:60,card_zoom:1.2});
+ assert.match(profileImageFrameCss(normalized,'avatar'),/--ua-image-x:100%;--ua-image-y:0%;--ua-image-zoom:2.5/);
+ const html=renderPeopleRecommendations({people:[{...profile('new'),isNew:true,public_city:'Jakarta',avatar_path:'avatar.jpg'}],avatarUrls:new Map([['avatar.jpg','https://example.test/avatar.jpg']]),imageFrames:new Map([['new',{card_x:20,card_y:35,card_zoom:1.3}]])});
+ assert.match(html,/--ua-image-x:20%;--ua-image-y:35%;--ua-image-zoom:1.3/);
+});

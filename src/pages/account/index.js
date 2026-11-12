@@ -20,6 +20,8 @@ import {listPrivateDrafts,getPrivateDraft,savePrivateDraft,deletePrivateDraft} f
 import {getMediaMime,getMediaExtension,validateMediaFile,getVideoDuration} from '../../features/media/media-types.js';
 import {createMediaUploader} from '../../features/media/storage-upload.js';
 import {createSignedUrlMap} from '../../services/storage/signed-urls.js';
+import {DEFAULT_PROFILE_IMAGE_FRAME,normalizeProfileImageFrame,profileImageFrameCss,readProfileImageFrame} from '../../features/profile/image-framing.js';
+import '../../features/profile/image-framing.css';
 import {homeNearbySection,bindHomeNearby} from '../directory/index.js';
 
 const SUPABASE_URL='https://ytndswhqxayqpftszwfh.supabase.co';
@@ -30,7 +32,7 @@ const uploadMediaFile=createMediaUploader({supabase,bucket:BUCKET,supabaseUrl:SU
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmtDate=v=>new Date(v).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'});
 const initials=v=>String(v||'P').trim().slice(0,1).toUpperCase();
-let trendSliderTimer=null,trendSliderVisibilityHandler=null,user=null,profile=null,profileReels=[],addresses=[],noticeTimer=null,leafletMap=null,leafletMarker=null,exploreFilter='all',exploreCategory='all',reelsFilter='recommended',activityNotificationChannel=null,unreadNotificationCount=0,currentComposeDraft=null,profileMenuBound=false,accountContext={active:'personal',professional:null,stores:[],prefs:{}};
+let trendSliderTimer=null,trendSliderVisibilityHandler=null,user=null,profile=null,profileImageFrame={...DEFAULT_PROFILE_IMAGE_FRAME},profileReels=[],addresses=[],noticeTimer=null,leafletMap=null,leafletMarker=null,exploreFilter='all',exploreCategory='all',reelsFilter='recommended',activityNotificationChannel=null,unreadNotificationCount=0,currentComposeDraft=null,profileMenuBound=false,accountContext={active:'personal',professional:null,stores:[],prefs:{}};
 
 function notify(message,type='success'){
  const el=document.querySelector('#ua-toast');if(!el)return;
@@ -38,7 +40,7 @@ function notify(message,type='success'){
  clearTimeout(noticeTimer);noticeTimer=setTimeout(()=>el.classList.remove('show'),3800);
 }
 function frame(content,active='explore',avatarUrl=''){
- const userAvatar=avatar(avatarUrl,profile?.display_name||user?.email||'P');
+ const userAvatar=avatar(avatarUrl,profile?.display_name||user?.email||'P','',profileImageFrame);
  const profileView=active==='profile'||active==='preview'||active==='profile-edit';
  const showEditProfile=active==='profile'||active==='preview';
  return `<div class="ua-app ua-social-app">
@@ -84,17 +86,23 @@ async function signed(path){
 async function loadProfile(){
  const {data,error}=await supabase.from('user_profiles').select('*').eq('id',user.id).maybeSingle();
  if(error)throw error;
- if(data){profile=data;return;}
- const seed='user_'+user.id.replaceAll('-','').slice(0,12);
- const {data:created,error:insertError}=await supabase.from('user_profiles').insert({id:user.id,display_name:user.user_metadata?.full_name||'Pengguna Pluits',username:seed}).select().single();
- if(insertError)throw insertError;profile=created;
+ if(data)profile=data;
+ else{
+  const seed='user_'+user.id.replaceAll('-','').slice(0,12);
+  const {data:created,error:insertError}=await supabase.from('user_profiles').insert({id:user.id,display_name:user.user_metadata?.full_name||'Pengguna Pluits',username:seed}).select().single();
+  if(insertError)throw insertError;profile=created;
+ }
+ const {data:frame,error:frameError}=await supabase.from('user_profile_image_frames').select('*').eq('user_id',user.id).maybeSingle();
+ if(frameError)throw frameError;
+ profileImageFrame=normalizeProfileImageFrame(frame||DEFAULT_PROFILE_IMAGE_FRAME);
 }
 async function loadAddresses(){
  const {data,error}=await supabase.from('user_addresses').select('*').eq('user_id',user.id).order('is_default',{ascending:false}).order('created_at',{ascending:false});
  if(error)throw error;addresses=data||[];
 }
-function avatar(url,name,size=''){
- return url?`<img class="ua-avatar ${size}" src="${url}" alt="Foto profil">`:`<span class="ua-avatar ua-avatar-fallback ${size}">${esc(initials(name))}</span>`;
+function avatar(url,name,size='',frameSettings=null){
+ const frameStyle=frameSettings?' style="'+profileImageFrameCss(frameSettings,'avatar')+'"':'';
+ return url?`<img class="ua-avatar ${size}" src="${url}" alt="Foto profil"${frameStyle}>`:`<span class="ua-avatar ua-avatar-fallback ${size}">${esc(initials(name))}</span>`;
 }
 function navProfile(){
  return `<div class="ua-subnav"><a href="#/account/profile">Personal</a><a href="#/account/followers">Pengikut</a><a href="#/account/following">Mengikuti</a><a href="#/account/requests">Permintaan</a><a href="#/messages">Pesan</a><a href="#/account/wallet">Wallet</a><a href="#/account/addresses">Alamat</a><a href="#/account/explore">Explore</a></div>`;
@@ -181,7 +189,18 @@ async function profilePage(preview=false,editMode=false){
   return `<div class="ua-profile-editor">
    <header class="ua-profile-editor-head"><a href="#/account/profile" aria-label="Kembali ke profil" class="ua-editor-back">‹</a><div><span>PERSONAL PROFILE</span><h1>Edit profil</h1><p>Atur bagaimana orang mengenal Anda di Pluits.</p></div><button class="ua-editor-save" type="submit" form="ua-profile-form">Simpan</button></header>
    <form id="ua-profile-form" class="ua-profile-edit-form" autocomplete="off">
-    <section class="ua-editor-photo"><div class="ua-editor-avatar">${avatar(avatarUrl,profile.display_name,'large')}</div><div><strong>Foto profil</strong><small>Gunakan foto yang jelas dan mudah dikenali.</small><label for="ua-avatar-file" class="ua-editor-photo-action">Ubah foto profil</label><input id="ua-avatar-file" type="file" accept="image/jpeg,image/png,image/webp"></div></section>
+    <section class="ua-editor-photo"><div class="ua-editor-avatar">${avatar(avatarUrl,profile.display_name,'large',profileImageFrame)}</div><div><strong>Foto profil</strong><small>Gunakan foto yang jelas dan mudah dikenali.</small><label for="ua-avatar-file" class="ua-editor-photo-action">Ubah foto profil</label><input id="ua-avatar-file" type="file" accept="image/jpeg,image/png,image/webp"></div></section>
+    <section class="ua-editor-section ua-profile-image-framing">
+     <div class="ua-editor-section-title"><h2>Atur tampilan foto</h2><p>Foto asli tetap utuh. Atur bagian yang terlihat secara terpisah untuk avatar bundar dan kartu rekomendasi.</p></div>
+     <div class="ua-image-frame-previews">
+      <div class="ua-image-frame-preview-group"><div class="ua-image-frame-preview ua-image-frame-preview-avatar"><img data-image-frame-preview="avatar" src="${avatarUrl||''}" alt="Pratinjau foto profil" style="${profileImageFrameCss(profileImageFrame,'avatar')}" ${avatarUrl?'':'hidden'}></div><small class="ua-image-frame-preview-label">Avatar profil</small></div>
+      <div class="ua-image-frame-preview-group"><div class="ua-image-frame-preview ua-image-frame-preview-card"><img data-image-frame-preview="card" src="${avatarUrl||''}" alt="Pratinjau foto kartu Circle" style="${profileImageFrameCss(profileImageFrame,'card')}" ${avatarUrl?'':'hidden'}></div><small class="ua-image-frame-preview-label">Kartu Circle</small></div>
+     </div>
+     <div class="ua-image-frame-controls">
+      ${[['avatar_x','Avatar · posisi horizontal',0,100,1],['avatar_y','Avatar · posisi vertikal',0,100,1],['avatar_zoom','Avatar · pembesaran',1,2.5,.01],['card_x','Kartu · posisi horizontal',0,100,1],['card_y','Kartu · posisi vertikal',0,100,1],['card_zoom','Kartu · pembesaran',1,2.5,.01]].map(([key,label,min,max,step])=>'<label class="ua-image-frame-control"><span>'+label+' <output data-frame-output="'+key+'">'+profileImageFrame[key]+'</output></span><input type="range" data-image-frame="'+key+'" min="'+min+'" max="'+max+'" step="'+step+'" value="'+profileImageFrame[key]+'"></label>').join('')}
+     </div>
+     <p class="ua-image-frame-hint">Geser posisi untuk menentukan titik fokus foto. Pembesaran membantu menyesuaikan komposisi. Pengaturan avatar dan kartu tidak saling mengubah.</p>
+    </section>
     <section class="ua-editor-section"><div class="ua-editor-section-title"><h2>Informasi pribadi</h2><p>Informasi ini membantu orang menemukan dan mengenali Anda.</p></div>
      <label class="ua-editor-field"><span>Nama</span><input name="display_name" maxlength="80" required value="${esc(profile.display_name||'')}" placeholder="Nama Anda"></label>
      <label class="ua-editor-field"><span>Username</span><div class="ua-editor-input-prefix"><b>@</b><input name="username" minlength="3" maxlength="30" autocapitalize="none" autocomplete="off" spellcheck="false" required value="${esc(profile.username||'')}" placeholder="username"></div><small>3–30 karakter. Gunakan huruf kecil, angka, titik, garis bawah, atau tanda hubung.</small></label>
@@ -206,7 +225,7 @@ async function profilePage(preview=false,editMode=false){
   <section class="ua-profile-card ua-public-profile">
    ${profileMenuMarkup()}
    <div class="ua-cover ${coverUrl?'has-cover':'no-cover'}" ${coverUrl?`style="background-image:url('${coverUrl}')"`:''}>${coverUrl?'<span>PLUITS PROFILE</span>':''}</div>
-   <div class="ua-profile-content"><div class="ua-profile-avatar">${avatar(avatarUrl,profile.display_name,'large')}</div>
+   <div class="ua-profile-content"><div class="ua-profile-avatar">${avatar(avatarUrl,profile.display_name,'large',profileImageFrame)}</div>
     <div class="ua-profile-identity"><h2>${esc(profile.display_name)}</h2><div class="ua-username">@${esc(profile.username)}</div><div class="ua-location">${profile.public_city&&profile.public_province?'⌖ '+esc(profile.public_city)+', '+esc(profile.public_province):''}</div><p>${esc(profile.bio||'Bio belum ditambahkan.')}</p></div>
     <div class="ua-profile-count"><strong>${visiblePosts.length}</strong><span>Postingan publik</span></div>
    </div>
@@ -220,7 +239,7 @@ async function profilePage(preview=false,editMode=false){
    ${profileMenuMarkup()}
   <div class="ua-cover ${coverUrl?'has-cover':'no-cover'}" ${coverUrl?`style="background-image:url('${coverUrl}')"`:''}>
   </div>
-  <div class="ua-profile-content"><div class="ua-profile-avatar">${avatar(avatarUrl,profile.display_name,'large')}</div>
+  <div class="ua-profile-content"><div class="ua-profile-avatar">${avatar(avatarUrl,profile.display_name,'large',profileImageFrame)}</div>
    <div class="ua-profile-identity"><div class="ua-profile-name-row"><div><h2>${esc(profile.display_name)}</h2><div class="ua-username">@${esc(profile.username)}</div></div></div><p>${esc(profile.bio||'Bio belum ditambahkan.')}</p><div class="ua-location">${profile.public_city&&profile.public_province?'⌖ '+esc(profile.public_city)+', '+esc(profile.public_province):''}</div><div class="ua-profile-stats"><a href="#profile-posts"><strong>${ownPosts.length}</strong><span>Postingan</span></a><a href="#/account/followers"><strong>${followersCount.count||0}</strong><span>Pengikut</span></a><a href="#/account/following"><strong>${followingCount.count||0}</strong><span>Mengikuti</span></a></div><a class="ua-profile-story-link" href="#/account/story">＋ Tambah Story</a></div>
   </div>
  </section>
@@ -373,14 +392,17 @@ async function feedPage(){
   city:window.__pluitsHomeCity||profile?.public_city||'',province:profile?.public_province||''
  });
  const available=(postsResult.data||[]).filter(p=>!blockedIds.includes(p.user_id)).slice(0,30);
- const [peopleAvatarUrls,hydrated]=await Promise.all([
+ const [peopleAvatarUrls,peopleFramesResult,hydrated]=await Promise.all([
   createSignedUrlMap(supabase.storage,BUCKET,people.map(person=>person.avatar_path).filter(Boolean),3600),
+  people.length?supabase.from('user_profile_image_frames').select('user_id,card_x,card_y,card_zoom').in('user_id',people.map(person=>person.id)):{data:[],error:null},
   hydratePosts(available)
  ]);
+ if(peopleFramesResult.error)throw peopleFramesResult.error;
+ const peopleImageFrames=new Map((peopleFramesResult.data||[]).map(frame=>[frame.user_id,frame]));
  const registeredProfileCount=registeredProfilesResult.count??0;
  const showCircleDemo=registeredProfileCount<10;
  const demoPeople=showCircleDemo?CIRCLE_DEMO_PEOPLE.slice(0,Math.max(0,10-people.length)):[];
- const peopleSection=renderPeopleRecommendations({people,avatarUrls:peopleAvatarUrls,demoPeople});
+ const peopleSection=renderPeopleRecommendations({people,avatarUrls:peopleAvatarUrls,imageFrames:peopleImageFrames,demoPeople});
  const followedSet=new Set(followingIds);
  const visibleStories=(storiesResult.data||[]).filter(story=>followedSet.has(story.user_id)&&!blockedIds.includes(story.user_id));
  const storyOwners=new Map();
@@ -902,11 +924,31 @@ function bindProfile(){
   const {data,error}=await supabase.from('user_profiles').update(payload).eq('id',user.id).select().single();
   btn.disabled=false;
   if(error){profile=previous;paintIdentity(previous);note.textContent=error.code==='23505'?'Username sudah digunakan orang lain. Pilih username yang berbeda.':error.message;notify(note.textContent,'error');return;}
-  profile=data;paintIdentity(profile);note.textContent='Tersimpan.';notify('Profil berhasil diperbarui.');
+  profile=data;paintIdentity(profile);
+  const nextImageFrame=readProfileImageFrame(form,profileImageFrame);
+  const {error:frameError}=await supabase.from('user_profile_image_frames').upsert({user_id:user.id,...nextImageFrame,updated_at:new Date().toISOString()},{onConflict:'user_id'});
+  if(frameError){note.textContent='Profil tersimpan, tetapi pengaturan bingkai foto belum tersimpan: '+frameError.message;notify(note.textContent,'error');}
+  else{profileImageFrame=nextImageFrame;note.textContent='Profil dan pengaturan foto tersimpan.';notify('Profil berhasil diperbarui.');}
   updateSEO({title:profile.display_name+' (@'+profile.username+') — Pluits',description:(profile.bio||'Profil komunitas '+profile.display_name+' di Pluits.').slice(0,160),path:'#/@'+encodeURIComponent(profile.username)});
   if(previous.username!==profile.username)note.textContent='Tersimpan. Alamat profil baru: @'+profile.username;
  });
- bindImageUpload('ua-avatar-file','avatar_path','avatar');bindImageUpload('ua-cover-file','cover_path','cover');
+ bindProfileImageFrames(); bindImageUpload('ua-avatar-file','avatar_path','avatar');bindImageUpload('ua-cover-file','cover_path','cover');
+}
+function bindProfileImageFrames(){
+ const form=document.querySelector('#ua-profile-form');if(!form)return;
+ const update=()=>{
+  const frame=readProfileImageFrame(form,profileImageFrame);
+  ['avatar','card'].forEach(variant=>{
+   const preview=form.querySelector('[data-image-frame-preview="'+variant+'"]');
+   if(preview)preview.setAttribute('style',profileImageFrameCss(frame,variant));
+  });
+  form.querySelectorAll('[data-image-frame]').forEach(input=>{
+   const output=form.querySelector('[data-frame-output="'+input.dataset.imageFrame+'"]');
+   if(output)output.value=input.value;
+  });
+ };
+ form.querySelectorAll('[data-image-frame]').forEach(input=>input.addEventListener('input',update));
+ update();
 }
 function bindImageUpload(inputId,column,label){
  const input=document.getElementById(inputId);input?.addEventListener('change',async()=>{
