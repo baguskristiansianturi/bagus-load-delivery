@@ -56,6 +56,8 @@
     display: inline-flex !important;
     align-self: center;
     overflow: visible !important;
+    box-sizing: border-box !important;
+    aspect-ratio: 1 / 1;
   }
   .ua-social-app .pluits-brand-mark.ua-brand > img,
   .ua-social-app .pluits-brand-mark.pl-social-brand > img {
@@ -66,6 +68,8 @@
     max-height: none !important;
     object-fit: contain !important;
     object-position: center !important;
+    aspect-ratio: 1 / 1;
+    box-sizing: border-box !important;
     clip-path: none !important;
     transform: none !important;
   }
