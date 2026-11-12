@@ -55,21 +55,5 @@
 /* Match the mobile page clearance to the fixed navigation height, avoiding an oversized blank tail. */
 @media (max-width:760px){
  .pl-public-home{padding-bottom:0!important}
- .pl-public-home .pl-app-download{padding-bottom:12px}
-}
-
-
-/* Mobile: separate the two store cards and keep the final card clear of bottom navigation. */
-@media (max-width:760px){
- .pl-public-home .pl-app-download{
-  padding:0 0 26px;
- }
- .pl-public-home .pl-app-download-platforms{
-  display:grid;
-  gap:16px;
-  margin-top:4px;
- }
- .pl-public-home .pl-app-store-card{
-  margin:0;
- }
+ .pl-public-home .pl-app-download{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
 }
