@@ -173,3 +173,23 @@
 @media(max-height:720px) and (max-width:760px){
  .pl-auth-page .pl-register-card{padding-top:23px}
 }
+
+
+/* Compact, balanced social sign-in options: two providers per row. */
+.pl-auth-page .pl-auth-provider-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.pl-auth-page .pl-auth-provider-grid .pl-auth-provider{min-width:0;min-height:43px;justify-content:flex-start;padding:0 13px;gap:9px}
+.pl-auth-page .pl-auth-provider-grid .pl-auth-provider span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pl-auth-twitter,.pl-auth-linkedin{width:19px;height:19px;display:grid;place-items:center;font-size:13px;font-weight:850}
+.pl-auth-twitter{color:#1d9bf0;font-family:Arial,sans-serif}
+.pl-auth-linkedin{border-radius:3px;background:#0a66c2;color:#fff;font-size:11px;letter-spacing:-.06em}
+.pl-auth-page .pl-auth-phone{margin-top:5px}
+.pl-auth-page .pl-auth-social-note{margin:7px 2px 0;color:#9aa6aa;font-size:9px;line-height:1.7;text-align:center}
+.pl-auth-page .pl-register-login{margin-top:19px}
+.pl-auth-page .pl-register-security{margin-top:19px}
+@media(max-width:760px){
+ .pl-auth-page .pl-auth-provider-grid{gap:8px}
+ .pl-auth-page .pl-auth-provider-grid .pl-auth-provider{min-height:42px;padding:0 11px}
+ .pl-auth-page .pl-auth-social-note{margin-top:10px;line-height:1.75}
+ .pl-auth-page .pl-register-login{margin-top:19px}
+ .pl-auth-page .pl-register-security{margin-top:20px}
+}
