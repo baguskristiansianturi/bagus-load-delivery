@@ -101,3 +101,36 @@
 .pl-auth-facebook{border-radius:50%;background:#1877f2;color:#fff;font-family:Arial,sans-serif}
 .pl-auth-phone{display:block;text-align:center;color:#347c79;text-decoration:none;font-size:11px;font-weight:750;padding:4px}
 .pl-auth-phone:hover{text-decoration:underline}
+
+/* Consistent vertical rhythm across login, registration and recovery forms. */
+.pl-auth-page{--auth-gap:12px}
+.pl-auth-page .pl-register-card-head{margin-bottom:20px}
+.pl-auth-page .pl-register-form{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--auth-gap);align-items:start}
+.pl-auth-page .pl-auth-field{width:100%;min-width:0;padding-top:8px}
+.pl-auth-page .pl-auth-field>label{left:10px;line-height:14px}
+.pl-auth-page .pl-auth-field>input,
+.pl-auth-page .pl-auth-field>.pl-register-password-wrap,
+.pl-auth-page .pl-auth-field .pl-register-password-wrap>input{width:100%}
+.pl-auth-page .pl-register-help{display:block;margin:-3px 0 0;line-height:1.55}
+.pl-auth-page .pl-register-consent{margin:2px 0 0;gap:9px}
+.pl-auth-page .pl-register-message{margin:0}
+.pl-auth-page .pl-register-submit{margin-top:2px}
+.pl-auth-page .pl-auth-social{margin-top:18px;gap:10px}
+.pl-auth-page .pl-auth-divider{margin:0 0 2px}
+.pl-auth-page .pl-register-login{margin:16px 0 0;line-height:1.5}
+.pl-auth-page .pl-register-security{margin:12px 0 0;line-height:1.5}
+.pl-auth-page .pl-register-form[hidden]+.pl-auth-social{display:none}
+@media(max-width:760px){
+ .pl-auth-page{--auth-gap:11px}
+ .pl-auth-page .pl-register-card-head{margin-bottom:17px}
+ .pl-auth-page .pl-register-form{gap:var(--auth-gap)}
+ .pl-auth-page .pl-auth-field{padding-top:8px}
+ .pl-auth-page .pl-auth-social{margin-top:16px;gap:9px}
+ .pl-auth-page .pl-register-login{margin-top:14px}
+}
+@media(max-height:720px) and (max-width:760px){
+ .pl-auth-page .pl-register-card-head{margin-bottom:12px}
+ .pl-auth-page{--auth-gap:9px}
+ .pl-auth-page .pl-auth-social{margin-top:12px;gap:7px}
+ .pl-auth-page .pl-register-login{margin-top:11px}
+}
