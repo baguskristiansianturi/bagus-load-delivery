@@ -16,8 +16,11 @@ export function renderPublicNavbar(){
 export function bindPublicNavbar(){
  const header=document.querySelector('.pl-public-navbar');if(!header||header.dataset.bound==='true')return;
  header.dataset.bound='true';
- const readCart=()=>{try{const value=JSON.parse(localStorage.getItem('pluits-guest-cart')||'[]');return Array.isArray(value)?value.reduce((n,item)=>n+Math.max(0,Number(item.quantity)||0),0):0;}catch{return 0;}};
- const updateCart=()=>{const badge=header.querySelector('[data-public-cart-count]');if(!badge)return;const count=readCart();badge.textContent=count>99?'99+':String(count);badge.hidden=count<1;};
+ const readItems=key=>{try{const value=JSON.parse(localStorage.getItem(key)||'[]');return Array.isArray(value)?value:[];}catch{return [];}};
+ const readCart=()=>readItems('pluits_market_cart_v1').reduce((n,item)=>n+Math.max(0,Number(item.quantity)||0),0);
+ const readWishlist=()=>readItems('pluits_market_wishlist_v1').length;
+ const paintBadge=(selector,count)=>{const badge=header.querySelector(selector);if(!badge)return;badge.textContent=count>99?'99+':String(count);badge.hidden=count<1;};
+ const updateCart=()=>{paintBadge('[data-public-cart-count]',readCart());paintBadge('[data-public-wishlist-count]',readWishlist());};
  const toast=message=>{let node=document.querySelector('.pl-public-toast');if(!node){node=document.createElement('div');node.className='pl-public-toast';node.setAttribute('role','status');node.setAttribute('aria-live','polite');document.body.append(node);}node.textContent=message;node.classList.add('is-visible');clearTimeout(node._hideTimer);node._hideTimer=setTimeout(()=>node.classList.remove('is-visible'),2200);};
  header.addEventListener('click',event=>{
   const action=event.target.closest('[data-public-action]')?.dataset.publicAction;if(!action)return;
