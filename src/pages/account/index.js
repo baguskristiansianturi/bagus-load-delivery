@@ -10,6 +10,7 @@ import '../../features/posts/post-actions.css';
 import {renderSocialHeader,renderSocialMobileNav} from '../../components/social/navigation.js';
 import {updateSEO} from '../seo.js';
 import './user-account.css';
+import './circle-experience.css';
 import '../../features/profile/profile-hero.css';
 import '../../features/reels/reels.css';
 import {accountSecurityPage,bindAccountSecurity} from './security-settings.js';
@@ -396,7 +397,7 @@ async function feedPage(){
   const payload=esc(JSON.stringify(ready.map(story=>({url:story.url,type:story.media_type,caption:story.caption||'',createdAt:story.created_at}))));
   return "<button type='button' class='ua-story-group' data-story-items='"+payload+"' data-story-owner='"+esc(owner.display_name||'Pengguna PLUITS')+"' aria-label='Lihat Story "+name+"'><span class='ua-story-ring'><span class='ua-story-avatar'>"+(avatarUrl?"<img src='"+esc(avatarUrl)+"' alt='' loading='lazy'>":"<b>"+esc(initials(owner.display_name))+"</b>")+"</span></span><strong>"+name+"</strong><small>"+ready.length+" Story</small></button>";
  }).filter(Boolean).join('');
- const storiesSection="<section class='ua-circle-stories' aria-labelledby='ua-circle-stories-title'><div class='ua-circle-section-heading'><div><h2 id='ua-circle-stories-title'>Cerita circle</h2><p>Momen terbaru dari teman yang Anda ikuti.</p></div></div>"+(storyCards?"<div class='ua-circle-story-track'>"+storyCards+"</div>":"<div class='ua-circle-story-empty'>Belum ada Story teman yang aktif. Cerita dari circle Anda akan muncul di sini.</div>")+"</section>";
+ const storiesSection="<section class='ua-circle-stories' aria-labelledby='ua-circle-stories-title'><div class='ua-circle-section-heading'><div><h2 id='ua-circle-stories-title'>Cerita dari circle</h2><p>Lihat momen terbaru dari orang-orang yang Anda ikuti.</p></div></div>"+(storyCards?"<div class='ua-circle-story-track'>"+storyCards+"</div>":"<div class='ua-circle-story-empty'>Belum ada Story teman yang aktif. Cerita dari circle Anda akan muncul di sini.</div>")+"</section>";
  const interestSlugs=new Set(interests.map(x=>String(x.slug||'').toLowerCase()));
  const score=p=>{const age=Math.max(0,(Date.now()-new Date(p.created_at).getTime())/3600000),tags=(p.tags||[]).map(x=>String(x).toLowerCase().replace(/^#/,'').replace(/ /g,'-')),interestMatch=tags.filter(tag=>interestSlugs.has(tag)).length;return (followingIds.includes(p.user_id)?80:0)+interestMatch*28+36*Math.exp(-age/72)+Math.min(45,(p.likes||0)*1.5+(p.comments||0)*2.5);};
  let sorted=exploreFilter==='latest'?[...hydrated].sort((a,b)=>new Date(b.created_at)-new Date(a.created_at))
@@ -428,7 +429,7 @@ async function feedPage(){
  const empty='Belum ada postingan yang cocok dengan pilihan ini.';
  const action="<a href='#/account/compose'>Buat postingan pertama</a>";
  const homeHeading="<section class='ua-home-following'><div class='ua-home-section-heading'><div><h2>Postingan</h2><p>Semua cerita dari circle dan topik yang Anda minati.</p></div></div>"+filterNav+"</section>";
- const circleHeading="<section class='ua-circle-intro'><span class='ua-eyebrow'>RUANG PERSONAL PLUITS</span><h1>Circle Anda</h1><p>Terhubung dengan teman, lingkungan, dan hal-hal yang Anda minati.</p></section>";
+ const circleHeading="<section class='ua-circle-intro'><span class='ua-eyebrow'>RUANG PERSONAL PLUITS</span><h1>Circle Anda</h1><p>Ruang untuk mengikuti kabar teman, menemukan orang baru, dan melihat hal menarik di sekitar Anda.</p></section>";
  const discoverMore="<section class='ua-home-discover-more'><div class='ua-home-section-heading'><div><h2>Temukan Lebih Banyak</h2><small>Perluas koneksi dan temukan cerita baru di PLUITS.</small></div></div><div class='ua-home-discover-links'><a href='#/search'><span>Orang &amp; komunitas</span><b>Jelajahi ↗</b></a><a href='#/places'><span>Tempat dan lingkungan</span><b>Jelajahi ↗</b></a></div></section>";
  let productCards='';
  try{
