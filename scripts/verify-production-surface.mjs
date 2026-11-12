@@ -174,11 +174,11 @@ assert.match(publicHome, /stillOnRequestedHome/, 'A delayed auth response must n
 assert.match(publicHome, /Keep the public homepage stable for signed-in and guest visitors alike/, 'Public homepage must remain the same route for signed-in and guest visitors.');
 const mainEntry = read('src/main.js');
 assert.match(mainEntry, /let renderSequence = 0/, 'Application route rendering must use a monotonic render sequence.');
-assert.match(mainEntry, /await route\\(home\\)/, 'Homepage hydration must wait for the active route render.');
-assert.match(mainEntry, /sequence !== renderSequence/, 'Stale route completions must not hydrate or overwrite a newer page.');
+assert.ok(mainEntry.includes('await route(home)'), 'Homepage hydration must wait for the active route render.');
+assert.ok(mainEntry.includes('sequence !== renderSequence'), 'Stale route completions must not hydrate or overwrite a newer page.');
 const manifest = JSON.parse(read('public/manifest.webmanifest'));
 assert.ok(manifest.icons.some(icon => icon.src === '/pluits/assets/brand/pluits-logo.svg' && icon.type === 'image/svg+xml'), 'Installed app icon must use the canonical transparent SVG logo.');
-assert.doesNotMatch(read('index.html') + read('public/manifest.webmanifest'), /pluits-logo\\.png/, 'App shell must not reference the missing legacy PNG logo.');
+assert.ok(!(read('index.html') + read('public/manifest.webmanifest')).includes('pluits-logo.png'), 'App shell must not reference the missing legacy PNG logo.');
 assert.ok(!read('src/pages/account/index.js').includes("import '../../styles/social-navigation.css';"), 'Account pages must not import the global navigation stylesheet twice.');
 
 
