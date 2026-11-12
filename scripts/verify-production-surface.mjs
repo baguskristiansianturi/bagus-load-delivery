@@ -181,7 +181,7 @@ assert.match(mainEntry, /sequence !== renderSequence/, 'Stale route completions 
 const manifest = JSON.parse(read('public/manifest.webmanifest'));
 assert.ok(manifest.icons.some(icon => icon.src === '/pluits/assets/brand/pluits-logo.svg' && icon.type === 'image/svg+xml'), 'Installed app icon must use the canonical transparent SVG logo.');
 assert.doesNotMatch(read('index.html') + read('public/manifest.webmanifest'), /pluits-logo\\.png/, 'App shell must not reference the missing legacy PNG logo.');
-assert.doesNotMatch(read('src/pages/account/index.js'), /import ['"]\\.\\.\\/\\.\\.\\/styles\\/social-navigation\\.css['"]/, 'Account pages must not import the global navigation stylesheet twice.');
+assert.ok(!read('src/pages/account/index.js').includes("import '../../styles/social-navigation.css';"), 'Account pages must not import the global navigation stylesheet twice.');
 
 
 const inboxCss = read('src/pages/messages/messages.css');
