@@ -400,3 +400,29 @@
  .pl-public-category,.pl-public-market-grid>a,.pl-public-story-feature,.pl-public-home .pl-home-map-chip{transition:none}
  .pl-public-category:active,.pl-public-market-grid>a:active,.pl-public-home .pl-home-map-chip:active{transform:none}
 }
+
+
+/* Search rail sits immediately below the hero and remains available while browsing. */
+.pl-public-home .pl-public-sticky-search{
+ position:sticky;top:68px;z-index:310;
+ box-sizing:border-box;width:100%;padding:10px 20px;
+ background:rgba(255,255,255,.94);
+ border-bottom:1px solid rgba(52,71,76,.075);
+ -webkit-backdrop-filter:blur(12px) saturate(125%);
+ backdrop-filter:blur(12px) saturate(125%);
+}
+.pl-public-home .pl-public-sticky-search .pl-public-search{
+ width:min(720px,100%);max-width:720px;margin:0 auto;
+ background:rgba(255,255,255,.98);
+ box-shadow:0 3px 14px rgba(24,55,59,.045);
+}
+@media(max-width:760px){
+ .pl-public-home .pl-public-sticky-search{
+  top:60px;padding:8px 12px;
+  background:rgba(255,255,255,.95);
+  border-bottom-color:rgba(52,71,76,.07);
+ }
+ .pl-public-home .pl-public-sticky-search .pl-public-search{
+  min-height:46px;border-radius:12px;padding:5px 6px 5px 12px;
+ }
+}

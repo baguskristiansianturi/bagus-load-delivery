@@ -295,3 +295,38 @@
  .pl-public-wishlist-action.is-confirmed>.pl-icon{animation:pl-wishlist-confirm .32s ease}
  @keyframes pl-wishlist-confirm{0%{transform:scale(1)}45%{transform:scale(1.18)}100%{transform:scale(1)}}
 }
+
+
+/* Public homepage header: one clean surface and icon tones shared with bottom navigation. */
+.pl-public-home>header.pl-public-navbar{
+ position:sticky!important;top:0!important;z-index:320!important;
+ background:rgba(255,255,255,.96)!important;
+ border:0!important;border-bottom:1px solid rgba(52,71,76,.085)!important;
+ box-shadow:none!important;
+ -webkit-backdrop-filter:blur(10px) saturate(120%);
+ backdrop-filter:blur(10px) saturate(120%);
+}
+.pl-public-home>header.pl-public-navbar:before,
+.pl-public-home>header.pl-public-navbar:after{content:none!important;display:none!important}
+.pl-public-home>header.pl-public-navbar>.pl-public-navbar-actions>.pl-public-icon-action{
+ color:#758489!important;background:transparent!important;box-shadow:none!important;
+}
+.pl-public-home>header.pl-public-navbar>.pl-public-navbar-actions>.pl-public-icon-action>.pl-icon{
+ color:currentColor!important;stroke:currentColor!important;
+}
+.pl-public-home>header.pl-public-navbar>.pl-public-navbar-actions>.pl-public-wishlist-action.has-saved{
+ color:#168f87!important;
+}
+.pl-public-home>header.pl-public-navbar>.pl-public-navbar-actions>.pl-public-wishlist-action.has-saved>.pl-icon{
+ fill:#168f87!important;stroke:#168f87!important;
+}
+.pl-public-home>header.pl-public-navbar>.pl-public-navbar-actions>.pl-public-cart-action.has-items{
+ color:#758489!important;
+}
+@media(max-width:760px){
+ .pl-public-home>header.pl-public-navbar{
+  background:rgba(255,255,255,.96)!important;
+  border-bottom:1px solid rgba(52,71,76,.085)!important;
+  box-shadow:none!important;
+ }
+}
