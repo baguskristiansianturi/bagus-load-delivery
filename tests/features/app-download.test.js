@@ -26,7 +26,7 @@ test('app download spacing and tablet layout stay responsive without excess mobi
  assert.ok(css.includes('@media (min-width:761px) and (max-width:900px)'), 'Tablet layout breakpoint must be present.');
  assert.ok(css.includes('grid-template-columns:repeat(2,minmax(0,1fr))'), 'Tablet store cards must share a balanced two-column row.');
  assert.ok(css.includes('.pl-public-home{padding-bottom:0!important}'), 'Root padding must not duplicate the content clearance.');
- const layout=await readFile(new URL('../../../../styles/home-layout.css',import.meta.url),'utf8');
+ const layout=await readFile(new URL('../../styles/home-layout.css',import.meta.url),'utf8');
  assert.ok(layout.includes('.pl-public-home .pl-public-shell{padding:8px 0 64px}'), 'The homepage content must reserve one controlled clearance for the fixed bottom navigation.');
  assert.ok(css.includes('.pl-public-home .pl-app-download{padding-bottom:12px}'), 'Mobile app download section must not leave an oversized gap before navigation.');
 });
