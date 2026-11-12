@@ -179,6 +179,15 @@ async function walletPage(){
  ${items.length?items.map(x=>`<div class="ua-wallet-row"><div><strong>${x.request_type==='top_up'?'Top Up':'Tarik Saldo'}</strong><small>${fmtDate(x.created_at)} · ${esc(x.payment_method||'Metode belum diisi')}</small></div><b>${rupiah(Number(x.amount_minor))}</b><span class="ua-wallet-status ${esc(x.status)}">${x.status==='pending'?'Menunggu':x.status==='approved'?'Disetujui':x.status==='rejected'?'Ditolak':'Dibatalkan'}</span></div>`).join(''):'<div class="ua-empty"><strong>Belum ada transaksi</strong><p>Riwayat permintaan top up dan penarikan akan tampil di sini.</p></div>'}
  </section>`;
 }
+function profileMenuMarkup(){
+ return `<div class="pl-social-header-menu ua-profile-menu">
+  <button class="pl-social-menu-trigger" type="button" aria-label="Pengaturan profil" aria-expanded="false" aria-controls="pl-account-menu"><span aria-hidden="true">•••</span></button>
+  <div class="pl-social-menu-panel" id="pl-account-menu" hidden>
+   <a href="#/account/profile/edit">${socialIcon('edit',{size:17})}<span>Edit profil</span></a>
+   <a href="#/account/settings">${socialIcon('settings',{size:17})}<span>Pusat Pengaturan</span></a>
+  </div>
+ </div>`;
+}
 async function profilePage(preview=false,editMode=false){
  const [avatarUrl,coverUrl,postsResult,storesResult]=await Promise.all([
   signed(profile.avatar_path),signed(profile.cover_path),
@@ -222,16 +231,9 @@ async function profilePage(preview=false,editMode=false){
   return `<div class="ua-page-heading"><div><span class="ua-eyebrow">PRATINJAU PROFIL</span><h1>Begini profil Anda terlihat</h1><p>Ini adalah simulasi tampilan profil bagi pengunjung Pluits.</p></div><a class="ua-outline" href="#/account/profile">← Kembali ke Edit Profil</a></div>
   <div class="ua-preview-status">${profile.visibility==='public'?'Profil Anda bersifat publik.':'Profil Anda privat. Pengunjung lain tidak dapat melihat postingan Anda.'}</div>
   <section class="ua-profile-card ua-public-profile">
+   ${profileMenuMarkup()}
    <div class="ua-cover ${coverUrl?'has-cover':'no-cover'}" ${coverUrl?`style="background-image:url('${coverUrl}')"`:''}>${coverUrl?'<span>PLUITS PROFILE</span>':''}</div>
-   <div class="ua-profile-content"><div class="ua-profile-menu-actions">
-    <a class="ua-profile-settings-link" href="#/account/settings">${socialIcon('settings',{size:16})}<span>Pusat Pengaturan</span></a>
-    <div class="pl-social-header-menu ua-profile-menu">
-     <button class="pl-social-menu-trigger" type="button" aria-label="Menu profil" aria-expanded="false" aria-controls="pl-account-menu"><span aria-hidden="true">•••</span></button>
-     <div class="pl-social-menu-panel" id="pl-account-menu" hidden>
-      <a href="#/account/profile/edit">${socialIcon('edit',{size:17})}<span>Edit profil</span></a>
-     </div>
-    </div>
-   </div><div class="ua-profile-avatar">${avatar(avatarUrl,profile.display_name,'large')}</div>
+   <div class="ua-profile-content"><div class="ua-profile-avatar">${avatar(avatarUrl,profile.display_name,'large')}</div>
     <div class="ua-profile-identity"><h2>${esc(profile.display_name)}</h2><div class="ua-username">@${esc(profile.username)}</div><div class="ua-location">${profile.public_city&&profile.public_province?'⌖ '+esc(profile.public_city)+', '+esc(profile.public_province):''}</div><p>${esc(profile.bio||'Bio belum ditambahkan.')}</p></div>
     <div class="ua-profile-count"><strong>${visiblePosts.length}</strong><span>Postingan publik</span></div>
    </div>
@@ -242,17 +244,10 @@ async function profilePage(preview=false,editMode=false){
  }
  return `
  <section class="ua-profile-card">
+   ${profileMenuMarkup()}
   <div class="ua-cover ${coverUrl?'has-cover':'no-cover'}" ${coverUrl?`style="background-image:url('${coverUrl}')"`:''}>
   </div>
-  <div class="ua-profile-content"><div class="ua-profile-menu-actions">
-    <a class="ua-profile-settings-link" href="#/account/settings">${socialIcon('settings',{size:16})}<span>Pusat Pengaturan</span></a>
-    <div class="pl-social-header-menu ua-profile-menu">
-     <button class="pl-social-menu-trigger" type="button" aria-label="Menu profil" aria-expanded="false" aria-controls="pl-account-menu"><span aria-hidden="true">•••</span></button>
-     <div class="pl-social-menu-panel" id="pl-account-menu" hidden>
-      <a href="#/account/profile/edit">${socialIcon('edit',{size:17})}<span>Edit profil</span></a>
-     </div>
-    </div>
-   </div><div class="ua-profile-avatar">${avatar(avatarUrl,profile.display_name,'large')}</div>
+  <div class="ua-profile-content"><div class="ua-profile-avatar">${avatar(avatarUrl,profile.display_name,'large')}</div>
    <div class="ua-profile-identity"><div class="ua-profile-name-row"><div><h2>${esc(profile.display_name)}</h2><div class="ua-username">@${esc(profile.username)}</div></div></div><p>${esc(profile.bio||'Bio belum ditambahkan.')}</p><div class="ua-location">${profile.public_city&&profile.public_province?'⌖ '+esc(profile.public_city)+', '+esc(profile.public_province):''}</div><div class="ua-profile-stats"><a href="#profile-posts"><strong>${ownPosts.length}</strong><span>Postingan</span></a><a href="#/account/followers"><strong>${followersCount.count||0}</strong><span>Pengikut</span></a><a href="#/account/following"><strong>${followingCount.count||0}</strong><span>Mengikuti</span></a></div><a class="ua-profile-story-link" href="#/account/story">＋ Tambah Story</a></div>
   </div>
  </section>
@@ -583,6 +578,7 @@ async function publicProfilePage(username){
  const action=isOwner?'<a class="ua-primary ua-inline" href="#/account/profile">Edit profil</a>':user?`<button type="button" class="ua-primary ua-inline" data-follow-target="${target.id}" data-follow-state="${relation?.status||''}" data-follow-username="${esc(target.username)}" ${relation?.status==='pending'&&relation.follower_id!==user.id?'disabled':''}>${followLabel}</button>`:'<a class="ua-primary ua-inline" href="#/account/login">Masuk untuk mengikuti</a>';
  const postsMarkup=target.visibility==='private'&&!isOwner&&relation?.status!=='accepted'?'<div class="ua-empty"><strong>Akun ini privat</strong><p>Ajukan permintaan mengikuti untuk melihat postingan akun ini.</p></div>':posts.length?postGrid(posts):'<div class="ua-empty"><strong>Belum ada postingan</strong><p>Postingan publik akan tampil di sini.</p></div>';
  return `<section class="ua-profile-card ua-public-profile">
+   ${profileMenuMarkup()}
   <div class="ua-cover" ${coverUrl?`style="background-image:url('${coverUrl}')"`:''}><span>PLUITS PROFILE</span></div>
   <div class="ua-profile-content"><div class="ua-profile-avatar">${avatar(avatarUrl,target.display_name,'large')}</div>
    <div class="ua-profile-identity"><div class="ua-profile-name-row"><div><h2>${esc(target.display_name)}</h2><div class="ua-username">@${esc(target.username)}</div></div></div>

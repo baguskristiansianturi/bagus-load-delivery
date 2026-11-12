@@ -32,7 +32,7 @@ test('shared header does not render a second profile avatar target',()=>{
  assert.doesNotMatch(html,/class="ua-header-profile"/);
 });
 
-test('public guest home and authenticated create/activity destinations remain separate',async()=>{
+test('guest root stays public while signed-in root opens the canonical Explore workspace',async()=>{
  const home=await (await import('node:fs/promises')).readFile(new URL('../../src/pages/home/index.js',import.meta.url),'utf8');
  const account=await (await import('node:fs/promises')).readFile(new URL('../../src/pages/account/index.js',import.meta.url),'utf8');
  const routes=await (await import('node:fs/promises')).readFile(new URL('../../src/components/social/navigation-routes.js',import.meta.url),'utf8');
@@ -40,6 +40,8 @@ test('public guest home and authenticated create/activity destinations remain se
  assert.ok(home.includes("renderSocialMobileNav({active:'home',publicHome:true})"));
  assert.ok(home.includes('stillOnRequestedHome'),'A delayed public-home auth response must not overwrite a route the visitor opened afterward.');
  assert.ok(home.includes('requestHash')&&home.includes('routeVersion'),'Public-home auth routing must be bound to the original route generation.');
+  assert.match(home,/if\(actualViewer&&!guestMode\)/,'A signed-in visitor at the root must be sent to the authenticated workspace.');
+  assert.match(home,/location\.hash='#\/account\/explore'/,'Signed-in root must use the canonical Explore route.');
  assert.ok(account.includes('id="ua-story-form"') && account.includes("from('user_stories')"), "Story creation must remain available outside the Explore feed.");
  assert.ok(routes.includes("activity: '#/account/activity'"));
  assert.ok(routes.includes("create: '#/account/create'"));
@@ -134,13 +136,13 @@ test('signed-in home leads with Bali experiences, search, wishlist and the perso
 });
 
 
-test('profile keeps the three-dot settings menu visible on the cover on mobile',async()=>{
+test('profile keeps the three-dot settings menu visible on the profile card on mobile',async()=>{
  const nav=await readFile(new URL('../../src/components/social/navigation.js',import.meta.url),'utf8');
  const account=await readFile(new URL('../../src/pages/account/index.js',import.meta.url),'utf8');
  const css=await readFile(new URL('../../src/pages/account/user-account.css',import.meta.url),'utf8');
  assert.ok(nav.includes("${profileView?'':"),'Profile view must not render a duplicate header menu.');
- assert.ok(account.includes('ua-profile-menu')&&account.includes('Pengaturan profil'),'Profile cover must contain its own settings trigger.');
+ assert.ok(account.includes('ua-profile-menu')&&account.includes('Pengaturan profil'),'Profile card must contain its own settings trigger.');
  assert.ok(account.includes('Pusat Pengaturan')&&account.includes('Edit profil'),'The three-dot menu must retain both settings destinations.');
- assert.ok(css.includes('.ua-profile-card .ua-cover .ua-profile-menu'),'Profile menu must be anchored visibly to the cover.');
+ assert.ok(css.includes('.ua-profile-card>.ua-profile-menu{position:absolute'),'Profile menu must be anchored directly to the visible profile card.');
  assert.ok(css.includes('@media(max-width:760px)'),'Profile menu must have a mobile layout rule.');
 });
