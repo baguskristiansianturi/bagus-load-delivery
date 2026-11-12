@@ -16,7 +16,7 @@ export function mountAuthPage({ supabase, mode = 'login', onAuthenticated }) {
   const app = document.querySelector('#app');
   if (!app) return;
   const appBase = new URL(import.meta.env.BASE_URL || '/', window.location.origin).toString();
-  const safeMode = ['login', 'register', 'forgot', 'reset'].includes(mode) ? mode : 'login';
+  const safeMode = ['login', 'register', 'forgot', 'reset', 'phone'].includes(mode) ? mode : 'login';
   const isRegister = safeMode === 'register';
   const isForgot = safeMode === 'forgot';
   const isReset = safeMode === 'reset';
@@ -25,7 +25,9 @@ export function mountAuthPage({ supabase, mode = 'login', onAuthenticated }) {
   const intro = isRegister ? 'Mulai dengan tiga informasi dasar. Detail profil bisa ditambahkan nanti.' : isForgot ? 'Masukkan email akunmu. Kami akan mengirim tautan untuk mengatur ulang password.' : isReset ? 'Gunakan password baru yang kuat untuk mengamankan akunmu.' : isPhone ? 'Masukkan nomor telepon dengan kode negara, lalu verifikasi kode OTP.' : 'Masuk untuk melanjutkan aktivitas dan mengelola identitasmu di Pluits.';
   const switcher = isForgot || isReset || isPhone ? '' : '<nav class="pl-auth-tabs" aria-label="Jenis akses"><a href="#/account/auth?mode=login" class="' + (!isRegister ? 'is-active' : '') + '">Masuk</a><a href="#/account/auth?mode=register" class="' + (isRegister ? 'is-active' : '') + '">Daftar</a></nav>';
   let fields = '';
-  if (isRegister) {
+  if (isPhone) {
+    fields = '<div class="pl-auth-field"><label for="pl-auth-phone">Nomor telepon</label><input id="pl-auth-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="+628123456789" required></div>';
+  } else if (isRegister) {
     fields = '<div class="pl-auth-field"><label for="pl-auth-name">Nama tampilan</label><input id="pl-auth-name" name="full_name" type="text" autocomplete="name" maxlength="80" minlength="2" placeholder="Nama yang ingin ditampilkan" required></div>' +
       '<div class="pl-auth-field"><label for="pl-auth-email">Alamat email</label><input id="pl-auth-email" name="email" type="email" autocomplete="email" inputmode="email" autocapitalize="none" spellcheck="false" placeholder="nama@email.com" required></div>' +
       '<div class="pl-auth-field"><label for="pl-auth-password">Password</label><div class="pl-register-password-wrap"><input id="pl-auth-password" name="password" type="password" autocomplete="new-password" minlength="8" placeholder="Minimal 8 karakter" required><button class="pl-register-show" type="button" data-toggle-password aria-label="Tampilkan password" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>'
@@ -37,7 +39,7 @@ export function mountAuthPage({ supabase, mode = 'login', onAuthenticated }) {
     fields = '<div class="pl-auth-field"><label for="pl-auth-email">Alamat email</label><input id="pl-auth-email" name="email" type="email" autocomplete="email" inputmode="email" autocapitalize="none" spellcheck="false" placeholder="nama@email.com" required></div>' +
       (isForgot ? '' : '<div class="pl-auth-field"><label for="pl-auth-password">Password</label><div class="pl-register-password-wrap"><input id="pl-auth-password" name="password" type="password" autocomplete="current-password" placeholder="Password akun" required><button class="pl-register-show" type="button" data-toggle-password aria-label="Tampilkan password" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>');
   }
-  const buttonText = isRegister ? 'Buat akun' : isForgot ? 'Kirim tautan pemulihan' : isReset ? 'Simpan password baru' : 'Masuk';
+  const buttonText = isRegister ? 'Buat akun' : isForgot ? 'Kirim tautan pemulihan' : isReset ? 'Simpan password baru' : isPhone ? 'Kirim kode OTP' : 'Masuk';
   app.innerHTML = '<div class="pl-register-page pl-auth-page"><header class="pl-register-header">' +
     renderBrandLogo({ className: 'pl-register-logo pl-register-brand', size: 29, label: 'PLUITS, kembali ke beranda', wordmark: true }) +
     '<a class="pl-register-back" href="#/">Kembali ke beranda</a></header><main class="pl-register-main">' +
@@ -67,6 +69,8 @@ export function mountAuthPage({ supabase, mode = 'login', onAuthenticated }) {
   }));
   const resend = app.querySelector('#pl-auth-resend');
   let pendingEmail = '';
+  let phoneOtpSent = false;
+  let pendingPhone = '';
   resend?.addEventListener('click', async () => {
     if (!pendingEmail || resend.disabled) return;
     resend.disabled = true; resend.textContent = 'Meminta pengiriman…';
@@ -90,7 +94,26 @@ export function mountAuthPage({ supabase, mode = 'login', onAuthenticated }) {
     submit.disabled = true; submit.textContent = 'Memproses…';
     showMessage(message, 'Menghubungi sistem akun Pluits…', 'info');
     try {
-      if (isRegister) {
+      if (isPhone) {
+        if (!phoneOtpSent) {
+          pendingPhone = String(values.get('phone') || '').replace(/[\\s()-]/g, '');
+          if (!/^\\+[1-9]\\d{7,14}$/.test(pendingPhone)) throw new Error('Gunakan format internasional, contoh +628123456789.');
+          const { error } = await supabase.auth.signInWithOtp({ phone: pendingPhone });
+          if (error) throw error;
+          phoneOtpSent = true;
+          const phoneField = form.querySelector('.pl-auth-field');
+          phoneField.insertAdjacentHTML('afterend', '<div class="pl-auth-field"><label for="pl-auth-otp">Kode verifikasi</label><input id="pl-auth-otp" name="otp" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="8" placeholder="Masukkan kode OTP" required></div>');
+          showMessage(message, 'Kode OTP diminta. Periksa SMS di nomor telepon Anda.', 'success');
+          submit.textContent = 'Verifikasi dan masuk';
+          submit.disabled = false;
+          return;
+        }
+        const token = String(values.get('otp') || '').trim();
+        if (!token) throw new Error('Masukkan kode OTP yang dikirim melalui SMS.');
+        const { error } = await supabase.auth.verifyOtp({ phone: pendingPhone, token, type: 'sms' });
+        if (error) throw error;
+        onAuthenticated?.();
+      } else if (isRegister) {
         const { data, error } = await supabase.auth.signUp({ email, password, options: { data: { full_name: fullName }, emailRedirectTo: appBase } });
         if (error) throw error;
         if (data.session) { onAuthenticated?.(); return; }
@@ -115,7 +138,7 @@ export function mountAuthPage({ supabase, mode = 'login', onAuthenticated }) {
       }
     } catch (error) {
       showMessage(message, friendlyError(error));
-      submit.disabled = false; submit.textContent = isRegister ? 'Buat akun' : isForgot ? 'Kirim tautan pemulihan' : isReset ? 'Simpan password baru' : 'Masuk';
+      submit.disabled = false; submit.textContent = isRegister ? 'Buat akun' : isForgot ? 'Kirim tautan pemulihan' : isReset ? 'Simpan password baru' : isPhone ? (phoneOtpSent ? 'Verifikasi dan masuk' : 'Kirim kode OTP') : 'Masuk';
     }
   });
 }
