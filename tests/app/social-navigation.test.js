@@ -32,7 +32,7 @@ test('shared header does not render a second profile avatar target',()=>{
  assert.doesNotMatch(html,/class="ua-header-profile"/);
 });
 
-test('public guest home and authenticated create/activity destinations remain separate',async()=>{
+test('guest root stays public while signed-in root opens the canonical Explore workspace',async()=>{
  const home=await (await import('node:fs/promises')).readFile(new URL('../../src/pages/home/index.js',import.meta.url),'utf8');
  const account=await (await import('node:fs/promises')).readFile(new URL('../../src/pages/account/index.js',import.meta.url),'utf8');
  const routes=await (await import('node:fs/promises')).readFile(new URL('../../src/components/social/navigation-routes.js',import.meta.url),'utf8');
@@ -40,6 +40,9 @@ test('public guest home and authenticated create/activity destinations remain se
  assert.ok(home.includes("renderSocialMobileNav({active:'home',publicHome:true})"));
  assert.ok(home.includes('stillOnRequestedHome'),'A delayed public-home auth response must not overwrite a route the visitor opened afterward.');
  assert.ok(home.includes('requestHash')&&home.includes('routeVersion'),'Public-home auth routing must be bound to the original route generation.');
+  assert.match(home,/if\(actualViewer&&!guestMode\)/,'A signed-in visitor at the root must be sent to the authenticated workspace.');
+  assert.match(home,/location\.hash='#\/account\/explore'/,'Signed-in root must use the canonical Explore route.');
+  assert.match(home,/const viewer=null/,'The public feed must never accidentally inherit an authenticated viewer after the redirect.');
  assert.ok(account.includes('id="ua-story-form"') && account.includes("from('user_stories')"), "Story creation must remain available outside the Explore feed.");
  assert.ok(routes.includes("activity: '#/account/activity'"));
  assert.ok(routes.includes("create: '#/account/create'"));
