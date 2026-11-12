@@ -41,9 +41,12 @@ export async function bindHome(){
  try{
   const {data:{user:actualViewer}}=await db.auth.getUser();
   if(!stillOnRequestedHome())return;
-  const viewer=guestMode?null:actualViewer;
-  // Keep the public homepage stable for signed-in and guest visitors alike.
-  // Account Explore is opened only through its explicit navigation route.
+  if(actualViewer&&!guestMode){
+   // The root URL is the guest landing page; signed-in visitors continue to the canonical Explore workspace.
+   if(stillOnRequestedHome())location.hash='#/account/explore';
+   return;
+  }
+  const viewer=null;
   bindHomeNearby({personalize:false});
   const headerActions=document.querySelector('.pl-social-header-actions');
   if(viewer&&!guestMode&&headerActions){
