@@ -938,3 +938,30 @@
 @media(prefers-reduced-motion:reduce){
   .ua-social-home .ua-circle-story-track{scroll-behavior:auto}
 }
+
+
+/* Carousel alignment: preserve the first Story circle and leave the peek on the right. */
+@media(max-width:760px){
+  .ua-social-home .ua-circle-story-track{
+    gap:4px;
+    padding:8px 12px 12px;
+    scroll-padding-left:12px;
+    scroll-padding-right:12px;
+    scroll-snap-type:x mandatory;
+    direction:ltr;
+  }
+  .ua-social-home .ua-story-group{
+    flex:0 0 132px;
+    scroll-snap-align:start;
+    scroll-snap-stop:always;
+  }
+  .ua-social-home .ua-story-group .ua-story-ring{
+    width:124px;
+    height:124px;
+  }
+  .ua-social-home .ua-story-group>strong{max-width:124px}
+}
+@media(max-width:380px){
+  .ua-social-home .ua-story-group{flex-basis:124px}
+  .ua-social-home .ua-story-group .ua-story-ring{width:116px;height:116px}
+}
