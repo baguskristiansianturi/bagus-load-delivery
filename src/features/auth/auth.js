@@ -54,7 +54,7 @@ export function mountAuthPage({ supabase, mode = 'login', onAuthenticated }) {
     '<p class="pl-register-security">Satu pusat akun untuk seluruh pengalaman Pluits.</p></section></main><footer class="pl-register-footer">PLUITS · Akunmu, kendalimu.<span class="pl-register-copyright">© 2026 PLUITS. All rights reserved.</span></footer></div>';
 
   const identityInput = app.querySelector('#pl-auth-email');
-  if (identityInput && !isForgot) {
+  if (identityInput && !isForgot && !isRegister) {
     const examples = ['Email', 'Nomor telepon', 'Nama pengguna'];
     let exampleIndex = 0, characterIndex = 0, deleting = false;
     const typeNext = () => {
