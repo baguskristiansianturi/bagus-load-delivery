@@ -81,7 +81,7 @@ export async function bindHome(){
   const visible=cards.filter(Boolean);target.innerHTML=visible.length?visible.join(''):'<div class="pl-feed-empty"><h3>Belum ada cerita publik untuk ditampilkan</h3><p>Feed ini akan menampilkan postingan publik komunitas Pluits. Kamu tetap bisa menjelajahi bagian lain tanpa mendaftar.</p><a href="#/account/register">Buat akun Pluits</a></div>';
   target.querySelectorAll('[data-home-action]').forEach(button=>button.addEventListener('click',async()=>{
    const action=button.dataset.homeAction,postId=button.dataset.postId;
-   if(!viewer){location.hash='/account/login';return;}
+   if(!viewer&&action==='like'){location.hash='#/account/login';return;}
    button.disabled=true;
    try{
     if(action==='like'){
