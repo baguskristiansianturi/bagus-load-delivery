@@ -330,5 +330,5 @@ assert.throws(() => getRoute('unknown'), /Unknown PLUITS route/);
 const accountSource = read('src/pages/account/index.js');
 const homeFeedSource = accountSource.slice(accountSource.indexOf('async function feedPage()'), accountSource.indexOf('async function reelsPage()'));
 assert.ok(homeFeedSource.includes(".eq('moderation_status','published').order('created_at',{ascending:false}).limit(60)") && homeFeedSource.includes('.slice(0,30)'), 'Home feed must bound candidate reads and hydrate no more than 30 posts for mobile performance.');
-assert.ok(!homeFeedSource.includes("from('user_stories')"), 'Stories must stay on user profiles, not the Explore home feed.');
+assert.ok(homeFeedSource.includes("from('user_stories')") && homeFeedSource.includes(".eq('visibility','public')") && homeFeedSource.includes('followedSet.has(story.user_id)'), 'Circle must render active public stories only from followed accounts.');
 assert.ok(accountSource.includes(".lte('duration_ms',60000).order('created_at',{ascending:false}).limit(60)"), 'Reels discovery must bound initial media lookup.');
