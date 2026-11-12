@@ -40,3 +40,11 @@ test('public guest homepage keeps a consistent mobile visual rhythm and light in
  assert.ok(layout.includes('.pl-public-category:active'), 'Cards must provide lightweight touch feedback.');
  assert.ok(layout.includes('@media(prefers-reduced-motion:reduce)'), 'Touch feedback must respect reduced-motion preferences.');
 });
+
+test('mobile store cards keep visible spacing from each other and the fixed bottom navigation',async()=>{
+ const css=await readFile(new URL('../../src/features/app-download/app-download.css',import.meta.url),'utf8');
+ const mobile=css.slice(css.lastIndexOf('/* Mobile: separate the two store cards'));
+ assert.ok(mobile.includes('gap:16px'), 'The two store cards must have a clear gap on mobile.');
+ assert.ok(mobile.includes('padding:0 0 26px'), 'The download section must leave breathing room after the final card.');
+ assert.ok(mobile.includes('margin:0'), 'Store cards must not introduce inconsistent default margins.');
+});
