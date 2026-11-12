@@ -657,3 +657,75 @@
 @media(max-width:380px){
  .ua-social-home .ua-people-card{flex-basis:158px;height:250px;min-height:250px}
 }
+
+
+/* Refined profile discovery cards: full-bleed portrait, concise identity, discreet actions. */
+.ua-social-home .ua-people-card{
+ position:relative;
+ flex:0 0 176px;
+ height:260px;
+ min-height:260px;
+ padding:0;
+ overflow:hidden;
+ isolation:isolate;
+ border:1px solid rgba(24,49,49,.14);
+ border-radius:16px;
+ background:#dce8e5;
+ box-shadow:0 5px 16px rgba(25,54,53,.09);
+}
+.ua-social-home .ua-people-cover{position:absolute;inset:0;z-index:-2;overflow:hidden;background:#dce8e5}
+.ua-social-home .ua-people-cover img{
+ display:block;width:100%;height:100%;object-fit:cover;object-position:center 28%;
+ image-rendering:auto;transform:translateZ(0);
+}
+.ua-social-home .ua-people-cover-fallback{
+ display:grid;width:100%;height:100%;place-items:center;
+ background:linear-gradient(145deg,#d9ece9,#9fc9c3);color:#176f6a;font-size:48px;font-weight:750;
+}
+.ua-social-home .ua-people-overlay{
+ position:absolute;inset:0;z-index:0;
+ display:flex;align-items:flex-end;justify-content:flex-start;
+ padding:76px 11px 13px;
+ background:linear-gradient(180deg,rgba(4,15,17,0) 42%,rgba(4,15,17,.14) 57%,rgba(4,15,17,.78) 79%,rgba(4,15,17,.94) 100%);
+}
+.ua-social-home .ua-people-copy{min-width:0;width:100%}
+.ua-social-home .ua-people-profile{display:block;min-width:0;max-width:100%;text-decoration:none}
+.ua-social-home .ua-people-profile strong{
+ display:block;max-width:100%;overflow:hidden;color:#fff;font-size:14px;font-weight:750;
+ line-height:1.25;letter-spacing:-.015em;text-overflow:ellipsis;white-space:nowrap;
+ text-shadow:0 1px 5px rgba(0,0,0,.4);
+}
+.ua-social-home .ua-people-meta{margin:5px 0 0;min-height:0;color:rgba(255,255,255,.9);font-size:10px;line-height:1.35}
+.ua-social-home .ua-people-meta small{
+ display:block;overflow:hidden;color:rgba(255,255,255,.9);font-size:10px;line-height:1.35;
+ text-overflow:ellipsis;white-space:nowrap;
+}
+.ua-social-home .ua-people-new-badge{
+ position:absolute;z-index:2;top:9px;left:9px;
+ display:inline-flex;align-items:center;min-height:19px;padding:0 7px;
+ border:1px solid rgba(255,255,255,.3);border-radius:6px;
+ background:rgba(13,29,30,.48);color:#fff;font-size:8px;font-weight:800;
+ letter-spacing:.09em;backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px);
+}
+.ua-social-home .ua-people-follow{
+ position:absolute;z-index:3;top:8px;right:8px;
+ display:grid;place-items:center;width:29px;height:29px;min-width:29px;min-height:29px;
+ margin:0;padding:0;border:1px solid rgba(255,255,255,.72);border-radius:50%;
+ background:rgba(255,255,255,.92);color:#087f78;font-size:20px;font-weight:500;line-height:1;
+ box-shadow:0 2px 8px rgba(0,0,0,.16);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+}
+.ua-social-home .ua-people-follow span{display:block;transform:translateY(-1px)}
+.ua-social-home .ua-people-follow[aria-pressed=true]{
+ border-color:rgba(255,255,255,.62);background:rgba(16,43,42,.78);color:#fff;
+}
+.ua-social-home .ua-people-follow:disabled{opacity:.72}
+@media(max-width:760px){
+ .ua-social-home .ua-people-card{flex-basis:164px;height:248px;min-height:248px;border-radius:15px}
+ .ua-social-home .ua-people-overlay{padding:68px 10px 12px}
+ .ua-social-home .ua-people-profile strong{font-size:13px}
+ .ua-social-home .ua-people-meta,.ua-social-home .ua-people-meta small{font-size:9px}
+ .ua-social-home .ua-people-follow{top:8px;right:8px;width:28px;height:28px;min-width:28px;min-height:28px}
+}
+@media(max-width:380px){
+ .ua-social-home .ua-people-card{flex-basis:156px;height:238px;min-height:238px}
+}
