@@ -554,3 +554,76 @@
     flex: 0 0 34px !important;
   }
 }
+
+
+/* Profile settings are a permanent visible action; the three-dot menu is only for secondary actions. */
+.ua-social-app .ua-profile-main .ua-profile-content > .ua-profile-menu-actions {
+  position: absolute !important;
+  top: 12px !important;
+  right: 12px !important;
+  z-index: 45 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  width: auto !important;
+  height: auto !important;
+  margin: 0 !important;
+}
+.ua-social-app .ua-profile-main .ua-profile-settings-link {
+  display: inline-flex !important;
+  min-height: 36px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  padding: 0 10px !important;
+  border: 1px solid #e3e9ef !important;
+  border-radius: 9px !important;
+  background: #fff !important;
+  color: #26384c !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+  text-decoration: none !important;
+  white-space: nowrap !important;
+}
+.ua-social-app .ua-profile-main .ua-profile-menu-actions .ua-profile-menu {
+  position: relative !important;
+  inset: auto !important;
+  display: inline-flex !important;
+  width: 36px !important;
+  height: 36px !important;
+  flex: 0 0 36px !important;
+}
+.ua-social-app .ua-profile-main .ua-profile-menu-actions .pl-social-menu-trigger {
+  width: 36px !important;
+  height: 36px !important;
+  border-color: #e3e9ef !important;
+  background: #fff !important;
+  color: #26384c !important;
+  box-shadow: none !important;
+}
+.ua-social-app .ua-profile-main .ua-profile-menu-actions .pl-social-menu-panel {
+  top: calc(100% + 7px) !important;
+  right: 0 !important;
+}
+.ua-social-app .ua-profile-main .ua-profile-identity {
+  padding-right: 0 !important;
+}
+@media (max-width: 760px) {
+  .ua-social-app .ua-profile-main .ua-profile-content > .ua-profile-menu-actions {
+    top: 10px !important;
+    right: 10px !important;
+    gap: 5px !important;
+  }
+  .ua-social-app .ua-profile-main .ua-profile-settings-link {
+    min-height: 34px !important;
+    padding-inline: 8px !important;
+    font-size: 10px !important;
+  }
+  .ua-social-app .ua-profile-main .ua-profile-menu-actions .ua-profile-menu,
+  .ua-social-app .ua-profile-main .ua-profile-menu-actions .pl-social-menu-trigger {
+    width: 34px !important;
+    height: 34px !important;
+    flex-basis: 34px !important;
+  }
+}
