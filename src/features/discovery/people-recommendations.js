@@ -26,7 +26,7 @@ export const CIRCLE_DEMO_PEOPLE=[{"name":"Alya Putri","username":"alyaputri","av
 export function renderPeopleRecommendations({people=[],avatarUrls=new Map(),demoPeople=[]}={}){
  const demoCards=demoPeople.map(person=>{
   const name=escapeHtml(person.name),username=escapeHtml(person.username),city=escapeHtml(person.city),interests=escapeHtml(person.interests);
-  return '<article class="ua-people-card ua-people-card-demo"><div class="ua-people-profile ua-people-profile-demo"><span class="ua-people-avatar"><img src="'+escapeHtml(person.avatarUrl)+'" alt="Foto contoh '+name+'" loading="lazy"></span><strong>'+name+'</strong><small>@'+username+'</small></div><span class="ua-people-demo-label">Profil contoh</span><div class="ua-people-meta"><small>'+city+' · '+interests+'</small></div><button type="button" class="ua-people-follow ua-people-demo-follow" data-people-demo-follow aria-pressed="false">Ikuti · demo</button></article>';
+  return '<article class="ua-people-card ua-people-card-demo"><div class="ua-people-profile ua-people-profile-demo"><span class="ua-people-avatar"><img src="'+escapeHtml(person.avatarUrl)+'" alt="Foto profil '+name+'" loading="lazy"></span><strong>'+name+'</strong><small>@'+username+'</small></div><span class="ua-people-reason">Kenalan baru</span><div class="ua-people-meta"><small>'+city+' · '+interests+'</small></div><button type="button" class="ua-people-follow ua-people-demo-follow" data-people-demo-follow aria-pressed="false">Ikuti</button></article>';
  }).join('');
  const cards=people.map(person=>{
   const name=escapeHtml(person.display_name||'Pengguna Pluits'),username=escapeHtml(person.username||'pengguna');

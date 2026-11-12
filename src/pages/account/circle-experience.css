@@ -372,25 +372,29 @@
   .ua-social-home .ua-circle-story-track,.ua-social-home .ua-people-track{scroll-behavior:auto}
 }
 
-/* Transparent section surfaces: only individual cards carry a background. */
+/* Circle sections stay transparent; Story is a circular avatar, people are the only cards. */
 .ua-social-home .ua-circle-stories,.ua-social-home .ua-people-recommendations{margin:0 0 20px;padding:17px 0 10px;border:0;border-radius:0;background:transparent;box-shadow:none}
 .ua-social-home .ua-circle-section-heading,.ua-social-home .ua-people-heading{padding:0 1px}
-.ua-social-home .ua-circle-story-track{gap:10px;padding:3px 2px 10px}
-.ua-social-home .ua-story-group{flex-basis:88px;min-height:122px;padding:10px 7px 8px;border:1px solid #e8efed;border-radius:14px;background:#fff;box-shadow:0 3px 12px rgba(32,55,58,.035);gap:6px}
-.ua-social-home .ua-story-group .ua-story-ring{width:58px;height:58px;box-shadow:none}
-.ua-social-home .ua-story-group>strong{font-size:10px}
-.ua-social-home .ua-story-group>small{font-size:9px}
-.ua-social-home .ua-story-group-demo{border-style:dashed}
-.ua-social-home .ua-demo-chip,.ua-social-home .ua-demo-tag,.ua-social-home .ua-people-demo-label{display:inline-flex;align-items:center;justify-content:center;padding:3px 7px;border-radius:999px;background:#f1f6f5;color:#71817f;font-size:9px;line-height:1.2;font-weight:700}
+.ua-social-home .ua-circle-story-track{gap:17px;padding:3px 2px 10px}
+.ua-social-home .ua-story-group{appearance:none;display:flex;flex:0 0 76px;min-width:0;min-height:0;flex-direction:column;align-items:center;gap:7px;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;color:inherit;text-align:center;cursor:pointer}
+.ua-social-home .ua-story-group .ua-story-ring{width:70px;height:70px;padding:3px;border:2px solid transparent;border-radius:50%;background:linear-gradient(#fff,#fff) padding-box,linear-gradient(135deg,#24b8ad,#9bded7,#168e89) border-box;box-shadow:0 0 0 3px #f1f8f7}
+.ua-social-home .ua-story-group-demo .ua-story-ring{background:linear-gradient(#fff,#fff) padding-box,linear-gradient(135deg,#c4d4d1,#e1eae8) border-box;box-shadow:0 0 0 3px #f6f8f8}
+.ua-social-home .ua-story-group .ua-story-avatar{width:100%;height:100%;overflow:hidden;border:2px solid #fff;border-radius:50%;background:#edf5f4}
+.ua-social-home .ua-story-group .ua-story-avatar img{display:block;width:100%;height:100%;object-fit:cover;border-radius:50%}
+.ua-social-home .ua-story-group>strong{max-width:76px;overflow:hidden;color:#43545a;font-size:10px;font-weight:650;text-overflow:ellipsis;white-space:nowrap}
+.ua-social-home .ua-story-group>small{display:none}
+.ua-social-home .ua-demo-tag{display:inline-flex;align-items:center;padding:3px 8px;border-radius:999px;background:#f1f6f5;color:#71817f;font-size:9px;font-weight:700}
 .ua-social-home .ua-people-recommendations{padding-top:14px}
 .ua-social-home .ua-people-heading{align-items:center}
-.ua-social-home .ua-people-track{gap:10px;padding:3px 1px 10px}
-.ua-social-home .ua-people-card{flex:0 0 164px;min-height:220px;border:1px solid #e8efed;border-radius:15px;background:#fff;box-shadow:0 3px 12px rgba(32,55,58,.035)}
-.ua-social-home .ua-people-profile-demo{cursor:default}
-.ua-social-home .ua-people-demo-label{margin-top:7px}
-.ua-social-home .ua-people-card-demo .ua-people-meta{min-height:27px;line-height:1.4}
-.ua-social-home .ua-people-card-demo .ua-people-follow{background:#f0f7f6;color:#16877f;border:1px solid #dceeea}
-.ua-social-home .ua-people-card-demo .ua-people-follow[aria-pressed=true]{background:#20aaa2;color:#fff;border-color:#20aaa2}
-.ua-social-home .ua-story-demo-note{display:block;margin-top:8px;color:#9aa5a7;font-size:10px}
-@media(max-width:760px){.ua-social-home .ua-circle-stories,.ua-social-home .ua-people-recommendations{margin-bottom:15px;padding:14px 0 8px}.ua-social-home .ua-circle-story-track{gap:8px;margin-right:-14px;padding-right:14px}.ua-social-home .ua-story-group{flex-basis:82px;min-height:117px;padding:9px 6px 7px}.ua-social-home .ua-story-group .ua-story-ring{width:54px;height:54px}.ua-social-home .ua-people-card{flex-basis:148px;min-height:213px}.ua-social-home .ua-people-track{gap:9px}}
-@media(max-width:380px){.ua-social-home .ua-story-group{flex-basis:78px}.ua-social-home .ua-people-card{flex-basis:142px}}
+.ua-social-home .ua-people-track{gap:11px;padding:3px 1px 10px}
+.ua-social-home .ua-people-card{flex:0 0 176px;min-height:232px;padding:15px 12px 12px;border:1px solid #e7eeec;border-radius:16px;background:linear-gradient(155deg,#fff 0%,#fbfdfc 100%);box-shadow:0 2px 10px rgba(34,58,58,.035)}
+.ua-social-home .ua-people-avatar{width:88px;height:88px;margin-bottom:5px;border:3px solid #eaf5f3;background:#f1f7f6}
+.ua-social-home .ua-people-avatar img{width:100%;height:100%;object-fit:cover}
+.ua-social-home .ua-people-profile strong{font-size:12px}
+.ua-social-home .ua-people-profile>small{font-size:10px}
+.ua-social-home .ua-people-new,.ua-social-home .ua-people-reason{margin-top:6px}
+.ua-social-home .ua-people-meta{min-height:26px;margin-top:6px;font-size:10px;line-height:1.4}
+.ua-social-home .ua-people-card-demo .ua-people-follow{background:#20aaa2;color:#fff;border:1px solid #20aaa2}
+.ua-social-home .ua-people-card-demo .ua-people-follow[aria-pressed=true]{background:#eff7f6;color:#58706d;border-color:#dcebe8}
+@media(max-width:760px){.ua-social-home .ua-circle-stories,.ua-social-home .ua-people-recommendations{margin-bottom:15px;padding:14px 0 8px}.ua-social-home .ua-circle-story-track{gap:13px;margin-right:-14px;padding-right:14px}.ua-social-home .ua-story-group{flex-basis:76px;min-height:0;padding:0;background:transparent;border:0;box-shadow:none}.ua-social-home .ua-story-group .ua-story-ring{width:66px;height:66px}.ua-social-home .ua-story-group>strong{font-size:10px}.ua-social-home .ua-people-card{flex-basis:164px;min-height:230px}.ua-social-home .ua-people-avatar{width:84px;height:84px}.ua-social-home .ua-people-track{gap:9px}}
+@media(max-width:380px){.ua-social-home .ua-story-group{flex-basis:72px}.ua-social-home .ua-story-group .ua-story-ring{width:62px;height:62px}.ua-social-home .ua-people-card{flex-basis:156px}.ua-social-home .ua-people-avatar{width:80px;height:80px}}
