@@ -1,0 +1,1 @@
+export function renderPublicJoin(){return `<section class="pl-public-join"><div><span class="pl-public-eyebrow">JADILAH BAGIAN DARI PLUITS</span><h2>Punya cerita, tempat, atau usaha untuk dibagikan?</h2><p>Buat akun gratis dan mulai membangun kehadiranmu di PLUITS.</p></div><a href="#/account/register">Daftar gratis <span>→</span></a></section>`;}

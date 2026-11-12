@@ -1,0 +1,1 @@
+export function renderPublicNearby(content){return `<section class="pl-public-section pl-public-nearby"><div class="pl-public-section-head"><div><span class="pl-public-eyebrow">GEO DIRECTORY</span><h2>Temukan yang dekat denganmu.</h2><p>Tempat, restoran, fasilitas umum, dan penyedia layanan.</p></div><a href="#/places">Lihat semua tempat →</a></div>${content}</section>`;}

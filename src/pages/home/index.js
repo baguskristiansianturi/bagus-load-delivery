@@ -4,34 +4,30 @@ import {ROUTES} from '../../components/social/navigation-routes.js';
 import {homeNearbySection,bindHomeNearby} from '../directory/index.js';
 import {createSignedUrlMap} from '../../services/storage/signed-urls.js';
 import {renderAppDownload} from '../../features/app-download/app-download.js';
+import {renderPublicHero} from '../../features/public-home/hero.js';
+import {renderPublicDiscovery} from '../../features/public-home/discovery.js';
+import {renderPublicNearby} from '../../features/public-home/nearby.js';
+import {renderPublicStories} from '../../features/public-home/stories.js';
+import {renderPublicMarketplace} from '../../features/public-home/marketplace.js';
+import {renderPublicJoin} from '../../features/public-home/join.js';
+import {renderPublicFooter} from '../../features/public-home/footer.js';
 const db=createClient('https://ytndswhqxayqpftszwfh.supabase.co','sb_publishable_kOUbKBYg88nXgz8FQRSnvA_k0hvKY65');
 const safe=v=>String(v??'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
 export function home(){
  const guestMode=(location.hash||'').startsWith('#/guest');
  const image=(id)=>'https://images.unsplash.com/'+id+'?auto=format&fit=crop&w=900&q=82';
- const destinations=[
-  ['Destinasi','photo-1507525428034-b723cf961d3e','Tempat dan pengalaman menarik','places'],
-  ['Makanan','photo-1517248135467-4c7edcad34c4','Hidangan yang sedang diminati','marketplace'],
-  ['Produk','photo-1441986300917-64674bd600d8','Produk yang menarik perhatian','marketplace'],
-  ['Jasa','photo-1521737711867-e3b97375f902','Layanan yang mungkin dibutuhkan','places'],
-  ['Blog & topik','photo-1470252649378-9c29740c9fa8','Artikel dan topik dari berbagai akun','search']
- ];
+ const image=(id)=>'https://images.unsplash.com/'+id+'?auto=format&fit=crop&w=900&q=82';
  return `<div class="pl-social-home pl-public-home">
  ${renderSocialHeader({active:'home',publicHome:true})}
  <main class="pl-public-shell">
-  <section class="pl-public-hero">
-   <div class="pl-public-hero-copy"><span class="pl-public-eyebrow">SOCIAL · LOCAL · DISCOVERY</span><h1>Temukan dunia di sekitarmu.</h1><p>Jelajahi tempat, cerita, komunitas, produk, dan layanan. Semua terhubung dalam satu ruang.</p><form class="pl-public-search" action="#/search"><span>⌕</span><input aria-label="Cari di Pluits" placeholder="Cari tempat, orang, produk, atau cerita…"><button type="submit">Cari</button></form><div class="pl-public-hero-links"><a href="#/places">Jelajahi direktori</a><a href="#/search">Temukan cerita <span>→</span></a></div></div>
-   <div class="pl-public-hero-visual"><img src="${image('photo-1518837695005-2083093ee35b')}" alt="Pemandangan pantai dan laut" fetchpriority="high"><div class="pl-public-hero-note"><b>Lebih dari sekadar sosial.</b><span>Orang · Tempat · Pengalaman · Usaha</span></div></div>
-  </section>
-  <section class="pl-public-section pl-public-discover"><div class="pl-public-section-head"><div><span class="pl-public-eyebrow">JELAJAHI PLUITS</span><h2>Temukan hal menarik di PLUITS.</h2><p>Destinasi, makanan, produk, jasa, dan topik dari seluruh wilayah.</p></div><a href="#/places">Buka direktori →</a></div>
-   <div class="pl-public-category-grid">${destinations.map(([label,id,desc,route])=>`<a class="pl-public-category" href="#/${route}"><img src="${image(id)}" alt="" loading="lazy"><span class="pl-public-category-shade"></span><span class="pl-public-category-copy"><b>${label}</b><small>${desc}</small></span></a>`).join('')}</div>
-  </section>
-  <section class="pl-public-section pl-public-nearby"><div class="pl-public-section-head"><div><span class="pl-public-eyebrow">GEO DIRECTORY</span><h2>Temukan yang dekat denganmu.</h2><p>Tempat, restoran, fasilitas umum, dan penyedia layanan.</p></div><a href="#/places">Lihat semua tempat →</a></div>${homeNearbySection()}</section>
-  <section class="pl-public-section pl-public-stories"><div class="pl-public-section-head"><div><span class="pl-public-eyebrow">KONTEN KOMUNITAS</span><h2>Cerita dari berbagai sudut pandang.</h2><p>Foto, tulisan, video, dan pengalaman yang dibagikan komunitas.</p></div><a href="#/search">Jelajahi konten →</a></div><div class="pl-public-story-feature"><img src="${image('photo-1470252649378-9c29740c9fa8')}" alt="Pemandangan alam saat matahari terbit" loading="lazy"><div><span class="pl-public-eyebrow">STORY · POST · REEL</span><h3>Temukan inspirasi dari pengalaman nyata.</h3><p>Jelajahi konten publik sekarang. Bergabunglah untuk berbagi cerita dan berinteraksi.</p><a href="#/search">Mulai menjelajah →</a></div></div><div id="pl-public-feed"><div class="pl-feed-loading">Memuat postingan publik…</div></div></section>
-  <section class="pl-public-section pl-public-market"><div class="pl-public-section-head"><div><span class="pl-public-eyebrow">LOCAL COMMERCE</span><h2>Usaha dan layanan dalam satu ekosistem.</h2><p>Kenali penyedia, lihat produk, dan temukan layanan yang kamu butuhkan.</p></div><a href="#/marketplace">Jelajahi marketplace →</a></div><div class="pl-public-market-grid"><a href="#/marketplace"><img src="${image('photo-1542838132-92c53300491e')}" alt="Produk bahan pangan segar" loading="lazy"><b>Toko & produk</b><small>Temukan produk dari berbagai usaha.</small></a><a href="#/places"><img src="${image('photo-1552566626-52f8b828add9')}" alt="Interior restoran" loading="lazy"><b>Restoran & kafe</b><small>Kenali tempat dan pengalaman kuliner.</small></a><a href="#/places"><img src="${image('photo-1530789253388-582c481c54b0')}" alt="Perjalanan dan destinasi" loading="lazy"><b>Transportasi & trip</b><small>Jelajahi perjalanan dan aktivitas.</small></a><a href="#/places"><img src="${image('photo-1521737711867-e3b97375f902')}" alt="Tim profesional bekerja" loading="lazy"><b>Jasa profesional</b><small>Temukan keahlian dan layanan.</small></a></div></section>
-  <section class="pl-public-join"><div><span class="pl-public-eyebrow">JADILAH BAGIAN DARI PLUITS</span><h2>Punya cerita, tempat, atau usaha untuk dibagikan?</h2><p>Buat akun gratis dan mulai membangun kehadiranmu di PLUITS.</p></div><a href="#/account/register">Daftar gratis <span>→</span></a></section>
+  ${renderPublicHero(image)}
+  ${renderPublicDiscovery(image)}
+  ${renderPublicNearby(homeNearbySection())}
+  ${renderPublicStories(image)}
+  ${renderPublicMarketplace(image)}
+  ${renderPublicJoin()}
   ${renderAppDownload()}
- </main><footer class="pl-social-footer">PLUITS INDONESIA · Social · Local Commerce · Discovery</footer>
+ </main>${renderPublicFooter()}
  ${renderSocialMobileNav({active:'home',publicHome:true})}</div>`;
 }
 export async function bindHome(){
