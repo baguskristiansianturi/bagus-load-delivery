@@ -170,10 +170,9 @@ for (const path of [
 }
 
 const publicHome = read('src/pages/home/index.js');
-assert.match(publicHome, /await mountUserAccount\('explore'\)/, 'Signed-in homepage must use the canonical interactive social feed after lazy loading.');
-assert.match(publicHome, /if\(viewer\)\{[\s\S]*?history\.replaceState\(null,'',location\.pathname\+location\.search\+'#\/account\/explore'\);[\s\S]*?await mountUserAccount\('explore'\);[\s\S]*?return;/, 'Signed-in homepage must canonicalize to the interactive Explore feed.');
+assert.doesNotMatch(publicHome, /await mountUserAccount\('explore'\)/, 'Public homepage must not be replaced by the signed-in profile feed.');
+assert.doesNotMatch(publicHome, /history\.replaceState/, 'Public homepage must never silently redirect signed-in visitors into an account page.');
 assert.match(publicHome, /stillOnRequestedHome/, 'A delayed auth response must not replace a page after navigation away from the public home.');
-assert.doesNotMatch(publicHome, /history\\.replaceState/, 'Public homepage must never silently redirect signed-in visitors into an account page.');
 assert.match(publicHome, /Keep the public homepage stable for signed-in and guest visitors alike/, 'Public homepage must remain the same route for signed-in and guest visitors.');
 const mainEntry = read('src/main.js');
 assert.match(mainEntry, /let renderSequence = 0/, 'Application route rendering must use a monotonic render sequence.');
@@ -202,10 +201,10 @@ assert.match(sharedDesign, /--pl-color-line/, 'Social UI must use shared spacing
 const socialHome = read('src/pages/account/index.js');
 const sharedHeader = read('src/components/social/navigation.js');
 assert.ok(sharedHeader.includes("getRoute('profile', Boolean(user))"), 'Header avatar must resolve the canonical profile route.');
-assert.ok(sharedHeader.includes('pl-social-menu-trigger') && sharedHeader.includes('Pusat Pengaturan') && sharedHeader.includes('ROUTES.settings'), 'Shared account menu must expose the canonical settings route.');
+assert.ok(sharedHeader.includes('pl-social-menu-trigger') && sharedHeader.includes('ROUTES.settings'), 'Shared account menu must expose the canonical settings route.');
 assert.ok(sharedHeader.includes("profileView?'':") && socialHome.includes('ua-profile-menu'), 'Profile settings must use the profile-specific menu, not a duplicate global header menu.');
 const profileFunction = socialHome.slice(socialHome.indexOf('async function profilePage'), socialHome.indexOf('function bindProfileMenu'));
-assert.ok(profileFunction.includes('<div class="ua-profile-content">   <div class="pl-social-header-menu ua-profile-menu">'), 'Profile settings menu must be mounted inside visible profile content because the cover is hidden by the profile hero.');
+assert.ok(profileFunction.includes('ua-profile-settings-link') && profileFunction.includes('href="#/account/settings"'), 'Profile settings center must have a permanent visible link outside the three-dot menu.');
 assert.equal(socialHome.split('function bindProfileMenu').length - 1, 1, 'Profile menu must have exactly one delegated interaction handler.');
 assert.ok(socialHome.includes("event.target.closest('.pl-social-menu-trigger')"), 'Profile menu must support dynamically rendered profile and preview controls.');
 const profileHeroStyles = read('src/features/profile/profile-hero.css');
