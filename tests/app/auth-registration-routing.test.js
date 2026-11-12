@@ -5,6 +5,9 @@ import { readFile } from 'node:fs/promises';
 test('registration is delegated to its own feature and remains reachable before the session gate', async () => {
   const account = await readFile(new URL('../../src/pages/account/index.js', import.meta.url), 'utf8');
   const feature = await readFile(new URL('../../src/features/auth/register.js', import.meta.url), 'utf8');
+  const brand = await readFile(new URL('../../src/components/common/brand.js', import.meta.url), 'utf8');
+  const brandCss = await readFile(new URL('../../src/styles/brand.css', import.meta.url), 'utf8');
+  const registerCss = await readFile(new URL('../../src/features/auth/register.css', import.meta.url), 'utf8');
   const mount = account.slice(account.indexOf('async function mountAccount('), account.indexOf('function bindWallet('));
   const registerGate = mount.indexOf("if(section==='register'){authScreen('register');return;}");
   const sessionGate = mount.indexOf("if(!user){authScreen('login');return;}");
@@ -21,6 +24,13 @@ test('registration is delegated to its own feature and remains reachable before 
   assert.match(feature, /pl-register-pending/);
   assert.match(feature, /Ketentuan Layanan/);
   assert.match(feature, /Kebijakan Privasi/);
+  assert.match(feature, /wordmark:\s*true/);
+  assert.doesNotMatch(feature, /<a class=\\"pl-register-logo[^>]*>['\\s\\S]*renderBrandLogo/);
+  assert.match(brand, /pluits-brand-wordmark/);
+  assert.match(brandCss, /\\.pluits-brand-wordmark/);
+  assert.match(registerCss, /min-height:100vh;min-height:100svh/);
+  assert.match(registerCss, /flex:1 0 auto/);
+  assert.doesNotMatch(registerCss, /overflow-y\\s*:\\s*hidden/);
 });
 
 test('registration styling is isolated from other account and public pages', async () => {

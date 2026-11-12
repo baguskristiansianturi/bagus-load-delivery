@@ -4,9 +4,10 @@ const BRAND_LOGO_SRC = '/pluits/assets/brand/pluits-logo.svg';
  * Render the canonical PLUITS image mark.
  * The image is the brand asset; this helper never recreates it with text, CSS or SVG.
  */
-export function renderBrandLogo({ href = '#/', className = '', size = 40, label = 'Beranda PLUITS' } = {}) {
+export function renderBrandLogo({ href = '#/', className = '', size = 40, label = 'Beranda PLUITS', wordmark = false } = {}) {
   const classes = ['pluits-brand-mark', className].filter(Boolean).join(' ');
-  return `<a class="${classes}" href="${href}" aria-label="${label}" style="--brand-size:${size}px"><img src="${BRAND_LOGO_SRC}" alt="" width="${size}" height="${size}" decoding="async" fetchpriority="high"></a>`;
+  const wordmarkMarkup = wordmark ? '<span class="pluits-brand-wordmark">PLUITS</span>' : '';
+  return `<a class="${classes}" href="${href}" aria-label="${label}" style="--brand-size:${size}px"><img src="${BRAND_LOGO_SRC}" alt="" width="${size}" height="${size}" decoding="async" fetchpriority="high">${wordmarkMarkup}</a>`;
 }
 
 export { BRAND_LOGO_SRC };
