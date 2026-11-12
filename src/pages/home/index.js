@@ -1,35 +1,11 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-import {renderSocialMobileNav} from '../../components/social/navigation.js';
-import {renderPublicNavbar,bindPublicNavbar} from '../../features/public-home/navbar.js';
-import '../../features/public-home/navbar.css';
-import {ROUTES} from '../../components/social/navigation-routes.js';
-import {homeNearbySection,bindHomeNearby} from '../directory/index.js';
-import {createSignedUrlMap} from '../../services/storage/signed-urls.js';
-import {renderAppDownload} from '../../features/app-download/app-download.js';
-import {renderPublicHero} from '../../features/public-home/hero.js';
-import {renderPublicDiscovery} from '../../features/public-home/discovery.js';
-import {renderPublicNearby} from '../../features/public-home/nearby.js';
-import {renderPublicStories} from '../../features/public-home/stories.js';
-import {renderPublicMarketplace} from '../../features/public-home/marketplace.js';
-import {renderPublicJoin} from '../../features/public-home/join.js';
-import {renderPublicFooter} from '../../features/public-home/footer.js';
+import {renderPublicHomeLayout} from '../../features/public-home/layout.js';
 const db=createClient('https://ytndswhqxayqpftszwfh.supabase.co','sb_publishable_kOUbKBYg88nXgz8FQRSnvA_k0hvKY65');
 const safe=v=>String(v??'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
 export function home(){
  const guestMode=(location.hash||'').startsWith('#/guest');
  const image=(id)=>'https://images.unsplash.com/'+id+'?auto=format&fit=crop&w=900&q=82';
- return `<div class="pl-social-home pl-public-home">
- ${renderPublicNavbar()}
- <main class="pl-public-shell">
-  ${renderPublicHero(image)}
-  ${renderPublicDiscovery(image)}
-  ${renderPublicNearby(homeNearbySection())}
-  ${renderPublicStories(image)}
-  ${renderPublicMarketplace(image)}
-  ${renderPublicJoin()}
-  ${renderAppDownload()}
- </main>${renderPublicFooter()}
- ${renderSocialMobileNav({active:'home',publicHome:true})}</div>`;
+ return renderPublicHomeLayout({image,nearbyContent:homeNearbySection()});
 }
 export async function bindHome(){
  const requestHash=location.hash||'#/';
