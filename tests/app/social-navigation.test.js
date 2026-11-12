@@ -83,7 +83,8 @@ test('public home loads the real navigation layer and exposes visible mobile ico
  const main=await readFile(new URL('../../src/main.js',import.meta.url),'utf8');
  const css=await readFile(new URL('../../styles/home-layout.css',import.meta.url),'utf8');
  assert.ok(main.includes("import './styles/social-navigation.css'"),'Shared navigation stylesheet must be loaded from the application entry point.');
- assert.ok(css.includes('.pl-public-home>.pl-public-navbar'),'Public guest navbar must have one explicit isolated surface.');
+ const navbarCss=await readFile(new URL('../../src/features/public-home/navbar.css',import.meta.url),'utf8');
+ assert.ok(navbarCss.includes('.pl-public-home>.pl-public-navbar'),'Public guest navbar must have one explicit isolated surface.');
  assert.ok(css.includes('.pl-public-home .pl-social-mobile-nav>a .pl-icon'),'Public mobile navigation SVG icons must have explicit dimensions and visibility.');
  const navbar=await readFile(new URL('../../src/features/public-home/navbar.js',import.meta.url),'utf8');
  const navbarCss=await readFile(new URL('../../src/features/public-home/navbar.css',import.meta.url),'utf8');
