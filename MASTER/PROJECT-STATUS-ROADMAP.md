@@ -1189,3 +1189,11 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - **Commits implementasi dan tes:** 525d37d5127794f213dd16a5809d1ba66aaf9c9e, 1a916f9d389607fc7aacdabda12ee6aaeac51bb9, 55236cc1601141f51288320f85314e313a5c830d, 121aa93029b0c128e10f1765d3230b2ff504e505, ade40128454e39ac8e6f9184596d019908764e7b, 846e8fdcf043df8441c3d8fcf410f45f290b4601.
 - **Status:** DEPLOYED. GitHub Actions run 43196982363, attempt 2, succeeded for commit d9c8ede90865c137e5d7791f93331fc4560257a9. Production-surface/backend-contract tests, Vite build, output verification, Pages artifact upload, and Deploy to GitHub Pages all passed. Founder Android real-device visual UAT remains pending; do not mark ACCEPTED until founder confirms.
 - **UAT founder:** periksa hero, pencarian, section heading/description, kategori, cerita, marketplace, CTA, card touch feedback, ikon navbar, dan ruang setelah konten terakhir pada Android. Pastikan konten terakhir dapat digulir melewati navigasi fixed tanpa menyisakan ekor kosong yang berlebihan.
+
+
+## 12 November 2026 — Signed-in home people discovery increment
+- **Scope:** After the existing Di Sekitar Anda section, add the People You May Know carousel, including a new-account discovery boost; keep the existing Beranda filters and composer; show up to 30 feed posts, followed by Temukan Lebih Banyak.
+- **Backend contract:** Read existing public profiles, accepted follow edges and the viewer's block/relationship rows under current RLS. Follow uses the existing user_follows triggers. No schema migration, RPC, contact upload, phone matching, or production data seeding.
+- **Performance bounds:** 60 profile candidates, 300 mutual edges, 10 rendered recommendations, 60 feed candidates, maximum 30 hydrated posts, batched signed avatar URLs.
+- **Status:** IMPLEMENTED IN SOURCE; CI/deployment and founder Android UAT are recorded separately after verification.
+- **Technical specification:** [Home People Recommendations & Feed Increment](../docs/pluits/HOME-PEOPLE-RECOMMENDATIONS-TECH-SPEC-2026-11-12.md).
