@@ -118,9 +118,9 @@ test('signed-in home leads with Bali experiences, search, wishlist and the perso
  const topTen=await readFile(new URL('../../src/features/discovery/top-ten-cards.js',import.meta.url),'utf8');
  assert.ok(topTen.includes('Top 10 Trending')&&topTen.includes('ua-topten-grid')&&((topTen.match(/className:'ua-topten-card-/g)||[]).length===10),'Explore must show ten individual trending subjects, not category tiles.');
  assert.ok(account.includes('function bindToptenSlider()')&&account.includes('scheduleAuto(3600)')&&account.includes('pointerdown')&&account.includes('pointerup')&&account.includes('setTimeout(()=>{'),'Mobile Top 10 must rotate automatically, follow direct pointer control and wait before resuming after interaction.');
- assert.ok(account.includes("exploreFilter='recommended'")&&account.includes("ua-home-following")&&account.includes("Mengikuti")&&account.includes("Untuk Anda"),'The Beranda feed must lead with posts from followed accounts.');
+ assert.ok(account.includes("exploreFilter='all'")&&account.includes("ua-home-following")&&account.includes("['all','Semua']")&&account.includes("['latest','Terbaru']"),'Circle feed must default to all posts and offer latest ordering.');
  assert.ok(account.includes('ua-home-topic-carousel')&&account.includes('ua-home-compose-prompt')&&!account.includes('REKOMENDASI PERSONAL')&&!account.includes('Atur minat')&&!account.includes('Pilih minat'),'Untukmu must show automatic recommendation cards without setup instructions or extra explanatory copy.');
- assert.ok(account.includes('trendSection+homeNearbySection()+homeHeading'),'The page hierarchy must place Di sekitar Anda cards directly below Top 10, before Untukmu and Beranda.');
+ assert.ok(account.includes('circleHeading+storiesSection+peopleSection+homeHeading'),'Circle hierarchy must place stories, people recommendations, and post controls before the feed.');
 
  assert.ok(topTen.includes("title:'Beef Slab'")&&topTen.includes("href:'#/places?category=restaurant'"),'Tapping a trending food item must open its matching directory category.');
  const directorySource=await readFile(new URL('../../src/pages/directory/index.js',import.meta.url),'utf8');
@@ -131,10 +131,10 @@ test('signed-in home leads with Bali experiences, search, wishlist and the perso
  assert.ok(account.includes("startHomeSearchPrompt('Welcome to '+city)")&&account.includes('nominatim.openstreetmap.org/reverse'),'Search prompt must welcome users using their detected current city.');
  assert.ok(account.includes('navigator.geolocation.getCurrentPosition'),'Home must request device location when no current location is available.');
  assert.ok(account.includes('window.__pluitsHomeLocation'),'Detected device location must be kept separate from profile location.');
- assert.ok(account.includes('renderTopTenSection')&&account.includes('ua-explore-filters'),'Explore must compose the isolated Top 10 module before feed filters.');
+ assert.ok(account.includes('ua-explore-filters')&&!account.includes(')+trendSection+homeNearbySection()'),'Circle must use sticky post filters; demo-only Top 10 content must not be presented as live trending.');
  assert.ok(account.includes('homeNearbySection')&&account.includes('bindHomeNearby'),'Home must use live nearby results.');
  assert.ok(account.includes('Temukan Lebih Banyak')&&account.includes('Produk Lokal')&&account.includes('Kumpulan')&&account.includes('Layanan PLUITS'),'Home must continue from the 30-post feed into discovery, product recommendations, service collections and PLUITS service filters.');
- assert.ok(account.includes('trendSection+homeNearbySection()+homeHeading+peopleSection'),'People recommendations must appear immediately after Di sekitar Anda and the Beranda heading.');
+ assert.ok(account.includes('circleHeading+storiesSection+peopleSection+homeHeading'),'People recommendations must appear after Circle stories and before the post feed.');
  assert.ok(account.includes('.slice(0,30)'),'The signed-in home must cap rendered post hydration at 30 items.');
  assert.ok(topTen.includes('⌖ ')&&topTen.includes('ua-topten-copy')&&topTen.includes('TOP_TEN_DEMO_ITEMS'),'Top 10 cards must be an isolated, explicitly demo-only image presentation module.');
  const nearbySource=await readFile(new URL('../../src/pages/directory/index.js',import.meta.url),'utf8');
@@ -166,4 +166,11 @@ test('Circle feed controls expose all, latest, random and category filtering',as
  const account=await readFile(new URL('../../src/pages/account/index.js',import.meta.url),'utf8');
  assert.ok(account.includes("['all','Semua']")&&account.includes("['latest','Terbaru']")&&account.includes("['random','Acak']")&&account.includes('data-explore-category'));
  assert.ok(account.includes("exploreCategory=String(event.currentTarget.value||'all')"));
+});
+
+test('Circle header exposes desktop Circle and Jelajah links while retaining mobile bottom navigation',async()=>{
+ const nav=await readFile(new URL('../../src/components/social/navigation.js',import.meta.url),'utf8');
+ const css=await readFile(new URL('../../src/styles/social-navigation.css',import.meta.url),'utf8');
+ assert.ok(nav.includes('ua-home-desktop-nav')&&nav.includes('Circle</a>')&&nav.includes('Jelajah</a>'));
+ assert.match(css,/\.ua-social-app \.ua-home-desktop-nav/);
 });

@@ -24,7 +24,8 @@ export function renderSocialHeader({ active = 'explore', profileView = false, sh
   if (active === 'explore') {
     return `
       <header class="ua-header pl-social-header ua-home-header">
-        ${renderBrandLogo({href:ROUTES.home,className:'ua-brand',size:34,label:'Beranda PLUITS'})}
+        ${renderBrandLogo({href:ROUTES.home,className:'ua-brand',size:34,label:'Circle PLUITS'})}
+        <nav class="ua-home-desktop-nav" aria-label="Navigasi utama"><a class="active" href="${ROUTES.home}">Circle</a><a href="${ROUTES.discover}">Jelajah</a></nav>
         <a class="ua-home-searchbar" href="#/search" aria-label="Cari di PLUITS">${socialIcon('search',{size:17})}<span id="ua-home-search-prompt" data-location-text>Memeriksa lokasi…</span></a>
         <a class="ua-home-wishlist" href="${ROUTES.saved}" aria-label="Tersimpan" title="Tersimpan">${socialIcon('bookmark',{size:21})}</a>
         <a class="ua-home-profile" href="${user?ROUTES.profile:ROUTES.login}" aria-label="${user?'Profil':'Masuk'}" title="${user?'Profil':'Masuk ke PLUITS'}">${userAvatar||socialIcon('user',{size:19})}</a>
