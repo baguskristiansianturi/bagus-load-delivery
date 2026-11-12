@@ -1,4 +1,4 @@
-const BRAND_LOGO_SRC = '/pluits/assets/brand/pluits-logo.png';
+const BRAND_LOGO_SRC = '/pluits/assets/brand/pluits-logo.svg';
 
 /**
  * Render the canonical PLUITS image mark.
