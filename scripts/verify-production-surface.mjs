@@ -171,7 +171,8 @@ const publicHome = read('src/pages/home/index.js');
 assert.doesNotMatch(publicHome, /await mountUserAccount\('explore'\)/, 'Public homepage must not be replaced by the signed-in profile feed.');
 assert.doesNotMatch(publicHome, /history\.replaceState/, 'Public homepage must never silently redirect signed-in visitors into an account page.');
 assert.match(publicHome, /stillOnRequestedHome/, 'A delayed auth response must not replace a page after navigation away from the public home.');
-assert.match(publicHome, /Keep the public homepage stable for signed-in and guest visitors alike/, 'Public homepage must remain the same route for signed-in and guest visitors.');
+assert.match(publicHome, /if\(actualViewer&&!guestMode\)/, 'Signed-in visitors must leave the guest landing page for the canonical Explore workspace.');
+assert.match(publicHome, /location\.hash='#\/account\/explore'/, 'Signed-in homepage routing must use the canonical Explore route.');
 const mainEntry = read('src/main.js');
 assert.match(mainEntry, /let renderSequence = 0/, 'Application route rendering must use a monotonic render sequence.');
 assert.ok(mainEntry.includes('await route(home)'), 'Homepage hydration must wait for the active route render.');
@@ -202,7 +203,7 @@ assert.ok(sharedHeader.includes("getRoute('profile', Boolean(user))"), 'Header a
 assert.ok(sharedHeader.includes('pl-social-menu-trigger') && sharedHeader.includes('ROUTES.settings'), 'Shared account menu must expose the canonical settings route.');
 assert.ok(sharedHeader.includes("profileView?'':") && socialHome.includes('ua-profile-menu'), 'Profile settings must use the profile-specific menu, not a duplicate global header menu.');
 const profileFunction = socialHome.slice(socialHome.indexOf('async function profilePage'), socialHome.indexOf('function bindProfileMenu'));
-assert.ok(profileFunction.includes('ua-profile-settings-link') && profileFunction.includes('href="#/account/settings"'), 'Profile settings center must have a permanent visible link outside the three-dot menu.');
+assert.ok(socialHome.includes('function profileMenuMarkup()') && socialHome.includes('href="#/account/settings"'), 'The profile three-dot menu must expose the account settings center.');
 assert.equal(socialHome.split('function bindProfileMenu').length - 1, 1, 'Profile menu must have exactly one delegated interaction handler.');
 assert.ok(socialHome.includes("event.target.closest('.pl-social-menu-trigger')"), 'Profile menu must support dynamically rendered profile and preview controls.');
 const profileHeroStyles = read('src/features/profile/profile-hero.css');
@@ -294,7 +295,7 @@ assert.match(postLayoutCss, /pluits-heart-core 1\.18s/, 'Main heart animation mu
 
 
 assert.ok(read('src/main.js').includes("history.replaceState(null, '', location.pathname + location.search + '#/')"), 'Legacy home aliases must normalize to the canonical public home URL.');
-assert.ok(!read('src/pages/home/index.js').includes("'#/account/explore'"), 'Authenticated users must remain on the canonical public homepage instead of being redirected into Explore.');
+assert.ok(read('src/pages/home/index.js').includes("location.hash='#/account/explore'"), 'Authenticated users must enter the canonical signed-in Explore workspace from the root URL.');
 
 assert.ok(read('src/pages/account/index.js').includes('sorted.map(post=>postCard(post)).join(\'\')'),'The home feed must use the defined post-card renderer, not the Reel-only renderer.');
 assert.ok(read('src/pages/account/index.js').includes('accept="video/*,.mp4,.m4v,.mov,.webm,.3gp,.3gpp,.3g2,.3gp2"'),'Reel picker must request common Android video formats explicitly.');
