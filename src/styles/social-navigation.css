@@ -502,11 +502,11 @@
 }
 @media (max-width: 760px) {
   .ua-social-app .pl-social-header > .pluits-brand-mark.ua-brand {
-    width: 34px !important;
-    height: 34px !important;
-    min-width: 34px !important;
-    min-height: 34px !important;
-    flex: 0 0 34px !important;
+    width: 30px !important;
+    height: 30px !important;
+    min-width: 30px !important;
+    min-height: 30px !important;
+    flex: 0 0 30px !important;
   }
 }
 
