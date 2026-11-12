@@ -294,7 +294,7 @@ assert.match(postLayoutCss, /pluits-heart-core 1\.18s/, 'Main heart animation mu
 
 
 assert.ok(read('src/main.js').includes("history.replaceState(null, '', location.pathname + location.search + '#/')"), 'Legacy home aliases must normalize to the canonical public home URL.');
-assert.ok(read('src/pages/home/index.js').includes("'#/account/explore'"), 'Authenticated users must land on the canonical Explore feed URL.');
+assert.ok(!read('src/pages/home/index.js').includes("'#/account/explore'"), 'Authenticated users must remain on the canonical public homepage instead of being redirected into Explore.');
 
 assert.ok(read('src/pages/account/index.js').includes('sorted.map(post=>postCard(post)).join(\'\')'),'The home feed must use the defined post-card renderer, not the Reel-only renderer.');
 assert.ok(read('src/pages/account/index.js').includes('accept="video/*,.mp4,.m4v,.mov,.webm,.3gp,.3gpp,.3g2,.3gp2"'),'Reel picker must request common Android video formats explicitly.');
