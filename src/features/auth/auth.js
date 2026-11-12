@@ -31,12 +31,12 @@ export function mountAuthPage({ supabase, mode = 'login', onAuthenticated }) {
     fields = '<div class="pl-auth-field"><label for="pl-auth-name">Nama tampilan</label><input id="pl-auth-name" name="full_name" type="text" autocomplete="name" maxlength="80" minlength="2" placeholder="Nama yang ingin ditampilkan" required></div>' +
       '<div class="pl-auth-field"><label for="pl-auth-email">Alamat email</label><input id="pl-auth-email" name="email" type="email" autocomplete="email" inputmode="email" autocapitalize="none" spellcheck="false" placeholder="nama@email.com" required></div>' +
       '<div class="pl-auth-field"><label for="pl-auth-password">Password</label><div class="pl-register-password-wrap"><input id="pl-auth-password" name="password" type="password" autocomplete="new-password" minlength="8" placeholder="Minimal 8 karakter" required><button class="pl-register-show" type="button" data-toggle-password aria-label="Tampilkan password" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>' +
-      '<small class="pl-register-help">Gunakan minimal 8 karakter. Jangan gunakan password yang sama dengan akun penting lainnya.</small>' +
+      '<small class="pl-register-help">Buat password minimal 8 karakter dengan huruf besar, huruf kecil, angka, dan simbol. Hindari nama atau tanggal lahir.</small>' +
       '<label class="pl-register-consent"><input name="terms" type="checkbox" required><span>Saya menyetujui <a href="#/terms">Ketentuan Layanan</a> dan telah membaca <a href="#/privacy">Kebijakan Privasi</a> Pluits.</span></label>';
   } else if (isReset) {
-    fields = '<div class="pl-auth-field"><label for="pl-auth-password">Password baru</label><div class="pl-register-password-wrap"><input id="pl-auth-password" name="password" type="password" autocomplete="new-password" minlength="8" placeholder="Minimal 8 karakter" required><button class="pl-register-show" type="button" data-toggle-password aria-label="Tampilkan password" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div><small class="pl-register-help">Gunakan password baru yang tidak dipakai di akun lain.</small>';
+    fields = '<div class="pl-auth-field"><label for="pl-auth-password">Password baru</label><div class="pl-register-password-wrap"><input id="pl-auth-password" name="password" type="password" autocomplete="new-password" minlength="8" placeholder="Minimal 8 karakter" required><button class="pl-register-show" type="button" data-toggle-password aria-label="Tampilkan password" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div><small class="pl-register-help">Gunakan minimal 8 karakter, gabungkan huruf besar-kecil, angka, dan simbol. Jangan gunakan password lama.</small>';
   } else {
-    fields = '<div class="pl-auth-field"><label for="pl-auth-email">' + (isForgot ? 'Alamat email' : 'Email / Nomor telepon') + '</label><input id="pl-auth-email" name="email" type="' + (isForgot ? 'email' : 'text') + '" autocomplete="' + (isForgot ? 'email' : 'username') + '" inputmode="' + (isForgot ? 'email' : 'text') + '" autocapitalize="none" spellcheck="false" placeholder="' + (isForgot ? 'nama@email.com' : 'nama@email.com atau +628123456789') + '" required></div>' +
+    fields = '<div class="pl-auth-field"><label for="pl-auth-email">' + (isForgot ? 'Alamat email' : 'Email, nomor HP, atau nama pengguna') + '</label><input id="pl-auth-email" name="email" type="' + (isForgot ? 'email' : 'text') + '" autocomplete="' + (isForgot ? 'email' : 'username') + '" inputmode="' + (isForgot ? 'email' : 'text') + '" autocapitalize="none" spellcheck="false" placeholder="' + (isForgot ? 'nama@email.com' : 'Email') + '" required></div>' +
       (isForgot ? '' : '<div class="pl-auth-field"><label for="pl-auth-password">Password</label><div class="pl-register-password-wrap"><input id="pl-auth-password" name="password" type="password" autocomplete="current-password" placeholder="Password akun" required><button class="pl-register-show" type="button" data-toggle-password aria-label="Tampilkan password" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>');
   }
   const buttonText = isRegister ? 'Buat akun' : isForgot ? 'Kirim tautan pemulihan' : isReset ? 'Simpan password baru' : isPhone ? 'Kirim kode OTP' : 'Masuk';
@@ -48,11 +48,28 @@ export function mountAuthPage({ supabase, mode = 'login', onAuthenticated }) {
     '<section class="pl-register-card" aria-labelledby="pl-auth-title"><div class="pl-register-card-head"><span class="pl-register-step">PLUITS ACCOUNT</span><h2 id="pl-auth-title">' + title + '</h2><p>' + intro + '</p></div>' +
     switcher + '<form id="pl-auth-form" class="pl-register-form" novalidate>' + fields +
     '<p id="pl-auth-message" class="pl-register-message" role="status" aria-live="polite"></p><button class="pl-register-submit" type="submit">' + buttonText + '</button></form>' +
-    ((!isForgot && !isReset && !isPhone) ? '<div class="pl-auth-social"><div class="pl-auth-divider"><span>atau lanjutkan dengan</span></div><button type="button" class="pl-auth-provider" data-provider="google"><b class="pl-auth-google">G</b><span>Lanjutkan dengan Google</span></button><button type="button" class="pl-auth-provider" data-provider="facebook"><b class="pl-auth-facebook">f</b><span>Lanjutkan dengan Facebook</span></button><a class="pl-auth-phone" href="#/account/auth?mode=phone">Masuk dengan nomor telepon</a></div>' : '') +
+    ((!isForgot && !isReset && !isPhone) ? '<div class="pl-auth-social"><div class="pl-auth-divider"><span>atau lanjutkan dengan</span></div><div class="pl-auth-provider-grid"><button type="button" class="pl-auth-provider" data-provider="google"><b class="pl-auth-google">G</b><span>Google</span></button><button type="button" class="pl-auth-provider" data-provider="facebook"><b class="pl-auth-facebook">f</b><span>Facebook</span></button><button type="button" class="pl-auth-provider" data-provider="twitter"><b class="pl-auth-twitter">t</b><span>Twitter</span></button><button type="button" class="pl-auth-provider" data-provider="linkedin_oidc"><b class="pl-auth-linkedin">in</b><span>LinkedIn</span></button></div><a class="pl-auth-phone" href="#/account/auth?mode=phone">Masuk dengan nomor telepon</a><p class="pl-auth-social-note">Dengan melanjutkan, kamu menyetujui Ketentuan Layanan dan Kebijakan Privasi Pluits.</p></div>' : '') +
     '<section id="pl-auth-pending" class="pl-register-pending" aria-live="polite" hidden><div class="pl-register-mail-icon" aria-hidden="true">✉</div><span class="pl-register-step">SATU LANGKAH LAGI</span><h3>Periksa email kamu</h3><p>Permintaan konfirmasi akun dikirim untuk:</p><strong id="pl-auth-pending-email"></strong><ol><li>Buka email dari Pluits/Supabase.</li><li>Tekan tombol konfirmasi.</li><li>Kamu akan kembali ke Pluits.</li></ol><p id="pl-auth-pending-message" class="pl-register-message" role="status"></p><button id="pl-auth-resend" class="pl-register-secondary" type="button">Kirim ulang email</button></section>' +
     (isRegister ? '<p class="pl-register-login">Sudah punya akun? <a href="#/account/auth?mode=login">Masuk</a></p>' : isForgot || isReset ? '<p class="pl-register-login"><a href="#/account/auth?mode=login">Kembali ke Masuk</a></p>' : '<p class="pl-register-login"><a href="#/account/auth?mode=forgot">Lupa password?</a></p><p class="pl-register-login">Belum punya akun? <a href="#/account/auth?mode=register">Daftar</a></p>') +
     '<p class="pl-register-security">Satu pusat akun untuk seluruh pengalaman Pluits.</p></section></main><footer class="pl-register-footer">PLUITS · Akunmu, kendalimu.<span class="pl-register-copyright">© 2026 PLUITS. All rights reserved.</span></footer></div>';
 
+  const identityInput = app.querySelector('#pl-auth-email');
+  if (identityInput && !isForgot) {
+    const examples = ['Email', 'Nomor telepon', 'Nama pengguna'];
+    let exampleIndex = 0, characterIndex = 0, deleting = false;
+    const typeNext = () => {
+      if (!identityInput.isConnected || identityInput.value) return;
+      const word = examples[exampleIndex];
+      characterIndex += deleting ? -1 : 1;
+      identityInput.placeholder = word.slice(0, characterIndex);
+      let delay = deleting ? 48 : 92;
+      if (!deleting && characterIndex >= word.length) { deleting = true; delay = 1050; }
+      else if (deleting && characterIndex <= 0) { deleting = false; exampleIndex = (exampleIndex + 1) % examples.length; delay = 260; }
+      window.setTimeout(typeNext, delay);
+    };
+    window.setTimeout(typeNext, 350);
+    identityInput.addEventListener('input', () => { if (identityInput.value) identityInput.placeholder = 'Email, nomor HP, atau nama pengguna'; });
+  }
   const form = app.querySelector('#pl-auth-form');
   const message = app.querySelector('#pl-auth-message');
   const submit = form.querySelector('[type="submit"]');
@@ -136,6 +153,7 @@ export function mountAuthPage({ supabase, mode = 'login', onAuthenticated }) {
         const identity = String(values.get('email') || '').trim();
         const phone = identity.replace(/[\\s()-]/g, '');
         const isPhoneIdentity = /^\\+[1-9]\\d{7,14}$/.test(phone);
+        if (!isPhoneIdentity && !identity.includes('@')) throw new Error('Login dengan nama pengguna sedang disiapkan. Untuk saat ini, gunakan email atau nomor HP.');
         const credentials = isPhoneIdentity ? { phone, password } : { email: identity.toLowerCase(), password };
         const { error } = await supabase.auth.signInWithPassword(credentials);
         if (error) throw error;
