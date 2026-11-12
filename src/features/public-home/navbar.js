@@ -3,14 +3,12 @@ import {renderBrandLogo} from '../../components/common/brand.js';
 
 export function renderPublicNavbar(){
  const locale=localStorage.getItem('pluits-public-locale')==='en'?'en':'id';
- const flag=locale==='id'?'🇮🇩':'🇬🇧';
  return `<header class="pl-public-navbar" aria-label="PLUITS">
   <div class="pl-public-navbar-brand">${renderBrandLogo({className:'pl-public-navbar-mark',size:30,label:'PLUITS beranda'})}<span>pluits</span></div>
   <div class="pl-public-navbar-actions">
-   <button class="pl-public-language" type="button" data-public-action="language" aria-label="Ganti bahasa" title="Bahasa"><span class="pl-public-flag" aria-hidden="true">${flag}</span><span data-public-locale-label>${locale.toUpperCase()}</span></button>
+   <button class="pl-public-language" type="button" data-public-action="language" aria-label="Ganti bahasa" title="Bahasa"><span class="pl-public-flag pl-public-flag-${locale}" aria-hidden="true"></span><span data-public-locale-label>${locale.toUpperCase()}</span></button>
    <button class="pl-public-icon-action" type="button" data-public-action="wishlist" aria-label="Wishlist" title="Wishlist">${socialIcon('heart',{size:22})}</button>
-   <button class="pl-public-icon-action pl-public-cart-action" type="button" data-public-action="cart" aria-label="Keranjang" title="Keranjang">${socialIcon('shopping-bag',{size:22})}<span class="pl-public-cart-count" data-public-cart-count hidden>0</span></button>
-   <a class="pl-public-register" href="#/account/register"><span data-public-register-label>${locale==='id'?'Daftar':'Sign up'}</span></a>
+   <button class="pl-public-icon-action pl-public-cart-action" type="button" data-public-action="cart" aria-label="Keranjang" title="Keranjang">${socialIcon('shopping-cart',{size:22})}<span class="pl-public-cart-count" data-public-cart-count hidden>0</span></button>
   </div>
  </header>`;
 }
@@ -25,8 +23,8 @@ export function bindPublicNavbar(){
   const action=event.target.closest('[data-public-action]')?.dataset.publicAction;if(!action)return;
   if(action==='language'){
    const next=(localStorage.getItem('pluits-public-locale')==='en'?'id':'en');localStorage.setItem('pluits-public-locale',next);document.documentElement.lang=next;
-   const flag=header.querySelector('.pl-public-flag'),label=header.querySelector('[data-public-locale-label]'),register=header.querySelector('[data-public-register-label]');
-   if(flag)flag.textContent=next==='id'?'🇮🇩':'🇬🇧';if(label)label.textContent=next.toUpperCase();if(register)register.textContent=next==='id'?'Daftar':'Sign up';
+   const languageButton=header.querySelector('.pl-public-language'),label=header.querySelector('[data-public-locale-label]');
+   if(languageButton){languageButton.querySelector('.pl-public-flag')?.classList.toggle('pl-public-flag-id',next==='id');languageButton.querySelector('.pl-public-flag')?.classList.toggle('pl-public-flag-en',next==='en');}if(label)label.textContent=next.toUpperCase();
    toast(next==='id'?'Bahasa Indonesia dipilih':'English selected');
   }else if(action==='wishlist'||action==='cart'){location.hash='#/account/login';}
  });
