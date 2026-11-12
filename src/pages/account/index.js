@@ -1301,17 +1301,15 @@ function bindStoryAutoScroll(){
   stop();if(interacting||document.hidden)return;
   timer=setTimeout(()=>{
    if(interacting||document.hidden)return;
-   const max=track.scrollWidth-track.clientWidth;
-   if(max<=4)return;
-   const first=cards[0],step=first.getBoundingClientRect().width+2;
-   if(track.scrollLeft+track.clientWidth>=track.scrollWidth-12){
-    track.scrollTo({left:0,behavior:'smooth'});
-   }else{
+   const current=cards.reduce((best,card)=>Math.abs(card.getBoundingClientRect().left-track.getBoundingClientRect().left)<Math.abs(cards[best].getBoundingClientRect().left-track.getBoundingClientRect().left)?cards.indexOf(card):best,0);
+   const next=cards[current+1];
+   if(!next){track.scrollTo({left:0,behavior:'smooth'});}
+   else{
     autoScrolling=true;
-    track.scrollBy({left:step,behavior:'smooth'});
+    track.scrollTo({left:Math.max(0,next.offsetLeft-track.offsetLeft-12),behavior:'smooth'});
    }
    clearTimeout(settleTimer);
-   settleTimer=setTimeout(()=>{autoScrolling=false;schedule(5200);},1900);
+   settleTimer=setTimeout(()=>{autoScrolling=false;schedule(5200);},900);
   },delay);
  };
  const begin=()=>{interacting=true;stop();if(autoScrolling){track.scrollTo({left:track.scrollLeft,behavior:'auto'});autoScrolling=false;clearTimeout(settleTimer);}};
