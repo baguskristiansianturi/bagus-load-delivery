@@ -40,7 +40,7 @@ export function mountAuthPage({ supabase, mode = 'login', onAuthenticated }) {
       (isForgot ? '' : '<div class="pl-auth-field"><label for="pl-auth-password">Password</label><div class="pl-register-password-wrap"><input id="pl-auth-password" name="password" type="password" autocomplete="current-password" placeholder="Password akun" required><button class="pl-register-show" type="button" data-toggle-password aria-label="Tampilkan password" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>');
   }
   const buttonText = isRegister ? 'Buat akun' : isForgot ? 'Kirim tautan pemulihan' : isReset ? 'Simpan password baru' : isPhone ? 'Kirim kode OTP' : 'Masuk';
-  app.innerHTML = '<div class="pl-register-page pl-auth-page"><header class="pl-register-header">' +
+  app.innerHTML = '<div class="pl-register-page pl-auth-page pl-auth-mode-' + safeMode + '"><header class="pl-register-header">' +
     renderBrandLogo({ className: 'pl-register-logo pl-register-brand', size: 29, label: 'PLUITS, kembali ke beranda', wordmark: true }) +
     '<a class="pl-register-back" href="#/">Kembali ke beranda</a></header><main class="pl-register-main">' +
     '<aside class="pl-register-story"><span class="pl-register-eyebrow">SATU AKUN · BANYAK KEMUNGKINAN</span><h1>Mulai terhubung dengan dunia di sekitarmu.</h1>' +
