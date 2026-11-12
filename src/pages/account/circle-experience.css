@@ -776,3 +776,44 @@
  .ua-social-home .ua-people-card:hover .ua-people-cover img,
  .ua-social-home .ua-people-card:active .ua-people-cover img{transform:none}
 }
+
+
+/* Story circles: approximately double the previous size, with a tighter mobile rhythm. */
+.ua-social-home .ua-circle-story-track{
+  gap:10px;
+}
+.ua-social-home .ua-story-group{
+  flex:0 0 150px;
+  gap:8px;
+}
+.ua-social-home .ua-story-group .ua-story-ring{
+  width:140px;
+  height:140px;
+}
+.ua-social-home .ua-story-group>strong{
+  max-width:144px;
+  font-size:11px;
+}
+@media(max-width:760px){
+  .ua-social-home .ua-circle-story-track{
+    gap:8px;
+    margin-right:-14px;
+    padding-right:14px;
+  }
+  .ua-social-home .ua-story-group{
+    flex-basis:140px;
+    gap:7px;
+  }
+  .ua-social-home .ua-story-group .ua-story-ring{
+    width:132px;
+    height:132px;
+  }
+  .ua-social-home .ua-story-group>strong{
+    max-width:136px;
+    font-size:10px;
+  }
+}
+@media(max-width:380px){
+  .ua-social-home .ua-story-group{flex-basis:140px}
+  .ua-social-home .ua-story-group .ua-story-ring{width:132px;height:132px}
+}
