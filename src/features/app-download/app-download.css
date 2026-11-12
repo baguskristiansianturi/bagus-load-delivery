@@ -38,3 +38,22 @@
  .pl-app-store-status{font-size:8px;padding:4px 6px}
  .pl-app-download-inner{padding-inline:15px}
 }
+
+/* Tablet composition: give the copy a full row and place both platform cards side by side. */
+@media (min-width:761px) and (max-width:900px){
+ .pl-public-home .pl-app-download-inner{
+  width:calc(100% - 40px);
+  padding:30px;
+  grid-template-columns:minmax(0,1fr);
+  gap:22px;
+ }
+ .pl-app-download-platforms{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+ .pl-app-store-card{min-width:0;padding:12px}
+ .pl-app-store-text strong{font-size:clamp(15px,2vw,19px)}
+ .pl-app-store-status{font-size:8px;padding:4px 6px}
+}
+/* Match the mobile page clearance to the fixed navigation height, avoiding an oversized blank tail. */
+@media (max-width:760px){
+ .pl-social-home.pl-public-home{padding-bottom:calc(60px + env(safe-area-inset-bottom))!important}
+ .pl-public-home .pl-app-download{padding-bottom:12px}
+}
