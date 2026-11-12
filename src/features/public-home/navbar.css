@@ -253,3 +253,26 @@
  .pl-public-home>header.pl-public-navbar>.pl-public-navbar-actions>.pl-public-icon-action>.pl-icon{width:23px!important;height:23px!important;min-width:23px!important;min-height:23px!important;flex-basis:23px!important;stroke-width:1.8!important}
  .pl-public-home>header.pl-public-navbar>.pl-public-navbar-actions>.pl-public-register{display:none!important}
 }
+
+/* Tighten the guest mobile action cluster without changing the left brand. */
+@media(max-width:760px){
+ .pl-public-home>header.pl-public-navbar>.pl-public-navbar-actions{gap:0!important}
+ .pl-public-home>header.pl-public-navbar>.pl-public-navbar-actions>.pl-public-language{
+  flex:0 0 40px!important;width:40px!important;min-width:40px!important;max-width:40px!important;
+ }
+ .pl-public-home>header.pl-public-navbar>.pl-public-navbar-actions>.pl-public-icon-action{
+  flex:0 0 40px!important;width:40px!important;min-width:40px!important;max-width:40px!important;
+ }
+ .pl-public-home>header.pl-public-navbar>.pl-public-navbar-actions>.pl-public-icon-action>.pl-icon{
+  width:22px!important;height:22px!important;min-width:22px!important;min-height:22px!important;flex-basis:22px!important;
+ }
+ .pl-public-home>header.pl-public-navbar>.pl-public-navbar-actions>.pl-public-cart-action>.pl-icon-cart-facing-in{
+  transform:scaleX(-1)!important;transform-origin:center!important;
+ }
+}
+@media(max-width:360px){
+ .pl-public-home>header.pl-public-navbar>.pl-public-navbar-actions>.pl-public-language,
+ .pl-public-home>header.pl-public-navbar>.pl-public-navbar-actions>.pl-public-icon-action{
+  flex-basis:40px!important;width:40px!important;min-width:40px!important;max-width:40px!important;
+ }
+}

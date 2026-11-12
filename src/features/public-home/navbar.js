@@ -8,7 +8,7 @@ export function renderPublicNavbar(){
   <div class="pl-public-navbar-actions">
    <button class="pl-public-language" type="button" data-public-action="language" aria-label="Ganti bahasa" title="Bahasa"><span class="pl-public-flag pl-public-flag-${locale}" aria-hidden="true"></span><span data-public-locale-label>${locale.toUpperCase()}</span></button>
    <button class="pl-public-icon-action" type="button" data-public-action="wishlist" aria-label="Wishlist" title="Wishlist">${socialIcon('heart',{size:22})}</button>
-   <button class="pl-public-icon-action pl-public-cart-action" type="button" data-public-action="cart" aria-label="Keranjang" title="Keranjang">${socialIcon('shopping-cart',{size:22})}<span class="pl-public-cart-count" data-public-cart-count hidden>0</span></button>
+   <button class="pl-public-icon-action pl-public-cart-action" type="button" data-public-action="cart" aria-label="Keranjang" title="Keranjang">${socialIcon('shopping-cart',{size:22,className:'pl-icon-cart-facing-in'})}<span class="pl-public-cart-count" data-public-cart-count hidden>0</span></button>
   </div>
  </header>`;
 }
