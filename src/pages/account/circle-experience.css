@@ -1728,3 +1728,56 @@
     height:106px !important;
   }
 }
+
+
+/* Mobile Story alignment: remove the app-shell side inset before centering
+   the Circle page. The Story rail must start at the same left gutter as the
+   viewport, not inherit the narrow-screen .ua-app padding. */
+@media(max-width:760px){
+  .ua-social-app:has(.ua-social-home){
+    width:100%!important;
+    max-width:100%!important;
+    padding-left:0!important;
+    padding-right:0!important;
+    overflow-x:clip!important;
+  }
+  .ua-social-app:has(.ua-social-home) .ua-main:has(.ua-social-home){
+    width:100%!important;
+    max-width:none!important;
+    min-width:0!important;
+    margin-left:0!important;
+    margin-right:0!important;
+    padding-left:0!important;
+    padding-right:0!important;
+  }
+  .ua-social-home{
+    width:100%!important;
+    max-width:none!important;
+    min-width:0!important;
+    margin-left:0!important;
+    margin-right:0!important;
+  }
+  .ua-social-home .ua-circle-stories{
+    width:100%!important;
+    max-width:100%!important;
+    margin-left:0!important;
+    margin-right:0!important;
+    padding-left:14px!important;
+    padding-right:0!important;
+    box-sizing:border-box!important;
+  }
+  .ua-social-home .ua-circle-story-track{
+    width:100%!important;
+    max-width:100%!important;
+    margin-left:0!important;
+    margin-right:0!important;
+    padding-left:0!important;
+    padding-right:14px!important;
+    box-sizing:border-box!important;
+  }
+}
+@media(max-width:380px){
+  .ua-social-app:has(.ua-social-home){padding-left:0!important;padding-right:0!important}
+  .ua-social-home .ua-circle-stories{padding-left:11px!important}
+  .ua-social-home .ua-circle-story-track{padding-right:11px!important}
+}
