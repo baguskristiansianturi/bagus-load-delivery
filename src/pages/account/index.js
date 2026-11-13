@@ -11,6 +11,8 @@ import {renderSocialHeader,renderSocialMobileNav} from '../../components/social/
 import {updateSEO} from '../seo.js';
 import './user-account.css';
 import './circle-experience.css';
+import {renderPublicJoin} from '../../features/public-home/join.js';
+import {renderAppDownload} from '../../features/app-download/app-download.js';
 import '../../features/profile/image-framing.css';
 import '../../features/profile/profile-hero.css';
 import '../../features/reels/reels.css';
@@ -511,7 +513,7 @@ async function feedPage(){
  const blogMarkup=exploreContentType==='blog'?await blogFeedMarkup():'';
  const liveMarkup=exploreContentType==='live'?"<div class='ua-feed-empty'><strong>Live PLUITS</strong><p>Siaran langsung akan muncul di sini saat fitur Live diaktifkan. Kerangka navigasi sudah tersedia.</p></div>":'';
  const feedMarkup=exploreContentType==='blog'?blogMarkup:exploreContentType==='live'?liveMarkup:sorted.length?sorted.map(post=>postCard(post)).join(''):"<div class='ua-feed-empty'><strong>"+empty+"</strong>"+action+"</div>";
- return "<div class='ua-social-home'>"+trendSection+homeNearbySection()+circleHeading+storiesSection+peopleSection+homeHeading+"<div class='ua-home-feed-region'>"+filterNav+"<a class='ua-home-compose-prompt' href='#/account/compose'><span class='ua-home-compose-avatar'>"+esc(initials(profile?.display_name||user?.email||'P'))+"</span><span>Apa yang ingin Anda bagikan?</span><b>＋</b></a><section class='ua-feed'>"+feedMarkup+"</section></div>"+discoverMore+maybeLike+collections+serviceFilters+"</div>";
+ return "<div class='ua-social-home'>"+trendSection+homeNearbySection()+circleHeading+storiesSection+peopleSection+homeHeading+"<div class='ua-home-feed-region'>"+filterNav+"<a class='ua-home-compose-prompt' href='#/account/compose'><span class='ua-home-compose-avatar'>"+esc(initials(profile?.display_name||user?.email||'P'))+"</span><span>Apa yang ingin Anda bagikan?</span><b>＋</b></a><section class='ua-feed'>"+feedMarkup+"</section></div>"+discoverMore+maybeLike+collections+serviceFilters+"<div class='pl-public-home ua-circle-bottom-promos'>"+renderPublicJoin()+renderAppDownload()+"</div></div>";
 }
 async function reelsPage(){
  const {data:vm,error:me}=await supabase.from('post_media').select('post_id,duration_ms').eq('media_type','video').lte('duration_ms',60000).order('created_at',{ascending:false}).limit(60);if(me)throw me;
