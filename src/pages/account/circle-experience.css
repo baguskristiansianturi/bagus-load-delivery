@@ -1968,7 +1968,7 @@
   outline:2px solid #25a69c!important;
   outline-offset:2px!important;
 }
-.ua-social-home .ua-feed{min-width:0!important;width:100%!important;max-width:100%!important}
+.ua-social-home .ua-feed{min-width:0!important}
 
 @media(max-width:760px){
   .ua-social-home .ua-circle-stories{
