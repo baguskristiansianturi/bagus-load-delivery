@@ -1313,60 +1313,89 @@
  .ua-social-home .ua-circle-bottom-promos .pl-app-download{padding-bottom:0}
 }
 
-
-/* Circle polish: allow sticky navigation, retain edge-to-edge Story/Post only. */
+/* PLUITS Circle layout system — one viewport rail, one consistent screen gutter. */
+.ua-social-home{
+  --pl-rail-gutter:14px;
+  --pl-rail-gap:10px;
+}
 @media(max-width:760px){
-  /* Sticky cannot work while the shared main container is a scroll container. */
+  /* The bottom navigation is the page boundary; do not leave an extra blank panel above it. */
+  .ua-social-app:has(.ua-social-home){
+    padding-bottom:calc(64px + env(safe-area-inset-bottom))!important;
+  }
   .ua-social-app .ua-main:has(.ua-social-home){
-    overflow:visible!important;
-    overflow-x:visible!important;
-    overflow-y:visible!important;
-  }
-
-  /* The single content-type row stays transparent, framed only by hairlines. */
-  .ua-social-home .ua-home-feed-region{
-    overflow:visible!important;
-    contain:initial!important;
-  }
-  .ua-social-home .ua-explore-toolbar{
-    position:sticky!important;
-    top:58px!important;
-    z-index:60!important;
-    display:block;
-    margin:0 0 10px!important;
-    padding:0!important;
-    border-top:1px solid #e7eceb!important;
-    border-bottom:1px solid #e7eceb!important;
-    background:transparent!important;
-    backdrop-filter:none!important;
-    -webkit-backdrop-filter:none!important;
-    -webkit-backdrop-filter:none!important;
-  }
-  .ua-social-home .ua-content-tabs{
-    min-height:48px;
-    padding:6px 12px!important;
-    background:transparent!important;
-    border:0!important;
-  }
-
-  /* Keep Story and Post edge-to-edge, without widening the other home cards. */
-  .ua-social-home .ua-circle-stories{
-    width:100vw!important;
-    max-width:100vw!important;
-    margin-left:calc(50% - 50vw)!important;
-    margin-right:calc(50% - 50vw)!important;
-  }
-  .ua-social-home .ua-circle-story-track{
-    gap:1px!important;
-    padding-left:10px!important;
+    min-height:0!important;
+    margin-bottom:0!important;
+    padding-left:0!important;
     padding-right:0!important;
-    scroll-padding-left:10px;
-    scroll-padding-right:10px;
+    overflow:visible!important;
+  }
+  .ua-social-home{
+    width:100%!important;
+    max-width:none!important;
+    margin:0!important;
+    padding:8px var(--pl-rail-gutter) 0!important;
+    box-sizing:border-box!important;
+  }
+
+  /* Reusable horizontal rail: viewport edge to viewport edge, with equal safe gutters. */
+  .ua-social-home .ua-circle-story-track,
+  .ua-social-home .ua-people-track,
+  .ua-social-home .ua-topten-track,
+  .ua-social-home .pl-home-map-results,
+  .ua-social-home .ua-home-topic-carousel,
+  .ua-social-home .ua-home-product-row,
+  .ua-social-home .ua-home-collection-row,
+  .ua-social-home .ua-home-service-chip-row{
+    position:relative!important;
+    left:auto!important;
+    width:100vw!important;
+    max-width:none!important;
+    min-width:0!important;
+    margin-left:calc(50% - 50vw)!important;
+    margin-right:0!important;
+    padding-left:var(--pl-rail-gutter)!important;
+    padding-right:var(--pl-rail-gutter)!important;
+    gap:var(--pl-rail-gap)!important;
+    box-sizing:border-box!important;
+    overflow-x:auto!important;
+    overflow-y:hidden!important;
+    overscroll-behavior-x:contain;
+    scroll-padding-left:var(--pl-rail-gutter);
+    scroll-padding-right:var(--pl-rail-gutter);
+    scroll-snap-type:x proximity;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+    touch-action:pan-x pan-y;
+  }
+  .ua-social-home .ua-circle-story-track::-webkit-scrollbar,
+  .ua-social-home .ua-people-track::-webkit-scrollbar,
+  .ua-social-home .ua-topten-track::-webkit-scrollbar,
+  .ua-social-home .pl-home-map-results::-webkit-scrollbar,
+  .ua-social-home .ua-home-topic-carousel::-webkit-scrollbar,
+  .ua-social-home .ua-home-product-row::-webkit-scrollbar,
+  .ua-social-home .ua-home-collection-row::-webkit-scrollbar,
+  .ua-social-home .ua-home-service-chip-row::-webkit-scrollbar{display:none}
+
+  /* Story keeps its large avatar; only the rail becomes full viewport width. */
+  .ua-social-home .ua-circle-stories{
+    width:100%!important;
+    max-width:none!important;
+    margin:0 0 15px!important;
+    padding:14px 0 8px!important;
+    overflow:visible!important;
+  }
+  .ua-social-home .ua-circle-section-heading{
+    width:100%!important;
+    margin:0 0 12px!important;
+    padding:0!important;
   }
   .ua-social-home .ua-story-group{
     flex:0 0 120px!important;
     min-width:120px!important;
-    gap:3px!important;
+    max-width:120px!important;
+    gap:4px!important;
+    scroll-snap-align:start;
   }
   .ua-social-home .ua-story-group .ua-story-ring{
     width:116px!important;
@@ -1374,6 +1403,59 @@
   }
   .ua-social-home .ua-story-group>strong{max-width:116px!important}
 
+  /* People, Top 10 and nearby use the same rail gutter and snap rhythm. */
+  .ua-social-home .ua-people-track{align-items:stretch!important}
+  .ua-social-home .ua-people-card{
+    flex:0 0 168px!important;
+    width:168px!important;
+    min-width:168px!important;
+    scroll-snap-align:start;
+  }
+  .ua-social-home .ua-topten-track>*,
+  .ua-social-home .pl-home-map-results>.pl-nearby-item-card{
+    scroll-snap-align:start;
+  }
+
+  /* Feed tabs are a full-width rail too, while keeping the established hairline style. */
+  .ua-social-home .ua-explore-toolbar{
+    position:sticky!important;
+    top:58px!important;
+    z-index:60!important;
+    display:block!important;
+    width:100vw!important;
+    margin:0 0 10px calc(50% - 50vw)!important;
+    padding:0!important;
+    border-top:1px solid #e7eceb!important;
+    border-bottom:1px solid #e7eceb!important;
+    background:rgba(255,255,255,.96)!important;
+    backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);
+  }
+  .ua-social-home .ua-content-tabs{
+    display:flex!important;
+    align-items:center!important;
+    flex-wrap:nowrap!important;
+    gap:18px!important;
+    width:100%!important;
+    min-height:48px!important;
+    margin:0!important;
+    padding:6px var(--pl-rail-gutter)!important;
+    overflow-x:auto!important;
+    overflow-y:hidden!important;
+    background:transparent!important;
+    border:0!important;
+    scrollbar-width:none;
+    -webkit-overflow-scrolling:touch;
+  }
+  .ua-social-home .ua-content-tabs::-webkit-scrollbar{display:none}
+  .ua-social-home .ua-content-tabs>button{
+    flex:0 0 auto!important;
+    min-height:34px!important;
+    padding:0 2px!important;
+    white-space:nowrap!important;
+  }
+
+  /* Instagram-style posts remain genuinely edge-to-edge, separate from carousel gutters. */
   .ua-social-home .ua-feed{
     position:relative!important;
     left:50%!important;
@@ -1382,6 +1464,7 @@
     transform:translateX(-50%)!important;
     margin:0!important;
     padding:0!important;
+    gap:12px!important;
   }
   .ua-social-home .ua-feed>.ua-post-card{
     width:100%!important;
@@ -1392,100 +1475,102 @@
     border-radius:0!important;
   }
 
-  /* CTA and app-download cards follow the regular content column, not viewport width. */
+  /* Bottom promotions share the same content width, card treatment and breathing room. */
   .ua-social-home .ua-circle-bottom-promos{
-    width:calc(100% - 28px)!important;
-    max-width:680px!important;
-    margin:24px auto 12px!important;
-    display:grid;
-    gap:14px;
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr)!important;
+    gap:12px!important;
+    width:100%!important;
+    max-width:none!important;
+    margin:22px 0 0!important;
+    padding:0!important;
+    background:transparent!important;
+  }
+  .ua-social-home .ua-circle-bottom-promos .pl-public-join,
+  .ua-social-home .ua-circle-bottom-promos .pl-app-download-inner{
+    width:100%!important;
+    min-width:0!important;
+    min-height:0!important;
+    margin:0!important;
+    padding:20px 17px!important;
+    box-sizing:border-box!important;
+    border:1px solid #e3ebea!important;
+    border-radius:16px!important;
+    background:linear-gradient(135deg,#fff 0%,#f7faf9 100%)!important;
+    box-shadow:0 3px 14px rgba(29,55,54,.045)!important;
   }
   .ua-social-home .ua-circle-bottom-promos .pl-public-join{
-    width:100%!important;
-    box-sizing:border-box;
-    margin:0!important;
-    padding:19px 17px!important;
-    border-radius:14px!important;
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:flex-start!important;
+    justify-content:space-between!important;
+    gap:16px!important;
+  }
+  .ua-social-home .ua-circle-bottom-promos .pl-public-join>div{width:100%;min-width:0}
+  .ua-social-home .ua-circle-bottom-promos .pl-public-join h2{
+    margin:7px 0!important;
+    font-size:20px!important;
+    line-height:1.25!important;
+  }
+  .ua-social-home .ua-circle-bottom-promos .pl-public-join p{
+    font-size:12px!important;
+    line-height:1.55!important;
+  }
+  .ua-social-home .ua-circle-bottom-promos .pl-public-join>a{
+    align-self:flex-start!important;
+    min-height:40px;
+    padding:0 16px!important;
   }
   .ua-social-home .ua-circle-bottom-promos .pl-app-download{
     width:100%!important;
+    margin:0!important;
     padding:0!important;
+    background:transparent!important;
   }
   .ua-social-home .ua-circle-bottom-promos .pl-app-download-inner{
-    width:100%!important;
-    max-width:100%!important;
-    box-sizing:border-box;
-    margin:0!important;
-    padding:20px 17px!important;
+    display:grid!important;
     grid-template-columns:minmax(0,1fr)!important;
     gap:16px!important;
-    border-radius:14px!important;
-  }
-}
-@media(max-width:380px){
-  .ua-social-home .ua-story-group{flex-basis:116px!important;min-width:116px!important}
-  .ua-social-home .ua-story-group .ua-story-ring{width:112px!important;height:112px!important}
-  .ua-social-home .ua-story-group>strong{max-width:112px!important}
-}
-
-
-/* Story carousel alignment fix + Explore-only surface (no creation composer). */
-.ua-social-home .ua-home-feed-region .ua-home-compose-prompt{display:none!important}
-@media(max-width:760px){
-  .ua-social-home .ua-circle-stories{
-    position:relative!important;
-    left:auto!important;
-    right:auto!important;
-    width:100%!important;
-    max-width:100%!important;
-    min-width:0!important;
-    margin-left:0!important;
-    margin-right:0!important;
-    padding-left:0!important;
-    padding-right:0!important;
-    box-sizing:border-box!important;
-    overflow:hidden!important;
-  }
-  .ua-social-home .ua-circle-section-heading{
-    width:100%!important;
-    max-width:100%!important;
-    margin-left:0!important;
-    margin-right:0!important;
-    padding-left:0!important;
-    padding-right:0!important;
-    box-sizing:border-box!important;
-  }
-  .ua-social-home .ua-circle-story-track{
-    position:relative!important;
-    left:auto!important;
-    width:100%!important;
-    max-width:100%!important;
-    min-width:0!important;
     margin:0!important;
-    padding:3px 0 10px 2px!important;
-    gap:2px!important;
-    box-sizing:border-box!important;
-    overflow-x:auto!important;
-    overflow-y:hidden!important;
-    transform:none!important;
-    scroll-padding-left:2px!important;
-    scroll-padding-right:2px!important;
-    overscroll-behavior-x:contain;
-    -webkit-overflow-scrolling:touch;
   }
-  .ua-social-home .ua-story-group{
-    flex:0 0 120px!important;
-    min-width:120px!important;
-    max-width:120px!important;
+  .ua-social-home .ua-circle-bottom-promos .pl-app-download-copy h2{
+    font-size:20px!important;
+    line-height:1.25!important;
   }
-  .ua-social-home .ua-story-group .ua-story-ring{
-    width:116px!important;
-    height:116px!important;
+  .ua-social-home .ua-circle-bottom-promos .pl-app-download-copy>p{
+    margin:9px 0 12px!important;
+    font-size:12px!important;
+    line-height:1.55!important;
   }
-  .ua-social-home .ua-story-group>strong{max-width:116px!important}
+  .ua-social-home .ua-circle-bottom-promos .pl-app-download-platforms{
+    grid-template-columns:minmax(0,1fr)!important;
+    gap:9px!important;
+  }
+  .ua-social-home .ua-circle-bottom-promos .pl-app-store-card{
+    min-width:0!important;
+    min-height:68px!important;
+    padding:10px 11px!important;
+    border-radius:12px!important;
+  }
+  .ua-social-home .ua-circle-bottom-promos .pl-app-store-status{
+    font-size:8px!important;
+  }
+
+  /* No trailing white block after the last card; the fixed nav is the page end. */
+  .ua-social-home .ua-circle-bottom-promos{margin-bottom:0!important}
+  .ua-social-home{padding-bottom:0!important}
 }
 @media(max-width:380px){
+  .ua-social-home{--pl-rail-gutter:11px;--pl-rail-gap:8px}
   .ua-social-home .ua-story-group{flex-basis:116px!important;min-width:116px!important;max-width:116px!important}
   .ua-social-home .ua-story-group .ua-story-ring{width:112px!important;height:112px!important}
   .ua-social-home .ua-story-group>strong{max-width:112px!important}
+  .ua-social-home .ua-people-card{flex-basis:158px!important;width:158px!important;min-width:158px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  .ua-social-home .ua-circle-story-track,
+  .ua-social-home .ua-people-track,
+  .ua-social-home .ua-topten-track,
+  .ua-social-home .pl-home-map-results,
+  .ua-social-home .ua-content-tabs{scroll-behavior:auto!important}
 }
