@@ -1810,91 +1810,7 @@
 }
 
 
-/* Canonical Circle Story + feed navigation layout.
-   Story shares the exact content gutter with every section; no viewport offsets. */
-.ua-social-home .ua-circle-stories{
-  display:block!important;
-  position:relative!important;
-  inset:auto!important;
-  width:100%!important;
-  max-width:100%!important;
-  min-width:0!important;
-  margin:0 0 18px!important;
-  padding:16px 0 10px!important;
-  overflow:hidden!important;
-  border:0!important;
-  border-radius:0!important;
-  background:transparent!important;
-  box-shadow:none!important;
-  transform:none!important;
-}
-.ua-social-home .ua-circle-stories .ua-circle-section-heading{
-  width:100%!important;
-  margin:0 0 12px!important;
-  padding:0!important;
-  text-align:left!important;
-}
-.ua-social-home .ua-circle-story-track{
-  display:flex!important;
-  flex-flow:row nowrap!important;
-  align-items:flex-start!important;
-  justify-content:flex-start!important;
-  direction:ltr!important;
-  width:100%!important;
-  max-width:100%!important;
-  min-width:0!important;
-  margin:0!important;
-  padding:3px 0 10px!important;
-  gap:10px!important;
-  overflow-x:auto!important;
-  overflow-y:hidden!important;
-  overscroll-behavior-x:contain!important;
-  scroll-snap-type:x mandatory!important;
-  scroll-padding-inline:0!important;
-  scrollbar-width:none!important;
-  -webkit-overflow-scrolling:touch!important;
-  touch-action:pan-x pan-y!important;
-}
-.ua-social-home .ua-circle-story-track::-webkit-scrollbar{display:none!important}
-.ua-social-home .ua-circle-story-track>.ua-story-group{
-  display:flex!important;
-  flex:0 0 156px!important;
-  width:156px!important;
-  min-width:156px!important;
-  max-width:156px!important;
-  margin:0!important;
-  padding:0!important;
-  flex-direction:column!important;
-  align-items:center!important;
-  justify-content:flex-start!important;
-  gap:8px!important;
-  scroll-snap-align:start!important;
-  text-align:center!important;
-}
-.ua-social-home .ua-circle-story-track>.ua-story-group .ua-story-ring{
-  display:grid!important;
-  flex:0 0 140px!important;
-  width:140px!important;
-  height:140px!important;
-  max-width:140px!important;
-  margin:0!important;
-}
-.ua-social-home .ua-circle-story-track>.ua-story-group .ua-story-avatar,
-.ua-social-home .ua-circle-story-track>.ua-story-group .ua-story-avatar img{
-  width:100%!important;
-  height:100%!important;
-}
-.ua-social-home .ua-circle-story-track>.ua-story-group>strong{
-  display:block!important;
-  width:100%!important;
-  max-width:100%!important;
-  overflow:hidden!important;
-  text-align:center!important;
-  text-overflow:ellipsis!important;
-  white-space:nowrap!important;
-}
-
-/* A compact, aligned, thumb-friendly tab bar directly above the post feed. */
+/* Tab bar layout only. Story and post-card styling remain on their prior rules. */
 .ua-social-home .ua-explore-toolbar{
   position:sticky!important;
   top:54px!important;
@@ -1979,37 +1895,8 @@
   color:#4c6664!important;
   font-size:20px!important;
 }
-.ua-social-home .ua-feed{min-width:0!important;width:100%!important;max-width:100%!important}
 
 @media(max-width:760px){
-  .ua-social-home .ua-circle-stories{
-    width:100%!important;
-    max-width:100%!important;
-    margin:0 0 14px!important;
-    padding:13px 0 8px!important;
-  }
-  .ua-social-home .ua-circle-story-track{
-    gap:2px!important;
-    padding:2px 0 9px!important;
-  }
-  .ua-social-home .ua-circle-story-track>.ua-story-group{
-    flex:0 0 calc((100% - 4px)/3)!important;
-    width:calc((100% - 4px)/3)!important;
-    min-width:calc((100% - 4px)/3)!important;
-    max-width:calc((100% - 4px)/3)!important;
-    gap:6px!important;
-  }
-  .ua-social-home .ua-circle-story-track>.ua-story-group .ua-story-ring{
-    flex:0 0 clamp(76px,26vw,104px)!important;
-    width:clamp(76px,26vw,104px)!important;
-    height:clamp(76px,26vw,104px)!important;
-    max-width:104px!important;
-  }
-  .ua-social-home .ua-circle-story-track>.ua-story-group>strong{
-    max-width:100%!important;
-    font-size:10px!important;
-    line-height:1.3!important;
-  }
   .ua-social-home .ua-explore-toolbar{
     top:54px!important;
     width:100%!important;
@@ -2034,19 +1921,12 @@
   }
 }
 @media(max-width:360px){
-  .ua-social-home .ua-circle-story-track>.ua-story-group .ua-story-ring{
-    flex-basis:76px!important;
-    width:76px!important;
-    height:76px!important;
-  }
   .ua-social-home .ua-content-tabs{gap:11px!important}
   .ua-social-home .ua-content-tabs>button{font-size:11px!important}
 }
 @media(prefers-reduced-motion:reduce){
-  .ua-social-home .ua-circle-story-track,
   .ua-social-home .ua-content-tabs{scroll-behavior:auto!important}
 }
-
 
 /* Feed tabs: full-bleed surface, content remains on the existing page gutter.
    Reuse the same negative-margin + matching-padding pattern as explore filters. */
