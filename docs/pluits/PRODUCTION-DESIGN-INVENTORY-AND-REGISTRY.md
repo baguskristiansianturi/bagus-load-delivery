@@ -340,3 +340,46 @@ Before consolidating, record:
 ### 13.4 Design-system baseline warning
 
 The source contains multiple palette families: legacy green root tokens in `src/style.css`, Social navy values, and Public Home teal values. The HTML theme color and web manifest also use navy. These are source-level observations, not a finalized universal palette. Keep the current rendered baseline intact until all consumers, route contexts and runtime screenshots are reviewed.
+
+
+## 14. CSS ownership and token-source audit — 13 November 2026
+
+### 14.1 Inventory
+
+- 24 tracked CSS files, total raw size 759,742 bytes.
+- `src/style.css`: 285,949 bytes; it is the global stylesheet and contains broad reset/base selectors plus several page-specific style families.
+- `src/pages/account/user-account.css`: 186,707 bytes; account/profile surface stylesheet.
+- `src/pages/account/circle-experience.css`: 53,575 bytes; Circle/feed surface stylesheet.
+- `styles/home-layout.css`: 27,323 bytes; imported by `src/main.js` from outside `src/`, so it is an existing location exception that should be moved only with import and route regression coverage.
+
+### 14.2 Page and feature stylesheet ownership
+
+| Runtime owner | Stylesheet owner(s) |
+|---|---|
+| App bootstrap | `src/style.css`, `src/styles/brand.css`, `src/styles/page-transitions.css`, `src/styles/social-navigation.css`, `styles/home-layout.css` |
+| Account / Circle | `src/pages/account/user-account.css`, `circle-experience.css`, plus feature styles for recommendations, post actions, image framing, profile hero, reels and shared social components |
+| Public Home | `src/features/public-home/layout.js` imports `navbar.css` and `public-home.css` |
+| Auth / registration | `src/features/auth/auth.js` and `register.js` both import `src/features/auth/register.css` |
+| GeoDirectory | `src/pages/directory/directory.css` |
+| Help | `src/pages/help/help.css` |
+| Inbox | `src/pages/messages/messages.css` |
+| Inbox Settings | `src/pages/messages/settings.css` |
+| Search | `src/pages/search/discovery.css` plus shared social navigation |
+| Seller Center | `src/pages/seller/seller.css` |
+| Blog Studio | `src/pages/blog-studio/blog-studio.css` |
+| Marketplace, Trip, public Blog, Misc, Admin Moderation | No dedicated page CSS import in the current controller; they rely on global/shared styles in the current source |
+
+### 14.3 Token owners and overrides
+
+Token declarations are distributed across several owners:
+
+- Global base tokens in `src/style.css`, including `--primary: #0b6b55`, `--ink: #17221f`, surfaces, radii, shadows, container and touch-size values.
+- Social tokens in `src/styles/social-components.css`, including `--pl-color-ink: #172b45`, muted/line colors and icon/text sizes.
+- Public Home header-height tokens in `src/features/public-home/public-home.css`.
+- Registration-specific accent/ink/muted/line tokens in `src/features/auth/register.css`.
+- Circle-specific ink/muted/line/soft/teal tokens and rail spacing in `circle-experience.css`.
+- Shared spacing and rail tokens in `styles/home-layout.css`.
+
+Repeated declarations such as `--auth-gap`, `--pl-rail-gap`, `--pl-rail-gutter`, and public header height occur in responsive scopes. Treat them as responsive overrides until their selector/media context is reviewed; do not remove them as duplicate tokens by name alone.
+
+Page/feature CSS files use namespaced class selectors in the inspected source. Broad element selectors are concentrated in the global `src/style.css`, where they act as reset/base rules. Do not move or split the large global/account files mechanically: first map selector-to-markup consumers, cascade order, dynamic route lifetime, and breakpoint behavior.
