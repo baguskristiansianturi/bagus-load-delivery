@@ -1729,174 +1729,85 @@
   }
 }
 
-
-/* Mobile Story alignment: remove the app-shell side inset before centering
-   the Circle page. The Story rail must start at the same left gutter as the
-   viewport, not inherit the narrow-screen .ua-app padding. */
-@media(max-width:760px){
-  .ua-social-app:has(.ua-social-home){
-    width:100%!important;
-    max-width:100%!important;
-    padding-left:0!important;
-    padding-right:0!important;
-    overflow-x:clip!important;
-  }
-  .ua-social-app:has(.ua-social-home) .ua-main:has(.ua-social-home){
-    width:100%!important;
-    max-width:none!important;
-    min-width:0!important;
-    margin-left:0!important;
-    margin-right:0!important;
-    padding-left:0!important;
-    padding-right:0!important;
-  }
-  .ua-social-home{
-    width:100%!important;
-    max-width:none!important;
-    min-width:0!important;
-    margin-left:0!important;
-    margin-right:0!important;
-  }
-  .ua-social-home .ua-circle-stories{
-    width:100%!important;
-    max-width:100%!important;
-    margin-left:0!important;
-    margin-right:0!important;
-    padding-left:14px!important;
-    padding-right:0!important;
-    box-sizing:border-box!important;
-  }
-  .ua-social-home .ua-circle-story-track{
-    width:100%!important;
-    max-width:100%!important;
-    margin-left:0!important;
-    margin-right:0!important;
-    padding-left:0!important;
-    padding-right:14px!important;
-    box-sizing:border-box!important;
-  }
+/* Canonical Story Ring Rail — full-bleed, three-up on mobile.
+   The rail spans the full Circle content width. Only its heading keeps the
+   page gutter. Mobile shows three large rings with a minimal 2px gap.
+   The horizontal scroll and Story button/viewer behavior remain unchanged. */
+.ua-social-home .ua-circle-stories{
+  width:calc(100% + 44px);
+  max-width:none;
+  min-width:0;
+  margin:0 -22px 18px;
+  padding:18px 0 12px;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+  overflow:hidden;
 }
-@media(max-width:380px){
-  .ua-social-app:has(.ua-social-home){padding-left:0!important;padding-right:0!important}
-  .ua-social-home .ua-circle-stories{padding-left:11px!important}
-  .ua-social-home .ua-circle-story-track{padding-right:11px!important}
+.ua-social-home .ua-circle-section-heading{
+  margin:0 22px 15px;
 }
-
-
-/* Root cause: an older full-viewport rule left the Story section at left:50%.
-   Reset its positioning as well as its width so the whole section starts at
-   the normal page gutter on narrow screens. */
+.ua-social-home .ua-circle-story-track{
+  display:flex;
+  flex-flow:row nowrap;
+  align-items:flex-start;
+  justify-content:flex-start;
+  gap:14px;
+  width:100%;
+  min-width:0;
+  margin:0;
+  padding:2px 22px 9px;
+  overflow-x:auto;
+  overflow-y:hidden;
+  overscroll-behavior-x:contain;
+  scroll-snap-type:x proximity;
+  scroll-padding-inline:22px;
+  scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;
+}
+.ua-social-home .ua-circle-story-track::-webkit-scrollbar{display:none}
+.ua-social-home .ua-circle-story-track>.ua-story-group{
+  flex:0 0 156px;
+  width:156px;
+  max-width:156px;
+  min-width:0;
+  gap:8px;
+  scroll-snap-align:start;
+}
+.ua-social-home .ua-circle-story-track>.ua-story-group .ua-story-ring{
+  flex:0 0 140px;
+  width:140px;
+  height:140px;
+}
 @media(max-width:760px){
   .ua-social-home .ua-circle-stories{
-    position:static!important;
-    inset-inline:auto!important;
-    left:auto!important;
-    right:auto!important;
-    transform:none!important;
-    width:100%!important;
-    max-width:100%!important;
-    min-width:0!important;
-    margin-inline:0!important;
-    box-sizing:border-box!important;
+    width:calc(100% + 28px);
+    margin:0 -14px 15px;
+    padding:15px 0 9px;
   }
   .ua-social-home .ua-circle-section-heading{
-    width:100%!important;
-    max-width:100%!important;
-    margin-inline:0!important;
-    box-sizing:border-box!important;
+    margin:0 14px 12px;
   }
   .ua-social-home .ua-circle-story-track{
-    position:static!important;
-    left:auto!important;
-    transform:none!important;
-    width:100%!important;
-    max-width:100%!important;
-    margin-inline:0!important;
-    box-sizing:border-box!important;
-  }
-}
-
-
-/* Final mobile Story composition: align with the Circle content column and
-   use compact story avatars instead of a full-viewport oversized rail. */
-@media(max-width:760px){
-  .ua-social-home .ua-circle-stories{
-    position:static!important;
-    inset:auto!important;
-    left:auto!important;
-    right:auto!important;
-    transform:none!important;
-    display:block!important;
-    width:100%!important;
-    max-width:100%!important;
-    min-width:0!important;
-    margin:0 0 16px!important;
-    padding:14px 0 8px!important;
-    box-sizing:border-box!important;
-    overflow:hidden!important;
-  }
-  .ua-social-home .ua-circle-section-heading{
-    display:block!important;
-    width:auto!important;
-    max-width:none!important;
-    margin:0 0 12px!important;
-    padding:0 14px!important;
-    box-sizing:border-box!important;
-    text-align:left!important;
-  }
-  .ua-social-home .ua-circle-section-heading>div{
-    width:100%!important;
-    min-width:0!important;
-    text-align:left!important;
-  }
-  .ua-social-home .ua-circle-section-heading h2,
-  .ua-social-home .ua-circle-section-heading p{
-    text-align:left!important;
-  }
-  .ua-social-home .ua-circle-story-track{
-    position:static!important;
-    left:auto!important;
-    transform:none!important;
-    display:flex!important;
-    flex-flow:row nowrap!important;
-    justify-content:flex-start!important;
-    align-items:flex-start!important;
-    width:100%!important;
-    max-width:100%!important;
-    min-width:0!important;
-    margin:0!important;
-    padding:3px 14px 10px!important;
-    gap:12px!important;
-    box-sizing:border-box!important;
-    overflow-x:auto!important;
-    overflow-y:hidden!important;
-    scroll-padding-inline:14px!important;
-    -webkit-overflow-scrolling:touch;
+    gap:2px;
+    padding:2px 0 9px;
+    scroll-padding-inline:0;
   }
   .ua-social-home .ua-circle-story-track>.ua-story-group{
-    display:flex!important;
-    flex:0 0 76px!important;
-    width:76px!important;
-    min-width:76px!important;
-    max-width:76px!important;
-    align-items:center!important;
-    gap:6px!important;
-    margin:0!important;
-    padding:0!important;
-    text-align:center!important;
+    flex:0 0 calc((100% - 4px)/3);
+    width:calc((100% - 4px)/3);
+    max-width:calc((100% - 4px)/3);
+    gap:6px;
   }
   .ua-social-home .ua-circle-story-track>.ua-story-group .ua-story-ring{
-    flex:0 0 66px!important;
-    width:66px!important;
-    height:66px!important;
-    max-width:66px!important;
+    flex:0 0 clamp(88px,28vw,112px);
+    width:clamp(88px,28vw,112px);
+    height:clamp(88px,28vw,112px);
   }
   .ua-social-home .ua-circle-story-track>.ua-story-group>strong{
-    display:block!important;
-    width:100%!important;
-    max-width:76px!important;
-    font-size:10px!important;
-    line-height:1.3!important;
-    text-align:center!important;
+    max-width:100%;
+    font-size:11px;
+    line-height:1.35;
   }
 }
