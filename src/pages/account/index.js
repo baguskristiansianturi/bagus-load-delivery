@@ -491,7 +491,6 @@ async function feedPage(){
   const filterNav="<div class='ua-explore-toolbar' aria-label='Navigasi konten Circle'>"+typeNav+"</div>";
  const empty='Belum ada postingan yang cocok dengan pilihan ini.';
  const action="";
- const homeHeading="<section class='ua-home-following' id='ua-circle-feed-start'><div class='ua-home-section-heading'><div><h2>Postingan</h2><p>Semua cerita dari circle dan topik yang Anda minati.</p></div></div></section>";
  const discoverMore="<section class='ua-home-discover-more'><div class='ua-home-section-heading'><div><h2>Temukan Lebih Banyak</h2><small>Perluas koneksi dan temukan cerita baru di PLUITS.</small></div></div><div class='ua-home-discover-links'><a href='#/search'><span>Orang &amp; komunitas</span><b>Jelajahi ↗</b></a><a href='#/places'><span>Tempat dan lingkungan</span><b>Jelajahi ↗</b></a></div></section>";
  let productCards='';
  try{
@@ -512,7 +511,7 @@ async function feedPage(){
  const blogMarkup=exploreContentType==='blog'?await blogFeedMarkup():'';
  const liveMarkup=exploreContentType==='live'?"<div class='ua-feed-empty'><strong>Live PLUITS</strong><p>Siaran langsung akan muncul di sini saat fitur Live diaktifkan. Kerangka navigasi sudah tersedia.</p></div>":'';
  const feedMarkup=exploreContentType==='blog'?blogMarkup:exploreContentType==='live'?liveMarkup:sorted.length?sorted.map(post=>postCard(post)).join(''):"<div class='ua-feed-empty'><strong>"+empty+"</strong>"+action+"</div>";
- return "<div class='ua-social-home'>"+trendSection+homeNearbySection()+peopleSection+storiesSection+filterNav+homeHeading+"<div class='ua-home-feed-region'><section class='ua-feed'>"+feedMarkup+"</section></div>"+discoverMore+maybeLike.replace("<h2>Produk Lokal</h2>","<h2>Temukan Produk Lokal</h2>")+collections+serviceFilters+"<div class='pl-public-home ua-circle-bottom-promos'>"+renderPublicJoin()+renderAppDownload()+"</div></div>";
+ return "<div class='ua-social-home'>"+trendSection+homeNearbySection()+peopleSection+storiesSection+filterNav+"<div class='ua-home-feed-region'><section class='ua-feed'>"+feedMarkup+"</section></div>"+discoverMore+maybeLike.replace("<h2>Produk Lokal</h2>","<h2>Temukan Produk Lokal</h2>")+collections+serviceFilters+"<div class='pl-public-home ua-circle-bottom-promos'>"+renderPublicJoin()+renderAppDownload()+"</div></div>";
 }
 async function reelsPage(){
  const {data:vm,error:me}=await supabase.from('post_media').select('post_id,duration_ms').eq('media_type','video').lte('duration_ms',60000).order('created_at',{ascending:false}).limit(60);if(me)throw me;
