@@ -62,3 +62,8 @@ Before any visual implementation or UI change, consult [PLUITS-DESIGN-SYSTEM-AND
 ## Complete source and component catalogue
 
 Use [`PLUITS-COMPLETE-SOURCE-STRUCTURE-AND-COMPONENT-MAP.md`](./PLUITS-COMPLETE-SOURCE-STRUCTURE-AND-COMPONENT-MAP.md) as the detailed source-tree, route ownership, CSS/JavaScript inventory, component status, carousel taxonomy and target modularization reference. Do not treat proposed target paths as existing modules until extracted and verified.
+
+
+## Human-readable technical terminology
+
+For the current SPA runtime, standard names for HTML/template, JavaScript runtime, CSS, design tokens, icon registries, contacts and conversations, see [PLUITS Technical Terminology and Runtime Map](./PLUITS-TECHNICAL-TERMINOLOGY-AND-RUNTIME-MAP.md). Use it alongside the current-only [Page Directory](../../src/pages/README.md). Do not create source folders for unimplemented ideas.
