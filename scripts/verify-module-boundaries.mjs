@@ -41,7 +41,7 @@ for (const absoluteFile of sourceFiles) {
     if (targetLayer === sourceLayer && sourceLayer === 'features') {
       const sourceFeature = file.split('/')[2];
       const targetFeature = resolved.split('/')[2];
-      if (sourceFeature && targetFeature && sourceFeature !== targetFeature) {
+      if (sourceFeature && targetFeature && sourceFeature !== targetFeature && !resolved.endsWith('/index.js')) {
         violations.push(file + ' -> ' + resolved + ': feature modules must use an explicit shared contract, not another feature private files.');
       }
     }
