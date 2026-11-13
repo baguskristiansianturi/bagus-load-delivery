@@ -63,6 +63,8 @@ Story Rail, Story Viewer, Post Card, Post Actions, People Recommendations, Reel 
 
 ## Related maps
 
+- [Page Directory, Workspace Structure & Roadmap](../../docs/pluits/PLUITS-PAGE-DIRECTORY-AND-ROADMAP.md)
+
 - [Page, Route and Section Registry](../../docs/pluits/PAGE-ROUTE-AND-SECTION-REGISTRY.md)
 - [Page & Component Ownership Audit](../../docs/pluits/PAGE-COMPONENT-OWNERSHIP-AUDIT-2026-11-12.md)
 - [Complete Source Structure and Component Map](../../docs/pluits/PLUITS-COMPLETE-SOURCE-STRUCTURE-AND-COMPONENT-MAP.md)
