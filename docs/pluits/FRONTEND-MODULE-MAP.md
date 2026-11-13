@@ -53,3 +53,7 @@ Important: this is an incremental migration. Account, Marketplace, Trip, Seller 
 ## Public homepage composition — 12 November 2026
 
 `src/features/public-home/layout.js` is the page-owned composition layer. `src/pages/home/index.js` owns route/auth/data behavior only. See `src/features/public-home/README.md` and `docs/pluits/PAGE-COMPONENT-OWNERSHIP-AUDIT-2026-11-12.md` for the component ownership table. Public navbar/search behavior must not leak into Marketplace, Trip, Directory or signed-in social workspaces.
+
+## Design system and component inventory
+
+Before any visual implementation or UI change, consult [PLUITS-DESIGN-SYSTEM-AND-COMPONENT-INVENTORY.md](./PLUITS-DESIGN-SYSTEM-AND-COMPONENT-INVENTORY.md). It maps the current source-backed brand, typography, colors, shared geometry, icon registry and workspace components, while marking partial extraction and unresolved audit debt. Do not treat local or legacy CSS values as approved global tokens.
