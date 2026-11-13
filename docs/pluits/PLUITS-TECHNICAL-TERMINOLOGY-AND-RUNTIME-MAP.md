@@ -137,3 +137,12 @@ Use these standard names when describing a component. The PLUITS alias is option
 | Post Action Bar | Post Actions |
 
 When a request uses an alias, resolve it to the standard component name and verify the current owner before editing. If the same alias could refer to multiple components, ask which workspace/context is intended.
+
+
+## 9. Change boundaries and dependency audit
+
+The detailed source-backed change contract, page dependency matrix, icon registry audit, CSS impact procedure, risk levels and delivery gates are maintained in:
+
+- `docs/pluits/PLUITS-CHANGE-BOUNDARY-AND-DEPENDENCY-AUDIT.md`
+
+Use that document before any scoped implementation. It distinguishes verified imports/routes from incomplete selector and consumer audits. Do not interpret an unverified dependency as proof of isolation.
