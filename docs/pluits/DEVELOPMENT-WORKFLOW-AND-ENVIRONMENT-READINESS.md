@@ -1,7 +1,7 @@
 # PLUITS — Development Workflow and Environment Readiness
 
 **Status:** PR validation and frontend module-boundary verification are implemented and CI-tested. Hosted full-site preview and isolated backend environment are not configured.
-**Last verified:** 13 November 2026 — branch commit `1219fe3f7c91acdda827cf62ee793d6f817ec402`
+**Last verified:** 13 November 2026 — branch commit `29e08526ee3076fb9d2c16ceb0110ad49ef49459`
 **Production baseline:** `main` at `4ef9fb96e8e942511879303f355a7336860c287f`
 
 ## 1. Environment separation
@@ -28,18 +28,18 @@ For pull requests targeting `main`, it runs:
 8. Skip the GitHub Pages deployment step.
 
 Latest verified PR run:
-- Run: [43446620778](https://github.com/baguskristiansianturi/pluits/actions/runs/43446620778)
-- Commit: `1219fe3f7c91acdda827cf62ee793d6f817ec402`
+- Run: [43447480093](https://github.com/baguskristiansianturi/pluits/actions/runs/43447480093)
+- Commit: `29e08526ee3076fb9d2c16ceb0110ad49ef49459`
 - Result: **success**.
 - Production-surface verification: success.
-- Module-boundary verification: success across 53 JavaScript modules.
+- Module-boundary verification: success across 53 JavaScript modules, including enforcement of one shared Supabase client.
 - Node test suite: 39 passed, 0 failed.
 - Vite production build: success; `dist/index.html` verified.
 - Pages artifact upload: success.
 - Production deploy step: skipped.
-- Artifact ID: `14047364889`; expires 14 November 2026 at 14:50 UTC.
+- Artifact ID: `14049036024`; expires 14 November 2026 at 14:56 UTC.
 
-This confirms the current PR commit builds and passes the automated tests. It does not prove Android browser UAT or a hosted preview.
+This confirms the current PR commit builds and passes automated tests. It does not prove Android browser UAT or a hosted preview.
 
 ## 3. Modular frontend structure
 
@@ -60,7 +60,7 @@ The current branch now tracks README scaffolding for target folders that do not 
 
 `scripts/verify-module-boundaries.mjs` is added to check dependency direction. `npm test` invokes it alongside the existing production-surface verification and Node tests. The guard prevents shared components/services/library adapters from importing higher-level UI and prevents private direct imports between feature modules. Feature-to-feature reuse must go through an explicit `src/features/<feature>/index.js` public entry point. The first two consumers now use public entry points for Profile image framing and the App Download section.
 
-The existing runtime is still being modularized incrementally. In particular, the architecture audit identified multiple page controllers that instantiate Supabase independently despite the shared client. Consolidate these only as a tested domain-by-domain refactor; do not mass-move files.
+The existing runtime is still being modularized incrementally. Eleven runtime Supabase client instances have now been consolidated onto the singleton in `src/lib/supabase/client.js`; an unused client import in Account Context was removed. The module guard now prevents new direct Supabase client construction elsewhere. Data-access code is still embedded in several page controllers and must be extracted into `src/services/` one domain at a time, with route/behavior tests; do not mass-move files.
 
 ## 4. Production deployment boundary
 
@@ -148,4 +148,4 @@ The full development/release loop is complete only after:
 - production secrets and preview credentials are separated;
 - release approval and rollback procedure are documented and tested.
 
-**Current overall status:** PR CI, module-boundary guard, 39 automated tests and production build pass on commit `1219fe3`. Modular target folders are scaffolded, but several runtime controllers and data-access paths still need incremental extraction. Hosted preview and isolated backend environment are not configured. Migration/security gates remain open. Do not label PLUITS fully release-ready.
+**Current overall status:** PR CI, module-boundary guard, single-client guard, 39 automated tests and production build pass on commit `29e0852`. Modular target folders are scaffolded, but several runtime controllers and data-access paths still need incremental extraction. Hosted preview and isolated backend environment are not configured. Migration/security gates remain open. Do not label PLUITS fully release-ready.
