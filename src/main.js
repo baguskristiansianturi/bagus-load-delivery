@@ -1,28 +1,8 @@
 import { supabase as presenceDb } from './lib/supabase/client.js';
-let globalPresenceChannel = null;
-let activePresenceUserId = null;
+import { startGlobalPresence } from './services/realtime/presence/index.js';
 
-async function syncGlobalPresence(session) {
-  const userId = session?.user?.id || null;
-  if (userId === activePresenceUserId && globalPresenceChannel) return;
-  if (globalPresenceChannel) {
-    await presenceDb.removeChannel(globalPresenceChannel);
-    globalPresenceChannel = null;
-  }
-  activePresenceUserId = userId;
-  if (!userId) return;
-  globalPresenceChannel = presenceDb.channel('pluits-online-v1', { config: { presence: { key: userId } } });
-  globalPresenceChannel.subscribe(async status => {
-    if (status === 'SUBSCRIBED') {
-      await globalPresenceChannel.track({ user_id: userId, online_at: new Date().toISOString() });
-    }
-  });
-}
+void startGlobalPresence(presenceDb);
 
-presenceDb.auth.getSession().then(({ data }) => syncGlobalPresence(data.session));
-presenceDb.auth.onAuthStateChange((_event, session) => {
-  queueMicrotask(() => syncGlobalPresence(session));
-});
 
 import './style.css';
 import './styles/brand.css';

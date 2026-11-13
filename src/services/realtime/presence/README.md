@@ -1,9 +1,13 @@
 # Presence Service
 
-**Status:** Planned; app-wide presence currently starts in `src/main.js`.
+**Status:** implemented and unit-tested.
 
-**Target responsibility:** Presence channel lifecycle, tracking and cleanup.
+Owns the single app-wide Supabase Realtime presence channel, account switching, initial session synchronization and channel cleanup.
 
-**Boundary:** One app-wide owner; no duplicate channels.
+- Runtime: `index.js`.
+- Consumer: `src/main.js`.
+- Client: injected shared instance from `src/lib/supabase/client.js`.
+- Channel: `pluits-online-v1`.
+- Tests: `tests/services/realtime-presence.test.js`.
 
-This README tracks the planned module. It is not a runtime implementation. Extract only with a documented consumer, contract, regression tests and no production-data dependency.
+This service owns presence lifecycle only. Inbox message subscriptions and notification subscriptions remain separate services and must not reuse this channel.
