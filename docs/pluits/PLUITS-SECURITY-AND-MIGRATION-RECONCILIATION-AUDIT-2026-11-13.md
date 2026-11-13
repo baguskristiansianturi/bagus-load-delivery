@@ -244,7 +244,7 @@ Sebagian besar page controller masih menjalankan query `.from()`, RPC, Storage, 
 
 Hitungan berikut adalah jumlah pemanggilan API yang tampak pada source (bukan metrik traffic/runtime):
 
-| Modul | `.from()` | `.rpc()` | Storage | Realtime channel/listener |
+| Modul | `.from()` occurrences (table/storage) | `.rpc()` | Storage calls | Realtime channel / Postgres listener |
 |---|---:|---:|---:|---:|
 | `pages/account/index.js` | 127 | 5 | 9 | 1 / 2 |
 | `pages/account/account-context.js` | 11 | 1 | 0 | 0 |
@@ -258,7 +258,7 @@ Hitungan berikut adalah jumlah pemanggilan API yang tampak pada source (bukan me
 | `pages/search/discovery.js` | 7 | 0 | 1 | 0 |
 | `pages/seller/index.js` | 25 | 8 | 3 | 0 |
 | `pages/trip/index.js` | 9 | 3 | 0 | 0 |
-| `main.js` | 0 | 0 | 0 | 1 / lifecycle |
+| `main.js` | 0 | 0 | 0 | 1 / 0 (presence) |
 
 `account-context.js` menerima client sebagai parameter dari `account/index.js`; ia tidak membuat client sendiri. Import SDK pada file itu tidak terpakai dan dapat dihapus saat refactor terkontrol.
 
