@@ -1,7 +1,7 @@
 import './seller.css';
 import {renderBrandLogo} from '../../components/common/brand.js';
 import {renderSellerNavigation} from '../../features/seller/seller-navigation.js';
-import { supabase, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from '../../lib/supabase/client.js';
+import { supabase } from '../../lib/supabase/client.js';
 
 
 const money = n => new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(Number(n||0));
