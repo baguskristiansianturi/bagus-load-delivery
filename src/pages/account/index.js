@@ -32,7 +32,7 @@ const uploadMediaFile=createMediaUploader({supabase,bucket:BUCKET,supabaseUrl:SU
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmtDate=v=>new Date(v).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'});
 const initials=v=>String(v||'P').trim().slice(0,1).toUpperCase();
-let trendSliderTimer=null,trendSliderVisibilityHandler=null,user=null,profile=null,profileImageFrame={...DEFAULT_PROFILE_IMAGE_FRAME},profileReels=[],addresses=[],noticeTimer=null,leafletMap=null,leafletMarker=null,exploreFilter='all',exploreCategory='all',reelsFilter='recommended',activityNotificationChannel=null,unreadNotificationCount=0,currentComposeDraft=null,profileMenuBound=false,accountContext={active:'personal',professional:null,stores:[],prefs:{}};
+let trendSliderTimer=null,trendSliderVisibilityHandler=null,user=null,profile=null,profileImageFrame={...DEFAULT_PROFILE_IMAGE_FRAME},profileReels=[],addresses=[],noticeTimer=null,leafletMap=null,leafletMarker=null,exploreFilter='all',exploreCategory='all',exploreContentType='all',reelsFilter='recommended',activityNotificationChannel=null,unreadNotificationCount=0,currentComposeDraft=null,profileMenuBound=false,accountContext={active:'personal',professional:null,stores:[],prefs:{}};
 
 function notify(message,type='success'){
  const el=document.querySelector('#ua-toast');if(!el)return;
@@ -126,7 +126,7 @@ function settingsHubPage(){
   ['Privasi & konten','Atur audiens dan kelola konten pribadi',[
    ['lock','Privasi dan audiens','Visibilitas default Post, Story, dan interaksi','/account/content-settings','ready'],
    ['edit','Draf konten','Lanjutkan atau hapus Post yang belum diterbitkan','/account/drafts','ready'],
-   ['shield','Akun diblokir','Kelola akun yang tidak ingin Anda hubungi','/account/blocked','ready']]],
+   ['shield','Akun diblokir','Kelola akun yang tidak ingin Anda hubungi','/account/blocked','ready'],['eye-off','Konten disembunyikan','Kelola Post dan akun yang tidak ingin muncul di feed','/account/hidden-content','ready']]],
   ['Bantuan & kebijakan','Panduan, aturan komunitas, dan perlindungan data',[
    ['help','Pusat Bantuan','Panduan dan jawaban penggunaan Pluits','/help','staged'],
    ['book','Pedoman Komunitas','Aturan konten dan interaksi yang aman','/guidelines','staged'],
@@ -357,6 +357,18 @@ async function hydratePosts(rows){
    return {...p,owner,media,tagged:(tagsByPost.get(p.id)||[]).map(t=>pmap.get(t.tagged_user_id)).filter(Boolean),mediaUrl:media[0]?.url||'',avatarUrl:mediaUrls.get(owner.avatar_path)||'',likes:likeCounts.get(p.id)||0,liked:likedPosts.has(p.id),comments:commentCounts.get(p.id)||0,saved:saved.has(p.id)};
   });
  }
+async function blogFeedMarkup(){
+ const {data:rows,error}=await supabase.from('blog_posts').select('id,title,description,cover_path,slug,published_at,owner_user_id,blog_profiles(display_title,slug)').eq('status','published').eq('visibility','public').order('published_at',{ascending:false}).limit(40);if(error)throw error;
+ const ids=[...new Set((rows||[]).map(x=>x.owner_user_id).filter(Boolean))],{data:owners}=ids.length?await supabase.from('user_profiles').select('id,display_name,username').in('id',ids):{data:[]},ownerMap=new Map((owners||[]).map(x=>[x.id,x]));
+ const urls=await createSignedUrlMap(supabase.storage,BUCKET,(rows||[]).map(x=>x.cover_path).filter(Boolean),1800);
+ return (rows||[]).map(row=>{const owner=ownerMap.get(row.owner_user_id)||{},blog=row.blog_profiles||{},href='#/blog/'+encodeURIComponent(row.slug||row.id);return "<article class='ua-blog-feed-card'><a href='"+href+"' class='ua-blog-feed-cover'>"+(urls.get(row.cover_path)?"<img src='"+esc(urls.get(row.cover_path))+"' alt='"+esc(row.title)+"' loading='lazy'>":"<span>PLUITS BLOG</span>")+"</a><div class='ua-blog-feed-copy'><small>"+esc(blog.display_title||owner.display_name||'Blog PLUITS')+" · "+fmtDate(row.published_at||row.created_at)+"</small><h3><a href='"+href+"'>"+esc(row.title)+"</a></h3><p>"+esc(row.description||'')+"</p><a class='ua-blog-read-link' href='"+href+"'>Baca artikel ↗</a></div></article>";}).join('')||"<div class='ua-feed-empty'><strong>Belum ada Blog publik</strong><p>Artikel yang diterbitkan akan tampil di sini.</p></div>";
+}
+async function hiddenContentPage(){
+ const {data:rows,error}=await supabase.from('user_hidden_content').select('id,target_type,target_id,created_at').eq('viewer_id',user.id).order('created_at',{ascending:false});if(error)throw error;
+ const ids=(rows||[]).filter(x=>x.target_type==='user').map(x=>x.target_id),{data:people}=ids.length?await supabase.from('user_profiles').select('id,display_name,username').in('id',ids):{data:[]},map=new Map((people||[]).map(x=>[x.id,x]));
+ return "<div class='ua-page-heading'><div><span class='ua-eyebrow'>PREFERENSI KONTEN</span><h1>Konten disembunyikan</h1><p>Anda tetap mengikuti akun yang disembunyikan. Pilihan ini hanya mengatur apa yang muncul di feed Anda.</p></div></div><section class='ua-panel ua-hidden-content-list'>"+((rows||[]).map(row=>{const person=map.get(row.target_id);return "<article class='ua-hidden-content-row'><div><strong>"+(row.target_type==='user'?esc(person?.display_name||'Akun PLUITS'):'Postingan disembunyikan')+"</strong><small>"+(row.target_type==='user'?'@'+esc(person?.username||'akun')+' · Tetap mengikuti':'Tidak ditampilkan di feed')+"</small></div><button type='button' data-unhide-content='"+row.id+"'>Tampilkan kembali</button></article>";}).join('')||"<div class='ua-empty'><strong>Belum ada konten disembunyikan</strong><p>Gunakan menu titik tiga pada Post atau Reel untuk mengelola konten.</p></div>")+"</section>";
+}
+function bindHiddenContent(){document.querySelectorAll('[data-unhide-content]').forEach(button=>button.addEventListener('click',async()=>{button.disabled=true;const {error}=await supabase.from('user_hidden_content').delete().eq('id',button.dataset.unhideContent).eq('viewer_id',user.id);if(error){notify(error.message,'error');button.disabled=false;return;}notify('Konten akan ditampilkan kembali.');await mountAccount('hidden-content');}));}
 async function feedPage(){
  const trendSection=renderTopTenSection();
  const [interestQuery,followsResult,blocksResult,profileResult,relationshipResult,postsResult,storiesResult,registeredProfilesResult]=await Promise.all([
@@ -391,7 +403,9 @@ async function feedPage(){
   profiles:profileResult.data||[],viewerId:user.id,followingIds,blockedIds,relationships,mutualCounts,
   city:window.__pluitsHomeCity||profile?.public_city||'',province:profile?.public_province||''
  });
- const available=(postsResult.data||[]).filter(p=>!blockedIds.includes(p.user_id)).slice(0,30);
+ const hiddenResult=await supabase.from('user_hidden_content').select('target_type,target_id').eq('viewer_id',user.id);if(hiddenResult.error)throw hiddenResult.error;
+ const mutedUserIds=(hiddenResult.data||[]).filter(x=>x.target_type==='user').map(x=>x.target_id),hiddenPostIds=(hiddenResult.data||[]).filter(x=>x.target_type==='post').map(x=>x.target_id);
+ const available=(postsResult.data||[]).filter(p=>!blockedIds.includes(p.user_id)&&!mutedUserIds.includes(p.user_id)&&!hiddenPostIds.includes(p.id)).slice(0,60);
  const [peopleAvatarUrls,peopleFramesResult,hydrated]=await Promise.all([
   createSignedUrlMap(supabase.storage,BUCKET,people.map(person=>person.avatar_path).filter(Boolean),3600),
   people.length?supabase.from('user_profile_image_frames').select('user_id,card_x,card_y,card_zoom').in('user_id',people.map(person=>person.id)):{data:[],error:null},
@@ -404,7 +418,7 @@ async function feedPage(){
  const demoPeople=showCircleDemo?CIRCLE_DEMO_PEOPLE.slice(0,Math.max(0,10-people.length)):[];
  const peopleSection=renderPeopleRecommendations({people,avatarUrls:peopleAvatarUrls,imageFrames:peopleImageFrames,demoPeople});
  const followedSet=new Set(followingIds);
- const visibleStories=(storiesResult.data||[]).filter(story=>followedSet.has(story.user_id)&&!blockedIds.includes(story.user_id));
+ const visibleStories=(storiesResult.data||[]).filter(story=>followedSet.has(story.user_id)&&!blockedIds.includes(story.user_id)&&!mutedUserIds.includes(story.user_id));
  const storyOwners=new Map();
  visibleStories.forEach(story=>{if(!storyOwners.has(story.user_id))storyOwners.set(story.user_id,[]);storyOwners.get(story.user_id).push(story);});
  const storyProfileIds=[...storyOwners.keys()];
@@ -434,9 +448,10 @@ async function feedPage(){
  const storiesSection="<section class='ua-circle-stories' aria-labelledby='ua-circle-stories-title'><div class='ua-circle-section-heading'><div><h2 id='ua-circle-stories-title'>Cerita dari circle</h2><p>Lihat momen terbaru dari orang-orang yang Anda ikuti.</p></div>"+(showCircleDemo?"<span class='ua-demo-tag'>DEMO UI</span>":"")+"</div>"+(storyCards||demoStoryCards?"<div class='ua-circle-story-track'>"+storyCards+demoStoryCards+"</div>":"<div class='ua-circle-story-empty'>Belum ada Story teman yang aktif. Cerita dari circle Anda akan muncul di sini.</div>")+"</section>";
  const interestSlugs=new Set(interests.map(x=>String(x.slug||'').toLowerCase()));
  const score=p=>{const age=Math.max(0,(Date.now()-new Date(p.created_at).getTime())/3600000),tags=(p.tags||[]).map(x=>String(x).toLowerCase().replace(/^#/,'').replace(/ /g,'-')),interestMatch=tags.filter(tag=>interestSlugs.has(tag)).length;return (followingIds.includes(p.user_id)?80:0)+interestMatch*28+36*Math.exp(-age/72)+Math.min(45,(p.likes||0)*1.5+(p.comments||0)*2.5);};
- let sorted=exploreFilter==='latest'?[...hydrated].sort((a,b)=>new Date(b.created_at)-new Date(a.created_at))
-  :exploreFilter==='random'?[...hydrated].sort(()=>Math.random()-.5)
-  :[...hydrated].sort((a,b)=>score(b)-score(a)||new Date(b.created_at)-new Date(a.created_at));
+ let typedPosts=exploreContentType==='reel'?hydrated.filter(post=>post.media?.length===1&&post.media[0].media_type==='video'&&Number(post.media[0].duration_ms||0)>0&&Number(post.media[0].duration_ms||0)<=60000):hydrated;
+ let sorted=exploreFilter==='latest'?[...typedPosts].sort((a,b)=>new Date(b.created_at)-new Date(a.created_at))
+  :exploreFilter==='random'?[...typedPosts].sort(()=>Math.random()-.5)
+  :[...typedPosts].sort((a,b)=>score(b)-score(a)||new Date(b.created_at)-new Date(a.created_at));
  const inferredTags=new Map();
  const activityPosts=hydrated.filter(post=>followingIds.includes(post.user_id));
  (activityPosts.length?activityPosts:hydrated).forEach(post=>(post.tags||[]).forEach(raw=>{
@@ -459,10 +474,12 @@ async function feedPage(){
  if(exploreCategory!=='all')sorted=sorted.filter(post=>(post.tags||[]).some(tag=>String(tag).toLowerCase().replace(/^#/,'').trim().replace(/\s+/g,'-')===exploreCategory));
  const filters=[['all','Semua'],['latest','Terbaru'],['random','Acak']];
  const categorySelect="<label class='ua-explore-category-label'><span>Kategori</span><select data-explore-category aria-label='Pilih kategori postingan'><option value='all' "+(exploreCategory==='all'?'selected':'')+">Semua kategori</option>"+categoryOptions.map(topic=>"<option value='"+esc(topic.slug)+"' "+(exploreCategory===String(topic.slug).toLowerCase()?'selected':'')+">"+esc(topic.name)+"</option>").join('')+"</select></label>";
- const filterNav="<nav class='ua-explore-filters' aria-label='Urutan postingan'>"+filters.map(([key,label])=>"<button type='button' data-explore-filter='"+key+"' class='"+(exploreFilter===key?'is-active':'')+"' "+(exploreFilter===key?"aria-current='true'":"")+">"+label+"</button>").join('')+categorySelect+"</nav>";
+ const contentTabs=[['all','Semua'],['reel','Reel'],['live','Live'],['blog','Blog']];
+ const typeNav="<nav class='ua-content-tabs' aria-label='Jenis konten'>"+contentTabs.map(([key,label])=>"<button type='button' data-content-type='"+key+"' class='"+(exploreContentType===key?'is-active':'')+"' aria-pressed='"+(exploreContentType===key)+"'>"+label+"</button>").join('')+"<button type='button' class='ua-feed-refresh' data-feed-refresh aria-label='Muat ulang postingan' title='Muat ulang'>↻</button></nav>";
+ const filterNav="<div class='ua-explore-toolbar'>"+typeNav+"<nav class='ua-explore-filters' aria-label='Urutan postingan'>"+filters.map(([key,label])=>"<button type='button' data-explore-filter='"+key+"' class='"+(exploreFilter===key?'is-active':'')+"' "+(exploreFilter===key?"aria-current='true'":"")+">"+label+"</button>").join('')+categorySelect+"</nav></div>";
  const empty='Belum ada postingan yang cocok dengan pilihan ini.';
  const action="<a href='#/account/compose'>Buat postingan pertama</a>";
- const homeHeading="<section class='ua-home-following'><div class='ua-home-section-heading'><div><h2>Postingan</h2><p>Semua cerita dari circle dan topik yang Anda minati.</p></div></div>"+filterNav+"</section>";
+ const homeHeading="<section class='ua-home-following' id='ua-circle-feed-start'><div class='ua-home-section-heading'><div><h2>Postingan</h2><p>Semua cerita dari circle dan topik yang Anda minati.</p></div></div>"+filterNav+"</section>";
  const circleHeading="<section class='ua-circle-intro'><span class='ua-eyebrow'>RUANG PERSONAL PLUITS</span><h1>Circle Anda</h1><p>Ruang untuk mengikuti kabar teman, menemukan orang baru, dan melihat hal menarik di sekitar Anda.</p></section>";
  const discoverMore="<section class='ua-home-discover-more'><div class='ua-home-section-heading'><div><h2>Temukan Lebih Banyak</h2><small>Perluas koneksi dan temukan cerita baru di PLUITS.</small></div></div><div class='ua-home-discover-links'><a href='#/search'><span>Orang &amp; komunitas</span><b>Jelajahi ↗</b></a><a href='#/places'><span>Tempat dan lingkungan</span><b>Jelajahi ↗</b></a></div></section>";
  let productCards='';
@@ -481,7 +498,10 @@ async function feedPage(){
  const maybeLike="<section class='ua-home-products'><div class='ua-home-section-heading'><div><h2>Produk Lokal</h2><small>Produk dari penjual di <span data-home-location-city>Bali</span>, dipilih dari yang ramai dan sesuai minat Anda.</small></div><a href='#/marketplace'>Lihat semua ↗</a></div><div class='ua-home-product-row'>"+(productCards||"<a class='ua-home-product-empty' href='#/marketplace'>Jelajahi produk di Marketplace ↗</a>")+"</div></section>";
  const collections="<section class='ua-home-collections'><div class='ua-home-section-heading'><div><h2>Kumpulan</h2><small>Jasa dan layanan pilihan</small></div><a href='#/places'>Jelajahi ↗</a></div><div class='ua-home-collection-row'><a href='#/places?category=professional-service'><span>✳</span><b>Jasa profesional</b></a><a href='#/places?category=transport'><span>⌁</span><b>Transportasi lokal</b></a><a href='#/trip'><span>◷</span><b>Aktivitas &amp; pengalaman</b></a><a href='#/marketplace'><span>◇</span><b>Produk lokal</b></a></div></section>";
  const serviceFilters="<section class='ua-home-service-filters'><div class='ua-home-section-heading'><div><h2>Layanan PLUITS</h2></div></div><div class='ua-home-service-chip-row'><a href='#/places?category=accommodation'>Akomodasi</a><a href='#/trip'>Tiket</a><a href='#/places?category=transport'>Transportasi</a><a href='#/places?category=professional-service'>Jasa</a></div></section>";
- return "<div class='ua-social-home'>"+trendSection+homeNearbySection()+circleHeading+storiesSection+peopleSection+homeHeading+"<a class='ua-home-compose-prompt' href='#/account/compose'><span class='ua-home-compose-avatar'>"+esc(initials(profile?.display_name||user?.email||'P'))+"</span><span>Apa yang ingin Anda bagikan?</span><b>＋</b></a><section class='ua-feed'>"+(sorted.length?sorted.map(post=>postCard(post)).join(''):"<div class='ua-feed-empty'><strong>"+empty+"</strong>"+action+"</div>")+"</section>"+discoverMore+maybeLike+collections+serviceFilters+"</div>";
+ const blogMarkup=exploreContentType==='blog'?await blogFeedMarkup():'';
+ const liveMarkup=exploreContentType==='live'?"<div class='ua-feed-empty'><strong>Live PLUITS</strong><p>Siaran langsung akan muncul di sini saat fitur Live diaktifkan. Kerangka navigasi sudah tersedia.</p></div>":'';
+ const feedMarkup=exploreContentType==='blog'?blogMarkup:exploreContentType==='live'?liveMarkup:sorted.length?sorted.map(post=>postCard(post)).join(''):"<div class='ua-feed-empty'><strong>"+empty+"</strong>"+action+"</div>";
+ return "<div class='ua-social-home'>"+trendSection+homeNearbySection()+circleHeading+storiesSection+peopleSection+"<div class='ua-home-feed-region'>"+homeHeading+"<a class='ua-home-compose-prompt' href='#/account/compose'><span class='ua-home-compose-avatar'>"+esc(initials(profile?.display_name||user?.email||'P'))+"</span><span>Apa yang ingin Anda bagikan?</span><b>＋</b></a><section class='ua-feed'>"+feedMarkup+"</section></div>"+discoverMore+maybeLike+collections+serviceFilters+"</div>";
 }
 async function reelsPage(){
  const {data:vm,error:me}=await supabase.from('post_media').select('post_id,duration_ms').eq('media_type','video').lte('duration_ms',60000).order('created_at',{ascending:false}).limit(60);if(me)throw me;
@@ -506,7 +526,7 @@ function postCard(p){
  const profileHref='#/@'+encodeURIComponent(p.owner.username);
  const mediaMarkup=(p.media||[]).length>1?`<div class="ua-media-gallery" data-gallery><div class="ua-gallery-track">${p.media.map((m,i)=>`<div class="ua-gallery-item">${m.media_type==='video'?`<video src="${m.url}" controls playsinline preload="metadata"></video>`:`<img src="${m.url}" alt="Media ${i+1}">`}</div>`).join('')}</div><span class="ua-gallery-count" data-gallery-count>1/${p.media.length}</span></div>`:(p.media?.length?`<div class="ua-media">${p.media[0].media_type==='video'?`<video src="${p.media[0].url}" controls playsinline preload="metadata"></video>`:`<img src="${p.media[0].url}" alt="${esc(p.caption||'Foto postingan')}">`}</div>`:'<div class="ua-text-post-mark">PLUITS</div>');
  return `<article class="ua-post-card" data-post-id="${p.id}" data-owner-id="${p.user_id}">
- <div class="ua-post-head"><a class="ua-post-avatar-link" href="${profileHref}">${avatar(p.avatarUrl,p.owner.display_name)}</a><div><a class="ua-author-link" href="${profileHref}"><strong>${esc(p.owner.display_name)}</strong></a><small>@${esc(p.owner.username)} ${p.owner.public_city&&p.owner.public_province?'· '+esc(p.owner.public_city):''}</small><time class="ua-post-date" datetime="${esc(p.created_at)}">${formatPostDate(p.created_at)}</time></div><div class="ua-post-menu-wrap"><button class="ua-post-more" type="button" aria-label="Menu postingan" aria-expanded="false" data-post-menu>${socialIcon("more",{size:21})}</button><div class="ua-post-menu" hidden>${p.user_id===user?.id?`<button type="button" data-action="edit">${socialIcon("edit",{size:16})}<span>Edit postingan</span></button><button type="button" data-action="delete-post"><span class="ua-menu-delete-icon">×</span><span>Hapus postingan</span></button>`:`<button type="button" data-action="share">${socialIcon("send",{size:16})}<span>Bagikan postingan</span></button>`}</div></div></div>
+ <div class="ua-post-head"><a class="ua-post-avatar-link" href="${profileHref}">${avatar(p.avatarUrl,p.owner.display_name)}</a><div><a class="ua-author-link" href="${profileHref}"><strong>${esc(p.owner.display_name)}</strong></a><small>@${esc(p.owner.username)} ${p.owner.public_city&&p.owner.public_province?'· '+esc(p.owner.public_city):''}</small><time class="ua-post-date" datetime="${esc(p.created_at)}">${formatPostDate(p.created_at)}</time></div><div class="ua-post-menu-wrap"><button class="ua-post-more" type="button" aria-label="Menu postingan" aria-expanded="false" data-post-menu>${socialIcon("more",{size:21})}</button><div class="ua-post-menu" hidden>${p.user_id===user?.id?`<button type="button" data-action="edit">${socialIcon("edit",{size:16})}<span>Edit postingan</span></button><button type="button" data-action="delete-post"><span class="ua-menu-delete-icon">×</span><span>Hapus postingan</span></button>`:`<button type="button" data-action="hide-post">${socialIcon("eye-off",{size:16})}<span>Sembunyikan postingan ini</span></button><button type="button" data-action="mute-user">${socialIcon("user-round-x",{size:16})}<span>Jangan tampilkan dari ${esc(p.owner.display_name)}</span></button><button type="button" data-action="share">${socialIcon("send",{size:16})}<span>Bagikan postingan</span></button><button type="button" data-action="report">${socialIcon("flag",{size:16})}<span>Laporkan postingan</span></button>`}</div></div></div>
  ${mediaMarkup}
  ${renderPostActions({user,liked:p.liked,likes:p.likes,comments:p.comments,saved:p.saved})}
  <div class="ua-post-caption">${p.likes?'<strong>'+p.likes+' suka</strong>':''}<p><a href="${profileHref}"><b>${esc(p.owner.username)}</b></a> ${esc(p.caption||'')}</p>${p.comments?'<button data-action="comments" class="ua-view-comments">Lihat semua '+p.comments+' komentar</button>':''}</div>
@@ -855,7 +875,7 @@ async function mountAccount(section='profile',parameter=''){
   accountContext=await loadAccountContext(supabase,user);if(!isCurrent())return;
   unreadNotificationCount=await countUnreadActivity();if(!isCurrent())return;
   if(section==='profile')updateSEO({title:profile.display_name+' (@'+profile.username+') — Pluits',description:(profile.bio||'Profil komunitas '+profile.display_name+' di Pluits.').slice(0,160),path:'#/@'+encodeURIComponent(profile.username)});
-  const page=section==='explore'?await feedPage():section==='activity'?await notificationPage():section==='reels'?await reelsPage():section==='create'?await createPage():section==='upgrade'?upgradePage():section==='story'?await storyComposePage():section==='live'?livePage():section==='saved'?await savedPage():section==='reel'?await composePage('', 'reel'):section==='compose'?await composePage(parameter):section==='drafts'?await draftsPage():section==='addresses'?await addressPage():section==='wallet'?await walletPage():section==='post'?await postDetailPage(parameter||location.hash.split('/')[3]||''):section==='user'?await publicProfilePage(parameter):section==='followers'?await followListPage('followers'):section==='following'?await followListPage('following'):section==='requests'?await followListPage('followers'):section==='preview'?await profilePage(true):section==='profile'?await profilePage(false,parameter==='edit'):section==='professional'?professionalPage(accountContext,profile):section==='professional-create'?professionalFormPage(accountContext,profile):section==='settings'?settingsHubPage():section==='security'?await accountSecurityPage(supabase,user):section==='blocked'?await blockedAccountsPage():section==='content-settings'?await accountSettingsPage(supabase,user):await profilePage();
+  const page=section==='explore'?await feedPage():section==='activity'?await notificationPage():section==='reels'?await reelsPage():section==='create'?await createPage():section==='upgrade'?upgradePage():section==='story'?await storyComposePage():section==='live'?livePage():section==='saved'?await savedPage():section==='reel'?await composePage('', 'reel'):section==='compose'?await composePage(parameter):section==='drafts'?await draftsPage():section==='addresses'?await addressPage():section==='wallet'?await walletPage():section==='post'?await postDetailPage(parameter||location.hash.split('/')[3]||''):section==='user'?await publicProfilePage(parameter):section==='followers'?await followListPage('followers'):section==='following'?await followListPage('following'):section==='requests'?await followListPage('followers'):section==='preview'?await profilePage(true):section==='profile'?await profilePage(false,parameter==='edit'):section==='professional'?professionalPage(accountContext,profile):section==='professional-create'?professionalFormPage(accountContext,profile):section==='settings'?settingsHubPage():section==='security'?await accountSecurityPage(supabase,user):section==='blocked'?await blockedAccountsPage():section==='hidden-content'?await hiddenContentPage():section==='content-settings'?await accountSettingsPage(supabase,user):await profilePage();
   if(!isCurrent())return;
   const headerAvatar=await signed(profile.avatar_path);if(!isCurrent())return;
   const app=document.querySelector('#app');if(!app)return;
@@ -873,7 +893,7 @@ async function mountAccount(section='profile',parameter=''){
   if(section==='post'){const focusId=parameter||location.hash.split('/')[3]||'';requestAnimationFrame(()=>document.getElementById('ua-post-focus-'+focusId)?.scrollIntoView({block:'start',behavior:'auto'}));}
   bindProfileTabs();bindNotificationActions();if(section==='drafts')bindDrafts();
   bindProfile();bindCompose();bindStoryCompose();bindStories();bindStoryAutoScroll();bindExploreFilters();bindPeopleRecommendationActions();bindToptenSlider();bindAddresses();bindWallet();bindPostActions();bindFollowActions();
-  if(section==='blocked')bindBlockedAccounts();if(section==='reels')bindReelsPlayback();if(section==='addresses')initMap();
+  if(section==='blocked')bindBlockedAccounts();if(section==='hidden-content')bindHiddenContent();if(section==='reels')bindReelsPlayback();if(section==='addresses')initMap();
  }catch(err){
   if(!isCurrent())return;
   const app=document.querySelector('#app');if(!app)return;
@@ -1439,13 +1459,10 @@ function bindToptenSlider(){
  scheduleAuto(4200);
 }
 function bindExploreFilters(){
- document.querySelectorAll('[data-explore-filter]').forEach(button=>button.addEventListener('click',async()=>{
-  const next=button.dataset.exploreFilter;if(!['all','latest','random'].includes(next)||next===exploreFilter)return;
-  exploreFilter=next;await mountAccount('explore');
- }));
- document.querySelector('[data-explore-category]')?.addEventListener('change',async event=>{
-  exploreCategory=String(event.currentTarget.value||'all');await mountAccount('explore');
- });
+ document.querySelectorAll('[data-content-type]').forEach(button=>button.addEventListener('click',async()=>{const next=button.dataset.contentType;if(!['all','reel','live','blog'].includes(next)||next===exploreContentType)return;exploreContentType=next;await mountAccount('explore');}));
+ document.querySelector('[data-feed-refresh]')?.addEventListener('click',async event=>{const el=event.currentTarget;el.disabled=true;el.classList.add('is-loading');exploreFilter='latest';await mountAccount('explore');});
+ document.querySelectorAll('[data-explore-filter]').forEach(button=>button.addEventListener('click',async()=>{const next=button.dataset.exploreFilter;if(!['all','latest','random'].includes(next)||next===exploreFilter)return;exploreFilter=next;await mountAccount('explore');}));
+ document.querySelector('[data-explore-category]')?.addEventListener('change',async event=>{exploreCategory=String(event.currentTarget.value||'all');await mountAccount('explore');});
 }
 function bindReelsPlayback(){document.querySelectorAll('[data-reels-filter]').forEach(btn=>btn.addEventListener('click',()=>{reelsFilter=btn.dataset.reelsFilter;mountAccount('reels');}));const feed=document.querySelector('.ua-reels-feed');if(!feed)return;feed.querySelectorAll('[data-reel-toggle]').forEach(b=>b.addEventListener('click',()=>{const v=b.closest('.ua-reel-stage')?.querySelector('[data-reel-video]');if(v){if(v.paused)v.play().catch(()=>{});else v.pause();}}));feed.querySelectorAll('[data-reel-video]').forEach(v=>{v.addEventListener('play',()=>{const b=v.closest('.ua-reel-stage')?.querySelector('[data-reel-toggle]');if(b){b.textContent='Ⅱ';b.setAttribute('aria-label','Jeda video');}});v.addEventListener('pause',()=>{const b=v.closest('.ua-reel-stage')?.querySelector('[data-reel-toggle]');if(b){b.textContent='▶';b.setAttribute('aria-label','Putar video');}});});if(!('IntersectionObserver'in window))return;const videos=[...feed.querySelectorAll('[data-reel-video]')];let active=null;const io=new IntersectionObserver(es=>es.forEach(e=>{const v=e.target;if(e.isIntersecting&&e.intersectionRatio>=.72){if(active&&active!==v)active.pause();active=v;v.muted=true;v.loop=true;v.playsInline=true;v.play().catch(()=>{});}else if(e.intersectionRatio<.25){v.pause();if(active===v)active=null;}}),{threshold:[0,.25,.72,1]});videos.forEach(v=>{v.playsInline=true;v.preload='metadata';io.observe(v);});}
 function bindPostActions(){
@@ -1532,6 +1549,9 @@ function bindPostActions(){
    }catch(err){notify(err.message||'Postingan gagal dihapus.','error');if(button)button.disabled=false;}
   });
 
+  card.querySelector('[data-action="hide-post"]')?.addEventListener('click',async()=>{if(menu)menu.hidden=true;const {error}=await supabase.from('user_hidden_content').upsert({viewer_id:user.id,target_type:'post',target_id:id},{onConflict:'viewer_id,target_type,target_id'});if(error){notify(error.message,'error');return;}notify('Postingan disembunyikan dari feed Anda.');card.remove();});
+  card.querySelector('[data-action="mute-user"]')?.addEventListener('click',async()=>{if(menu)menu.hidden=true;const ownerId=card.dataset.ownerId;if(!confirm('Sembunyikan semua Post, Reel, dan Story dari akun ini? Anda tetap mengikutinya.'))return;const {error}=await supabase.from('user_hidden_content').upsert({viewer_id:user.id,target_type:'user',target_id:ownerId},{onConflict:'viewer_id,target_type,target_id'});if(error){notify(error.message,'error');return;}notify('Konten akun ini disembunyikan. Anda tetap mengikutinya.');document.querySelectorAll('.ua-post-card[data-owner-id="'+ownerId+'"]').forEach(item=>item.remove());});
+  card.querySelector('[data-action="report"]')?.addEventListener('click',async()=>{if(menu)menu.hidden=true;const reason=prompt('Alasan laporan: spam, harassment, hate, violence, nudity, scam, misinformation, atau other','other');if(!reason)return;const allowed=['spam','harassment','hate','violence','nudity','scam','misinformation','other'];if(!allowed.includes(reason)){notify('Pilih alasan laporan yang tersedia.','error');return;}const {error}=await supabase.from('content_reports').insert({reporter_user_id:user.id,target_type:'post',target_id:id,reason});if(error)notify(error.message,'error');else notify('Laporan berhasil dikirim untuk ditinjau.');});
   const likeButton=card.querySelector('[data-action="like"]');
   const paintLikeState=(liked,count)=>{
    if(!likeButton)return;
