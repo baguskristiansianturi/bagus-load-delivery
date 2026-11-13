@@ -62,7 +62,7 @@ PR #3 memiliki `supabase/migration-order-overrides.json` dengan 38 override, ber
 
 - 17 override untuk nama file yang cocok tetapi timestamp live berbeda;
 - 21 override untuk kandidat nama file yang berbeda;
-- dua timestamp yang berbeda pada catatan live lebih baru tidak tercakup oleh snapshot tersebut;
+- dua timestamp mismatch yang lebih baru tidak tercakup: `pluits_private_voice_messages` (live `20261110084744`, repo `20261110103000`) dan `profile_image_framing_settings` (live `20261112161044`, repo `20261113100000`);
 - sembilan migrasi Blog yang muncul sesudah snapshot tidak memiliki file sumber.
 
 Script pada branch PR #3 juga mengunci jumlah file migrasi menjadi **82**. Repository `main` sekarang memiliki 90 file. Karena itu, manifest dan script tersebut **sudah kedaluwarsa dan tidak boleh dipakai untuk replay saat ini**.
