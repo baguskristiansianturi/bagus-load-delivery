@@ -103,7 +103,8 @@ All planned folders are tracked with a README so Git records the directory. A RE
 |---|---|---|
 | `services/auth` | Session, recovery and identity operations | Planned extraction |
 | `services/repositories/{accounts,social,messaging,notifications,directory,marketplace,seller,trips,blog}` | Domain data access; no HTML/DOM | Planned extraction |
-| `services/realtime/{presence,messages,notifications}` | Subscription lifecycle and cleanup | Planned extraction |
+| `services/realtime/presence` | App-wide presence lifecycle | Implemented and unit-tested |
+| `services/realtime/{messages,notifications}` | Message and notification subscription lifecycle | Planned extraction |
 | `services/storage` | Signed URLs and Storage operations | Implemented helpers |
 | `services/offline/{outbox,cache}` | Per-user queue, cache and retry | Planned extraction |
 | `design-system/{tokens,typography,icons,motion}` | Visual foundations | Planned extraction; current styles remain source of truth |

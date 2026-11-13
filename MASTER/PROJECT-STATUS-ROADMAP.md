@@ -1266,3 +1266,12 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - **Tracked implementation:** folder README scaffolding dan architecture regression test ditambahkan. Folder rencana tidak diimpor sebagai halaman palsu dan tidak otomatis membuat route. Pemilik route/runtime yang sudah ada tetap dipertahankan.
 - **No-cost constraint:** tidak ada Supabase development branch atau hosting berbayar dibuat. Database production dan Pages production tidak disentuh.
 - **Next sequence:** (1) CI validation struktur; (2) konfigurasi full-site preview gratis yang terpisah dari production Pages; (3) pilih satu batas page/feature; (4) ekstrak UI/behavior; (5) pindahkan data access ke repository; (6) ekstrak lifecycle Realtime/Offline; (7) rekonsiliasi migration dan uji backend secara terisolasi; (8) Android/browser UAT; (9) persetujuan founder sebelum release production.
+
+
+## CP-079 — App-wide Realtime presence extraction (13 November 2026)
+
+- **Frontend change:** lifecycle dipindahkan dari `src/main.js` ke `src/services/realtime/presence/index.js`. Main sekarang hanya memulai service menggunakan shared Supabase client.
+- **Service contract:** satu channel `pluits-online-v1`, sync dari initial session dan auth changes, mencegah channel ganda, mengganti channel saat akun berubah, membersihkan channel saat sign-out.
+- **Tests:** `tests/services/realtime-presence.test.js` menguji satu channel per akun, duplicate prevention, account switching, sign-out dan cleanup.
+- **CI:** [run 43450851746 — SUCCESS](https://github.com/baguskristiansianturi/pluits/actions/runs/43450851746), commit `f942a2fd02beadacf676099cbd86fe84c9d979a8`; 54 source modules checked, 44 tests PASS / 0 FAIL, Vite build PASS, production deploy SKIPPED.
+- **Status:** REALTIME PRESENCE SERVICE IMPLEMENTED / AUTOMATED TESTED. Message dan notification realtime tetap menjadi service terpisah yang belum diekstrak.
