@@ -6,14 +6,15 @@ Dokumen ini adalah pintu masuk untuk memahami susunan teknis PLUITS. Tidak perlu
 
 1. [Engineering Architecture Playbook](./ENGINEERING-ARCHITECTURE-PLAYBOOK.md) — cara kerja dan aturan pengembangan.
 2. [Page, Route and Section Registry](./PAGE-ROUTE-AND-SECTION-REGISTRY.md) — halaman yang sudah ada, alamatnya, pemilik file, alias, dan placeholder.
-3. [PLUITS System Architecture Audit](./PLUITS-SYSTEM-ARCHITECTURE-AUDIT-2026-11-13.md) — hasil audit struktur repository, batas frontend/backend, aset dan dependency eksternal, serta kondisi live Supabase.
-4. [Reuse-First Design and Component Policy](./REUSE-FIRST-DESIGN-AND-COMPONENT-POLICY.md) — aturan wajib mencari dan menggunakan kembali aset, token, komponen dan pola yang sudah ada sebelum membuat hal baru.
-5. [Production Design Inventory and Registry](./PRODUCTION-DESIGN-INVENTORY-AND-REGISTRY.md) — baseline desain online, gudang aset, layout, komponen, halaman pengguna dan aturan perubahan.
-6. [Design System and Component Standard](./DESIGN-SYSTEM-AND-COMPONENT-STANDARD.md) — font, warna, ukuran, ikon, komponen, CSS.
-7. [Frontend, Backend and VPS Boundaries](./FRONTEND-BACKEND-AND-VPS-BOUNDARIES.md) — fungsi frontend/backend, alur data, dan persiapan VPS.
-8. [Existing Frontend Module Map](./FRONTEND-MODULE-MAP.md) — pemetaan modul yang sudah ada.
-9. [Existing Frontend Module Contracts](./FRONTEND-MODULE-CONTRACTS.md) — batas tanggung jawab dan aturan perubahan.
-10. [PLUITS Application Architecture](./PLUITS-APPLICATION-ARCHITECTURE.md) — arsitektur aplikasi yang sudah menjadi baseline.
+3. [PLUITS System Architecture Audit](./PLUITS-SYSTEM-ARCHITECTURE-AUDIT-2026-11-13.md) — inventaris struktur repository, batas frontend/backend, dependency, dan kondisi live Supabase.
+4. [PLUITS Security and Migration Reconciliation Audit](./PLUITS-SECURITY-AND-MIGRATION-RECONCILIATION-AUDIT-2026-11-13.md) — temuan RLS, fungsi SQL, Storage, migrasi live vs repository, dan gerbang validasi keamanan.
+5. [Reuse-First Design and Component Policy](./REUSE-FIRST-DESIGN-AND-COMPONENT-POLICY.md) — aturan wajib mencari dan menggunakan kembali aset, token, komponen dan pola yang sudah ada sebelum membuat hal baru.
+6. [Production Design Inventory and Registry](./PRODUCTION-DESIGN-INVENTORY-AND-REGISTRY.md) — baseline desain online, gudang aset, layout, komponen, halaman pengguna dan aturan perubahan.
+7. [Design System and Component Standard](./DESIGN-SYSTEM-AND-COMPONENT-STANDARD.md) — font, warna, ukuran, ikon, komponen, CSS.
+8. [Frontend, Backend and VPS Boundaries](./FRONTEND-BACKEND-AND-VPS-BOUNDARIES.md) — fungsi frontend/backend, alur data, dan persiapan VPS.
+9. [Existing Frontend Module Map](./FRONTEND-MODULE-MAP.md) — pemetaan modul yang sudah ada.
+10. [Existing Frontend Module Contracts](./FRONTEND-MODULE-CONTRACTS.md) — batas tanggung jawab dan aturan perubahan.
+11. [PLUITS Application Architecture](./PLUITS-APPLICATION-ARCHITECTURE.md) — arsitektur aplikasi yang sudah menjadi baseline.
 
 ## Cara membaca folder kode
 
@@ -31,4 +32,4 @@ Dokumen ini adalah pintu masuk untuk memahami susunan teknis PLUITS. Tidak perlu
 
 ## Status penting
 
-Daftar halaman dalam registry adalah inventaris route dari kode saat ini, bukan jaminan semua alur sudah lengkap. Folder Inbox Personal dan Inbox Toko yang disiapkan hanya placeholder; keduanya belum didaftarkan sebagai route dan belum mengubah halaman Inbox yang sedang aktif.
+Daftar halaman dalam registry adalah inventaris route dari kode saat ini, bukan jaminan semua alur sudah lengkap. Saat ini route Inbox yang aktif adalah `#/inbox` (alias lama `#/messages`) dan runtime-nya dimiliki `src/pages/messages/`. Pemisahan Inbox Personal dan Inbox Toko belum menjadi route atau implementasi aktif. Kebutuhan tersebut harus tetap terlihat pada roadmap, tetapi tidak boleh dianggap sebagai folder/runtime yang sudah ada.
