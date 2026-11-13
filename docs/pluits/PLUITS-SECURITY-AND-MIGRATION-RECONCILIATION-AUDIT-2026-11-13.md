@@ -272,16 +272,16 @@ CSS import ownership yang terverifikasi:
 
 ### 5.2 Dependency eksternal
 
-| Dependency / provider | Exact source/version | License / terms | Status di PLUITS |
-|---|---|---|---|
-| Supabase JS | `https://esm.sh/@supabase/supabase-js@2` | MIT | Remote import; major version floating, bukan package dependency/lockfile |
-| tus-js-client | `https://esm.sh/tus-js-client@4.3.1` | MIT | Remote import; versi dipin di URL, tidak dikelola package lock |
-| Leaflet | `https://unpkg.com/leaflet@1.9.4/dist/leaflet.js` + CSS | BSD-2-Clause | Remote import di Account; tidak dibundel lokal |
-| MapLibre GL JS | `https://unpkg.com/maplibre-gl@6.17.0/dist/maplibre-gl.mjs` + CSS | BSD-3-Clause | Remote import di GeoDirectory; tidak dibundel lokal |
-| OpenStreetMap raster tiles | `https://tile.openstreetmap.org/{z}/{x}/{y}.png` | Data OSM di bawah ODbL; tile server tunduk pada OSMF Tile Usage Policy | Remote; directory memakai URL resmi dan attribution contributors |
-| Nominatim | `https://nominatim.openstreetmap.org/reverse` | OSMF Nominatim Usage Policy | Remote reverse geocoding; satu pemanggilan per page-session, belum ada throttle/cache persisten |
-| Unsplash | `https://images.unsplash.com/photo-{id}...` | Unsplash License: penggunaan komersial/nonkomersial umumnya diizinkan; tidak boleh mengompilasi gambar untuk meniru layanan kompetitor; hak model/properti tetap perlu diperhatikan | Remote image URLs; tidak ada salinan lokal terdaftar |
-| Random User / UI Faces | `https://randomuser.me/api/portraits/{gender}/{id}.jpg` | Situs menyatakan foto dipilih dari bagian UI Faces yang diotorisasi; tidak ditemukan lisensi terpisah untuk setiap foto di source | Remote demo portraits; jangan dianggap foto/akun pengguna nyata atau dipakai sebagai konten produksi terverifikasi |
+| Dependency / provider | Exact source/version | Format | License / terms | Local status |
+|---|---|---|---|---|
+| Supabase JS | `https://esm.sh/@supabase/supabase-js@2` | ESM JavaScript | MIT | Remote import; major version floating, not in package dependency/lockfile |
+| tus-js-client | `https://esm.sh/tus-js-client@4.3.1` | ESM JavaScript | MIT | Remote import; version pinned in URL, not in package lock |
+| Leaflet | `https://unpkg.com/leaflet@1.9.4/dist/leaflet.js` + CSS | JavaScript + CSS | BSD-2-Clause | Remote import in Account; not bundled locally |
+| MapLibre GL JS | `https://unpkg.com/maplibre-gl@6.17.0/dist/maplibre-gl.mjs` + CSS | ESM JavaScript + CSS | BSD-3-Clause | Remote import in GeoDirectory; not bundled locally |
+| OpenStreetMap raster tiles | `https://tile.openstreetmap.org/{z}/{x}/{y}.png` | PNG tiles | ODbL data; OSMF Tile Usage Policy | Remote; Directory uses official host and contributors attribution |
+| Nominatim | `https://nominatim.openstreetmap.org/reverse` | JSON response | OSMF Nominatim Usage Policy | Remote reverse geocoding; no persistent result cache/throttle found |
+| Unsplash | `https://images.unsplash.com/photo-{id}...` | `auto=format` image response; negotiated format | Unsplash License; commercial/noncommercial use generally allowed, but not for compiling images to imitate a competing service; model/property rights still matter | Remote image URLs; no local asset copy registered |
+| Random User / UI Faces | `https://randomuser.me/api/portraits/{gender}/{id}.jpg` | JPEG | Site says photos were selected from an authorized UI Faces section; no separate per-photo license was found in source | Remote demo portraits; not real verified user accounts and not in local assets |
 
 Rujukan lisensi dan kebijakan resmi:
 - [Unsplash License](https://unsplash.com/license) dan [Unsplash releases/trademarks guidance](https://help.unsplash.com/en/articles/2612329-releases-and-trademarks).
