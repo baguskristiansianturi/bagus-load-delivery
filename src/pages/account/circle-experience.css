@@ -1781,3 +1781,37 @@
   .ua-social-home .ua-circle-stories{padding-left:11px!important}
   .ua-social-home .ua-circle-story-track{padding-right:11px!important}
 }
+
+
+/* Root cause: an older full-viewport rule left the Story section at left:50%.
+   Reset its positioning as well as its width so the whole section starts at
+   the normal page gutter on narrow screens. */
+@media(max-width:760px){
+  .ua-social-home .ua-circle-stories{
+    position:static!important;
+    inset-inline:auto!important;
+    left:auto!important;
+    right:auto!important;
+    transform:none!important;
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    margin-inline:0!important;
+    box-sizing:border-box!important;
+  }
+  .ua-social-home .ua-circle-section-heading{
+    width:100%!important;
+    max-width:100%!important;
+    margin-inline:0!important;
+    box-sizing:border-box!important;
+  }
+  .ua-social-home .ua-circle-story-track{
+    position:static!important;
+    left:auto!important;
+    transform:none!important;
+    width:100%!important;
+    max-width:100%!important;
+    margin-inline:0!important;
+    box-sizing:border-box!important;
+  }
+}
