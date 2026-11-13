@@ -76,3 +76,7 @@ The Story carousel is a **full-bleed horizontal Story Ring Rail**, not a card ca
 - Horizontal touch scrolling and start snap remain. Preserve Story data eligibility/order, ring seen/unseen states, click/focus behavior and existing Story Viewer controls.
 - Source ownership: renderer `src/pages/account/index.js`; CSS `src/pages/account/circle-experience.css`. No duplicate Story renderer or separate carousel behavior is to be introduced.
 - Acceptance: on a 360px-wide phone, three large circles fit across the full rail with only 2px between items; rail begins at the viewport content edge rather than inside an inset card; swipe moves horizontally; tapping a Story opens the existing viewer unchanged.
+
+
+### Carousel interaction parity (14 November 2026)
+The Story Ring Rail uses the same native horizontal carousel interaction pattern as `Orang yang Mungkin Anda Kenal`: flex row without wrapping, horizontal overflow, momentum scrolling on touch, hidden scrollbar, and mandatory start snapping. Story-specific sizing remains independent: three visible rings on mobile with 2px spacing. Swiping Story must feel the same as swiping the People Recommendations cards; tapping a Story still opens the Story Viewer and must not be repurposed as carousel navigation.
