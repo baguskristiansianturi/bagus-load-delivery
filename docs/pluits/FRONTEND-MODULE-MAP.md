@@ -37,7 +37,6 @@ Read before editing. Existing owners remain during incremental migration; target
 
 See `docs/pluits/PLUITS-APPLICATION-ARCHITECTURE.md` and `docs/pluits/FRONTEND-MODULE-CONTRACTS.md`.
 
-
 ## Page/component ownership audit — 12 November 2026
 
 See [PAGE-COMPONENT-OWNERSHIP-AUDIT-2026-11-12.md](./PAGE-COMPONENT-OWNERSHIP-AUDIT-2026-11-12.md) for the complete route-to-page inventory, layout/sidebar ownership matrix, target folder convention, change-scope contract and incremental migration order.
@@ -49,7 +48,24 @@ Current concrete extractions:
 
 Important: this is an incremental migration. Account, Marketplace, Trip, Seller Center and Inbox controllers still contain substantial page-level composition/behavior. A folder existing does not mean that page is fully modular. Follow the audit's migration order and do not mass-move files.
 
-
 ## Public homepage composition — 12 November 2026
 
 `src/features/public-home/layout.js` is the page-owned composition layer. `src/pages/home/index.js` owns route/auth/data behavior only. See `src/features/public-home/README.md` and `docs/pluits/PAGE-COMPONENT-OWNERSHIP-AUDIT-2026-11-12.md` for the component ownership table. Public navbar/search behavior must not leak into Marketplace, Trip, Directory or signed-in social workspaces.
+
+## Canonical module scaffolding — 13 November 2026
+
+The following folders now exist as tracked architecture scaffolding. A README in these folders records target ownership; it does **not** claim that a runtime feature has been implemented.
+
+| Module/folder | Current status | Current runtime owner |
+|---|---|---|
+| `src/config/` | Reserved; extraction not started | Existing route/config owners |
+| `src/design-system/` | Reserved; existing styles remain authoritative | `src/styles/`, `src/style.css` |
+| `src/platform/` | Reserved; browser adapters not extracted | Existing browser-facing owners |
+| `src/features/feed/` | Planned extraction | `pages/home`, `pages/account`, `features/public-home` |
+| `src/features/notifications/` | Planned extraction | `pages/account` |
+| `src/features/store/` | Planned extraction | `pages/marketplace` |
+| `src/features/checkout/` | Planned extraction | `pages/marketplace` |
+| `src/features/directory/` | Planned extraction | `pages/directory` |
+| `src/features/trips/` | Planned extraction | `pages/trip` |
+
+The first enforcement gate is `npm run verify:module-boundaries`, included in `npm test`. It blocks upward imports from shared components/services/library adapters and direct cross-feature private imports. Existing runtime files remain in place until a feature-by-feature extraction is covered by route and behavior tests.
