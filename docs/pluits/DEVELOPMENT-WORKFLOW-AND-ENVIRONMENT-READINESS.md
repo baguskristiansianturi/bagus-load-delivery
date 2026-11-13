@@ -1,7 +1,7 @@
 # PLUITS — Development Workflow and Environment Readiness
 
 **Status:** PR validation and frontend module-boundary verification are implemented and CI-tested. Hosted full-site preview and isolated backend environment are not configured.
-**Last verified:** 13 November 2026 — branch commit `29e08526ee3076fb9d2c16ceb0110ad49ef49459`
+**Last verified:** 13 November 2026 — branch commit `65dffe4b391e243d4cc58fdeb27394e64cc78f10`
 **Production baseline:** `main` at `4ef9fb96e8e942511879303f355a7336860c287f`
 
 ## 1. Environment separation
@@ -28,8 +28,8 @@ For pull requests targeting `main`, it runs:
 8. Skip the GitHub Pages deployment step.
 
 Latest verified PR run:
-- Run: [43447480093](https://github.com/baguskristiansianturi/pluits/actions/runs/43447480093)
-- Commit: `29e08526ee3076fb9d2c16ceb0110ad49ef49459`
+- Run: [43447816043](https://github.com/baguskristiansianturi/pluits/actions/runs/43447816043)
+- Commit: `65dffe4b391e243d4cc58fdeb27394e64cc78f10`
 - Result: **success**.
 - Production-surface verification: success.
 - Module-boundary verification: success across 53 JavaScript modules, including enforcement of one shared Supabase client.
@@ -37,7 +37,7 @@ Latest verified PR run:
 - Vite production build: success; `dist/index.html` verified.
 - Pages artifact upload: success.
 - Production deploy step: skipped.
-- Artifact ID: `14049036024`; expires 14 November 2026 at 14:56 UTC.
+- Artifact ID: `14048193242`; expires 14 November 2026 at 14:58 UTC.
 
 This confirms the current PR commit builds and passes automated tests. It does not prove Android browser UAT or a hosted preview.
 
@@ -148,4 +148,4 @@ The full development/release loop is complete only after:
 - production secrets and preview credentials are separated;
 - release approval and rollback procedure are documented and tested.
 
-**Current overall status:** PR CI, module-boundary guard, single-client guard, 39 automated tests and production build pass on commit `29e0852`. Modular target folders are scaffolded, but several runtime controllers and data-access paths still need incremental extraction. Hosted preview and isolated backend environment are not configured. Migration/security gates remain open. Do not label PLUITS fully release-ready.
+**Current overall status:** PR CI, module-boundary guard, single-client guard, 39 automated tests and production build pass on commit `65dffe4`. Modular target folders are scaffolded, but several runtime controllers and data-access paths still need incremental extraction. Hosted preview and isolated backend environment are not configured. Migration/security gates remain open. Do not label PLUITS fully release-ready.
