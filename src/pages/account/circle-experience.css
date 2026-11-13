@@ -1138,3 +1138,126 @@
 .ua-social-home .ua-explore-toolbar{position:sticky;top:62px;z-index:26;background:rgba(255,255,255,.97);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
 .ua-social-home .ua-content-tabs{position:relative;top:auto;z-index:auto;background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none}
 @media(max-width:760px){.ua-social-home .ua-explore-toolbar{top:58px}.ua-social-home .ua-content-tabs{position:relative;top:auto}}
+
+
+/* Circle-only corrections: preserve the large Story avatars and expand their
+   horizontal viewport without changing the shared page/container width. */
+@media(max-width:760px){
+  .ua-social-home{
+    width:100%;
+    max-width:1040px;
+    margin-left:auto;
+    margin-right:auto;
+    padding-left:0;
+    padding-right:0;
+  }
+  .ua-social-home .ua-circle-stories{
+    position:relative;
+    left:50%;
+    width:100vw;
+    max-width:100vw;
+    margin-left:-50vw;
+    margin-right:-50vw;
+    padding:14px 0 10px;
+    overflow:visible;
+  }
+  .ua-social-home .ua-circle-section-heading{
+    padding-left:14px;
+    padding-right:14px;
+  }
+  .ua-social-home .ua-circle-story-track{
+    width:100%;
+    gap:8px;
+    margin:0;
+    padding:4px 14px 10px;
+    overflow-x:auto;
+    overflow-y:hidden;
+    scroll-snap-type:x proximity;
+    scroll-padding-left:14px;
+    -webkit-overflow-scrolling:touch;
+  }
+  .ua-social-home .ua-story-group{
+    flex:0 0 132px;
+    min-width:132px;
+    gap:6px;
+    padding:0;
+  }
+  .ua-social-home .ua-story-group .ua-story-ring{
+    width:124px;
+    height:124px;
+  }
+  .ua-social-home .ua-story-group>strong{
+    max-width:124px;
+    font-size:10px;
+  }
+  .ua-social-home .ua-home-feed-region{
+    position:relative;
+    width:100%;
+    min-width:0;
+    overflow:visible;
+    isolation:isolate;
+  }
+  .ua-social-home .ua-home-following{
+    margin-left:14px;
+    margin-right:14px;
+  }
+  .ua-social-home .ua-explore-toolbar{
+    position:sticky;
+    top:58px;
+    z-index:40;
+    width:100%;
+    margin:0 0 10px;
+    padding:0;
+    background:rgba(255,255,255,.97);
+    border-bottom:1px solid #e7eeec;
+    backdrop-filter:blur(16px);
+    -webkit-backdrop-filter:blur(16px);
+  }
+  .ua-social-home .ua-content-tabs{
+    position:relative;
+    top:auto;
+    min-height:48px;
+    margin:0;
+    padding:7px 12px;
+    gap:6px;
+    border:0;
+    background:transparent;
+    backdrop-filter:none;
+    -webkit-backdrop-filter:none;
+  }
+  .ua-social-home .ua-explore-filters{display:none!important}
+  .ua-social-home .ua-feed{
+    position:relative;
+    left:50%;
+    width:100vw;
+    max-width:100vw;
+    transform:translateX(-50%);
+    margin:0;
+    padding:0;
+    display:grid;
+    gap:0;
+  }
+  .ua-social-home .ua-feed>.ua-post-card{
+    display:block;
+    width:100%;
+    max-width:100%;
+    min-width:0;
+    margin:0;
+    border:0;
+    border-top:1px solid #edf0f0;
+    border-bottom:1px solid #edf0f0;
+    border-radius:0;
+    box-shadow:none;
+  }
+  .ua-social-home .ua-feed>.ua-post-card .ua-post-head,
+  .ua-social-home .ua-feed>.ua-post-card .ua-post-caption,
+  .ua-social-home .ua-feed>.ua-post-card .ua-comments{
+    padding-left:15px;
+    padding-right:15px;
+  }
+}
+@media(max-width:380px){
+  .ua-social-home .ua-story-group{flex-basis:124px;min-width:124px}
+  .ua-social-home .ua-story-group .ua-story-ring{width:116px;height:116px}
+  .ua-social-home .ua-story-group>strong{max-width:116px}
+}
