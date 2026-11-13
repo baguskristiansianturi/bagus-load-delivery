@@ -1245,3 +1245,11 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - **Boundary:** README scaffolding tidak berisi runtime palsu. Komponen bersama tidak boleh mengambil data; services tidak boleh merender HTML; realtime harus memiliki lifecycle owner tunggal; offline state tidak boleh disamakan dengan data server/publikasi.
 - **Documentation:** `FRONTEND-MODULE-MAP.md` dan `PLUITS-APPLICATION-ARCHITECTURE.md` diselaraskan dengan folder yang benar-benar ada.
 - **Status:** CONVENTIONAL FOLDER SCAFFOLDING IMPLEMENTED. Belum berarti semua komponen, services, atau fitur telah diekstrak. PR #8 tetap draft, belum merge/deploy.
+
+
+## CP-077 — Production Pages deployment guard (13 November 2026)
+
+- **Temuan:** workflow sebelumnya melewati deployment hanya untuk event pull_request; manual workflow dispatch dari branch development masih berpotensi menjalankan deploy step.
+- **CI FIX IMPLEMENTED:** deployment kini mensyaratkan event bukan pull_request **dan** `github.ref == 'refs/heads/main'`. Push trigger tetap hanya pada main. Manual dispatch dari branch lain hanya dapat build/upload artifact, tidak dapat deploy ke Pages production.
+- **Regression test:** `tests/app/deployment-workflow.test.js` memverifikasi pull_request/push branch filters, workflow_dispatch, artifact upload, dan syarat main-only deploy.
+- **Status:** CODE + REGRESSION TEST IMPLEMENTED; menunggu hasil GitHub Actions untuk commit ini. Tidak ada deployment production yang dijalankan.
