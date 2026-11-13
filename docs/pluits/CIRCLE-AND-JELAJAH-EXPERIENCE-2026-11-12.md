@@ -64,3 +64,15 @@ Jelajah mixed-feed commit: 24800259c62483f84454576a139e727a2ab405b2.
 Syntax correction: 9ccd13050541bd1fb5bd423a1f6479f898d0e118.
 GitHub Actions run 43243601266 (run 1642) succeeded on commit 9ccd13050541bd1fb5bd423a1f6479f898d0e118. Production verification, automated tests, Vite build, build-output verification, Pages artifact upload and deployment all succeeded.
 Android founder UAT: NOT TESTED. Founder acceptance: PENDING.
+
+
+## Story Ring Rail — approved visual contract (14 November 2026)
+
+The Story carousel is a **full-bleed horizontal Story Ring Rail**, not a card carousel.
+- It spans the full Circle content width; no inset white card, border, rounded card container or shadow.
+- Heading/description align to the normal page text gutter; the horizontal rail itself uses the full width.
+- Mobile: exactly three large rings visible, 2px gap, ring diameter `clamp(88px, 28vw, 112px)`, each item takes one third of the track after the two gaps.
+- Desktop: 140px rings, 156px item width, 14px gap.
+- Horizontal touch scrolling and start snap remain. Preserve Story data eligibility/order, ring seen/unseen states, click/focus behavior and existing Story Viewer controls.
+- Source ownership: renderer `src/pages/account/index.js`; CSS `src/pages/account/circle-experience.css`. No duplicate Story renderer or separate carousel behavior is to be introduced.
+- Acceptance: on a 360px-wide phone, three large circles fit across the full rail with only 2px between items; rail begins at the viewport content edge rather than inside an inset card; swipe moves horizontally; tapping a Story opens the existing viewer unchanged.
