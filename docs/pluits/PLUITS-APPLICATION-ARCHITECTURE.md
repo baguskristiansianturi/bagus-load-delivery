@@ -82,7 +82,7 @@ Feature CSS is rooted in its namespace. No generic element selectors, global sid
 
 ## Current implementation versus target — 13 November 2026
 - Implemented: app bootstrap/router, page controllers, multiple extracted features, shared navigation/components, Supabase client adapter, storage service, global/shared styles, Node test suite and Vite build.
-- Scaffolding only: `src/config/`, `src/design-system/`, `src/platform/`, plus feed/notifications/store/checkout/directory/trips feature ownership markers. Their READMEs explicitly identify current runtime owners.
+- Scaffolding only: `src/config/`, `src/design-system/`, `src/platform/`; shared component groups `layout/`, `feedback/`, `primitives/`; service groups `auth/`, `realtime/`, `offline/`, `repositories/`; and feed/notifications/store/checkout/directory/trips feature ownership markers. Their READMEs explicitly identify current runtime owners. `src/services/storage/` already has runtime helpers.
 - Implemented in this increment: all 11 runtime modules that independently constructed Supabase clients now import the singleton from `src/lib/supabase/client.js`; the unused client import in `account-context.js` was removed. The automated guard blocks new independent clients.
 - Not yet modularized: several page controllers still own data access and feature behavior. Move data-access functions into `src/services/` one domain at a time, retaining page-level composition and adding consumer/route tests.
 - Enforcement: `scripts/verify-module-boundaries.mjs` is run by `npm test` and prevents shared lower-level layers from importing page/feature UI and prevents direct private cross-feature imports.
