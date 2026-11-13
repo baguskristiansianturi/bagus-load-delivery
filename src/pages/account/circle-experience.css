@@ -2117,3 +2117,33 @@
 @media(max-width:380px){
   .ua-social-home{--pl-rail-gutter:11px;--pl-rail-gap:8px}
 }
+
+
+/* Story avatar sizing: 1.5x current mobile ring, with people-card spacing. */
+@media(max-width:760px){
+  .ua-social-home .ua-circle-story-track{
+    gap:10px;
+  }
+  .ua-social-home .ua-story-group{
+    flex:0 0 105px;
+  }
+  .ua-social-home .ua-story-group .ua-story-ring{
+    width:99px;
+    height:99px;
+  }
+  .ua-social-home .ua-story-group>strong{
+    max-width:105px;
+  }
+}
+@media(max-width:380px){
+  .ua-social-home .ua-story-group{
+    flex-basis:99px;
+  }
+  .ua-social-home .ua-story-group .ua-story-ring{
+    width:93px;
+    height:93px;
+  }
+  .ua-social-home .ua-story-group>strong{
+    max-width:99px;
+  }
+}
