@@ -1,4 +1,4 @@
-import {profileImageFrameCss} from '../profile/image-framing.js';
+import {profileImageFrameCss} from '../profile/index.js';
 const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const DAY=24*60*60*1000;
 export function rankPeopleRecommendations({profiles=[],viewerId,followingIds=[],blockedIds=[],relationships=[],mutualCounts={},city='',province='',now=Date.now(),limit=10}={}){
