@@ -752,3 +752,18 @@ This document is documentation only. It does not change:
 - Supabase schema or policies.
 
 Any production changes must be proposed and reviewed as a separate, narrowly scoped implementation after the inventory and design-system contract are accepted.
+
+
+## 15. Standard technical terminology and runtime orientation
+
+Use [PLUITS Technical Terminology and Runtime Map](./PLUITS-TECHNICAL-TERMINOLOGY-AND-RUNTIME-MAP.md) as the human-readable glossary for HTML document/application shell, SPA, routes, page controllers, templates, runtime, event handlers, components, feature modules, stylesheets, design tokens, services and dependencies.
+
+### Current architecture facts
+- PLUITS is a client-side SPA hosted by `index.html`; route views are rendered into the application shell by JavaScript page controllers.
+- `src/app/router.js` selects the route, dynamically imports page modules, inserts rendered markup into `#app`, then schedules data/event binding.
+- Page controllers currently include both standalone route modules and shared legacy controllers. Several Social route states still belong to `src/pages/account/index.js`; Marketplace commerce route states belong to `src/pages/marketplace/index.js`.
+- Current icon sources are split between `src/components/common/social-icons.js`, `src/components/common/icons.js`, `src/app/ui.js` and `public/icons.svg`. Treat this as observed duplication, not as a canonical consolidated icon system.
+- Inbox contacts, online contact strip, contact list and conversation behavior are currently composed in `src/pages/messages/index.js`; the Inbox sidebar renderer is extracted to `src/features/inbox/inbox-sidebar.js`. People Recommendations are a separate discovery feature.
+
+### Naming policy
+Prefer standard industry terms such as Page, Route, Page Controller, Template Renderer, Runtime, Event Handler, Component, Feature Module, Stylesheet, Design Token, Icon Registry, Contact List, Conversation List and Message Composer. PLUITS-specific labels may be added as aliases, but must not replace or masquerade as standard technical terminology.
