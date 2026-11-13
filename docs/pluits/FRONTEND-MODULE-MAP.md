@@ -57,3 +57,8 @@ Important: this is an incremental migration. Account, Marketplace, Trip, Seller 
 ## Design system and component inventory
 
 Before any visual implementation or UI change, consult [PLUITS-DESIGN-SYSTEM-AND-COMPONENT-INVENTORY.md](./PLUITS-DESIGN-SYSTEM-AND-COMPONENT-INVENTORY.md). It maps the current source-backed brand, typography, colors, shared geometry, icon registry and workspace components, while marking partial extraction and unresolved audit debt. Do not treat local or legacy CSS values as approved global tokens.
+
+
+## Complete source and component catalogue
+
+Use [`PLUITS-COMPLETE-SOURCE-STRUCTURE-AND-COMPONENT-MAP.md`](./PLUITS-COMPLETE-SOURCE-STRUCTURE-AND-COMPONENT-MAP.md) as the detailed source-tree, route ownership, CSS/JavaScript inventory, component status, carousel taxonomy and target modularization reference. Do not treat proposed target paths as existing modules until extracted and verified.
