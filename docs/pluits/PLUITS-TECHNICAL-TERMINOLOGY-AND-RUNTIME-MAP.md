@@ -103,3 +103,37 @@ The names after the workspace/page should use standard UI/product terminology wh
 This map identifies current source owners and known overlap. It does not claim that every icon consumer, CSS selector, contact flow, runtime event handler or backend call has already been exhaustively traced. Those are explicit audit tasks. Mark unverified relationships as **Audit required** rather than inventing a mapping.
 
 No production runtime, design, route, database or user data is changed by this terminology map.
+
+
+## 8. Current UI component vocabulary — standard names first
+
+Use these standard names when describing a component. The PLUITS alias is optional and exists only to make voice instructions easier; it is not a new industry term.
+
+| Standard component name | Current PLUITS location / owner | Status and boundary |
+|---|---|---|
+| Post Card | Markup/composition in `src/pages/account/index.js`; post actions in `src/features/posts/post-actions.js` | Full Post Card is not yet a single extracted canonical component |
+| Post Action Bar | `src/features/posts/post-actions.js`, `src/features/posts/post-actions.css` | Extracted action behavior/presentation; does not own the full Post Card |
+| Story Tray / Story List | Current Social/Account composition | Exact renderer and all consumers still require call-site audit |
+| Story Viewer | Current Social/Account composition | Treat as a feature/viewer, not a separate Page unless a route exists |
+| Profile Header | Profile composition in `src/pages/account/index.js`; partial styling in `src/features/profile/profile-hero.css` | Partial extraction; not the whole Profile Page |
+| User Avatar | Contextual markup across Social and Inbox | No single canonical Avatar renderer has been verified; Story Avatar and Inbox Avatar may have different contracts |
+| User Recommendation Card | `src/features/discovery/people-recommendations.js` | Extracted feature component; not the same as a Contact List item |
+| Reel Card | `src/features/reels/reel-card.js`, `src/features/reels/reels.css` | Extracted component; Vertical Reel Feed remains a page/feature composition |
+| Contact List | `src/pages/messages/index.js` | Current Inbox controller owns contact loading/rendering |
+| Online Contacts List / Horizontal List | `src/pages/messages/index.js` | Current Inbox controller owns online contact strip; not the People Recommendation rail |
+| Conversation List | `src/pages/messages/index.js`, with sidebar renderer in `src/features/inbox/inbox-sidebar.js` | Data/events remain in controller; sidebar presentation is extracted |
+| Message Composer | `src/pages/messages/index.js` | Current implementation remains inside Inbox controller |
+| Product Card | `src/pages/marketplace/index.js` | Marketplace controller currently owns product rendering; separate canonical extraction not yet verified |
+| Search Input | Used by multiple page/workspace contexts | A low-level input is not the same thing as domain search; People Search, Content Search, Product Search and Contact Search have different semantics |
+
+### PLUITS voice aliases (optional)
+
+| Standard term | Optional PLUITS instruction alias |
+|---|---|
+| Profile Header | Profile Head |
+| Story Tray / Story List | Story Rail |
+| Online Contacts List | Kontak Online |
+| User Recommendation Card | People Card |
+| Post Action Bar | Post Actions |
+
+When a request uses an alias, resolve it to the standard component name and verify the current owner before editing. If the same alias could refer to multiple components, ask which workspace/context is intended.
