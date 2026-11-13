@@ -16,15 +16,11 @@ function walk(directory) {
 walk(sourceRoot);
 
 const relativePath = (file) => path.relative(process.cwd(), file).split(path.sep).join('/');
-const layerOf = (file) => {
-  const parts = file.split('/');
-  return parts[1] === 'features' ? `features/${parts[2]}` : parts.slice(0, 2).join('/');
-};
 const forbidden = {
   components: new Set(['pages', 'features']),
   services: new Set(['pages', 'features', 'components']),
   lib: new Set(['pages', 'features', 'components']),
-  design-system: new Set(['pages', 'features', 'components', 'services']),
+  'design-system': new Set(['pages', 'features', 'components', 'services']),
   platform: new Set(['pages', 'features', 'components']),
 };
 
