@@ -1133,3 +1133,8 @@
 @media(max-width:760px){
  .ua-social-home{width:calc(100% + 24px);margin-left:-12px;margin-right:-12px}
 }
+
+/* Keep the complete category toolbar sticky only within the feed region. */
+.ua-social-home .ua-explore-toolbar{position:sticky;top:62px;z-index:26;background:rgba(255,255,255,.97);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.ua-social-home .ua-content-tabs{position:relative;top:auto;z-index:auto;background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none}
+@media(max-width:760px){.ua-social-home .ua-explore-toolbar{top:58px}.ua-social-home .ua-content-tabs{position:relative;top:auto}}
