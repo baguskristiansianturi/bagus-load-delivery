@@ -383,3 +383,26 @@ Token declarations are distributed across several owners:
 Repeated declarations such as `--auth-gap`, `--pl-rail-gap`, `--pl-rail-gutter`, and public header height occur in responsive scopes. Treat them as responsive overrides until their selector/media context is reviewed; do not remove them as duplicate tokens by name alone.
 
 Page/feature CSS files use namespaced class selectors in the inspected source. Broad element selectors are concentrated in the global `src/style.css`, where they act as reset/base rules. Do not move or split the large global/account files mechanically: first map selector-to-markup consumers, cascade order, dynamic route lifetime, and breakpoint behavior.
+
+
+## 9. Approved component contract — Circle Story Ring Rail (2026-11-14)
+
+**Stable component ID:** `social.story-ring-rail`  
+**Page/feature owner:** Circle experience, composed by `src/pages/account/index.js`  
+**Style owner:** `src/pages/account/circle-experience.css`  
+**Renderer/data behavior owner:** account Circle renderer and existing Story data/viewer flow.  
+**Variant taxonomy:** Story Ring Rail + Full-Bleed Horizontal Rail. This is not a Card Carousel.
+
+### Approved visual and responsive contract
+- The rail spans the full available Circle content width (full-bleed relative to the page content column); it must not be rendered as a bordered, rounded, inset card.
+- The heading and supporting description retain the normal page text gutter; the carousel track itself spans edge-to-edge.
+- Mobile presents exactly three large Story rings in the visible row.
+- Mobile inter-item gap: 2px. Do not introduce wide card gaps.
+- Mobile ring diameter: `clamp(88px, 28vw, 112px)`.
+- Mobile item width: one third of the rail after the two 2px gaps: `calc((100% - 4px) / 3)`.
+- Desktop baseline: 140px rings, 156px item width, 14px gap.
+- The track remains a horizontal, touch-scrollable rail with start snap. It must not become a grid or a compact avatar strip.
+- Preserve existing labels, ring states, Story ordering, eligibility, click targets, keyboard focus and Story Viewer previous/next/close behavior. A layout correction must not change data or interaction behavior.
+
+### Change control
+Any future change to ring diameter, visible count, gap, full-bleed behavior, ring-state styling or viewer interaction requires an explicit product-owner decision and an update to this record. Record observed implementation separately from approved values; do not silently replace this contract with a new CSS override.
