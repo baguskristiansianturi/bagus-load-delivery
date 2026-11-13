@@ -18,7 +18,7 @@ The repository already has most conventional frontend and backend building block
 
 The main structural problem is not a lack of folders. It is that responsibilities are not consistently kept inside their owners. Several page modules create their own Supabase clients and contain direct data access; the same integration is already represented by `src/lib/supabase/client.js`. A second global stylesheet directory exists outside `src`. CSS and page controllers have grown very large. Some third-party runtime dependencies are loaded directly from CDNs instead of being declared and locked in the package manifest.
 
-**Critical backend source-of-truth issue:** the live database reports 97 applied migrations, while the repository contains 90 migration SQL files. 67 live migration names have a matching repository filename suffix, but a number of timestamps differ; 30 live migration records have no exact filename/version match. Eight applied Blog migrations have no corresponding migration file in the repository. This must be reconciled before any further database migration is prepared or applied. Do not replay, rename, delete, or regenerate migrations until the mapping is verified.
+**Critical backend source-of-truth issue:** the live database reports 97 migration records, while the repository contains 90 migration SQL files. 67 live migration names match repository basenames exactly; 19 of those have different timestamps. Another 30 live names have no exact basename match: 21 have candidate repository files documented in an older manifest, while 9 Blog migrations have no corresponding source file in the current repository. The repository has 23 files without an exact live-name match; 21 are candidates for those aliases and 2 remain unmatched. The older PR #3 manifest is stale and must not be used for replay. See [Security and Migration Reconciliation Audit](./PLUITS-SECURITY-AND-MIGRATION-RECONCILIATION-AUDIT-2026-11-13.md). Do not replay, rename, delete, or regenerate migrations until the mapping is verified.
 
 ## 2. Inventory measured from GitHub and Supabase
 
@@ -293,3 +293,31 @@ This report is a repository-wide structural inventory plus live Supabase metadat
 - The audit did not edit frontend source, database schema, policies, storage settings or production data.
 - Do not merge the audit branch or deploy production as part of this audit without explicit approval.
 - Any future source move must preserve the existing behavior and be verified with tests, build and route-wide preview.
+
+
+## 14. Deep audit addendum — 13 November 2026
+
+A read-only follow-up reviewed the live RLS definitions, the 22 public SECURITY DEFINER function bodies callable by authenticated users, private helper functions, Storage policies, the current migration-history comparison, and the frontend Supabase client/import graph.
+
+### Confirmed security findings
+
+1. Four `directory_media` policies contain the self-comparison `m.entity_id = m.entity_id`. This fails to bind membership to the media row's entity and creates cross-entity read/write/delete exposure. The repository migration source contains the same unqualified reference and needs a corrected forward migration after migration history is reconciled.
+2. Public and authenticated non-member read branches for `products` and `product_variants` do not require `stores.online_sales_enabled = true`, although the public marketplace view and product-image policy do. Direct table reads can therefore expose products/variants from stores that have disabled online sales.
+3. Live `user_post_directory_entities_public_read` does not filter the parent post to public visibility and published moderation status. The repository migration source includes a visibility check, so live/source drift also needs reconciliation.
+4. `private.get_user_profile_directory_by_ids` allows a reverse-follow relationship to expose fields of a private profile, while `private.get_user_profile_directory` requires the viewer to be an accepted follower. Product privacy semantics need confirmation.
+
+Detailed policy names, observed impact, recommended tests and priorities are recorded in [PLUITS Security and Migration Reconciliation Audit](./PLUITS-SECURITY-AND-MIGRATION-RECONCILIATION-AUDIT-2026-11-13.md).
+
+### Additional frontend findings
+
+- 11 page/bootstrap modules still create independent Supabase clients despite the shared client module.
+- `src/pages/search/discovery.js` already uses the shared client; `src/pages/account/account-context.js` has an unused Supabase SDK import.
+- Domain-level data services are not yet consistently separated from page controllers.
+- The source tree has 62 JS/MJS/TS files, 24 CSS files (759,742 raw bytes), 8 test files and 90 migration files.
+- `public/icons.svg`, `src/components/common/icons.js`, and `src/assets/hero.png` have no references in the inspected JS/TS/HTML source; do not delete them until the complete runtime/asset registry is approved.
+- Static Top Ten demo entries do not carry a visible DEMO label; legacy Blog content still names “Bali Bagus Editorial”.
+- The only workflow on `main` is the GitHub Pages deployment workflow. It runs tests and build before deployment but does not provide a separate branch preview environment.
+
+### Validation status
+
+This addendum does not claim a full runtime, browser, pixel, Android, performance or penetration test. No production database change, source-code change, PR merge, Pages deployment, test run or build was performed. Remaining validation gates are listed in §7 of the Security and Migration Reconciliation Audit.
