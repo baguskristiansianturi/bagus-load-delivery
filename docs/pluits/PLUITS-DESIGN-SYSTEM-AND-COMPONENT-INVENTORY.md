@@ -374,3 +374,8 @@ The repository already has a reusable brand renderer, shared SVG icon registry, 
 7. Color, typography and interaction states are still split across global, Social, Circle, public-home and workspace-local styles.
 
 **No production CSS, JavaScript, route, asset or page layout was changed for this appendix.** The next phase is to finish the import/caller and selector audit, then propose a named component/size/token registry. Token normalization and component extraction remain separate implementation tasks and must preserve current approved visuals.
+
+
+## Complete repository structure reference
+
+For the full verified source tree, route-to-controller map, current component catalogue, CSS/JavaScript file inventories, tests, carousel naming and proposed modular target structure, see [`PLUITS-COMPLETE-SOURCE-STRUCTURE-AND-COMPONENT-MAP.md`](./PLUITS-COMPLETE-SOURCE-STRUCTURE-AND-COMPONENT-MAP.md). The detailed map distinguishes existing source from proposed target folders and records remaining audit work explicitly.
