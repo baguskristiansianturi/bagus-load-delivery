@@ -1629,3 +1629,102 @@
   .ua-social-home .ua-story-group{flex-basis:64px!important}
   .ua-social-home .ua-story-group .ua-story-ring{width:58px!important;height:58px!important}
 }
+
+
+/* Canonical Story layout: one left-aligned horizontal rail at every viewport size.
+   Keep this block last so older responsive experiments cannot resize or offset it. */
+.ua-social-home .ua-circle-stories{
+  display:block;
+  width:auto !important;
+  max-width:100%;
+  min-width:0;
+  margin:0 0 18px !important;
+  padding:16px 0 10px !important;
+  overflow:hidden;
+}
+.ua-social-home .ua-circle-story-track{
+  display:flex;
+  flex-flow:row nowrap;
+  align-items:flex-start;
+  justify-content:flex-start !important;
+  direction:ltr;
+  width:100% !important;
+  min-width:0;
+  margin:0 !important;
+  padding:5px 0 12px !important;
+  gap:14px !important;
+  overflow-x:auto;
+  overflow-y:hidden;
+  scroll-snap-type:x proximity;
+  scroll-padding-inline:0;
+  overscroll-behavior-x:contain;
+  -webkit-overflow-scrolling:touch;
+}
+.ua-social-home .ua-circle-story-track > .ua-story-group{
+  display:flex;
+  flex:0 0 156px !important;
+  width:156px;
+  min-width:0;
+  max-width:156px;
+  margin:0 !important;
+  padding:0 !important;
+  align-items:center;
+  justify-content:flex-start;
+  gap:8px;
+  scroll-snap-align:start;
+}
+.ua-social-home .ua-circle-story-track > .ua-story-group .ua-story-ring{
+  flex:0 0 140px;
+  width:140px !important;
+  height:140px !important;
+  max-width:none;
+}
+.ua-social-home .ua-circle-story-track > .ua-story-group > strong{
+  display:block;
+  width:100%;
+  max-width:100% !important;
+  text-align:center;
+}
+@media(max-width:760px){
+  .ua-social-home .ua-circle-stories{
+    width:auto !important;
+    margin:0 0 15px !important;
+    padding:14px 0 8px !important;
+  }
+  .ua-social-home .ua-circle-story-track{
+    width:100% !important;
+    margin:0 !important;
+    padding:5px 0 12px !important;
+    gap:12px !important;
+  }
+  .ua-social-home .ua-circle-story-track > .ua-story-group{
+    flex:0 0 124px !important;
+    width:124px;
+    max-width:124px;
+    gap:6px;
+  }
+  .ua-social-home .ua-circle-story-track > .ua-story-group .ua-story-ring{
+    flex-basis:112px;
+    width:112px !important;
+    height:112px !important;
+  }
+  .ua-social-home .ua-circle-story-track > .ua-story-group > strong{
+    max-width:124px !important;
+    font-size:10px;
+  }
+}
+@media(max-width:380px){
+  .ua-social-home .ua-circle-story-track{
+    gap:10px !important;
+  }
+  .ua-social-home .ua-circle-story-track > .ua-story-group{
+    flex-basis:116px !important;
+    width:116px;
+    max-width:116px;
+  }
+  .ua-social-home .ua-circle-story-track > .ua-story-group .ua-story-ring{
+    flex-basis:106px;
+    width:106px !important;
+    height:106px !important;
+  }
+}
