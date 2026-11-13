@@ -43,3 +43,13 @@
 ## Audit dampak modul sebelum perubahan
 
 Sebelum mengubah komponen bersama, rujuk `docs/pluits/FRONTEND-MODULE-CONTRACTS.md`. Perubahan pada router, header, navigasi mobile, ikon, token desain, atau CSS global wajib mengaudit seluruh pemanggil dan halaman saudara, bukan hanya halaman yang sedang dibuka. Setelah perubahan, jalankan `npm test` dan `npm run build`, tinjau diff, lalu periksa rute publik, feed, profil, pengaturan, DM, notifikasi, pencarian, GeoDirectory, Marketplace, dan Trip pada mobile serta desktop. Deployment tidak boleh dinyatakan selesai sebelum workflow Pages sukses.
+
+
+## Resolusi instruksi berdasarkan nama komponen
+
+- Baca `docs/pluits/CANONICAL-COMPONENT-OWNERSHIP-AND-REQUEST-LANGUAGE.md` dan registry sebelum mengubah komponen.
+- Instruksi yang menyebut nama komponen unik (misalnya “Post Instagram”) diarahkan ke canonical owner, bukan ke halaman tempat komponen sedang terlihat.
+- Instruksi generik yang memiliki beberapa owner (misalnya “sidebar”) wajib diklarifikasi. Jangan memilih workspace berdasarkan tebakan atau konteks halaman.
+- Sebelum edit, laporkan target, owner, seluruh consumer yang terdampak, batas perubahan dan bagian desain yang harus dipertahankan.
+- Setelah edit, pastikan seluruh consumer memakai public contract yang sama; jangan membuat salinan per halaman.
+- Catat source path dan status hanya setelah diverifikasi di repository. Status “Audit required” tidak boleh diperlakukan sebagai bukti bahwa ekstraksi sudah selesai.
