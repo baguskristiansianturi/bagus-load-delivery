@@ -328,6 +328,18 @@ Font stack menyebut Inter, tetapi file font/provider yang dibundel tidak ditemuk
 - Repository memiliki 8 test file berbasis Node test runner.
 - `npm test` menjalankan production-surface verification dan test runner.
 - `npm run build` menjalankan Vite build.
+
+Delapan test file yang ada saat ini mencakup:
+- auth registration dan routing;
+- brand/profile settings;
+- lazy route loading;
+- social navigation dan beberapa source-level assertions untuk Home, Circle, Inbox, dan GeoDirectory;
+- app-download section;
+- media MIME/extension validation;
+- people recommendation ranking/rendering;
+- signed URL batching/fallback.
+
+Cakupan tersebut berguna, tetapi belum mencakup integration test RLS lintas-role, SQL RPC lifecycle, Storage authorization, Realtime delivery, Marketplace/Seller/Trip/Blog controller behavior, atau browser end-to-end route journeys. Sebagian besar test menggunakan Node test runner dan pembacaan source; itu bukan pengganti UAT browser atau Supabase local integration.
 - Workflow `.github/workflows/deploy.yml` menjalankan install, test, build, pemeriksaan `dist/index.html`, lalu deploy GitHub Pages pada push `main` atau manual dispatch.
 - Tidak ditemukan workflow preview terpisah untuk branch. Menjalankan workflow Pages secara manual pada branch kerja dapat mengganti situs Pages yang sama; jangan gunakan itu sebagai preview.
 - Audit ini belum menjalankan `npm test`, `npm run build`, browser UAT, pixel inspection, atau pengukuran mobile. Percobaan clone repository untuk menjalankan tes lokal gagal karena environment eksekusi tidak dapat me-resolve `github.com`; karena itu tidak ada klaim bahwa tes/build lulus.
