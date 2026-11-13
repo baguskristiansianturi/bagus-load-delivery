@@ -61,6 +61,14 @@ The following folders now exist as tracked architecture scaffolding. A README in
 | `src/config/` | Reserved; extraction not started | Existing route/config owners |
 | `src/design-system/` | Reserved; existing styles remain authoritative | `src/styles/`, `src/style.css` |
 | `src/platform/` | Reserved; browser adapters not extracted | Existing browser-facing owners |
+| `src/components/layout/` | Planned shared layout primitives | Existing page/workspace shells |
+| `src/components/feedback/` | Planned loading/empty/error/toast components | Existing page and feature states |
+| `src/components/primitives/` | Planned reusable controls | `components/common/` and feature-local controls |
+| `src/services/auth/` | Planned auth/session services | `features/auth/`, `app/`, page controllers |
+| `src/services/realtime/` | Planned subscription lifecycle | `main.js`, `pages/messages/`, `pages/account/` |
+| `src/services/offline/` | Planned local persistence/outbox | `pages/messages/`, `pages/blog-studio/` |
+| `src/services/repositories/` | Planned domain data-access modules | Existing page controllers |
+| `src/services/storage/` | Implemented signed URL/storage helpers | `services/storage/`
 | `src/features/feed/` | Planned extraction | `pages/home`, `pages/account`, `features/public-home` |
 | `src/features/notifications/` | Planned extraction | `pages/account` |
 | `src/features/store/` | Planned extraction | `pages/marketplace` |
@@ -68,4 +76,4 @@ The following folders now exist as tracked architecture scaffolding. A README in
 | `src/features/directory/` | Planned extraction | `pages/directory` |
 | `src/features/trips/` | Planned extraction | `pages/trip` |
 
-The first enforcement gate is `npm run verify:module-boundaries`, included in `npm test`. It blocks upward imports from shared components/services/library adapters and direct cross-feature private imports. Existing runtime files remain in place until a feature-by-feature extraction is covered by route and behavior tests.
+The enforcement gate is `npm run verify:module-boundaries`, included in `npm test`. It blocks upward imports from shared components/services/library adapters, private direct cross-feature imports, and new Supabase client instances outside `src/lib/supabase/client.js`. Eleven runtime client instances now use that singleton. Data access remains in some page controllers and is the next incremental service-extraction task. Existing runtime files remain in place until each extraction is covered by route and behavior tests.
