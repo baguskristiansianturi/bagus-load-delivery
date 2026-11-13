@@ -1,14 +1,12 @@
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { supabase, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from '../../lib/supabase/client.js';
 import { createMediaUploader } from '../../features/media/storage-upload.js';
 import { renderSocialHeader, renderSocialMobileNav } from '../../components/social/navigation.js';
 import { createSignedUrlMap } from '../../services/storage/signed-urls.js';
 import './blog-studio.css';
 
-const DB_URL = 'https://ytndswhqxayqpftszwfh.supabase.co';
-const DB_KEY = 'sb_publishable_kOUbKBYg88nXgz8FQRSnvA_k0hvKY65';
-const supabase = createClient(DB_URL, DB_KEY);
+
 const BUCKET='pluits-user-media';
-const uploadMedia=createMediaUploader({supabase,bucket:BUCKET,supabaseUrl:DB_URL,publishableKey:DB_KEY});
+const uploadMedia=createMediaUploader({supabase,bucket:BUCKET,supabaseUrl:SUPABASE_URL,publishableKey:SUPABASE_PUBLISHABLE_KEY});
 let blogProfile=null,categories=[];
 let activeUser=null,activeProfile=null,activeTab='posts',activeView='dashboard',editingId=null,coverObjectUrl='',selectedCoverFile=null,galleryItems=[],supportingObjectUrls=[],pendingSupportingFiles=[],toastTimer=null;
 const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));

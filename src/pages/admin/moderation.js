@@ -1,5 +1,5 @@
-import {createClient} from 'https://esm.sh/@supabase/supabase-js@2';
-const db=createClient('https://ytndswhqxayqpftszwfh.supabase.co','sb_publishable_kOUbKBYg88nXgz8FQRSnvA_k0hvKY65');
+import { supabase as db } from '../../lib/supabase/client.js';
+
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export function moderationPage(){
  return `<main class="pl-mod"><header><a href="#/">PLUITS <span>MODERATION</span></a><a href="#/account/profile">Kembali ke akun</a></header><section><small>TRUST & SAFETY</small><h1>Moderation Center</h1><p>Antrean laporan konten, akun, entitas GeoDirectory, dan pengumuman resmi Pluits.</p>

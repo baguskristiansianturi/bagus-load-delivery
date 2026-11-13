@@ -1,6 +1,4 @@
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-
-const presenceDb = createClient('https://ytndswhqxayqpftszwfh.supabase.co', 'sb_publishable_kOUbKBYg88nXgz8FQRSnvA_k0hvKY65');
+import { supabase as presenceDb } from './lib/supabase/client.js';
 let globalPresenceChannel = null;
 let activePresenceUserId = null;
 

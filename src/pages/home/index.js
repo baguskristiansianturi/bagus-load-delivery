@@ -1,9 +1,9 @@
 import {bindPublicNavbar} from '../../features/public-home/navbar.js';
 import {homeNearbySection,bindHomeNearby} from '../directory/index.js';
 import {createSignedUrlMap} from '../../services/storage/signed-urls.js';
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { supabase as db } from '../../lib/supabase/client.js';
 import {renderPublicHomeLayout} from '../../features/public-home/layout.js';
-const db=createClient('https://ytndswhqxayqpftszwfh.supabase.co','sb_publishable_kOUbKBYg88nXgz8FQRSnvA_k0hvKY65');
+
 const safe=v=>String(v??'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
 export function home(){
  const guestMode=(location.hash||'').startsWith('#/guest');

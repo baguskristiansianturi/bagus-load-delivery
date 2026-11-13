@@ -1,11 +1,8 @@
 import './seller.css';
 import {renderBrandLogo} from '../../components/common/brand.js';
 import {renderSellerNavigation} from '../../features/seller/seller-navigation.js';
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { supabase, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from '../../lib/supabase/client.js';
 
-const SUPABASE_URL = 'https://ytndswhqxayqpftszwfh.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_kOUbKBYg88nXgz8FQRSnvA_k0hvKY65';
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const money = n => new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(Number(n||0));
 const esc = s => String(s ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
