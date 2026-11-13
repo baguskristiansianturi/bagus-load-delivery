@@ -1224,3 +1224,15 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - **Biaya:** Supabase development branch tidak dibuat karena ada biaya berulang US$0.01344/jam. Tidak ada biaya baru yang disetujui atau dijalankan.
 - **Status:** ARCHITECTURE SCAFFOLDING IMPLEMENTED / MODULE BOUNDARY CI TESTED / PR BUILD TESTED. Bukan FULLY MODULAR, bukan HOSTED PREVIEW READY, bukan BACKEND RELEASE READY, dan bukan founder ACCEPTED.
 - **Next:** lakukan extraction satu domain pada satu waktu (mulai shared Supabase client/service boundary), dengan tes consumer/route sebelum dan sesudah. Selesaikan preview hosting hanya dengan jalur gratis yang terpisah dari production; jangan menggunakan live Supabase sebagai backend preview.
+
+
+## CP-075 — Supabase client consolidation across frontend runtime (13 November 2026)
+
+- **Scope:** menghilangkan Supabase client independen agar auth/session/channel state konsisten dan konfigurasi environment berasal dari satu sumber.
+- **Frontend IMPLEMENTED:** 11 runtime client instances di `src/main.js`, Account, Home, Messages, Marketplace, Directory, Trip, Seller, Admin Moderation, Blog Studio, dan Misc sekarang menggunakan singleton `supabase` dari `src/lib/supabase/client.js`. Account Context tidak lagi mengimpor SDK client yang tidak dipakai. URL dan publishable key untuk media uploader memakai export konfigurasi dari shared client.
+- **Architecture guard:** `scripts/verify-module-boundaries.mjs` sekarang juga menolak `createClient` atau import langsung SDK Supabase di luar file shared client.
+- **Automated verification:** [Actions run 43447480093 — SUCCESS](https://github.com/baguskristiansianturi/pluits/actions/runs/43447480093), commit `29e08526ee3076fb9d2c16ceb0110ad49ef49459`; production-surface check PASS; module boundary + single-client check PASS across 53 source modules; 39 Node tests PASS, 0 FAIL; Vite build PASS; `dist/index.html` PASS; Pages artifact upload PASS; production deploy SKIPPED.
+- **Artifact:** `14049036024`, expires 14 November 2026 at 14:56 UTC.
+- **Status:** SHARED CLIENT CONSOLIDATION IMPLEMENTED / AUTOMATED TESTED. No production deploy, no database mutation, and no user data change.
+- **Belum selesai:** pemindahan query/mutation dari page controllers ke repository/service modules; pemisahan realtime lifecycle dari app bootstrap; full-site browser preview; backend dev environment tanpa biaya; migration reconciliation dan RLS regression fixes.
+- **Next:** mulai service extraction pada domain kecil dengan kontrak eksplisit dan tes. Pertahankan page controller sebagai route composition owner; jangan pindahkan seluruh file besar sekaligus.
