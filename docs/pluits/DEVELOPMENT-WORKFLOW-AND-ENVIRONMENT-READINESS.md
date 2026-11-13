@@ -66,7 +66,9 @@ The existing runtime is still being modularized incrementally. Eleven runtime Su
 
 Production deployment runs only on:
 - a push to `main`; or
-- an explicit manual workflow dispatch.
+- an explicit manual workflow dispatch **from `main`**.
+
+The deploy step also checks `github.ref == 'refs/heads/main'`. A manual dispatch from a development branch may build and upload an artifact, but it cannot deploy Pages. A regression test in `tests/app/deployment-workflow.test.js` protects this condition.
 
 A pull request event must never deploy to the production Pages environment. Merge to `main` is a release action and requires explicit product-owner approval after preview/UAT.
 
