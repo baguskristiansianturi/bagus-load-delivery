@@ -50,3 +50,8 @@ A request such as “fix Instagram Post” targets the canonical Post feature wh
 Distinct search intents (Friends/People, Content, Product, Contact/Inbox) have separate feature owners, filters, query semantics, result behavior and styles. Share only low-level primitives whose contracts genuinely match. Similar appearance alone is not a reason to share a complete component or workspace navigation.
 
 Keep the registry current with actual verified source paths, consumers, dependencies, tests and status. Never label a proposed folder as an existing implementation. Preserve approved layouts and perform changes incrementally, auditing all consumers whenever a canonical shared component changes.
+
+
+## Design-system and component inventory (mandatory)
+
+Before any page or component UI change, read `docs/pluits/PLUITS-DESIGN-SYSTEM-AND-COMPONENT-INVENTORY.md`. Treat it as the source-backed inventory and audit baseline for brand assets, typography, colors, geometry, icons and workspace components. Distinguish global tokens from scoped/local and legacy values; do not promote a found CSS value into a universal standard without consumer audit. Record missing/unverified entries honestly and update the inventory as components are mapped. New pages must reuse the approved brand asset and relevant semantic tokens, and must not invent fonts, colors, type sizes or geometry independently.
