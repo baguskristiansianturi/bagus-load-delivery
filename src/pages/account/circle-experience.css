@@ -2119,43 +2119,27 @@
 }
 
 
-/* Story avatars: override the earlier three-column mobile sizing.
-   Keep stories as a horizontal rail so the larger circles are not squeezed. */
+/* Story rail: show about 3.5 avatars at once, with a narrow gap. */
 @media(max-width:760px){
   .ua-social-home .ua-circle-story-track{
-    gap:10px!important;
+    gap:4px!important;
   }
   .ua-social-home .ua-circle-story-track>.ua-story-group{
-    flex:0 0 156px!important;
-    width:156px!important;
-    min-width:156px!important;
-    max-width:156px!important;
-    gap:8px!important;
+    flex:0 0 calc((100vw - (2 * var(--pl-rail-gutter,14px)) - 12px) / 3.5)!important;
+    width:calc((100vw - (2 * var(--pl-rail-gutter,14px)) - 12px) / 3.5)!important;
+    min-width:calc((100vw - (2 * var(--pl-rail-gutter,14px)) - 12px) / 3.5)!important;
+    max-width:calc((100vw - (2 * var(--pl-rail-gutter,14px)) - 12px) / 3.5)!important;
+    gap:4px!important;
   }
   .ua-social-home .ua-circle-story-track>.ua-story-group .ua-story-ring{
-    flex:0 0 140px!important;
-    width:140px!important;
-    height:140px!important;
-    max-width:140px!important;
+    flex:0 0 calc(100% - 4px)!important;
+    width:calc(100% - 4px)!important;
+    height:auto!important;
+    aspect-ratio:1!important;
+    max-width:none!important;
   }
   .ua-social-home .ua-circle-story-track>.ua-story-group>strong{
-    max-width:156px!important;
-  }
-}
-@media(max-width:380px){
-  .ua-social-home .ua-circle-story-track>.ua-story-group{
-    flex-basis:148px!important;
-    width:148px!important;
-    min-width:148px!important;
-    max-width:148px!important;
-  }
-  .ua-social-home .ua-circle-story-track>.ua-story-group .ua-story-ring{
-    flex-basis:132px!important;
-    width:132px!important;
-    height:132px!important;
-    max-width:132px!important;
-  }
-  .ua-social-home .ua-circle-story-track>.ua-story-group>strong{
-    max-width:148px!important;
+    max-width:100%!important;
+    font-size:11px!important;
   }
 }
