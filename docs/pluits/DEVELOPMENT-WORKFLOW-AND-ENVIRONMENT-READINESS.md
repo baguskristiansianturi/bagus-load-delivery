@@ -56,7 +56,7 @@ The architecture follows conventional ownership:
 
 The current branch now tracks README scaffolding for target folders that do not yet have runtime implementations. Each README identifies the existing runtime owner. A folder or README is not proof that a feature has been implemented.
 
-`scripts/verify-module-boundaries.mjs` is added to check dependency direction. `npm test` invokes it alongside the existing production-surface verification and Node tests. The guard is intended to prevent shared components/services/library adapters from importing higher-level UI and to prevent private direct imports between feature modules. The latest CI run must verify this new guard.
+`scripts/verify-module-boundaries.mjs` is added to check dependency direction. `npm test` invokes it alongside the existing production-surface verification and Node tests. The guard is intended to prevent shared components/services/library adapters from importing higher-level UI and to prevent private direct imports between feature modules. The guard syntax correction is committed at `4c94c67`; its first complete CI run is still pending.
 
 The existing runtime is still being modularized incrementally. In particular, the architecture audit identified multiple page controllers that instantiate Supabase independently despite the shared client. Consolidate these only as a tested domain-by-domain refactor; do not mass-move files.
 
