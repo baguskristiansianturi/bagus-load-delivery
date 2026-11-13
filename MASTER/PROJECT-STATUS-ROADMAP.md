@@ -1209,3 +1209,18 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - Status: IMPLEMENTED, DEPLOYED. Android UAT NOT TESTED; founder ACCEPTANCE PENDING.
 - Known gaps: Story seen receipts/counts/reactions/comments/replies and notification deep links; profile-owned Story management; social-proof cards; real area Top 10/important-event ranking; AI moderation pipelines; business request workspace; user feedback center. These are not represented as active features.
 - Technical spec: docs/pluits/CIRCLE-AND-JELAJAH-EXPERIENCE-2026-11-12.md.
+
+
+## CP-074 — Modular frontend scaffolding, public feature contracts, and PR validation (13 November 2026)
+
+- **Founder direction:** tuntaskan fondasi alur modular dan workflow development tanpa biaya tambahan; jangan menyentuh production atau membuat environment berbayar.
+- **Architecture scaffolding IMPLEMENTED:** menambahkan README status/ownership pada `src/config/`, `src/design-system/`, `src/platform/`, serta target feature `feed`, `notifications`, `store`, `checkout`, `directory`, dan `trips`. Folder ini adalah roadmap ownership, bukan klaim runtime feature sudah dibuat. Pemilik runtime lama ditulis di setiap README.
+- **Public feature contracts IMPLEMENTED:** menambahkan `src/features/profile/index.js` dan `src/features/app-download/index.js`; dua consumer di Discovery dan Public Home sekarang menggunakan public entry point, bukan file internal feature lain.
+- **Automated architecture guard IMPLEMENTED:** `scripts/verify-module-boundaries.mjs` memeriksa 53 modul JavaScript/MJS dan menolak dependency ke lapisan UI yang lebih tinggi serta direct private cross-feature imports. `npm test` menjalankan production-surface verifier, module-boundary verifier, dan Node test suite.
+- **Automated verification:** 39 tests PASS, 0 FAIL; module-boundary verification PASS (53 source modules); Vite production build PASS; `dist/index.html` PASS; Pages artifact upload PASS. Production deploy step SKIPPED sebagaimana mestinya untuk pull request.
+- **GitHub Actions:** [run 43446620778 — SUCCESS](https://github.com/baguskristiansianturi/pluits/actions/runs/43446620778), commit `1219fe3f7c91acdda827cf62ee793d6f817ec402`. Artifact ID `14047364889`; masa berlaku sampai 14 November 2026 14:50 UTC.
+- **PR:** [#8 — Audit PLUITS workflow, architecture and release readiness](https://github.com/baguskristiansianturi/pluits/pull/8), tetap DRAFT dan belum merge.
+- **Belum selesai:** pemindahan seluruh data access dari page controllers ke services; konsolidasi beberapa Supabase client independen; pemisahan runtime penuh untuk Account/Marketplace/Trip/Directory/Inbox; full-site hosted preview yang bisa dibuka melalui browser ponsel; backend development environment tanpa biaya; rekonsiliasi 97 live migration records dengan 90 file SQL; perbaikan RLS dan regression matrix. Tidak ada produksi deploy, database mutation, atau perubahan data pengguna.
+- **Biaya:** Supabase development branch tidak dibuat karena ada biaya berulang US$0.01344/jam. Tidak ada biaya baru yang disetujui atau dijalankan.
+- **Status:** ARCHITECTURE SCAFFOLDING IMPLEMENTED / MODULE BOUNDARY CI TESTED / PR BUILD TESTED. Bukan FULLY MODULAR, bukan HOSTED PREVIEW READY, bukan BACKEND RELEASE READY, dan bukan founder ACCEPTED.
+- **Next:** lakukan extraction satu domain pada satu waktu (mulai shared Supabase client/service boundary), dengan tes consumer/route sebelum dan sesudah. Selesaikan preview hosting hanya dengan jalur gratis yang terpisah dari production; jangan menggunakan live Supabase sebagai backend preview.
