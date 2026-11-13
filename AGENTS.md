@@ -42,3 +42,12 @@ Record exact commit SHA, workflow run, build/test result, deployment result, and
 - Never edit a sibling page's component or CSS as a side effect. Shared component changes require a consumer audit.
 - Keep page composition in pages/, behavior-rich domain UI in features/, true shared primitives in components/, backend communication in services/, and only truly global rules in styles/.
 - Do not declare the application fully modular until the route/component/style/service ownership audit and regression tests support that claim.
+
+
+## Current-only source directory and technical naming
+- `src/pages/README.md` is the current page/route directory. It must list verified routes and their actual runtime owners only.
+- Do not create empty source folders or README placeholders for future ideas, unapproved pages, speculative Marketplace expansion or a future Inbox workspace. Keep those ideas in `IDEAS/IDEA-BACKLOG.md` or the approved product roadmap.
+- Create a Page folder only when a canonical page is approved and implementation begins. If several routes share one controller, record them as route states and identify that shared controller honestly.
+- Do not create Page folders for components/features such as Post Card, Story Rail, People Recommendations, Contact List or icons.
+- Use standard web/product terminology. PLUITS-specific voice-command names are aliases and must be explicitly marked as such.
+- Before changing a page, map its route, page controller, template renderer, event handlers/runtime, stylesheets, design tokens, components, services, imports and consumers. Mark unverified links as Audit required; never guess.

@@ -43,3 +43,32 @@
 ## Audit dampak modul sebelum perubahan
 
 Sebelum mengubah komponen bersama, rujuk `docs/pluits/FRONTEND-MODULE-CONTRACTS.md`. Perubahan pada router, header, navigasi mobile, ikon, token desain, atau CSS global wajib mengaudit seluruh pemanggil dan halaman saudara, bukan hanya halaman yang sedang dibuka. Setelah perubahan, jalankan `npm test` dan `npm run build`, tinjau diff, lalu periksa rute publik, feed, profil, pengaturan, DM, notifikasi, pencarian, GeoDirectory, Marketplace, dan Trip pada mobile serta desktop. Deployment tidak boleh dinyatakan selesai sebelum workflow Pages sukses.
+
+
+## Resolusi instruksi berdasarkan nama komponen
+
+- Baca `docs/pluits/CANONICAL-COMPONENT-OWNERSHIP-AND-REQUEST-LANGUAGE.md` dan registry sebelum mengubah komponen.
+- Instruksi yang menyebut nama komponen unik (misalnya “Post Instagram”) diarahkan ke canonical owner, bukan ke halaman tempat komponen sedang terlihat.
+- Instruksi generik yang memiliki beberapa owner (misalnya “sidebar”) wajib diklarifikasi. Jangan memilih workspace berdasarkan tebakan atau konteks halaman.
+- Sebelum edit, laporkan target, owner, seluruh consumer yang terdampak, batas perubahan dan bagian desain yang harus dipertahankan.
+- Setelah edit, pastikan seluruh consumer memakai public contract yang sama; jangan membuat salinan per halaman.
+- Catat source path dan status hanya setelah diverifikasi di repository. Status “Audit required” tidak boleh diperlakukan sebagai bukti bahwa ekstraksi sudah selesai.
+
+
+## Pemeriksaan design system sebelum membuat/mengubah UI
+
+- Baca `docs/pluits/PLUITS-DESIGN-SYSTEM-AND-COMPONENT-INVENTORY.md` sebelum membuat halaman, section, komponen, atau mengubah styling.
+- Periksa font family, semantic type role, size, weight, line-height, letter-spacing, warna, logo, ikon, spacing, radius, shadow, layout dan breakpoint yang sudah terdaftar.
+- Bedakan global token, nilai lokal feature, dan legacy value. Jangan menganggap angka CSS yang ditemukan otomatis menjadi standar resmi.
+- Jika token belum tersedia, cari token semantic terdekat dan dokumentasikan kebutuhan baru; jangan membuat nilai acak atau menambahkan override lintas halaman.
+- Perubahan token bersama wajib menelusuri seluruh consumer dan menguji workspace saudara.
+- Update inventory ketika komponen, owner, consumer, kontrak, token atau status audit berubah.
+
+
+## Current-only Page Directory and terminology
+- Use `src/pages/README.md` as the current-only page and route directory. It records real routes and their actual controller owners; it is not a speculative sitemap.
+- Do not create future/empty page folders or README placeholders. Future ideas belong in the Idea Backlog or approved product roadmap.
+- A route rendered inside a shared controller must be recorded as a route state with that actual controller, not represented as an already-separated runtime.
+- Do not create Page folders for reusable components or features. Map those to their actual `features/` or `components/` owner.
+- Use standard terms (Page, Route, Runtime, Event Handler, Component, Feature Module, Stylesheet, Design Token, Icon Registry, Contact List, Conversation List). Mark any PLUITS-specific wording as an alias.
+- Use `docs/pluits/PLUITS-TECHNICAL-TERMINOLOGY-AND-RUNTIME-MAP.md` to understand the current SPA runtime, icon sources, Inbox contact/conversation boundaries and CSS ownership levels.

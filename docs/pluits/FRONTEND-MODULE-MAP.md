@@ -53,3 +53,17 @@ Important: this is an incremental migration. Account, Marketplace, Trip, Seller 
 ## Public homepage composition — 12 November 2026
 
 `src/features/public-home/layout.js` is the page-owned composition layer. `src/pages/home/index.js` owns route/auth/data behavior only. See `src/features/public-home/README.md` and `docs/pluits/PAGE-COMPONENT-OWNERSHIP-AUDIT-2026-11-12.md` for the component ownership table. Public navbar/search behavior must not leak into Marketplace, Trip, Directory or signed-in social workspaces.
+
+## Design system and component inventory
+
+Before any visual implementation or UI change, consult [PLUITS-DESIGN-SYSTEM-AND-COMPONENT-INVENTORY.md](./PLUITS-DESIGN-SYSTEM-AND-COMPONENT-INVENTORY.md). It maps the current source-backed brand, typography, colors, shared geometry, icon registry and workspace components, while marking partial extraction and unresolved audit debt. Do not treat local or legacy CSS values as approved global tokens.
+
+
+## Complete source and component catalogue
+
+Use [`PLUITS-COMPLETE-SOURCE-STRUCTURE-AND-COMPONENT-MAP.md`](./PLUITS-COMPLETE-SOURCE-STRUCTURE-AND-COMPONENT-MAP.md) as the detailed source-tree, route ownership, CSS/JavaScript inventory, component status, carousel taxonomy and target modularization reference. Do not treat proposed target paths as existing modules until extracted and verified.
+
+
+## Human-readable technical terminology
+
+For the current SPA runtime, standard names for HTML/template, JavaScript runtime, CSS, design tokens, icon registries, contacts and conversations, see [PLUITS Technical Terminology and Runtime Map](./PLUITS-TECHNICAL-TERMINOLOGY-AND-RUNTIME-MAP.md). Use it alongside the current-only [Page Directory](../../src/pages/README.md). Do not create source folders for unimplemented ideas.
