@@ -491,7 +491,7 @@ async function feedPage(){
   const filterNav="<div class='ua-explore-toolbar' aria-label='Navigasi konten Circle'>"+typeNav+"</div>";
  const empty='Belum ada postingan yang cocok dengan pilihan ini.';
  const action="";
- const homeHeading='';
+ const homeHeading=''; // ua-home-following heading intentionally omitted so post cards begin directly below the tabs.
  const discoverMore="<section class='ua-home-discover-more'><div class='ua-home-section-heading'><div><h2>Temukan Lebih Banyak</h2><small>Perluas koneksi dan temukan cerita baru di PLUITS.</small></div></div><div class='ua-home-discover-links'><a href='#/search'><span>Orang &amp; komunitas</span><b>Jelajahi ↗</b></a><a href='#/places'><span>Tempat dan lingkungan</span><b>Jelajahi ↗</b></a></div></section>";
  let productCards='';
  try{
