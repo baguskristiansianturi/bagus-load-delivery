@@ -489,7 +489,8 @@ async function feedPage(){
  const contentTabs=[['all','Semua'],['reel','Reel'],['live','Live'],['blog','Blog']];
  const typeNav="<nav class='ua-content-tabs' aria-label='Jenis konten'>"+contentTabs.map(([key,label])=>"<button type='button' data-content-type='"+key+"' class='"+(exploreContentType===key?'is-active':'')+"' aria-pressed='"+(exploreContentType===key)+"'>"+label+"</button>").join('')+"<button type='button' class='ua-feed-refresh' data-feed-refresh aria-label='Muat ulang postingan' title='Muat ulang'>↻</button></nav>";
  // .ua-explore-filters is intentionally omitted: content type tabs are the only feed navigation.
- const filterNav="<div class='ua-explore-toolbar' aria-label='Navigasi konten Circle'>"+typeNav+"</div>";
+ // Circle Explore is discovery-only; omit the .ua-home-compose-prompt creation entry point.
+  const filterNav="<div class='ua-explore-toolbar' aria-label='Navigasi konten Circle'>"+typeNav+"</div>";
  const empty='Belum ada postingan yang cocok dengan pilihan ini.';
  const action="";
  const homeHeading="<section class='ua-home-following' id='ua-circle-feed-start'><div class='ua-home-section-heading'><div><h2>Postingan</h2><p>Semua cerita dari circle dan topik yang Anda minati.</p></div></div></section>";
