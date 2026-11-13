@@ -272,18 +272,41 @@ CSS import ownership yang terverifikasi:
 
 ### 5.2 Dependency eksternal
 
-| Dependency / provider | Pemakaian source | Status pinning / catatan |
-|---|---|---|
-| Supabase JS | Auth, Data API, Storage, Realtime | `https://esm.sh/@supabase/supabase-js@2`; major version floating dan tidak tercantum sebagai package dependency |
-| tus-js-client | Resumable upload | `4.3.1` dari esm.sh; tidak dikelola lewat package lock |
-| Leaflet | Location picker/account | `1.9.4` dari unpkg |
-| MapLibre GL JS | GeoDirectory map | `6.17.0` dari unpkg |
-| OpenStreetMap tiles | Peta | Eksternal; attribution dan usage policy harus dipertahankan |
-| Nominatim | Reverse geocoding | Eksternal; perlu rate limit/cache dan peninjauan usage policy |
-| Unsplash | Hero, Top Ten, legacy blog imagery | URL remote; provenance/licence setiap foto belum diregistrasi lokal |
-| Random User | Foto demo People Recommendations | URL remote; hanya untuk data demo, bukan identitas pengguna terverifikasi |
+| Dependency / provider | Exact source/version | License / terms | Status di PLUITS |
+|---|---|---|---|
+| Supabase JS | `https://esm.sh/@supabase/supabase-js@2` | MIT | Remote import; major version floating, bukan package dependency/lockfile |
+| tus-js-client | `https://esm.sh/tus-js-client@4.3.1` | MIT | Remote import; versi dipin di URL, tidak dikelola package lock |
+| Leaflet | `https://unpkg.com/leaflet@1.9.4/dist/leaflet.js` + CSS | BSD-2-Clause | Remote import di Account; tidak dibundel lokal |
+| MapLibre GL JS | `https://unpkg.com/maplibre-gl@6.17.0/dist/maplibre-gl.mjs` + CSS | BSD-3-Clause | Remote import di GeoDirectory; tidak dibundel lokal |
+| OpenStreetMap raster tiles | `https://tile.openstreetmap.org/{z}/{x}/{y}.png` | Data OSM di bawah ODbL; tile server tunduk pada OSMF Tile Usage Policy | Remote; directory memakai URL resmi dan attribution contributors |
+| Nominatim | `https://nominatim.openstreetmap.org/reverse` | OSMF Nominatim Usage Policy | Remote reverse geocoding; satu pemanggilan per page-session, belum ada throttle/cache persisten |
+| Unsplash | `https://images.unsplash.com/photo-{id}...` | Unsplash License: penggunaan komersial/nonkomersial umumnya diizinkan; tidak boleh mengompilasi gambar untuk meniru layanan kompetitor; hak model/properti tetap perlu diperhatikan | Remote image URLs; tidak ada salinan lokal terdaftar |
+| Random User / UI Faces | `https://randomuser.me/api/portraits/{gender}/{id}.jpg` | Situs menyatakan foto dipilih dari bagian UI Faces yang diotorisasi; tidak ditemukan lisensi terpisah untuk setiap foto di source | Remote demo portraits; jangan dianggap foto/akun pengguna nyata atau dipakai sebagai konten produksi terverifikasi |
 
-Font stack menyebut Inter, tetapi file font/provider yang dibundel tidak ditemukan pada pemeriksaan source ini. Tidak ada klaim performa atau lisensi yang dibuat tanpa pengukuran dan verifikasi provider.
+Rujukan lisensi dan kebijakan resmi:
+- [Unsplash License](https://unsplash.com/license) dan [Unsplash releases/trademarks guidance](https://help.unsplash.com/en/articles/2612329-releases-and-trademarks).
+- [OpenStreetMap Tile Usage Policy](https://operations.osmfoundation.org/policies/tiles/) dan [Nominatim Usage Policy](https://operations.osmfoundation.org/policies/nominatim/).
+- [MapLibre GL JS BSD-3-Clause](https://github.com/maplibre/maplibre-gl-js), [Leaflet BSD-2-Clause](https://github.com/Leaflet/Leaflet/blob/main/LICENSE), [tus-js-client MIT](https://github.com/tus/tus-js-client), [Supabase JS MIT](https://github.com/supabase/supabase-js/blob/master/LICENSE).
+
+### 5.2.1 Pemetaan aset gambar eksternal
+
+Semua URL di bawah ini remote dan tidak tersimpan sebagai aset PLUITS lokal:
+
+- Global/legacy hero CSS: `photo-1541888946425-d81bb19240f5` (diulang pada beberapa selector).
+- Public Home hero: `photo-1518837695005-2083093ee35b`.
+- Public Home discovery/stories/marketplace: `photo-1507525428034-b723cf961d3e`, `photo-1517248135467-4c7edcad34c4`, `photo-1441986300917-64674bd600d8`, `photo-1521737711867-e3b97375f902`, `photo-1470252649378-9c29740c9fa8`, `photo-1542838132-92c53300491e`, `photo-1552566626-52f8b828add9`, `photo-1530789253388-582c481c54b0`.
+- Top Ten static cards: `photo-1555939594-58d7cb561ad1`, `photo-1607623814075-e51df1bdc82f`, `photo-1510414842594-a61c69b5ae57`, `photo-1544551763-46a013bb70d5`, `photo-1537996194471-e657df975ab4`, `photo-1514525253161-7a46d19cd819`, `photo-1507525428034-b723cf961d3e`, `photo-1523275335684-37898b6baf30`, `photo-1521737711867-e3b97375f902`, `photo-1500530855697-b586d89ba3ee`.
+- Legacy public Blog: `photo-1504307651254-35680f356dfd`, `photo-1541888946425-d81bb19240f5`, `photo-1601584115197-04ecc0da31d8`, `photo-1505693416388-ac5ce068fe85`.
+- People Recommendations demo portraits: Random User portrait IDs `women/12`, `men/32`, `women/44`, `men/46`, `women/49`, `men/51`, `women/56`, `men/60`, `women/65`, `men/68`.
+
+### 5.2.2 Map provider compliance observations
+
+- GeoDirectory MapLibre uses the official `tile.openstreetmap.org` host and visible “© OpenStreetMap contributors” attribution.
+- Account's Leaflet map uses `https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png` and attribution text `© OpenStreetMap`. Update it to the exact official tile URL and full “© OpenStreetMap contributors” attribution before production scale.
+- The Nominatim reverse-geocoding call sends `Accept-Language: id`; browser requests provide browser User-Agent/Referer, but source has no explicit request throttling or persistent response cache. Nominatim's public policy sets an absolute maximum of one request per second and requires identifying headers/attribution. Add a rate guard and cache before traffic increases.
+- Account uses Leaflet and GeoDirectory uses MapLibre. These are two map engines with different page contracts; do not replace either until the address-picker and GeoDirectory interaction requirements are compared.
+
+Font stack menyebut Inter, tetapi file font/provider yang dibundel tidak ditemukan pada pemeriksaan source ini. Tidak ada klaim performa yang dibuat tanpa pengukuran.
 
 ### 5.3 Asset lokal yang belum terpakai/terverifikasi
 
