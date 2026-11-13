@@ -1728,10 +1728,9 @@
     height:106px !important;
   }
 }
-/* Canonical Story Ring Rail — full-bleed, three-up on mobile.
-   The rail spans the full Circle content width. Only its heading keeps the
-   page gutter. Mobile shows three large rings with a minimal 2px gap.
-   The horizontal scroll and Story button/viewer behavior remain unchanged. */
+/* Story Ring Rail — interaction mirrors the People Recommendations carousel.
+   Keep the Story-specific three-up sizing, but reuse the same native horizontal
+   swipe, momentum scrolling, hidden scrollbar and mandatory snap behavior. */
 .ua-social-home .ua-circle-stories{
   width:calc(100% + 44px)!important;
   max-width:none!important;
@@ -1752,27 +1751,26 @@
   flex-flow:row nowrap!important;
   align-items:flex-start!important;
   justify-content:flex-start!important;
-  gap:14px!important;
+  gap:10px!important;
   width:100%!important;
   min-width:0!important;
   margin:0!important;
-  padding:2px 22px 9px!important;
+  padding:2px 1px 8px!important;
   overflow-x:auto!important;
   overflow-y:hidden!important;
   overscroll-behavior-x:contain;
-  scroll-snap-type:x proximity;
-  scroll-padding-inline:22px;
-  scrollbar-width:none;
-  -webkit-overflow-scrolling:touch;
+  scroll-snap-type:x mandatory!important;
+  scrollbar-width:none!important;
+  -webkit-overflow-scrolling:touch!important;
 }
-.ua-social-home .ua-circle-story-track::-webkit-scrollbar{display:none}
+.ua-social-home .ua-circle-story-track::-webkit-scrollbar{display:none!important}
 .ua-social-home .ua-circle-story-track>.ua-story-group{
   flex:0 0 156px!important;
   width:156px!important;
   max-width:156px!important;
   min-width:0!important;
   gap:8px!important;
-  scroll-snap-align:start;
+  scroll-snap-align:start!important;
 }
 .ua-social-home .ua-circle-story-track>.ua-story-group .ua-story-ring{
   flex:0 0 140px!important;
@@ -1790,8 +1788,8 @@
   }
   .ua-social-home .ua-circle-story-track{
     gap:2px!important;
-    padding:2px 0 9px!important;
-    scroll-padding-inline:0;
+    padding:2px 1px 8px!important;
+    scroll-padding-inline:1px!important;
   }
   .ua-social-home .ua-circle-story-track>.ua-story-group{
     flex:0 0 calc((100% - 4px)/3)!important;
