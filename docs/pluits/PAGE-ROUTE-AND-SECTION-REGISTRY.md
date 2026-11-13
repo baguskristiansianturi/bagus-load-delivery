@@ -111,32 +111,18 @@ These are route states currently owned by one page module; they are not automati
 - Profile edit states.
 The profile hero has an isolated feature stylesheet at `src/features/profile/profile-hero.css`; other profile responsibilities remain partly in account controller/CSS.
 
-## 5. Missing, planned and reserved page areas
+## 5. Not implemented pages and future ideas
 
-Do not invent routes or add navigation links for a page that has not been approved. A reserved folder is a planning marker only.
+Do not create a source folder, README placeholder, route, navigation item or fake page for an idea that has not entered implementation. Keep future ideas in `IDEAS/IDEA-BACKLOG.md` or the approved product roadmap. When a new page is approved and implementation starts, add its route, owner and page map in the same change.
 
-| Page area | Current state | Preparation |
-|---|---|---|
-| Inbox Personal | Current Inbox implementation is `#/inbox` in `pages/messages`; ownership is not yet split into a dedicated page folder | Reserved directory added; do not register a second route until migration is planned |
-| Inbox Toko | No separate route/page module confirmed in current router | Reserved directory added; empty, not routed |
-| Notifications as a dedicated page | Activity currently belongs to account controller; Inbox context changes navigation slot | Do not create a second page until route and ownership are agreed |
-| Other future pages | Not inferred from business/product documents in this registry | Add only after explicit route/page decision |
+A separate Inbox Toko page is not registered in the current router. The current Inbox is `#/inbox`, owned by `src/pages/messages/index.js`; do not create a duplicate Personal Inbox page folder for the same route.
 
-## 6. Page folder readiness rule
+## 6. Page folder and runtime ownership rule
 
-A page folder may start with a README only. Before it becomes active, it must declare:
-- canonical route and route owner;
-- page purpose and workspace/layout;
-- section/component list;
-- public entry point;
-- stylesheet namespace and JS binding entry point;
-- services/API contracts;
-- loading/empty/error/permission states;
-- responsive and accessibility expectations;
-- tests and migration/alias plan.
+A page folder represents an existing canonical page boundary or a page whose implementation is actively being created. If several route states still share one controller, record each route state and its actual shared owner. Do not imply that each state already has an independent JavaScript runtime or stylesheet.
 
-An empty placeholder must not be imported by the router and must not display a fake functional page.
-
+Feature/component names such as Post Card, Story Rail, People Recommendations, Reel Card, Inbox Contact Strip and Product Card do not justify creating a Page folder. They remain under their actual feature/component owner.
+  
 ## 7. Updating this registry
 
 Update this file in the same change that adds/removes/renames a canonical route or moves page ownership. Record aliases separately. Never label an alias as a second page. Mark page completeness separately from route existence.
@@ -146,6 +132,6 @@ Update this file in the same change that adds/removes/renames a canonical route 
 The route inventory above must be read together with [PAGE-COMPONENT-OWNERSHIP-AUDIT-2026-11-12.md](./PAGE-COMPONENT-OWNERSHIP-AUDIT-2026-11-12.md). The audit defines the page layout, sidebar and feature ownership boundaries, plus the required process for adding a new page. A route alias must never receive a duplicate page controller.
 
 
-## 8. Page directory and roadmap scaffold
+## 8. Current page directory
 
-The physical page-folder roadmap is tracked in [`src/pages/README.md`](../../src/pages/README.md). The broader rationale, status vocabulary, migration order and deletion-safety rules are documented in [PLUITS-PAGE-DIRECTORY-AND-ROADMAP.md](./PLUITS-PAGE-DIRECTORY-AND-ROADMAP.md). README-only folders are reserved ownership markers; they are not runtime pages and must not be imported by the router.
+The current-only page directory is tracked in [`src/pages/README.md`](../../src/pages/README.md). It lists verified routes, aliases and actual runtime owners. Future ideas are kept in the Idea Backlog or approved product roadmap; do not create speculative page folders.
