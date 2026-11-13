@@ -8,7 +8,6 @@ Audit basis: `src/app/router.js`, `src/components/social/navigation-routes.js`, 
 - **Implemented** means a route handler and current page/module owner exist in source.
 - **Alias** means an alternate URL redirects to or renders the same canonical page. It is not a second page.
 - **Partial / dynamic** means the route uses a shared controller or only some states are implemented.
-- **Reserved placeholder** means a folder exists for future ownership, but no route or functional page is registered.
 - A route name is not proof that every user journey on that page is complete.
 
 ## 2. Current page and route inventory
