@@ -2119,31 +2119,43 @@
 }
 
 
-/* Story avatar sizing: 1.5x current mobile ring, with people-card spacing. */
+/* Story avatars: override the earlier three-column mobile sizing.
+   Keep stories as a horizontal rail so the larger circles are not squeezed. */
 @media(max-width:760px){
   .ua-social-home .ua-circle-story-track{
-    gap:10px;
+    gap:10px!important;
   }
-  .ua-social-home .ua-story-group{
-    flex:0 0 105px;
+  .ua-social-home .ua-circle-story-track>.ua-story-group{
+    flex:0 0 156px!important;
+    width:156px!important;
+    min-width:156px!important;
+    max-width:156px!important;
+    gap:8px!important;
   }
-  .ua-social-home .ua-story-group .ua-story-ring{
-    width:99px;
-    height:99px;
+  .ua-social-home .ua-circle-story-track>.ua-story-group .ua-story-ring{
+    flex:0 0 140px!important;
+    width:140px!important;
+    height:140px!important;
+    max-width:140px!important;
   }
-  .ua-social-home .ua-story-group>strong{
-    max-width:105px;
+  .ua-social-home .ua-circle-story-track>.ua-story-group>strong{
+    max-width:156px!important;
   }
 }
 @media(max-width:380px){
-  .ua-social-home .ua-story-group{
-    flex-basis:99px;
+  .ua-social-home .ua-circle-story-track>.ua-story-group{
+    flex-basis:148px!important;
+    width:148px!important;
+    min-width:148px!important;
+    max-width:148px!important;
   }
-  .ua-social-home .ua-story-group .ua-story-ring{
-    width:93px;
-    height:93px;
+  .ua-social-home .ua-circle-story-track>.ua-story-group .ua-story-ring{
+    flex-basis:132px!important;
+    width:132px!important;
+    height:132px!important;
+    max-width:132px!important;
   }
-  .ua-social-home .ua-story-group>strong{
-    max-width:99px;
+  .ua-social-home .ua-circle-story-track>.ua-story-group>strong{
+    max-width:148px!important;
   }
 }
