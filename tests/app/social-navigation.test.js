@@ -136,7 +136,7 @@ test('signed-in home leads with Bali experiences, search, wishlist and the perso
  assert.ok((account.match(/homeNearbySection\(\)/g)||[]).length===1,'The nearby section must appear once, above Circle content, not be duplicated after the feed.');
  assert.ok(account.includes('homeNearbySection')&&account.includes('bindHomeNearby'),'Home must use live nearby results.');
  assert.ok(account.includes('Temukan Lebih Banyak')&&account.includes('Produk Lokal')&&account.includes('Kumpulan')&&account.includes('Layanan PLUITS'),'Home must continue from the 30-post feed into discovery, product recommendations, service collections and PLUITS service filters.');
- assert.ok(account.includes('circleHeading+storiesSection+peopleSection+homeHeading'),'People recommendations must appear after Circle stories and before the post feed.');
+ assert.ok(account.includes('storiesSection+peopleSection+homeHeading'),'People recommendations must appear after Circle stories and before the post feed, without an intro banner.');
  assert.ok(account.includes('.slice(0,30)'),'The signed-in home must cap rendered post hydration at 30 items.');
  assert.ok(topTen.includes('⌖ ')&&topTen.includes('ua-topten-copy')&&topTen.includes('TOP_TEN_DEMO_ITEMS'),'Top 10 cards must be an isolated, explicitly demo-only image presentation module.');
  const nearbySource=await readFile(new URL('../../src/pages/directory/index.js',import.meta.url),'utf8');
