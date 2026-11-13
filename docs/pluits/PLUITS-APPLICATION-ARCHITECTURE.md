@@ -14,14 +14,16 @@ Store/catalog, product detail, product wishlist, cart and checkout are separate 
 ## Architecture layers
 - App shell: bootstrap, router, auth/session lifecycle and error handling.
 - Route registry: canonical URLs and protected-route fallback.
+- Configuration: environment parsing and non-secret feature/config flags; no credentials.
 - Design system: tokens, typography, spacing, breakpoints, safe areas and icons; no page layouts.
 - Shared components: reusable accessible UI; no data fetching.
 - Feature modules: feature UI, state transitions, scoped styles and tests.
 - Page controllers: compose features and connect data; no global CSS ownership.
 - Services: Supabase repositories, Storage, Realtime, cache and offline queue; no HTML.
+- Library adapters: SDK initialization and low-level library wrappers.
 - Platform adapters: browser APIs now; Capacitor/native bridges later.
 
-Dependency direction: `page → feature → shared component/design system`; `page/feature → service → platform adapter`. Shared components never import pages. Services never import UI. Feature A cannot access Feature B's private implementation.
+Dependency direction: `page → feature → shared component/design system`; `page/feature → service → library/platform adapter`. Shared components never import pages or features. Services and library/platform adapters never import UI. Feature A cannot access Feature B's private implementation.
 
 ## Target structure
 ```text
@@ -33,14 +35,15 @@ src/
   features/             # feed, posts, reels, media, profile, inbox, notifications
                          # discovery, store, checkout, directory, trips, seller
   services/             # supabase, realtime, storage, offline
+  lib/                  # SDK clients and library adapters
   platform/             # browser adapters; future capacitor adapters
   pages/                # route-level composition only
   styles/               # reset and global token consumption only
 tests/                  # contracts, features, route regression
-docs/architecture/      # decisions, module contracts and diagrams
+docs/                   # architecture decisions, module contracts and diagrams
 ```
 
-This is target ownership, not a risky mass-move. Migrate incrementally with compatibility exports and sibling-route regression checks.
+This is a target ownership map, not a risky mass-move. Folders for planned layers/features are tracked with README status markers. They contain no fake runtime behavior. Migrate incrementally with compatibility exports and sibling-route regression checks.
 
 ## Feature contract
 Every feature documents purpose/non-goals, public entry points, inputs/outputs/events, state owner, service dependencies, stylesheet namespace, composed routes, loading/empty/error/offline/permission states, accessibility, responsive rules and tests.
@@ -68,7 +71,6 @@ Feature CSS is rooted in its namespace. No generic element selectors, global sid
 ## Migration order
 1. Canonical route registry (started). 2. Split social header/bottom nav with compatibility exports. 3. Design tokens/layout primitives. 4. Extract Profile Hero. 5. Extract Inbox. 6. Decompose account controller. 7. Store/Wishlist/Checkout shells. 8. Route and visual regression. 9. Capacitor adapter after browser auth/media/offline stabilize.
 
-
 ## Route loading and runtime performance
 - The app shell and social homepage remain the initial entry path.
 - Route-level page modules (account, messages, marketplace, Trip, directory, seller, moderation, help and discovery) are loaded with explicit dynamic imports when their route is requested.
@@ -77,3 +79,9 @@ Feature CSS is rooted in its namespace. No generic element selectors, global sid
 - Feature CSS imported by a lazy route can be emitted as route-associated CSS chunks by Vite instead of forcing every workspace stylesheet into the first load.
 - Keep media lists and upload operations bounded; avoid parallelizing large mobile uploads.
 - Verify production bundle output and route chunking in CI. This is a code-splitting baseline, not a claim of measured device latency.
+
+## Current implementation versus target — 13 November 2026
+- Implemented: app bootstrap/router, page controllers, multiple extracted features, shared navigation/components, Supabase client adapter, storage service, global/shared styles, Node test suite and Vite build.
+- Scaffolding only: `src/config/`, `src/design-system/`, `src/platform/`, plus feed/notifications/store/checkout/directory/trips feature ownership markers. Their READMEs explicitly identify current runtime owners.
+- Not yet modularized: several page controllers still own data access and feature behavior; 11 files were identified in the architecture audit as independently constructing Supabase clients despite the shared client. Refactor these one domain at a time, starting with a shared-client adoption and service extraction covered by tests.
+- Enforcement: `scripts/verify-module-boundaries.mjs` is run by `npm test` and prevents shared lower-level layers from importing page/feature UI and prevents direct private cross-feature imports.
