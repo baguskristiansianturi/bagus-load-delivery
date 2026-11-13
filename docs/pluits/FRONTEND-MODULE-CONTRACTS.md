@@ -39,3 +39,14 @@ Before edits, identify owner, public contract, route consumers, CSS selectors, s
 - Component CSS belongs to the component/feature namespace. Truly global styles belong in src/styles. Do not append cross-page CSS patches.
 - Before a new page is created, choose its canonical route, page folder, layout owner, feature owner, service dependencies and tests. Add the route to PAGE-ROUTE-AND-SECTION-REGISTRY.md and update FRONTEND-MODULE-MAP.md.
 - Read PAGE-COMPONENT-OWNERSHIP-AUDIT-2026-11-12.md before decomposing or adding page modules.
+
+
+## Canonical component names and request routing (mandatory)
+
+Read `docs/pluits/CANONICAL-COMPONENT-OWNERSHIP-AND-REQUEST-LANGUAGE.md` before extracting or changing reusable UI. Resolve user-facing component names to one canonical owner through its registry and the live import/caller graph. If a term such as “sidebar” can refer to multiple owners, ask one concise clarification before editing; never guess the page or workspace. The product owner should not need to provide route names, source paths or CSS filenames.
+
+A request such as “fix Instagram Post” targets the canonical Post feature wherever it is rendered. All consumers must use the same public component contract; page controllers compose the component but do not fork it. The component owns its own presentation, namespaced styles, accessibility, responsive/loading/error states and local interactions. Page-level data fetching, authorization and business rules remain with the page/domain/service/backend and cross the boundary through documented inputs and callbacks.
+
+Distinct search intents (Friends/People, Content, Product, Contact/Inbox) have separate feature owners, filters, query semantics, result behavior and styles. Share only low-level primitives whose contracts genuinely match. Similar appearance alone is not a reason to share a complete component or workspace navigation.
+
+Keep the registry current with actual verified source paths, consumers, dependencies, tests and status. Never label a proposed folder as an existing implementation. Preserve approved layouts and perform changes incrementally, auditing all consumers whenever a canonical shared component changes.
