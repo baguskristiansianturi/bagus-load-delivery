@@ -1957,3 +1957,60 @@
 
 /* Canonical Circle Story + feed navigation layout — structural contract marker.
    Keep the existing Story rail sizing and post-card presentation unchanged. */
+
+
+/* Mobile alignment correction: Story rail uses the same left/right page gutter.
+   Do not offset the Story section or its action buttons beyond the viewport. */
+@media(max-width:760px){
+  .ua-social-home .ua-circle-stories{
+    position:relative!important;
+    left:auto!important;
+    transform:none!important;
+    width:calc(100% + 28px)!important;
+    max-width:none!important;
+    margin:0 -14px 15px!important;
+    padding:14px 0 8px!important;
+    box-sizing:border-box!important;
+    overflow:hidden!important;
+  }
+  .ua-social-home .ua-circle-section-heading{
+    width:auto!important;
+    margin:0 14px 12px!important;
+    padding:0!important;
+    box-sizing:border-box!important;
+  }
+  .ua-social-home .ua-circle-story-track{
+    position:relative!important;
+    left:auto!important;
+    transform:none!important;
+    width:100%!important;
+    max-width:none!important;
+    min-width:0!important;
+    margin:0!important;
+    padding:3px 14px 10px!important;
+    gap:2px!important;
+    box-sizing:border-box!important;
+    overflow-x:auto!important;
+    overflow-y:hidden!important;
+    scroll-padding-inline:14px!important;
+    scroll-snap-type:x mandatory!important;
+    -webkit-overflow-scrolling:touch!important;
+  }
+  .ua-social-home .ua-circle-story-track>.ua-story-group{
+    flex:0 0 calc((100% - 4px)/3)!important;
+    width:calc((100% - 4px)/3)!important;
+    max-width:calc((100% - 4px)/3)!important;
+    min-width:0!important;
+    margin:0!important;
+    scroll-snap-align:start!important;
+  }
+}
+@media(max-width:380px){
+  .ua-social-home .ua-circle-stories{
+    width:calc(100% + 22px)!important;
+    margin-left:-11px!important;
+    margin-right:-11px!important;
+  }
+  .ua-social-home .ua-circle-section-heading{margin-left:11px!important;margin-right:11px!important}
+  .ua-social-home .ua-circle-story-track{padding-left:11px!important;padding-right:11px!important}
+}
