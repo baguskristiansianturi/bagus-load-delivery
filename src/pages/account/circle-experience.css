@@ -2143,3 +2143,12 @@
     font-size:11px!important;
   }
 }
+
+
+/* Story labels: reduce name text only; keep avatar and rail sizing unchanged. */
+@media(max-width:760px){
+  .ua-social-home .ua-circle-story-track>.ua-story-group>strong{
+    font-size:9px!important;
+    line-height:1.2!important;
+  }
+}
