@@ -1,5 +1,6 @@
 name: Deploy to GitHub Pages
-# Pull requests validate and upload an artifact; they never deploy to Pages.
+# Pull requests validate and upload an artifact; the dedicated UI-test branch deploys
+# to the same Pages site so the owner can inspect the real mobile UI before merge.
 
 on:
   pull_request:
@@ -8,6 +9,7 @@ on:
   push:
     branches:
       - main
+      - fix/circle-feed-navigation-mobile-white
   workflow_dispatch:
 
 permissions:
@@ -55,7 +57,7 @@ jobs:
           name: github-pages-${{ github.run_id }}-${{ github.run_attempt }}
 
       - name: Deploy to GitHub Pages
-        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/fix/circle-feed-navigation-mobile-white')
         id: deployment
         uses: actions/deploy-pages@v4
         with:
