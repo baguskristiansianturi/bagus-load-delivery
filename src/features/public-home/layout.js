@@ -9,7 +9,7 @@ import {renderPublicStories} from './stories.js';
 import {renderPublicMarketplace} from './marketplace.js';
 import {renderPublicJoin} from './join.js';
 import {renderPublicFooter} from './footer.js';
-import {renderAppDownload} from '../app-download/app-download.js';
+import {renderAppDownload} from '../app-download/index.js';
 
 /** Public visitor homepage composition only. Data/auth remain in pages/home. */
 export function renderPublicHomeLayout({image,nearbyContent}) {

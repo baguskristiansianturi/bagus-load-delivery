@@ -1,11 +1,6 @@
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { supabase } from '../../lib/supabase/client.js';
 import './directory.css';
 import {renderNearbyHeroCard} from '../../features/discovery/nearby-card.js';
-
-const supabase = createClient(
-  'https://ytndswhqxayqpftszwfh.supabase.co',
-  'sb_publishable_kOUbKBYg88nXgz8FQRSnvA_k0hvKY65'
-);
 
 const AREAS = {
   denpasar: { label: 'Denpasar', lat: -8.65, lon: 115.2167 },

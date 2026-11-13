@@ -1,6 +1,10 @@
 name: Deploy to GitHub Pages
+# Pull requests validate and upload an artifact; they never deploy to Pages.
 
 on:
+  pull_request:
+    branches:
+      - main
   push:
     branches:
       - main
@@ -51,6 +55,7 @@ jobs:
           name: github-pages-${{ github.run_id }}-${{ github.run_attempt }}
 
       - name: Deploy to GitHub Pages
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         id: deployment
         uses: actions/deploy-pages@v4
         with:

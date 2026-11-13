@@ -1,6 +1,6 @@
 # PLUITS Page, Route and Section Registry
 
-Status: Initial inventory from repository branch `main`; update whenever routes/pages change.  
+Status: Source-verified route inventory; last checked 13 November 2026 against `main` at `4ef9fb96e8e942511879303f355a7336860c287f`. Update whenever routes/pages change.  
 Audit basis: `src/app/router.js`, `src/components/social/navigation-routes.js`, `src/pages/**` and current source tree.
 
 ## 1. How to read this registry
@@ -19,6 +19,8 @@ Audit basis: `src/app/router.js`, `src/components/social/navigation-routes.js`, 
 | Beranda aliases | `#/home`, `#/feed`, `#/beranda` | `src/main.js` normalizes to `#/` | Alias, not duplicate pages |
 | Signed-in Beranda / Feed | `#/account/explore` | `src/pages/account/index.js` | Implemented inside account controller; target feature owner is feed |
 | Profil pengguna by username | `#/@username` | `src/pages/account/index.js` | Dynamic profile route |
+| Blog Studio milik pengguna | `#/account/blog` | `src/pages/blog-studio/index.js` | Route state mounted by `mountBlogStudio()`; distinct from the public Blog reader |
+| Public blog pengguna | `#/@username/blog/:blogSlug/:postSlug` | `src/pages/blog-studio/index.js` | Dynamic public route mounted by `mountPublicBlog()`; shares Blog Studio module, not the public editorial Blog controller |
 | Account pages/states | `#/account/*` | `src/pages/account/index.js` | Shared controller; exact states depend on route arguments |
 | Login / Register | `#/login`, `#/register`, plus account aliases | `src/pages/account/index.js` | Shared account/auth controller; inspect before splitting |
 | Account settings | `#/account/settings` | `src/pages/account/index.js` | Implemented route state |
@@ -40,7 +42,7 @@ Audit basis: `src/app/router.js`, `src/components/social/navigation-routes.js`, 
 | Provider aliases | `#/provider`, `#/suppliers`, `#/jasa` | `src/pages/directory/index.js` | Alias to directory |
 | Trip | `#/trip` | `src/pages/trip/index.js` | Implemented route |
 | Trip itinerary | `#/trip/itinerary/:id` | `src/pages/trip/index.js` | Dynamic route state |
-| Seller Center | `#/seller` | `src/pages/seller/index.js` | Implemented route shell; feature completeness requires separate UAT |
+| Seller Center | `#/seller`, `#/seller/register` | `src/pages/seller/index.js` | Dashboard and registration are states in the same controller; feature completeness requires separate UAT |
 | Admin moderation | `#/admin/moderation` | `src/pages/admin/moderation.js` | Implemented route |
 | Blog / Guides / Article | `#/blog`, `#/guides`, `#/article/:slug` | `src/pages/blog/index.js` | Shared blog controller |
 | Help / FAQ | `#/help`, `#/faq` | `src/pages/help/index.js` | Shared help controller |
@@ -144,3 +146,10 @@ Update this file in the same change that adds/removes/renames a canonical route 
 
 ## 7. Page/component ownership standard
 The route inventory above must be read together with [PAGE-COMPONENT-OWNERSHIP-AUDIT-2026-11-12.md](./PAGE-COMPONENT-OWNERSHIP-AUDIT-2026-11-12.md). The audit defines the page layout, sidebar and feature ownership boundaries, plus the required process for adding a new page. A route alias must never receive a duplicate page controller.
+
+
+## Module folders are not route declarations
+
+Folders under `src/features/` describe capabilities and internal parts; they do not create URLs. Only canonical routes listed in this registry and implemented by `src/pages/` are routable. A tab, panel, modal, subflow or feature component must not receive a new page controller unless it is a separately approved route.
+
+The reserved `src/pages/inbox-personal/` and `src/pages/inbox-toko/` folders are roadmap markers only. They are not imported by the router and do not create new Inbox routes. Marketplace catalog, storefront, product, cart, checkout and orders remain composed by the current Marketplace route controller while feature modules are extracted incrementally.

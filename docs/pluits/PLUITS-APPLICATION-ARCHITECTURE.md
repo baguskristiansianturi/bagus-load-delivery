@@ -14,33 +14,65 @@ Store/catalog, product detail, product wishlist, cart and checkout are separate 
 ## Architecture layers
 - App shell: bootstrap, router, auth/session lifecycle and error handling.
 - Route registry: canonical URLs and protected-route fallback.
+- Configuration: environment parsing and non-secret feature/config flags; no credentials.
 - Design system: tokens, typography, spacing, breakpoints, safe areas and icons; no page layouts.
 - Shared components: reusable accessible UI; no data fetching.
 - Feature modules: feature UI, state transitions, scoped styles and tests.
 - Page controllers: compose features and connect data; no global CSS ownership.
 - Services: Supabase repositories, Storage, Realtime, cache and offline queue; no HTML.
+- Library adapters: SDK initialization and low-level library wrappers.
 - Platform adapters: browser APIs now; Capacitor/native bridges later.
 
-Dependency direction: `page → feature → shared component/design system`; `page/feature → service → platform adapter`. Shared components never import pages. Services never import UI. Feature A cannot access Feature B's private implementation.
+Dependency direction: `page → feature → shared component/design system`; `page/feature → service → library/platform adapter`. Shared components never import pages or features. Services and library/platform adapters never import UI. Feature A cannot access Feature B's private implementation.
 
 ## Target structure
+
+This is the complete ownership map. README-only directories are tracked roadmap entries, not fake runtime implementations.
+
 ```text
 src/
-  app/                 # bootstrap, router, guards, lifecycle
-  config/              # route registry, flags, environment config
-  design-system/       # tokens, typography, motion, icons
-  components/           # navigation, layout, feedback, primitives
-  features/             # feed, posts, reels, media, profile, inbox, notifications
-                         # discovery, store, checkout, directory, trips, seller
-  services/             # supabase, realtime, storage, offline
-  platform/             # browser adapters; future capacitor adapters
-  pages/                # route-level composition only
-  styles/               # reset and global token consumption only
-tests/                  # contracts, features, route regression
-docs/architecture/      # decisions, module contracts and diagrams
+  app/                         # bootstrap, router, guards, app lifecycle
+  config/                      # environment and non-secret app configuration
+  pages/                       # canonical route controllers only
+    home/ account/ messages/ marketplace/ seller/ directory/ trip/
+    blog/ blog-studio/ help/ admin/
+    inbox-personal/            # reserved; no route yet
+    inbox-toko/                # reserved; no route yet
+  features/
+    auth/ public-home/ feed/ posts/ stories/ reels/ media/ profile/
+    inbox/ conversations/ composer/ contacts/ requests/
+    notifications/ discovery/ directory/
+    store/ catalog/ storefront/ product/ wishlist/
+    cart/ checkout/ orders/
+    seller/ dashboard/ store-switcher/ products/ categories/ inventory/
+            delivery/ store-profile/ settings/
+    trips/ itinerary/ destinations/ service-requests/
+    account-settings/ moderation/ app-download/
+  components/ common/ social/ layout/ feedback/ primitives/
+  design-system/ tokens/ typography/ icons/ motion/
+  services/
+    auth/
+    repositories/ accounts/ social/ messaging/ notifications/ directory/
+                 marketplace/ seller/ trips/ blog/
+    realtime/ presence/ messages/ notifications/
+    storage/
+    offline/ outbox/ cache/
+  lib/ supabase/               # single shared browser client
+  platform/ browser/ native/   # native adapter is future-only
+  styles/                      # global styles only
+  assets/
+
+supabase/
+  migrations/                  # flat chronological immutable SQL migrations
+  functions/                   # trusted Edge Functions only when needed
+  tests/ rls/ rpc/ storage/
+
+tests/
+  app/ features/ services/ architecture/ contracts/ integration/
+  routes/ e2e/ visual/
 ```
 
-This is target ownership, not a risky mass-move. Migrate incrementally with compatibility exports and sibling-route regression checks.
+The current app uses Vite and native JavaScript ES modules. This structure does not introduce React, a second router, a second design system or a separate Node/Go backend. Keep existing files where they are until imports, consumers and tests are mapped.
 
 ## Feature contract
 Every feature documents purpose/non-goals, public entry points, inputs/outputs/events, state owner, service dependencies, stylesheet namespace, composed routes, loading/empty/error/offline/permission states, accessibility, responsive rules and tests.
@@ -68,7 +100,6 @@ Feature CSS is rooted in its namespace. No generic element selectors, global sid
 ## Migration order
 1. Canonical route registry (started). 2. Split social header/bottom nav with compatibility exports. 3. Design tokens/layout primitives. 4. Extract Profile Hero. 5. Extract Inbox. 6. Decompose account controller. 7. Store/Wishlist/Checkout shells. 8. Route and visual regression. 9. Capacitor adapter after browser auth/media/offline stabilize.
 
-
 ## Route loading and runtime performance
 - The app shell and social homepage remain the initial entry path.
 - Route-level page modules (account, messages, marketplace, Trip, directory, seller, moderation, help and discovery) are loaded with explicit dynamic imports when their route is requested.
@@ -77,3 +108,11 @@ Feature CSS is rooted in its namespace. No generic element selectors, global sid
 - Feature CSS imported by a lazy route can be emitted as route-associated CSS chunks by Vite instead of forcing every workspace stylesheet into the first load.
 - Keep media lists and upload operations bounded; avoid parallelizing large mobile uploads.
 - Verify production bundle output and route chunking in CI. This is a code-splitting baseline, not a claim of measured device latency.
+
+## Current implementation versus target — 13 November 2026
+- Implemented: app bootstrap/router, page controllers, multiple extracted features, shared navigation/components, Supabase client adapter, storage service, global/shared styles, Node test suite and Vite build.
+- Tracked roadmap scaffolding: conventional feature submodules for Stories, Posts, Inbox, Notifications, GeoDirectory, Store, Seller Center and Trips; repository domains; Realtime/Offline service groups; design-system foundations; browser/native platform adapters; Supabase function/test boundaries; and contract/integration/route/E2E/visual test groups. Each README names current runtime owner and target responsibility. These folders do not claim runtime completion.
+- Implemented: all 11 runtime modules that independently constructed Supabase clients now import the singleton from `src/lib/supabase/client.js`; the unused client import in `account-context.js` was removed. The automated guard blocks new independent clients.
+- Implemented: app-wide Realtime presence lifecycle extracted from `src/main.js` into `src/services/realtime/presence/index.js`, with injected client and unit tests for duplicate channels, account switching, sign-out and cleanup.
+- Not yet modularized: several page controllers still own data access and feature behavior. Move data-access functions into `src/services/` one domain at a time, retaining page-level composition and adding consumer/route tests.
+- Enforcement: `scripts/verify-module-boundaries.mjs` is run by `npm test` and prevents shared lower-level layers from importing page/feature UI and prevents direct private cross-feature imports.

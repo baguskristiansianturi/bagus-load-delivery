@@ -1209,3 +1209,69 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - Status: IMPLEMENTED, DEPLOYED. Android UAT NOT TESTED; founder ACCEPTANCE PENDING.
 - Known gaps: Story seen receipts/counts/reactions/comments/replies and notification deep links; profile-owned Story management; social-proof cards; real area Top 10/important-event ranking; AI moderation pipelines; business request workspace; user feedback center. These are not represented as active features.
 - Technical spec: docs/pluits/CIRCLE-AND-JELAJAH-EXPERIENCE-2026-11-12.md.
+
+
+## CP-074 — Modular frontend scaffolding, public feature contracts, and PR validation (13 November 2026)
+
+- **Founder direction:** tuntaskan fondasi alur modular dan workflow development tanpa biaya tambahan; jangan menyentuh production atau membuat environment berbayar.
+- **Architecture scaffolding IMPLEMENTED:** menambahkan README status/ownership pada `src/config/`, `src/design-system/`, `src/platform/`, serta target feature `feed`, `notifications`, `store`, `checkout`, `directory`, dan `trips`. Folder ini adalah roadmap ownership, bukan klaim runtime feature sudah dibuat. Pemilik runtime lama ditulis di setiap README.
+- **Public feature contracts IMPLEMENTED:** menambahkan `src/features/profile/index.js` dan `src/features/app-download/index.js`; dua consumer di Discovery dan Public Home sekarang menggunakan public entry point, bukan file internal feature lain.
+- **Automated architecture guard IMPLEMENTED:** `scripts/verify-module-boundaries.mjs` memeriksa 53 modul JavaScript/MJS dan menolak dependency ke lapisan UI yang lebih tinggi serta direct private cross-feature imports. `npm test` menjalankan production-surface verifier, module-boundary verifier, dan Node test suite.
+- **Automated verification:** 39 tests PASS, 0 FAIL; module-boundary verification PASS (53 source modules); Vite production build PASS; `dist/index.html` PASS; Pages artifact upload PASS. Production deploy step SKIPPED sebagaimana mestinya untuk pull request.
+- **GitHub Actions:** [run 43446620778 — SUCCESS](https://github.com/baguskristiansianturi/pluits/actions/runs/43446620778), commit `1219fe3f7c91acdda827cf62ee793d6f817ec402`. Artifact ID `14047364889`; masa berlaku sampai 14 November 2026 14:50 UTC.
+- **PR:** [#8 — Audit PLUITS workflow, architecture and release readiness](https://github.com/baguskristiansianturi/pluits/pull/8), tetap DRAFT dan belum merge.
+- **Belum selesai:** pemindahan seluruh data access dari page controllers ke services; konsolidasi beberapa Supabase client independen; pemisahan runtime penuh untuk Account/Marketplace/Trip/Directory/Inbox; full-site hosted preview yang bisa dibuka melalui browser ponsel; backend development environment tanpa biaya; rekonsiliasi 97 live migration records dengan 90 file SQL; perbaikan RLS dan regression matrix. Tidak ada produksi deploy, database mutation, atau perubahan data pengguna.
+- **Biaya:** Supabase development branch tidak dibuat karena ada biaya berulang US$0.01344/jam. Tidak ada biaya baru yang disetujui atau dijalankan.
+- **Status:** ARCHITECTURE SCAFFOLDING IMPLEMENTED / MODULE BOUNDARY CI TESTED / PR BUILD TESTED. Bukan FULLY MODULAR, bukan HOSTED PREVIEW READY, bukan BACKEND RELEASE READY, dan bukan founder ACCEPTED.
+- **Next:** lakukan extraction satu domain pada satu waktu (mulai shared Supabase client/service boundary), dengan tes consumer/route sebelum dan sesudah. Selesaikan preview hosting hanya dengan jalur gratis yang terpisah dari production; jangan menggunakan live Supabase sebagai backend preview.
+
+
+## CP-075 — Supabase client consolidation across frontend runtime (13 November 2026)
+
+- **Scope:** menghilangkan Supabase client independen agar auth/session/channel state konsisten dan konfigurasi environment berasal dari satu sumber.
+- **Frontend IMPLEMENTED:** 11 runtime client instances di `src/main.js`, Account, Home, Messages, Marketplace, Directory, Trip, Seller, Admin Moderation, Blog Studio, dan Misc sekarang menggunakan singleton `supabase` dari `src/lib/supabase/client.js`. Account Context tidak lagi mengimpor SDK client yang tidak dipakai. URL dan publishable key untuk media uploader memakai export konfigurasi dari shared client.
+- **Architecture guard:** `scripts/verify-module-boundaries.mjs` sekarang juga menolak `createClient` atau import langsung SDK Supabase di luar file shared client.
+- **Automated verification:** [Actions run 43447480093 — SUCCESS](https://github.com/baguskristiansianturi/pluits/actions/runs/43447480093), commit `29e08526ee3076fb9d2c16ceb0110ad49ef49459`; production-surface check PASS; module boundary + single-client check PASS across 53 source modules; 39 Node tests PASS, 0 FAIL; Vite build PASS; `dist/index.html` PASS; Pages artifact upload PASS; production deploy SKIPPED.
+- **Artifact:** `14049036024`, expires 14 November 2026 at 14:56 UTC.
+- **Status:** SHARED CLIENT CONSOLIDATION IMPLEMENTED / AUTOMATED TESTED. No production deploy, no database mutation, and no user data change.
+- **Belum selesai:** pemindahan query/mutation dari page controllers ke repository/service modules; pemisahan realtime lifecycle dari app bootstrap; full-site browser preview; backend dev environment tanpa biaya; migration reconciliation dan RLS regression fixes.
+- **Next:** mulai service extraction pada domain kecil dengan kontrak eksplisit dan tes. Pertahankan page controller sebagai route composition owner; jangan pindahkan seluruh file besar sekaligus.
+
+
+## CP-076 — Conventional component and service folder scaffolding (13 November 2026)
+
+- **Founder direction:** semua bagian arsitektur yang sudah diputuskan harus tampak di struktur repository meskipun implementasi belum dimulai, agar folder menjadi roadmap yang dapat diaudit.
+- **Scaffolding IMPLEMENTED:** `src/components/layout/`, `src/components/feedback/`, `src/components/primitives/`; `src/services/auth/`, `src/services/realtime/`, `src/services/offline/`, dan `src/services/repositories/` kini memiliki README yang menjelaskan tanggung jawab target, pemilik runtime saat ini, serta batas migrasinya. `src/services/storage/` tetap menjadi implementasi aktif.
+- **Boundary:** README scaffolding tidak berisi runtime palsu. Komponen bersama tidak boleh mengambil data; services tidak boleh merender HTML; realtime harus memiliki lifecycle owner tunggal; offline state tidak boleh disamakan dengan data server/publikasi.
+- **Documentation:** `FRONTEND-MODULE-MAP.md` dan `PLUITS-APPLICATION-ARCHITECTURE.md` diselaraskan dengan folder yang benar-benar ada.
+- **Status:** CONVENTIONAL FOLDER SCAFFOLDING IMPLEMENTED. Belum berarti semua komponen, services, atau fitur telah diekstrak. PR #8 tetap draft, belum merge/deploy.
+
+
+## CP-077 — Production Pages deployment guard (13 November 2026)
+
+- **Temuan:** workflow sebelumnya melewati deployment hanya untuk event pull_request; manual workflow dispatch dari branch development masih berpotensi menjalankan deploy step.
+- **CI FIX IMPLEMENTED:** deployment kini mensyaratkan event bukan pull_request **dan** `github.ref == 'refs/heads/main'`. Push trigger tetap hanya pada main. Manual dispatch dari branch lain hanya dapat build/upload artifact, tidak dapat deploy ke Pages production.
+- **Regression test:** `tests/app/deployment-workflow.test.js` memverifikasi pull_request/push branch filters, workflow_dispatch, artifact upload, dan syarat main-only deploy.
+- **Automated verification:** [GitHub Actions run 43448015144 — SUCCESS](https://github.com/baguskristiansianturi/pluits/actions/runs/43448015144), commit `4608ce580d6b7fb5bc13b37a07dc0e1ee7f8ad63`; 40 Node tests PASS, module-boundary/single-client checks PASS, Vite build PASS, Pages artifact upload PASS, production deploy SKIPPED.
+- **Status:** CODE + REGRESSION TEST IMPLEMENTED / AUTOMATED TESTED. Tidak ada deployment production yang dijalankan.
+
+
+## CP-078 — Full modular folder roadmap and frontend/backend placement (13 November 2026)
+
+- **Founder requirement:** seluruh bagian PLUITS yang sudah diputuskan harus memiliki tempat/folder konvensional di repository, termasuk bagian yang belum diimplementasikan, agar folder kosong menunjukkan roadmap. Nama folder harus lazim dan penempatannya jelas antara frontend dan backend.
+- **Frontend structure:** `src/app`, `src/config`, `src/pages`, `src/features`, `src/components`, `src/design-system`, `src/services`, `src/lib`, `src/platform`, `src/styles`, `src/assets`.
+- **Feature map:** Social (Feed, Posts, Stories, Reels, Media, Profile, Inbox, Notifications); Discovery/GeoDirectory; Marketplace (Catalog, Storefront, Product, Wishlist, Cart, Checkout, Orders); Seller Center (Dashboard, Store Switcher, Products, Categories, Inventory, Delivery, Store Profile, Settings); Trips (Itinerary, Destinations, Service Requests); Account Settings; Moderation; Auth; Public Home; App Download.
+- **Services map:** repositories per domain, Realtime (Presence, Messages, Notifications), Storage, Offline (Outbox, Cache), Auth. Satu shared Supabase client tetap berada di `src/lib/supabase/client.js`.
+- **Backend placement:** Supabase memiliki Auth, PostgreSQL/RLS/RPC, Realtime dan Storage. SQL migrations tetap flat/chronological di `supabase/migrations/`; Edge Functions di `supabase/functions/` hanya bila dibutuhkan; database tests di `supabase/tests/{rls,rpc,storage}/`. Tidak dibuat backend Node/Go yang tidak ada.
+- **Tracked implementation:** folder README scaffolding dan architecture regression test ditambahkan. Folder rencana tidak diimpor sebagai halaman palsu dan tidak otomatis membuat route. Pemilik route/runtime yang sudah ada tetap dipertahankan.
+- **No-cost constraint:** tidak ada Supabase development branch atau hosting berbayar dibuat. Database production dan Pages production tidak disentuh.
+- **Next sequence:** (1) CI validation struktur; (2) konfigurasi full-site preview gratis yang terpisah dari production Pages; (3) pilih satu batas page/feature; (4) ekstrak UI/behavior; (5) pindahkan data access ke repository; (6) ekstrak lifecycle Realtime/Offline; (7) rekonsiliasi migration dan uji backend secara terisolasi; (8) Android/browser UAT; (9) persetujuan founder sebelum release production.
+
+
+## CP-079 — App-wide Realtime presence extraction (13 November 2026)
+
+- **Frontend change:** lifecycle dipindahkan dari `src/main.js` ke `src/services/realtime/presence/index.js`. Main sekarang hanya memulai service menggunakan shared Supabase client.
+- **Service contract:** satu channel `pluits-online-v1`, sync dari initial session dan auth changes, mencegah channel ganda, mengganti channel saat akun berubah, membersihkan channel saat sign-out.
+- **Tests:** `tests/services/realtime-presence.test.js` menguji satu channel per akun, duplicate prevention, account switching, sign-out dan cleanup.
+- **CI:** [run 43450851746 — SUCCESS](https://github.com/baguskristiansianturi/pluits/actions/runs/43450851746), commit `f942a2fd02beadacf676099cbd86fe84c9d979a8`; 54 source modules checked, 44 tests PASS / 0 FAIL, Vite build PASS, production deploy SKIPPED.
+- **Status:** REALTIME PRESENCE SERVICE IMPLEMENTED / AUTOMATED TESTED. Message dan notification realtime tetap menjadi service terpisah yang belum diekstrak.
