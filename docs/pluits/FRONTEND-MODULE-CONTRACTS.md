@@ -39,3 +39,13 @@ Before edits, identify owner, public contract, route consumers, CSS selectors, s
 - Component CSS belongs to the component/feature namespace. Truly global styles belong in src/styles. Do not append cross-page CSS patches.
 - Before a new page is created, choose its canonical route, page folder, layout owner, feature owner, service dependencies and tests. Add the route to PAGE-ROUTE-AND-SECTION-REGISTRY.md and update FRONTEND-MODULE-MAP.md.
 - Read PAGE-COMPONENT-OWNERSHIP-AUDIT-2026-11-12.md before decomposing or adding page modules.
+
+
+## Feature public entry points
+
+A feature may be consumed by another feature only through its explicit public entry point, `src/features/<feature>/index.js`. Consumers must not import a sibling feature's internal files. Keep the public API narrow and export only symbols required by approved consumers. The module-boundary CI check enforces this rule.
+
+Initial public contracts:
+- Profile image-frame helpers: `src/features/profile/index.js`.
+- App download section renderer: `src/features/app-download/index.js`.
+
