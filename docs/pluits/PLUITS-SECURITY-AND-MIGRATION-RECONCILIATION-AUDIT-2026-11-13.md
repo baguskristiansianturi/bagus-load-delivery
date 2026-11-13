@@ -152,20 +152,24 @@ Migration repository `20261108090600_pluits_geodirectory_domain_links.sql` memil
 **Prioritas:** sedang–tinggi, bergantung pada data relasi yang tersedia.  
 **Tindakan:** pastikan hanya relasi dari post yang benar-benar publik dan diterbitkan yang dapat dibaca anon; tambahkan tes untuk private, pending, rejected, dan public published post. Telusuri migrasi yang menyebabkan perbedaan live sebelum membuat koreksi.
 
-### 3.4 Tinggi — post Blog tetap dapat dibaca saat blog diatur privat
+### 3.4 Blog post policy — hasil verifikasi ulang tidak mendukung temuan kebocoran sebelumnya
 
-Policy live `Public published blog posts readable` pada `blog_posts` mengizinkan SELECT anon/authenticated ketika `status = 'published'` dan `visibility = 'public'`, tanpa memeriksa `blog_profiles.default_visibility`. Hak SELECT anon pada tabel `blog_posts` memang aktif.
+Pemeriksaan ulang langsung terhadap `pg_policies` pada database live menunjukkan policy `Public published blog posts readable` di `blog_posts` memiliki kondisi:
 
-Sebaliknya:
-- view `blog_public_routes` hanya menampilkan blog dengan `default_visibility = 'public'` (atau kepada pemilik);
-- halaman publik `mountPublicBlog()` harus menemukan blog melalui view tersebut dan menolak blog yang tidak public;
-- policy Storage untuk media blog juga mensyaratkan `blog_profiles.default_visibility = 'public'`;
-- fungsi frontend `saveSettings()` hanya mengubah `blog_profiles.default_visibility`, tidak mengubah visibilitas post yang sudah ada.
+```sql
+(status = 'published' AND visibility = 'public')
+OR auth.uid() = owner_user_id
+```
 
-Akibatnya, ketika pemilik mengubah blog menjadi privat, halaman publik dan media tersembunyi, tetapi teks post yang sebelumnya berstatus published/public masih dapat dibaca langsung melalui Data API. Ini tidak konsisten dengan perilaku UI dan berpotensi membocorkan konten blog privat.
+Dengan demikian:
+- anon dan authenticated dapat membaca post yang berstatus `published` dan `public`;
+- pemilik dapat membaca post miliknya sendiri;
+- post yang private atau belum published tidak lolos cabang akses publik.
 
-**Prioritas:** tinggi / privacy release-blocking.  
-**Tindakan:** tentukan aturan canonical—blog privat harus menutup seluruh post, atau post public memang boleh tetap terbuka. Jika blog privat harus menutup semuanya, tambahkan pemeriksaan `EXISTS` terhadap `blog_profiles.default_visibility = 'public'` pada cabang public policy (atau lakukan transisi visibilitas post yang atomik). Uji anon, authenticated non-owner, owner, dan perubahan public → private. Belum ada policy yang diubah.
+Temuan sebelumnya yang menyatakan policy tidak memeriksa status dan visibility post adalah keliru dan dicabut. Namun, policy post tidak memeriksa `blog_profiles.default_visibility`. Apakah pengaturan private pada profil blog harus menutup seluruh post public yang sebelumnya dipublikasikan adalah keputusan produk yang belum ditetapkan. Karena itu, ini bukan temuan kebocoran yang sudah terbukti; catat sebagai **keputusan semantik privasi yang perlu dikonfirmasi**, lalu uji perilaku UI, view `blog_public_routes`, policy Storage, dan akses langsung Data API secara konsisten.
+
+**Prioritas:** keputusan produk; bukan release-blocking berdasarkan bukti policy post saat ini.  
+**Tindakan:** tetapkan apakah private profile hanya menyembunyikan halaman blog atau juga mencabut akses langsung ke post public. Jangan mengubah policy sebelum semantik ini disepakati.
 
 ### 3.5 Perlu keputusan produk — visibilitas profil privat tidak konsisten
 
@@ -343,12 +347,14 @@ Cakupan tersebut berguna, tetapi belum mencakup integration test RLS lintas-role
 - Workflow `.github/workflows/deploy.yml` menjalankan install, test, build, pemeriksaan `dist/index.html`, lalu deploy GitHub Pages pada push `main` atau manual dispatch.
 - Tidak ditemukan workflow preview terpisah untuk branch. Menjalankan workflow Pages secara manual pada branch kerja dapat mengganti situs Pages yang sama; jangan gunakan itu sebagai preview.
 - Audit ini belum menjalankan `npm test`, `npm run build`, browser UAT, pixel inspection, atau pengukuran mobile. Percobaan clone repository untuk menjalankan tes lokal gagal karena environment eksekusi tidak dapat me-resolve `github.com`; karena itu tidak ada klaim bahwa tes/build lulus.
-- Branch `work/production-design-inventory` berisi dokumentasi saja, 23 commit di depan `main`, 0 di belakang. Belum ada perubahan source app atau deployment.
+- Branch `work/production-design-inventory` berisi dokumentasi saja, 25 commit di depan `main`, 0 di belakang. Belum ada perubahan source app atau deployment.
 - PR #7 dan PR #3 tetap open dan belum digabung. Tidak ada merge yang dilakukan.
 
 ## 7. Gerbang audit yang masih wajib diselesaikan
 
-1. Pulihkan dan verifikasi sembilan sumber migrasi Blog; verifikasi 21 kandidat alias dan dua file repository tanpa pasangan live; buat manifest terkini.
+**Koreksi audit 13 Nov 2026:** pemeriksaan ulang policy live membatalkan klaim pada §3.4 bahwa policy `blog_posts` mengizinkan post private/unpublished. Kondisi policy yang teramati mensyaratkan `status = 'published'` dan `visibility = 'public'`, dengan pengecualian pemilik. Temuan §3.4 kini diklasifikasikan sebagai keputusan semantik privasi profil Blog, bukan kerentanan terkonfirmasi. Hitungan migrasi pada gerbang pertama juga diperinci berdasarkan pencocokan nama persis; pasangan berdasarkan kemiripan nama belum dianggap ekuivalen tanpa pemeriksaan isi SQL.
+
+1. Rekonsiliasi migrasi berdasarkan pemeriksaan ulang 13 Nov 2026: 90 file repository, 97 catatan live, 67 nama cocok persis, 30 catatan live tanpa nama file persis (9 Blog tanpa SQL repository dan 21 kandidat non-Blog untuk pemetaan isi), serta 23 file repository tanpa nama live persis. Verifikasi isi untuk 21 kandidat pasangan dan identifikasi dua file repository yang belum memiliki pasangan live; jangan replay sebelum manifest final disetujui.
 2. Jalankan migration replay hanya pada Supabase lokal kosong setelah manifest disetujui dan seluruh file historis tersedia.
 3. Tambahkan tes RLS lintas-entitas untuk empat policy `directory_media`, tes online-sales visibility untuk tabel dan view Marketplace, serta tes visibility post–GeoDirectory.
 4. Konfirmasi aturan visibilitas profil privat satu arah vs dua arah.
