@@ -346,7 +346,7 @@ Delapan test file yang ada saat ini mencakup:
 Cakupan tersebut berguna, tetapi belum mencakup integration test RLS lintas-role, SQL RPC lifecycle, Storage authorization, Realtime delivery, Marketplace/Seller/Trip/Blog controller behavior, atau browser end-to-end route journeys. Sebagian besar test menggunakan Node test runner dan pembacaan source; itu bukan pengganti UAT browser atau Supabase local integration.
 - Workflow `.github/workflows/deploy.yml` menjalankan install, test, build, pemeriksaan `dist/index.html`, lalu deploy GitHub Pages pada push `main` atau manual dispatch.
 - Tidak ditemukan workflow preview terpisah untuk branch. Menjalankan workflow Pages secara manual pada branch kerja dapat mengganti situs Pages yang sama; jangan gunakan itu sebagai preview.
-- Audit ini belum menjalankan `npm test`, `npm run build`, browser UAT, pixel inspection, atau pengukuran mobile. Percobaan clone repository untuk menjalankan tes lokal gagal karena environment eksekusi tidak dapat me-resolve `github.com`; karena itu tidak ada klaim bahwa tes/build lulus.
+- GitHub Actions terakhir yang diverifikasi pada baseline `main` SHA `4ef9fb96e8e942511879303f355a7336860c287f` (run `43410526528`, 13 Nov 2026 18:37 WIB/UTC+8) berhasil menyelesaikan production-surface/backend contract checks, Vite production build, dan pemeriksaan output build. Ini adalah hasil CI untuk `main`, bukan pengujian branch dokumentasi saat ini. Audit ini belum menjalankan ulang `npm test`/`npm run build` secara lokal pada branch kerja, browser UAT, pixel inspection, atau pengukuran mobile. Percobaan clone repository untuk menjalankan tes lokal gagal karena environment eksekusi tidak dapat me-resolve `github.com`; karena itu tidak ada klaim bahwa tes/build lulus.
 - Branch `work/production-design-inventory` berisi dokumentasi saja, 25 commit di depan `main`, 0 di belakang. Belum ada perubahan source app atau deployment.
 - PR #7 dan PR #3 tetap open dan belum digabung. Tidak ada merge yang dilakukan.
 
@@ -356,6 +356,9 @@ Cakupan tersebut berguna, tetapi belum mencakup integration test RLS lintas-role
 
 1. Rekonsiliasi migrasi berdasarkan pemeriksaan ulang 13 Nov 2026: 90 file repository, 97 catatan live, 67 nama cocok persis, 30 catatan live tanpa nama file persis (9 Blog tanpa SQL repository dan 21 kandidat non-Blog untuk pemetaan isi), serta 23 file repository tanpa nama live persis. Verifikasi isi untuk 21 kandidat pasangan dan identifikasi dua file repository yang belum memiliki pasangan live; jangan replay sebelum manifest final disetujui.
 2. Jalankan migration replay hanya pada Supabase lokal kosong setelah manifest disetujui dan seluruh file historis tersedia.
+
+Pemeriksaan lanjutan terhadap seluruh 9 nama file Blog pada seluruh 9 branch GitHub yang terlihat tidak menemukan file migrasi Blog. Pemeriksaan commit history per path untuk kesembilan nama tersebut juga mengembalikan 0 commit. Artinya, sumber SQL tersebut tidak dapat dipulihkan dari branch atau riwayat path repository yang saat ini tersedia. Diperlukan sumber tepercaya lain (backup SQL, artefak CI/developer, atau export schema terverifikasi) sebelum rekonsiliasi migrasi dapat ditutup. Export schema dari database live dapat membantu membangun baseline, tetapi bukan pengganti otomatis isi migrasi historis.
+
 3. Tambahkan tes RLS lintas-entitas untuk empat policy `directory_media`, tes online-sales visibility untuk tabel dan view Marketplace, serta tes visibility post–GeoDirectory.
 4. Konfirmasi aturan visibilitas profil privat satu arah vs dua arah.
 5. Jalankan role-context regression tests untuk anon, authenticated non-owner, owner, store member, moderator, dan admin.
