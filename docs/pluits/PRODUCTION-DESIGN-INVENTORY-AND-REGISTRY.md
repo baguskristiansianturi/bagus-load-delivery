@@ -82,12 +82,13 @@ This is an initial source-level inventory from the `main` baseline. It is not ye
 |---|---|---|
 | `src/components/common/icons.js` | Object of inline SVG strings; includes search, heart, cart, user, location, chevron, arrow, menu, truck, check, star and app | Existing source; consumers and exact rendered sizes still need mapping |
 | `src/components/common/social-icons.js` | Social icon path registry and `socialIcon(name, options)` renderer; includes generic and PLUITS-specific marks/actions | Existing source; full name inventory and consumers need mapping |
+| `src/app/ui.js` | Application-level `icon` map; duplicates names such as location, truck, store, menu, search, cart, heart, arrow, user and check | Existing source; overlaps with common icon maps and must be mapped before consolidation |
 | `src/app/ui.js` | Another icon map/helper exists in the application UI layer | Existing source; overlap and call sites need mapping |
 | `public/icons.svg` | SVG symbol sprite, 5,031 bytes at baseline | Existing asset; enumerate every symbol and every `<use>` consumer |
 | `public/assets/brand/pluits-logo.svg` | Canonical brand SVG file is present | Existing brand asset; compare exact usage and variants |
 | `public/favicon.svg` | Favicon path is present and currently has the same blob as the logo asset | Existing asset; confirm whether intentional |
 
-**Rule:** Do not consolidate or replace these sources until every symbol/name, SVG geometry, default stroke/fill, rendered dimensions, color behavior, consumer and dependency has been inventoried. A semantic icon name must resolve to one documented approved asset or an explicitly documented variant.
+**Observed duplication:** the semantic name `heart` exists in at least `icons.js`, `social-icons.js` and `app/ui.js`, but the path geometry is not identical. Therefore, a name match does not prove the assets are visually identical. The current source inventory also contains duplicate semantic names for search, cart, user, location, menu, truck, arrow and check.\n\n**Rule:** Do not consolidate or replace these sources until every symbol/name, SVG geometry, default stroke/fill, rendered dimensions, color behavior, consumer and dependency has been inventoried. A semantic icon name must resolve to one documented approved asset or an explicitly documented variant.
 
 ### 4.2 Global style and current source-level tokens
 
