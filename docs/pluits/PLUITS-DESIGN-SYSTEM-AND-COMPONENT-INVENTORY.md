@@ -282,3 +282,95 @@ When a token is changed, inspect every consumer and all sibling workspaces befor
 - `docs/pluits/PAGE-ROUTE-AND-SECTION-REGISTRY.md`
 - `docs/pluits/PAGE-COMPONENT-OWNERSHIP-AUDIT-2026-11-12.md`
 - `docs/pluits/CANONICAL-COMPONENT-OWNERSHIP-AND-REQUEST-LANGUAGE.md`
+
+
+## Appendix A — Verified source-level consistency findings (13 November 2026)
+
+This appendix records concrete differences found by inspecting the current `main` source at baseline commit `4ef9fb96e8e942511879303f355a7336860c287f`. It does not authorize visual changes.
+
+### A1. Brand mark and wordmark call-site audit
+
+The canonical renderer is `src/components/common/brand.js`. It uses the single SVG asset `/pluits/assets/brand/pluits-logo.svg`, accepts a pixel `size`, and supports an optional `wordmark` flag. The current call sites do not yet use one consistent placement contract:
+
+| Context | Current renderer call / markup | Current observed geometry |
+|---|---|---|
+| Social public header | `renderBrandLogo(... size: 38)` with `pl-social-brand` | 38px desktop; shared brand CSS overrides the mark to 30px on mobile |
+| Circle / Explore header | `renderBrandLogo(... size: 34)` with `ua-brand` | 34px desktop; shared brand CSS overrides the mark to 30px on mobile |
+| Other Social header states | `renderBrandLogo(... size: 38)` with `ua-brand` | 38px desktop; 30px mobile |
+| Message header | `renderBrandLogo(... size: 36)` with `pl-msg-brand` | 36px; it does not match the mobile override selectors for `ua-brand` / `pl-social-brand` |
+| Public Home navbar | `renderBrandLogo(... size: 30)` plus a separate `<span>Pluits</span>` | 30px mark plus 15px desktop / 14px narrow-screen wordmark |
+
+**Verified cause of the Circle vs Message discrepancy:** Circle uses the `ua-brand` class, which is explicitly reduced to 30px by `src/styles/brand.css` at mobile widths. Message uses `pl-msg-brand`, which is not included in that mobile rule, so its renderer's 36px size remains. The mark asset is the same; the responsive sizing contract differs.
+
+**Wordmark status:** the shared renderer already has an optional `wordmark` mode, but Public Home currently assembles the wordmark as a separate span. Message uses the shared image renderer and a Message-specific class. There is not yet a single documented placement API covering icon-only and icon-plus-wordmark contexts. Record two official placement modes in the brand contract—mark-only and mark-plus-wordmark—then map each context to a named size role. Do not change any call site until the current visual appearance has been reviewed.
+
+### A2. Avatar and identity-image size observations
+
+These are contextual sizes found in source, not proposed universal dimensions:
+
+| Context | Existing size |
+|---|---:|
+| Circle Story ring | 66px outer ring |
+| Circle people recommendation avatar | 68px |
+| Message people strip avatar | 48px |
+| Message conversation/contact avatar | 38px |
+| Reels author avatar | 36px |
+| Profile hero avatar | 104px desktop; 72px mobile; 60px at narrow widths |
+
+The future size catalogue should name roles (for example Story Avatar, People Card Avatar, Message Contact Avatar, Reel Author Avatar, Profile Avatar) and record any responsive variants. A shared avatar primitive may own image/fallback rendering and accessibility while role-specific wrappers provide the documented geometry.
+
+### A3. Carousel / horizontal-scroll pattern inventory
+
+“Carousel” currently describes multiple different structures. Register each by behavior and owner rather than introducing one universal component:
+
+| User-facing pattern name | Existing source selector / owner | Behavior observed |
+|---|---|---|
+| Story Ring Rail | `.ua-circle-story-track` / Account Circle experience | Horizontal swipe/scroll of circular story identities with scroll snapping |
+| People Card Rail | `.ua-people-track` / People Recommendations | Horizontal scroll of person cards; mandatory snap in the feature stylesheet |
+| Inbox Contact Rail | `.pl-msg-people-strip` / Messages page | Horizontal scroll of contact avatars with proximity snapping |
+| Nearby Place Rail | `.pl-home-map-results` and `.pl-nearby-topic-carousel` / Directory | Horizontal scroll of place cards or topic chips; different card contracts |
+| Seller Product Rail | `.pluits-product-list` / Seller Center | Horizontal product-row list with mandatory snap |
+| Product Gallery Rail | `.pluits-product-gallery` / Seller Center | Horizontal image gallery; thumbnail/large-image behavior changes by breakpoint |
+| Topic Content Rail | `.ua-home-topic-carousel` and recommendation variant / Account Circle | Horizontal content-card groups, composed by the Account controller |
+| Vertical Reel Feed | `.ua-reels-feed` / Reels | Vertical feed of 9:16 video stages; not the same component as a horizontal carousel |
+
+The user's approved viewport-edge behavior should be registered separately as **Full-Bleed Horizontal Rail** when the rail intentionally reaches the screen edges. An ordinary **Contained Horizontal Rail** remains bounded by its parent content padding. These are layout modes of a rail pattern, not reasons to duplicate the scrolling engine. Before any migration, verify each existing consumer's card width, gap, edge padding, scroll-snap mode, touch behavior, controls and desktop behavior.
+
+### A4. Existing visual-state conventions
+
+Source inspection shows mixed interaction conventions rather than one complete shared interaction contract:
+
+- Social and public-home styles include hover treatments.
+- Some Circle card hover transforms are guarded by `@media(hover:hover) and (pointer:fine)`.
+- Message styles commonly use `:active` and `:focus-visible`.
+- Social navigation defines explicit `:focus-visible` outlines.
+- Several feature styles include `prefers-reduced-motion: reduce` handling.
+- There is not yet a verified shared contract for hover, pressed, selected, focus-visible, disabled, loading and reduced-motion states across all component families.
+
+The next audit must map these states per canonical component. Do not add hover behavior to touch-only controls merely to make CSS look uniform.
+
+### A5. Source size and performance audit baseline
+
+At the inspected `main` tree:
+
+- 269 tracked blob files were returned by the repository tree.
+- 24 CSS files total approximately 759,742 raw source bytes.
+- 61 JavaScript files total approximately 571,904 raw source bytes; this count includes tests and service-worker code and is not a production bundle measurement.
+- Largest CSS sources include `src/style.css` (~286 KB), `src/pages/account/user-account.css` (~187 KB), and `src/pages/account/circle-experience.css` (~54 KB).
+- Largest application JavaScript source includes `src/pages/account/index.js` (~170 KB), followed by Messages (~37 KB), Blog Studio (~34 KB), Seller (~34 KB), and Directory (~33 KB).
+
+Raw source size is not equivalent to downloaded bundle size. A production build, chunk inspection, route loading analysis and browser network measurement are still required before making performance claims. These figures identify where to inspect for duplication and extraction opportunities; they are not a reason to split files mechanically or add more JavaScript.
+
+### A6. Current audit conclusion
+
+The repository already has a reusable brand renderer, shared SVG icon registry, Social navigation/route registry, Post Actions renderer, Profile image-framing helper, Inbox Sidebar, Seller Navigation, and several discovery/media feature modules. However, the same source inspection confirms:
+
+1. Brand sizing is passed as arbitrary numbers at call sites and has inconsistent responsive coverage.
+2. Wordmark placement is not yet standardized across the two intended brand modes.
+3. Several avatar roles have local dimensions without a shared role catalogue.
+4. Horizontal scroll rails exist in several workspaces with similar mechanics but different content contracts and CSS owners.
+5. Post Actions are extracted, but the complete Post Card remains composed in the large Account controller.
+6. The root stylesheet and Account stylesheet are substantially larger than the extracted feature styles; their contents need selector/import/cascade analysis before deciding ownership boundaries.
+7. Color, typography and interaction states are still split across global, Social, Circle, public-home and workspace-local styles.
+
+**No production CSS, JavaScript, route, asset or page layout was changed for this appendix.** The next phase is to finish the import/caller and selector audit, then propose a named component/size/token registry. Token normalization and component extraction remain separate implementation tasks and must preserve current approved visuals.
