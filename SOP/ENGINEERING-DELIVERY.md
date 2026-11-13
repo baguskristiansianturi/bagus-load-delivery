@@ -63,3 +63,12 @@ Sebelum mengubah komponen bersama, rujuk `docs/pluits/FRONTEND-MODULE-CONTRACTS.
 - Jika token belum tersedia, cari token semantic terdekat dan dokumentasikan kebutuhan baru; jangan membuat nilai acak atau menambahkan override lintas halaman.
 - Perubahan token bersama wajib menelusuri seluruh consumer dan menguji workspace saudara.
 - Update inventory ketika komponen, owner, consumer, kontrak, token atau status audit berubah.
+
+
+## Current-only Page Directory and terminology
+- Use `src/pages/README.md` as the current-only page and route directory. It records real routes and their actual controller owners; it is not a speculative sitemap.
+- Do not create future/empty page folders or README placeholders. Future ideas belong in the Idea Backlog or approved product roadmap.
+- A route rendered inside a shared controller must be recorded as a route state with that actual controller, not represented as an already-separated runtime.
+- Do not create Page folders for reusable components or features. Map those to their actual `features/` or `components/` owner.
+- Use standard terms (Page, Route, Runtime, Event Handler, Component, Feature Module, Stylesheet, Design Token, Icon Registry, Contact List, Conversation List). Mark any PLUITS-specific wording as an alias.
+- Use `docs/pluits/PLUITS-TECHNICAL-TERMINOLOGY-AND-RUNTIME-MAP.md` to understand the current SPA runtime, icon sources, Inbox contact/conversation boundaries and CSS ownership levels.
