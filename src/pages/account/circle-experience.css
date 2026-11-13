@@ -2031,11 +2031,11 @@
   .ua-social-home .ua-circle-stories,
   .ua-social-home .ua-people-recommendations{
     position:relative!important;
-    width:calc(100% + 2 * var(--pl-rail-gutter))!important;
+    width:calc(100% + var(--pl-rail-gutter) + var(--pl-rail-gutter))!important;
     max-width:none!important;
     min-width:0!important;
-    margin-left:calc(-1 * var(--pl-rail-gutter))!important;
-    margin-right:calc(-1 * var(--pl-rail-gutter))!important;
+    margin-left:calc(0px - var(--pl-rail-gutter))!important;
+    margin-right:calc(0px - var(--pl-rail-gutter))!important;
     padding-left:0!important;
     padding-right:0!important;
     overflow:visible!important;
@@ -2086,9 +2086,9 @@
   .ua-social-home .ua-home-product-row,
   .ua-social-home .ua-home-collection-row,
   .ua-social-home .ua-home-service-chip-row{
-    width:calc(100% + 2 * var(--pl-rail-gutter))!important;
-    margin-left:calc(-1 * var(--pl-rail-gutter))!important;
-    margin-right:calc(-1 * var(--pl-rail-gutter))!important;
+    width:calc(100% + var(--pl-rail-gutter) + var(--pl-rail-gutter))!important;
+    margin-left:calc(0px - var(--pl-rail-gutter))!important;
+    margin-right:calc(0px - var(--pl-rail-gutter))!important;
   }
 
   .ua-social-home .ua-circle-story-track::-webkit-scrollbar,
