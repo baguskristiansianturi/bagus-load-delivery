@@ -510,8 +510,13 @@ async function feedPage(){
  const serviceFilters="<section class='ua-home-service-filters'><div class='ua-home-section-heading'><div><h2>Layanan PLUITS</h2></div></div><div class='ua-home-service-chip-row'><a href='#/places?category=accommodation'>Akomodasi</a><a href='#/trip'>Tiket</a><a href='#/places?category=transport'>Transportasi</a><a href='#/places?category=professional-service'>Jasa</a></div></section>";
  const blogMarkup=exploreContentType==='blog'?await blogFeedMarkup():'';
  const liveMarkup=exploreContentType==='live'?"<div class='ua-feed-empty'><strong>Live PLUITS</strong><p>Siaran langsung akan muncul di sini saat fitur Live diaktifkan. Kerangka navigasi sudah tersedia.</p></div>":'';
- const feedMarkup=exploreContentType==='blog'?blogMarkup:exploreContentType==='live'?liveMarkup:sorted.length?sorted.map(post=>postCard(post)).join(''):"<div class='ua-feed-empty'><strong>"+empty+"</strong>"+action+"</div>";
- return "<div class='ua-social-home'>"+trendSection+homeNearbySection()+peopleSection+storiesSection+filterNav+"<div class='ua-home-feed-region'><section class='ua-feed'>"+feedMarkup+"</section></div>"+discoverMore+maybeLike.replace("<h2>Produk Lokal</h2>","<h2>Temukan Produk Lokal</h2>")+collections+serviceFilters+"<div class='pl-public-home ua-circle-bottom-promos'>"+renderPublicJoin()+renderAppDownload()+"</div></div>";
+ const feedPostsMarkup=sorted.length?sorted.map((post,index)=>{
+  const card=postCard(post);
+  return index<30?card:card.replace('<article class="ua-post-card"','<article hidden data-feed-extra="true" class="ua-post-card"');
+ }).join(''):"<div class='ua-feed-empty'><strong>"+empty+"</strong>"+action+"</div>";
+ const feedMarkup=exploreContentType==='blog'?blogMarkup:exploreContentType==='live'?liveMarkup:feedPostsMarkup;
+ const seeAllMarkup=(exploreContentType==='all'||exploreContentType==='reel')&&sorted.length>30?"<button type='button' class='ua-feed-see-all' data-feed-see-all>Lihat semua postingan</button>":"";
+ return "<div class='ua-social-home'>"+trendSection+homeNearbySection()+peopleSection+storiesSection+"<div class='ua-home-feed-region'>"+filterNav+"<section class='ua-feed'>"+feedMarkup+"</section>"+seeAllMarkup+"</div>"+discoverMore+maybeLike.replace("<h2>Produk Lokal</h2>","<h2>Temukan Produk Lokal</h2>")+collections+serviceFilters+"<div class='pl-public-home ua-circle-bottom-promos'>"+renderPublicJoin()+renderAppDownload()+"</div></div>";
 }
 async function reelsPage(){
  const {data:vm,error:me}=await supabase.from('post_media').select('post_id,duration_ms').eq('media_type','video').lte('duration_ms',60000).order('created_at',{ascending:false}).limit(60);if(me)throw me;
@@ -1465,6 +1470,10 @@ function bindCircleStoryCarousel(){
  schedule(4200);
 }
 function bindExploreFilters(){
+ document.querySelector('[data-feed-see-all]')?.addEventListener('click',event=>{
+  document.querySelectorAll('.ua-feed [data-feed-extra]').forEach(card=>{card.hidden=false;});
+  event.currentTarget.remove();
+ });
  document.querySelectorAll('[data-content-type]').forEach(button=>button.addEventListener('click',async()=>{const next=button.dataset.contentType;if(!['all','reel','live','blog'].includes(next)||next===exploreContentType)return;exploreContentType=next;await mountAccount('explore');}));
  document.querySelector('[data-feed-refresh]')?.addEventListener('click',async event=>{const el=event.currentTarget;el.disabled=true;el.classList.add('is-loading');exploreFilter='latest';await mountAccount('explore');});
  document.querySelectorAll('[data-explore-filter]').forEach(button=>button.addEventListener('click',async()=>{const next=button.dataset.exploreFilter;if(!['all','latest','random'].includes(next)||next===exploreFilter)return;exploreFilter=next;await mountAccount('explore');}));
