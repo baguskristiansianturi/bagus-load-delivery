@@ -379,3 +379,14 @@ The repository already has a reusable brand renderer, shared SVG icon registry, 
 ## Complete repository structure reference
 
 For the full verified source tree, route-to-controller map, current component catalogue, CSS/JavaScript file inventories, tests, carousel naming and proposed modular target structure, see [`PLUITS-COMPLETE-SOURCE-STRUCTURE-AND-COMPONENT-MAP.md`](./PLUITS-COMPLETE-SOURCE-STRUCTURE-AND-COMPONENT-MAP.md). The detailed map distinguishes existing source from proposed target folders and records remaining audit work explicitly.
+
+
+## Icon architecture — current source inventory
+
+The current code contains multiple icon sources:
+- `src/components/common/social-icons.js`: social SVG path registry and renderer.
+- `src/components/common/icons.js`: legacy/general inline SVG icon object.
+- `src/app/ui.js`: another inline SVG icon map alongside legacy shell helpers.
+- `public/icons.svg`: static SVG symbol sprite.
+
+These are source-backed observations, not a final approved icon system. There is overlap between registries. Do not consolidate, replace or globally restyle icons as part of an unrelated page task. Before an icon change, trace its registry key, renderer, imports/call sites, SVG geometry, CSS size/stroke rules and all visual consumers. The full terminology and known ownership distinctions are in [PLUITS Technical Terminology and Runtime Map](./PLUITS-TECHNICAL-TERMINOLOGY-AND-RUNTIME-MAP.md).
