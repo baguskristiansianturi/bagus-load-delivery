@@ -1,54 +1,54 @@
-# PLUITS — Page Directory, Workspace Structure & Roadmap
+# PLUITS — Current Page Directory & Runtime Ownership
 
-**Status:** Initial route-backed page scaffold  
-**Runtime impact:** None. README placeholders and documentation only; no router, UI, CSS, service, database or behavior changed.
+**Audit basis:** router and source files on branch `docs/component-ownership-language-contract`.  
+**Purpose:** show only the pages/routes that exist in the current application, identify their real runtime owners, and make route aliases and non-page features easy to distinguish.
 
-## Purpose
-The page tree is both an engineering navigation map and a visible roadmap. It records pages that exist, pages still owned by legacy controllers, reserved boundaries and features that are not standalone pages. Git does not track empty folders, so reserved folders contain README markers. A README-only folder is not an implemented page.
+## Directory policy
+
+This directory is a map of the current implementation, not a speculative product sitemap. Do not create source folders or README placeholders for unbuilt ideas. Future ideas remain in `IDEAS/IDEA-BACKLOG.md` or the approved product roadmap. Add a page folder only when a canonical page/route is approved and implementation begins.
+
+A route can exist inside a shared controller. In that case, record it as a route state and name the actual controller. Do not imply that a dedicated page module already exists.
 
 ## Status vocabulary
-- **IMPLEMENTED:** canonical route and current runtime owner exist; does not imply full product acceptance.
-- **PARTIAL:** route/controller exists but some journeys or states are incomplete.
-- **RESERVED:** README-only folder; no runtime page and no router registration.
-- **LEGACY OWNER:** current code remains in a shared controller; folder marks a future boundary, not a second implementation.
-- **ALIAS:** alternate URL to a canonical route, not a second page.
-- **FEATURE, NOT PAGE:** section, overlay or reusable UI without a standalone route.
 
-## Three different Home pages
-- `src/pages/home` = **Public Home** (`#/`).
-- `src/pages/social/home` = **Social Home / signed-in feed** (`#/account/explore`), currently rendered by `src/pages/account/index.js`.
-- `src/pages/marketplace/home` = **Marketplace Home** (`#/marketplace`), currently rendered by `src/pages/marketplace/index.js`.
+- **IMPLEMENTED:** route and renderer/controller exist in source.
+- **PARTIAL:** route or page shell exists, but some journeys/states remain incomplete.
+- **LEGACY OWNER:** current implementation is still inside a larger shared controller.
+- **ALIAS:** alternate URL to a canonical route, not a separate page.
+- **FEATURE / COMPONENT, NOT PAGE:** reusable UI or behavior without a standalone route.
 
-## Marketplace page boundaries
-Storefront, Product Detail, Cart, Checkout, Orders and Order Detail each have their own folder marker even though the current runtime owner is still one Marketplace controller. This makes target boundaries visible without pretending migration has happened.
+## Three distinct Home pages
 
-## Features that are not pages
-Story Rail, Story Viewer, Post Card, Post Actions, People Recommendations, Reel Card, Vertical Reel Feed and Circle UI are not automatically separate pages. They remain feature/section/component boundaries unless a canonical route is explicitly confirmed.
+- **Public Home** — `#/`, rendered by `src/pages/home/index.js`.
+- **Social Home / Feed** — `#/account/explore`, rendered by `src/pages/account/index.js`.
+- **Marketplace Home / Catalog** — `#/marketplace`, rendered by `src/pages/marketplace/index.js`.
 
-## Alias and duplicate cleanup
-Known aliases include:
-- `#/home`, `#/feed`, `#/beranda` → Public Home `#/`
-- `#/messages` → Inbox `#/inbox`
-- `#/cart` → `#/market-cart`
-- `#/checkout` → `#/market-checkout`
-- `#/orders` → `#/market-orders`
-- `#/order/:id` → `#/market-order/:id`
-- `#/materials`, `#/material`, `#/logistik`, `#/delivery` → Marketplace
-- `#/provider`, `#/suppliers`, `#/jasa` → Directory
-- `#/faq` → Help
+These names must always be qualified by workspace. Never use the ambiguous label “Home” alone in a change request.
 
-If a click opens an unexpected or old page, trace the clicked link → router branch → canonical route/alias → page controller → mount. Do not delete a file based on its name alone.
+## Current page inventory
 
-## Migration roadmap
-1. Keep existing routes stable and use the directory as the naming reference.
-2. Finish Social First Release P0 and founder UAT before Marketplace expansion or other deferred vertical expansion.
-3. Decompose the account controller incrementally into social home, profile, activity, saved and other approved page owners.
-4. Decompose Marketplace route states into focused page modules only when its roadmap gate allows; preserve one canonical implementation per route.
-5. Split Inbox Personal and Inbox Toko only after their distinct journeys and canonical routes are approved.
-6. Audit Directory, Trip, Seller, Blog, Help, Admin and Misc ownership without unrelated redesign.
-7. For each migration, add route/sibling regression tests, run `npm test` and `npm run build`, then record deployment and founder UAT separately.
+The complete current route inventory and aliases live in [src/pages/README.md](../../src/pages/README.md) and [PAGE-ROUTE-AND-SECTION-REGISTRY.md](./PAGE-ROUTE-AND-SECTION-REGISTRY.md).
 
-## Deletion safety
-Before removing an old page/module, inspect router conditions, hrefs, programmatic navigation, route helpers, dynamic imports, direct imports, CSS selectors, tests, workflows and docs. Confirm no canonical route, alias target or user journey depends on it. Preserve unique behavior or add a tested redirect. A RESERVED folder does not authorize deleting its current legacy owner.
+The current implementation includes Public Home, Social/account route states, Auth, Inbox, Search, Directory, Marketplace commerce route states, Trip, Seller Center, Blog, Help/Legal, Misc and Admin Moderation.
 
-Update both `src/pages/README.md` and `docs/pluits/PAGE-ROUTE-AND-SECTION-REGISTRY.md` whenever route or ownership changes.
+**Marketplace is already present in the current source:** `src/pages/marketplace/index.js` renders the catalog, storefront, product detail, cart, checkout, orders and order-detail route states. Their completeness is a separate product/UAT question; do not classify them as nonexistent or create duplicate routes.
+
+## What is not a Page
+
+Post Card, Story Card, Story Rail, Profile Header, People Recommendations, Reel Card, Inbox Contact Strip, Product Card, sidebars, icons, avatars, tabs and other reusable UI are feature/component/section boundaries. They belong in their actual feature/component owner and are not automatically route-level pages.
+
+## Physical source tree rule
+
+Only current source owners and confirmed route/page boundaries belong under `src/pages/`. Do not add empty directories for planned Marketplace expansions, future Inbox workspaces, speculative Social screens, or ideas that have not entered implementation. When an actual new page is approved, create its folder and map its runtime, CSS, components, services and tests as part of that implementation.
+
+## Migration and deletion safety
+
+Before splitting a route out of a shared controller, first map its renderer, event binding, CSS selectors, data/service calls, imports, route aliases and tests. Keep one canonical runtime owner throughout migration. Before deletion, prove that no route, link, import, dynamic import, test or user journey still depends on the old implementation. Preserve redirects for aliases where needed.
+
+## Related technical maps
+
+- [Complete Source Structure and Component Map](./PLUITS-COMPLETE-SOURCE-STRUCTURE-AND-COMPONENT-MAP.md)
+- [Technical Terminology and Runtime Map](./PLUITS-TECHNICAL-TERMINOLOGY-AND-RUNTIME-MAP.md)
+- [Page, Route and Section Registry](./PAGE-ROUTE-AND-SECTION-REGISTRY.md)
+- [Page & Component Ownership Audit](./PAGE-COMPONENT-OWNERSHIP-AUDIT-2026-11-12.md)
+- [Design System and Component Inventory](./PLUITS-DESIGN-SYSTEM-AND-COMPONENT-INVENTORY.md)
