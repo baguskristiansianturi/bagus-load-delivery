@@ -2046,3 +2046,31 @@
   .ua-social-home .ua-circle-story-track,
   .ua-social-home .ua-content-tabs{scroll-behavior:auto!important}
 }
+
+
+/* Feed tabs: full-bleed surface, content remains on the existing page gutter.
+   Reuse the same negative-margin + matching-padding pattern as explore filters. */
+.ua-social-home .ua-explore-toolbar{
+  width:auto!important;
+  max-width:none!important;
+  margin-right:-22px!important;
+  margin-left:-22px!important;
+  padding-right:22px!important;
+  padding-left:22px!important;
+}
+@media(max-width:760px){
+  .ua-social-home .ua-explore-toolbar{
+    margin-right:-14px!important;
+    margin-left:-14px!important;
+    padding-right:14px!important;
+    padding-left:14px!important;
+  }
+}
+@media(max-width:380px){
+  .ua-social-home .ua-explore-toolbar{
+    margin-right:-11px!important;
+    margin-left:-11px!important;
+    padding-right:11px!important;
+    padding-left:11px!important;
+  }
+}
