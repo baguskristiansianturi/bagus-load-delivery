@@ -1129,3 +1129,7 @@
  .ua-social-home .ua-feed-empty{margin:0 12px}
 }
 @media(prefers-reduced-motion:reduce){.ua-social-home .ua-content-tabs button{transition:none}.ua-social-home .ua-feed-refresh.is-loading{animation:none}}
+
+@media(max-width:760px){
+ .ua-social-home{width:calc(100% + 24px);margin-left:-12px;margin-right:-12px}
+}
