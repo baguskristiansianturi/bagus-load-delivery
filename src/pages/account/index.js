@@ -904,7 +904,7 @@ async function mountAccount(section='profile',parameter=''){
   normalizeFeedMediaFrames(document);bindPostGalleries();
   if(section==='post'){const focusId=parameter||location.hash.split('/')[3]||'';requestAnimationFrame(()=>document.getElementById('ua-post-focus-'+focusId)?.scrollIntoView({block:'start',behavior:'auto'}));}
   bindProfileTabs();bindNotificationActions();if(section==='drafts')bindDrafts();
-  bindProfile();bindCompose();bindStoryCompose();bindStories();bindStoryAutoScroll();bindExploreFilters();bindPeopleRecommendationActions();bindToptenSlider();bindAddresses();bindWallet();bindPostActions();bindFollowActions();
+  bindProfile();bindCompose();bindStoryCompose();bindStories();bindExploreFilters();bindPeopleRecommendationActions();bindToptenSlider();bindAddresses();bindWallet();bindPostActions();bindFollowActions();
   if(section==='blocked')bindBlockedAccounts();if(section==='hidden-content')bindHiddenContent();if(section==='reels')bindReelsPlayback();if(section==='addresses')initMap();
  }catch(err){
   if(!isCurrent())return;
@@ -1322,76 +1322,6 @@ function bindFollowActions(){
   notify(incoming ? "Pengikut dihapus." : "Anda berhenti mengikuti akun ini.");
   await mountAccount(incoming ? "followers" : "following");
  }));
-}
-function bindStoryAutoScroll(){
- const track=document.querySelector('.ua-circle-story-track');
- if(!track||!window.matchMedia('(max-width:760px)').matches||window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
- const cards=[...track.querySelectorAll('.ua-story-group')];if(cards.length<2)return;
- let timer=null,settleTimer=null,wheelTimer=null,frame=null,interacting=false,autoScrolling=false;
- const stop=()=>{
-  if(timer){clearTimeout(timer);timer=null;}
-  if(frame!==null){cancelAnimationFrame(frame);frame=null;}
-  if(settleTimer){clearTimeout(settleTimer);settleTimer=null;}
- };
- const schedule=(delay=1800)=>{
-  if(timer){clearTimeout(timer);timer=null;}
-  if(interacting||document.hidden)return;
-  timer=setTimeout(()=>{
-   timer=null;
-   if(interacting||document.hidden)return;
-   const trackLeft=track.getBoundingClientRect().left;
-   const current=cards.reduce((best,card,i)=>{
-    const distance=Math.abs(card.getBoundingClientRect().left-trackLeft);
-    const bestDistance=Math.abs(cards[best].getBoundingClientRect().left-trackLeft);
-    return distance<bestDistance?i:best;
-   },0);
-   const next=cards[current+1];
-   const target=next?track.scrollLeft+next.getBoundingClientRect().left-trackLeft-8:0;
-   const from=track.scrollLeft,distance=target-from;
-   if(Math.abs(distance)<2){schedule(1800);return;}
-   autoScrolling=true;
-   const duration=950,started=performance.now();
-   const animate=now=>{
-    if(!autoScrolling||interacting){frame=null;return;}
-    const progress=Math.min(1,(now-started)/duration);
-    const eased=1-Math.pow(1-progress,5);
-    track.scrollLeft=from+distance*eased;
-    if(progress<1){frame=requestAnimationFrame(animate);return;}
-    frame=null;autoScrolling=false;schedule(1800);
-   };
-   frame=requestAnimationFrame(animate);
-  },delay);
- };
- const begin=()=>{
-  interacting=true;
-  if(timer){clearTimeout(timer);timer=null;}
-  if(frame!==null){cancelAnimationFrame(frame);frame=null;}
-  autoScrolling=false;
-  if(settleTimer){clearTimeout(settleTimer);settleTimer=null;}
- };
- const end=()=>{
-  interacting=false;
-  if(timer){clearTimeout(timer);timer=null;}
-  timer=setTimeout(()=>{timer=null;schedule(1800);},700);
- };
- track.addEventListener('pointerdown',begin,{passive:true});
- track.addEventListener('pointerup',end,{passive:true});
- track.addEventListener('pointercancel',end,{passive:true});
- track.addEventListener('touchcancel',end,{passive:true});
- track.addEventListener('wheel',()=>{
-  begin();clearTimeout(wheelTimer);wheelTimer=setTimeout(end,700);
- },{passive:true});
- track.addEventListener('scroll',()=>{
-  if(autoScrolling||interacting)return;
-  if(timer){clearTimeout(timer);timer=null;}
-  if(settleTimer)clearTimeout(settleTimer);
-  settleTimer=setTimeout(()=>{settleTimer=null;schedule(1800);},260);
- },{passive:true});
- track.addEventListener('mouseenter',begin);
- track.addEventListener('mouseleave',end);
- track.addEventListener('focusin',begin);
- track.addEventListener('focusout',end);
- schedule(1800);
 }
 function bindToptenSlider(){
  if(trendSliderVisibilityHandler){document.removeEventListener('visibilitychange',trendSliderVisibilityHandler);trendSliderVisibilityHandler=null;}
