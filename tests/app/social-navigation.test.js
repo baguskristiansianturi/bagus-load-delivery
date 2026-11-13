@@ -121,7 +121,7 @@ test('signed-in home leads with Bali experiences, search, wishlist and the perso
  assert.ok(account.includes('function bindToptenSlider()')&&account.includes('scheduleAuto(3600)')&&account.includes('pointerdown')&&account.includes('pointerup')&&account.includes('setTimeout(()=>{'),'Mobile Top 10 must rotate automatically, follow direct pointer control and wait before resuming after interaction.');
  assert.ok(account.includes("exploreFilter='all'")&&account.includes("ua-home-following")&&account.includes("['all','Semua']")&&account.includes("['latest','Terbaru']"),'Circle feed must default to all posts and offer latest ordering.');
  assert.ok(account.includes('ua-home-topic-carousel')&&account.includes('ua-home-compose-prompt')&&!account.includes('REKOMENDASI PERSONAL')&&!account.includes('Atur minat')&&!account.includes('Pilih minat'),'Untukmu must show automatic recommendation cards without setup instructions or extra explanatory copy.');
- assert.ok(account.includes('storiesSection+peopleSection+homeHeading')&&!account.includes('circleHeading')&&!account.includes('RUANG PERSONAL PLUITS'),'Circle must begin with its content sections without a redundant personal-space intro banner.');
+ assert.ok(account.includes('trendSection+homeNearbySection()+peopleSection+storiesSection+filterNav+homeHeading')&&!account.includes('circleHeading')&&!account.includes('RUANG PERSONAL PLUITS'),'Circle order must be Top 10, nearby, people recommendations, Story, feed navbar, then real post cards.');
 
  assert.ok(topTen.includes("title:'Beef Slab'")&&topTen.includes("href:'#/places?category=restaurant'"),'Tapping a trending food item must open its matching directory category.');
  const directorySource=await readFile(new URL('../../src/pages/directory/index.js',import.meta.url),'utf8');
@@ -132,11 +132,11 @@ test('signed-in home leads with Bali experiences, search, wishlist and the perso
  assert.ok(account.includes("startHomeSearchPrompt('Welcome to '+city)")&&account.includes('nominatim.openstreetmap.org/reverse'),'Search prompt must welcome users using their detected current city.');
  assert.ok(account.includes('navigator.geolocation.getCurrentPosition'),'Home must request device location when no current location is available.');
  assert.ok(account.includes('window.__pluitsHomeLocation'),'Detected device location must be kept separate from profile location.');
- assert.ok(account.includes('ua-explore-filters')&&account.includes('trendSection+homeNearbySection()+storiesSection')&&!account.includes('circleHeading'),'Circle must retain Trending and nearby sections while omitting the redundant intro banner.');
+ assert.ok(account.includes('trendSection+homeNearbySection()+peopleSection+storiesSection+filterNav')&&!account.includes('circleHeading'),'Circle must retain the requested section order while omitting the redundant intro banner.');
  assert.ok((account.match(/homeNearbySection\(\)/g)||[]).length===1,'The nearby section must appear once, above Circle content, not be duplicated after the feed.');
  assert.ok(account.includes('homeNearbySection')&&account.includes('bindHomeNearby'),'Home must use live nearby results.');
- assert.ok(account.includes('Temukan Lebih Banyak')&&account.includes('Produk Lokal')&&account.includes('Kumpulan')&&account.includes('Layanan PLUITS'),'Home must continue from the 30-post feed into discovery, product recommendations, service collections and PLUITS service filters.');
- assert.ok(account.includes('storiesSection+peopleSection+homeHeading'),'People recommendations must appear after Circle stories and before the post feed, without an intro banner.');
+ assert.ok(account.includes('Temukan Lebih Banyak')&&account.includes('Temukan Produk Lokal')&&account.includes('Kumpulan')&&account.includes('Layanan PLUITS'),'Home must continue from the 30-post feed into discovery, local products, service collections and PLUITS service filters.');
+ assert.ok(account.includes('peopleSection+storiesSection+filterNav+homeHeading'),'People recommendations must appear before Story, and the feed navbar must appear immediately after Story.');
  const circleCss=await readFile(new URL('../../src/pages/account/circle-experience.css',import.meta.url),'utf8');
  const peopleCss=await readFile(new URL('../../src/features/discovery/people-recommendations.css',import.meta.url),'utf8');
  assert.ok(circleCss.includes('scroll-snap-type:x mandatory!important')&&circleCss.includes('overflow-x:auto!important')&&circleCss.includes('-webkit-overflow-scrolling:touch!important')&&circleCss.includes('gap:2px!important'),'Story rail must use the same native swipe/momentum/snap carousel behavior as People Recommendations while retaining the three-up mobile layout.');
