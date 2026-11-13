@@ -31,6 +31,9 @@ for (const absoluteFile of sourceFiles) {
   const file = relativePath(absoluteFile);
   const sourceLayer = file.split('/')[1];
   const content = readFileSync(absoluteFile, 'utf8');
+  if (file !== 'src/lib/supabase/client.js' && (/\\bcreateClient\\s*\\(/.test(content) || /@supabase\\/supabase-js/.test(content))) {
+    violations.push(file + ': use the single shared Supabase client from src/lib/supabase/client.js.');
+  }
   for (const match of content.matchAll(importPattern)) {
     const specifier = match[2];
     if (!specifier.startsWith('.') && !specifier.startsWith('@/')) continue;
