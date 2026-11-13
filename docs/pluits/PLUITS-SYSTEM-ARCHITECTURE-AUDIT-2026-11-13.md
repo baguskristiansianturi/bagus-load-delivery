@@ -305,6 +305,7 @@ A read-only follow-up reviewed the live RLS definitions, the 22 public SECURITY 
 2. Public and authenticated non-member read branches for `products` and `product_variants` do not require `stores.online_sales_enabled = true`, although the public marketplace view and product-image policy do. Direct table reads can therefore expose products/variants from stores that have disabled online sales.
 3. Live `user_post_directory_entities_public_read` does not filter the parent post to public visibility and published moderation status. The repository migration source includes a visibility check, so live/source drift also needs reconciliation.
 4. `private.get_user_profile_directory_by_ids` allows a reverse-follow relationship to expose fields of a private profile, while `private.get_user_profile_directory` requires the viewer to be an accepted follower. Product privacy semantics need confirmation.
+5. Blog post SELECT policy can expose published/public post text even after its parent blog is set private; the public route view and Blog media Storage policy both hide the private blog. This is a privacy inconsistency requiring a policy correction or explicit product decision.
 
 Detailed policy names, observed impact, recommended tests and priorities are recorded in [PLUITS Security and Migration Reconciliation Audit](./PLUITS-SECURITY-AND-MIGRATION-RECONCILIATION-AUDIT-2026-11-13.md).
 
