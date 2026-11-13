@@ -14,7 +14,7 @@ test('public app download section presents Android and iOS as coming soon withou
 
 test('guest homepage places the modular app download section after the signup CTA and before footer',async()=>{
  const layout=await readFile(new URL('../../src/features/public-home/layout.js',import.meta.url),'utf8');
- assert.ok(layout.includes("import {renderAppDownload} from '../app-download/app-download.js';"));
+ assert.ok(layout.includes("import {renderAppDownload} from '../app-download/index.js';"));
  const join=await readFile(new URL('../../src/features/public-home/join.js',import.meta.url),'utf8');
  const footerModule=await readFile(new URL('../../src/features/public-home/footer.js',import.meta.url),'utf8');
  assert.ok(layout.includes("import {renderPublicJoin} from './join.js';"));
