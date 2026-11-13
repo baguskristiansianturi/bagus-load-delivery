@@ -343,7 +343,7 @@ Cakupan tersebut berguna, tetapi belum mencakup integration test RLS lintas-role
 - Workflow `.github/workflows/deploy.yml` menjalankan install, test, build, pemeriksaan `dist/index.html`, lalu deploy GitHub Pages pada push `main` atau manual dispatch.
 - Tidak ditemukan workflow preview terpisah untuk branch. Menjalankan workflow Pages secara manual pada branch kerja dapat mengganti situs Pages yang sama; jangan gunakan itu sebagai preview.
 - Audit ini belum menjalankan `npm test`, `npm run build`, browser UAT, pixel inspection, atau pengukuran mobile. Percobaan clone repository untuk menjalankan tes lokal gagal karena environment eksekusi tidak dapat me-resolve `github.com`; karena itu tidak ada klaim bahwa tes/build lulus.
-- Branch `work/production-design-inventory` berisi dokumentasi saja, 7 commit di depan `main`, 0 di belakang. Belum ada perubahan source app atau deployment.
+- Branch `work/production-design-inventory` berisi dokumentasi saja, 23 commit di depan `main`, 0 di belakang. Belum ada perubahan source app atau deployment.
 - PR #7 dan PR #3 tetap open dan belum digabung. Tidak ada merge yang dilakukan.
 
 ## 7. Gerbang audit yang masih wajib diselesaikan
