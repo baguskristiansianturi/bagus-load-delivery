@@ -1236,3 +1236,12 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - **Status:** SHARED CLIENT CONSOLIDATION IMPLEMENTED / AUTOMATED TESTED. No production deploy, no database mutation, and no user data change.
 - **Belum selesai:** pemindahan query/mutation dari page controllers ke repository/service modules; pemisahan realtime lifecycle dari app bootstrap; full-site browser preview; backend dev environment tanpa biaya; migration reconciliation dan RLS regression fixes.
 - **Next:** mulai service extraction pada domain kecil dengan kontrak eksplisit dan tes. Pertahankan page controller sebagai route composition owner; jangan pindahkan seluruh file besar sekaligus.
+
+
+## CP-076 — Conventional component and service folder scaffolding (13 November 2026)
+
+- **Founder direction:** semua bagian arsitektur yang sudah diputuskan harus tampak di struktur repository meskipun implementasi belum dimulai, agar folder menjadi roadmap yang dapat diaudit.
+- **Scaffolding IMPLEMENTED:** `src/components/layout/`, `src/components/feedback/`, `src/components/primitives/`; `src/services/auth/`, `src/services/realtime/`, `src/services/offline/`, dan `src/services/repositories/` kini memiliki README yang menjelaskan tanggung jawab target, pemilik runtime saat ini, serta batas migrasinya. `src/services/storage/` tetap menjadi implementasi aktif.
+- **Boundary:** README scaffolding tidak berisi runtime palsu. Komponen bersama tidak boleh mengambil data; services tidak boleh merender HTML; realtime harus memiliki lifecycle owner tunggal; offline state tidak boleh disamakan dengan data server/publikasi.
+- **Documentation:** `FRONTEND-MODULE-MAP.md` dan `PLUITS-APPLICATION-ARCHITECTURE.md` diselaraskan dengan folder yang benar-benar ada.
+- **Status:** CONVENTIONAL FOLDER SCAFFOLDING IMPLEMENTED. Belum berarti semua komponen, services, atau fitur telah diekstrak. PR #8 tetap draft, belum merge/deploy.
