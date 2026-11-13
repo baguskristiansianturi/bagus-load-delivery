@@ -6,6 +6,7 @@ Dokumen ini adalah pintu masuk untuk memahami susunan teknis PLUITS. Tidak perlu
 
 1. [Engineering Architecture Playbook](./ENGINEERING-ARCHITECTURE-PLAYBOOK.md) — cara kerja dan aturan pengembangan.
 2. [Page, Route and Section Registry](./PAGE-ROUTE-AND-SECTION-REGISTRY.md) — halaman yang sudah ada, alamatnya, pemilik file, alias, dan placeholder.
+3. [Development Workflow and Environment Readiness](./DEVELOPMENT-WORKFLOW-AND-ENVIRONMENT-READINESS.md) — local development, PR CI, hosted preview, production boundary, Supabase environment, and readiness gates.
 3. [PLUITS System Architecture Audit](./PLUITS-SYSTEM-ARCHITECTURE-AUDIT-2026-11-13.md) — inventaris struktur repository, batas frontend/backend, dependency, dan kondisi live Supabase.
 4. [PLUITS Security and Migration Reconciliation Audit](./PLUITS-SECURITY-AND-MIGRATION-RECONCILIATION-AUDIT-2026-11-13.md) — temuan RLS, fungsi SQL, Storage, migrasi live vs repository, dan gerbang validasi keamanan.
 5. [Reuse-First Design and Component Policy](./REUSE-FIRST-DESIGN-AND-COMPONENT-POLICY.md) — aturan wajib mencari dan menggunakan kembali aset, token, komponen dan pola yang sudah ada sebelum membuat hal baru.
