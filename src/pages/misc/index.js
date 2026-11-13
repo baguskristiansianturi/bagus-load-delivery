@@ -1,6 +1,6 @@
-import {createClient} from 'https://esm.sh/@supabase/supabase-js@2';
+import { supabase as db } from '../../lib/supabase/client.js';
 import {shell,hero,pageHeading,icon} from '../../app/ui.js';
-const db=createClient('https://ytndswhqxayqpftszwfh.supabase.co','sb_publishable_kOUbKBYg88nXgz8FQRSnvA_k0hvKY65');
+
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const D={promo:['PROMO','Penawaran usaha lokal','Penawaran akan ditampilkan setelah program promo resmi tersedia.'],help:['BANTUAN','Pusat Bantuan','Panduan menggunakan akun, komunitas, GeoDirectory, Marketplace, dan Trip.'],faq:['FAQ','Pertanyaan yang sering muncul','Jawaban singkat untuk hal yang paling sering ditanyakan pelanggan.'],about:['TENTANG KAMI','Tentang Pluits','Social, local marketplace, trip, dan GeoDirectory dalam satu ekosistem.'],contact:['KONTAK','Hubungi Pluits','Pilih kanal yang sesuai untuk kebutuhan dan bantuan.'],terms:['LEGAL','Syarat & Ketentuan','Aturan penggunaan marketplace.'],privacy:['LEGAL','Kebijakan Privasi','Informasi pengelolaan data pengguna.'],reviews:['ULASAN','Ulasan terverifikasi','Ulasan akan ditampilkan setelah transaksi atau kunjungan memenuhi kriteria verifikasi Pluits.']};
 async function loadRecentDirectory(){
