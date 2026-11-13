@@ -31,7 +31,7 @@ for (const absoluteFile of sourceFiles) {
   const file = relativePath(absoluteFile);
   const sourceLayer = file.split('/')[1];
   const content = readFileSync(absoluteFile, 'utf8');
-  if (file !== 'src/lib/supabase/client.js' && (/\\bcreateClient\\s*\\(/.test(content) || /@supabase\\/supabase-js/.test(content))) {
+  if (file !== 'src/lib/supabase/client.js' && (content.includes('createClient') || content.includes('@supabase/supabase-js'))) {
     violations.push(file + ': use the single shared Supabase client from src/lib/supabase/client.js.');
   }
   for (const match of content.matchAll(importPattern)) {
