@@ -52,28 +52,67 @@ Important: this is an incremental migration. Account, Marketplace, Trip, Seller 
 
 `src/features/public-home/layout.js` is the page-owned composition layer. `src/pages/home/index.js` owns route/auth/data behavior only. See `src/features/public-home/README.md` and `docs/pluits/PAGE-COMPONENT-OWNERSHIP-AUDIT-2026-11-12.md` for the component ownership table. Public navbar/search behavior must not leak into Marketplace, Trip, Directory or signed-in social workspaces.
 
-## Canonical module scaffolding — 13 November 2026
+## Canonical module structure — 13 November 2026
 
-The following folders now exist as tracked architecture scaffolding. A README in these folders records target ownership; it does **not** claim that a runtime feature has been implemented.
+All planned folders are tracked with a README so Git records the directory. A README-only folder is a roadmap marker, not an implemented feature or route. Existing runtime files remain with their current owner until a tested extraction is completed.
 
-| Module/folder | Current status | Current runtime owner |
+### Frontend layers
+
+| Layer | Canonical location | Responsibility | Current state |
+|---|---|---|---|
+| App | `src/app/` | Bootstrap, router, guards, app lifecycle | Active |
+| Configuration | `src/config/` | Environment parsing and non-secret flags | Scaffolded; current sources must be consolidated before moving |
+| Pages | `src/pages/` | Route-level screen composition; one controller per canonical route | Active; some controllers still contain feature/data logic |
+| Features | `src/features/` | User-facing capability, state, sections and scoped styles | Mixed: active and planned modules |
+| Shared components | `src/components/` | Reusable accessible UI; no domain data fetching | Active and scaffolded |
+| Design system | `src/design-system/` | Tokens, typography, icons, motion | Scaffolded; current CSS remains authoritative |
+| Services | `src/services/` | Repositories, Auth, Storage, Realtime, cache and offline operations | Storage active; other domain services planned |
+| Library adapters | `src/lib/` | SDK initialization and low-level wrappers | Active; one shared Supabase client |
+| Platform adapters | `src/platform/` | Browser APIs and future native bridges | Scaffolded; no native runtime |
+| Global styles/assets | `src/styles/`, `src/assets/`, `public/` | Global CSS, bundled assets and static public files | Active |
+
+### Feature ownership
+
+| Feature | Current runtime owner | Target module | Status |
+|---|---|---|---|
+| Authentication | `features/auth`, Account page | `features/auth` + `services/auth` | Partially implemented |
+| Public Home | `features/public-home`, Home page | `features/public-home` | Implemented composition; legacy CSS remains |
+| Feed | Home and Account pages | `features/feed` | Planned extraction |
+| Posts | Account page; post actions extracted | `features/posts` | Partially implemented |
+| Stories | Account/feed owners | `features/stories` | Planned extraction |
+| Reels | Reel card/style extracted; page owns flows | `features/reels` | Partially implemented |
+| Media | Media feature + storage helper | `features/media`, `services/storage` | Partially implemented |
+| Profile | Account page; hero/image framing extracted | `features/profile` | Partially implemented |
+| Inbox | Messages page; sidebar extracted | `features/inbox` | Partially implemented |
+| Notifications | Account page | `features/notifications` | Planned extraction |
+| Discovery | Search and public-home owners | `features/discovery` | Partially implemented |
+| GeoDirectory | Directory page | `features/directory` | Planned extraction |
+| Store/catalog | Marketplace page | `features/store/{catalog,storefront,product,wishlist}` | Planned extraction |
+| Cart | Marketplace page | `features/cart` | Planned extraction |
+| Checkout | Marketplace page | `features/checkout` | Planned extraction |
+| Orders | Marketplace page | `features/orders` | Planned extraction |
+| Seller Center | Seller page; navigation extracted | `features/seller/{dashboard,store-switcher,products,categories,inventory,delivery,store-profile,settings}` | Partially implemented |
+| Trip | Trip page | `features/trips/{itinerary,destinations,service-requests}` | Planned extraction |
+| Account Settings | Account page | `features/account-settings` | Planned extraction |
+| Moderation | Admin page | `features/moderation` | Planned extraction |
+| App Download | Feature module | `features/app-download` | Implemented |
+
+### Services and platform modules
+
+| Module | Target ownership | Status |
 |---|---|---|
-| `src/config/` | Reserved; extraction not started | Existing route/config owners |
-| `src/design-system/` | Reserved; existing styles remain authoritative | `src/styles/`, `src/style.css` |
-| `src/platform/` | Reserved; browser adapters not extracted | Existing browser-facing owners |
-| `src/components/layout/` | Planned shared layout primitives | Existing page/workspace shells |
-| `src/components/feedback/` | Planned loading/empty/error/toast components | Existing page and feature states |
-| `src/components/primitives/` | Planned reusable controls | `components/common/` and feature-local controls |
-| `src/services/auth/` | Planned auth/session services | `features/auth/`, `app/`, page controllers |
-| `src/services/realtime/` | Planned subscription lifecycle | `main.js`, `pages/messages/`, `pages/account/` |
-| `src/services/offline/` | Planned local persistence/outbox | `pages/messages/`, `pages/blog-studio/` |
-| `src/services/repositories/` | Planned domain data-access modules | Existing page controllers |
-| `src/services/storage/` | Implemented signed URL/storage helpers | `services/storage/`
-| `src/features/feed/` | Planned extraction | `pages/home`, `pages/account`, `features/public-home` |
-| `src/features/notifications/` | Planned extraction | `pages/account` |
-| `src/features/store/` | Planned extraction | `pages/marketplace` |
-| `src/features/checkout/` | Planned extraction | `pages/marketplace` |
-| `src/features/directory/` | Planned extraction | `pages/directory` |
-| `src/features/trips/` | Planned extraction | `pages/trip` |
+| `services/auth` | Session, recovery and identity operations | Planned extraction |
+| `services/repositories/{accounts,social,messaging,notifications,directory,marketplace,seller,trips,blog}` | Domain data access; no HTML/DOM | Planned extraction |
+| `services/realtime/{presence,messages,notifications}` | Subscription lifecycle and cleanup | Planned extraction |
+| `services/storage` | Signed URLs and Storage operations | Implemented helpers |
+| `services/offline/{outbox,cache}` | Per-user queue, cache and retry | Planned extraction |
+| `design-system/{tokens,typography,icons,motion}` | Visual foundations | Planned extraction; current styles remain source of truth |
+| `platform/{browser,native}` | Browser adapters and future native bridge | Planned; native runtime not installed |
 
-The enforcement gate is `npm run verify:module-boundaries`, included in `npm test`. It blocks upward imports from shared components/services/library adapters, private direct cross-feature imports, and new Supabase client instances outside `src/lib/supabase/client.js`. Eleven runtime client instances now use that singleton. Data access remains in some page controllers and is the next incremental service-extraction task. Existing runtime files remain in place until each extraction is covered by route and behavior tests.
+### Page and route rule
+
+Page folders correspond to canonical route ownership, not every tab or UI state. Marketplace subflows remain route states owned by `pages/marketplace` until safely extracted into features. `pages/inbox-personal` and `pages/inbox-toko` remain reserved planning folders; no new route is registered for them. Aliases never create duplicate page controllers.
+
+### Enforcement
+
+`npm run verify:module-boundaries` is included in `npm test`. It blocks upward imports from shared lower-level modules, private direct cross-feature imports and independent Supabase client construction outside `src/lib/supabase/client.js`. Eleven runtime modules now use that singleton. Data-access extraction from page controllers remains incremental and must include consumer/route tests.

@@ -26,24 +26,53 @@ Store/catalog, product detail, product wishlist, cart and checkout are separate 
 Dependency direction: `page → feature → shared component/design system`; `page/feature → service → library/platform adapter`. Shared components never import pages or features. Services and library/platform adapters never import UI. Feature A cannot access Feature B's private implementation.
 
 ## Target structure
+
+This is the complete ownership map. README-only directories are tracked roadmap entries, not fake runtime implementations.
+
 ```text
 src/
-  app/                 # bootstrap, router, guards, lifecycle
-  config/              # route registry, flags, environment config
-  design-system/       # tokens, typography, motion, icons
-  components/           # navigation, layout, feedback, primitives
-  features/             # feed, posts, reels, media, profile, inbox, notifications
-                         # discovery, store, checkout, directory, trips, seller
-  services/             # supabase, realtime, storage, offline
-  lib/                  # SDK clients and library adapters
-  platform/             # browser adapters; future capacitor adapters
-  pages/                # route-level composition only
-  styles/               # reset and global token consumption only
-tests/                  # contracts, features, route regression
-docs/                   # architecture decisions, module contracts and diagrams
+  app/                         # bootstrap, router, guards, app lifecycle
+  config/                      # environment and non-secret app configuration
+  pages/                       # canonical route controllers only
+    home/ account/ messages/ marketplace/ seller/ directory/ trip/
+    blog/ blog-studio/ help/ admin/
+    inbox-personal/            # reserved; no route yet
+    inbox-toko/                # reserved; no route yet
+  features/
+    auth/ public-home/ feed/ posts/ stories/ reels/ media/ profile/
+    inbox/ conversations/ composer/ contacts/ requests/
+    notifications/ discovery/ directory/
+    store/ catalog/ storefront/ product/ wishlist/
+    cart/ checkout/ orders/
+    seller/ dashboard/ store-switcher/ products/ categories/ inventory/
+            delivery/ store-profile/ settings/
+    trips/ itinerary/ destinations/ service-requests/
+    account-settings/ moderation/ app-download/
+  components/ common/ social/ layout/ feedback/ primitives/
+  design-system/ tokens/ typography/ icons/ motion/
+  services/
+    auth/
+    repositories/ accounts/ social/ messaging/ notifications/ directory/
+                 marketplace/ seller/ trips/ blog/
+    realtime/ presence/ messages/ notifications/
+    storage/
+    offline/ outbox/ cache/
+  lib/ supabase/               # single shared browser client
+  platform/ browser/ native/   # native adapter is future-only
+  styles/                      # global styles only
+  assets/
+
+supabase/
+  migrations/                  # flat chronological immutable SQL migrations
+  functions/                   # trusted Edge Functions only when needed
+  tests/ rls/ rpc/ storage/
+
+tests/
+  app/ features/ services/ architecture/ contracts/ integration/
+  routes/ e2e/ visual/
 ```
 
-This is a target ownership map, not a risky mass-move. Folders for planned layers/features are tracked with README status markers. They contain no fake runtime behavior. Migrate incrementally with compatibility exports and sibling-route regression checks.
+The current app uses Vite and native JavaScript ES modules. This structure does not introduce React, a second router, a second design system or a separate Node/Go backend. Keep existing files where they are until imports, consumers and tests are mapped.
 
 ## Feature contract
 Every feature documents purpose/non-goals, public entry points, inputs/outputs/events, state owner, service dependencies, stylesheet namespace, composed routes, loading/empty/error/offline/permission states, accessibility, responsive rules and tests.

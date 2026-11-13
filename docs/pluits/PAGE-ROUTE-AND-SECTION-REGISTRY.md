@@ -146,3 +146,10 @@ Update this file in the same change that adds/removes/renames a canonical route 
 
 ## 7. Page/component ownership standard
 The route inventory above must be read together with [PAGE-COMPONENT-OWNERSHIP-AUDIT-2026-11-12.md](./PAGE-COMPONENT-OWNERSHIP-AUDIT-2026-11-12.md). The audit defines the page layout, sidebar and feature ownership boundaries, plus the required process for adding a new page. A route alias must never receive a duplicate page controller.
+
+
+## Module folders are not route declarations
+
+Folders under `src/features/` describe capabilities and internal parts; they do not create URLs. Only canonical routes listed in this registry and implemented by `src/pages/` are routable. A tab, panel, modal, subflow or feature component must not receive a new page controller unless it is a separately approved route.
+
+The reserved `src/pages/inbox-personal/` and `src/pages/inbox-toko/` folders are roadmap markers only. They are not imported by the router and do not create new Inbox routes. Marketplace catalog, storefront, product, cart, checkout and orders remain composed by the current Marketplace route controller while feature modules are extracted incrementally.

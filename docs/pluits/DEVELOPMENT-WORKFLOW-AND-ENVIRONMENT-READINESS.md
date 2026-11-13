@@ -56,7 +56,7 @@ The architecture follows conventional ownership:
 - `styles/`: global styles only.
 - `tests/`, `scripts/`: automated checks and developer tooling.
 
-The current branch now tracks README scaffolding for target folders that do not yet have runtime implementations. Each README identifies the existing runtime owner. A folder or README is not proof that a feature has been implemented.
+The current branch tracks the agreed frontend/backend module map with README markers for planned directories. This includes Social (Feed, Posts, Stories, Reels, Media, Profile, Inbox, Notifications), Discovery/GeoDirectory, Marketplace (Catalog, Storefront, Product, Wishlist, Cart, Checkout, Orders), Seller Center sections, Trip sections, Account Settings, Moderation, repositories by domain, Realtime/Offline services, design-system foundations, platform adapters, Supabase Edge Function/database-test boundaries and test groups. Each marker identifies the current runtime owner and target responsibility. A folder or README is not proof that a feature has been implemented.
 
 `scripts/verify-module-boundaries.mjs` is added to check dependency direction. `npm test` invokes it alongside the existing production-surface verification and Node tests. The guard prevents shared components/services/library adapters from importing higher-level UI and prevents private direct imports between feature modules. Feature-to-feature reuse must go through an explicit `src/features/<feature>/index.js` public entry point. The first two consumers now use public entry points for Profile image framing and the App Download section.
 
@@ -150,4 +150,4 @@ The full development/release loop is complete only after:
 - production secrets and preview credentials are separated;
 - release approval and rollback procedure are documented and tested.
 
-**Current overall status:** PR CI, module-boundary guard, single-client guard, main-only deployment guard, 40 automated tests and production build pass on commit `1ef8139`. Modular target folders are scaffolded, but several runtime controllers and data-access paths still need incremental extraction. Hosted preview and isolated backend environment are not configured. Migration/security gates remain open. Do not label PLUITS fully release-ready.
+**Current overall status before the expanded module-map commit:** PR CI, module-boundary guard, single-client guard, main-only deployment guard, 40 automated tests and production build pass on commit `9c5c928`. The expanded module map adds a scaffold-presence regression test; its own CI run must pass before this latest structure is marked verified. Several runtime controllers and data-access paths still need incremental extraction. Hosted preview and isolated backend environment are not configured. Migration/security gates remain open. Do not label PLUITS fully release-ready.

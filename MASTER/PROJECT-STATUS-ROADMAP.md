@@ -1254,3 +1254,15 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - **Regression test:** `tests/app/deployment-workflow.test.js` memverifikasi pull_request/push branch filters, workflow_dispatch, artifact upload, dan syarat main-only deploy.
 - **Automated verification:** [GitHub Actions run 43448015144 — SUCCESS](https://github.com/baguskristiansianturi/pluits/actions/runs/43448015144), commit `4608ce580d6b7fb5bc13b37a07dc0e1ee7f8ad63`; 40 Node tests PASS, module-boundary/single-client checks PASS, Vite build PASS, Pages artifact upload PASS, production deploy SKIPPED.
 - **Status:** CODE + REGRESSION TEST IMPLEMENTED / AUTOMATED TESTED. Tidak ada deployment production yang dijalankan.
+
+
+## CP-078 — Full modular folder roadmap and frontend/backend placement (13 November 2026)
+
+- **Founder requirement:** seluruh bagian PLUITS yang sudah diputuskan harus memiliki tempat/folder konvensional di repository, termasuk bagian yang belum diimplementasikan, agar folder kosong menunjukkan roadmap. Nama folder harus lazim dan penempatannya jelas antara frontend dan backend.
+- **Frontend structure:** `src/app`, `src/config`, `src/pages`, `src/features`, `src/components`, `src/design-system`, `src/services`, `src/lib`, `src/platform`, `src/styles`, `src/assets`.
+- **Feature map:** Social (Feed, Posts, Stories, Reels, Media, Profile, Inbox, Notifications); Discovery/GeoDirectory; Marketplace (Catalog, Storefront, Product, Wishlist, Cart, Checkout, Orders); Seller Center (Dashboard, Store Switcher, Products, Categories, Inventory, Delivery, Store Profile, Settings); Trips (Itinerary, Destinations, Service Requests); Account Settings; Moderation; Auth; Public Home; App Download.
+- **Services map:** repositories per domain, Realtime (Presence, Messages, Notifications), Storage, Offline (Outbox, Cache), Auth. Satu shared Supabase client tetap berada di `src/lib/supabase/client.js`.
+- **Backend placement:** Supabase memiliki Auth, PostgreSQL/RLS/RPC, Realtime dan Storage. SQL migrations tetap flat/chronological di `supabase/migrations/`; Edge Functions di `supabase/functions/` hanya bila dibutuhkan; database tests di `supabase/tests/{rls,rpc,storage}/`. Tidak dibuat backend Node/Go yang tidak ada.
+- **Tracked implementation:** folder README scaffolding dan architecture regression test ditambahkan. Folder rencana tidak diimpor sebagai halaman palsu dan tidak otomatis membuat route. Pemilik route/runtime yang sudah ada tetap dipertahankan.
+- **No-cost constraint:** tidak ada Supabase development branch atau hosting berbayar dibuat. Database production dan Pages production tidak disentuh.
+- **Next sequence:** (1) CI validation struktur; (2) konfigurasi full-site preview gratis yang terpisah dari production Pages; (3) pilih satu batas page/feature; (4) ekstrak UI/behavior; (5) pindahkan data access ke repository; (6) ekstrak lifecycle Realtime/Offline; (7) rekonsiliasi migration dan uji backend secara terisolasi; (8) Android/browser UAT; (9) persetujuan founder sebelum release production.

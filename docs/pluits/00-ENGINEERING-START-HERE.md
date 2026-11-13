@@ -40,3 +40,12 @@ Dokumen ini adalah pintu masuk untuk memahami susunan teknis PLUITS. Tidak perlu
 Daftar halaman dalam registry adalah inventaris route dari kode saat ini, bukan jaminan semua alur sudah lengkap. Saat ini route Inbox yang aktif adalah `#/inbox` (alias lama `#/messages`) dan runtime-nya dimiliki `src/pages/messages/`. Folder Inbox Personal dan Inbox Toko hanya berisi README placeholder untuk roadmap; keduanya belum memiliki route, controller, atau runtime sendiri.
 
 Folder scaffolding lain juga hanya penanda target ownership, bukan fitur runtime. Jangan memindahkan kode atau menyatakan fitur selesai hanya karena folder target sudah tersedia.
+
+
+## Modular development entry points
+
+- [Frontend module map](./FRONTEND-MODULE-MAP.md) — feature folders and current/target ownership.
+- [Application architecture](./PLUITS-APPLICATION-ARCHITECTURE.md) — full folder structure and dependency direction.
+- [Page and route registry](./PAGE-ROUTE-AND-SECTION-REGISTRY.md) — canonical route ownership; feature folders do not create routes.
+- [Backend module map](./BACKEND-MODULE-MAP.md) — Supabase/PostgreSQL, RLS, RPC, Storage and Edge Function boundaries.
+- [Development workflow and environment readiness](./DEVELOPMENT-WORKFLOW-AND-ENVIRONMENT-READINESS.md) — branch, CI, preview, backend and release gates.
