@@ -10,7 +10,7 @@ function walk(directory) {
   for (const entry of readdirSync(directory)) {
     const fullPath = path.join(directory, entry);
     if (statSync(fullPath).isDirectory()) walk(fullPath);
-    else if (/\\.(?:js|mjs)$/.test(entry)) sourceFiles.push(fullPath);
+    else if (/\.(?:js|mjs)$/.test(entry)) sourceFiles.push(fullPath);
   }
 }
 walk(sourceRoot);
@@ -25,7 +25,7 @@ const forbidden = {
 };
 
 const violations = [];
-const importPattern = /(?:\\bimport\\s+(?:[^'"]*?\\s+from\\s+)?|\\bexport\\s+[^'"]*?\\s+from\\s+|\\bimport\\s*\\()(['"])([^'"]+)\\1/g;
+const importPattern = /(?:\bimport\s+(?:[^'"]*?\s+from\s+)?|\bexport\s+[^'"]*?\s+from\s+|\bimport\s*\()(['"])([^'"]+)\1/g;
 
 for (const absoluteFile of sourceFiles) {
   const file = relativePath(absoluteFile);
@@ -35,18 +35,18 @@ for (const absoluteFile of sourceFiles) {
     const specifier = match[2];
     if (!specifier.startsWith('.') && !specifier.startsWith('@/')) continue;
     const resolved = specifier.startsWith('@/') 
-      ? posixPath.normalize(`src/${specifier.slice(2)}`)
+      ? posixPath.normalize(\`src/\${specifier.slice(2)}\`)
       : posixPath.normalize(posixPath.join(posixPath.dirname(file), specifier));
     const targetLayer = resolved.split('/')[1];
     if (targetLayer === sourceLayer && sourceLayer === 'features') {
       const sourceFeature = file.split('/')[2];
       const targetFeature = resolved.split('/')[2];
       if (sourceFeature && targetFeature && sourceFeature !== targetFeature) {
-        violations.push(`${file} -> ${resolved}: feature modules must use an explicit shared contract, not another feature's private files.`);
+        violations.push(\`\${file} -> \${resolved}: feature modules must use an explicit shared contract, not another feature's private files.\`);
       }
     }
     if (forbidden[sourceLayer]?.has(targetLayer)) {
-      violations.push(`${file} -> ${resolved}: ${sourceLayer} must not depend on ${targetLayer}.`);
+      violations.push(\`\${file} -> \${resolved}: \${sourceLayer} must not depend on \${targetLayer}.\`);
     }
   }
 }
@@ -54,6 +54,6 @@ for (const absoluteFile of sourceFiles) {
 assert.deepEqual(
   violations,
   [],
-  `PLUITS module-boundary violations found:\\n- ${violations.join('\\n- ')}`
+  \`PLUITS module-boundary violations found:\\n- \${violations.join('\\n- ')}\`
 );
-console.log(`Module boundaries verified across ${sourceFiles.length} source modules.`);
+console.log(\`Module boundaries verified across \${sourceFiles.length} source modules.\`);
