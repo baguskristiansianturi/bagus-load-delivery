@@ -1261,3 +1261,54 @@
   .ua-social-home .ua-story-group .ua-story-ring{width:116px;height:116px}
   .ua-social-home .ua-story-group>strong{max-width:116px}
 }
+
+
+/* Restore the two existing public-home conversion panels at the end of Circle. */
+.ua-social-home .ua-circle-bottom-promos{
+  width:100%;
+  max-width:1040px;
+  margin:28px auto 12px;
+  padding:0;
+}
+.ua-social-home .ua-circle-bottom-promos .pl-public-join{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:22px;
+  margin:0 auto 18px;
+  padding:26px 28px;
+  border:1px solid #dfeae8;
+  border-radius:18px;
+  background:linear-gradient(120deg,#f3faf9,#fff);
+}
+.ua-social-home .ua-circle-bottom-promos .pl-public-join>div{min-width:0}
+.ua-social-home .ua-circle-bottom-promos .pl-public-join .pl-public-eyebrow{
+  color:#168f87;font-size:10px;font-weight:800;letter-spacing:.12em
+}
+.ua-social-home .ua-circle-bottom-promos .pl-public-join h2{
+  margin:7px 0;color:#24383e;font-size:clamp(18px,2.4vw,25px);line-height:1.25
+}
+.ua-social-home .ua-circle-bottom-promos .pl-public-join p{
+  margin:0;color:#718087;font-size:12px;line-height:1.55
+}
+.ua-social-home .ua-circle-bottom-promos .pl-public-join>a{
+  flex:0 0 auto;display:inline-flex;align-items:center;gap:12px;padding:11px 17px;
+  border-radius:999px;background:#20aaa2;color:#fff;font-size:12px;font-weight:750;text-decoration:none
+}
+.ua-social-home .ua-circle-bottom-promos .pl-app-download{padding:0 0 24px}
+.ua-social-home .ua-circle-bottom-promos .pl-app-download-inner{
+  width:100%;max-width:none;margin:0;padding:28px;
+  grid-template-columns:minmax(0,1.1fr) minmax(260px,.9fr);
+  gap:24px;border-radius:18px;
+}
+@media(max-width:760px){
+ .ua-social-home .ua-circle-bottom-promos{width:calc(100% - 28px);margin:24px auto 12px}
+ .ua-social-home .ua-circle-bottom-promos .pl-public-join{
+   align-items:flex-start;flex-direction:column;gap:14px;margin-bottom:14px;padding:21px 18px;border-radius:15px
+ }
+ .ua-social-home .ua-circle-bottom-promos .pl-public-join h2{font-size:20px}
+ .ua-social-home .ua-circle-bottom-promos .pl-app-download-inner{
+   width:100%;padding:22px 17px;grid-template-columns:1fr;gap:18px;border-radius:15px
+ }
+ .ua-social-home .ua-circle-bottom-promos .pl-app-download{padding-bottom:0}
+}
