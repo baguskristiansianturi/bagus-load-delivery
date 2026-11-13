@@ -141,6 +141,7 @@ test('signed-in home leads with Bali experiences, search, wishlist and the perso
  const peopleCss=await readFile(new URL('../../src/features/discovery/people-recommendations.css',import.meta.url),'utf8');
  assert.ok(circleCss.includes('scroll-snap-type:x mandatory!important')&&circleCss.includes('overflow-x:auto!important')&&circleCss.includes('-webkit-overflow-scrolling:touch!important')&&circleCss.includes('gap:2px!important'),'Story rail must use the same native swipe/momentum/snap carousel behavior as People Recommendations while retaining the three-up mobile layout.');
  assert.ok(peopleCss.includes('scroll-snap-type:x mandatory')&&peopleCss.includes('-webkit-overflow-scrolling:touch'),'People Recommendations remains the reference carousel interaction.');
+ assert.ok(circleCss.includes('Canonical Circle Story + feed navigation layout')&&circleCss.includes('width:100%!important')&&circleCss.includes('calc((100% - 4px)/3)')&&circleCss.includes('ua-content-tabs>button.is-active:after'),'Story must align to the content gutter with a responsive three-up mobile rail, and feed tabs must use the canonical active indicator.');
  assert.ok(account.includes('.slice(0,30)'),'The signed-in home must cap rendered post hydration at 30 items.');
  assert.ok(topTen.includes('⌖ ')&&topTen.includes('ua-topten-copy')&&topTen.includes('TOP_TEN_DEMO_ITEMS'),'Top 10 cards must be an isolated, explicitly demo-only image presentation module.');
  const nearbySource=await readFile(new URL('../../src/pages/directory/index.js',import.meta.url),'utf8');
