@@ -188,7 +188,7 @@ test('Circle UI demo provides ten sample profiles without persisting fake accoun
  assert.equal(CIRCLE_DEMO_PEOPLE.length,10);
  const html=renderPeopleRecommendations({demoPeople:CIRCLE_DEMO_PEOPLE.slice(0,8)});
  assert.equal((html.match(/class="ua-people-card ua-people-card-demo"/g)||[]).length,8);
- assert.match(html,/DEMO UI/);
+ assert.doesNotMatch(html,/DEMO UI|DEMO/);
  assert.match(html,/data-people-demo-follow/);
  assert.doesNotMatch(html,/data-people-follow=/);
 });
