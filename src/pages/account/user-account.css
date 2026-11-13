@@ -957,11 +957,11 @@
 /* PLUITS MOBILE POLISH — calmer rhythm, balanced feed and safe-area navigation */
 @media (max-width: 760px) {
   .ua-social-app {
-    background: #f4f6f8;
+    background: #fff;
     padding-bottom: calc(72px + env(safe-area-inset-bottom)) !important;
   }
-  .ua-social-app .ua-main { background: #f4f6f8; }
-  .ua-social-home { background: #f4f6f8; }
+  .ua-social-app .ua-main { background: #fff; }
+  .ua-social-home { background: #fff; }
   .ua-social-home .ua-feed-top {
     height: 62px;
     min-height: 62px;
