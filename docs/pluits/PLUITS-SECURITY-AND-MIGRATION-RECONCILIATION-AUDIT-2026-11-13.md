@@ -160,7 +160,7 @@ Perbedaan arah relasi ini perlu dibandingkan dengan aturan privasi PLUITS yang d
 
 ### 4.1 SECURITY DEFINER
 
-Pemeriksaan isi dilakukan terhadap 22 public SECURITY DEFINER function yang dilaporkan dapat dipanggil role authenticated.
+Pemeriksaan isi dilakukan terhadap 22 public SECURITY DEFINER function yang dapat dipanggil role authenticated. Pemeriksaan grant pada seluruh 23 public SECURITY DEFINER function memastikan tidak satu pun memiliki EXECUTE untuk role anon; fungsi ke-23, `create_wallet_account_for_new_user`, tidak dapat dipanggil langsung oleh anon/authenticated dan digunakan sebagai trigger function.
 
 Hasil pemeriksaan source:
 
