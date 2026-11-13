@@ -127,6 +127,14 @@ function settingsHubPage(){
    ['lock','Privasi dan audiens','Visibilitas default Post, Story, dan interaksi','/account/content-settings','ready'],
    ['edit','Draf konten','Lanjutkan atau hapus Post yang belum diterbitkan','/account/drafts','ready'],
    ['shield','Akun diblokir','Kelola akun yang tidak ingin Anda hubungi','/account/blocked','ready'],['eye-off','Konten disembunyikan','Kelola Post dan akun yang tidak ingin muncul di feed','/account/hidden-content','ready']]],
+  ['Circle & hubungan','Atur interaksi sosial dan pengalaman komunitas',[
+   ['users','Hubungan dan mengikuti','Kelola akun yang diikuti, dibisukan, dan dibatasi','/account/following','ready'],
+   ['message-circle','Pesan dan komunikasi','Preferensi pesan, permintaan, dan interaksi','/messages','ready'],
+   ['bell','Notifikasi','Atur pemberitahuan aktivitas, komentar, dan pesan','/account/settings','staged']]],
+  ['Pengalaman aplikasi','Atur bahasa, tampilan, dan rekomendasi PLUITS',[
+   ['globe','Bahasa','Bahasa tampilan dan format wilayah','/account/settings','staged'],
+   ['palette','Tampilan','Tema, ukuran teks, dan kenyamanan visual','/account/settings','staged'],
+   ['sliders-horizontal','Preferensi aplikasi','Kontrol pengalaman dan personalisasi aplikasi','/account/settings','staged']]],
   ['Bantuan & kebijakan','Panduan, aturan komunitas, dan perlindungan data',[
    ['help','Pusat Bantuan','Panduan dan jawaban penggunaan Pluits','/help','staged'],
    ['book','Pedoman Komunitas','Aturan konten dan interaksi yang aman','/guidelines','staged'],
@@ -358,7 +366,7 @@ async function hydratePosts(rows){
   });
  }
 async function blogFeedMarkup(){
- const {data:rows,error}=await supabase.from('blog_posts').select('id,title,description,cover_path,slug,published_at,owner_user_id,blog_profiles(display_title,slug)').eq('status','published').eq('visibility','public').order('published_at',{ascending:false}).limit(40);if(error)throw error;
+ const {data:rows,error}=await supabase.from('blog_posts').select('id,title,description,cover_path,slug,published_at,created_at,owner_user_id,blog_profiles(display_title,slug)').eq('status','published').eq('visibility','public').order('published_at',{ascending:false}).limit(40);if(error)throw error;
  const ids=[...new Set((rows||[]).map(x=>x.owner_user_id).filter(Boolean))],{data:owners}=ids.length?await supabase.from('user_profiles').select('id,display_name,username').in('id',ids):{data:[]},ownerMap=new Map((owners||[]).map(x=>[x.id,x]));
  const urls=await createSignedUrlMap(supabase.storage,BUCKET,(rows||[]).map(x=>x.cover_path).filter(Boolean),1800);
  return (rows||[]).map(row=>{const owner=ownerMap.get(row.owner_user_id)||{},blog=row.blog_profiles||{},href='#/blog/'+encodeURIComponent(row.slug||row.id);return "<article class='ua-blog-feed-card'><a href='"+href+"' class='ua-blog-feed-cover'>"+(urls.get(row.cover_path)?"<img src='"+esc(urls.get(row.cover_path))+"' alt='"+esc(row.title)+"' loading='lazy'>":"<span>PLUITS BLOG</span>")+"</a><div class='ua-blog-feed-copy'><small>"+esc(blog.display_title||owner.display_name||'Blog PLUITS')+" · "+fmtDate(row.published_at||row.created_at)+"</small><h3><a href='"+href+"'>"+esc(row.title)+"</a></h3><p>"+esc(row.description||'')+"</p><a class='ua-blog-read-link' href='"+href+"'>Baca artikel ↗</a></div></article>";}).join('')||"<div class='ua-feed-empty'><strong>Belum ada Blog publik</strong><p>Artikel yang diterbitkan akan tampil di sini.</p></div>";
@@ -1549,7 +1557,7 @@ function bindPostActions(){
    }catch(err){notify(err.message||'Postingan gagal dihapus.','error');if(button)button.disabled=false;}
   });
 
-  card.querySelector('[data-action="hide-post"]')?.addEventListener('click',async()=>{if(menu)menu.hidden=true;const {error}=await supabase.from('user_hidden_content').upsert({viewer_id:user.id,target_type:'post',target_id:id},{onConflict:'viewer_id,target_type,target_id'});if(error){notify(error.message,'error');return;}notify('Postingan disembunyikan dari feed Anda.');card.remove();});
+  card.querySelector('[data-action="hide-post"]')?.addEventListener('click',async()=>{if(menu)menu.hidden=true;const {error}=await supabase.from('user_hidden_content').upsert({viewer_id:user.id,target_type:'post',target_id:id},{onConflict:'viewer_id,target_type,target_id',ignoreDuplicates:true});if(error){notify(error.message,'error');return;}notify('Postingan disembunyikan dari feed Anda.');card.remove();});
   card.querySelector('[data-action="mute-user"]')?.addEventListener('click',async()=>{if(menu)menu.hidden=true;const ownerId=card.dataset.ownerId;if(!confirm('Sembunyikan semua Post, Reel, dan Story dari akun ini? Anda tetap mengikutinya.'))return;const {error}=await supabase.from('user_hidden_content').upsert({viewer_id:user.id,target_type:'user',target_id:ownerId},{onConflict:'viewer_id,target_type,target_id'});if(error){notify(error.message,'error');return;}notify('Konten akun ini disembunyikan. Anda tetap mengikutinya.');document.querySelectorAll('.ua-post-card[data-owner-id="'+ownerId+'"]').forEach(item=>item.remove());});
   card.querySelector('[data-action="report"]')?.addEventListener('click',async()=>{if(menu)menu.hidden=true;const reason=prompt('Alasan laporan: spam, harassment, hate, violence, nudity, scam, misinformation, atau other','other');if(!reason)return;const allowed=['spam','harassment','hate','violence','nudity','scam','misinformation','other'];if(!allowed.includes(reason)){notify('Pilih alasan laporan yang tersedia.','error');return;}const {error}=await supabase.from('content_reports').insert({reporter_user_id:user.id,target_type:'post',target_id:id,reason});if(error)notify(error.message,'error');else notify('Laporan berhasil dikirim untuk ditinjau.');});
   const likeButton=card.querySelector('[data-action="like"]');
