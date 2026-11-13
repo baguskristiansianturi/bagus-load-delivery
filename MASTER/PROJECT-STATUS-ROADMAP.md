@@ -1252,4 +1252,5 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - **Temuan:** workflow sebelumnya melewati deployment hanya untuk event pull_request; manual workflow dispatch dari branch development masih berpotensi menjalankan deploy step.
 - **CI FIX IMPLEMENTED:** deployment kini mensyaratkan event bukan pull_request **dan** `github.ref == 'refs/heads/main'`. Push trigger tetap hanya pada main. Manual dispatch dari branch lain hanya dapat build/upload artifact, tidak dapat deploy ke Pages production.
 - **Regression test:** `tests/app/deployment-workflow.test.js` memverifikasi pull_request/push branch filters, workflow_dispatch, artifact upload, dan syarat main-only deploy.
-- **Status:** CODE + REGRESSION TEST IMPLEMENTED; menunggu hasil GitHub Actions untuk commit ini. Tidak ada deployment production yang dijalankan.
+- **Automated verification:** [GitHub Actions run 43448015144 — SUCCESS](https://github.com/baguskristiansianturi/pluits/actions/runs/43448015144), commit `4608ce580d6b7fb5bc13b37a07dc0e1ee7f8ad63`; 40 Node tests PASS, module-boundary/single-client checks PASS, Vite build PASS, Pages artifact upload PASS, production deploy SKIPPED.
+- **Status:** CODE + REGRESSION TEST IMPLEMENTED / AUTOMATED TESTED. Tidak ada deployment production yang dijalankan.
