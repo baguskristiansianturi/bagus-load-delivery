@@ -299,3 +299,44 @@ This inventory extends, rather than replaces:
 - `PLUITS-TECHNICAL-TERMINOLOGY-AND-RUNTIME-MAP.md` (if present on the active documentation branch)
 
 Keep this file as the entry point for the production design baseline and registries. Detailed inventories should live in dedicated registries, not as an ever-growing narrative document.
+
+
+## 13. Source-usage verification — 13 November 2026
+
+This follow-up searched the tracked JS/MJS/TS/HTML source at the baseline commit. It records source references only; it does not claim runtime visual verification.
+
+### 13.1 Icon and asset usage
+
+| Source | Verified usage finding | Handling |
+|---|---|---|
+| `src/components/common/social-icons.js` | Shared `socialIcon(name, options)` renderer is imported by Account, Inbox and shared navigation/feature code | Keep as the current shared icon registry; map each icon name and rendered consumer before changing geometry |
+| `src/app/ui.js` | App-level SVG/icon helper is imported by Help, Misc and Blog; the `icon` map is used by Misc | Keep as an application-shell helper for its current consumers; do not assume it is interchangeable with Social icons |
+| `src/components/common/icons.js` | No import or reference found in the tracked JS/MJS/TS/HTML source scan | Candidate orphan. Do not delete until CSS/runtime references and any external use are checked |
+| `src/features/posts/post-actions.js` | Contains post-action SVG rendering with overlapping semantics such as like/comment/share/save | Treat as a domain action renderer; compare actual SVG geometry and accessibility contract before any consolidation |
+| `public/icons.svg` | No `<use>` or direct reference found in the tracked JS/MJS/TS/HTML source scan | Candidate unused sprite; retain until CSS/runtime and deployed-page checks are complete |
+| `src/assets/hero.png` | No import or direct reference found in the tracked JS/MJS/TS/HTML source scan | Candidate unused local image; provenance/license and any runtime consumer remain unverified |
+| `public/assets/brand/pluits-logo.svg` / `public/favicon.svg` | Both files have the same Git blob SHA; the HTML shell references the brand asset path for the favicon | Keep one canonical logo source; decide separately whether the duplicate path is needed for compatibility |
+
+A missing source reference is not permission to delete an asset. Removal requires a final consumer/runtime check and owner approval.
+
+### 13.2 Icon ownership rule
+
+The current sources have overlapping semantic names, but they do not necessarily share identical path geometry, fill/stroke behavior, default size or accessible label. In particular, a `heart` name across `social-icons.js`, `app/ui.js`, `common/icons.js` and post actions does not prove a visually equivalent asset.
+
+Before consolidating, record:
+- icon semantic name and source asset;
+- exact path geometry, stroke/fill and `currentColor` behavior;
+- default and rendered dimensions;
+- accessible label/hidden state;
+- every importing/rendering module and route;
+- whether the icon is a control action, status indicator, brand mark or decoration.
+
+### 13.3 Demo and legacy content
+
+- People Recommendations uses static demo people with remote Random User portraits and visibly labels the area `DEMO UI`.
+- Top Ten uses static place/business entries and Unsplash imagery without a similarly visible demo label. Do not treat these records as verified user/provider content.
+- The public Blog source still contains legacy “Bali Bagus Editorial” and construction-guide content. Confirm editorial ownership and whether it should remain visible in PLUITS before redesigning or sourcing replacement imagery.
+
+### 13.4 Design-system baseline warning
+
+The source contains multiple palette families: legacy green root tokens in `src/style.css`, Social navy values, and Public Home teal values. The HTML theme color and web manifest also use navy. These are source-level observations, not a finalized universal palette. Keep the current rendered baseline intact until all consumers, route contexts and runtime screenshots are reviewed.
