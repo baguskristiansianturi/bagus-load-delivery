@@ -279,7 +279,7 @@ Font stack menyebut Inter, tetapi file font/provider yang dibundel tidak ditemuk
 - `npm run build` menjalankan Vite build.
 - Workflow `.github/workflows/deploy.yml` menjalankan install, test, build, pemeriksaan `dist/index.html`, lalu deploy GitHub Pages pada push `main` atau manual dispatch.
 - Tidak ditemukan workflow preview terpisah untuk branch. Menjalankan workflow Pages secara manual pada branch kerja dapat mengganti situs Pages yang sama; jangan gunakan itu sebagai preview.
-- Audit ini belum menjalankan `npm test`, `npm run build`, browser UAT, pixel inspection, atau pengukuran mobile. Tidak ada klaim bahwa tes tersebut lulus.
+- Audit ini belum menjalankan `npm test`, `npm run build`, browser UAT, pixel inspection, atau pengukuran mobile. Percobaan clone repository untuk menjalankan tes lokal gagal karena environment eksekusi tidak dapat me-resolve `github.com`; karena itu tidak ada klaim bahwa tes/build lulus.
 - Branch `work/production-design-inventory` berisi dokumentasi saja, 7 commit di depan `main`, 0 di belakang. Belum ada perubahan source app atau deployment.
 - PR #7 dan PR #3 tetap open dan belum digabung. Tidak ada merge yang dilakukan.
 
