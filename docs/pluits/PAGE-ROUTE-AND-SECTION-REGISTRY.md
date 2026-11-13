@@ -144,3 +144,8 @@ Update this file in the same change that adds/removes/renames a canonical route 
 
 ## 7. Page/component ownership standard
 The route inventory above must be read together with [PAGE-COMPONENT-OWNERSHIP-AUDIT-2026-11-12.md](./PAGE-COMPONENT-OWNERSHIP-AUDIT-2026-11-12.md). The audit defines the page layout, sidebar and feature ownership boundaries, plus the required process for adding a new page. A route alias must never receive a duplicate page controller.
+
+
+## 8. Page directory and roadmap scaffold
+
+The physical page-folder roadmap is tracked in [`src/pages/README.md`](../../src/pages/README.md). The broader rationale, status vocabulary, migration order and deletion-safety rules are documented in [PLUITS-PAGE-DIRECTORY-AND-ROADMAP.md](./PLUITS-PAGE-DIRECTORY-AND-ROADMAP.md). README-only folders are reserved ownership markers; they are not runtime pages and must not be imported by the router.
