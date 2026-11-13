@@ -1,0 +1,68 @@
+/* Circle Story + content tabs: compact mobile-first alignment. */
+.ua-social-home .ua-circle-story-track{
+  justify-content:flex-start!important;
+}
+.ua-social-home .ua-circle-story-track>.ua-story-group{
+  flex:0 0 82px!important;
+  width:82px!important;
+  max-width:82px!important;
+  align-items:center!important;
+}
+.ua-social-home .ua-circle-story-track>.ua-story-group .ua-story-ring{
+  flex:0 0 68px!important;
+  width:68px!important;
+  height:68px!important;
+}
+.ua-social-home .ua-explore-toolbar{
+  overflow:hidden!important;
+}
+.ua-social-home .ua-content-tabs{
+  justify-content:flex-start!important;
+  gap:14px!important;
+}
+.ua-social-home .ua-content-tabs>button{
+  flex:0 0 auto!important;
+  min-width:0!important;
+  padding:0 2px!important;
+}
+@media(max-width:760px){
+  .ua-social-home .ua-circle-story-track{
+    gap:7px!important;
+  }
+  .ua-social-home .ua-circle-story-track>.ua-story-group{
+    flex:0 0 clamp(67px,21vw,82px)!important;
+    width:clamp(67px,21vw,82px)!important;
+    max-width:clamp(67px,21vw,82px)!important;
+    gap:5px!important;
+  }
+  .ua-social-home .ua-circle-story-track>.ua-story-group .ua-story-ring{
+    flex:0 0 clamp(58px,17vw,66px)!important;
+    width:clamp(58px,17vw,66px)!important;
+    height:clamp(58px,17vw,66px)!important;
+  }
+  .ua-social-home .ua-circle-story-track>.ua-story-group>strong{
+    font-size:10px!important;
+    line-height:1.25!important;
+  }
+  .ua-social-home .ua-content-tabs{
+    gap:13px!important;
+    min-height:46px!important;
+    padding:5px 0!important;
+  }
+  .ua-social-home .ua-content-tabs>button{
+    min-height:35px!important;
+    font-size:12px!important;
+  }
+}
+@media(max-width:380px){
+  .ua-social-home .ua-circle-story-track{gap:6px!important}
+  .ua-social-home .ua-circle-story-track>.ua-story-group{
+    flex-basis:clamp(64px,20.5vw,76px)!important;
+    width:clamp(64px,20.5vw,76px)!important;
+    max-width:clamp(64px,20.5vw,76px)!important;
+  }
+  .ua-social-home .ua-circle-story-track>.ua-story-group .ua-story-ring{
+    width:58px!important;height:58px!important;flex-basis:58px!important;
+  }
+  .ua-social-home .ua-content-tabs{gap:11px!important}
+}
