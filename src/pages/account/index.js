@@ -510,10 +510,9 @@ async function feedPage(){
  const serviceFilters="<section class='ua-home-service-filters'><div class='ua-home-section-heading'><div><h2>Layanan PLUITS</h2></div></div><div class='ua-home-service-chip-row'><a href='#/places?category=accommodation'>Akomodasi</a><a href='#/trip'>Tiket</a><a href='#/places?category=transport'>Transportasi</a><a href='#/places?category=professional-service'>Jasa</a></div></section>";
  const blogMarkup=exploreContentType==='blog'?await blogFeedMarkup():'';
  const liveMarkup=exploreContentType==='live'?"<div class='ua-feed-empty'><strong>Live PLUITS</strong><p>Siaran langsung akan muncul di sini saat fitur Live diaktifkan. Kerangka navigasi sudah tersedia.</p></div>":'';
- const feedPostsMarkup=sorted.length?sorted.map((post,index)=>{
-  const card=postCard(post);
-  return index<30?card:card.replace('<article class="ua-post-card"','<article hidden data-feed-extra="true" class="ua-post-card"');
- }).join(''):"<div class='ua-feed-empty'><strong>"+empty+"</strong>"+action+"</div>";
+ const allFeedCards=sorted.map(post=>postCard(post)).join('');
+ let renderedFeedPostIndex=0;
+ const feedPostsMarkup=sorted.length?allFeedCards.replace(/<article class="ua-post-card"/g,match=>renderedFeedPostIndex++<30?match:'<article hidden data-feed-extra="true" class="ua-post-card"'):"<div class='ua-feed-empty'><strong>"+empty+"</strong>"+action+"</div>";
  const feedMarkup=exploreContentType==='blog'?blogMarkup:exploreContentType==='live'?liveMarkup:feedPostsMarkup;
  const seeAllMarkup=(exploreContentType==='all'||exploreContentType==='reel')&&sorted.length>30?"<button type='button' class='ua-feed-see-all' data-feed-see-all>Lihat semua postingan</button>":"";
  return "<div class='ua-social-home'>"+trendSection+homeNearbySection()+peopleSection+storiesSection+"<div class='ua-home-feed-region'>"+filterNav+"<section class='ua-feed'>"+feedMarkup+"</section>"+seeAllMarkup+"</div>"+discoverMore+maybeLike.replace("<h2>Produk Lokal</h2>","<h2>Temukan Produk Lokal</h2>")+collections+serviceFilters+"<div class='pl-public-home ua-circle-bottom-promos'>"+renderPublicJoin()+renderAppDownload()+"</div></div>";
