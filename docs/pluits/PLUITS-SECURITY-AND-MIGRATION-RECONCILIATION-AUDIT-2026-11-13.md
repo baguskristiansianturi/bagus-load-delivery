@@ -74,6 +74,15 @@ Status PR #3:
 - GitHub melaporkan PR tidak mergeable;
 - workflow replay lokal di PR tersebut belum menjadi bukti bahwa 97 migrasi live dapat direproduksi.
 
+
+
+
+### 2.4 Pencarian sumber migrasi Blog
+
+Pemeriksaan tambahan mencakup seluruh branch GitHub yang tersedia, direktori `supabase/archive/`, dan riwayat commit pada `supabase/migrations/`. Tidak ditemukan berkas SQL untuk sembilan migrasi Blog di branch aktif, branch kerja lain, arsip SQL, atau riwayat perubahan folder migrasi yang diperiksa.
+
+Schema live Blog tetap dapat diinventarisasi secara read-only: terdapat tabel `blog_profiles`, `blog_posts`, `blog_categories`; view `blog_public_routes`; tiga trigger auto-slug; dan policy Storage khusus media Blog. Pemeriksaan struktur live ini tidak menggantikan sumber migration historis dan tidak boleh dipakai untuk mengarang ulang sembilan file tersebut.
+
 ### 2.3 Aturan keselamatan migrasi
 
 Sampai rekonsiliasi sumber selesai:
@@ -143,7 +152,22 @@ Migration repository `20261108090600_pluits_geodirectory_domain_links.sql` memil
 **Prioritas:** sedang–tinggi, bergantung pada data relasi yang tersedia.  
 **Tindakan:** pastikan hanya relasi dari post yang benar-benar publik dan diterbitkan yang dapat dibaca anon; tambahkan tes untuk private, pending, rejected, dan public published post. Telusuri migrasi yang menyebabkan perbedaan live sebelum membuat koreksi.
 
-### 3.4 Perlu keputusan produk — visibilitas profil privat tidak konsisten
+### 3.4 Tinggi — post Blog tetap dapat dibaca saat blog diatur privat
+
+Policy live `Public published blog posts readable` pada `blog_posts` mengizinkan SELECT anon/authenticated ketika `status = 'published'` dan `visibility = 'public'`, tanpa memeriksa `blog_profiles.default_visibility`. Hak SELECT anon pada tabel `blog_posts` memang aktif.
+
+Sebaliknya:
+- view `blog_public_routes` hanya menampilkan blog dengan `default_visibility = 'public'` (atau kepada pemilik);
+- halaman publik `mountPublicBlog()` harus menemukan blog melalui view tersebut dan menolak blog yang tidak public;
+- policy Storage untuk media blog juga mensyaratkan `blog_profiles.default_visibility = 'public'`;
+- fungsi frontend `saveSettings()` hanya mengubah `blog_profiles.default_visibility`, tidak mengubah visibilitas post yang sudah ada.
+
+Akibatnya, ketika pemilik mengubah blog menjadi privat, halaman publik dan media tersembunyi, tetapi teks post yang sebelumnya berstatus published/public masih dapat dibaca langsung melalui Data API. Ini tidak konsisten dengan perilaku UI dan berpotensi membocorkan konten blog privat.
+
+**Prioritas:** tinggi / privacy release-blocking.  
+**Tindakan:** tentukan aturan canonical—blog privat harus menutup seluruh post, atau post public memang boleh tetap terbuka. Jika blog privat harus menutup semuanya, tambahkan pemeriksaan `EXISTS` terhadap `blog_profiles.default_visibility = 'public'` pada cabang public policy (atau lakukan transisi visibilitas post yang atomik). Uji anon, authenticated non-owner, owner, dan perubahan public → private. Belum ada policy yang diubah.
+
+### 3.5 Perlu keputusan produk — visibilitas profil privat tidak konsisten
 
 Fungsi `private.get_user_profile_directory_by_ids` mengembalikan bio, avatar, cover, kota, dan provinsi untuk profil privat ketika:
 
