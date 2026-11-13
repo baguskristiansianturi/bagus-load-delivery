@@ -32,4 +32,4 @@ Dokumen ini adalah pintu masuk untuk memahami susunan teknis PLUITS. Tidak perlu
 
 ## Status penting
 
-Daftar halaman dalam registry adalah inventaris route dari kode saat ini, bukan jaminan semua alur sudah lengkap. Saat ini route Inbox yang aktif adalah `#/inbox` (alias lama `#/messages`) dan runtime-nya dimiliki `src/pages/messages/`. Pemisahan Inbox Personal dan Inbox Toko belum menjadi route atau implementasi aktif. Kebutuhan tersebut harus tetap terlihat pada roadmap, tetapi tidak boleh dianggap sebagai folder/runtime yang sudah ada.
+Daftar halaman dalam registry adalah inventaris route dari kode saat ini, bukan jaminan semua alur sudah lengkap. Saat ini route Inbox yang aktif adalah `#/inbox` (alias lama `#/messages`) dan runtime-nya dimiliki `src/pages/messages/`. Folder Inbox Personal dan Inbox Toko hanya berisi README placeholder untuk roadmap; keduanya belum memiliki route, controller, atau runtime sendiri. Jangan menganggap placeholder itu sebagai implementasi aktif.
