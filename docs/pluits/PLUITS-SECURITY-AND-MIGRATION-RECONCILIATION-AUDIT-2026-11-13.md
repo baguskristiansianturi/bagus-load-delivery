@@ -242,6 +242,34 @@ Satu client bersama sudah tersedia di `src/lib/supabase/client.js`, tetapi 11 mo
 
 Sebagian besar page controller masih menjalankan query `.from()`, RPC, Storage, atau Realtime langsung. Folder `src/services/` saat ini baru memiliki helper signed URL; service domain belum terbentuk merata. Jangan memindahkan authorization ke frontend service—RLS dan backend tetap otoritatif.
 
+Hitungan berikut adalah jumlah pemanggilan API yang tampak pada source (bukan metrik traffic/runtime):
+
+| Modul | `.from()` | `.rpc()` | Storage | Realtime channel/listener |
+|---|---:|---:|---:|---:|
+| `pages/account/index.js` | 127 | 5 | 9 | 1 / 2 |
+| `pages/account/account-context.js` | 11 | 1 | 0 | 0 |
+| `pages/admin/moderation.js` | 5 | 2 | 0 | 0 |
+| `pages/blog-studio/index.js` | 20 | 0 | melalui uploader/helper | 0 |
+| `pages/directory/index.js` | 22 | 1 | 1 | 0 |
+| `pages/home/index.js` | 9 | 1 | 0 | 0 |
+| `pages/marketplace/index.js` | 11 | 3 | 1 | 0 |
+| `pages/messages/index.js` | 16 | 6 | 4 | 2 / 2 |
+| `pages/misc/index.js` | 2 | 0 | 0 | 0 |
+| `pages/search/discovery.js` | 7 | 0 | 1 | 0 |
+| `pages/seller/index.js` | 25 | 8 | 3 | 0 |
+| `pages/trip/index.js` | 9 | 3 | 0 | 0 |
+| `main.js` | 0 | 0 | 0 | 1 / lifecycle |
+
+`account-context.js` menerima client sebagai parameter dari `account/index.js`; ia tidak membuat client sendiri. Import SDK pada file itu tidak terpakai dan dapat dihapus saat refactor terkontrol.
+
+`home/index.js` mengambil `homeNearbySection` dan binder-nya dari `pages/directory/index.js`. Ini adalah coupling antar-page controller; pemilik komponen Nearby perlu dipindahkan ke feature module yang sesuai hanya setelah consumer dan kontraknya diverifikasi.
+
+CSS import ownership yang terverifikasi:
+- Bootstrap global: `src/style.css`, `src/styles/brand.css`, `page-transitions.css`, `social-navigation.css`, serta `styles/home-layout.css` yang masih berada di luar `src/`.
+- Account mengimpor delapan stylesheet page/feature; Home mendapatkan `navbar.css` dan `public-home.css` dari `features/public-home/layout.js`.
+- Directory, Help, Inbox, Inbox Settings, Search, Seller Center, dan Blog Studio masing-masing mengimpor stylesheet page sendiri.
+- Marketplace, Trip, public Blog, Misc, Admin Moderation, dan Home controller tidak mengimpor stylesheet page secara langsung; styling-nya berada pada global CSS atau feature/shared styles.
+
 ### 5.2 Dependency eksternal
 
 | Dependency / provider | Pemakaian source | Status pinning / catatan |
