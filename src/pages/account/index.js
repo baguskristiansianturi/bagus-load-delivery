@@ -415,7 +415,7 @@ async function feedPage(){
  });
  const hiddenResult=await supabase.from('user_hidden_content').select('target_type,target_id').eq('viewer_id',user.id);if(hiddenResult.error)throw hiddenResult.error;
  const mutedUserIds=(hiddenResult.data||[]).filter(x=>x.target_type==='user').map(x=>x.target_id),hiddenPostIds=(hiddenResult.data||[]).filter(x=>x.target_type==='post').map(x=>x.target_id);
- const available=(postsResult.data||[]).filter(p=>!blockedIds.includes(p.user_id)&&!mutedUserIds.includes(p.user_id)&&!hiddenPostIds.includes(p.id)).slice(0,60);
+ const available=(postsResult.data||[]).filter(p=>!blockedIds.includes(p.user_id)&&!mutedUserIds.includes(p.user_id)&&!hiddenPostIds.includes(p.id)).slice(0,30);
  const [peopleAvatarUrls,peopleFramesResult,hydrated]=await Promise.all([
   createSignedUrlMap(supabase.storage,BUCKET,people.map(person=>person.avatar_path).filter(Boolean),3600),
   people.length?supabase.from('user_profile_image_frames').select('user_id,card_x,card_y,card_zoom').in('user_id',people.map(person=>person.id)):{data:[],error:null},
