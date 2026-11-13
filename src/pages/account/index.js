@@ -1406,7 +1406,7 @@ function bindCircleStoryCarousel(){
  if(!track||!window.matchMedia('(max-width:760px)').matches||window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
  const items=[...track.querySelectorAll(':scope > .ua-story-group')];
  if(items.length<4||track.scrollWidth<=track.clientWidth+2)return;
- let interacting=false,animating=false,frame=null,resumeTimer=null,settleTimer=null;
+ let interacting=false,animating=false,frame=null,resumeTimer=null,settleTimer=null,wheelTimer=null;
  const clearAuto=()=>{if(circleStoryAutoTimer){clearTimeout(circleStoryAutoTimer);circleStoryAutoTimer=null;}if(resumeTimer){clearTimeout(resumeTimer);resumeTimer=null;}};
  const stopMotion=()=>{if(frame!==null){cancelAnimationFrame(frame);frame=null;}animating=false;};
  const schedule=(delay=4200)=>{
@@ -1454,7 +1454,7 @@ function bindCircleStoryCarousel(){
  track.addEventListener('touchstart',begin,{passive:true});
  track.addEventListener('touchend',end,{passive:true});
  track.addEventListener('touchcancel',end,{passive:true});
- track.addEventListener('wheel',begin,{passive:true});
+ track.addEventListener('wheel',()=>{begin();if(wheelTimer)clearTimeout(wheelTimer);wheelTimer=setTimeout(end,420);},{passive:true});
  track.addEventListener('scroll',onScroll,{passive:true});
  track.addEventListener('mouseenter',begin);
  track.addEventListener('mouseleave',end);
