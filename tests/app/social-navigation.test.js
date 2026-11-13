@@ -137,6 +137,10 @@ test('signed-in home leads with Bali experiences, search, wishlist and the perso
  assert.ok(account.includes('homeNearbySection')&&account.includes('bindHomeNearby'),'Home must use live nearby results.');
  assert.ok(account.includes('Temukan Lebih Banyak')&&account.includes('Produk Lokal')&&account.includes('Kumpulan')&&account.includes('Layanan PLUITS'),'Home must continue from the 30-post feed into discovery, product recommendations, service collections and PLUITS service filters.');
  assert.ok(account.includes('storiesSection+peopleSection+homeHeading'),'People recommendations must appear after Circle stories and before the post feed, without an intro banner.');
+ const circleCss=await readFile(new URL('../../src/pages/account/circle-experience.css',import.meta.url),'utf8');
+ const peopleCss=await readFile(new URL('../../src/features/discovery/people-recommendations.css',import.meta.url),'utf8');
+ assert.ok(circleCss.includes('scroll-snap-type:x mandatory!important')&&circleCss.includes('overflow-x:auto!important')&&circleCss.includes('-webkit-overflow-scrolling:touch!important')&&circleCss.includes('gap:2px!important'),'Story rail must use the same native swipe/momentum/snap carousel behavior as People Recommendations while retaining the three-up mobile layout.');
+ assert.ok(peopleCss.includes('scroll-snap-type:x mandatory')&&peopleCss.includes('-webkit-overflow-scrolling:touch'),'People Recommendations remains the reference carousel interaction.');
  assert.ok(account.includes('.slice(0,30)'),'The signed-in home must cap rendered post hydration at 30 items.');
  assert.ok(topTen.includes('⌖ ')&&topTen.includes('ua-topten-copy')&&topTen.includes('TOP_TEN_DEMO_ITEMS'),'Top 10 cards must be an isolated, explicitly demo-only image presentation module.');
  const nearbySource=await readFile(new URL('../../src/pages/directory/index.js',import.meta.url),'utf8');
