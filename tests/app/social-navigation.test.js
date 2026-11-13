@@ -121,7 +121,7 @@ test('signed-in home leads with Bali experiences, search, wishlist and the perso
  assert.ok(account.includes('function bindToptenSlider()')&&account.includes('scheduleAuto(3600)')&&account.includes('pointerdown')&&account.includes('pointerup')&&account.includes('setTimeout(()=>{'),'Mobile Top 10 must rotate automatically, follow direct pointer control and wait before resuming after interaction.');
  assert.ok(account.includes("exploreFilter='all'")&&account.includes("ua-home-following")&&account.includes("['all','Semua']")&&account.includes("['latest','Terbaru']"),'Circle feed must default to all posts and offer latest ordering.');
  assert.ok(account.includes('ua-home-topic-carousel')&&account.includes('ua-home-compose-prompt')&&!account.includes('REKOMENDASI PERSONAL')&&!account.includes('Atur minat')&&!account.includes('Pilih minat'),'Untukmu must show automatic recommendation cards without setup instructions or extra explanatory copy.');
- assert.ok(account.includes('circleHeading+storiesSection+peopleSection+homeHeading'),'Circle hierarchy must place stories, people recommendations, and post controls before the feed.');
+ assert.ok(account.includes('storiesSection+peopleSection+homeHeading')&&!account.includes('circleHeading')&&!account.includes('RUANG PERSONAL PLUITS'),'Circle must begin with its content sections without a redundant personal-space intro banner.');
 
  assert.ok(topTen.includes("title:'Beef Slab'")&&topTen.includes("href:'#/places?category=restaurant'"),'Tapping a trending food item must open its matching directory category.');
  const directorySource=await readFile(new URL('../../src/pages/directory/index.js',import.meta.url),'utf8');
