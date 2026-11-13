@@ -126,7 +126,7 @@ Masalah ini juga terlihat pada file repository `20261108090700_pluits_geodirecto
 
 ### 3.2 Tinggi — katalog produk melewati syarat online sales pada akses tabel langsung
 
-Policy live berikut tidak memeriksa `stores.online_sales_enabled = true`:
+Kolom `online_sales_enabled` berada pada tabel `stores`, bukan pada `products` atau `product_variants`. Policy live berikut sudah memeriksa status produk, toko aktif, dan verifikasi toko, tetapi belum memeriksa `s.online_sales_enabled = true` pada join ke `stores s`:
 
 - `products_anon_public_read`
 - cabang publik pada `products_authenticated_read`
@@ -151,6 +151,20 @@ Migration repository `20261108090600_pluits_geodirectory_domain_links.sql` memil
 
 **Prioritas:** sedang–tinggi, bergantung pada data relasi yang tersedia.  
 **Tindakan:** pastikan hanya relasi dari post yang benar-benar publik dan diterbitkan yang dapat dibaca anon; tambahkan tes untuk private, pending, rejected, dan public published post. Telusuri migrasi yang menyebabkan perbedaan live sebelum membuat koreksi.
+
+### 3.3a Korelasi pemeriksaan policy dengan struktur tabel
+
+Struktur tabel live diverifikasi:
+- `directory_media.entity_id` mereferensikan `directory_entities.id`;
+- `directory_memberships.entity_id` mereferensikan `directory_entities.id`;
+- `directory_memberships.status` memiliki nilai `pending`, `active`, `revoked`;
+- role membership memiliki nilai `owner`, `manager`, `staff`, `contributor`;
+- `user_posts.visibility` memiliki nilai `public`, `private`;
+- `user_posts.moderation_status` memiliki nilai `published`, `hidden`, `removed`.
+
+Ini mengonfirmasi bahwa policy relasi publik GeoDirectory seharusnya memeriksa kedua atribut post: `visibility = 'public'` dan `moderation_status = 'published'`. Untuk policy media, korelasi wajib mengacu pada `directory_media.entity_id` baris luar, bukan kolom membership itu sendiri.
+
+**Catatan:** struktur ini membantu menyusun koreksi, tetapi belum cukup untuk menjalankan migrasi. Seluruh fungsi helper, grant, policy terkait, histori migration, dan regression test harus ditinjau sebelum DDL disiapkan.
 
 ### 3.4 Blog post policy — hasil verifikasi ulang tidak mendukung temuan kebocoran sebelumnya
 
