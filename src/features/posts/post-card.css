@@ -16,3 +16,6 @@
 .ua-social-app .ua-media img,.ua-social-app .ua-media video,.ua-social-app .ua-gallery-item img,.ua-social-app .ua-gallery-item video{max-height:min(78svh,900px);object-fit:contain}
 .ua-social-app .ua-post-card{width:100%;min-width:0}
 @media(max-width:760px){.ua-social-app .ua-post-avatar-link .ua-avatar{width:48px;height:48px}.ua-social-app .ua-post-caption{padding-bottom:20px}}
+
+.ua-social-app .ua-profile-post-feed{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;width:100%;min-width:0}
+.ua-social-app .ua-profile-post-feed .ua-post-card{max-width:100%}
