@@ -139,7 +139,7 @@ export function messagesPage() {
         </nav>
       </div>
     </header>
-    <section class="pl-msg-content">
+    <section class="pl-msg-content plds-container plds-container--wide">
       <section class="pl-msg-people" aria-label="Online contacts">
         <div class="pl-msg-people-heading"><div class="pl-msg-people-counts"><strong>Kontak</strong><small><span id="pl-msg-online-count">0 online</span><span aria-hidden="true"> · </span><span id="pl-msg-offline-count">0 offline</span></small></div><a href="#/account/followers">Lihat semua</a></div>
         <div id="pl-msg-people-strip" class="pl-msg-people-strip"><span class="pl-msg-people-loading">Memuat kontak…</span></div>
