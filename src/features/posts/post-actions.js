@@ -3,16 +3,16 @@ const paths = {
   comment: '<path d="M20.2 11.4a7.7 7.7 0 0 1-7.7 7.7 8 8 0 0 1-3.2-.7L4 20l1.6-4.3a7.7 7.7 0 1 1 14.6-4.3Z"/>',
   share: '<path d="M22 2 15 22l-4-8-8-4 19-8Z"/><path d="m22 2-11 12"/>',
   save: '<path d="M6 4.8A1.8 1.8 0 0 1 7.8 3h8.4A1.8 1.8 0 0 1 18 4.8V21l-6-4-6 4V4.8Z"/>'
-};;
+};
 function icon(name) {
   return '<svg class="pl-post-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' + paths[name] + '</svg>';
 }
-export function renderPostActions({ user, liked = false, likes = 0, comments = 0, saved = false } = {}) {
+export function renderPostActions({ user, liked = false, saved = false } = {}) {
   if (!user) return '<div class="ua-post-actions pl-post-actions"><a class="ua-login-action" href="#/account/login">Masuk untuk berinteraksi</a></div>';
   return '<div class="ua-post-actions pl-post-actions">' +
-    '<button type="button" data-action="like" class="' + (liked ? 'is-liked' : '') + '" aria-label="Suka">' + icon('like') + '<b>' + Number(likes || 0) + '</b></button>' +
-    '<button type="button" data-action="comments" aria-label="Komentar">' + icon('comment') + '<b>' + Number(comments || 0) + '</b></button>' +
-    '<button type="button" data-action="share" aria-label="Bagikan">' + icon('share') + '</button>' +
-    '<button type="button" data-action="save" class="' + (saved ? 'is-saved' : '') + '" aria-label="Simpan">' + icon('save') + '</button>' +
+    '<button type="button" data-action="like" class="' + (liked ? 'is-liked' : '') + '" aria-label="Suka" title="Suka">' + icon('like') + '</button>' +
+    '<button type="button" data-action="comments" aria-label="Komentar" title="Komentar">' + icon('comment') + '</button>' +
+    '<button type="button" data-action="share" aria-label="Bagikan" title="Bagikan">' + icon('share') + '</button>' +
+    '<button type="button" data-action="save" class="' + (saved ? 'is-saved' : '') + '" aria-label="Simpan" title="Simpan">' + icon('save') + '</button>' +
   '</div>';
 }
