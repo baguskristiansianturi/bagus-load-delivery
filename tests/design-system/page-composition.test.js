@@ -161,3 +161,10 @@ test('layout migration registry marks adopted route families as partial, not leg
   for (const key of adopted) assert.equal(pageLayoutRegistry[key].migration,'partial',key);
   assert.ok(pageLayoutRegistry.reels.migration==='legacy-markup');
 });
+
+test('Blog Studio editor adopts the shared reading-width container', () => {
+  const pageSource = readFileSync(new URL('../../src/pages/blog-studio/index.js', import.meta.url), 'utf8');
+  const pageCss = readFileSync(new URL('../../src/pages/blog-studio/blog-studio.css', import.meta.url), 'utf8');
+  assert.match(pageSource, /pl-blog-main plds-container plds-container--reading/);
+  assert.match(pageCss, /--pl-layout-reading-max:760px/);
+});
