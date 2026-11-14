@@ -11,6 +11,7 @@ Read before editing. Existing owners remain during incremental migration; target
 | Inbox | `#/messages` | `pages/messages` | `features/inbox` |
 | Activity | `#/account/activity` | `pages/account` | `features/notifications` |
 | Media composer | account compose routes | account + media | media/posts/reels features |
+| Blog Studio | `#/account/blog`, `#/@username/blog/:blogSlug/:postSlug` | `pages/blog-studio` | `features/blog` (target; extraction pending) |
 | Store | marketplace routes | `pages/marketplace` | `features/store` |
 | Checkout | `#/market-checkout` | marketplace controller | `features/checkout` |
 | Seller | seller routes | `pages/seller` | `features/seller` |
@@ -23,7 +24,8 @@ Read before editing. Existing owners remain during incremental migration; target
 - SVG icon paths: `components/common/social-icons.js`; paths only, no route/data behavior.
 - Profile hero: account controller + legacy CSS; target `features/profile/profile-hero.*`.
 - Inbox layout: `pages/messages/*`; Inbox owns content, shared nav stays shared.
-- Media validation/upload: `features/media/*`; pure detection separated from transport.
+- Media validation/upload: `features/media/*`; pure detection separated from transport. Resumable upload fingerprint must include the destination object path; never resume a matching file into a different path.
+- Blog Studio: `pages/blog-studio/*` owns the current editor/dashboard/public reader; media transport is delegated to `features/media/storage-upload.js`, media validation to `features/media/media-types.js`, and public media authorization remains owned by blog RLS/Storage policies.
 - Reels: `features/reels/*`; dedicated markup and scoped styling.
 - Post cards and actions: `features/posts/index.js` is the public API; canonical card markup/styles live in `post-card.js` and `post-card.css`. Signed-in Explore/Circle and Profile consume the same card. Public guest-home feed remains a separate migration target.
 
