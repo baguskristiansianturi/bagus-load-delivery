@@ -129,3 +129,55 @@ This is a verified starting map, not yet a complete dependency graph. Remaining 
 - identify orphaned/duplicate files only after proving no runtime or documentation consumer.
 
 **Do not move, rename, delete, or visually redesign components as part of this inventory pass.** First produce the complete map; structural changes should be separate, reviewable commits.
+
+
+## Verified source findings — 14 November 2026
+
+### Important authority conflict: logo asset
+- Runtime renderer: `src/components/common/brand.js` exports `renderBrandLogo()` and `BRAND_LOGO_SRC`.
+- Current renderer path: `/pluits/assets/brand/pluits-logo.svg`.
+- Existing files: `public/assets/brand/pluits-logo.svg` and `public/favicon.svg`.
+- However, approved decision D-007 in `MASTER/DECISION-LOG.md` specifies `public/assets/brand/pluits-logo.png` as the canonical image asset, with the shared renderer and `src/styles/brand.css`.
+- **Do not move, replace, rename, or convert the logo during this pass.** This is a source-vs-decision discrepancy requiring reconciliation against the actual current main/live commit before any asset operation. Favicon/PWA references must also be traced.
+
+### Verified icon renderers (do not consolidate yet)
+- `src/components/common/icons.js`: general HTML SVG fragment map (`icon`).
+- `src/components/common/social-icons.js`: social SVG path registry and `socialIcon()`.
+- `src/app/ui.js`: another inline icon map used by the legacy app shell helpers.
+- `public/icons.svg`: static SVG sprite.
+- `src/design-system/icons/README.md` explicitly says this is a planned extraction and current paths remain authoritative in `src/components/common/`.
+- The icon systems are overlapping, but their consumers/contracts have not yet been exhaustively mapped. No consolidation or file move until each symbol and import is traced.
+
+### Verified search/page ownership (current vs target)
+| Search experience | Current runtime file(s) | Target owner | Status |
+|---|---|---|---|
+| Inbox people/friend search | `src/pages/messages/index.js` (Inbox page controller currently owns markup/behavior; feature root is `src/features/inbox/`) | `src/features/inbox/` with a dedicated search component/module | Not yet extracted; keep behavior isolated from other searches. |
+| Marketplace product search | `src/pages/marketplace/index.js` | `src/features/store/` or a Marketplace-owned search module after tracing the controller and route contract | Not yet extracted; do not share Inbox behavior. |
+| Jelajah/content search | `src/pages/search/discovery.js`, `src/pages/search/discovery.css` | `src/features/discovery/` for reusable discovery behavior; page remains the route composition owner | Page module exists; feature boundary needs consumer audit. |
+| Public Home search | `src/features/public-home/` composition and navbar/search styling | Public-home feature only | Must remain separate from authenticated Inbox and Marketplace search. |
+
+Search inputs are currently embedded in page/feature controllers rather than exposed as four clean standalone modules. The next safe step is to extract each one separately behind its own feature contract, not to point them all at one generic search component.
+
+### Verified ownership and layout notes
+- `src/features/public-home/navbar.js` imports `socialIcon` and `renderBrandLogo`; this is the public-home navbar, not the universal authenticated social header.
+- `src/pages/messages/index.js` imports `socialIcon`, `renderBrandLogo`, shared social mobile navigation, and `renderInboxSidebar` from `src/features/inbox/inbox-sidebar.js`. Inbox page still owns significant markup/data/event behavior.
+- `src/pages/marketplace/index.js` is the route controller for Marketplace, Storefront, product, cart and checkout states. Keep these states distinct; do not relocate them as a single generic shell.
+- `src/components/social/navigation.js` and `navigation-routes.js` own shared social navigation and canonical route references. Workspace navigation remains feature-owned.
+- `src/app/ui.js` contains a legacy shell/header/footer/mobile nav and a second icon map. It is a high-impact dependency candidate; do not move it until all importers and route usage are enumerated.
+
+### CSS risk baseline
+- `src/style.css` is approximately 286 KB and is a high-risk legacy/global stylesheet.
+- `styles/home-layout.css` is a separate root-level stylesheet.
+- Scoped styles already exist beside several page/feature modules, including public-home, search, messages, seller, directory, account, profile and reels.
+- Do not relocate or rewrite CSS until import order, selector namespaces, route consumers and collisions are mapped. Placement-only work must preserve selectors, specificity, cascade order and rendered output.
+
+## Current execution boundary
+
+This branch currently contains documentation-only commits. The source audit has identified ownership and placement discrepancies, but has not yet produced a complete import/consumer graph or visual regression evidence. Therefore no runtime source file, asset, stylesheet, route, component behavior or design has been changed. This is intentional: moving files before tracing every import and dynamic reference would violate the repository's own modularization and production-safety rules.
+
+The next implementation slices should be small and independently testable:
+1. Finish exact import/consumer map for logo, icons, global shells and CSS.
+2. Extract Inbox people search into its Inbox-owned module, preserving markup, class names, selectors, event behavior and appearance.
+3. Extract Marketplace product search separately, preserving its own behavior and appearance.
+4. Extract or formalize Discovery search separately.
+5. Move only files with complete import and test coverage; update imports atomically and run `npm test` + `npm run build` after each slice.
