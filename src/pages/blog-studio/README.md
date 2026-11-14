@@ -74,3 +74,9 @@
 - Comment identity always comes from the authenticated PLUITS personal account (author_user_id); there is no separate blog commenter identity.
 - Public read is limited by RLS to visible comments on published public posts in public blogs. Insert requires the signed-in user's ID. Author or blog owner may delete.
 - Publishing a blog article does not emit follower-style notifications. Comment/reply notifications, moderation reports, and organization editor identity remain separate follow-up modules.
+
+
+## Release status
+- PR #24 merged to main; production deployment completed in GitHub Actions run #1873.
+- Automated verification: 70 tests passed, Vite production build and Pages deploy succeeded.
+- Android device UAT, two-account privacy UAT, crawler-readable OG metadata, comment reporting/notifications, and News & Media institutional roles remain outstanding.
