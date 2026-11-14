@@ -2833,3 +2833,6 @@
 
 /* Circle home feed: keep video media at its native ratio and full content width. */
 .ua-social-app .ua-social-home .ua-feed .ua-media video,.ua-social-app .ua-social-home .ua-feed .ua-gallery-item video{display:block;width:100%;max-width:100%;height:auto;max-height:none;object-fit:contain;background:#101820}
+
+/* Reel upload preview mirrors the 9:16 viewer; the empty picker remains only a plus tile. */
+.ua-social-app .ua-clean-composer .ua-media-count{display:none}.ua-social-app .ua-clean-composer[data-content-kind="reel"] .ua-clean-preview{grid-template-columns:minmax(0,min(100%,320px));justify-content:start}.ua-social-app .ua-clean-composer[data-content-kind="reel"] .ua-clean-media-item{width:100%;max-width:320px;aspect-ratio:9/16;max-height:min(65svh,570px)}
