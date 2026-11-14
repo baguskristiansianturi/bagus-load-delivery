@@ -1,13 +1,12 @@
-# Design System
+# PLUITS Design System
 
-**Status:** reserved architectural layer; existing tokens and styles remain authoritative.
+The design system is the shared foundation for tokens, layout primitives, typography, motion and icon assets.
 
-Owns design tokens, typography, spacing, color, breakpoints, motion, icon conventions and accessible visual primitives. It does not own page layouts, feature state or data access.
+- `tokens/foundation.css`: viewport, safe-area, spacing, geometry and type-size tokens.
+- `layouts/foundation.css`: opt-in page/container/section/layout primitives.
+- `icons/index.js`: canonical local SVG rendering facade.
+- `icons/registry.js` and `icons/social-registry.js`: repository-owned SVG artwork.
+- `typography/`: typography roles and font loading policy (migration in progress).
+- `motion/`: motion and reduced-motion policy (migration in progress).
 
-Existing visual sources to audit before extraction:
-- `src/styles/brand.css`
-- `src/styles/social-components.css`
-- `src/styles/social-navigation.css`
-- `src/style.css`
-
-Do not create a parallel token system. Reuse the existing PLUITS teal identity and soft neutral surfaces.
+Do not place feature-specific business logic or page-specific visual overrides here. New UI must reuse the foundation and register any new shared component or asset.
