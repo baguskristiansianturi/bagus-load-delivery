@@ -104,3 +104,5 @@
  .ua-social-app.ua-reels-app .ua-reel-bottomline{right:70px;left:12px;gap:7px}
  .ua-social-app.ua-reels-app .ua-reel-audio{font-size:9px}
 }
+
+.ua-social-app.ua-reels-app .ua-reel-card[hidden]{display:none!important}
