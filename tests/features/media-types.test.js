@@ -21,3 +21,9 @@ test('rejects unsupported/empty media and enforces 50 MB',()=>{
  assert.equal(validateMediaFile(file('large.mp4','video/mp4',50*1024*1024+1)).reason,'too-large');
  assert.equal(validateMediaFile(file('limit.mp4','video/mp4',50*1024*1024)).valid,true);
 });
+
+test('accepts MOV, MP4 and 3GP when Android provides no MIME type',()=>{
+ assert.equal(getMediaMime(file('clip.mp4','')),'video/mp4');
+ assert.equal(getMediaMime(file('clip.mov','')),'video/quicktime');
+ assert.equal(getMediaMime(file('clip.3gp','')),'video/3gpp');
+});
