@@ -106,7 +106,7 @@ test('Blog Saya has an editorial hero and orders published cards by publication 
 
 
 test('Blog draft migration allows null cover only for drafts and keeps published cover required', async () => {
-  const migration = await readFile(new URL('../../supabase/migrations/20261114120000_allow_blog_drafts_without_cover.sql', import.meta.url), 'utf8');
+  const migration = await readFile(new URL('../../supabase/migrations/20261114114848_allow_blog_drafts_without_cover.sql', import.meta.url), 'utf8');
   assert.match(migration, /alter column cover_path drop not null/);
   assert.match(migration, /cover_path is null[\s\S]*or cover_path like owner_user_id/);
   assert.match(migration, /status <> 'published' or cover_path is not null/);
