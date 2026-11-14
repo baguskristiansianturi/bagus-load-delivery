@@ -334,7 +334,7 @@ function bindProfileTabs(){
 async function profileBlogMarkup(){
  const username=profile?.username;
  if(!username)return '<div class="ua-profile-tab-empty"><strong>Blog belum tersedia</strong><p>Akun ini belum memiliki alamat Blog.</p></div>';
- const {data:route,error:routeError}=await supabase.from('blog_public_routes').select('slug,display_title').eq('username',username).eq('default_visibility','public').maybeSingle();
+ const {data:route,error:routeError}=await supabase.from('blog_public_routes').select('blog_id,slug,display_title').eq('username',username).eq('default_visibility','public').maybeSingle();
  if(routeError)throw routeError;
  if(!route)return '<div class="ua-profile-tab-empty"><span>▤</span><strong>Belum ada Blog publik</strong><p>Artikel yang diterbitkan secara publik akan tampil di sini.</p>'+(user?.id===profile?.id?'<a class="ua-outline" href="#/account/blog">Kelola Blog</a>':'')+'</div>';
  const {data:rows,error}=await supabase.from('blog_posts').select('id,title,slug,description,cover_path,published_at,created_at').eq('blog_id',route.blog_id||route.id).eq('status','published').eq('visibility','public').order('published_at',{ascending:false}).limit(30);
