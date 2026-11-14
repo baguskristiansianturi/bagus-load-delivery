@@ -1,0 +1,75 @@
+/* PLUITS structural design tokens.
+   These define geometry, not page-specific appearance. Keep existing brand palette
+   in its approved brand source; do not introduce a competing color system here. */
+:root {
+  /* Viewport and safe-area contract */
+  --pl-viewport-height: 100dvh;
+  --pl-safe-top: env(safe-area-inset-top, 0px);
+  --pl-safe-right: env(safe-area-inset-right, 0px);
+  --pl-safe-bottom: env(safe-area-inset-bottom, 0px);
+  --pl-safe-left: env(safe-area-inset-left, 0px);
+
+  /* Mobile canvas: fluid width, never force a device-specific fixed width */
+  --pl-layout-mobile-gutter: 16px;
+  --pl-layout-mobile-gutter-compact: 12px;
+  --pl-layout-content-max: 1200px;
+  --pl-layout-reading-max: 720px;
+  --pl-layout-workspace-max: 1440px;
+
+  /* 4px spacing scale */
+  --pl-space-1: 4px;
+  --pl-space-2: 8px;
+  --pl-space-3: 12px;
+  --pl-space-4: 16px;
+  --pl-space-5: 20px;
+  --pl-space-6: 24px;
+  --pl-space-8: 32px;
+  --pl-space-10: 40px;
+  --pl-space-12: 48px;
+
+  /* Icon artwork size; touch target is deliberately larger */
+  --pl-icon-xs: 16px;
+  --pl-icon-sm: 18px;
+  --pl-icon-md: 20px;
+  --pl-icon-nav: 22px;
+  --pl-icon-lg: 24px;
+  --pl-icon-xl: 28px;
+  --pl-touch-target: 44px;
+  --pl-touch-target-compact: 40px;
+
+  /* Shared geometry */
+  --pl-control-height-sm: 36px;
+  --pl-control-height-md: 44px;
+  --pl-control-height-lg: 48px;
+  --pl-search-height: 44px;
+  --pl-radius-sm: 8px;
+  --pl-radius-md: 12px;
+  --pl-radius-lg: 16px;
+  --pl-radius-xl: 24px;
+
+  /* Text roles */
+  --pl-text-xs: 11px;
+  --pl-text-sm: 12px;
+  --pl-text-md: 14px;
+  --pl-text-body: 15px;
+  --pl-text-lg: 18px;
+  --pl-text-xl: 24px;
+}
+
+/* Canonical viewport behavior: content adapts to available space, including browser chrome. */
+html { min-height: 100%; }
+body { min-height: 100vh; min-height: var(--pl-viewport-height); }
+#app { min-height: 100vh; min-height: var(--pl-viewport-height); }
+
+@media (max-width: 360px) {
+  :root { --pl-layout-mobile-gutter: var(--pl-layout-mobile-gutter-compact); }
+}
+
+@media (max-width: 760px) {
+  :root { --pl-layout-content-max: 100%; }
+}
+
+/* Older browsers without dynamic viewport units retain the vh fallback above. */
+@supports not (height: 100dvh) {
+  :root { --pl-viewport-height: 100vh; }
+}
