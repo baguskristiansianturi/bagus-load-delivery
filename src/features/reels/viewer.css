@@ -1,0 +1,64 @@
+/* Dedicated immersive Reel viewer. Kept separate from shared feed and profile styles. */
+.ua-social-app.ua-reels-app .ua-reel-topline{
+ height:calc(58px + env(safe-area-inset-top));padding:env(safe-area-inset-top) 15px 0;
+ display:flex;align-items:center;justify-content:space-between;gap:12px;
+ background:linear-gradient(180deg,rgba(0,0,0,.42),transparent);
+}
+.ua-social-app.ua-reels-app .ua-reel-topline .ua-reel-back,
+.ua-social-app.ua-reels-app .ua-reel-topline .ua-post-more{
+ flex:0 0 40px;width:40px;height:40px;border:1px solid rgba(255,255,255,.14);
+ border-radius:50%;background:rgba(12,18,22,.42);backdrop-filter:blur(10px);
+}
+.ua-social-app.ua-reels-app .ua-reel-discovery-search{
+ top:calc(env(safe-area-inset-top) + 9px);left:64px;right:62px;width:auto;
+ height:40px;max-width:none;margin:0;padding:0 12px;gap:9px;
+ border:1px solid rgba(255,255,255,.22);background:rgba(10,15,19,.48);
+ box-shadow:0 2px 12px rgba(0,0,0,.08);backdrop-filter:blur(12px);
+}
+.ua-social-app.ua-reels-app .ua-reel-discovery-search input{font-size:13px;line-height:1.2}
+.ua-social-app.ua-reels-app .ua-reel-discovery-search button{background:transparent;flex-basis:26px;width:26px;height:26px}
+.ua-social-app.ua-reels-app .ua-reel-bottomline{
+ right:76px;left:16px;bottom:calc(22px + env(safe-area-inset-bottom));
+ display:grid;gap:9px;padding:0;background:none;isolation:isolate;
+}
+.ua-social-app.ua-reels-app .ua-reel-bottomline::before{
+ content:"";position:absolute;z-index:-1;pointer-events:none;
+ left:-16px;right:-76px;bottom:-22px;height:clamp(170px,25vh,260px);
+ background:linear-gradient(0deg,rgba(0,0,0,.64) 0%,rgba(0,0,0,.34) 42%,rgba(0,0,0,.10) 76%,transparent 100%);
+}
+.ua-social-app.ua-reels-app .ua-reel-author{width:max-content;max-width:100%;gap:10px}
+.ua-social-app.ua-reels-app .ua-reel-author .ua-avatar{width:42px;height:42px;flex-basis:42px}
+.ua-social-app.ua-reels-app .ua-reel-author strong{font-size:13px}
+.ua-social-app.ua-reels-app .ua-reel-author small{font-size:11px}
+.ua-social-app.ua-reels-app .ua-reel-audio{
+ display:flex;align-items:center;gap:8px;min-width:0;max-width:100%;
+ color:rgba(255,255,255,.9);font-size:11px;line-height:1.3;
+}
+.ua-social-app.ua-reels-app .ua-reel-audio>span:last-of-type{
+ min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap
+}
+.ua-social-app.ua-reels-app .ua-reel-sound{
+ flex:0 0 auto;width:auto;height:auto;min-height:28px;padding:4px 9px;white-space:nowrap;border:1px solid rgba(255,255,255,.28);
+ border-radius:999px;background:rgba(0,0,0,.22);color:#fff;font-size:10px;line-height:1;
+}
+.ua-social-app.ua-reels-app .ua-reel-actions-wrap{bottom:calc(104px + env(safe-area-inset-bottom))}
+.ua-social-app.ua-reels-app .ua-reel-actions{gap:16px}
+.ua-social-app.ua-reels-app .ua-reel-actions button{min-width:46px}
+.ua-social-app.ua-reels-app .ua-reel-comments{border:0;border-radius:20px 20px 0 0;box-shadow:0 -5px 24px rgba(0,0,0,.16)}
+@media(max-width:420px){
+ .ua-social-app.ua-reels-app .ua-reel-discovery-search{left:60px;right:58px;height:39px}
+ .ua-social-app.ua-reels-app .ua-reel-bottomline{left:14px;right:72px;bottom:calc(18px + env(safe-area-inset-bottom));gap:8px}
+ .ua-social-app.ua-reels-app .ua-reel-bottomline::before{left:-14px;right:-72px;height:clamp(160px,24vh,230px)}
+ .ua-social-app.ua-reels-app .ua-reel-author .ua-avatar{width:40px;height:40px;flex-basis:40px}
+ .ua-social-app.ua-reels-app .ua-reel-audio{font-size:10px;gap:6px}
+ .ua-social-app.ua-reels-app .ua-reel-sound{min-height:26px;padding-inline:8px}
+ .ua-social-app.ua-reels-app .ua-reel-actions-wrap{right:7px;bottom:calc(98px + env(safe-area-inset-bottom))}
+ .ua-social-app.ua-reels-app .ua-reel-actions{gap:14px}
+}
+@media(max-height:650px){
+ .ua-social-app.ua-reels-app .ua-reel-bottomline::before{height:150px}
+ .ua-social-app.ua-reels-app .ua-reel-actions{gap:10px}
+}
+@media(prefers-reduced-motion:reduce){
+ .ua-social-app.ua-reels-app .ua-reel-discovery-search{backdrop-filter:none}
+}

@@ -18,7 +18,9 @@ import {renderAppDownload} from '../../features/app-download/app-download.js';
 import '../../features/profile/image-framing.css';
 import '../../features/profile/profile-hero.css';
 import {renderReelCard} from '../../features/reels/reel-card.js';
+import {bindReelsPlayback} from '../../features/reels/reel-playback.js';
 import '../../features/reels/reels.css';
+import '../../features/reels/viewer.css';
 import {accountSecurityPage,bindAccountSecurity} from './security-settings.js';
 import '../../styles/social-components.css';
 import {loadAccountContext,contextHeader,professionalPage,professionalFormPage,accountSettingsPage,bindAccountContext} from './account-context.js';
@@ -1443,51 +1445,6 @@ function bindExploreFilters(){
  document.querySelector('[data-feed-refresh]')?.addEventListener('click',async event=>{const el=event.currentTarget;el.disabled=true;el.classList.add('is-loading');exploreFilter='latest';await mountAccount('explore');});
  document.querySelectorAll('[data-explore-filter]').forEach(button=>button.addEventListener('click',async()=>{const next=button.dataset.exploreFilter;if(!['all','latest','random'].includes(next)||next===exploreFilter)return;exploreFilter=next;await mountAccount('explore');}));
  document.querySelector('[data-explore-category]')?.addEventListener('change',async event=>{exploreCategory=String(event.currentTarget.value||'all');await mountAccount('explore');});
-}
-function bindReelsPlayback(){
- const feed=document.querySelector('.ua-reels-feed');if(!feed)return;
- const searchForm=document.querySelector('[data-reel-search-form]');
- const searchInput=searchForm?.querySelector('input[name="query"]');
- const applyReelSearch=()=>{
-  const query=String(searchInput?.value||'').trim().toLocaleLowerCase('id');
-  const cards=[...feed.querySelectorAll('[data-reel-post-id]')];
-  let visible=0;
-  cards.forEach(card=>{
-   const matches=!query||card.textContent.toLocaleLowerCase('id').includes(query);
-   card.hidden=!matches;if(matches)visible++;
-  });
-  let empty=feed.querySelector('.ua-reel-search-empty');
-  if(!visible&&query){
-   if(!empty){empty=document.createElement('div');empty.className='ua-reel-search-empty';empty.setAttribute('role','status');feed.append(empty);}
-   empty.textContent='Belum ada video, orang, atau topik yang cocok. Coba kata kunci lain.';
-  }else empty?.remove();
-  feed.scrollTo({top:0,behavior:'smooth'});
- };
- searchForm?.addEventListener('submit',event=>{event.preventDefault();applyReelSearch();});
- searchForm?.addEventListener('reset',()=>{requestAnimationFrame(()=>{applyReelSearch();searchInput?.focus();});});
- searchInput?.addEventListener('input',applyReelSearch);
- feed.querySelectorAll('[data-reel-toggle]').forEach(button=>button.addEventListener('click',()=>{
-  const video=button.closest('.ua-reel-stage')?.querySelector('[data-reel-video]');if(!video)return;
-  if(video.paused)video.play().catch(()=>{});else video.pause();
- }));
- feed.querySelectorAll('[data-reel-sound]').forEach(button=>button.addEventListener('click',()=>{
-  const video=button.closest('.ua-reel-stage')?.querySelector('[data-reel-video]');if(!video)return;
-  video.muted=!video.muted;button.textContent=video.muted?'♪':'♫';button.setAttribute('aria-label',video.muted?'Aktifkan suara':'Matikan suara');
- }));
- feed.querySelectorAll('[data-reel-video]').forEach(video=>{
-  video.addEventListener('click',()=>{if(video.paused)video.play().catch(()=>{});else video.pause();});
-  video.addEventListener('play',()=>{const button=video.closest('.ua-reel-stage')?.querySelector('[data-reel-toggle]');if(button){button.textContent='Ⅱ';button.setAttribute('aria-label','Jeda video');}});
-  video.addEventListener('pause',()=>{const button=video.closest('.ua-reel-stage')?.querySelector('[data-reel-toggle]');if(button){button.textContent='▶';button.setAttribute('aria-label','Putar video');}});
- });
- if(!('IntersectionObserver'in window))return;
- const videos=[...feed.querySelectorAll('[data-reel-video]')];let active=null;
- const io=new IntersectionObserver(entries=>entries.forEach(entry=>{
-  const video=entry.target;
-  if(entry.isIntersecting&&entry.intersectionRatio>=.72){
-   if(active&&active!==video)active.pause();active=video;video.muted=true;video.loop=true;video.playsInline=true;video.play().catch(()=>{});
-  }else if(entry.intersectionRatio<.25){video.pause();if(active===video)active=null;}
- }),{threshold:[0,.25,.72,1]});
- videos.forEach(video=>{video.playsInline=true;video.preload='metadata';io.observe(video);});
 }
 function bindPostActions(){
  document.querySelectorAll('.ua-post-card').forEach(card=>{
