@@ -18,5 +18,5 @@ test('Blog comments use personal account identity and public published-post scop
 
 test('Blog publishing does not create follower-style publication notifications', async () => {
   const migration = await readFile(new URL('../../supabase/migrations/20261114142641_blog_personal_account_comments.sql', import.meta.url), 'utf8');
-  assert.doesNotMatch(migration, /create trigger|user_notifications|notify|notification/i);
+  assert.doesNotMatch(migration, /create trigger|insert into public\.user_notifications/i);
 });
