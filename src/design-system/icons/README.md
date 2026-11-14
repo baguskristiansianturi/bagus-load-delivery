@@ -9,7 +9,7 @@ PLUITS uses repository-owned inline SVG markup. It does not request icon artwork
 Do not add an icon package solely to render a few icons. Evaluate one only if the icon inventory demonstrates a real maintenance or coverage benefit and its bundle, license and network cost are measured. Prefer local SVG assets for brand marks and complex illustrations.
 
 ## API
-New code imports `renderIcon` or `socialIcon` from this directory. The facade preserves legacy artwork and is a compatibility boundary; the two old registries are not yet deduplicated.
+New code imports `renderIcon` or `socialIcon` from this directory. The facade fronts general, social and application UI SVG registries. Legacy import paths remain as compatibility exports. Some semantic duplicates intentionally preserve distinct artwork until exact visual equivalence is reviewed.
 
 - Default icon: 20px; navigation: 22px; metadata: 16–18px; prominent action: 24px; creation action may use 28px.
 - Artwork size is not the click target. Icon-only controls use a minimum 44px hit area (40px only for documented dense layouts).
@@ -25,4 +25,4 @@ New code imports `renderIcon` or `socialIcon` from this directory. The facade pr
 6. Never hotlink an external SVG or use a remote icon font in production UI.
 
 ## Migration status
-The facade is implemented. Legacy maps remain for backward compatibility; consumer-by-consumer migration and duplicate-path removal are pending.
+The facade and three canonical registries are implemented. `src/app/ui.js` now consumes the design-system application registry. Old common icon modules are compatibility exports. The public SVG sprite remains a separate brand/social asset; its six symbols are catalogued in the asset warehouse.
