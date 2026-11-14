@@ -1,7 +1,7 @@
 /* Canonical shared post-card layout */
 .ua-social-app .ua-post-head .ua-post-avatar-link{display:flex;flex:none}
 .ua-social-app .ua-post-avatar-link .ua-avatar{width:50px;height:50px}
-.ua-social-app .ua-post-actions{display:flex;align-items:center;gap:18px;padding:9px 15px 5px;border:0}
+.ua-social-app .ua-post-actions{display:flex;align-items:center;gap:8px;padding:9px 15px 5px;border:0}
 .ua-social-app .ua-post-actions button{display:inline-grid;place-items:center;width:30px;height:32px;padding:4px;border:0;background:transparent;color:#344256;cursor:pointer}
 .ua-social-app .ua-post-actions .pl-post-icon{display:block;width:23px;height:23px}
 .ua-social-app .ua-post-actions button:last-child{margin-left:auto}
@@ -19,3 +19,8 @@
 
 .ua-social-app .ua-profile-post-feed{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;width:100%;min-width:0}
 .ua-social-app .ua-profile-post-feed .ua-post-card{max-width:100%}
+
+.ua-social-app .ua-post-author{display:flex;flex-direction:column;align-items:flex-start;min-width:0}
+.ua-social-app .ua-post-username{margin:0 0 2px;font-weight:600;color:#344256}
+.ua-social-app .ua-post-caption .ua-post-username a{color:inherit;text-decoration:none}
+.ua-social-app .ua-post-caption .ua-post-caption-text{margin:0;white-space:pre-wrap;overflow-wrap:anywhere}
