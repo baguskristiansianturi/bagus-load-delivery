@@ -32,7 +32,7 @@ export function normalizeBlogPresentation(profile={}) {
 export function renderBlogThemePanel(profile={}) {
   const state=normalizeBlogPresentation(profile);
   return '<section class="pl-blog-theme-workspace"><div class="pl-blog-theme-intro"><span class="pl-blog-theme-eyebrow">BLOG DESIGN STUDIO</span><h2>Jadikan blog terasa seperti milikmu.</h2><p>Ganti tampilan kapan saja. Tulisan, foto, kategori, dan alamat blog tetap aman.</p></div>'+
-    '<form id="pl-blog-theme-form"><section class="pl-blog-theme-section"><div class="pl-blog-theme-section-head"><h3>Pilih template</h3><p>Setiap template punya karakter visual sendiri.</p></div><div class="pl-blog-template-grid">'+TEMPLATES.map(t=>'<label class="pl-blog-template-option '+(t.key===state.templateKey?'is-selected':'')+'"><input type="radio" name="templateKey" value="'+t.key+'" '+(t.key===state.templateKey?'checked':'')+'><span class="pl-blog-template-preview" style="--preview-bg:'+t.colors.background+';--preview-accent:'+t.colors.accent+';--preview-text:'+t.colors.text+'"><i></i><b></b><em></em><small></small></span><strong>'+t.name+'</strong><span>'+t.kind+'</span><small>'+t.description+'</small></label>').join('')+'</div></section>'+
+    '<form id="pl-blog-theme-form"><input type="hidden" name="blockOrder" value="'+state.layout.blocks.join(',')+'"><section class="pl-blog-theme-section"><div class="pl-blog-theme-section-head"><h3>Pilih template</h3><p>Setiap template punya karakter visual sendiri.</p></div><div class="pl-blog-template-grid">'+TEMPLATES.map(t=>'<label class="pl-blog-template-option '+(t.key===state.templateKey?'is-selected':'')+'"><input type="radio" name="templateKey" value="'+t.key+'" '+(t.key===state.templateKey?'checked':'')+'><span class="pl-blog-template-preview" style="--preview-bg:'+t.colors.background+';--preview-accent:'+t.colors.accent+';--preview-text:'+t.colors.text+'"><i></i><b></b><em></em><small></small></span><strong>'+t.name+'</strong><span>'+t.kind+'</span><small>'+t.description+'</small></label>').join('')+'</div></section>'+
     '<section class="pl-blog-theme-section"><div class="pl-blog-theme-section-head"><h3>Warna dan tipografi</h3><p>Aksen bisa diubah lagi kapan saja.</p></div><div class="pl-blog-theme-controls"><label>Warna aksen<input type="color" name="accent" value="'+state.theme.accent+'"></label><label>Gaya huruf<select name="font"><option value="serif" '+(state.theme.font==='serif'?'selected':'')+'>Editorial / Serif</option><option value="sans" '+(state.theme.font==='sans'?'selected':'')+'>Modern / Sans serif</option></select></label></div></section>'+
     '<section class="pl-blog-theme-section"><div class="pl-blog-theme-section-head"><h3>Profile Blocks</h3><p>Tentukan bagian yang ingin ditampilkan. Konten tidak dihapus ketika blok disembunyikan.</p></div><div class="pl-blog-block-list">'+BLOCKS.map(([key,label,desc])=>'<label class="pl-blog-block-option"><span><strong>'+label+'</strong><small>'+desc+'</small></span><input type="checkbox" name="block_'+key+'" value="1" '+(!state.layout.hidden.includes(key)?'checked':'')+'></label>').join('')+'</div></section><div class="pl-blog-theme-actions"><button class="pl-blog-primary" type="submit">Simpan tampilan</button><span>Perubahan hanya memengaruhi tampilan publik, bukan privasi tulisan.</span></div></form></section>';
 }
@@ -41,7 +41,11 @@ export function readBlogThemeForm(form) {
   const template=getBlogTemplate(data.get('templateKey'));
   const accent=safeHex(data.get('accent'))||template.colors.accent;
   const hidden=BLOCKS.filter(([key])=>!data.get('block_'+key)).map(([key])=>key);
-  return {templateKey:template.key,themeSettings:{accent,font:data.get('font')==='sans'?'sans':'serif'},layoutSettings:{blocks:BLOCKS.map(([key])=>key),hidden}};
+  const requested=String(data.get('blockOrder')||'').split(',');
+  const valid=BLOCKS.map(([key])=>key);
+  const blocks=requested.filter((key,i)=>valid.includes(key)&&requested.indexOf(key)===i);
+  for(const key of valid)if(!blocks.includes(key))blocks.push(key);
+  return {templateKey:template.key,themeSettings:{accent,font:data.get('font')==='sans'?'sans':'serif'},layoutSettings:{blocks,hidden}};
 }
 export function applyBlogTheme(root, profile={}) {
   if(!root)return;
