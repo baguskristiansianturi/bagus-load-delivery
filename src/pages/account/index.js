@@ -315,7 +315,7 @@ function bindProfileTabs(){
  const nav=document.querySelector('.ua-profile-tabs'),panel=document.querySelector('#ua-profile-tab-content');
  if(!nav||!panel)return;
  const postsMarkup=postGrid(ownPosts.filter(p=>p.content_kind!=='reel'));
- const reelsMarkup='<div class="ua-section-title"><strong>Reels</strong><a class="ua-outline" href="#/account/compose">＋ Buat Reel</a></div>'+(profileReels.length?postGrid(profileReels):'<div class="ua-empty"><strong>Belum ada Reels</strong><p>Video tunggal berdurasi hingga 60 detik akan muncul di sini.</p><a class="ua-primary ua-inline" href="#/account/compose">Unggah video</a></div>');
+ const reelsMarkup='<div class="ua-section-title"><strong>Reels</strong><a class="ua-outline" href="#/account/reel">＋ Buat Reel</a></div>'+(profileReels.length?postGrid(profileReels):'<div class="ua-empty"><strong>Belum ada Reels</strong><p>Video tunggal berdurasi hingga 60 detik akan muncul di sini.</p><a class="ua-primary ua-inline" href="#/account/reel">Unggah video</a></div>');
  const views={
   posts:postsMarkup,
   reels:reelsMarkup,
@@ -557,7 +557,7 @@ function renderReelCard(post){
    </div></div>
    <div class="ua-reel-bottomline"><a class="ua-reel-author" href="#/@${username}">${avatar(post.avatarUrl,owner.display_name||'P')}<span><strong>@${username}</strong><small>${name}</small></span></a><p>${esc(post.caption||'')}</p></div>
   </div>
-  <section class="ua-comments ua-reel-comments" hidden></section>
+  <span class="ua-like-count" hidden>${Number(post.likes||0)} suka</span><section class="ua-comments ua-reel-comments" hidden></section>
  </article>`;
 }
 async function reelsPage(initialPostId=''){
@@ -1630,7 +1630,7 @@ function bindPostActions(){
   card.querySelector('[data-action="save"]')?.addEventListener('click',async()=>{
    const p=await supabase.from('post_saves').select('post_id').eq('post_id',id).eq('user_id',user.id).maybeSingle();
    const result=p.data?await supabase.from('post_saves').delete().eq('post_id',id).eq('user_id',user.id):await supabase.from('post_saves').insert({post_id:id,user_id:user.id});
-   if(result.error)notify(result.error.message,'error');else{notify(p.data?'Tanda disimpan dibatalkan.':'Postingan disimpan.');await mountAccount(location.hash.includes('/explore')?'explore':location.hash.split('/')[2]==='post'?'post':'profile');}
+   if(result.error)notify(result.error.message,'error');else{notify(p.data?'Tanda disimpan dibatalkan.':'Postingan disimpan.');await mountAccount(location.hash.includes('/account/reels')?'reels':location.hash.includes('/explore')?'explore':location.hash.split('/')[2]==='post'?'post':'profile');}
   });
   card.querySelectorAll('[data-action="share"]').forEach(button=>button.addEventListener('click',async()=>{
    const url=location.origin+location.pathname+'#/account/post/'+id;
