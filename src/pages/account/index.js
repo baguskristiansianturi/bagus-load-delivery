@@ -328,7 +328,7 @@ function bindProfileTabs(){
  });
 }
 
-function postGrid(posts){return `<div class="ua-post-grid">${posts.map(p=>`<a class="ua-post-thumb" href="#/account/post/${p.id}">${p.media?.length?(p.media[0].media_type==='video'?'<span class="ua-video-mark">▶ VIDEO</span><video src="'+p.media[0].url+'" muted playsinline preload="metadata"></video>':'<img src="'+p.media[0].url+'" alt="'+esc(p.caption||'Postingan Pluits')+'">'):'<span class="ua-text-thumb">PLUITS</span>'}<span class="ua-thumb-caption">${esc(p.caption||'')}</span></a>`).join('')}</div>`;}
+function postGrid(posts){return `<div class="ua-profile-post-feed">${posts.map(postCard).join('')}</div>`;}
 async function hydratePosts(rows){
   if(!rows.length)return [];
   const postIds=rows.map(p=>p.id);
