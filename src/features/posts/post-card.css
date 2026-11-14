@@ -1,16 +1,16 @@
 /* Canonical shared post-card layout */
 .ua-social-app .ua-post-head .ua-post-avatar-link{display:flex;flex:none}
 .ua-social-app .ua-post-avatar-link .ua-avatar{width:50px;height:50px}
-.ua-social-app .ua-post-actions{display:flex;align-items:center;gap:8px;padding:9px 15px 5px;border:0}
+.ua-social-app .ua-post-actions{display:flex;align-items:center;gap:3px;padding:8px 15px 5px;border:0}
 .ua-social-app .ua-post-actions button{display:inline-grid;place-items:center;width:30px;height:32px;padding:4px;border:0;background:transparent;color:#344256;cursor:pointer}
 .ua-social-app .ua-post-actions .pl-post-icon{display:block;width:23px;height:23px}
 .ua-social-app .ua-post-actions button:last-child{margin-left:auto}
 .ua-social-app .ua-post-actions button.is-liked{color:#d84a61}
 .ua-social-app .ua-post-actions button.is-saved{color:#147d80}
-.ua-social-app .ua-post-caption{padding:2px 15px 18px;margin:0;color:#263445;font-size:12px;line-height:1.55}
+.ua-social-app .ua-post-caption{padding:2px 15px 18px;margin:0;color:#263445;font-size:12px;line-height:1.5}
 .ua-social-app .ua-post-caption p{margin:0;white-space:pre-wrap;overflow-wrap:anywhere}
 .ua-social-app .ua-post-caption p a{color:inherit;text-decoration:none}
-.ua-social-app .ua-post-engagement{display:flex;align-items:center;gap:12px;margin-top:7px;color:#7b8794;font-size:10px}
+.ua-social-app .ua-post-caption-line{display:grid;grid-template-columns:max-content minmax(0,1fr);align-items:start;column-gap:5px;min-width:0}.ua-social-app .ua-post-username{font-weight:700;color:#344256;white-space:nowrap}.ua-social-app .ua-post-caption-text{min-width:0;white-space:pre-wrap;overflow-wrap:anywhere}.ua-social-app .ua-post-engagement{display:flex;align-items:center;gap:12px;min-height:16px;margin-top:6px;color:#7b8794;font-size:10px;line-height:1.3}.ua-social-app .ua-post-engagement>*{display:inline-flex;align-items:center;min-height:16px;line-height:1.3}
 .ua-social-app .ua-post-engagement .ua-view-comments{border:0;background:none;padding:0;color:inherit;font:inherit;cursor:pointer}
 .ua-social-app .ua-post-date{white-space:normal}
 .ua-social-app .ua-media img,.ua-social-app .ua-media video,.ua-social-app .ua-gallery-item img,.ua-social-app .ua-gallery-item video{max-height:min(78svh,900px);object-fit:contain}
