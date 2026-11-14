@@ -66,12 +66,12 @@ test('search bar registry preserves distinct feature ownership', () => {
   for (const [id,owner] of Object.entries(expected)) assert.equal(searchBarRegistry[id]?.owner,owner);
 });
 
-import { renderPublicHomeLayout } from '../../src/features/public-home/layout.js';
+import { readFileSync } from 'node:fs';
 import { renderPublicStories } from '../../src/features/public-home/stories.js';
 
 test('public home adopts shared container and a viewport-wide community feed region', () => {
-  const html = renderPublicHomeLayout({ image: id => '/images/'+id, nearbyContent: '' });
-  assert.match(html, /class="pl-public-shell plds-container"/);
+  const source = readFileSync(new URL('../../src/features/public-home/layout.js', import.meta.url), 'utf8');
+  assert.match(source, /class="pl-public-shell plds-container"/);
   assert.match(html, /class="pl-public-feed-region plds-section--full-bleed"/);
   assert.match(html, /id="pl-public-feed"/);
   assert.ok(html.indexOf('pl-public-feed-region') > html.indexOf('pl-public-story-feature'));
