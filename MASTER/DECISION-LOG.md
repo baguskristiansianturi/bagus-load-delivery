@@ -143,3 +143,14 @@ Salin untuk keputusan berikutnya:
 - IMPLEMENTED: `user_profile_image_frames` with bounded focus coordinates and zoom for avatar/card; owner-only writes; public read limited to public profiles; profile editor previews and independent sliders; Circle reads card framing only for recommended public profiles.
 - CONSTRAINT: use the original signed Storage object URL and browser-side framing. Supabase Storage image transformation is not a dependency for this flow because it is plan-gated.
 - NOT TESTED: Android device UAT, multiple source-image aspect ratios, and two-account RLS verification. GitHub Actions and database advisors must be checked against the implementation commit before marking DEPLOYED.
+
+
+## D-009 — Public Blog as a shareable personal landing page
+- **Tanggal keputusan:** 14 November 2026
+- **Status:** DECIDED
+- **Founder approval:** eksplisit dalam arahan founder pada percakapan 14 November 2026.
+- **Konteks:** ruang Blog harus menjadi tujuan publik yang dapat dibagikan ke sosial media, Google Maps/profil bisnis, dan kanal lain; bukan hanya daftar artikel di dalam akun.
+- **Keputusan final:** halaman utama Blog memakai hero editorial, carousel kategori, identitas penulis, daftar artikel, dan kredit Pluits. Halaman artikel menampilkan metadata penulis/tanggal, berbagi, artikel terkait, rekomendasi, dan tautan profil. Pemilik dapat mengatur urutan artikel (terbaru/terlama) dan memilih artikel utama hero. URL tetap berada pada namespace Pluits dan identitas Pluits dicantumkan secara elegan. Tab profil menjadi Feed, Reels, Trip, Blog dengan ikon.
+- **Batas:** tidak membuat domain atau aplikasi terpisah per penulis; tidak mempublikasikan draft/privat; tidak mengubah kontrol follow/privasi; fitur ini tidak menjadikan Blog akun terpisah.
+- **Dampak:** halaman publik Blog menjadi landing page personal/kreator/bisnis; struktur dan aturan aktif dicatat pada Business Model Master Bagian 33.15.
+- **Status implementasi:** PR #23 terbuka; CI success pada run #1863; migration presentasi belum diterapkan; Pages deployment dan Android UAT belum dilakukan.
