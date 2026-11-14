@@ -128,6 +128,6 @@ This is a limited anonymous smoke test only. It does not replace signed-in owner
 
 
 ### Blog draft autosave — 14 November 2026
-- Migration `20261114120000_allow_blog_drafts_without_cover.sql` allows owner-scoped draft rows to exist before a cover is selected.
+- Migration `20261114114848_allow_blog_drafts_without_cover.sql` allows owner-scoped draft rows to exist before a cover is selected.
 - The cover owner-path constraint still applies to every non-null cover path; published rows must have a cover.
 - Frontend autosave writes draft rows under the authenticated owner. Publishing still validates title and cover in the frontend and the database requires a cover for published rows.
