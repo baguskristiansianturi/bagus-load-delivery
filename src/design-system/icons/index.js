@@ -2,8 +2,8 @@
  * Existing icon artwork remains the source of truth during the consolidation.
  * New consumers should import from this file, not the legacy common paths.
  */
-import { icon as legacyGeneralIcons } from '../../components/common/icons.js';
-import { socialIcon } from '../../components/common/social-icons.js';
+import { icon as legacyGeneralIcons } from './registry.js';
+import { socialIcon } from './social-registry.js';
 
 export { socialIcon };
 
