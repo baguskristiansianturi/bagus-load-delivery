@@ -207,7 +207,7 @@ assert.ok(socialHome.includes('function profileMenuMarkup()') && socialHome.incl
 assert.equal(socialHome.split('function bindProfileMenu').length - 1, 1, 'Profile menu must have exactly one delegated interaction handler.');
 assert.ok(socialHome.includes("event.target.closest('.pl-social-menu-trigger')"), 'Profile menu must support dynamically rendered profile and preview controls.');
 const profileHeroStyles = read('src/features/profile/profile-hero.css');
-assert.ok(profileHeroStyles.includes('.ua-profile-main .ua-cover{display:none!important}'), 'Profile hero must keep its intended cover-free layout.');
+assert.ok(profileHeroStyles.includes('.ua-profile-main .ua-cover{') && profileHeroStyles.includes('width:100%') && profileHeroStyles.includes('.ua-profile-main .ua-cover::after'), 'Profile hero cover must remain full-width and fade smoothly into the profile surface.');
 const navigationStyles = read('src/styles/social-navigation.css');
 assert.ok(navigationStyles.includes('.ua-social-app .pl-social-header > .pluits-brand-mark.ua-brand') && navigationStyles.includes('flex: 0 0 38px !important') && navigationStyles.includes('flex: 0 0 30px !important') && navigationStyles.includes('overflow: visible !important'), 'Signed-in header logo must use a fixed, unclipped box with responsive desktop/mobile sizing.');
 assert.ok(sharedHeader.includes('showEditProfile') && socialHome.includes("section==='profile'?(parameter==='edit'?'profile-edit':'profile')"), 'Edit profile must only appear in the three-dot menu on the profile view, not throughout settings pages.');
