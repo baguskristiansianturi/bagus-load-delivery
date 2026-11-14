@@ -110,3 +110,9 @@ test('Marketplace content sections use the shared content container', () => {
   assert.match(appCss, /--pl-layout-content-max:1180px/);
   assert.match(appCss, /max-width:var\(--pl-layout-content-max,1180px\)/);
 });
+
+test('Trip pages use the shared content container for itinerary and discovery layouts', () => {
+  const pageSource = readFileSync(new URL('../../src/pages/trip/index.js', import.meta.url), 'utf8');
+  assert.match(pageSource, /pl-trip-content plds-container/);
+  assert.equal((pageSource.match(/pl-trip-content plds-container/g)||[]).length, 2);
+});
