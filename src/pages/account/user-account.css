@@ -2787,3 +2787,42 @@
  .ua-profile-blog-card{grid-template-columns:100px minmax(0,1fr);gap:10px;padding:10px 8px}
  .ua-profile-blog-copy h3{font-size:13px}
 }
+
+/* Public profile shares the same four-tab layout as the signed-in profile. */
+.ua-public-profile .ua-profile-tabs{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  justify-content:stretch!important;
+  gap:0!important;
+  width:100%;
+}
+.ua-public-profile .ua-profile-tabs button{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  min-width:0!important;
+  width:100%;
+  gap:6px!important;
+  padding:13px 3px!important;
+  color:#737982!important;
+  font-size:11px!important;
+  font-weight:750!important;
+  letter-spacing:0!important;
+  text-transform:none!important;
+  border:0!important;
+  border-bottom:2px solid transparent!important;
+  background:transparent!important;
+}
+.ua-public-profile .ua-profile-tabs button.active{
+  color:#159e91!important;
+  border-bottom-color:#159e91!important;
+}
+.ua-public-profile .ua-profile-tabs button svg{
+  width:17px;height:17px;flex:0 0 17px;
+  fill:none;stroke:currentColor;stroke-width:1.7;
+  stroke-linecap:round;stroke-linejoin:round;
+}
+@media(max-width:420px){
+ .ua-public-profile .ua-profile-tabs button{font-size:10px!important;gap:4px!important}
+ .ua-public-profile .ua-profile-tabs button svg{width:16px;height:16px;flex-basis:16px}
+}
