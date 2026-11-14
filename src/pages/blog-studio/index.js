@@ -10,7 +10,7 @@ const BUCKET='pluits-user-media';
 const uploadMedia=createMediaUploader({supabase,bucket:BUCKET,supabaseUrl:SUPABASE_URL,publishableKey:SUPABASE_PUBLISHABLE_KEY});
 let blogProfile=null,categories=[],savedBodyRange=null;
 let activeUser=null,activeProfile=null,activeTab='posts',activeView='dashboard',editingId=null,coverObjectUrl='',selectedCoverFile=null,galleryItems=[],supportingObjectUrls=[],pendingSupportingFiles=[],previewObjectUrls=[],toastTimer=null;
-let autoSaveTimer=null,autoSaveInFlight=false,autoSaveQueued=false,editorRevision=0,editorDirty=false;
+let autoSaveTimer=null,autoSaveInFlight=false,autoSaveQueued=false,pendingManualStatus=null,editorRevision=0,editorDirty=false;
 const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const wordCount=value=>String(value||'').replace(/<[^>]*>/g,' ').replace(/&nbsp;/g,' ').trim().split(/\s+/).filter(Boolean).length;
 const MAX_BODY_WORDS=1200;
@@ -180,7 +180,7 @@ function scheduleEditorAutoSave(){
 }
 async function persistEditor(status,options={}){
  const form=document.querySelector('#pl-blog-editor-form');if(!form)return;
- if(autoSaveInFlight){autoSaveQueued=true;return;}
+ if(autoSaveInFlight){autoSaveQueued=true;if(!options.silent){pendingManualStatus=status;notify('Sedang menyimpan perubahan. Draft akan diselesaikan sesaat lagi.');}return;}
  autoSaveInFlight=true;const revisionAtStart=editorRevision;
  try{
   const d=new FormData(form),rawTitle=String(d.get('title')||'').trim(),description=String(d.get('description')||'').trim();
@@ -220,7 +220,9 @@ async function persistEditor(status,options={}){
   previewObjectUrls.forEach(url=>URL.revokeObjectURL(url));previewObjectUrls=[];revokePreviews();await render();return data;
  } finally {
   autoSaveInFlight=false;
-  if(autoSaveQueued||editorDirty){autoSaveQueued=false;if(activeView==='editor'){clearTimeout(autoSaveTimer);autoSaveTimer=setTimeout(()=>persistEditor('draft',{silent:true,stay:true}).catch(error=>{console.error('PLUITS Blog autosave:',error);setEditorSaveState('Belum tersimpan · periksa koneksi lalu coba lagi','error');}),500);}}
+  const manualStatus=pendingManualStatus;pendingManualStatus=null;
+  if(manualStatus){autoSaveQueued=false;setTimeout(()=>persistEditor(manualStatus).catch(error=>{console.error('PLUITS Blog draft:',error);notify(error?.message||'Draft belum berhasil disimpan.','error');}),0);}
+  else if(autoSaveQueued||editorDirty){autoSaveQueued=false;if(activeView==='editor'){clearTimeout(autoSaveTimer);autoSaveTimer=setTimeout(()=>persistEditor('draft',{silent:true,stay:true}).catch(error=>{console.error('PLUITS Blog autosave:',error);setEditorSaveState('Belum tersimpan · periksa koneksi lalu coba lagi','error');}),500);}}
  }
 }
 
