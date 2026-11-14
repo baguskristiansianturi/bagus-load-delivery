@@ -150,3 +150,14 @@ test('Shared application shell uses the canonical content container', () => {
   assert.match(uiSource, /page-main plds-container/);
   assert.match(appCss, /--pl-layout-content-max:var\(--container,1200px\)/);
 });
+
+test('layout migration registry marks adopted route families as partial, not legacy', () => {
+  const adopted = [
+    'publicHome','signedInFeed','profile','accountSettings','accountSections','accountPost',
+    'accountUser','inbox','marketplace','storefront','marketProduct','marketCart','checkout',
+    'marketOrders','marketOrder','seller','directory','trip','tripItinerary','discoverySearch',
+    'blog','help','legal','misc'
+  ];
+  for (const key of adopted) assert.equal(pageLayoutRegistry[key].migration,'partial',key);
+  assert.ok(pageLayoutRegistry.reels.migration==='legacy-markup');
+});
