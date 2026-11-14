@@ -29,7 +29,7 @@ export const pageLayoutRegistry = Object.freeze({
   trip:{ route:'#/trip', owner:'pages/trip', experience:'trip', layout:'content', migration:legacy, sections:['trip-header','trip-search','itineraries','service-requests'] },
   tripItinerary:{ route:'#/trip/itinerary/:id', owner:'pages/trip', experience:'trip-detail', layout:'reading', migration:legacy, sections:['itinerary-header','day-plan','places','sharing-controls'] },
   discoverySearch:{ route:'#/search?q=:query', owner:'pages/search/discovery', experience:'discovery', layout:'content', migration:legacy, sections:['search-header','search-controls','results'] },
-  blog:{ route:'#/blog and #/guides', owner:'pages/blog', experience:'editorial', layout:'reading', migration:legacy, sections:['editorial-header','article-list'] },
+  blog:{ route:'#/blog, #/guides, #/article/:slug', owner:'pages/blog', experience:'editorial', layout:'reading', migration:legacy, sections:['editorial-header','article-list'] },
   publicBlog:{ route:'#/@username/blog/:slug', owner:'pages/blog-studio', experience:'editorial', layout:'reading', migration:legacy, sections:['blog-header','article-content','comments'] },
   blogStudio:{ route:'#/account/blog', owner:'pages/blog-studio', experience:'blog-studio', layout:'workspace', migration:legacy, sections:['studio-navigation','editor','preview'] },
   help:{ route:'#/help and #/faq', owner:'pages/help', experience:'help', layout:'reading', migration:legacy, sections:['help-header','topic-navigation','article-content'] },
