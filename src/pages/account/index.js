@@ -1524,7 +1524,7 @@ function bindPostActions(){
    if(!likeButton||likeButton.dataset.busy==='1')return;
    const wasLiked=likeButton.classList.contains('is-liked');
    const liked=!wasLiked;
-   const oldCount=Number(likeButton.querySelector('b')?.textContent||0),nextCount=Math.max(0,oldCount+(liked?1:-1));
+   const oldCount=Number(card.querySelector('.ua-like-count')?.textContent.match(/[0-9]+/)?.[0]||0),nextCount=Math.max(0,oldCount+(liked?1:-1));
    likeButton.dataset.busy='1';
    paintLikeState(liked,nextCount);if(animationArea)animateLikeTransition(animationArea,liked);
    try{
