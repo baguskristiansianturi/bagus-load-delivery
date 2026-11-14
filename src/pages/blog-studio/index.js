@@ -72,7 +72,7 @@ function avatarMarkup() {
 function shell(content) {
   return '<div class="ua-app ua-social-app pl-blog-studio">' +
     renderSocialHeader({ active: 'create', user: activeUser, profile: activeProfile, userAvatar: '' }) +
-    '<main class="ua-main pl-blog-main">' + content + '</main>' +
+    '<main class="ua-main pl-blog-main plds-container plds-container--reading">' + content + '</main>' +
     renderSocialMobileNav({ active: 'create', user: activeUser, profile: activeProfile }) +
     '<div id="pl-blog-toast" class="pl-blog-toast" role="status" aria-live="polite"></div>' +
     '<footer class="ua-footer">PLUITS · Ruang karya dan cerita</footer></div>';
