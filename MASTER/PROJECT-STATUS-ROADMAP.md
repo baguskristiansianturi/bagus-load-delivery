@@ -60,6 +60,16 @@
 - **Bukti:** bagian 19 pada model bisnis.
 - **Kriteria:** lihat PR dan checkpoint CP-006 yang direncanakan di bawah.
 
+
+### CP-006 — Blog Studio autosave dan Blog Saya homepage
+- **Tanggal:** 14 November 2026.
+- **Status:** IMPLEMENTED dan MERGED; PR #21 (https://github.com/baguskristiansianturi/pluits/pull/21), merge commit 12cafa73f98e654ce501fcd1da173cd8fc6c1da9.
+- **Perubahan:** draft tersimpan otomatis setelah jeda mengetik dan dicoba disimpan saat tab/halaman ditinggalkan; draft dapat disimpan sebelum cover dipilih; tombol Simpan Draft memberi hasil yang jelas; Blog Saya memiliki hero, tautan ke beranda blog publik, kartu artikel terbaru, tab Draft, dan Pengaturan Blog.
+- **Database:** migration 20261114120000_allow_blog_drafts_without_cover.sql diterapkan ke Supabase project ytndswhqxayqpftszwfh; cover boleh NULL untuk draft, tetapi published tetap wajib memiliki cover dan path non-null tetap owner-scoped.
+- **CI PR:** workflow run #1846, 61/61 tests passed, Vite production build passed, build output verification passed, Pages artifact uploaded. Deploy dilewati pada event pull request (sesuai workflow).
+- **Deployment main:** NOT VERIFIED dari sesi ini; verifikasi workflow push-to-main masih diperlukan.
+- **Founder Android UAT:** NOT TESTED / menunggu uji nyata; khususnya autosave saat keluar mendadak, restore draft, upload media, dan tautan Blog Saya.
+
 ## 3. PR dan urutan pekerjaan
 
 ### PR-001 — Audit kondisi aktual repository dan Supabase
