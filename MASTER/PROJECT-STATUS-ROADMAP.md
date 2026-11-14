@@ -1275,3 +1275,16 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - **Tests:** `tests/services/realtime-presence.test.js` menguji satu channel per akun, duplicate prevention, account switching, sign-out dan cleanup.
 - **CI:** [run 43450851746 — SUCCESS](https://github.com/baguskristiansianturi/pluits/actions/runs/43450851746), commit `f942a2fd02beadacf676099cbd86fe84c9d979a8`; 54 source modules checked, 44 tests PASS / 0 FAIL, Vite build PASS, production deploy SKIPPED.
 - **Status:** REALTIME PRESENCE SERVICE IMPLEMENTED / AUTOMATED TESTED. Message dan notification realtime tetap menjadi service terpisah yang belum diekstrak.
+
+## CP-080 — Mobile video upload recovery and Blog mixed-media authoring (14 November 2026)
+
+- **Branch:** `fix/video-upload-blog-media`.
+- **Video upload fix IMPLEMENTED in branch:** resumable TUS fingerprints now include the destination object path so an interrupted upload for the same filename cannot resume into a different post's object path. Transient TUS/network failures attempt owner-scoped cleanup before the SDK standard-upload fallback; HTTP 4xx validation/auth/permission failures are surfaced rather than hidden by fallback.
+- **Blog authoring IMPLEMENTED in branch:** Blog Studio accepts supporting images and videos (MP4, MOV, WebM, 3GP/3G2), retains image-only cover rules, renders video previews and public article playback, and links public articles back to the author's profile/follow journey.
+- **Account access alignment:** removed the frontend Premium gate from the Blog create hub and Blog Studio, consistent with D-008 where Premium/entitlement rules were explicitly deferred. A new owner-only RLS migration is staged: `supabase/migrations/20261114100000_allow_free_user_blog_profiles.sql`.
+- **Data model:** supporting videos reuse the existing `blog_posts.supporting_paths` JSON path list and the existing published-blog Storage read policy. No new media table or public bucket is introduced.
+- **Module documentation:** `src/pages/blog-studio/README.md` and `docs/pluits/FRONTEND-MODULE-MAP.md` document ownership, dependencies, storage/privacy contracts, and boundaries.
+- **Regression coverage added:** media MIME/size, TUS path fingerprint/fallback, Blog mixed-media, free-account gate, and RLS ownership policy tests.
+- **Production safety:** no Supabase migration has been applied; no live user data or Storage objects have been modified; no Pages production deployment has been run.
+- **Status:** IMPLEMENTED IN FEATURE BRANCH / CI NOT YET VERIFIED / SUPABASE MIGRATION PENDING REVIEW / ANDROID FOUNDER UAT NOT TESTED / NOT ACCEPTED.
+- **Next:** run PR CI and inspect every job; after CI passes, provide a private review route or a safe preview path. Apply the RLS migration only after explicit review, then test upload/playback and public/private visibility on the founder's Android device before production release.

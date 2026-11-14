@@ -35,7 +35,7 @@ Database schema is applied in Supabase. Confirm the live migration list and advi
 ## User media storage
 Private bucket: `pluits-user-media`.
 - Maximum file size: 50 MB.
-- Allowed MIME: JPEG, PNG, WebP, GIF, MP4, WebM.
+- Allowed MIME: JPEG, PNG, WebP, GIF, MP4, QuickTime/MOV, WebM, 3GP, and 3G2.
 - Object path starts with the authenticated user's UUID.
 - RLS restricts uploads/deletes to the owner and reads to the owner or content allowed by public profile/post visibility.
 - The frontend uses short-lived signed URLs for rendering. Anonymous read policy permits signed URLs only for media referenced by public published posts or public profiles; private posts and private profiles remain inaccessible. Never expose a service-role key in the browser.
@@ -48,7 +48,9 @@ Private bucket: `pluits-user-media`.
 - The public profile location contains only city/regency and province.
 - Exact address and coordinates must never be returned in public profile/feed queries.
 - Wallet tables and a user request screen are scaffolded, but no payment provider, verified settlement, withdrawal processing, or complete financial ledger is implemented. This is not an operational real-money wallet; do not advertise balance/top-up/withdrawal as available.
-- Storage upload for video is currently standard upload with a 50 MB cap; resumable/TUS upload remains future work.
+- Video uploads use resumable TUS for files larger than 6 MB, with destination-path-scoped fingerprints and a standard-upload fallback for transient resumable failures. Bucket limit remains 50 MB per file.
+- Blog article media reuses `supporting_paths` for both image and video objects. Public reads are authorized by the existing published-blog Storage policy; private drafts remain owner-only.
+- Proposed migration `20261114100000_allow_free_user_blog_profiles.sql` removes the unapproved Premium gate in blog-profile creation RLS. It is staged in the feature branch and MUST NOT be treated as applied until explicitly reviewed and run.
 - Run security/performance advisors after each schema change. The latest 8 Nov 2026 audit reports two authenticated-callable SECURITY DEFINER store RPCs and leaked-password protection disabled. Performance notices: 14 unindexed foreign keys and 12 unused-index notices; wallet RLS init-plan and duplicate Stories SELECT warnings have been cleared. See MASTER/PLUITS-SECURITY-REVIEW.md.
 
 ## Project handoff
