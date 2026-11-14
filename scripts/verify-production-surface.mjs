@@ -175,7 +175,8 @@ assert.match(publicHome, /if\(actualViewer&&!guestMode\)/, 'Signed-in visitors m
 assert.match(publicHome, /location\.hash='#\/account\/explore'/, 'Signed-in homepage routing must use the canonical Explore route.');
 const mainEntry = read('src/main.js');
 assert.match(mainEntry, /let renderSequence = 0/, 'Application route rendering must use a monotonic render sequence.');
-assert.ok(mainEntry.includes('await route(home)'), 'Homepage hydration must wait for the active route render.');
+assert.ok(mainEntry.includes('await route()'), 'Homepage hydration must wait for the active route render.');
+assert.ok(mainEntry.includes("const {bindHome}=await import('./pages/home/index.js')"), 'Homepage behavior must load only after the public-home route is active.');
 assert.ok(mainEntry.includes('sequence !== renderSequence'), 'Stale route completions must not hydrate or overwrite a newer page.');
 const manifest = JSON.parse(read('public/manifest.webmanifest'));
 assert.ok(manifest.icons.some(icon => icon.src === '/pluits/assets/brand/pluits-logo.svg' && icon.type === 'image/svg+xml'), 'Installed app icon must use the canonical transparent SVG logo.');
