@@ -298,6 +298,9 @@ assert.ok(read('src/main.js').includes("history.replaceState(null, '', location.
 assert.ok(read('src/pages/home/index.js').includes("location.hash='#/account/explore'"), 'Authenticated users must enter the canonical signed-in Explore workspace from the root URL.');
 
 assert.ok(read('src/pages/account/index.js').includes('sorted.map(post=>postCard(post)).join(\'\')'),'The home feed must use the defined post-card renderer, not the Reel-only renderer.');
+assert.ok(read('src/pages/account/index.js').includes('sorted.map(post=>renderReelCard(post,{user,avatar,socialIcon,esc}))'),'Reels must use the dedicated Reel card renderer.');
+assert.ok(read('src/features/reels/reel-card.js').includes('data-reel-sound') && read('src/features/reels/reels.css').includes('ua-reels-app'), 'Reel viewer must provide full-screen controls and sound toggle.');
+assert.ok(read('src/pages/account/index.js').includes('content_kind:contentKind'), 'Publishing must persist the explicit Post or Reel content kind.');
 assert.ok(read('src/pages/account/index.js').includes('accept="video/*,.mp4,.m4v,.mov,.webm,.3gp,.3gpp,.3g2,.3gp2"'),'Reel picker must request common Android video formats explicitly.');
 assert.ok(read('src/features/reels/reel-card.js').includes('ua-reel-stage'),'Reel card module must own its stage.');
 assert.ok(read('src/features/reels/reels.css').includes('aspect-ratio:9/16'),'Reel layout must preserve vertical framing.');
@@ -331,4 +334,5 @@ const accountSource = read('src/pages/account/index.js');
 const homeFeedSource = accountSource.slice(accountSource.indexOf('async function feedPage()'), accountSource.indexOf('async function reelsPage()'));
 assert.ok(homeFeedSource.includes(".eq('moderation_status','published').order('created_at',{ascending:false}).limit(60)") && homeFeedSource.includes('.slice(0,30)'), 'Home feed must bound candidate reads and hydrate no more than 30 posts for mobile performance.');
 assert.ok(homeFeedSource.includes("from('user_stories')") && homeFeedSource.includes(".eq('visibility','public')") && homeFeedSource.includes('followedSet.has(story.user_id)'), 'Circle must render active public stories only from followed accounts.');
-assert.ok(accountSource.includes(".lte('duration_ms',60000).order('created_at',{ascending:false}).limit(60)"), 'Reels discovery must bound initial media lookup.');
+assert.ok(accountSource.includes("from('user_posts').select('*').eq('content_kind','reel')") && accountSource.includes("section==='reels'?await reelsPage(parameter)"), 'Reels discovery must query explicit Reel publications and support deep links.');
+assert.ok(accountSource.includes(".eq('content_kind','post').eq('visibility','public')"), 'Circle feed must exclude dedicated Reel publications.');
