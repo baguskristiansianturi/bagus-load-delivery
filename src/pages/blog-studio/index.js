@@ -9,7 +9,7 @@ import './blog-studio.css';
 const BUCKET='pluits-user-media';
 const uploadMedia=createMediaUploader({supabase,bucket:BUCKET,supabaseUrl:SUPABASE_URL,publishableKey:SUPABASE_PUBLISHABLE_KEY});
 let blogProfile=null,categories=[];
-let activeUser=null,activeProfile=null,activeTab='posts',activeView='dashboard',editingId=null,coverObjectUrl='',selectedCoverFile=null,galleryItems=[],supportingObjectUrls=[],pendingSupportingFiles=[],toastTimer=null;
+let activeUser=null,activeProfile=null,activeTab='posts',activeView='dashboard',editingId=null,coverObjectUrl='',selectedCoverFile=null,galleryItems=[],supportingObjectUrls=[],pendingSupportingFiles=[],previewObjectUrls=[],toastTimer=null;
 const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const wordCount=value=>String(value||'').trim().split(/\s+/).filter(Boolean).length;
 const uid=()=>crypto.randomUUID();
@@ -134,7 +134,6 @@ function editorPage(item = null) {
 }
 async function previewPage(item) {
   activeView = 'preview';
-  revokePreviews();
   const cover = item.cover_url || '';
   const support = (item.supporting_media || []).map(media => isVideoPath(media.path) ? '<video class="pl-blog-support-video" src="' + media.url + '" controls playsinline preload="metadata"></video>' : '<img src="' + media.url + '" alt="Gambar pendukung">').join('');
   return header('Pratinjau tulisan', 'Tampilan lokal sebelum dibagikan.') +
@@ -170,7 +169,7 @@ async function persistEditor(status){
  const support=[...(old?.supporting_paths||[])];for(const f of pendingSupportingFiles)support.push(await uploadBlogSupportingMedia(f,'body'));
  const now=new Date().toISOString(),payload={blog_id:blogProfile.id,owner_user_id:activeUser.id,title,description,body,cover_path:coverPath,supporting_paths:support,status,visibility:blogProfile.default_visibility==='private'?'private':String(d.get('visibility')||'public'),category_id:String(d.get('category_id')||'')||null,updated_at:now,published_at:status==='published'?(old?.published_at||now):old?.published_at||null};
  const q=editingId?supabase.from('blog_posts').update(payload).eq('id',editingId).eq('owner_user_id',activeUser.id):supabase.from('blog_posts').insert(payload);const {data,error}=await q.select('*').single();if(error)throw error;
- editingId=data.id;notify(status==='draft'?'Draft tersimpan di akun PLUITS.':'Tulisan berhasil diterbitkan.');activeTab=status==='draft'?'drafts':'posts';activeView='dashboard';revokePreviews();await render();
+ editingId=data.id;notify(status==='draft'?'Draft tersimpan di akun PLUITS.':'Tulisan berhasil diterbitkan.');activeTab=status==='draft'?'drafts':'posts';activeView='dashboard';pendingSupportingFiles=[];window.__plBlogEditingItem=null;previewObjectUrls.forEach(url=>URL.revokeObjectURL(url));previewObjectUrls=[];revokePreviews();await render();
 }
 
 function bind() {
@@ -178,9 +177,9 @@ function bind() {
   document.querySelector('#pl-blog-category-form')?.addEventListener('submit',async e=>{e.preventDefault();const name=String(new FormData(e.currentTarget).get('name')||'').trim();if(!name)return;const {error}=await supabase.from('blog_categories').insert({blog_id:blogProfile.id,owner_user_id:activeUser.id,name});if(error)throw error;await loadBlogProfile();notify('Kategori ditambahkan.');await render();});
 
   document.querySelectorAll('[data-tab]').forEach(button => button.addEventListener('click', () => { activeTab = button.dataset.tab; activeView = 'dashboard'; render().catch(showError); }));
-  document.querySelectorAll('[data-action="new"]').forEach(button => button.addEventListener('click', () => { editingId = null; window.__plBlogEditingItem = null; revokePreviews(); setView('editor'); }));
+  document.querySelectorAll('[data-action="new"]').forEach(button => button.addEventListener('click', () => { editingId = null; window.__plBlogEditingItem = null; pendingSupportingFiles=[]; revokePreviews(); setView('editor'); }));
   document.querySelectorAll('[data-action="edit"]').forEach(button => button.addEventListener('click', async () => {
-    const {data:item,error}=await supabase.from('blog_posts').select('*').eq('id',button.dataset.id).eq('owner_user_id',activeUser.id).single();if(error)throw error;const urls=await createSignedUrlMap(supabase.storage,BUCKET,[item.cover_path,...(item.supporting_paths||[])],3600);item.cover_url=urls.get(item.cover_path)||'';item.supporting_urls=(item.supporting_paths||[]).map(path=>({path,url:urls.get(path)||''})).filter(media=>media.url);window.__plBlogEditingItem=item;editingId=item.id;setView('editor');
+    const {data:item,error}=await supabase.from('blog_posts').select('*').eq('id',button.dataset.id).eq('owner_user_id',activeUser.id).single();if(error)throw error;const urls=await createSignedUrlMap(supabase.storage,BUCKET,[item.cover_path,...(item.supporting_paths||[])],3600);item.cover_url=urls.get(item.cover_path)||'';item.supporting_urls=(item.supporting_paths||[]).map(path=>({path,url:urls.get(path)||''})).filter(media=>media.url);window.__plBlogEditingItem=item;editingId=item.id;pendingSupportingFiles=[];setView('editor');
   }));
   document.querySelectorAll('[data-action="delete"]').forEach(button => button.addEventListener('click', async () => {
     if (!confirm('Hapus tulisan ini dari akun PLUITS?')) return;
@@ -197,7 +196,8 @@ function bind() {
     if(!title||!description||!body||!coverUrl)return notify('Lengkapi judul, deskripsi, isi, dan cover untuk pratinjau.','error');
     if(wordCount(description)>85)return notify('Deskripsi maksimal 85 kata.','error');
     const oldPaths=old?.supporting_paths||[],oldUrls=oldPaths.length?await createSignedUrlMap(supabase.storage,BUCKET,oldPaths,1800):new Map();
-    const supporting_media=[...oldPaths.filter(path=>oldUrls.has(path)).map(path=>({path,url:oldUrls.get(path)})),...pendingSupportingFiles.map(file=>({path:file.name,url:URL.createObjectURL(file)}))];
+    previewObjectUrls.forEach(url=>URL.revokeObjectURL(url));previewObjectUrls=[];
+    const supporting_media=[...oldPaths.filter(path=>oldUrls.has(path)).map(path=>({path,url:oldUrls.get(path)})),...pendingSupportingFiles.map(file=>{const url=URL.createObjectURL(file);previewObjectUrls.push(url);return {path:file.name,url};})];
     window.__plBlogPreviewItem={title,description,body,cover_url:coverUrl,supporting_media};
     setView('preview');
   });
@@ -297,7 +297,7 @@ function bind() {
     event.target.value='';
     if(files.length)notify(files.length+' media ditambahkan. Simpan draft agar media tersimpan.');
   });
-  document.querySelector('[data-action="back-editor"]')?.addEventListener('click', () => setView('editor'));
+  document.querySelector('[data-action="back-editor"]')?.addEventListener('click', () => {previewObjectUrls.forEach(url=>URL.revokeObjectURL(url));previewObjectUrls=[];setView('editor');});
 }
 export async function mountBlogStudio() {
   try {
