@@ -5,6 +5,7 @@ void startGlobalPresence(presenceDb);
 
 
 import './design-system/tokens/foundation.css';
+import './design-system/layouts/foundation.css';
 import './style.css';
 import './styles/brand.css';
 import './styles/page-transitions.css';
