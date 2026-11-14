@@ -9,11 +9,11 @@ export function renderReelCard(p,{user,avatar,esc,socialIcon}){
   : '<a class="ua-login-action" href="#/account/login">Masuk untuk berinteraksi</a>';
  return `<article class="ua-post-card ua-reel-card" data-post-id="${esc(p.id)}" data-owner-id="${esc(p.user_id)}" data-reel-post-id="${esc(p.id)}">
   <div class="ua-reel-stage">
-   <video class="ua-reel-video" data-reel-video src="${esc(media.url)}" playsinline muted loop preload="metadata" aria-label="Reel oleh ${esc(owner.display_name||'Pengguna Pluits')}"></video>
+   <video class="ua-reel-video" data-reel-video data-reel-src="${esc(media.url)}" playsinline muted loop preload="none" aria-label="Reel oleh ${esc(owner.display_name||'Pengguna Pluits')}"></video>
    <button type="button" class="ua-reel-play-toggle" data-reel-toggle aria-label="Jeda video">Ⅱ</button>
-   <header class="ua-reel-topline"><a class="ua-reel-back" href="#/account/explore" aria-label="Kembali ke Circle">‹</a><button type="button" class="ua-reel-sound" data-reel-sound aria-label="Aktifkan suara">♪</button><div class="ua-post-menu-wrap"><button type="button" class="ua-post-more" aria-label="Menu Reel" aria-expanded="false" data-post-menu>${socialIcon('more',{size:21})}</button><div class="ua-post-menu" hidden>${menu}</div></div></header>
+   <header class="ua-reel-topline"><a class="ua-reel-back" href="#/account/explore" aria-label="Kembali ke Circle">‹</a><div class="ua-post-menu-wrap"><button type="button" class="ua-post-more" aria-label="Menu Reel" aria-expanded="false" data-post-menu>${socialIcon('more',{size:21})}</button><div class="ua-post-menu" hidden>${menu}</div></div></header>
    <div class="ua-reel-actions-wrap">${actions}</div>
-   <div class="ua-reel-bottomline"><a class="ua-reel-author" href="${href}">${avatar(p.avatarUrl,owner.display_name||'P')}<span><strong>@${esc(owner.username||'pengguna')}</strong><small>${esc(owner.display_name||'Pengguna Pluits')}</small></span></a><p>${esc(p.caption||'')}</p><div class="ua-reel-audio" aria-label="Audio asli"><span aria-hidden="true">♫</span><span>Audio asli · @${esc(owner.username||'pengguna')}</span></div></div>
+   <div class="ua-reel-bottomline"><a class="ua-reel-author" href="${href}">${avatar(p.avatarUrl,owner.display_name||'P')}<span><strong>@${esc(owner.username||'pengguna')}</strong><small>${esc(owner.display_name||'Pengguna Pluits')}</small></span></a><p>${esc(p.caption||'')}</p><div class="ua-reel-audio" aria-label="Audio asli"><span aria-hidden="true">♫</span><span>Audio asli · @${esc(owner.username||'pengguna')}</span><button type="button" class="ua-reel-sound" data-reel-sound aria-label="Aktifkan suara">Suara mati</button></div></div>
   </div>
   <span class="ua-like-count" hidden>${Number(p.likes||0)} suka</span>
   <section class="ua-comments ua-reel-comments" hidden></section>
