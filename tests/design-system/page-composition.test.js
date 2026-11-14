@@ -156,7 +156,7 @@ test('layout migration registry marks adopted route families as partial, not leg
     'publicHome','signedInFeed','profile','accountSettings','accountSections','accountPost',
     'accountUser','inbox','marketplace','storefront','marketProduct','marketCart','checkout',
     'marketOrders','marketOrder','seller','directory','trip','tripItinerary','discoverySearch',
-    'blog','help','legal','misc'
+    'blog','blogStudio','help','legal','misc'
   ];
   for (const key of adopted) assert.equal(pageLayoutRegistry[key].migration,'partial',key);
   assert.ok(pageLayoutRegistry.reels.migration==='legacy-markup');
