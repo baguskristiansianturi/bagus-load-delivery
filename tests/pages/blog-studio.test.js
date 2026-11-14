@@ -71,9 +71,10 @@ test('Blog inline media is rendered as media in preview and public articles', as
   assert.match(source, /pendingUrls\[Number\(index\)\]/);
 });
 
-test('Blog writing requires title and cover but not description or category', async () => {
+test('Blog publishing requires title and cover while drafts may omit both', async () => {
   const source = await readFile(new URL('../../src/pages/blog-studio/index.js', import.meta.url), 'utf8');
-  assert.match(source, /if\(!title\)return notify\('Judul tulisan wajib diisi\./);
+  assert.match(source, /if\(!isDraft&&!rawTitle\)/);
+  assert.match(source, /if\(!isDraft&&!coverPath\)/);
   assert.doesNotMatch(source, /name="description" id="pl-blog-description" rows="3" required/);
   assert.match(source, /pl-blog-optional-settings/);
 });
@@ -107,6 +108,6 @@ test('Blog Saya has an editorial hero and orders published cards by publication 
 test('Blog draft migration allows null cover only for drafts and keeps published cover required', async () => {
   const migration = await readFile(new URL('../../supabase/migrations/20261114120000_allow_blog_drafts_without_cover.sql', import.meta.url), 'utf8');
   assert.match(migration, /alter column cover_path drop not null/);
-  assert.match(migration, /cover_path is null or cover_path like owner_user_id/);
+  assert.match(migration, /cover_path is null[\s\S]*or cover_path like owner_user_id/);
   assert.match(migration, /status <> 'published' or cover_path is not null/);
 });
