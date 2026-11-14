@@ -1,6 +1,6 @@
 # PLUITS Personal Blog — Template & Profile Block Implementation
 
-**Status:** schema deployed; frontend implementation in feature branch; CI/deploy and Android UAT pending.
+**Status:** schema and frontend deployed to production; automated CI passed; Android UAT and founder acceptance pending.
 
 ## Approved product rules
 - Blog is a personal publishing surface inside PLUITS, not a separate social network.
@@ -73,5 +73,8 @@ RLS remains the existing blog-profile owner/public-read boundary. Presentation p
 - [x] Blog comments and one-level replies use PLUITS personal account identity; author/blog owner can delete. Reporting and notification preferences remain later work.
 - [x] No publication notification trigger is created by the blog-comments migration.
 - [ ] Public/private authorization tested with owner, second account, and anonymous visitor.
-- [ ] Automated tests and production build pass in CI.
+- [x] Automated tests and production build pass in CI (70/70; run #1873).
 - [ ] Android UAT and founder acceptance recorded.
+- [ ] Crawler-readable Open Graph metadata is delivered; current SPA share action does not yet provide guaranteed crawler previews.
+- [ ] Comment reporting/moderation UI and comment/reply notification preferences are delivered.
+- [ ] News & Media institutional identity and delegated editor roles are delivered.
