@@ -1,6 +1,6 @@
 /* PLUITS inbox — compact, responsive and touch-first */
-.pl-msg{min-height:100dvh;background:#f7f8fa;color:#172b45;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding-bottom:env(safe-area-inset-bottom)}
-.pl-msg-head{height:62px;position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:12px;padding:0 max(16px,calc((100vw - 1120px)/2));border-bottom:1px solid #e8edf2;background:rgba(255,255,255,.96);backdrop-filter:blur(12px)}
+.pl-msg{--pl-layout-workspace-max:1120px;--pl-layout-mobile-gutter:20px;--pl-space-4:16px;--pl-space-8:32px;min-height:100dvh;background:#f7f8fa;color:#172b45;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding-bottom:env(safe-area-inset-bottom)}
+.pl-msg-head{height:62px;position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:12px;padding:0 max(16px,calc((100vw - var(--pl-layout-workspace-max,1120px))/2));border-bottom:1px solid #e8edf2;background:rgba(255,255,255,.96);backdrop-filter:blur(12px)}
 .pl-msg-self{width:36px;height:36px;flex:0 0 36px;display:grid;place-items:center;border:1px solid #e4eaf0;border-radius:50%;background:#eef2f6;color:#28415e;font-weight:800}
 .pl-msg-self-avatar{font-size:13px}
 .pl-msg-head-brand{display:grid;gap:3px;min-width:0;flex:1}
@@ -17,7 +17,7 @@
 .pl-msg-settings strong{display:block;margin-bottom:10px;font-size:12px}
 .pl-msg-settings label{display:flex;align-items:center;gap:8px;padding:8px 0;font-size:11px;color:#52647b}
 .pl-msg-settings small{display:block;margin-top:8px;color:#8793a2;font-size:9px}
-.pl-msg-content{width:min(1120px,100%);margin:0 auto;padding:18px 20px 30px}
+.pl-msg-content{width:min(var(--pl-layout-workspace-max,1120px),100%);margin:0 auto;padding:var(--pl-space-4,16px) var(--pl-layout-mobile-gutter,20px) var(--pl-space-8,32px)}
 .pl-msg-people{margin-bottom:18px;padding:14px 15px 12px;border:1px solid #e8edf2;border-radius:16px;background:#fff}
 .pl-msg-people-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
 .pl-msg-people-heading>div{display:grid;gap:3px;min-width:0}
