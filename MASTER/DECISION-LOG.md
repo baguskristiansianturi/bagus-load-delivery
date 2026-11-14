@@ -168,5 +168,5 @@ Salin untuk keputusan berikutnya:
   5. Menerbitkan artikel tidak menghasilkan notifikasi otomatis kepada pengikut. Notifikasi komentar/balasan merupakan preferensi terpisah dan tidak boleh disamakan dengan notifikasi publikasi.
   6. Konten privat tidak boleh muncul pada rute publik, feed pencarian publik, sitemap, media publik, atau preview berbagi.
 - **Batas:** lima template awal berlaku untuk Personal Blog. News & Media memerlukan identitas organisasi terverifikasi, role editor/delegasi, dan aturan moderasi tersendiri sebelum diaktifkan. Reorder dan theme customization tidak mengubah skema isi artikel.
-- **Status implementasi:** migration template/layout dan blog_comments telah diterapkan pada Supabase production; frontend berada pada branch feat/blog-templates-and-customization. CI, deploy, dan Android UAT belum diverifikasi pada saat pencatatan.
+- **Status implementasi:** migration template/layout dan blog_comments telah diterapkan pada Supabase production; PR #24 merged ke main pada commit 8e41d5850df184299ac6faf30ddc9a2b2e7d5a82; CI run #1873 SUCCESS (70/70 tests, Vite build, Pages deploy). Android UAT dan founder acceptance masih pending.
 - **Dokumen turunan:** docs/pluits/PERSONAL-BLOG-TEMPLATE-AND-BLOCK-SPEC.md, src/pages/blog-studio/README.md, dan checkpoint CP-082.
