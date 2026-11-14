@@ -27,3 +27,16 @@ The full-bleed media viewer is an explicit layout variant; do not force it into 
 - Use CSS grid/flex with `minmax(0,1fr)` and `min-width:0` to prevent mobile overflow.
 - Page gutter is tokenized (16px; 12px on narrow screens). The viewport is fluid; no physical device resolution is hardcoded.
 - Existing pages migrate one at a time after their selectors and consumers are inventoried. Importing this file alone changes no legacy layout.
+
+## Canonical presets
+Use `src/design-system/layouts/presets.js` as the named preset registry:
+- `standard`: standard content canvas and page gutter.
+- `fullWidth`: edge-to-edge content/media surface.
+- `hybrid`: standard page with explicitly full-bleed sections.
+- `reading`: narrow long-form reading column.
+- `workspace`: wide application workspace.
+- `immersive`: viewport-sized full-bleed experience.
+- `content`: named alias for the standard 1200px content canvas.
+
+## Shared search and brand assets
+Search bars have explicit owners in `design-system/components/search-bar/registry.js`, while geometry is shared. Logo mark and lockup semantics are listed in `design-system/assets/logo-registry.js`. The current repository has a logo mark asset; the lockup entry is a specification placeholder and must not be rendered as an actual lockup until approved artwork exists.
