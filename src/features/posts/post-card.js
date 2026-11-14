@@ -8,7 +8,7 @@ function relativeTime(value){
  return 'Baru saja';
 }
 function shortCaption(value,maxWords=50){
- const words=String(value??'').trim().split(/\\s+/).filter(Boolean);
+ const words=String(value??'').trim().split(/\s+/).filter(Boolean);
  return words.length>maxWords?words.slice(0,maxWords).join(' ')+'…':words.join(' ');
 }
 /** Canonical social post card. Page controllers provide data and visual helpers; data loading stays outside this component. */
