@@ -123,3 +123,14 @@ test('Seller Center adopts the shared wide workspace container', () => {
   assert.match(pageSource, /pluits-dashboard plds-container plds-container--wide/);
   assert.match(pageCss, /--pl-layout-workspace-max:1240px/);
 });
+
+test('Discovery and Help pages adopt shared content containers', () => {
+  const discovery = readFileSync(new URL('../../src/pages/search/discovery.js', import.meta.url), 'utf8');
+  const discoveryCss = readFileSync(new URL('../../src/pages/search/discovery.css', import.meta.url), 'utf8');
+  const help = readFileSync(new URL('../../src/pages/help/index.js', import.meta.url), 'utf8');
+  const helpCss = readFileSync(new URL('../../src/pages/help/help.css', import.meta.url), 'utf8');
+  assert.match(discovery, /ds-main plds-container/);
+  assert.match(discoveryCss, /--pl-layout-content-max:1040px/);
+  assert.match(help, /pl-help-page[^"]* plds-container/);
+  assert.match(helpCss, /--pl-layout-content-max:1060px/);
+});
