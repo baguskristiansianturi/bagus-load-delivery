@@ -2,8 +2,7 @@ import { supabase, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from '../../lib/supa
 import { mountAuthPage } from '../../features/auth/auth.js';
 import {socialIcon} from '../../components/common/social-icons.js';
 import {renderBrandLogo} from '../../components/common/brand.js';
-import {renderPostActions} from '../../features/posts/post-actions.js';
-import {renderPostCard} from '../../features/posts/post-card.js';
+import {renderPostActions,renderPostCard} from '../../features/posts/index.js';
 import '../../features/posts/post-card.css';
 import {renderTopTenSection} from '../../features/discovery/top-ten-cards.js';
 import {rankPeopleRecommendations,renderPeopleRecommendations,CIRCLE_DEMO_PEOPLE} from '../../features/discovery/people-recommendations.js';
