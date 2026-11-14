@@ -1318,5 +1318,9 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - **Frontend IMPLEMENTED IN BRANCH:** Blog Studio adds a Tampilan tab with five templates, accent color, typography, block visibility and reorder controls. Public blog reader applies the selected template, renders block order/visibility, Photo Gallery, About Me, and personal-account comments/replies.
 - **Privacy boundary:** public comments are readable only on published public articles in public blogs. Insert requires auth.uid() to match author_user_id. Delete is allowed to the comment author or blog owner. Private/draft posts do not satisfy comment policies.
 - **Tests added:** tests/pages/blog-theme.test.js and tests/pages/blog-comments.test.js. Existing blog studio tests remain part of npm test.
-- **Status:** DATABASE MIGRATIONS APPLIED / FRONTEND IMPLEMENTED IN FEATURE BRANCH / CI NOT YET VERIFIED / PAGES NOT DEPLOYED / ANDROID UAT NOT TESTED / FOUNDER ACCEPTANCE PENDING.
+- **PR:** #24 merged to main; merge commit 8e41d5850df184299ac6faf30ddc9a2b2e7d5a82.
+- **CI + deployment:** run #1873 SUCCESS — 70/70 tests passed, Vite production build passed, Pages artifact verified and production deployment succeeded. Run: https://github.com/baguskristiansianturi/pluits/actions/runs/43605252519
+- **Production URL:** https://baguskristiansianturi.github.io/pluits/
+- **Status:** DATABASE MIGRATIONS APPLIED / FRONTEND IMPLEMENTED / AUTOMATED TESTED / PRODUCTION DEPLOYED / ANDROID UAT NOT TESTED / FOUNDER ACCEPTANCE PENDING.
+- **Remaining:** crawler-readable Open Graph metadata, comment reporting/moderation UI, comment/reply notification preferences, institutional News & Media identities, and exhaustive two-account privacy UAT remain future work.
 - **Next:** open PR, inspect full CI output and fix any failures; merge only after CI success; verify main push workflow and live Pages URL; then founder tests template switch/persistence, block order, comments/replies, delete permissions, and public/private isolation on Android.
