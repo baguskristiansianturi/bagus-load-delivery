@@ -51,3 +51,12 @@
 - The owner Blog Saya dashboard has a hero, management settings, published article cards ordered by publication date, and a separate Draft tab ordered by recent edits.
 - The hero's `Blog Saya` link opens the public blog homepage when the blog is public; private blogs remain owner-managed only.
 - The auto-save indicator is the visible source of truth. If it reports an error, the draft has not been confirmed saved.
+
+
+## Public blog landing and reader
+- Public blog route is an owner-facing landing page with a full-width editorial hero, category carousel, author identity, article grid, and a Pluits credit footer.
+- Article routes show publication date, author profile link, share action, related posts from the same category, and further recommendations.
+- Owner settings control public article order (newest/oldest) and an optional featured hero article. The default hero is the newest published public article.
+- Preferences are stored on the existing blog profile row through migration `20261114190000_blog_public_presentation_settings.sql`; this migration must be applied before the new settings UI can save successfully.
+- Categories are read from the existing `blog_categories` table and filter the public article list without a page reload.
+- The public reader only queries published, public posts and verifies that the blog profile owner matches the public profile username.
