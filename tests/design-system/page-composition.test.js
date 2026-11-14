@@ -86,3 +86,11 @@ test('public community feed region is outside the constrained stories section', 
 test('editorial route registry includes article deep links handled by the router', () => {
   assert.match(pageLayoutRegistry.blog.route, /#\/article\/:slug/);
 });
+
+test('Inbox adopts the shared wide container and workspace geometry tokens', () => {
+  const inboxSource = readFileSync(new URL('../../src/pages/messages/index.js', import.meta.url), 'utf8');
+  const inboxCss = readFileSync(new URL('../../src/pages/messages/messages.css', import.meta.url), 'utf8');
+  assert.match(inboxSource, /pl-msg-content plds-container plds-container--wide/);
+  assert.match(inboxCss, /--pl-layout-workspace-max:1120px/);
+  assert.match(inboxCss, /width:min\(var\(--pl-layout-workspace-max,1120px\),100%\)/);
+});
