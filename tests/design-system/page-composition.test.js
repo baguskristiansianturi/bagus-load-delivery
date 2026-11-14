@@ -65,3 +65,24 @@ test('search bar registry preserves distinct feature ownership', () => {
   };
   for (const [id,owner] of Object.entries(expected)) assert.equal(searchBarRegistry[id]?.owner,owner);
 });
+
+import { renderPublicHomeLayout } from '../../src/features/public-home/layout.js';
+import { renderPublicStories } from '../../src/features/public-home/stories.js';
+
+test('public home adopts shared container and a viewport-wide community feed region', () => {
+  const html = renderPublicHomeLayout({ image: id => '/images/'+id, nearbyContent: '' });
+  assert.match(html, /class="pl-public-shell plds-container"/);
+  assert.match(html, /class="pl-public-feed-region plds-section--full-bleed"/);
+  assert.match(html, /id="pl-public-feed"/);
+  assert.ok(html.indexOf('pl-public-feed-region') > html.indexOf('pl-public-story-feature'));
+});
+
+test('public community feed region is outside the constrained stories section', () => {
+  const html = renderPublicStories(id => '/images/'+id);
+  assert.match(html, /<\/section><section class="pl-public-feed-region/);
+  assert.match(html, /aria-label="Postingan publik komunitas"/);
+});
+
+test('editorial route registry includes article deep links handled by the router', () => {
+  assert.match(pageLayoutRegistry.blog.route, /#\/article\/:slug/);
+});
