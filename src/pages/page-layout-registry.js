@@ -31,7 +31,7 @@ export const pageLayoutRegistry = Object.freeze({
   discoverySearch:{ route:'#/search?q=:query', owner:'pages/search/discovery', experience:'discovery', layout:'content', migration:'partial', sections:['search-header','search-controls','results'] },
   blog:{ route:'#/blog, #/guides, #/article/:slug', owner:'pages/blog', experience:'editorial', layout:'reading', migration:'partial', sections:['editorial-header','article-list'] },
   publicBlog:{ route:'#/@username/blog/:slug', owner:'pages/blog-studio', experience:'editorial', layout:'reading', migration:legacy, sections:['blog-header','article-content','comments'] },
-  blogStudio:{ route:'#/account/blog', owner:'pages/blog-studio', experience:'blog-studio', layout:'workspace', migration:'partial', sections:['studio-navigation','editor','preview'] },
+  blogStudio:{ route:'#/account/blog', owner:'pages/blog-studio', experience:'blog-studio', layout:'reading', migration:'partial', sections:['studio-navigation','editor','preview'] },
   help:{ route:'#/help and #/faq', owner:'pages/help', experience:'help', layout:'reading', migration:'partial', sections:['help-header','topic-navigation','article-content'] },
   legal:{ route:'#/terms, #/privacy, #/guidelines', owner:'pages/help', experience:'legal', layout:'reading', migration:'partial', sections:['legal-header','legal-content'] },
   misc:{ route:'#/promo, #/about, #/contact, #/reviews, #/recent', owner:'pages/misc', experience:'public-information', layout:'reading', migration:'partial', sections:['page-header','page-content'] },
