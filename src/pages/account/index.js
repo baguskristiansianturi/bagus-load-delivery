@@ -1031,6 +1031,8 @@ function bindCompose(){
  const form=document.querySelector('#ua-post-form'),input=document.querySelector('#ua-post-file'),preview=document.querySelector('#ua-media-preview'),count=document.querySelector('#ua-media-count'),note=msg=>{const n=document.querySelector('#ua-compose-note');if(n)n.textContent=msg;};
  if(!form||!input||!preview)return;
  let selectedFiles=[];
+ const visibilitySelect=form.querySelector('[name=visibility]'),audienceSummary=form.querySelector('.ua-post-options summary b');
+ visibilitySelect?.addEventListener('change',()=>{if(audienceSummary)audienceSummary.textContent=visibilitySelect.value==='private'?'Hanya saya':'Publik';});
  const revoke=()=>{(JSON.parse(preview.dataset.urls||'[]')).forEach(url=>URL.revokeObjectURL(url));preview.dataset.urls='[]';};
  const syncInput=()=>{try{const transfer=new DataTransfer();selectedFiles.forEach(file=>transfer.items.add(file));input.files=transfer.files;}catch{}};
  const render=()=>{
@@ -1072,7 +1074,7 @@ function bindCompose(){
   saveDraftButton.disabled=true;saveDraftButton.textContent='Menyimpan…';
   try{
    const draftFiles=selectedFiles.length?selectedFiles.map(file=>({name:file.name,type:file.type,size:file.size,lastModified:file.lastModified,blob:file})):(currentComposeDraft?.files||[]);
-   const draft={id:currentComposeDraft?.id||(crypto.randomUUID?crypto.randomUUID():'draft-'+Date.now()),user_id:user.id,caption,visibility:form.querySelector('[name=visibility]')?.value||form.dataset.defaultVisibility||'public',tagged_users:String(form.querySelector('[name=tagged_users]')?.value||'').trim(),profile_context:accountContext.active,updated_at:new Date().toISOString(),files:draftFiles};
+   const draft={id:currentComposeDraft?.id||(crypto.randomUUID?crypto.randomUUID():'draft-'+Date.now()),user_id:user.id,caption,visibility:form.querySelector('[name=visibility]')?.value||form.dataset.defaultVisibility||'public',profile_context:accountContext.active,updated_at:new Date().toISOString(),files:draftFiles};
    await savePrivateDraft(draft);currentComposeDraft=draft;note('Draf tersimpan di perangkat ini.');saveDraftButton.disabled=false;saveDraftButton.textContent='Draf tersimpan';
   }catch(error){note(error.message||'Draf tidak dapat disimpan.');saveDraftButton.disabled=false;saveDraftButton.textContent='Coba lagi';}
  });
