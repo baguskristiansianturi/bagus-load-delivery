@@ -30,3 +30,12 @@ test('icon facade supports registered social icons at explicit dimensions', () =
   assert.match(markup, /height="24"/);
   assert.match(markup, /test-icon/);
 });
+
+test('public home layout CSS is owned by the lazy home route, not app bootstrap', () => {
+  const main = readFileSync(new URL('../../src/main.js', import.meta.url), 'utf8');
+  const home = readFileSync(new URL('../../src/pages/home/index.js', import.meta.url), 'utf8');
+  assert.doesNotMatch(main, /styles\/home-layout\.css/);
+  assert.doesNotMatch(main, /from ['"]\.\/pages\/home\/index\.js['"]/);
+  assert.match(main, /import\(['"]\.\/pages\/home\/index\.js['"]\)/);
+  assert.match(home, /styles\/home-layout\.css/);
+});

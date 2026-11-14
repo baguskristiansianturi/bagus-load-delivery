@@ -9,10 +9,8 @@ import './style.css';
 import './styles/brand.css';
 import './styles/page-transitions.css';
 import './styles/social-navigation.css';
-import '../styles/home-layout.css';
 import './pages/account/circle-story-layout.css';
 import { route } from './app/router.js';
-import { home, bindHome } from './pages/home/index.js';
 
 let renderSequence = 0;
 
@@ -26,11 +24,12 @@ async function render() {
     path = '';
   }
   const expectedHash = location.hash || '#/';
-  await route(home);
+  await route();
   // A delayed route or auth lookup must never paint the previous page over
   // the page the visitor has navigated to in the meantime.
   if (sequence !== renderSequence || (location.hash || '#/') !== expectedHash) return;
   if ((!path || path === 'guest') && document.querySelector('#pl-public-feed')) {
+    const {bindHome}=await import('./pages/home/index.js');
     await bindHome();
   }
 }
