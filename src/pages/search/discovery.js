@@ -93,6 +93,25 @@ async function feed(){
    return '<article class="ds-grid-tile'+(media?.media_type==='video'?' is-video':'')+'"><a class="ds-tile-link" href="#/account/post/'+encodeURIComponent(post.id)+'" aria-label="Buka postingan dari '+name+'"><div class="ds-tile-media">'+mediaMarkup+'</div><div class="ds-tile-overlay"><span class="ds-tile-author">'+avatar+'</span><span class="ds-tile-stats">♡ '+post.likes+'　◯ '+post.comments+'</span></div>'+(context?'<span class="ds-tile-context">'+context+'</span>':'')+'</a></article>';
   }).join('');
   el.innerHTML=cards||'';
+  // Decode only visible Reel tiles; use the first decoded frame as an in-memory cover.
+  const tileVideos=[...el.querySelectorAll('.ds-tile-video')];
+  if('IntersectionObserver'in window){
+   const covers=new IntersectionObserver(entries=>entries.forEach(entry=>{
+    if(!entry.isIntersecting)return;
+    const video=entry.target;covers.unobserve(video);video.preload='auto';
+    video.addEventListener('loadeddata',()=>{
+     try{
+      if(video.videoWidth&&video.videoHeight){
+       const canvas=document.createElement('canvas');canvas.width=video.videoWidth;canvas.height=video.videoHeight;
+       const context=canvas.getContext('2d');context.drawImage(video,0,0,canvas.width,canvas.height);
+       video.poster=canvas.toDataURL('image/jpeg',.82);
+      }
+     }catch(error){console.debug('PLUITS Reel tile cover frame unavailable',error);}
+     video.pause();
+    },{once:true});
+   }),{rootMargin:'240px 0px',threshold:.01});
+   tileVideos.forEach(video=>covers.observe(video));
+  }else tileVideos.slice(0,6).forEach(video=>{video.preload='auto';});
   if(status)status.textContent=cards?'':'Belum ada konten publik yang cocok. Coba kategori atau kata kunci lain.';
  }catch(error){
   if(status)status.textContent='Jelajah belum dapat dimuat. Periksa koneksi lalu coba lagi.';
