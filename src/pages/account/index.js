@@ -4,6 +4,7 @@ import {socialIcon} from '../../components/common/social-icons.js';
 import {renderBrandLogo} from '../../components/common/brand.js';
 import {renderPostActions,renderPostCard} from '../../features/posts/index.js';
 import '../../features/posts/post-card.css';
+import '../../features/posts/comments.css';
 import {renderTopTenSection} from '../../features/discovery/top-ten-cards.js';
 import {rankPeopleRecommendations,renderPeopleRecommendations,CIRCLE_DEMO_PEOPLE} from '../../features/discovery/people-recommendations.js';
 import '../../features/discovery/people-recommendations.css';
