@@ -10,6 +10,7 @@
 ## Card standard
 - Shared full-width card for signed-in Explore/Circle feeds and Profile post feed.
 - Display name beside a larger avatar; username remains secondary.
+- When an owner has an active public Story, the avatar receives a subtle PLUITS gradient ring and opens that owner's Story viewer on tap. Expired or non-public Stories do not produce a ring.
 - Instagram-style media presentation preserves the source aspect ratio and constrains tall media to the viewport.
 - Like, comment, share and save are icon-only controls; counts are shown in the content area below the caption.
 - Caption is plain text, capped at 50 words in the card only.
