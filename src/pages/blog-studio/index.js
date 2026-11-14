@@ -10,6 +10,7 @@ const BUCKET='pluits-user-media';
 const uploadMedia=createMediaUploader({supabase,bucket:BUCKET,supabaseUrl:SUPABASE_URL,publishableKey:SUPABASE_PUBLISHABLE_KEY});
 let blogProfile=null,categories=[],savedBodyRange=null;
 let activeUser=null,activeProfile=null,activeTab='posts',activeView='dashboard',editingId=null,coverObjectUrl='',selectedCoverFile=null,galleryItems=[],supportingObjectUrls=[],pendingSupportingFiles=[],previewObjectUrls=[],toastTimer=null;
+let autoSaveTimer=null,autoSaveInFlight=false,autoSaveQueued=false,editorRevision=0,editorDirty=false;
 const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const wordCount=value=>String(value||'').replace(/<[^>]*>/g,' ').replace(/&nbsp;/g,' ').trim().split(/\s+/).filter(Boolean).length;
 const MAX_BODY_WORDS=1200;
@@ -86,11 +87,14 @@ function tabs() {
 async function dashboardPage() {
   activeView = 'dashboard';
   const [items, settings] = await Promise.all([getAllItems(), getSettings()]);
-  const visible = items.filter(item => activeTab === 'drafts' ? item.status === 'draft' : activeTab === 'posts' ? item.status === 'published' : false);
+  const visible = items.filter(item => activeTab === 'drafts' ? item.status === 'draft' : activeTab === 'posts' ? item.status === 'published' : false).sort((a,b)=>activeTab==='posts'?(new Date(b.published_at||b.updated_at)-new Date(a.published_at||a.updated_at)):(b.updatedAt-a.updatedAt));
   const name = activeProfile?.display_name || 'Penulis Pluits';
   const blogTitle = settings.blogTitle || ('Blog ' + name);
   const description = settings.blogDescription || 'Ruang untuk menyimpan cerita, pengalaman, dan karya.';
-  const profile = '<section class="pl-blog-identity"><div class="pl-blog-profile-row">' + avatarMarkup() + '<div><h2>' + esc(name) + '</h2><span>@' + esc(activeProfile?.username || 'akun-pluits') + '</span></div><span class="pl-blog-owner-chip">Blog saya</span></div><h3>' + esc(blogTitle) + '</h3><p>' + esc(description) + '</p></section>';
+  const latestPublished=items.filter(item=>item.status==='published').sort((a,b)=>new Date(b.published_at||b.updated_at)-new Date(a.published_at||a.updated_at))[0];
+  const heroCover=latestPublished?.cover_url?'<img class="pl-blog-hero-image" src="'+esc(latestPublished.cover_url)+'" alt="">':'';
+  const publicBlogUrl='#/@'+encodeURIComponent(activeProfile?.username||'')+'/blog/'+encodeURIComponent(blogProfile?.slug||'');
+  const profile = '<section class="pl-blog-hero">'+heroCover+'<div class="pl-blog-hero-content"><span class="pl-blog-hero-kicker">BLOG SAYA · PLUITS</span><div class="pl-blog-profile-row">' + avatarMarkup() + '<div><h2>' + esc(name) + '</h2><span>@' + esc(activeProfile?.username || 'akun-pluits') + '</span></div></div><h3>' + esc(blogTitle) + '</h3><p>' + esc(description) + '</p><div class="pl-blog-hero-actions"><button type="button" class="pl-blog-secondary" data-tab="settings">Pengaturan Blog</button>'+(blogProfile?.default_visibility==='public'?'<a class="pl-blog-hero-link" href="'+publicBlogUrl+'">Lihat Blog Publik ↗</a>':'<span class="pl-blog-private-label">Blog privat</span>')+'</div></div></section>';
   let body = '';
   if (activeTab === 'settings') {
     body = '<form id="pl-blog-settings-form" class="pl-blog-settings-form">' +
@@ -132,7 +136,7 @@ function editorPage(item = null) {
     '<div class="pl-blog-cover-actions"><button type="button" class="pl-blog-secondary" data-open-gallery>Galeri PLUITS</button><label class="pl-blog-secondary pl-blog-phone-picker" for="pl-blog-cover-input">Galeri HP<input id="pl-blog-cover-input" type="file" accept="image/*"></label></div><div class="pl-blog-cover-picker" id="pl-blog-cover-preview-wrap">' + (coverObjectUrl ? '<img id="pl-blog-cover-preview" src="' + coverObjectUrl + '" alt="Pratinjau cover">' : '<span id="pl-blog-cover-placeholder">＋</span><b>Belum ada gambar utama</b><small>Pilih dari Galeri PLUITS atau Galeri HP</small>') + '</div></section>' +
     '<section class="pl-blog-field"><span>Isi tulisan</span><div class="pl-blog-format-toolbar" role="toolbar" aria-label="Format tulisan"><button type="button" data-format="bold"><b>B</b></button><button type="button" data-format="italic"><i>I</i></button><button type="button" data-format="underline"><u>U</u></button><button type="button" data-format="insertUnorderedList" aria-label="Daftar berpoin">• Daftar</button><button type="button" data-format="insertOrderedList" aria-label="Daftar bernomor">1. Daftar</button><button type="button" data-format="formatBlock" data-value="blockquote">❝ Kutipan</button><button type="button" data-format="insertHorizontalRule">Garis</button><button type="button" data-action="insert-caption">Caption</button></div><div id="pl-blog-body-editor" class="pl-blog-rich-editor" contenteditable="true" role="textbox" aria-multiline="true" data-placeholder="Mulai menulis cerita kamu di sini…">' + safeBlogHtml(item?.body || '') + '</div><small><span id="pl-blog-body-word-count">' + wordCount(item?.body || '') + '</span>/1.200 kata</small></section>' +
     '<section class="pl-blog-support-field"><div><strong>Foto dan video di dalam tulisan</strong><small>Letakkan kursor di bagian tulisan yang diinginkan, lalu sisipkan foto atau video. Tidak ada batas jumlah yang ditetapkan editor.</small></div><label class="pl-blog-support-picker" for="pl-blog-support-input">＋ Sisipkan foto atau video<input id="pl-blog-support-input" type="file" accept="image/*,video/*,.mp4,.m4v,.mov,.webm,.3gp,.3gpp,.3g2,.3gp2" multiple></label><div class="pl-blog-support-grid" id="pl-blog-support-grid">' + images + '</div></section>' +
-    '<div class="pl-blog-editor-note">Draft dan tulisan disimpan di akun PLUITS melalui Supabase.</div>' +
+    '<div id="pl-blog-save-state" class="pl-blog-save-state" data-state="muted" role="status" aria-live="polite">Perubahan tersimpan otomatis saat kamu mengetik.</div><div class="pl-blog-editor-note">Draft disimpan otomatis ke akun PLUITS. Judul dan cover bisa dilengkapi nanti.</div>' +
     '<button type="button" class="pl-blog-preview-action" data-action="preview">Lihat pratinjau tulisan</button>' +
     '<div class="pl-blog-editor-actions"><button type="button" class="pl-blog-secondary" data-action="save-draft">Simpan Draft</button><button type="submit" class="pl-blog-primary" data-submit-publish>Terbitkan</button></div></form>';
 }
@@ -165,15 +169,59 @@ function showError(error) {
   if (app) app.innerHTML = '<div class="pl-blog-error"><h1>Blog belum dapat dibuka</h1><p>' + esc(error?.message || 'Terjadi kesalahan.') + '</p><a href="#/account/create">Kembali</a></div>';
 }
 function readFormFile(input) { return input?.files?.[0] || null; }
-async function persistEditor(status){
- const form=document.querySelector('#pl-blog-editor-form');if(!form)return;const d=new FormData(form),title=String(d.get('title')||'').trim(),description=String(d.get('description')||'').trim();let body=String(document.querySelector('#pl-blog-body-editor')?.innerHTML||'').trim();
- if(!title)return notify('Judul tulisan wajib diisi.','error');if(wordCount(description)>85)return notify('Deskripsi maksimal 85 kata.','error');if(wordCount(body)>MAX_BODY_WORDS)return notify('Isi tulisan maksimal 1.200 kata.','error');
- let old=null;if(editingId){const r=await supabase.from('blog_posts').select('*').eq('id',editingId).eq('owner_user_id',activeUser.id).single();if(r.error)throw r.error;old=r.data;}
- const file=readFormFile(document.querySelector('#pl-blog-cover-input'))||selectedCoverFile;let coverPath=old?.cover_path||null;if(file)coverPath=await uploadBlogImage(file,'cover');if(!coverPath)return notify('Pilih gambar utama sebelum menyimpan.','error');
- const support=[...(old?.supporting_paths||[])];for(let i=0;i<pendingSupportingFiles.length;i++){const f=pendingSupportingFiles[i],path=await uploadBlogSupportingMedia(f,'body');support.push(path);const marker=document.createElement('span');marker.dataset.blogPendingIndex=String(i);const editor=document.createElement('div');editor.innerHTML=body;const pending=editor.querySelector('[data-blog-pending-index="'+i+'"]');if(pending){const media=document.createElement(isVideoPath(path)?'video':'img');media.setAttribute('data-blog-media-path',path);if(media.tagName==='VIDEO'){media.controls=true;media.playsInline=true;}else media.alt='Foto dalam artikel';const figure=document.createElement('figure');figure.append(media);pending.replaceWith(figure);body=editor.innerHTML;}}
- const now=new Date().toISOString(),payload={blog_id:blogProfile.id,owner_user_id:activeUser.id,title,description,body,cover_path:coverPath,supporting_paths:support,status,visibility:blogProfile.default_visibility==='private'?'private':String(d.get('visibility')||'public'),category_id:String(d.get('category_id')||'')||null,updated_at:now,published_at:status==='published'?(old?.published_at||now):old?.published_at||null};
- const q=editingId?supabase.from('blog_posts').update(payload).eq('id',editingId).eq('owner_user_id',activeUser.id):supabase.from('blog_posts').insert(payload);const {data,error}=await q.select('*').single();if(error)throw error;
- editingId=data.id;notify(status==='draft'?'Draft tersimpan di akun PLUITS.':'Tulisan berhasil diterbitkan.');activeTab=status==='draft'?'drafts':'posts';activeView='dashboard';pendingSupportingFiles=[];window.__plBlogEditingItem=null;previewObjectUrls.forEach(url=>URL.revokeObjectURL(url));previewObjectUrls=[];revokePreviews();await render();
+function setEditorSaveState(message,kind='muted'){
+ const el=document.querySelector('#pl-blog-save-state');if(!el)return;el.textContent=message;el.dataset.state=kind;
+}
+function scheduleEditorAutoSave(){
+ if(activeView!=='editor')return;
+ editorRevision++;editorDirty=true;setEditorSaveState('Perubahan belum tersimpan','pending');
+ clearTimeout(autoSaveTimer);
+ autoSaveTimer=setTimeout(()=>persistEditor('draft',{silent:true,stay:true}).catch(error=>{console.error('PLUITS Blog autosave:',error);setEditorSaveState('Belum tersimpan · periksa koneksi lalu coba lagi','error');}),1400);
+}
+async function persistEditor(status,options={}){
+ const form=document.querySelector('#pl-blog-editor-form');if(!form)return;
+ if(autoSaveInFlight){autoSaveQueued=true;return;}
+ autoSaveInFlight=true;const revisionAtStart=editorRevision;
+ try{
+  const d=new FormData(form),rawTitle=String(d.get('title')||'').trim(),description=String(d.get('description')||'').trim();
+  let body=String(document.querySelector('#pl-blog-body-editor')?.innerHTML||'').trim();
+  const isDraft=status==='draft';
+  if(!isDraft&&!rawTitle)return notify('Judul tulisan wajib diisi.','error');
+  if(wordCount(description)>85)return notify('Deskripsi maksimal 85 kata.','error');
+  if(wordCount(body)>MAX_BODY_WORDS)return notify('Isi tulisan maksimal 1.200 kata.','error');
+  const title=rawTitle||'Draft tanpa judul';
+  const descriptionForDb=description||' ';
+  let old=null;
+  if(editingId){const r=await supabase.from('blog_posts').select('*').eq('id',editingId).eq('owner_user_id',activeUser.id).single();if(r.error)throw r.error;old=r.data;}
+  const file=readFormFile(document.querySelector('#pl-blog-cover-input'))||selectedCoverFile;
+  let coverPath=old?.cover_path||null;
+  if(file){coverPath=await uploadBlogImage(file,'cover');selectedCoverFile=null;}
+  if(!isDraft&&!coverPath)return notify('Pilih gambar utama sebelum menerbitkan tulisan.','error');
+  const support=[...(old?.supporting_paths||[])];
+  for(let i=0;i<pendingSupportingFiles.length;i++){
+   const f=pendingSupportingFiles[i],path=await uploadBlogSupportingMedia(f,'body');support.push(path);
+   const editor=document.createElement('div');editor.innerHTML=body;
+   const pending=editor.querySelector('[data-blog-pending-index="'+i+'"]');
+   if(pending){const media=document.createElement(isVideoPath(path)?'video':'img');media.setAttribute('data-blog-media-path',path);if(media.tagName==='VIDEO'){media.controls=true;media.playsInline=true;}else media.alt='Foto dalam artikel';const figure=document.createElement('figure');figure.append(media);pending.replaceWith(figure);body=editor.innerHTML;}
+  }
+  const payload={blog_id:blogProfile.id,owner_user_id:activeUser.id,title,description:descriptionForDb,body:body||'<p></p>',cover_path:coverPath,supporting_paths:support,status,visibility:blogProfile.default_visibility==='private'?'private':String(d.get('visibility')||'public'),category_id:String(d.get('category_id')||'')||null,updated_at:new Date().toISOString(),published_at:status==='published'?(old?.published_at||new Date().toISOString()):old?.published_at||null};
+  const q=editingId?supabase.from('blog_posts').update(payload).eq('id',editingId).eq('owner_user_id',activeUser.id):supabase.from('blog_posts').insert(payload);
+  const {data,error}=await q.select('*').single();if(error)throw error;
+  editingId=data.id;window.__plBlogEditingItem=data;pendingSupportingFiles=[];
+  if(options.stay){
+   const bodyEditor=document.querySelector('#pl-blog-body-editor');
+  document.querySelector('#pl-blog-editor-form')?.addEventListener('input',scheduleEditorAutoSave);
+  document.querySelector('#pl-blog-editor-form')?.addEventListener('change',scheduleEditorAutoSave);if(bodyEditor&&body!==String(bodyEditor.innerHTML||'').trim())bodyEditor.innerHTML=body;
+   if(editorRevision===revisionAtStart){editorDirty=false;setEditorSaveState('Draft tersimpan otomatis · '+new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}),'saved');}
+   return data;
+  }
+  notify(status==='draft'?'Draft tersimpan di Blog Saya.':'Tulisan berhasil diterbitkan.');
+  activeTab=status==='draft'?'drafts':'posts';activeView='dashboard';editorDirty=false;window.__plBlogEditingItem=null;
+  previewObjectUrls.forEach(url=>URL.revokeObjectURL(url));previewObjectUrls=[];revokePreviews();await render();return data;
+ } finally {
+  autoSaveInFlight=false;
+  if(autoSaveQueued||editorDirty){autoSaveQueued=false;if(activeView==='editor'){clearTimeout(autoSaveTimer);autoSaveTimer=setTimeout(()=>persistEditor('draft',{silent:true,stay:true}).catch(error=>{console.error('PLUITS Blog autosave:',error);setEditorSaveState('Belum tersimpan · periksa koneksi lalu coba lagi','error');}),500);}}
+ }
 }
 
 function bind() {
@@ -189,7 +237,7 @@ function bind() {
     if (!confirm('Hapus tulisan ini dari akun PLUITS?')) return;
     const result=await deleteItem(button.dataset.id);if(result.error)throw result.error;notify('Tulisan dihapus.');render().catch(showError);
   }));
-  document.querySelector('[data-action="save-draft"]')?.addEventListener('click', () => persistEditor('draft').catch(showError));
+  document.querySelector('[data-action="save-draft"]')?.addEventListener('click', () => persistEditor('draft').catch(error=>{console.error('PLUITS Blog draft:',error);notify(error?.message||'Draft belum berhasil disimpan. Coba lagi.','error');setEditorSaveState('Draft belum tersimpan','error');}));
   document.querySelector('[data-action="preview"]')?.addEventListener('click', async () => {
     const form=document.querySelector('#pl-blog-editor-form'),data=new FormData(form);
     const title=String(data.get('title')||'').trim(),description=String(data.get('description')||'').trim(),body=String(document.querySelector('#pl-blog-body-editor')?.innerHTML||'').trim();
@@ -236,6 +284,7 @@ function bind() {
         picker.prepend(preview);
       }
       preview.src = coverObjectUrl;
+      scheduleEditorAutoSave();
       picker.querySelector('#pl-blog-cover-placeholder')?.remove();
       picker.querySelector('b')?.remove();
       picker.querySelector('small')?.remove();
@@ -309,7 +358,7 @@ function bind() {
       tile.append(media);grid.append(tile);
     });
     event.target.value='';
-    if(files.length)notify(files.length+' media ditambahkan. Simpan draft agar media tersimpan.');
+    if(files.length){notify(files.length+' media ditambahkan.');scheduleEditorAutoSave();}
   });
   document.querySelector('[data-action="back-editor"]')?.addEventListener('click', () => {previewObjectUrls.forEach(url=>URL.revokeObjectURL(url));previewObjectUrls=[];setView('editor');});
 }
@@ -323,6 +372,7 @@ export async function mountBlogStudio() {
     activeProfile = profile || { display_name: user.email?.split('@')[0] || 'Pengguna', username: 'pengguna' };
     await loadBlogProfile();
     if(blogProfile){const migrated=await migrateLegacyDrafts();if(migrated)notify(migrated+' draft lama berhasil dipindahkan ke akun PLUITS.');}
+    if(!window.__plBlogLifecycleBound){window.__plBlogLifecycleBound=true;document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'&&activeView==='editor'&&editorDirty)persistEditor('draft',{silent:true,stay:true}).catch(error=>console.error('PLUITS Blog final autosave:',error));});window.addEventListener('pagehide',()=>{if(activeView==='editor'&&editorDirty)persistEditor('draft',{silent:true,stay:true}).catch(error=>console.error('PLUITS Blog pagehide autosave:',error));});}
     activeTab='posts';activeView=blogProfile?'dashboard':'setup';editingId=null;
     await render();
   } catch (error) { showError(error); }
