@@ -9,7 +9,7 @@ export function shell(content,title='Pluits',options={}){
  const pageTitle=String(title||'Pluits');
  const noHero=options.hero===false||options.hero==='none';
  const heroMarkup=noHero?'':`<section class="page-hero"><span class="eyebrow">PLUITS INDONESIA</span><h1>${pageTitle}</h1><p>Social, local discovery, commerce, and travel in one connected experience.</p></section>`;
- return `${header(title)}${heroMarkup}<main class="page-main">${content}</main>${footer()}${nav()}`;
+ return `${header(title)}${heroMarkup}<main class="page-main plds-container">${content}</main>${footer()}${nav()}`;
 }
 export function nav(){
  return `<nav class="mobile-bottom-nav app-nav" aria-label="Navigasi utama mobile"><a href="#/"><span>⌂</span><small>Beranda</small></a><a href="#/places"><span>⌖</span><small>Tempat</small></a><a href="#/marketplace"><span>▦</span><small>Marketplace</small></a><a href="#/trip"><span>✦</span><small>Trip</small></a><a href="#/account/profile"><span>◉</span><small>Akun</small></a></nav>`;
