@@ -15,7 +15,7 @@ import {renderAppDownload} from '../app-download/index.js';
 export function renderPublicHomeLayout({image,nearbyContent}) {
  return `<div class="pl-social-home pl-public-home">
   ${renderPublicNavbar()}
-  <main class="pl-public-shell">
+  <main class="pl-public-shell plds-page plds-page--content">
    ${renderPublicHero(image)}
    ${renderPublicDiscovery(image)}
    ${renderPublicNearby(nearbyContent)}
