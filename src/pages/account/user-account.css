@@ -2839,7 +2839,7 @@
 
 
 /* PLUITS composer refresh: clear hierarchy, touch-friendly media selection, and mobile-safe actions. */
-.ua-social-app .ua-compose-main{padding-bottom:calc(104px + env(safe-area-inset-bottom))}
+.ua-social-app .ua-create-main{padding-bottom:calc(104px + env(safe-area-inset-bottom))}
 .ua-social-app .ua-compose-shell{width:min(100%,720px);margin:0 auto;padding:8px 0 30px}
 .ua-social-app .ua-compose-header{display:flex;align-items:center;gap:12px;margin:0 0 18px;padding:0 2px}
 .ua-social-app .ua-compose-back{display:grid;place-items:center;width:40px;height:40px;flex:0 0 40px;border:1px solid #e8eeee;border-radius:50%;color:#263b43;text-decoration:none;font-size:26px;line-height:1}
@@ -2885,7 +2885,7 @@
 .ua-social-app .ua-clean-composer[data-content-kind="reel"] .ua-clean-media-item{width:100%;max-width:360px;aspect-ratio:9/16;max-height:62svh}
 .ua-social-app .ua-clean-composer[data-content-kind="reel"] .ua-clean-media-item video{object-fit:contain;background:#111}
 @media(max-width:760px){
- .ua-social-app .ua-compose-main{width:100%;margin:0;padding:12px 14px calc(110px + env(safe-area-inset-bottom))}
+ .ua-social-app .ua-create-main{width:100%;margin:0;padding:12px 14px calc(110px + env(safe-area-inset-bottom))}
  .ua-social-app .ua-compose-shell{padding-top:2px}
  .ua-social-app .ua-compose-header{margin-bottom:15px}
  .ua-social-app .ua-compose-header h1{font-size:20px}
@@ -2894,7 +2894,7 @@
  .ua-social-app .ua-clean-composer .ua-compose-actions{bottom:calc(62px + env(safe-area-inset-bottom))}
 }
 @media(max-width:380px){
- .ua-social-app .ua-compose-main{padding-right:11px;padding-left:11px}
+ .ua-social-app .ua-create-main{padding-right:11px;padding-left:11px}
  .ua-social-app .ua-compose-section-heading{align-items:flex-start;flex-direction:column;gap:3px}
  .ua-social-app .ua-clean-composer .ua-clean-preview{grid-template-columns:repeat(2,minmax(0,1fr))}
  .ua-social-app .ua-clean-composer .ua-compose-actions .ua-text-action{padding:0 10px}
