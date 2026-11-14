@@ -242,11 +242,11 @@ assert.ok(discoveryCss.includes('.ds-post-card') && discoveryCss.includes('.ds-p
 assert.match(discoveryCss, /safe-area-inset-bottom/, 'Explore bottom navigation must respect device safe areas.');
 
 const profileSource = read('src/pages/account/index.js');
-for (const tab of ['posts', 'reels', 'trip', 'tagged']) {
+for (const tab of ['posts', 'reels', 'trip', 'blog']) {
   assert.ok(profileSource.includes('data-profile-tab="' + tab + '"'), 'Profile must expose the ' + tab + ' tab.');
 }
 assert.ok(profileSource.includes('trip:\'<div class="ua-profile-tab-empty"'), 'Trip tab must render its own profile panel.');
-assert.ok(profileSource.includes('Post/Feed'), 'Profile posts tab must be clearly labelled Post/Feed.');
+assert.ok(profileSource.includes('<span>Feed</span>'), 'Profile posts tab must be clearly labelled Feed.');
 assert.ok(profileSource.includes('id="ua-profile-form"') && profileSource.includes('function bindProfileMenu()'), 'Personal profile must expose a dedicated editor and functional profile menu.');
 assert.ok(profileSource.includes('Simpan perubahan') && profileSource.includes('ua-profile-editor') && profileSource.includes('ua-editor-save'), 'Profile editing must use a dedicated polished editor page with clear save actions.');
 assert.ok(profileSource.includes("parameter==='edit'") && profileSource.includes('href="#/account/profile/edit"') && profileSource.includes('ua-profile-menu'), 'Profile editing must open only on its dedicated canonical route from the profile three-dot menu.');
