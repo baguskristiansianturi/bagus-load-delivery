@@ -19,6 +19,7 @@ import '../../features/profile/image-framing.css';
 import '../../features/profile/profile-hero.css';
 import {renderReelCard} from '../../features/reels/reel-card.js';
 import '../../features/reels/reels.css';
+import '../../features/reels/viewer.css';
 import {accountSecurityPage,bindAccountSecurity} from './security-settings.js';
 import '../../styles/social-components.css';
 import {loadAccountContext,contextHeader,professionalPage,professionalFormPage,accountSettingsPage,bindAccountContext} from './account-context.js';
@@ -1472,22 +1473,31 @@ function bindReelsPlayback(){
  }));
  feed.querySelectorAll('[data-reel-sound]').forEach(button=>button.addEventListener('click',()=>{
   const video=button.closest('.ua-reel-stage')?.querySelector('[data-reel-video]');if(!video)return;
-  video.muted=!video.muted;button.textContent=video.muted?'♪':'♫';button.setAttribute('aria-label',video.muted?'Aktifkan suara':'Matikan suara');
+  ensureReelSource(video);
+  video.muted=!video.muted;button.textContent=video.muted?'Suara mati':'Suara aktif';button.setAttribute('aria-label',video.muted?'Aktifkan suara':'Matikan suara');
  }));
+ const ensureReelSource=video=>{
+  if(!video||video.src||!video.dataset.reelSrc)return;
+  video.src=video.dataset.reelSrc;video.load();
+ };
  feed.querySelectorAll('[data-reel-video]').forEach(video=>{
-  video.addEventListener('click',()=>{if(video.paused)video.play().catch(()=>{});else video.pause();});
+  video.addEventListener('click',()=>{ensureReelSource(video);if(video.paused)video.play().catch(()=>{});else video.pause();});
   video.addEventListener('play',()=>{const button=video.closest('.ua-reel-stage')?.querySelector('[data-reel-toggle]');if(button){button.textContent='Ⅱ';button.setAttribute('aria-label','Jeda video');}});
   video.addEventListener('pause',()=>{const button=video.closest('.ua-reel-stage')?.querySelector('[data-reel-toggle]');if(button){button.textContent='▶';button.setAttribute('aria-label','Putar video');}});
  });
- if(!('IntersectionObserver'in window))return;
  const videos=[...feed.querySelectorAll('[data-reel-video]')];let active=null;
- const io=new IntersectionObserver(entries=>entries.forEach(entry=>{
-  const video=entry.target;
-  if(entry.isIntersecting&&entry.intersectionRatio>=.72){
-   if(active&&active!==video)active.pause();active=video;video.muted=true;video.loop=true;video.playsInline=true;video.play().catch(()=>{});
-  }else if(entry.intersectionRatio<.25){video.pause();if(active===video)active=null;}
- }),{threshold:[0,.25,.72,1]});
- videos.forEach(video=>{video.playsInline=true;video.preload='metadata';io.observe(video);});
+ const activate=video=>{ensureReelSource(video);video.muted=true;video.loop=true;video.playsInline=true;video.play().catch(()=>{});};
+ if(!('IntersectionObserver'in window)){
+  if(videos[0])activate(videos[0]);
+ }else{
+  const io=new IntersectionObserver(entries=>entries.forEach(entry=>{
+   const video=entry.target;
+   if(entry.isIntersecting&&entry.intersectionRatio>=.72){
+    if(active&&active!==video)active.pause();active=video;activate(video);
+   }else if(entry.intersectionRatio<.25){video.pause();if(active===video)active=null;}
+  }),{threshold:[0,.25,.72,1]});
+  videos.forEach(video=>io.observe(video));
+ }
 }
 function bindPostActions(){
  document.querySelectorAll('.ua-post-card').forEach(card=>{
