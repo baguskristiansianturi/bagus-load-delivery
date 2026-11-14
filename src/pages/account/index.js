@@ -16,6 +16,7 @@ import {renderPublicJoin} from '../../features/public-home/join.js';
 import {renderAppDownload} from '../../features/app-download/app-download.js';
 import '../../features/profile/image-framing.css';
 import '../../features/profile/profile-hero.css';
+import {renderReelCard} from '../../features/reels/reel-card.js';
 import '../../features/reels/reels.css';
 import {accountSecurityPage,bindAccountSecurity} from './security-settings.js';
 import '../../styles/social-components.css';
@@ -540,26 +541,7 @@ async function feedPage(){
  const feedMarkup=exploreContentType==='blog'?blogMarkup:exploreContentType==='live'?liveMarkup:sorted.length?sorted.map(post=>postCard(post)).join(''):"<div class='ua-feed-empty'><strong>"+empty+"</strong>"+action+"</div>";
  return "<div class='ua-social-home'>"+trendSection+homeNearbySection()+peopleSection+storiesSection+filterNav+homeHeading+"<div class='ua-home-feed-region'><section class='ua-feed'>"+feedMarkup+"</section></div>"+discoverMore+maybeLike.replace("<h2>Produk Lokal</h2>","<h2>Temukan Produk Lokal</h2>")+collections+serviceFilters+"<div class='pl-public-home ua-circle-bottom-promos'>"+renderPublicJoin()+renderAppDownload()+"</div></div>";
 }
-function renderReelCard(post){
- const owner=post.owner||{},name=esc(owner.display_name||'Pengguna Pluits'),username=esc(owner.username||'pengguna');
- const media=post.media?.[0];if(!media?.url)return '';
- const liked=!!post.liked,saved=!!post.saved;
- return `<article class="ua-post-card ua-reel-card" data-post-id="${esc(post.id)}" data-owner-id="${esc(post.user_id)}" data-reel-post-id="${esc(post.id)}">
-  <div class="ua-reel-stage">
-   <video class="ua-reel-video" data-reel-video src="${esc(media.url)}" muted playsinline loop preload="metadata" aria-label="Reel dari ${name}"></video>
-   <button class="ua-reel-play-toggle" type="button" data-reel-toggle aria-label="Jeda video">Ⅱ</button>
-   <header class="ua-reel-topline"><a class="ua-reel-back" href="#/account/explore" aria-label="Kembali ke Circle">‹</a><span>Reels</span><button type="button" class="ua-reel-sound" data-reel-sound aria-label="Aktifkan suara">♪</button></header>
-   <div class="ua-reel-actions-wrap"><div class="ua-reel-actions">
-    <button type="button" data-action="like" class="${liked?'is-liked':''}" aria-label="Sukai Reel">${socialIcon('heart',{size:27})}<b>${Number(post.likes||0)}</b></button>
-    <button type="button" data-action="comments" aria-label="Komentar Reel">${socialIcon('comment',{size:27})}<b>${Number(post.comments||0)}</b></button>
-    <button type="button" data-action="share" aria-label="Bagikan Reel">${socialIcon('send',{size:26})}<b>Bagikan</b></button>
-    <button type="button" data-action="save" class="${saved?'is-saved':''}" aria-label="Simpan Reel">${socialIcon('bookmark',{size:26})}<b>Simpan</b></button>
-   </div></div>
-   <div class="ua-reel-bottomline"><a class="ua-reel-author" href="#/@${username}">${avatar(post.avatarUrl,owner.display_name||'P')}<span><strong>@${username}</strong><small>${name}</small></span></a><p>${esc(post.caption||'')}</p></div>
-  </div>
-  <span class="ua-like-count" hidden>${Number(post.likes||0)} suka</span><section class="ua-comments ua-reel-comments" hidden></section>
- </article>`;
-}
+
 async function reelsPage(initialPostId=''){
  const q=await supabase.from('user_posts').select('*').eq('content_kind','reel').eq('visibility','public').eq('moderation_status','published').order('created_at',{ascending:false}).limit(80);
  if(q.error)throw q.error;
@@ -582,7 +564,7 @@ async function reelsPage(initialPostId=''){
   const score=post=>{const age=Math.max(0,(now-new Date(post.created_at).getTime())/3600000),follow=followingIds.includes(post.user_id)?45:0,recency=24*Math.exp(-age/48),engagement=Math.min(30,post.likes*1.5+post.comments*2.5);return follow+recency+engagement;};
   return score(b)-score(a)||new Date(b.created_at)-new Date(a.created_at);
  });
- const cards=sorted.map(renderReelCard).filter(Boolean).join('');
+ const cards=sorted.map(post=>renderReelCard(post,{user,avatar,socialIcon,esc})).filter(Boolean).join('');
  return `<section class="ua-reels-viewer" aria-label="Pemutar Reels"><div class="ua-reels-feed">${cards||'<div class="ua-reels-empty"><a class="ua-reel-back" href="#/account/explore" aria-label="Kembali">‹</a><strong>Belum ada Reel publik.</strong><p>Video yang dipublikasikan sebagai Reel akan muncul di sini.</p><a href="#/account/reel">＋ Buat Reel</a></div>'}</div></section>`;
 }
 function postCard(p){return renderPostCard(p,{user,avatar,socialIcon,renderActions:renderPostActions,esc});}
