@@ -11,9 +11,9 @@ let activeTab = 'overview';
 
 function shell(content,user=null){
  return `<main class="pluits-shell">
-  <header class="pluits-top">${renderBrandLogo({className:'pluits-brand',size:40,label:'Beranda PLUITS'})}<div>${user?'<a href="#/account/compose" class="pluits-ghost">Buat konten</a> <a href="#/account/profile" class="pluits-ghost">Akun Pluits</a> <button id="pluits-signout" class="pluits-ghost">Keluar</button>':'<a href="#/" class="pluits-ghost">Kembali ke beranda</a>'}</div></header>
+  <header class="pluits-top plds-container plds-container--wide">${renderBrandLogo({className:'pluits-brand',size:40,label:'Beranda PLUITS'})}<div>${user?'<a href="#/account/compose" class="pluits-ghost">Buat konten</a> <a href="#/account/profile" class="pluits-ghost">Akun Pluits</a> <button id="pluits-signout" class="pluits-ghost">Keluar</button>':'<a href="#/" class="pluits-ghost">Kembali ke beranda</a>'}</div></header>
   ${content}
-  <footer class="pluits-foot">PLUITS · Platform perdagangan dan kebutuhan konstruksi</footer>
+  <footer class="pluits-foot plds-container plds-container--wide">PLUITS · Platform perdagangan dan kebutuhan konstruksi</footer>
  </main>`;
 }
 function notice(msg,type='info'){const el=document.querySelector('#pluits-notice');if(el){el.textContent=msg;el.className='pluits-notice '+type;}}
@@ -95,8 +95,8 @@ async function dashboard(user,stores){
  if(activeTab==='profile')body=profilePanel();
  if(activeTab==='settings')body=await settingsPanel();
  document.querySelector('#app').innerHTML=shell(`
- <section class="pluits-dashboard-head"><div><span class="pluits-eyebrow">SELLER WORKSPACE</span><h1>${esc(activeStore.name)}</h1><p>@${esc(activeStore.username)} · ${esc(activeStore.business_type)} · ${esc(activeStore.public_city)}</p></div><span class="pluits-owner-pill">OWNER ACCOUNT</span></section><p id="pluits-notice" class="pluits-notice" role="status" aria-live="polite"></p>
- <div class="pluits-dashboard">${renderSellerNavigation({user,activeTab,tabs})}<section class="pluits-content">${body}</section></div>`,user);
+ <section class="pluits-dashboard-head plds-container plds-container--wide"><div><span class="pluits-eyebrow">SELLER WORKSPACE</span><h1>${esc(activeStore.name)}</h1><p>@${esc(activeStore.username)} · ${esc(activeStore.business_type)} · ${esc(activeStore.public_city)}</p></div><span class="pluits-owner-pill">OWNER ACCOUNT</span></section><p id="pluits-notice" class="pluits-notice" role="status" aria-live="polite"></p>
+ <div class="pluits-dashboard plds-container plds-container--wide">${renderSellerNavigation({user,activeTab,tabs})}<section class="pluits-content">${body}</section></div>`,user);
  document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>{activeTab=b.dataset.tab;dashboard(user,stores)}));
  const storeHead=document.querySelector('.pluits-dashboard-head');
  if(storeHead){
