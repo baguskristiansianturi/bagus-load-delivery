@@ -1026,6 +1026,19 @@ function bindCompose(){
    const media=getMediaMime(file).startsWith('video/')?'<video controls playsinline preload="metadata" src="'+urls[index]+'"></video>':'<img src="'+urls[index]+'" alt="Media '+(index+1)+'">';
    return '<article class="ua-clean-media-item">'+media+'<button type="button" data-remove-media="'+index+'" aria-label="Hapus media">×</button><small>'+(index+1)+' / '+selectedFiles.length+'</small></article>';
   }).join('');
+  preview.querySelectorAll('video').forEach(video=>{
+   video.muted=true;video.playsInline=true;video.preload='auto';
+   video.addEventListener('loadeddata',()=>{
+    try{
+     if(video.videoWidth&&video.videoHeight){
+      const canvas=document.createElement('canvas');canvas.width=video.videoWidth;canvas.height=video.videoHeight;
+      const context=canvas.getContext('2d');context.drawImage(video,0,0,canvas.width,canvas.height);
+      video.poster=canvas.toDataURL('image/jpeg',.84);
+     }
+    }catch(error){console.debug('PLUITS local video cover preview unavailable',error);}
+    video.pause();
+   },{once:true});
+  });
   preview.querySelectorAll('[data-remove-media]').forEach(button=>button.addEventListener('click',()=>{selectedFiles.splice(Number(button.dataset.removeMedia),1);syncInput();render();}));
  };
  input.addEventListener('change',()=>{
