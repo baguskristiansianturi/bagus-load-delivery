@@ -122,7 +122,7 @@ async function dashboardPage() {
     }).join('') + '</div>';
   }
   return header('Blog saya', 'Kelola tulisan dan ruang blog kamu.') + profile + tabs() +
-    (activeTab !== 'settings' ? '<div class="pl-blog-toolbar"><span>' + (activeTab === 'drafts' ? 'Tulisan yang belum diterbitkan' : 'Tulisan yang sudah diterbitkan') + '</span><button type="button" class="pl-blog-primary pl-blog-compact" data-action="new">＋ Tulis Blog</button></div>' : '') + body;
+    (!['settings','appearance'].includes(activeTab) ? '<div class="pl-blog-toolbar"><span>' + (activeTab === 'drafts' ? 'Tulisan yang belum diterbitkan' : 'Tulisan yang sudah diterbitkan') + '</span><button type="button" class="pl-blog-primary pl-blog-compact" data-action="new">＋ Tulis Blog</button></div>' : '') + body;
 }
 function editorPage(item = null) {
   activeView = 'editor';
