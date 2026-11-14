@@ -1113,20 +1113,15 @@ function bindStories(){
  });
 }
 async function createPage(){
- const [entitlement,blog]=await Promise.all([
-  supabase.from('account_feature_entitlements').select('plan_key,status,starts_at,expires_at').eq('user_id',user.id).eq('feature_key','blog_studio').maybeSingle(),
-  supabase.from('blog_profiles').select('id,display_title,slug').eq('owner_user_id',user.id).maybeSingle()
- ]);
- if(entitlement.error)throw entitlement.error;if(blog.error)throw blog.error;
- const now=Date.now(),premium=entitlement.data?.plan_key==='premium'&&entitlement.data.status==='active'&&new Date(entitlement.data.starts_at).getTime()<=now&&(!entitlement.data.expires_at||new Date(entitlement.data.expires_at).getTime()>now);
- const hasBlog=!!blog.data,blogHref=hasBlog||premium?'#/account/blog':'#/account/upgrade';
+ const {data:blog,error}=await supabase.from('blog_profiles').select('id,display_title,slug').eq('owner_user_id',user.id).maybeSingle();
+ if(error)throw error;
+ const hasBlog=!!blog,blogHref='#/account/blog';
  const daily=(icon,title,href,kind='',status='')=>'<a class="ua-create-card ua-create-daily '+kind+'" href="'+href+'"><span class="ua-create-card-icon">'+socialIcon(icon,{size:22})+'</span><strong>'+title+'</strong>'+(status?'<em>'+status+'</em>':'')+'</a>';
  const feature=(icon,title,description,href,kind='',status='')=>{
   const body='<span class="ua-create-card-icon">'+socialIcon(icon,{size:22})+'</span><span class="ua-create-card-copy"><strong>'+title+'</strong><small>'+description+'</small>'+(status?'<em>'+status+'</em>':'')+'</span><span class="ua-create-card-arrow" aria-hidden="true">›</span>';
   return href?'<a class="ua-create-card ua-create-feature '+kind+'" href="'+href+'">'+body+'</a>':'<article class="ua-create-card ua-create-feature ua-create-staged '+kind+'" aria-disabled="true">'+body+'</article>';
  };
- const blogCard=feature('book','Buat Blog','Terbitkan cerita, pengalaman, perjalanan, dan tulisan panjang di ruang blog pribadi PLUITS.',blogHref,hasBlog?'is-blog':premium?'is-premium':'is-locked',hasBlog?'KELOLA BLOG':premium?'PREMIUM AKTIF':'');
- const blogEntry=hasBlog||premium?blogCard:('<div class="ua-create-locked-wrap">'+blogCard+'<span class="ua-create-lock-mark" aria-label="Fitur terkunci">'+socialIcon('lock',{size:12})+'</span><span class="ua-create-premium-hint">UPGRADE KE PREMIUM</span></div>');
+ const blogEntry=feature('book','Buat Blog','Terbitkan cerita, pengalaman, perjalanan, foto, dan video di ruang blog pribadi PLUITS.',blogHref,hasBlog?'is-blog':'is-blog',hasBlog?'KELOLA BLOG':'BUAT BLOG');
  return `<div class="ua-create-hub">
   <header class="ua-create-top"><h1>Mau buat apa hari ini?</h1><p>Mulai dari hal sederhana, bagikan sesuatu, atau bangun kehadiranmu di PLUITS.</p></header>
   <section class="ua-create-section ua-create-daily-section">
@@ -1157,7 +1152,7 @@ async function createPage(){
  </div>`;
 }
 function upgradePage(){
- return `<div class="ua-upgrade-page"><a class="ua-upgrade-back" href="#/account/create">‹ Kembali ke Buat</a><section class="ua-upgrade-hero"><span class="ua-eyebrow">PLUITS MEMBERSHIP</span><div class="ua-upgrade-symbol">${socialIcon('plus',{size:28})}</div><h1>Lebih banyak ruang untuk berkarya.</h1><p>Dengan PLUITS Premium, kamu dapat membuat ruang Blog sendiri dan menerbitkan tulisan dengan identitas yang konsisten.</p><span class="ua-upgrade-plan">PREMIUM</span></section><section class="ua-upgrade-feature"><div><span class="ua-eyebrow">FITUR PREMIUM</span><h2>Blog Studio</h2><p>Kelola ruang blog, buat kategori, simpan draft di akun, dan terbitkan tulisan dengan alamat khusus.</p></div><span class="ua-upgrade-feature-icon">${socialIcon('book',{size:25})}</span></section><div class="ua-upgrade-status"><strong>Upgrade Premium</strong><p>Pengaturan hak akses Premium sudah disiapkan. Pembayaran dan aktivasi paket otomatis belum tersedia, jadi akun belum akan dikenakan biaya dari halaman ini.</p><span>AKTIVASI PAKET MENYUSUL</span></div><a class="ua-primary ua-upgrade-cta" href="#/account/create">Kembali ke pilihan kreasi</a></div>`;
+ return `<div class="ua-upgrade-page"><a class="ua-upgrade-back" href="#/account/create">‹ Kembali ke Buat</a><section class="ua-upgrade-hero"><span class="ua-eyebrow">PLUITS MEMBERSHIP</span><div class="ua-upgrade-symbol">${socialIcon('plus',{size:28})}</div><h1>Lebih banyak ruang untuk berkarya.</h1><p>Blog kini menjadi bagian dari Social Media PLUITS dan dapat digunakan oleh semua akun. Paket Premium disiapkan untuk modul lanjutan yang membutuhkan layanan tambahan.</p><span class="ua-upgrade-plan">PREMIUM</span></section><section class="ua-upgrade-feature"><div><span class="ua-eyebrow">FITUR PREMIUM</span><h2>Blog Studio</h2><p>Kelola ruang blog, buat kategori, simpan draft di akun, dan terbitkan tulisan dengan alamat khusus.</p></div><span class="ua-upgrade-feature-icon">${socialIcon('book',{size:25})}</span></section><div class="ua-upgrade-status"><strong>Upgrade Premium</strong><p>Pengaturan hak akses Premium sudah disiapkan. Pembayaran dan aktivasi paket otomatis belum tersedia, jadi akun belum akan dikenakan biaya dari halaman ini.</p><span>AKTIVASI PAKET MENYUSUL</span></div><a class="ua-primary ua-upgrade-cta" href="#/account/create">Kembali ke pilihan kreasi</a></div>`;
 }
 
 async function storyComposePage(){
