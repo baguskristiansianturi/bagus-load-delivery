@@ -167,7 +167,7 @@ function showError(error) {
 function readFormFile(input) { return input?.files?.[0] || null; }
 async function persistEditor(status){
  const form=document.querySelector('#pl-blog-editor-form');if(!form)return;const d=new FormData(form),title=String(d.get('title')||'').trim(),description=String(d.get('description')||'').trim();let body=String(document.querySelector('#pl-blog-body-editor')?.innerHTML||'').trim();
- if(!title||!description||!body)return notify('Judul, deskripsi, dan isi wajib diisi.','error');if(wordCount(description)>85)return notify('Deskripsi maksimal 85 kata.','error');if(wordCount(body)>MAX_BODY_WORDS)return notify('Isi tulisan maksimal 1.200 kata.','error');
+ if(!title)return notify('Judul tulisan wajib diisi.','error');if(wordCount(description)>85)return notify('Deskripsi maksimal 85 kata.','error');if(wordCount(body)>MAX_BODY_WORDS)return notify('Isi tulisan maksimal 1.200 kata.','error');
  let old=null;if(editingId){const r=await supabase.from('blog_posts').select('*').eq('id',editingId).eq('owner_user_id',activeUser.id).single();if(r.error)throw r.error;old=r.data;}
  const file=readFormFile(document.querySelector('#pl-blog-cover-input'))||selectedCoverFile;let coverPath=old?.cover_path||null;if(file)coverPath=await uploadBlogImage(file,'cover');if(!coverPath)return notify('Pilih gambar utama sebelum menyimpan.','error');
  const support=[...(old?.supporting_paths||[])];for(let i=0;i<pendingSupportingFiles.length;i++){const f=pendingSupportingFiles[i],path=await uploadBlogSupportingMedia(f,'body');support.push(path);const marker=document.createElement('span');marker.dataset.blogPendingIndex=String(i);const editor=document.createElement('div');editor.innerHTML=body;const pending=editor.querySelector('[data-blog-pending-index="'+i+'"]');if(pending){const media=document.createElement(isVideoPath(path)?'video':'img');media.setAttribute('data-blog-media-path',path);if(media.tagName==='VIDEO'){media.controls=true;media.playsInline=true;}else media.alt='Foto dalam artikel';const figure=document.createElement('figure');figure.append(media);pending.replaceWith(figure);body=editor.innerHTML;}}
@@ -198,7 +198,7 @@ function bind() {
     let coverUrl=file?URL.createObjectURL(file):'';
     if(file&&coverUrl)previewObjectUrls.push(coverUrl);
     if(!coverUrl&&old?.cover_path)coverUrl=(await createSignedUrlMap(supabase.storage,BUCKET,[old.cover_path],3600)).get(old.cover_path)||'';
-    if(!title||!description||!body||!coverUrl)return notify('Lengkapi judul, deskripsi, isi, dan cover untuk pratinjau.','error');if(wordCount(body)>MAX_BODY_WORDS)return notify('Isi tulisan maksimal 1.200 kata.','error');
+    if(!title||!coverUrl)return notify('Judul dan gambar utama wajib tersedia untuk pratinjau.','error');if(wordCount(body)>MAX_BODY_WORDS)return notify('Isi tulisan maksimal 1.200 kata.','error');
     if(wordCount(description)>85)return notify('Deskripsi maksimal 85 kata.','error');
     const oldPaths=old?.supporting_paths||[],oldUrls=oldPaths.length?await createSignedUrlMap(supabase.storage,BUCKET,oldPaths,1800):new Map();
     previewObjectUrls.forEach(url=>URL.revokeObjectURL(url));previewObjectUrls=[];
