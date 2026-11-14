@@ -573,19 +573,22 @@ async function composePage(draftId='',kind='post'){
  currentComposeDraft=draftId?await getPrivateDraft(user.id,draftId):null;
  const {data:contentPrefs}=await supabase.from('account_content_preferences').select('*').eq('user_id',user.id).maybeSingle();
  const defaultAudience=accountContext.active==='professional'?(contentPrefs?.professional_default_visibility==='unlisted'?'private':'public'):accountContext.active==='business'?(contentPrefs?.business_default_visibility==='unlisted'?'private':'public'):(contentPrefs?.personal_default_visibility||'public');
- return `<div class="ua-page-heading"><div><span class="ua-eyebrow">BUAT KONTEN</span><h1>${currentComposeDraft?'Lanjutkan draf':kind==='reel'?'Reel baru':'Post baru'}</h1></div></div>
- <section class="ua-panel ua-compose-panel"><form id="ua-post-form" class="ua-compose-form ua-clean-composer" data-content-kind="${kind}" data-default-visibility="${currentComposeDraft?.visibility||defaultAudience}">
-  <div class="ua-media-picker-row"><label class="ua-media-picker" for="ua-post-file" aria-label="${kind==='reel'?'Pilih video Reel':'Pilih foto atau video'}" title="${kind==='reel'?'Tambah Reel':'Tambah media'}"><span aria-hidden="true">＋</span><strong>${kind==='reel'?'Pilih video':'Tambah foto atau video'}</strong><small>${kind==='reel'?'Pilih satu video dari perangkat':'Pilih foto atau video dari perangkat'}</small><input id="ua-post-file" type="file" ${kind==='reel'?'accept="video/*,.mp4,.m4v,.mov,.webm,.3gp,.3gpp,.3g2,.3gp2"':'multiple accept="image/*,video/*,.mp4,.m4v,.mov,.webm,.3gp,.3gpp,.3g2,.3gp2"'} aria-label="${kind==='reel'?'Pilih video Reel':'Pilih foto atau video'}"></label><span class="ua-media-count" id="ua-media-count" aria-live="polite">Belum ada media</span></div>
-  <div id="ua-media-preview" class="ua-media-preview ua-clean-preview"></div>
-  <label class="ua-compose-caption-label"><textarea name="caption" rows="3" maxlength="2200" placeholder="Tulis deskripsi..." aria-label="Tulis deskripsi">${esc(currentComposeDraft?.caption||'')}</textarea></label>
-  <details class="ua-post-options"><summary>Pengaturan postingan <span>＋</span></summary><div class="ua-post-option-fields">
-   <label>Audiens<select name="visibility"><option value="public" ${(currentComposeDraft?.visibility||defaultAudience)!=='private'?'selected':''}>Publik</option><option value="private" ${(currentComposeDraft?.visibility||defaultAudience)==='private'?'selected':''}>Hanya saya</option></select></label>
-   <label>Tandai orang<input name="tagged_users" maxlength="240" placeholder="@username, @username" value="${esc(currentComposeDraft?.tagged_users||'')}"></label>
-   <p class="ua-option-hint">Jadwalkan dan tambahkan lokasi akan diaktifkan setelah alur backend siap.</p>
-  </div></details>
-  <div class="ua-progress" id="ua-upload-progress" hidden><span></span></div>
-  <div class="ua-compose-actions"><button class="ua-text-action" type="button" id="ua-save-draft">Simpan draf</button><button class="ua-primary" type="submit">Bagikan</button></div><p class="ua-form-note" id="ua-compose-note">${currentComposeDraft?'Draf dipulihkan dari penyimpanan privat perangkat ini.':''}</p>
- </form></section>`;
+ return `<div class="ua-compose-shell">
+  <header class="ua-compose-header"><a href="#/account/create" class="ua-compose-back" aria-label="Kembali">‹</a><div><span class="ua-eyebrow">${currentComposeDraft?'DRAF':'PUBLIKASI'}</span><h1>${currentComposeDraft?'Lanjutkan draf':kind==='reel'?'Buat Reel':'Buat Post'}</h1></div><span class="ua-compose-kind">${kind==='reel'?'REEL':'POST'}</span></header>
+  <form id="ua-post-form" class="ua-compose-form ua-clean-composer ua-compose-workspace" data-content-kind="${kind}" data-default-visibility="${currentComposeDraft?.visibility||defaultAudience}">
+   <section class="ua-compose-media-section"><div class="ua-compose-section-heading"><strong>${kind==='reel'?'Video Reel':'Foto atau video'}</strong><small>${kind==='reel'?'Satu video, maksimal 60 detik':'Pilih satu atau beberapa media'}</small></div>
+    <div class="ua-media-picker-row"><label class="ua-media-picker" for="ua-post-file" aria-label="${kind==='reel'?'Pilih video Reel':'Pilih foto atau video'}"><span aria-hidden="true">＋</span><strong>${kind==='reel'?'Pilih video':'Pilih dari perangkat'}</strong><small>${kind==='reel'?'Video dari galeri HP':'Foto dan video dari galeri HP'}</small><input id="ua-post-file" type="file" ${kind==='reel'?'accept="video/*,.mp4,.m4v,.mov,.webm,.3gp,.3gpp,.3g2,.3gp2"':'multiple accept="image/*,video/*,.mp4,.m4v,.mov,.webm,.3gp,.3gpp,.3g2,.3gp2"'} aria-label="${kind==='reel'?'Pilih video Reel':'Pilih foto atau video'}"></label><span class="ua-media-count" id="ua-media-count" aria-live="polite">Belum ada media</span></div>
+    <div id="ua-media-preview" class="ua-media-preview ua-clean-preview"></div>
+   </section>
+   <label class="ua-compose-caption-label"><span>Caption <small>Opsional</small></span><textarea name="caption" rows="3" maxlength="2200" placeholder="Ceritakan sesuatu...">${esc(currentComposeDraft?.caption||'')}</textarea></label>
+   <details class="ua-post-options"><summary><span>Audiens</span><b>${(currentComposeDraft?.visibility||defaultAudience)==='private'?'Hanya saya':'Publik'}</b></summary><div class="ua-post-option-fields">
+    <label>Siapa yang bisa melihat?<select name="visibility"><option value="public" ${(currentComposeDraft?.visibility||defaultAudience)!=='private'?'selected':''}>Publik</option><option value="private" ${(currentComposeDraft?.visibility||defaultAudience)==='private'?'selected':''}>Hanya saya</option></select></label>
+   </div></details>
+   <div class="ua-progress" id="ua-upload-progress" hidden><span></span></div>
+   <p class="ua-form-note" id="ua-compose-note">${currentComposeDraft?'Draf dipulihkan dari perangkat ini.':''}</p>
+   <div class="ua-compose-actions"><button class="ua-text-action" type="button" id="ua-save-draft">Simpan draf</button><button class="ua-primary" type="submit">Bagikan</button></div>
+  </form>
+ </div>`;
 }
 
 async function savedPage(){
