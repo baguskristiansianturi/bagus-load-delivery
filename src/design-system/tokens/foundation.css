@@ -54,6 +54,11 @@
   --pl-text-body: 15px;
   --pl-text-lg: 18px;
   --pl-text-xl: 24px;
+  --pl-text-2xl: 28px;
+  --pl-font-family-ui: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --pl-line-height-tight: 1.2;
+  --pl-line-height-normal: 1.5;
+  --pl-line-height-relaxed: 1.65;
 }
 
 /* Canonical viewport behavior: content adapts to available space, including browser chrome. */
