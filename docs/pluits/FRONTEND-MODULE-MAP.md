@@ -25,7 +25,7 @@ Read before editing. Existing owners remain during incremental migration; target
 - Inbox layout: `pages/messages/*`; Inbox owns content, shared nav stays shared.
 - Media validation/upload: `features/media/*`; pure detection separated from transport.
 - Reels: `features/reels/*`; dedicated markup and scoped styling.
-- Post actions: `features/posts/*`; action UI and styles isolated.
+- Post cards and actions: `features/posts/index.js` is the public API; canonical card markup/styles live in `post-card.js` and `post-card.css`. Signed-in Explore/Circle and Profile consume the same card. Public guest-home feed remains a separate migration target.
 
 ## Boundaries
 - Page controllers compose features; they do not redefine global destinations.

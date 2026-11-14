@@ -2,7 +2,8 @@ import { supabase, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from '../../lib/supa
 import { mountAuthPage } from '../../features/auth/auth.js';
 import {socialIcon} from '../../components/common/social-icons.js';
 import {renderBrandLogo} from '../../components/common/brand.js';
-import {renderPostActions} from '../../features/posts/post-actions.js';
+import {renderPostActions,renderPostCard} from '../../features/posts/index.js';
+import '../../features/posts/post-card.css';
 import {renderTopTenSection} from '../../features/discovery/top-ten-cards.js';
 import {rankPeopleRecommendations,renderPeopleRecommendations,CIRCLE_DEMO_PEOPLE} from '../../features/discovery/people-recommendations.js';
 import '../../features/discovery/people-recommendations.css';
@@ -326,7 +327,7 @@ function bindProfileTabs(){
  });
 }
 
-function postGrid(posts){return `<div class="ua-post-grid">${posts.map(p=>`<a class="ua-post-thumb" href="#/account/post/${p.id}">${p.media?.length?(p.media[0].media_type==='video'?'<span class="ua-video-mark">▶ VIDEO</span><video src="'+p.media[0].url+'" muted playsinline preload="metadata"></video>':'<img src="'+p.media[0].url+'" alt="'+esc(p.caption||'Postingan Pluits')+'">'):'<span class="ua-text-thumb">PLUITS</span>'}<span class="ua-thumb-caption">${esc(p.caption||'')}</span></a>`).join('')}</div>`;}
+function postGrid(posts){return `<div class="ua-profile-post-feed">${posts.map(postCard).join('')}</div>`;}
 async function hydratePosts(rows){
   if(!rows.length)return [];
   const postIds=rows.map(p=>p.id);
@@ -529,21 +530,7 @@ async function reelsPage(){
  return "<div class='ua-page-heading'><div><span class='ua-eyebrow'>VIDEO KOMUNITAS</span><h1>Reels</h1><p>Video tunggal hingga 60 detik. Geser ke atas untuk video berikutnya.</p></div><a class='ua-outline' href='#/account/explore'>Kembali ke Explore</a></div><nav class='ua-reels-filters' aria-label='Urutan Reels'><button data-reels-filter='recommended' class='"+(reelsFilter==='recommended'?'is-active':'')+"'>Untuk Anda</button><button data-reels-filter='following' class='"+(reelsFilter==='following'?'is-active':'')+"'>Mengikuti</button><button data-reels-filter='latest' class='"+(reelsFilter==='latest'?'is-active':'')+"'>Terbaru</button></nav><section class='ua-reels-feed'>"+(sorted.length?sorted.map(postCard).join(''):"<div class='ua-panel ua-empty'><strong>Belum ada Reels.</strong><p>Reels berisi video tunggal maksimal 60 detik. Video yang lebih panjang tetap ada di postingan biasa.</p><a class='ua-primary ua-inline' href='#/account/compose'>＋ Unggah video</a></div>")+"</section>";
 }
 
-function formatPostDate(value){
- const date=new Date(value);if(!Number.isFinite(date.getTime()))return '';
- return new Intl.DateTimeFormat('id-ID',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(date);
-}
-function postCard(p){
- const profileHref='#/@'+encodeURIComponent(p.owner.username);
- const mediaMarkup=(p.media||[]).length>1?`<div class="ua-media-gallery" data-gallery><div class="ua-gallery-track">${p.media.map((m,i)=>`<div class="ua-gallery-item">${m.media_type==='video'?`<video src="${m.url}" controls playsinline preload="metadata"></video>`:`<img src="${m.url}" alt="Media ${i+1}">`}</div>`).join('')}</div><span class="ua-gallery-count" data-gallery-count>1/${p.media.length}</span></div>`:(p.media?.length?`<div class="ua-media">${p.media[0].media_type==='video'?`<video src="${p.media[0].url}" controls playsinline preload="metadata"></video>`:`<img src="${p.media[0].url}" alt="${esc(p.caption||'Foto postingan')}">`}</div>`:'<div class="ua-text-post-mark">PLUITS</div>');
- return `<article class="ua-post-card" data-post-id="${p.id}" data-owner-id="${p.user_id}">
- <div class="ua-post-head"><a class="ua-post-avatar-link" href="${profileHref}">${avatar(p.avatarUrl,p.owner.display_name)}</a><div><a class="ua-author-link" href="${profileHref}"><strong>${esc(p.owner.display_name)}</strong></a><small>@${esc(p.owner.username)} ${p.owner.public_city&&p.owner.public_province?'· '+esc(p.owner.public_city):''}</small><time class="ua-post-date" datetime="${esc(p.created_at)}">${formatPostDate(p.created_at)}</time></div><div class="ua-post-menu-wrap"><button class="ua-post-more" type="button" aria-label="Menu postingan" aria-expanded="false" data-post-menu>${socialIcon("more",{size:21})}</button><div class="ua-post-menu" hidden>${p.user_id===user?.id?`<button type="button" data-action="edit">${socialIcon("edit",{size:16})}<span>Edit postingan</span></button><button type="button" data-action="delete-post"><span class="ua-menu-delete-icon">×</span><span>Hapus postingan</span></button>`:`<button type="button" data-action="hide-post">${socialIcon("eye-off",{size:16})}<span>Sembunyikan postingan ini</span></button><button type="button" data-action="mute-user">${socialIcon("user-round-x",{size:16})}<span>Jangan tampilkan dari ${esc(p.owner.display_name)}</span></button><button type="button" data-action="share">${socialIcon("send",{size:16})}<span>Bagikan postingan</span></button><button type="button" data-action="report">${socialIcon("flag",{size:16})}<span>Laporkan postingan</span></button>`}</div></div></div>
- ${mediaMarkup}
- ${renderPostActions({user,liked:p.liked,likes:p.likes,comments:p.comments,saved:p.saved})}
- <div class="ua-post-caption">${p.likes?'<strong>'+p.likes+' suka</strong>':''}<p><a href="${profileHref}"><b>${esc(p.owner.username)}</b></a> ${esc(p.caption||'')}</p>${p.comments?'<button data-action="comments" class="ua-view-comments">Lihat semua '+p.comments+' komentar</button>':''}</div>
- ${user?(p.user_id===user.id?'<section class="ua-post-editor" hidden></section>':'')+'<div class="ua-comments" hidden></div>':''}
- </article>`;
-}
+function postCard(p){return renderPostCard(p,{user,avatar,socialIcon,renderActions:renderPostActions,esc});}
 
 async function composePage(draftId='',kind='post'){
  currentComposeDraft=draftId?await getPrivateDraft(user.id,draftId):null;

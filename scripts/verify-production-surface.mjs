@@ -315,7 +315,7 @@ const postActionFeature = read('src/features/posts/post-actions.js');
 assert.ok(postActionFeature.includes('data-action="like"') && postActionFeature.includes('data-action="comments"') && postActionFeature.includes('data-action="share"') && postActionFeature.includes('data-action="save"'), 'Dedicated post actions must preserve all interaction hooks.');
 assert.ok(postActionFeature.includes('pl-post-icon') && !postActionFeature.includes('pluits-like'), 'Post actions must use their own restrained SVG icon set.');
 assert.ok(read('src/features/posts/post-actions.css').includes('.pl-post-actions'), 'Post action controls must own their feature-scoped styles.');
-assert.ok(read('src/pages/account/index.js').includes('renderPostActions({user,liked:p.liked,likes:p.likes,comments:p.comments,saved:p.saved})'), 'Post cards must delegate action rendering to the post feature module.');
+assert.ok(read('src/pages/account/index.js').includes('renderPostCard') && read('src/features/posts/post-card.js').includes('renderActions({user,liked:post.liked,saved:post.saved})'), 'Canonical post cards must delegate action rendering to the post feature module.');
 assert.ok(read('src/pages/account/user-account.css').includes('.ua-social-app .ua-post-caption'), 'Post caption spacing must be explicitly compacted.');
 
 import { ROUTES, NAVIGATION_CONTEXTS, getRoute } from '../src/components/social/navigation-routes.js';
