@@ -82,3 +82,23 @@ test('Blog formatting toolbar stays sticky for mobile writing', async () => {
   const css = await readFile(new URL('../../src/pages/blog-studio/blog-studio.css', import.meta.url), 'utf8');
   assert.match(css, /\.pl-blog-format-toolbar\{position:sticky;top:0/);
 });
+
+
+test('Blog drafts can be saved before a cover is selected and auto-save while editing', async () => {
+  const source = await readFile(new URL('../../src/pages/blog-studio/index.js', import.meta.url), 'utf8');
+  assert.match(source, /if\(!isDraft&&!coverPath\)/);
+  assert.match(source, /Draft tanpa judul/);
+  assert.match(source, /scheduleEditorAutoSave/);
+  assert.match(source, /visibilitychange/);
+  assert.match(source, /pagehide/);
+  assert.match(source, /Draft tersimpan otomatis/);
+});
+
+test('Blog Saya has an editorial hero and orders published cards by publication time', async () => {
+  const source = await readFile(new URL('../../src/pages/blog-studio/index.js', import.meta.url), 'utf8');
+  const css = await readFile(new URL('../../src/pages/blog-studio/blog-studio.css', import.meta.url), 'utf8');
+  assert.match(source, /pl-blog-hero/);
+  assert.match(source, /published_at\|\|b\.updated_at/);
+  assert.match(source, /Pengaturan Blog/);
+  assert.match(css, /\.pl-blog-hero/);
+});
