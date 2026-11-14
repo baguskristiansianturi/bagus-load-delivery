@@ -13,7 +13,7 @@ test('Blog theme module defines the five approved personal templates and safe pr
 
 test('Blog Studio exposes appearance workspace, persists presentation settings, and renders public blocks', async () => {
   const source = await readFile(new URL('../../src/pages/blog-studio/index.js', import.meta.url), 'utf8');
-  for (const token of ['data-tab="appearance"','renderBlogThemePanel','readBlogThemeForm','template_key','theme_settings','layout_settings','applyBlogTheme','data-blog-block="photo_gallery"','data-blog-block="about_me"']) {
+  for (const token of ['data-tab="appearance"','renderBlogThemePanel','readBlogThemeForm','template_key','theme_settings','layout_settings','applyBlogTheme','data-blog-block="photo_gallery"','data-blog-block="about_me"','data-block-up','data-block-down']) {
     assert.ok(source.includes(token), 'missing blog customization integration: '+token);
   }
   assert.match(source, /\.eq\('owner_user_id',activeUser\.id\)/);
