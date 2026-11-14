@@ -51,7 +51,7 @@ function frame(content,active='explore',avatarUrl=''){
  const showEditProfile=active==='profile'||active==='preview';
  return `<div class="ua-app ua-social-app">
   ${renderSocialHeader({active,profileView,showEditProfile,user,profile,userAvatar,notificationCount:unreadNotificationCount})}
-   <main class="ua-main ${profileView?'ua-profile-main':''} ${active==='create'?'ua-create-main':''}">${content}</main>
+   <main class="ua-main plds-container ${profileView?'ua-profile-main':''} ${active==='create'?'ua-create-main':''}">${content}</main>
   ${renderSocialMobileNav({active,profileView,user,profile,userAvatar,notificationCount:unreadNotificationCount})}
      <div id="ua-toast" class="ua-toast" role="status"></div>
   <footer class="ua-footer">PLUITS · Identitas pengguna dan aktivitas komunitas</footer>
