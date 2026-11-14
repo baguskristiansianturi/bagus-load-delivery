@@ -15,4 +15,5 @@ test('Profile content tabs expose Feed, Reels, Trip and Blog with consistent SVG
   assert.doesNotMatch(source, /data-profile-tab="tagged"/);
   assert.match(css, /grid-template-columns:repeat\(4,minmax\(0,1fr\)\)!important/);
   assert.match(css, /ua-profile-blog-card/);
+  assert.match(css, /ua-public-profile \.ua-profile-tabs/);
 });
