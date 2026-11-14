@@ -94,3 +94,10 @@ test('Inbox adopts the shared wide container and workspace geometry tokens', () 
   assert.match(inboxCss, /--pl-layout-workspace-max:1120px/);
   assert.match(inboxCss, /width:min\(var\(--pl-layout-workspace-max,1120px\),100%\)/);
 });
+
+test('GeoDirectory adopts the shared content container without changing its map layout', () => {
+  const pageSource = readFileSync(new URL('../../src/pages/directory/index.js', import.meta.url), 'utf8');
+  const pageCss = readFileSync(new URL('../../src/pages/directory/directory.css', import.meta.url), 'utf8');
+  assert.match(pageSource, /pl-directory-main plds-container/);
+  assert.match(pageCss, /--pl-layout-content-max:1120px/);
+});
