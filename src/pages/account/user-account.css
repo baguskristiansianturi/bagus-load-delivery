@@ -2836,3 +2836,66 @@
 
 /* Reel upload preview mirrors the 9:16 viewer; the empty picker remains only a plus tile. */
 .ua-social-app .ua-clean-composer .ua-media-count{display:none}.ua-social-app .ua-clean-composer[data-content-kind="reel"] .ua-clean-preview{grid-template-columns:minmax(0,min(100%,320px));justify-content:start}.ua-social-app .ua-clean-composer[data-content-kind="reel"] .ua-clean-media-item{width:100%;max-width:320px;aspect-ratio:9/16;max-height:min(65svh,570px)}
+
+
+/* PLUITS composer refresh: clear hierarchy, touch-friendly media selection, and mobile-safe actions. */
+.ua-social-app .ua-compose-main{padding-bottom:calc(104px + env(safe-area-inset-bottom))}
+.ua-social-app .ua-compose-shell{width:min(100%,720px);margin:0 auto;padding:8px 0 30px}
+.ua-social-app .ua-compose-header{display:flex;align-items:center;gap:12px;margin:0 0 18px;padding:0 2px}
+.ua-social-app .ua-compose-back{display:grid;place-items:center;width:40px;height:40px;flex:0 0 40px;border:1px solid #e8eeee;border-radius:50%;color:#263b43;text-decoration:none;font-size:26px;line-height:1}
+.ua-social-app .ua-compose-header>div{min-width:0;flex:1}
+.ua-social-app .ua-compose-header .ua-eyebrow{font-size:9px;letter-spacing:.1em}
+.ua-social-app .ua-compose-header h1{margin:3px 0 0;color:#20353d;font-size:22px;line-height:1.2;font-weight:760}
+.ua-social-app .ua-compose-kind{padding:7px 10px;border-radius:20px;background:#eaf7f5;color:#128f87;font-size:10px;font-weight:800;letter-spacing:.06em}
+.ua-social-app .ua-compose-workspace{display:grid;gap:18px;padding:0}
+.ua-social-app .ua-compose-media-section{min-width:0}
+.ua-social-app .ua-compose-section-heading{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:0 0 10px}
+.ua-social-app .ua-compose-section-heading strong{color:#2b4047;font-size:13px;font-weight:750}
+.ua-social-app .ua-compose-section-heading small{color:#89979a;font-size:10px;text-align:right}
+.ua-social-app .ua-clean-composer .ua-media-picker-row{display:block}
+.ua-social-app .ua-clean-composer .ua-media-picker{width:100%;height:auto;min-height:132px;max-width:none;flex:none;display:flex;flex-direction:column;justify-content:center;gap:7px;padding:18px;border:1.5px dashed #b9d4d1;border-radius:15px;background:#f8fcfb;color:#178f87}
+.ua-social-app .ua-clean-composer .ua-media-picker>span{position:static;display:grid;width:42px;height:42px;place-items:center;border-radius:50%;background:#e4f4f1;color:#148f87;font-size:28px;line-height:1}
+.ua-social-app .ua-clean-composer .ua-media-picker>strong,.ua-social-app .ua-clean-composer .ua-media-picker>small{position:static;width:auto;height:auto;overflow:visible;clip:auto;white-space:normal;text-align:center}
+.ua-social-app .ua-clean-composer .ua-media-picker>strong{color:#29434a;font-size:12px;font-weight:750}
+.ua-social-app .ua-clean-composer .ua-media-picker>small{color:#879699;font-size:10px}
+.ua-social-app .ua-clean-composer .ua-media-picker input[type=file]{z-index:2}
+.ua-social-app .ua-clean-composer .ua-media-count{display:block;margin:8px 0 0;color:#849397;font-size:10px}
+.ua-social-app .ua-clean-composer .ua-clean-preview{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:12px}
+.ua-social-app .ua-clean-composer .ua-clean-media-item{min-width:0;aspect-ratio:4/5;border:1px solid #edf0f0;border-radius:12px}
+.ua-social-app .ua-clean-composer .ua-clean-media-item img,.ua-social-app .ua-clean-composer .ua-clean-media-item video{object-fit:cover}
+.ua-social-app .ua-clean-composer .ua-compose-caption-label{display:grid;gap:8px;margin:0;color:#2b4047;font-size:13px;font-weight:750}
+.ua-social-app .ua-clean-composer .ua-compose-caption-label>span{display:flex;align-items:center;gap:7px}
+.ua-social-app .ua-clean-composer .ua-compose-caption-label>span small{color:#98a3a5;font-size:10px;font-weight:500}
+.ua-social-app .ua-clean-composer .ua-compose-caption-label textarea{width:100%;min-height:112px;padding:13px;border:1px solid #e3eaea;border-radius:12px;background:#fff;color:#273d44;font-size:13px;line-height:1.55;resize:vertical}
+.ua-social-app .ua-clean-composer .ua-post-options{margin:0;border:1px solid #e9eeee;border-radius:12px;background:#fff}
+.ua-social-app .ua-clean-composer .ua-post-options summary{display:flex;align-items:center;justify-content:space-between;padding:13px 14px;color:#33484e;font-size:12px;list-style:none;cursor:pointer}
+.ua-social-app .ua-clean-composer .ua-post-options summary::-webkit-details-marker{display:none}
+.ua-social-app .ua-clean-composer .ua-post-options summary b{color:#168f87;font-size:11px;font-weight:700}
+.ua-social-app .ua-clean-composer .ua-post-option-fields{padding:0 14px 13px}
+.ua-social-app .ua-clean-composer .ua-post-option-fields>label{display:grid;gap:7px;color:#637579;font-size:11px}
+.ua-social-app .ua-clean-composer .ua-post-option-fields select{width:100%;min-height:42px;padding:0 11px;border:1px solid #e3eaea;border-radius:9px;background:#fff;color:#294047;font-size:12px}
+.ua-social-app .ua-clean-composer .ua-compose-actions{position:sticky;bottom:calc(66px + env(safe-area-inset-bottom));z-index:8;display:flex;gap:10px;justify-content:stretch;margin:0 -14px;padding:12px 14px calc(12px + env(safe-area-inset-bottom));border-top:1px solid #edf0f0;background:#ffffffed;backdrop-filter:blur(14px)}
+.ua-social-app .ua-clean-composer .ua-compose-actions button{min-height:46px;border-radius:11px;font-size:12px}
+.ua-social-app .ua-clean-composer .ua-compose-actions .ua-text-action{flex:0 0 auto;padding:0 14px}
+.ua-social-app .ua-clean-composer .ua-compose-actions .ua-primary{flex:1}
+.ua-social-app .ua-clean-composer .ua-form-note{margin:0;color:#7b8b8e;font-size:11px;line-height:1.45}
+.ua-social-app .ua-clean-composer .ua-progress{height:5px;overflow:hidden;border-radius:9px;background:#eaf1f0}
+.ua-social-app .ua-clean-composer .ua-progress span{display:block;height:100%;border-radius:9px;background:#1aa59b;transition:width .2s ease}
+.ua-social-app .ua-clean-composer[data-content-kind="reel"] .ua-clean-preview{grid-template-columns:minmax(0,1fr);max-width:360px}
+.ua-social-app .ua-clean-composer[data-content-kind="reel"] .ua-clean-media-item{width:100%;max-width:360px;aspect-ratio:9/16;max-height:62svh}
+.ua-social-app .ua-clean-composer[data-content-kind="reel"] .ua-clean-media-item video{object-fit:contain;background:#111}
+@media(max-width:760px){
+ .ua-social-app .ua-compose-main{width:100%;margin:0;padding:12px 14px calc(110px + env(safe-area-inset-bottom))}
+ .ua-social-app .ua-compose-shell{padding-top:2px}
+ .ua-social-app .ua-compose-header{margin-bottom:15px}
+ .ua-social-app .ua-compose-header h1{font-size:20px}
+ .ua-social-app .ua-compose-workspace{gap:16px}
+ .ua-social-app .ua-clean-composer .ua-media-picker{min-height:126px}
+ .ua-social-app .ua-clean-composer .ua-compose-actions{bottom:calc(62px + env(safe-area-inset-bottom))}
+}
+@media(max-width:380px){
+ .ua-social-app .ua-compose-main{padding-right:11px;padding-left:11px}
+ .ua-social-app .ua-compose-section-heading{align-items:flex-start;flex-direction:column;gap:3px}
+ .ua-social-app .ua-clean-composer .ua-clean-preview{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .ua-social-app .ua-clean-composer .ua-compose-actions .ua-text-action{padding:0 10px}
+}
