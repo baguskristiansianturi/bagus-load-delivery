@@ -65,7 +65,7 @@ test('Blog cover has adjustable client-side crop controls', async () => {
 test('Blog inline media is rendered as media in preview and public articles', async () => {
   const source = await readFile(new URL('../../src/pages/blog-studio/index.js', import.meta.url), 'utf8');
   assert.match(source, /renderStoredBody\(item\.body,item\.media_urls,item\.pending_media_urls\)/);
-  assert.match(source, /renderStoredBody\(p\.body,urls\)/);
+  assert.match(source, /renderStoredBody\(selected\.body,urls\)/);
   assert.match(source, /data-blog-pending-index/);
   assert.match(source, /data-blog-media-path/);
   assert.match(source, /pendingUrls\[Number\(index\)\]/);
