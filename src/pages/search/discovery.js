@@ -16,7 +16,7 @@ export function discoverySearch(q=''){
    <div class="ds-title"><strong>Jelajah</strong><small>Temukan apa yang sedang terjadi di PLUITS</small></div>
    <form id="ds-form" class="ds-search"><span>⌕</span><input id="ds-query" value="${esc(q)}" placeholder="Cari konten, orang, atau topik…" aria-label="Cari"><button aria-label="Cari">⌕</button></form>
   </header>
-  <main class="ds-main">
+  <main class="ds-main plds-container">
    <section class="ds-intro"><h1>Jelajah</h1><p>Konten publik dari personal, kreator, pemilik usaha, penyedia layanan, komunitas, dan berbagai entitas.</p></section>
    <nav class="ds-sort" id="ds-sort" aria-label="Urutan konten"><button data-sort="trending" class="selected">Sedang populer</button><button data-sort="latest">Terbaru</button><button data-sort="random">Acak</button></nav>
    <nav class="ds-chips" id="ds-chips" aria-label="Kategori konten"><button data-cat="all" class="selected">Semua</button></nav>
