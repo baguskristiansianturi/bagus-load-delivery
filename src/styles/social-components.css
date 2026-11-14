@@ -27,7 +27,7 @@
 .ua-social-app .ua-post-menu button:active{background:#f4f6f8}
 .ua-social-app .ua-post-menu .pl-icon{color:#53647b}
 .ua-social-app .ua-post-actions{
- display:flex;align-items:center;gap:18px;padding:9px 13px 5px;
+ display:flex;align-items:center;gap:3px;padding:8px 15px 5px;
 }
 .ua-social-app .ua-post-actions button{
  display:inline-flex;align-items:center;justify-content:center;gap:5px;
