@@ -154,3 +154,19 @@ Salin untuk keputusan berikutnya:
 - **Batas:** tidak membuat domain atau aplikasi terpisah per penulis; tidak mempublikasikan draft/privat; tidak mengubah kontrol follow/privasi; fitur ini tidak menjadikan Blog akun terpisah.
 - **Dampak:** halaman publik Blog menjadi landing page personal/kreator/bisnis; struktur dan aturan aktif dicatat pada Business Model Master Bagian 33.15.
 - **Status implementasi:** PR #23 terbuka; CI success pada run #1863; migration presentasi belum diterapkan; Pages deployment dan Android UAT belum dilakukan.
+
+
+## D-010 — Personal Blog template customization, profile blocks, and social-account comments
+- **Tanggal keputusan:** 14 November 2026
+- **Status:** DECIDED
+- **Founder approval:** eksplisit dalam arahan founder pada pembahasan Personal Blogging System dan permintaan implementasi 14 November 2026.
+- **Keputusan final:**
+  1. Pemilik blog dapat mengganti template kapan saja tanpa mengubah artikel, kategori, media, URL blog, URL artikel, atau aturan privasi.
+  2. Personal Blog memulai dengan lima template: AURELIA, STAVERO, BREWNOX, ROVANTA, dan LUNELLE. PRESSORA, NEWSTERA, EDITORA, dan INFONARA merupakan konsep kategori News & Media terpisah dan tidak dicampurkan ke pemilih Personal Blog.
+  3. Pemilik dapat menyesuaikan warna aksen, tipografi, urutan blok, dan visibilitas Profile Blocks. Menyembunyikan blok tidak menghapus konten.
+  4. Blog adalah permukaan publikasi, bukan akun sosial tersendiri. Komentar dan balasan memakai identitas akun personal PLUITS yang menulisnya.
+  5. Menerbitkan artikel tidak menghasilkan notifikasi otomatis kepada pengikut. Notifikasi komentar/balasan merupakan preferensi terpisah dan tidak boleh disamakan dengan notifikasi publikasi.
+  6. Konten privat tidak boleh muncul pada rute publik, feed pencarian publik, sitemap, media publik, atau preview berbagi.
+- **Batas:** lima template awal berlaku untuk Personal Blog. News & Media memerlukan identitas organisasi terverifikasi, role editor/delegasi, dan aturan moderasi tersendiri sebelum diaktifkan. Reorder dan theme customization tidak mengubah skema isi artikel.
+- **Status implementasi:** migration template/layout dan blog_comments telah diterapkan pada Supabase production; frontend berada pada branch feat/blog-templates-and-customization. CI, deploy, dan Android UAT belum diverifikasi pada saat pencatatan.
+- **Dokumen turunan:** docs/pluits/PERSONAL-BLOG-TEMPLATE-AND-BLOCK-SPEC.md, src/pages/blog-studio/README.md, dan checkpoint CP-082.
