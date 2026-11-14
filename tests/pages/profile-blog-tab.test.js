@@ -9,6 +9,8 @@ test('Profile content tabs expose Feed, Reels, Trip and Blog with consistent SVG
   assert.match(source, /<svg viewBox="0 0 24 24" aria-hidden="true">/);
   assert.match(source, /async function profileBlogMarkup\(\)/);
   assert.match(source, /blog_public_routes/);
+  assert.match(source, /data-profile-username=/);
+  assert.match(source, /bindProfileTabs\(\);return;/);
   assert.match(source, /Kunjungi Blog/);
   assert.doesNotMatch(source, /data-profile-tab="tagged"/);
   assert.match(css, /grid-template-columns:repeat\(4,minmax\(0,1fr\)\)!important/);
