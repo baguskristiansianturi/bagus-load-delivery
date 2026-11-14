@@ -193,6 +193,7 @@ function bind() {
     const old=editingId?(await supabase.from('blog_posts').select('cover_path,supporting_paths').eq('id',editingId).single()).data:null;
     const file=readFormFile(document.querySelector('#pl-blog-cover-input'))||selectedCoverFile;
     let coverUrl=file?URL.createObjectURL(file):'';
+    if(file&&coverUrl)previewObjectUrls.push(coverUrl);
     if(!coverUrl&&old?.cover_path)coverUrl=(await createSignedUrlMap(supabase.storage,BUCKET,[old.cover_path],3600)).get(old.cover_path)||'';
     if(!title||!description||!body||!coverUrl)return notify('Lengkapi judul, deskripsi, isi, dan cover untuk pratinjau.','error');
     if(wordCount(description)>85)return notify('Deskripsi maksimal 85 kata.','error');
