@@ -921,7 +921,7 @@ Spesifikasi lengkap, user journey, dashboard, status, URL, acceptance criteria d
 
 ### 33.12 Profil terpadu, privasi tampilan, dan satu pusat pengaturan
 - Profil personal harus memakai satu identitas dan satu struktur halaman untuk pemilik maupun pengunjung. Perbedaan hanya pada izin: pemilik memperoleh kontrol pengelolaan, sedangkan pengunjung hanya melihat bagian yang diizinkan.
-- Struktur konten profil: **Post, Reels, Trip, dan Ditandai**. Post/Reels/Trip/penandaan tidak boleh digabung menjadi satu grid tanpa konteks. Wishlist dan pintasan akun lain bukan informasi publik secara default.
+- Struktur konten profil: **Feed, Reels, Trip, dan Blog**. Setiap tab memakai ikon yang konsisten; Blog menampilkan ruang blog milik pemilik profil, bukan feed artikel global. Post/Reels/Trip/penandaan tidak boleh digabung menjadi satu grid tanpa konteks. Wishlist dan pintasan akun lain bukan informasi publik secara default.
 - Pemilik harus dapat memilih bagian profil dan item mana yang ditampilkan kepada publik, teman/pengikut, atau hanya dirinya sendiri. Setiap Post juga mempunyai audience sendiri; default audience bukan pengganti kontrol per konten.
 - Konten Draft selalu privat dan hanya dapat dikelola pemilik. Draft tidak pernah menjadi tab publik.
 - Semua pengaturan akun, privasi, profil, notifikasi, dan preferensi harus mempunyai **satu pintu masuk utama**, yaitu menu titik tiga/Pusat Pengaturan. Hindari tautan pengaturan duplikat di halaman lain; subhalaman pengaturan harus menyediakan jalan kembali ke Pusat Pengaturan.
@@ -956,3 +956,14 @@ Spesifikasi lengkap, user journey, dashboard, status, URL, acceptance criteria d
 - Ranking live harus berasal dari data nyata. Renderer Top 10 yang berisi demo-only content tidak boleh ditampilkan sebagai ranking live.
 - Status implementasi: Circle layout, Story carousel publik dari akun yang diikuti, filter sticky, rekomendasi orang, dan Jelajah mixed public feed IMPLEMENTED/DEPLOYED. Social-proof cards, Story receipts/reactions/comments/deep links, area Top 10, event ranking, AI moderation pipeline, business request center, dan feedback center NOT IMPLEMENTED.
 - Rujukan teknis: docs/pluits/CIRCLE-AND-JELAJAH-EXPERIENCE-2026-11-12.md.
+
+
+### 33.15 Blog publik sebagai landing page personal dan ruang publikasi
+- Setiap ruang Blog memiliki halaman publik yang dapat dibagikan sebagai landing page milik penulis. URL tetap berada pada namespace Pluits `/@username/blog/slug`; tidak membuat akun, aplikasi, atau domain baru untuk setiap blog.
+- Halaman utama Blog memiliki hero editorial dengan nama dan deskripsi Blog serta artikel pilihan (atau otomatis artikel publik terbaru), carousel kategori, identitas/profil penulis, dan daftar artikel.
+- Pemilik dapat mengatur urutan artikel publik (terbaru atau terlama) dan memilih artikel utama untuk hero. Default adalah artikel publik terbaru.
+- Halaman artikel menampilkan cover, judul, ringkasan, tanggal publikasi, identitas dan tautan profil penulis, tombol berbagi, artikel terkait dalam kategori yang sama, rekomendasi artikel lain, dan kredit Pluits yang terlihat secara elegan.
+- Blog dapat digunakan untuk diary, cerita personal, puisi, pengalaman, portofolio tulisan, edukasi, maupun komunikasi bisnis pribadi. Identitas blog tetap terhubung dengan akun dan profil penulis Pluits.
+- Pengunjung dapat membaca konten publik tanpa login. Tindakan sosial seperti follow tetap mengikuti aturan login dan privasi akun. Draft dan tulisan privat tidak pernah ditampilkan pada halaman publik.
+- Halaman harus mobile-first, cepat dibaca, memiliki kategori horizontal yang dapat digeser, gambar cover dengan rasio konsisten, serta navigasi kembali ke profil penulis.
+- Status implementasi: struktur halaman dan pengaturan presentasi sedang dikerjakan pada PR #23; migration presentasi dan UAT masih menunggu verifikasi/approval.
