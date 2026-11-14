@@ -5352,7 +5352,7 @@ body{font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.45;-web
 
 
 /* PLUITS product spaces — unified responsive foundation */
-.pl-trip,.pl-market{min-height:100vh;background:#f7f8fa;color:#172033;font-family:Inter,system-ui,-apple-system,sans-serif}
+.pl-trip,.pl-market{--pl-layout-content-max:1180px;--pl-layout-mobile-gutter:clamp(16px,4vw,28px);min-height:100vh;background:#f7f8fa;color:#172033;font-family:Inter,system-ui,-apple-system,sans-serif}
 .pl-trip-head,.pl-market-head{position:sticky;top:0;z-index:30;display:flex;align-items:center;justify-content:space-between;gap:22px;padding:14px clamp(16px,4vw,56px);background:rgba(255,255,255,.96);border-bottom:1px solid #e6e9ef;backdrop-filter:blur(14px)}
 .pl-trip-brand,.pl-market-brand{font-weight:850;letter-spacing:.12em;color:#172033;text-decoration:none;white-space:nowrap}
 .pl-trip-brand span,.pl-market-brand span{display:block;font-size:9px;letter-spacing:.2em;color:#63728a;margin-top:3px}
@@ -5367,7 +5367,7 @@ body{font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.45;-web
 .pl-trip-primary,.pl-market-hero>a{display:inline-flex;gap:18px;align-items:center;margin-top:16px;padding:13px 18px;background:#172f52;color:white;text-decoration:none;border-radius:999px;font-weight:700;font-size:13px}
 .pl-trip-hero-art{min-height:240px;border-radius:24px;background:linear-gradient(145deg,#19385e,#7f9bb9);color:white;padding:28px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 18px 45px #1c35551c}
 .pl-trip-hero-art span{font-size:12px;letter-spacing:.3em}.pl-trip-hero-art i{font-style:normal;font-size:54px;align-self:flex-end}.pl-trip-hero-art b{font-size:23px;line-height:1.25}
-.pl-trip-content,.pl-market-content{max-width:1180px;margin:0 auto;padding:38px clamp(16px,4vw,28px) 72px}
+.pl-trip-content,.pl-market-content{max-width:var(--pl-layout-content-max,1180px);margin:0 auto;padding:38px var(--pl-layout-mobile-gutter,16px) 72px}
 .pl-trip-section-head,.pl-market-title{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin:0 0 18px}
 .pl-trip-section-head h2,.pl-trip-create h2,.pl-market-title h2,.pl-market-seller-cta h2{font-size:clamp(22px,3vw,30px);letter-spacing:-.03em;margin:7px 0}
 .pl-trip-section-head p,.pl-trip-create p,.pl-market-title p,.pl-market-seller-cta p{color:#68758a;font-size:13px;line-height:1.65;margin:6px 0}
