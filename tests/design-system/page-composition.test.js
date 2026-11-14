@@ -36,3 +36,32 @@ test('every registered page uses a known canonical layout preset', () => {
   assert.ok(pageLayoutRegistry.reels);
   assert.ok(pageLayoutRegistry.inbox);
 });
+
+test('route registry covers canonical route families and labels legacy migrations honestly', () => {
+  const required = [
+    'publicHome','signedInFeed','profile','accountAuth','accountSettings','accountSections',
+    'accountPost','accountUser','reels','inbox','inboxSettings','marketplace','storefront',
+    'marketProduct','marketCart','checkout','marketOrders','marketOrder','seller','directory',
+    'placeDetail','placeClaim','trip','tripItinerary','discoverySearch','blog','publicBlog',
+    'blogStudio','help','legal','misc','adminModeration'
+  ];
+  for (const key of required) assert.ok(pageLayoutRegistry[key], 'missing route layout: '+key);
+  for (const [key,page] of Object.entries(pageLayoutRegistry)) {
+    assert.ok(page.owner, key+' must declare an owner');
+    assert.ok(page.route, key+' must declare a canonical route');
+    assert.ok(['complete','partial','legacy-markup'].includes(page.migration), key+' must declare migration status');
+  }
+  assert.deepEqual(pageLayoutRegistry.signedInFeed.migration,'legacy-markup');
+});
+
+test('search bar registry preserves distinct feature ownership', () => {
+  const expected = {
+    'home-search-bar':'public-home',
+    'social-search-bar':'social',
+    'reels-search-bar':'reels',
+    'marketplace-search-bar':'marketplace',
+    'seller-search-bar':'seller',
+    'directory-search-bar':'directory'
+  };
+  for (const [id,owner] of Object.entries(expected)) assert.equal(searchBarRegistry[id]?.owner,owner);
+});
