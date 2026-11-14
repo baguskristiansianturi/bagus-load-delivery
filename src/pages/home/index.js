@@ -1,3 +1,4 @@
+import '../../../styles/home-layout.css';
 import {bindPublicNavbar} from '../../features/public-home/navbar.js';
 import {homeNearbySection,bindHomeNearby} from '../directory/index.js';
 import {createSignedUrlMap} from '../../services/storage/signed-urls.js';
