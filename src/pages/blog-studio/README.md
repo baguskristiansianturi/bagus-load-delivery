@@ -43,3 +43,11 @@
 - `tests/features/media-upload.test.js` guards TUS destination-path fingerprints and safe fallback.
 - `tests/features/media-types.test.js` covers mobile video MIME formats and the 50 MB limit.
 - Runtime UAT still requires Android file picker, video upload, playback, refresh persistence, public/private visibility, and a second account.
+
+
+## Draft autosave and Blog Saya navigation
+- Editor auto-saves draft changes to the authenticated owner's `blog_posts` row after a short typing pause and attempts a final save when the page becomes hidden or is unloaded.
+- Drafts may be saved before a cover is selected. An unfinished untitled draft uses the internal placeholder title `Draft tanpa judul`; the editor displays an empty title field when reopened. Published posts still require a title and cover.
+- The owner Blog Saya dashboard has a hero, management settings, published article cards ordered by publication date, and a separate Draft tab ordered by recent edits.
+- The hero's `Blog Saya` link opens the public blog homepage when the blog is public; private blogs remain owner-managed only.
+- The auto-save indicator is the visible source of truth. If it reports an error, the draft has not been confirmed saved.

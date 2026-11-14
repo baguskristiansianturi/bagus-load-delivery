@@ -123,3 +123,17 @@
 .pl-blog-reading-body>div{margin:0 0 10px}
 .pl-blog-reading-body figure{max-width:100%;overflow:hidden}
 .pl-blog-reading-body img,.pl-blog-reading-body video{height:auto}
+
+/* Blog Saya: editorial hero and responsive post cards */
+.pl-blog-hero{position:relative;isolation:isolate;overflow:hidden;min-height:220px;margin:0 0 18px;border-radius:22px;background:linear-gradient(135deg,#123b4b,#087f88 58%,#56b8b1);color:#fff;box-shadow:0 12px 32px #0b58601c}
+.pl-blog-hero-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;opacity:.28}
+.pl-blog-hero:after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,#092f3beF,#0b6675b8 65%,#0b667555)}
+.pl-blog-hero-content{position:relative;padding:24px 22px;max-width:640px}
+.pl-blog-hero-kicker{font-size:10px;font-weight:850;letter-spacing:.15em;color:#d2f5f0}
+.pl-blog-hero .pl-blog-profile-row{margin:13px 0 12px}.pl-blog-hero .pl-blog-avatar{background:#ffffff26;color:#fff;border:1px solid #ffffff55}.pl-blog-hero .pl-blog-profile-row h2{color:#fff;font-size:14px}.pl-blog-hero .pl-blog-profile-row span:not(.pl-blog-avatar){color:#d5eeed}
+.pl-blog-hero h3{font-size:25px;line-height:1.2;margin:0 0 7px;color:#fff}.pl-blog-hero p{font-size:13px;line-height:1.6;color:#e3f3f2;margin:0;max-width:520px}
+.pl-blog-hero-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:17px}.pl-blog-hero-actions .pl-blog-secondary{background:#ffffffed;color:#17535b}.pl-blog-hero-link{color:#fff;font-size:12px;font-weight:800;text-decoration:none}.pl-blog-private-label{color:#e1f2f0;font-size:12px;font-weight:700}
+.pl-blog-list{grid-template-columns:minmax(0,1fr)}
+.pl-blog-item{display:flex;flex-direction:column;min-width:0}.pl-blog-item-cover{height:auto;aspect-ratio:16/9}.pl-blog-item-copy{display:flex;flex-direction:column;align-items:flex-start;flex:1}.pl-blog-item-actions{margin-top:auto;padding-top:12px}
+.pl-blog-save-state{font-size:11px;color:#758694;padding:0 2px}.pl-blog-save-state[data-state="pending"]{color:#98711a}.pl-blog-save-state[data-state="saved"]{color:#087f88}.pl-blog-save-state[data-state="error"]{color:#b23b3b}
+@media(min-width:640px){.pl-blog-list{grid-template-columns:repeat(2,minmax(0,1fr))}.pl-blog-hero-content{padding:30px}.pl-blog-hero{min-height:250px}}

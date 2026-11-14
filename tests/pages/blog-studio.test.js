@@ -71,9 +71,10 @@ test('Blog inline media is rendered as media in preview and public articles', as
   assert.match(source, /pendingUrls\[Number\(index\)\]/);
 });
 
-test('Blog writing requires title and cover but not description or category', async () => {
+test('Blog publishing requires title and cover while drafts may omit both', async () => {
   const source = await readFile(new URL('../../src/pages/blog-studio/index.js', import.meta.url), 'utf8');
-  assert.match(source, /if\(!title\)return notify\('Judul tulisan wajib diisi\./);
+  assert.match(source, /if\(!isDraft&&!rawTitle\)/);
+  assert.match(source, /if\(!isDraft&&!coverPath\)/);
   assert.doesNotMatch(source, /name="description" id="pl-blog-description" rows="3" required/);
   assert.match(source, /pl-blog-optional-settings/);
 });
@@ -81,4 +82,32 @@ test('Blog writing requires title and cover but not description or category', as
 test('Blog formatting toolbar stays sticky for mobile writing', async () => {
   const css = await readFile(new URL('../../src/pages/blog-studio/blog-studio.css', import.meta.url), 'utf8');
   assert.match(css, /\.pl-blog-format-toolbar\{position:sticky;top:0/);
+});
+
+
+test('Blog drafts can be saved before a cover is selected and auto-save while editing', async () => {
+  const source = await readFile(new URL('../../src/pages/blog-studio/index.js', import.meta.url), 'utf8');
+  assert.match(source, /if\(!isDraft&&!coverPath\)/);
+  assert.match(source, /Draft tanpa judul/);
+  assert.match(source, /scheduleEditorAutoSave/);
+  assert.match(source, /visibilitychange/);
+  assert.match(source, /pagehide/);
+  assert.match(source, /Draft tersimpan otomatis/);
+});
+
+test('Blog Saya has an editorial hero and orders published cards by publication time', async () => {
+  const source = await readFile(new URL('../../src/pages/blog-studio/index.js', import.meta.url), 'utf8');
+  const css = await readFile(new URL('../../src/pages/blog-studio/blog-studio.css', import.meta.url), 'utf8');
+  assert.match(source, /pl-blog-hero/);
+  assert.match(source, /published_at\|\|b\.updated_at/);
+  assert.match(source, /Pengaturan Blog/);
+  assert.match(css, /\.pl-blog-hero/);
+});
+
+
+test('Blog draft migration allows null cover only for drafts and keeps published cover required', async () => {
+  const migration = await readFile(new URL('../../supabase/migrations/20261114120000_allow_blog_drafts_without_cover.sql', import.meta.url), 'utf8');
+  assert.match(migration, /alter column cover_path drop not null/);
+  assert.match(migration, /cover_path is null[\s\S]*or cover_path like owner_user_id/);
+  assert.match(migration, /status <> 'published' or cover_path is not null/);
 });

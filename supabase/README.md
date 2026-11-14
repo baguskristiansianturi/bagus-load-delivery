@@ -125,3 +125,9 @@ This is a limited anonymous smoke test only. It does not replace signed-in owner
 - Private profile fields dan media tidak dibuka kepada pending requester atau anon.
 - Frontend menyediakan profil publik berdasarkan username, follow/unfollow, permintaan follow, accept/decline, followers/following list, dan guest public profile/post view.
 - Backend rollback tests passed. GitHub Pages run #465 passed build and deployment. Real user/Android UAT and Lighthouse/runtime performance measurement remain pending. Build bundle: JS 172.94 kB (gzip 49.59 kB), CSS 258.32 kB (gzip 44.57 kB).
+
+
+### Blog draft autosave — 14 November 2026
+- Migration `20261114120000_allow_blog_drafts_without_cover.sql` allows owner-scoped draft rows to exist before a cover is selected.
+- The cover owner-path constraint still applies to every non-null cover path; published rows must have a cover.
+- Frontend autosave writes draft rows under the authenticated owner. Publishing still validates title and cover in the frontend and the database requires a cover for published rows.
