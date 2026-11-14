@@ -143,3 +143,10 @@ test('Account social pages use the shared content container while preserving pro
   assert.match(accountCss, /max-width:var\(--pl-layout-content-max,1080px\)/);
   assert.match(accountCss, /\.ua-profile-main\{max-width:935px/);
 });
+
+test('Shared application shell uses the canonical content container', () => {
+  const uiSource = readFileSync(new URL('../../src/app/ui.js', import.meta.url), 'utf8');
+  const appCss = readFileSync(new URL('../../src/style.css', import.meta.url), 'utf8');
+  assert.match(uiSource, /page-main plds-container/);
+  assert.match(appCss, /--pl-layout-content-max:var\(--container,1200px\)/);
+});
