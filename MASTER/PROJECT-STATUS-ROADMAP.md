@@ -1308,3 +1308,15 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - **CI:** run #1863, head `9d279fa3a75e570a86fc5098b25f28ddf51b994f`, 65/65 tests passed, Vite build passed, production output verification passed, Pages artifact uploaded; PR deploy is skipped by workflow policy.
 - **Status:** IMPLEMENTED IN PR / AUTOMATED TESTED / NOT MERGED / NOT DEPLOYED / MIGRATION NOT APPLIED / ANDROID UAT NOT TESTED.
 - **Next:** review migration dependency and PR diff; apply migration only after explicit approval, then merge/release and verify Pages deploy plus Android UAT.
+
+
+## CP-082 — Personal Blog template studio, Profile Blocks, and account comments (14 November 2026)
+- **Branch:** feat/blog-templates-and-customization.
+- **Founder-approved scope:** five personal blog templates (AURELIA, STAVERO, BREWNOX, ROVANTA, LUNELLE), owner-controlled accent/font, block visibility and order, public gallery/About Me blocks, and comments/replies authored by PLUITS personal accounts.
+- **Database IMPLEMENTED:** additive migration 20261114142328_blog_template_and_layout_customization adds template_key, theme_settings, and layout_settings to blog_profiles; migration 20261114142641_blog_personal_account_comments adds blog_comments with RLS for public published posts, authenticated personal-account inserts, and author/blog-owner deletes. No publication notification trigger was created.
+- **Performance:** added index on blog_profiles.featured_post_id after advisor identified the missing FK index.
+- **Frontend IMPLEMENTED IN BRANCH:** Blog Studio adds a Tampilan tab with five templates, accent color, typography, block visibility and reorder controls. Public blog reader applies the selected template, renders block order/visibility, Photo Gallery, About Me, and personal-account comments/replies.
+- **Privacy boundary:** public comments are readable only on published public articles in public blogs. Insert requires auth.uid() to match author_user_id. Delete is allowed to the comment author or blog owner. Private/draft posts do not satisfy comment policies.
+- **Tests added:** tests/pages/blog-theme.test.js and tests/pages/blog-comments.test.js. Existing blog studio tests remain part of npm test.
+- **Status:** DATABASE MIGRATIONS APPLIED / FRONTEND IMPLEMENTED IN FEATURE BRANCH / CI NOT YET VERIFIED / PAGES NOT DEPLOYED / ANDROID UAT NOT TESTED / FOUNDER ACCEPTANCE PENDING.
+- **Next:** open PR, inspect full CI output and fix any failures; merge only after CI success; verify main push workflow and live Pages URL; then founder tests template switch/persistence, block order, comments/replies, delete permissions, and public/private isolation on Android.
