@@ -53,3 +53,11 @@ test('Blog editor does not impose a fixed 15-item supporting media limit', async
   assert.doesNotMatch(source, /Maksimal 15 media/);
   assert.match(source, /Sisipkan foto atau video/);
 });
+
+test('Blog cover has adjustable client-side crop controls', async () => {
+  const source = await readFile(new URL('../../src/pages/blog-studio/index.js', import.meta.url), 'utf8');
+  assert.match(source, /pl-blog-crop-x/);
+  assert.match(source, /pl-blog-crop-y/);
+  assert.match(source, /apply-cover-crop/);
+  assert.match(source, /canvas\.toBlob/);
+});
