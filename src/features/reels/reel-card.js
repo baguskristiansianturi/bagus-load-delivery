@@ -2,7 +2,7 @@ export function renderReelCard(p,{user,avatar,esc,socialIcon}){
  const owner=p.owner||{},media=p.media?.[0];if(!media||media.media_type!=='video'||!media.url)return '';
  const href='#/@'+encodeURIComponent(owner.username||'');
  const menu=p.user_id===user?.id
-  ? `<button type="button" data-action="edit">${socialIcon('edit',{size:16})}<span>Edit Reel</span></button><button type="button" data-action="delete-post"><span>×</span><span>Hapus Reel</span></button>`
+  ? `<button type="button" data-action="delete-post"><span>×</span><span>Hapus Reel</span></button>`
   : `<button type="button" data-action="share">${socialIcon('send',{size:16})}<span>Bagikan Reel</span></button><button type="button" data-action="report">${socialIcon('shield',{size:16})}<span>Laporkan Reel</span></button>`;
  const actions=user
   ? `<div class="ua-reel-actions"><button type="button" data-action="like" class="${p.liked?'is-liked':''}" aria-label="Sukai Reel">${socialIcon('pluits-like',{size:26})}<b>${Number(p.likes||0)}</b></button><button type="button" data-action="comments" aria-label="Komentar Reel">${socialIcon('pluits-comment',{size:25})}<b>${Number(p.comments||0)}</b></button><button type="button" data-action="share" aria-label="Bagikan Reel">${socialIcon('pluits-share',{size:24})}<b>Bagikan</b></button><button type="button" data-action="save" class="${p.saved?'is-saved':''}" aria-label="Simpan Reel">${socialIcon('pluits-mark',{size:24})}<b>Simpan</b></button></div>`
