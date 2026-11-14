@@ -112,3 +112,14 @@
 .pl-blog-cover-adjust input[type=range]{width:100%;accent-color:#087f88}
 .pl-blog-cover-adjust small{color:#82909e;font-size:11px;line-height:1.45}
 .pl-blog-cover-picker img{aspect-ratio:16/9;height:auto;max-height:240px;object-fit:cover}
+
+/* Keep writing tools within reach while composing on mobile */
+.pl-blog-optional-settings{border:1px solid #e5ebef;border-radius:12px;background:#fbfcfd;padding:11px 13px}
+.pl-blog-optional-settings summary{color:#536477;font-size:12px;font-weight:750;cursor:pointer;list-style:none}
+.pl-blog-optional-settings summary::-webkit-details-marker{display:none}
+.pl-blog-optional-settings[open]{display:grid;gap:15px}
+.pl-blog-format-toolbar{position:sticky;top:0;z-index:25;box-shadow:0 4px 10px #1b33400d;padding-top:9px;padding-bottom:9px;isolation:isolate}
+.pl-blog-rich-editor{min-height:260px;scroll-margin-top:64px}
+.pl-blog-reading-body>div{margin:0 0 10px}
+.pl-blog-reading-body figure{max-width:100%;overflow:hidden}
+.pl-blog-reading-body img,.pl-blog-reading-body video{height:auto}
