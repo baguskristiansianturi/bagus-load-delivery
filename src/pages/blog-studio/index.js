@@ -117,9 +117,10 @@ function editorPage(item = null) {
   selectedCoverFile = null;
   if (item?.cover_url) coverObjectUrl = item.cover_url;
   const supporting = item?.supporting_urls || [];
-  pendingSupportingFiles = [];
   supportingObjectUrls = supporting.map(media => media.url).filter(Boolean);
-  const images = supporting.map((media, index) => '<div class="pl-blog-support-tile">' + (isVideoPath(media.path) ? '<video src="' + media.url + '" controls playsinline preload="metadata"></video>' : '<img src="' + media.url + '" alt="Media pendukung ' + (index + 1) + '">') + '</div>').join('');
+  const existingMediaMarkup=supporting.map((media,index)=>'<div class="pl-blog-support-tile">'+(isVideoPath(media.path)?'<video src="'+media.url+'" controls playsinline preload="metadata"></video>':'<img src="'+media.url+'" alt="Media pendukung '+(index+1)+'">')+'</div>');
+  const pendingMediaMarkup=pendingSupportingFiles.map((file,index)=>{const url=URL.createObjectURL(file);supportingObjectUrls.push(url);const mime=getMediaMime(file);return '<div class="pl-blog-support-tile">'+(mime.startsWith('video/')?'<video src="'+url+'" controls playsinline preload="metadata"></video>':'<img src="'+url+'" alt="Media pendukung '+(existingMediaMarkup.length+index+1)+'">')+'</div>';});
+  const images=[...existingMediaMarkup,...pendingMediaMarkup].join('');
   return header(item ? 'Lanjutkan tulisan' : 'Tulis Blog', 'Buat cerita dengan nyaman dari handphone.') +
     '<form id="pl-blog-editor-form" class="pl-blog-editor-form">' +
     '<label class="pl-blog-field">Judul tulisan<input name="title" maxlength="140" required value="' + esc(item?.title || '') + '" placeholder="Tuliskan judul blog kamu"></label>' + '<label class="pl-blog-field">Kategori<select name="category_id"><option value="">Tanpa kategori</option>' + categories.map(c => '<option value="' + c.id + '" ' + (item?.category_id===c.id?'selected':'') + '>' + esc(c.name) + '</option>').join('') + '</select></label>' + '<label class="pl-blog-field">Visibilitas tulisan<select name="visibility"><option value="public" ' + ((item?.visibility || blogProfile?.default_visibility || 'public') === 'public' ? 'selected' : '') + '>Publik</option><option value="private" ' + (item?.visibility === 'private' || (!item && blogProfile?.default_visibility === 'private') ? 'selected' : '') + '>Privat</option></select></label>' +
