@@ -1298,3 +1298,13 @@ Mulai 8 November 2026, dokumen ini adalah satu-satunya roadmap implementasi, che
 - **Production safety:** no Supabase migration has been applied; no live user data or Storage objects have been modified; no Pages production deployment has been run.
 - **Status:** IMPLEMENTED IN FEATURE BRANCH / CI NOT YET VERIFIED / SUPABASE MIGRATION PENDING REVIEW / ANDROID FOUNDER UAT NOT TESTED / NOT ACCEPTED.
 - **Next:** run PR CI and inspect every job; after CI passes, provide a private review route or a safe preview path. Apply the RLS migration only after explicit review, then test upload/playback and public/private visibility on the founder's Android device before production release.
+
+
+## CP-081 — Public Blog landing page and article reader (14 November 2026)
+- **PR:** #23 — https://github.com/baguskristiansianturi/pluits/pull/23
+- **Branch:** `feat/public-blog-landing-experience`.
+- **Scope:** public Blog homepage hero, category carousel, author profile, article list, Pluits credit; article page with publication date, author, share, related articles and recommendations; owner setting for newest/oldest order and featured hero article.
+- **Data:** migration `20261114190000_blog_public_presentation_settings.sql` adds owner-controlled presentation preferences to `blog_profiles`. Migration is staged only and has NOT been applied to production Supabase.
+- **CI:** run #1863, head `9d279fa3a75e570a86fc5098b25f28ddf51b994f`, 65/65 tests passed, Vite build passed, production output verification passed, Pages artifact uploaded; PR deploy is skipped by workflow policy.
+- **Status:** IMPLEMENTED IN PR / AUTOMATED TESTED / NOT MERGED / NOT DEPLOYED / MIGRATION NOT APPLIED / ANDROID UAT NOT TESTED.
+- **Next:** review migration dependency and PR diff; apply migration only after explicit approval, then merge/release and verify Pages deploy plus Android UAT.
