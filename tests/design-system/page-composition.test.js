@@ -6,7 +6,7 @@ import { logoRegistry, getLogoAsset } from '../../src/design-system/assets/logo-
 import { pageLayoutRegistry } from '../../src/pages/page-layout-registry.js';
 
 test('all layout presets resolve to named shared geometry', () => {
-  for (const id of ['standard','fullWidth','hybrid','reading','workspace','immersive']) assert.ok(layoutPresets[id]);
+  for (const id of ['content','standard','fullWidth','hybrid','reading','workspace','immersive']) assert.ok(layoutPresets[id]);
   assert.equal(getLayoutPreset('unknown').id,'standard');
   assert.match(layoutPresets.fullWidth.className,/full-bleed/);
   assert.equal(layoutPresets.hybrid.id,'hybrid');
@@ -31,7 +31,7 @@ test('logo variants are semantic and separately sized', () => {
 
 test('every registered page uses a known canonical layout preset', () => {
   const known = new Set(Object.values(layoutPresets).map(x=>x.id));
-  for (const page of Object.values(pageLayoutRegistry)) assert.ok(known.has(page.layout) || page.layout==='content');
+  for (const page of Object.values(pageLayoutRegistry)) assert.ok(known.has(page.layout));
   assert.ok(pageLayoutRegistry.publicHome);
   assert.ok(pageLayoutRegistry.reels);
   assert.ok(pageLayoutRegistry.inbox);
