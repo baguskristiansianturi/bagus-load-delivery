@@ -252,7 +252,7 @@ async function profilePage(preview=false,editMode=false){
    <div class="ua-profile-identity"><div class="ua-profile-name-row"><div><h2>${esc(profile.display_name)}</h2><div class="ua-username">@${esc(profile.username)}</div></div></div><p>${esc(profile.bio||'Bio belum ditambahkan.')}</p><div class="ua-location">${profile.public_city&&profile.public_province?'⌖ '+esc(profile.public_city)+', '+esc(profile.public_province):''}</div><div class="ua-profile-stats"><a href="#profile-posts"><strong>${ownPosts.length}</strong><span>Postingan</span></a><a href="#/account/followers"><strong>${followersCount.count||0}</strong><span>Pengikut</span></a><a href="#/account/following"><strong>${followingCount.count||0}</strong><span>Mengikuti</span></a></div><a class="ua-profile-story-link" href="#/account/story">＋ Tambah Story</a></div>
   </div>
  </section>
- <nav class="ua-profile-tabs" role="tablist" aria-label="Konten profil">
+ <nav class="ua-profile-tabs" role="tablist" aria-label="Konten profil" data-profile-username="${esc(profile.username)}" data-profile-owner-id="${profile.id}">
   <button class="active" type="button" role="tab" aria-selected="true" data-profile-tab="posts" title="Feed"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>Feed</span></button>
   <button type="button" role="tab" aria-selected="false" data-profile-tab="reels" title="Reels"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="m10 8 6 4-6 4z"/></svg><span>Reels</span></button>
   <button type="button" role="tab" aria-selected="false" data-profile-tab="trip" title="Trip"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg><span>Trip</span></button>
@@ -332,11 +332,13 @@ function bindProfileTabs(){
  });
 }
 async function profileBlogMarkup(){
- const username=profile?.username;
+ const nav=document.querySelector('.ua-profile-tabs');
+ const username=nav?.dataset.profileUsername||profile?.username;
+ const ownerId=nav?.dataset.profileOwnerId||profile?.id;
  if(!username)return '<div class="ua-profile-tab-empty"><strong>Blog belum tersedia</strong><p>Akun ini belum memiliki alamat Blog.</p></div>';
  const {data:route,error:routeError}=await supabase.from('blog_public_routes').select('blog_id,slug,display_title').eq('username',username).eq('default_visibility','public').maybeSingle();
  if(routeError)throw routeError;
- if(!route)return '<div class="ua-profile-tab-empty"><span>▤</span><strong>Belum ada Blog publik</strong><p>Artikel yang diterbitkan secara publik akan tampil di sini.</p>'+(user?.id===profile?.id?'<a class="ua-outline" href="#/account/blog">Kelola Blog</a>':'')+'</div>';
+ if(!route)return '<div class="ua-profile-tab-empty"><span>▤</span><strong>Belum ada Blog publik</strong><p>Artikel yang diterbitkan secara publik akan tampil di sini.</p>'+(user?.id===ownerId?'<a class="ua-outline" href="#/account/blog">Kelola Blog</a>':'')+'</div>';
  const {data:rows,error}=await supabase.from('blog_posts').select('id,title,slug,description,cover_path,published_at,created_at').eq('blog_id',route.blog_id||route.id).eq('status','published').eq('visibility','public').order('published_at',{ascending:false}).limit(30);
  if(error)throw error;
  const posts=rows||[],urls=await createSignedUrlMap(supabase.storage,BUCKET,posts.map(row=>row.cover_path).filter(Boolean),1800);
@@ -682,8 +684,11 @@ async function publicProfilePage(username){
    </div>
   </div>
  </section>
- <nav class="ua-profile-tabs" role="tablist" aria-label="Konten profil">
-  <button class="active" type="button" role="tab" aria-selected="true" data-profile-tab="posts">▦ <span>Post</span></button><button type="button" role="tab" aria-selected="false" data-profile-tab="reels">▣ <span>Reels</span></button><button type="button" role="tab" aria-selected="false" data-profile-tab="trip">⌖ <span>Trip</span></button><button type="button" role="tab" aria-selected="false" data-profile-tab="tagged">♙ <span>Ditandai</span></button>
+ <nav class="ua-profile-tabs" role="tablist" aria-label="Konten profil" data-profile-username="${esc(target.username)}" data-profile-owner-id="${target.id}">
+  <button class="active" type="button" role="tab" aria-selected="true" data-profile-tab="posts" title="Feed"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>Feed</span></button>
+  <button type="button" role="tab" aria-selected="false" data-profile-tab="reels" title="Reels"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="m10 8 6 4-6 4z"/></svg><span>Reels</span></button>
+  <button type="button" role="tab" aria-selected="false" data-profile-tab="trip" title="Trip"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg><span>Trip</span></button>
+  <button type="button" role="tab" aria-selected="false" data-profile-tab="blog" title="Blog"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v17H6.5A2.5 2.5 0 0 1 4 17.5z"/><path d="M4 17.5A2.5 2.5 0 0 1 6.5 15H20M8 7h8M8 10h8"/></svg><span>Blog</span></button>
  </nav>
  <section id="ua-profile-tab-content" class="ua-profile-tab-content" role="tabpanel">${postsMarkup}</section>`;
 }
@@ -887,7 +892,7 @@ async function mountAccount(section='profile',parameter=''){
   user=session?.user||null;
   if(!user&&(section==='user'||section==='post')){
    const page=section==='user'?await publicProfilePage(parameter):await postDetailPage(parameter||location.hash.split('/')[3]||'');if(!isCurrent())return;
-   document.querySelector('#app').innerHTML=frame(page,'explore');return;
+   document.querySelector('#app').innerHTML=frame(page,'explore');bindProfileTabs();return;
   }
   if(['auth','register','login'].includes(section)){authScreen(section==='auth'?parameter:section);return;}
   if(!user){authScreen('login');return;}
