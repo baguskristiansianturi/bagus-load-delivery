@@ -102,3 +102,11 @@ test('GeoDirectory adopts the shared content container without changing its map 
   assert.match(pageSource, /pl-directory-main plds-container/);
   assert.match(pageCss, /--pl-layout-content-max:1120px/);
 });
+
+test('Marketplace content sections use the shared content container', () => {
+  const pageSource = readFileSync(new URL('../../src/pages/marketplace/index.js', import.meta.url), 'utf8');
+  const appCss = readFileSync(new URL('../../src/style.css', import.meta.url), 'utf8');
+  assert.match(pageSource, /pl-market-content plds-container/);
+  assert.match(appCss, /--pl-layout-content-max:1180px/);
+  assert.match(appCss, /max-width:var\(--pl-layout-content-max,1180px\)/);
+});
