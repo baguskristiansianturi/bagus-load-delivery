@@ -208,7 +208,7 @@ function bind() {
   });
   document.querySelector('#pl-blog-editor-form')?.addEventListener('submit', event => { event.preventDefault(); persistEditor('published').catch(showError); });
   const bodyEditor=document.querySelector('#pl-blog-body-editor');
-  document.querySelectorAll('[data-format]').forEach(button=>button.addEventListener('click',()=>{bodyEditor?.focus();const command=button.dataset.format;if(command==='formatBlock')document.execCommand(command,false,button.dataset.value||'blockquote');else document.execCommand(command,false,null);bodyEditor?.dispatchEvent(new Event('input',{bubbles:true}));}));
+  document.querySelectorAll('[data-format]').forEach(button=>{button.addEventListener('pointerdown',event=>{const selection=window.getSelection();if(selection?.rangeCount&&bodyEditor?.contains(selection.anchorNode))savedBodyRange=selection.getRangeAt(0).cloneRange();event.preventDefault();});button.addEventListener('click',()=>{bodyEditor?.focus();if(savedBodyRange){const selection=window.getSelection();selection.removeAllRanges();selection.addRange(savedBodyRange);}const command=button.dataset.format;if(command==='formatBlock')document.execCommand(command,false,button.dataset.value||'blockquote');else document.execCommand(command,false,null);bodyEditor?.dispatchEvent(new Event('input',{bubbles:true}));});});
   document.querySelector('[data-action="insert-caption"]')?.addEventListener('click',()=>{bodyEditor?.focus();document.execCommand('insertHTML',false,'<figure><figcaption>Tulis caption gambar di sini…</figcaption></figure>');bodyEditor?.dispatchEvent(new Event('input',{bubbles:true}));});
   bodyEditor?.addEventListener('input',()=>{const count=wordCount(bodyEditor.innerHTML),output=document.querySelector('#pl-blog-body-word-count');if(output)output.textContent=String(count);output?.classList.toggle('is-over',count>MAX_BODY_WORDS);});
   document.querySelector('[data-action="add-category-inline"]')?.addEventListener('click',async()=>{const name=window.prompt('Nama kategori baru:');if(!name?.trim())return;const {error}=await supabase.from('blog_categories').insert({blog_id:blogProfile.id,owner_user_id:activeUser.id,name:name.trim().slice(0,40)});if(error)throw error;await loadBlogProfile();await render();notify('Kategori berhasil dibuat.');});
@@ -289,7 +289,7 @@ function bind() {
     }
   });
   document.querySelector('#pl-blog-body-editor')?.addEventListener('keyup',()=>{const selection=window.getSelection();if(selection?.rangeCount)savedBodyRange=selection.getRangeAt(0).cloneRange();});
-  document.querySelector('#pl-blog-support-input')?.addEventListener('click',()=>{const selection=window.getSelection();if(selection?.rangeCount)savedBodyRange=selection.getRangeAt(0).cloneRange();});
+  document.querySelector('#pl-blog-support-input')?.addEventListener('pointerdown',()=>{const selection=window.getSelection();if(selection?.rangeCount&&bodyEditor?.contains(selection.anchorNode))savedBodyRange=selection.getRangeAt(0).cloneRange();});
   document.querySelector('#pl-blog-support-input')?.addEventListener('change', event => {
     const files = Array.from(event.target.files || []);
     const existingCount=(window.__plBlogEditingItem?.supporting_paths||[]).length;
