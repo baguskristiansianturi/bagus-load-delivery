@@ -60,3 +60,17 @@
 - Preferences are stored on the existing blog profile row through migration `20261114190000_blog_public_presentation_settings.sql`; this migration must be applied before the new settings UI can save successfully.
 - Categories are read from the existing `blog_categories` table and filter the public article list without a page reload.
 - The public reader only queries published, public posts and verifies that the blog profile owner matches the public profile username.
+
+
+## Template and Profile Block customization
+- src/features/blog-theme/index.js owns the five Personal Blog template presets, presentation normalization, safe theme form parsing, and public rendering application.
+- src/features/blog-theme/blog-theme.css owns the customization workspace and public theme/block presentation styles.
+- Blog Studio imports this feature; it remains the route/page owner and persists template_key, theme_settings, and layout_settings to blog_profiles.
+- Profile Blocks: profile_header, featured_story, recent_stories, categories, photo_gallery, about_me, footer. Owners can toggle visibility and reorder the blocks; hiding a block never deletes its content.
+- The News & Media template concepts are intentionally not shown in this Personal Blog selector.
+
+## Blog comments
+- public.blog_comments stores article comments and one-level replies.
+- Comment identity always comes from the authenticated PLUITS personal account (author_user_id); there is no separate blog commenter identity.
+- Public read is limited by RLS to visible comments on published public posts in public blogs. Insert requires the signed-in user's ID. Author or blog owner may delete.
+- Publishing a blog article does not emit follower-style notifications. Comment/reply notifications, moderation reports, and organization editor identity remain separate follow-up modules.
