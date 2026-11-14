@@ -134,3 +134,12 @@ test('Discovery and Help pages adopt shared content containers', () => {
   assert.match(help, /pl-help-page[^"]* plds-container/);
   assert.match(helpCss, /--pl-layout-content-max:1060px/);
 });
+
+test('Account social pages use the shared content container while preserving profile variants', () => {
+  const pageSource = readFileSync(new URL('../../src/pages/account/index.js', import.meta.url), 'utf8');
+  const accountCss = readFileSync(new URL('../../src/pages/account/user-account.css', import.meta.url), 'utf8');
+  assert.match(pageSource, /ua-main plds-container/);
+  assert.match(accountCss, /--pl-layout-content-max:1080px/);
+  assert.match(accountCss, /max-width:var\(--pl-layout-content-max,1080px\)/);
+  assert.match(accountCss, /\.ua-profile-main\{max-width:935px/);
+});
