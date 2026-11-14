@@ -1,6 +1,6 @@
 # PLUITS Personal Blog — Template & Profile Block Implementation
 
-**Status:** schema deployed; frontend editor implementation in progress; Android UAT not yet performed.
+**Status:** schema deployed; frontend implementation in feature branch; CI/deploy and Android UAT pending.
 
 ## Approved product rules
 - Blog is a personal publishing surface inside PLUITS, not a separate social network.
@@ -64,14 +64,14 @@ RLS remains the existing blog-profile owner/public-read boundary. Presentation p
 
 ## Delivery acceptance
 - [x] Additive schema migration applied to Supabase; existing rows receive safe defaults.
-- [ ] Template selector saves and reloads from Supabase.
-- [ ] Theme accent/font saves and renders on public blog.
-- [ ] Profile block visibility saves and renders on public blog.
-- [ ] Reordering blocks is implemented.
-- [ ] Add gallery and About Me blocks to the public reader.
+- [x] Template selector and presentation settings are wired to Supabase in the feature branch.
+- [x] Theme accent/font save and public renderer applies the selected preset.
+- [x] Profile block visibility saves and public renderer applies it.
+- [x] Profile block order controls save and are applied by the public renderer.
+- [x] Photo Gallery and About Me blocks are rendered from public profile/article data.
 - [ ] Add a single Share action with crawler-readable Open Graph metadata.
-- [ ] Blog comments use PLUITS personal accounts and existing moderation/reporting rules.
-- [ ] No publication notifications are emitted.
+- [x] Blog comments and one-level replies use PLUITS personal account identity; author/blog owner can delete. Reporting and notification preferences remain later work.
+- [x] No publication notification trigger is created by the blog-comments migration.
 - [ ] Public/private authorization tested with owner, second account, and anonymous visitor.
-- [ ] Automated tests and production build pass.
+- [ ] Automated tests and production build pass in CI.
 - [ ] Android UAT and founder acceptance recorded.
