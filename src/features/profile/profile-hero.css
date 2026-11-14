@@ -3,7 +3,27 @@
 .ua-profile-main *{box-sizing:border-box}
 .ua-profile-main{width:min(935px,100%);min-width:0;margin:18px auto 42px!important;padding:0!important}
 .ua-profile-main .ua-profile-card{width:100%;min-width:0;margin:0 0 16px!important;overflow:visible!important;border:0!important;border-radius:0!important;box-shadow:none!important;background:#fff!important}
-.ua-profile-main .ua-cover{display:none!important}
+.ua-profile-main .ua-cover{
+ display:block!important;
+ position:relative;
+ width:100%;
+ height:clamp(150px,24vw,250px);
+ margin:0!important;
+ border:0!important;
+ border-radius:0!important;
+ box-shadow:none!important;
+ background-color:#eef2f4;
+ background-size:cover;
+ background-position:center;
+ overflow:hidden;
+}
+.ua-profile-main .ua-cover::after{
+ content:"";
+ position:absolute;
+ inset:45% 0 0;
+ pointer-events:none;
+ background:linear-gradient(180deg,transparent 0%,var(--ua-profile-surface,#fff) 100%);
+}
 .ua-profile-main .ua-profile-content{
  display:grid!important;
  grid-template-columns:112px minmax(0,1fr)!important;

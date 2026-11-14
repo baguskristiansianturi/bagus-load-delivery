@@ -2014,3 +2014,14 @@
   .ua-social-home .ua-circle-section-heading{margin-left:11px!important;margin-right:11px!important}
   .ua-social-home .ua-circle-story-track{padding-left:11px!important;padding-right:11px!important}
 }
+
+/* Direct transition from Circle content filters into the immersive Reels viewer. */
+.ua-social-app .ua-content-tabs .ua-reels-open{
+ display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;
+ min-height:34px;padding:0 11px;border:1px solid #dce9e8;border-radius:999px;
+ background:#f5fbfa;color:#167f79;text-decoration:none;font-size:11px;font-weight:700;
+ white-space:nowrap;
+}
+@media(max-width:760px){
+ .ua-social-app .ua-content-tabs .ua-reels-open{min-height:32px;padding-inline:9px;font-size:10px}
+}

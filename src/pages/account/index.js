@@ -4,6 +4,7 @@ import {socialIcon} from '../../components/common/social-icons.js';
 import {renderBrandLogo} from '../../components/common/brand.js';
 import {renderPostActions,renderPostCard} from '../../features/posts/index.js';
 import '../../features/posts/post-card.css';
+import '../../features/posts/comments.css';
 import {renderTopTenSection} from '../../features/discovery/top-ten-cards.js';
 import {rankPeopleRecommendations,renderPeopleRecommendations,CIRCLE_DEMO_PEOPLE} from '../../features/discovery/people-recommendations.js';
 import '../../features/discovery/people-recommendations.css';
@@ -512,7 +513,7 @@ async function feedPage(){
  const filters=[['all','Semua'],['latest','Terbaru'],['random','Acak']];
  const categorySelect="<label class='ua-explore-category-label'><span>Kategori</span><select data-explore-category aria-label='Pilih kategori postingan'><option value='all' "+(exploreCategory==='all'?'selected':'')+">Semua kategori</option>"+categoryOptions.map(topic=>"<option value='"+esc(topic.slug)+"' "+(exploreCategory===String(topic.slug).toLowerCase()?'selected':'')+">"+esc(topic.name)+"</option>").join('')+"</select></label>";
  const contentTabs=[['all','Semua'],['reel','Reel'],['live','Live'],['blog','Blog']];
- const typeNav="<nav class='ua-content-tabs' aria-label='Jenis konten'>"+contentTabs.map(([key,label])=>"<button type='button' data-content-type='"+key+"' class='"+(exploreContentType===key?'is-active':'')+"' aria-pressed='"+(exploreContentType===key)+"'>"+label+"</button>").join('')+"<button type='button' class='ua-feed-refresh' data-feed-refresh aria-label='Muat ulang postingan' title='Muat ulang'>↻</button></nav>";
+ const typeNav="<nav class='ua-content-tabs' aria-label='Jenis konten'>"+contentTabs.map(([key,label])=>"<button type='button' data-content-type='"+key+"' class='"+(exploreContentType===key?'is-active':'')+"' aria-pressed='"+(exploreContentType===key)+"'>"+label+"</button>").join('')+"<a class='ua-reels-open' href='#/account/reels' aria-label='Buka pemutar Reels'>Buka Reels ↗</a><button type='button' class='ua-feed-refresh' data-feed-refresh aria-label='Muat ulang postingan' title='Muat ulang'>↻</button></nav>";
  // .ua-explore-filters is intentionally omitted: content type tabs are the only feed navigation.
  // Circle Explore is discovery-only; omit the .ua-home-compose-prompt creation entry point.
   const filterNav="<div class='ua-explore-toolbar' aria-label='Navigasi konten Circle'>"+typeNav+"</div>";
@@ -565,7 +566,7 @@ async function reelsPage(initialPostId=''){
   return score(b)-score(a)||new Date(b.created_at)-new Date(a.created_at);
  });
  const cards=sorted.map(post=>renderReelCard(post,{user,avatar,socialIcon,esc})).filter(Boolean).join('');
- return `<section class="ua-reels-viewer" aria-label="Pemutar Reels"><div class="ua-reels-feed">${cards||'<div class="ua-reels-empty"><a class="ua-reel-back" href="#/account/explore" aria-label="Kembali">‹</a><strong>Belum ada Reel publik.</strong><p>Video yang dipublikasikan sebagai Reel akan muncul di sini.</p><a href="#/account/reel">＋ Buat Reel</a></div>'}</div></section>`;
+ return `<section class="ua-reels-viewer" aria-label="Pemutar Reels"><form class="ua-reel-discovery-search" data-reel-search-form role="search" aria-label="Cari video Reels"><span aria-hidden="true">${socialIcon('search',{size:17})}</span><input name="query" type="search" autocomplete="off" placeholder="Cari video, orang, atau topik…" aria-label="Cari video, orang, atau topik"><button type="reset" data-reel-search-clear aria-label="Hapus pencarian">×</button></form><div class="ua-reels-feed">${cards||'<div class="ua-reels-empty"><a class="ua-reel-back" href="#/account/explore" aria-label="Kembali">‹</a><strong>Belum ada Reel publik.</strong><p>Video yang dipublikasikan sebagai Reel akan muncul di sini.</p><a href="#/account/reel">＋ Buat Reel</a></div>'}</div></section>`;
 }
 function postCard(p){return renderPostCard(p,{user,avatar,socialIcon,renderActions:renderPostActions,esc});}
 
@@ -1445,6 +1446,26 @@ function bindExploreFilters(){
 }
 function bindReelsPlayback(){
  const feed=document.querySelector('.ua-reels-feed');if(!feed)return;
+ const searchForm=document.querySelector('[data-reel-search-form]');
+ const searchInput=searchForm?.querySelector('input[name="query"]');
+ const applyReelSearch=()=>{
+  const query=String(searchInput?.value||'').trim().toLocaleLowerCase('id');
+  const cards=[...feed.querySelectorAll('[data-reel-post-id]')];
+  let visible=0;
+  cards.forEach(card=>{
+   const matches=!query||card.textContent.toLocaleLowerCase('id').includes(query);
+   card.hidden=!matches;if(matches)visible++;
+  });
+  let empty=feed.querySelector('.ua-reel-search-empty');
+  if(!visible&&query){
+   if(!empty){empty=document.createElement('div');empty.className='ua-reel-search-empty';empty.setAttribute('role','status');feed.append(empty);}
+   empty.textContent='Belum ada video, orang, atau topik yang cocok. Coba kata kunci lain.';
+  }else empty?.remove();
+  feed.scrollTo({top:0,behavior:'smooth'});
+ };
+ searchForm?.addEventListener('submit',event=>{event.preventDefault();applyReelSearch();});
+ searchForm?.addEventListener('reset',()=>{requestAnimationFrame(()=>{applyReelSearch();searchInput?.focus();});});
+ searchInput?.addEventListener('input',applyReelSearch);
  feed.querySelectorAll('[data-reel-toggle]').forEach(button=>button.addEventListener('click',()=>{
   const video=button.closest('.ua-reel-stage')?.querySelector('[data-reel-video]');if(!video)return;
   if(video.paused)video.play().catch(()=>{});else video.pause();
@@ -1652,7 +1673,7 @@ async function loadComments(postId,box){
   const replies=(children.get(c.id)||[]).map(x=>render(x,Math.min(depth+1,3))).join('');
   return '<article class="ua-comment-item '+(depth?'ua-comment-nested':'ua-comment-root')+'" data-comment-id="'+c.id+'" data-comment-depth="'+Math.min(depth,3)+'" style="--comment-depth:'+Math.min(depth,3)+'"><div class="ua-comment-copy"><a href="#/@'+encodeURIComponent(username)+'" class="ua-comment-author">'+esc(person?.display_name||'Pengguna Pluits')+'</a><p>'+esc(c.body)+'</p><small>'+fmtDate(c.created_at)+'</small><div class="ua-comment-actions"><button type="button" data-comment-like="'+c.id+'" class="'+(liked?'is-liked':'')+'" aria-label="'+(liked?'Batal suka komentar':'Sukai komentar')+'">'+socialIcon("heart",{size:14})+'<span>'+(liked?'Disukai':'Suka')+'</span><b>'+count+'</b></button><button type="button" data-comment-reply="'+c.id+'">Balas</button></div><form class="ua-reply-form" data-reply-form="'+c.id+'" hidden><input name="body" maxlength="1200" required placeholder="Tulis balasan…"><button type="submit">Kirim</button></form></div>'+replies+'</article>';
  };
- box.innerHTML='<div class="ua-comment-thread">'+(children.get('root')||[]).map(c=>render(c)).join('')+'</div>'+'<form class="ua-comment-form"><input name="body" maxlength="1200" required placeholder="Tulis komentar…"><button type="submit">Kirim</button></form>';
+ box.innerHTML='<div class="ua-comment-thread" aria-live="polite">'+(children.get('root')||[]).map(c=>render(c)).join('')+'</div>'+'<form class="ua-comment-form" aria-label="Kirim komentar"><input name="body" maxlength="1200" required autocomplete="off" aria-label="Tulis komentar" placeholder="Tulis komentar…"><button type="submit"><span>Kirim</span></button></form>';
  box.querySelectorAll('[data-comment-like]').forEach(button=>button.addEventListener('click',async()=>{
   const commentId=button.dataset.commentLike;button.disabled=true;
   const exists=likes.some(x=>x.comment_id===commentId&&x.user_id===user.id);
@@ -1664,11 +1685,21 @@ async function loadComments(postId,box){
  }));
  const submitComment=async(form,parentId=null)=>{
   const body=String(new FormData(form).get('body')||'').trim();if(!body)return;
-  const submit=form.querySelector('button');submit.disabled=true;
-  const {error:insertError}=await supabase.from('post_comments').insert({post_id:postId,user_id:user.id,body,parent_comment_id:parentId});
-  if(insertError){notify(insertError.message,'error');submit.disabled=false;}else{
-   const counter=document.querySelector('[data-post-id="'+postId+'"] [data-action="comments"] b');if(counter)counter.textContent=String(Number(counter.textContent||0)+1);
+  if(!user?.id){notify('Masuk kembali untuk mengirim komentar.','error');return;}
+  const submit=form.querySelector('button'),input=form.querySelector('[name="body"]');
+  if(submit?.disabled)return;
+  if(submit){submit.disabled=true;submit.dataset.originalLabel=submit.textContent;submit.textContent='Mengirim…';}
+  try{
+   const {error:insertError}=await supabase.from('post_comments').insert({post_id:postId,user_id:user.id,body,parent_comment_id:parentId});
+   if(insertError)throw insertError;
+   if(input)input.value='';
+   const counter=document.querySelector('[data-post-id="'+postId+'"] [data-action="comments"] b');
+   if(counter)counter.textContent=String(Number(counter.textContent||0)+1);
    await loadComments(postId,box);
+  }catch(error){
+   notify(error?.message||'Komentar belum berhasil dikirim. Periksa koneksi lalu coba lagi.','error');
+  }finally{
+   if(submit){submit.disabled=false;submit.textContent=submit.dataset.originalLabel||'Kirim';}
   }
  };
  box.querySelector('.ua-comment-form')?.addEventListener('submit',e=>{e.preventDefault();submitComment(e.currentTarget);});
