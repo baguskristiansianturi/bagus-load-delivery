@@ -18,9 +18,6 @@ alter table public.blog_profiles
   add constraint blog_profiles_layout_settings_object_check
     check (jsonb_typeof(layout_settings) = 'object');
 
-create index if not exists blog_profiles_featured_post_id_idx
-  on public.blog_profiles (featured_post_id);
-
 comment on column public.blog_profiles.template_key is 'Selected PLUITS blog template identifier; changing templates never alters content or URLs.';
 comment on column public.blog_profiles.theme_settings is 'Owner-controlled presentation preferences only; never HTML, scripts, or arbitrary CSS.';
 comment on column public.blog_profiles.layout_settings is 'Owner-selected presentation block visibility and order; it does not change content access policy.';
