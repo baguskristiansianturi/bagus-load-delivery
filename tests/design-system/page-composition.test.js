@@ -51,7 +51,7 @@ test('route registry covers canonical route families and labels legacy migration
     assert.ok(page.route, key+' must declare a canonical route');
     assert.ok(['complete','partial','legacy-markup'].includes(page.migration), key+' must declare migration status');
   }
-  assert.deepEqual(pageLayoutRegistry.signedInFeed.migration,'legacy-markup');
+  assert.deepEqual(pageLayoutRegistry.signedInFeed.migration,'partial');
 });
 
 test('search bar registry preserves distinct feature ownership', () => {
