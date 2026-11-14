@@ -5,7 +5,7 @@
 }
 .ua-social-app .pl-icon{display:inline-block;flex:none;width:var(--icon-size,20px);height:var(--icon-size,20px);vertical-align:middle}
 .ua-social-app button{font-family:inherit}
-.ua-social-app .ua-post-head{display:flex;align-items:center;gap:10px;min-width:0}
+.ua-social-app .ua-post-head{display:flex;align-items:center;gap:10px;min-width:0;padding:10px 14px}
 .ua-social-app .ua-post-head>div:nth-child(2){flex:1;min-width:0}
 .ua-social-app .ua-post-more{
  display:grid;place-items:center;width:36px;height:36px;flex:none;
@@ -80,3 +80,11 @@
 .ua-social-app .ua-profile-menu summary{display:grid;place-items:center;list-style:none;cursor:pointer}
 .ua-social-app .ua-profile-menu summary::-webkit-details-marker{display:none}
 .ua-social-app .ua-profile-menu summary .pl-icon{width:20px;height:20px}
+
+.ua-social-app .ua-post-privacy{display:grid;gap:10px;padding:12px 15px;border-top:1px solid var(--pl-color-line);background:#fafbfc}
+.ua-social-app .ua-post-privacy[hidden]{display:none}
+.ua-social-app .ua-post-privacy label{display:grid;gap:6px;font-size:11px;font-weight:700;color:#344256}
+.ua-social-app .ua-post-privacy select{width:100%;padding:9px 10px;border:1px solid #dce3e9;border-radius:8px;background:#fff;color:#263445;font:inherit;font-size:12px}
+.ua-social-app .ua-post-privacy>div{display:flex;gap:8px}
+.ua-social-app .ua-post-privacy button{padding:8px 12px;border:1px solid #dce3e9;border-radius:7px;background:#fff;color:#344256;font:inherit;font-size:11px;font-weight:700}
+.ua-social-app .ua-post-privacy [data-save-privacy]{background:#168f8c;border-color:#168f8c;color:#fff}
