@@ -1,0 +1,71 @@
+/* PLUITS Design System — layout primitives.
+ * Namespaced and opt-in: importing this file does not restyle legacy page markup.
+ * Pages adopt these classes incrementally through their canonical page owner.
+ */
+.plds-page {
+  width: 100%;
+  min-width: 0;
+  min-height: var(--pl-viewport-height, 100vh);
+  margin-inline: auto;
+  padding-inline: var(--pl-layout-mobile-gutter, 16px);
+}
+.plds-page--reading { max-width: var(--pl-layout-reading-max, 720px); }
+.plds-page--content { max-width: var(--pl-layout-content-max, 1200px); }
+.plds-page--workspace { max-width: var(--pl-layout-workspace-max, 1440px); }
+.plds-page--full-bleed { max-width: none; padding-inline: 0; }
+
+.plds-container {
+  width: 100%;
+  max-width: var(--pl-layout-content-max, 1200px);
+  min-width: 0;
+  margin-inline: auto;
+}
+.plds-container--reading { max-width: var(--pl-layout-reading-max, 720px); }
+.plds-container--wide { max-width: var(--pl-layout-workspace-max, 1440px); }
+.plds-container--full { max-width: none; }
+
+.plds-section { width: 100%; min-width: 0; padding-block: var(--pl-space-8, 32px); }
+.plds-section--compact { padding-block: var(--pl-space-6, 24px); }
+.plds-section--spacious { padding-block: var(--pl-space-12, 48px); }
+.plds-stack { display: flex; flex-direction: column; gap: var(--pl-space-4, 16px); min-width: 0; }
+.plds-stack--tight { gap: var(--pl-space-2, 8px); }
+.plds-stack--loose { gap: var(--pl-space-6, 24px); }
+.plds-cluster { display: flex; flex-wrap: wrap; align-items: center; gap: var(--pl-space-3, 12px); min-width: 0; }
+.plds-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--pl-space-4, 16px); min-width: 0; }
+.plds-grid > * { min-width: 0; }
+.plds-grid--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.plds-grid--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.plds-grid--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+.plds-page-header { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--pl-space-4, 16px); min-width: 0; margin-block-end: var(--pl-space-6, 24px); }
+.plds-page-header__copy { display: grid; gap: var(--pl-space-2, 8px); min-width: 0; }
+.plds-page-header__title { margin: 0; font-size: var(--pl-text-2xl, 28px); line-height: 1.2; font-weight: 700; letter-spacing: -.025em; }
+.plds-page-header__description { margin: 0; max-width: 68ch; color: var(--pl-color-muted, #68746f); font-size: var(--pl-text-body, 15px); line-height: 1.6; }
+.plds-surface { min-width: 0; border: 1px solid var(--pl-color-line, #e4e9e6); border-radius: var(--pl-radius-lg, 16px); background: var(--pl-color-surface, #fff); }
+.plds-divider { width: 100%; height: 1px; border: 0; background: var(--pl-color-line, #e4e9e6); }
+
+.plds-icon { display: inline-block; width: var(--pl-icon-size, 20px); height: var(--pl-icon-size, 20px); flex: 0 0 auto; vertical-align: middle; }
+.plds-icon--sm { --pl-icon-size: var(--pl-icon-sm, 18px); }
+.plds-icon--nav { --pl-icon-size: var(--pl-icon-nav, 22px); }
+.plds-icon--lg { --pl-icon-size: var(--pl-icon-lg, 24px); }
+.plds-icon-button { display: inline-grid; place-items: center; width: var(--pl-touch-target, 44px); height: var(--pl-touch-target, 44px); flex: 0 0 auto; padding: 0; border: 0; border-radius: var(--pl-radius-md, 12px); background: transparent; color: inherit; cursor: pointer; }
+.plds-icon-button:focus-visible { outline: 2px solid var(--pl-color-focus, currentColor); outline-offset: 2px; }
+
+.plds-text-xs { font-size: var(--pl-text-xs, 11px); line-height: 1.4; }
+.plds-text-sm { font-size: var(--pl-text-sm, 12px); line-height: 1.45; }
+.plds-text-md { font-size: var(--pl-text-md, 14px); line-height: 1.5; }
+.plds-text-body { font-size: var(--pl-text-body, 15px); line-height: 1.6; }
+.plds-text-lg { font-size: var(--pl-text-lg, 18px); line-height: 1.4; }
+.plds-text-xl { font-size: var(--pl-text-xl, 24px); line-height: 1.25; }
+
+@media (max-width: 760px) {
+  .plds-page-header { flex-direction: column; align-items: stretch; }
+  .plds-grid--3, .plds-grid--4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 420px) {
+  .plds-page { padding-inline: var(--pl-layout-mobile-gutter, 12px); }
+  .plds-grid { gap: var(--pl-space-3, 12px); }
+}
+@media (max-width: 340px) {
+  .plds-grid--2, .plds-grid--3, .plds-grid--4 { grid-template-columns: minmax(0, 1fr); }
+}
