@@ -86,13 +86,11 @@ async function feed(){
   });
   if(version!==requestVersion)return;
   const cards=hydrated.map(post=>{
-   const owner=post.owner,name=esc(owner.display_name||'Pengguna PLUITS'),username=esc(owner.username||'pengguna');
+   const media=post.media[0],owner=post.owner,name=esc(owner.display_name||'Pengguna PLUITS');
    const avatar=post.avatarUrl?'<img src="'+esc(post.avatarUrl)+'" alt="" loading="lazy">':'<b>'+esc(initials(owner.display_name))+'</b>';
-   const media=post.media[0];
-   const mediaMarkup=media?(media.media_type==='video'?'<video src="'+esc(media.url)+'" controls playsinline preload="metadata"></video>':'<img src="'+esc(media.url)+'" loading="lazy" alt="Media postingan publik">'):'';
-   const tags=(post.tags||[]).map(tag=>'<span>#'+esc(String(tag).replace(/^#/,'').replace(/\s+/g,''))+'</span>').join(' ');
-   const context=post.profile_context==='business'?' · Bisnis':post.profile_context==='professional'?' · Profesional':'';
-   return '<article class="ds-post-card"><header class="ds-post-head"><a class="ds-avatar" href="#/@'+encodeURIComponent(owner.username||'')+'">'+avatar+'</a><div class="ds-author"><a href="#/@'+encodeURIComponent(owner.username||'')+'"><strong>'+name+'</strong></a><small>@'+username+context+' · '+esc(dateLabel(post.created_at))+'</small></div></header>'+(post.caption?'<p class="ds-caption">'+esc(post.caption)+'</p>':'')+(media?'<a class="ds-post-media" href="#/account/post/'+encodeURIComponent(post.id)+'">'+mediaMarkup+(post.media.length>1?'<span class="ds-media-count">'+post.media.length+' media</span>':'')+'</a>':'')+(tags?'<div class="ds-post-tags">'+tags+'</div>':'')+'<footer class="ds-post-meta"><span>♡ '+post.likes+' suka</span><span>◯ '+post.comments+' komentar</span><a href="#/account/post/'+encodeURIComponent(post.id)+'">Lihat postingan</a></footer></article>';
+   const mediaMarkup=media?(media.media_type==='video'?'<video class="ds-tile-video" src="'+esc(media.url)+'" muted playsinline preload="auto" aria-label="Pratinjau Reel"></video><span class="ds-tile-play" aria-hidden="true">▶</span>':'<img src="'+esc(media.url)+'" loading="lazy" alt="Pratinjau postingan">'):'<span class="ds-text-tile">'+esc((post.caption||'PLUITS').slice(0,110))+'</span>';
+   const context=post.profile_context==='business'?'Bisnis':post.profile_context==='professional'?'Profesional':'';
+   return '<article class="ds-grid-tile'+(media?.media_type==='video'?' is-video':'')+'"><a class="ds-tile-link" href="#/account/post/'+encodeURIComponent(post.id)+'" aria-label="Buka postingan dari '+name+'"><div class="ds-tile-media">'+mediaMarkup+'</div><div class="ds-tile-overlay"><span class="ds-tile-author">'+avatar+'</span><span class="ds-tile-stats">♡ '+post.likes+'　◯ '+post.comments+'</span></div>'+(context?'<span class="ds-tile-context">'+context+'</span>':'')+'</a></article>';
   }).join('');
   el.innerHTML=cards||'';
   if(status)status.textContent=cards?'':'Belum ada konten publik yang cocok. Coba kategori atau kata kunci lain.';
