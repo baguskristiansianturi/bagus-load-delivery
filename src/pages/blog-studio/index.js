@@ -297,13 +297,13 @@ function bind() {
     if(invalid){event.target.value='';return notify(invalid.size>50*1024*1024?'Media maksimal 50 MB per file.':'Format media tidak didukung. Gunakan foto atau video MP4, MOV, WebM, atau 3GP.','error');}
     
     const startIndex=pendingSupportingFiles.length;pendingSupportingFiles=[...pendingSupportingFiles,...files];
-    const editor=document.querySelector('#pl-blog-body-editor');if(editor){editor.focus();if(savedBodyRange){const selection=window.getSelection();selection.removeAllRanges();selection.addRange(savedBodyRange);}files.forEach((file,index)=>{const marker='<figure data-blog-pending-index="'+(startIndex+index)+'"><figcaption>Media: '+esc(file.name)+'</figcaption></figure>';document.execCommand('insertHTML',false,marker);});editor.dispatchEvent(new Event('input',{bubbles:true}));}
+    const fileUrls=files.map(file=>{const url=URL.createObjectURL(file);supportingObjectUrls.push(url);return url;});
+    const editor=document.querySelector('#pl-blog-body-editor');if(editor){editor.focus();if(savedBodyRange){const selection=window.getSelection();selection.removeAllRanges();selection.addRange(savedBodyRange);}files.forEach((file,index)=>{const mime=getMediaMime(file),media=mime.startsWith('video/')?'<video src="'+fileUrls[index]+'" controls playsinline></video>':'<img src="'+fileUrls[index]+'" alt="Foto dalam tulisan">';const marker='<figure data-blog-pending-index="'+(startIndex+index)+'">'+media+'<figcaption>Media: '+esc(file.name)+'</figcaption></figure>';document.execCommand('insertHTML',false,marker);});editor.dispatchEvent(new Event('input',{bubbles:true}));}
     const grid=document.querySelector('#pl-blog-support-grid');
     if(grid)files.forEach((file,index)=>{
-      const url=URL.createObjectURL(file);supportingObjectUrls.push(url);
       const tile=document.createElement('div');tile.className='pl-blog-support-tile';
       const mime=getMediaMime(file),media=mime.startsWith('video/')?document.createElement('video'):document.createElement('img');
-      media.src=url;
+      media.src=fileUrls[index];
       if(media.tagName==='VIDEO'){media.controls=true;media.playsInline=true;media.preload='metadata';}
       else media.alt='Gambar pendukung '+(grid.children.length+1);
       tile.append(media);grid.append(tile);
