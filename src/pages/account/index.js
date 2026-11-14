@@ -41,6 +41,7 @@ function notify(message,type='success'){
  clearTimeout(noticeTimer);noticeTimer=setTimeout(()=>el.classList.remove('show'),3800);
 }
 function frame(content,active='explore',avatarUrl=''){
+ if(active==='reels')return `<div class="ua-app ua-social-app ua-reels-app"><main class="ua-reels-main">${content}</main><div id="ua-toast" class="ua-toast" role="status"></div></div>`;
  const userAvatar=avatar(avatarUrl,profile?.display_name||user?.email||'P','',profileImageFrame);
  const profileView=active==='profile'||active==='preview'||active==='profile-edit';
  const showEditProfile=active==='profile'||active==='preview';
@@ -186,7 +187,7 @@ async function profilePage(preview=false,editMode=false){
  ]);
  if(postsResult.error)throw postsResult.error;
  const ownPosts=await hydratePosts(postsResult.data||[]);
-  profileReels=ownPosts.filter(p=>p.media?.length===1&&p.media[0].media_type==='video'&&Number(p.media[0].duration_ms||0)>0&&Number(p.media[0].duration_ms||0)<=60000);
+  profileReels=ownPosts.filter(p=>p.content_kind==='reel'&&p.media?.length===1&&p.media[0].media_type==='video'&&Number(p.media[0].duration_ms||0)>0&&Number(p.media[0].duration_ms||0)<=60000);
  const [followersCount,followingCount,pendingCount]=await Promise.all([
   supabase.from('user_follows').select('*',{count:'exact',head:true}).eq('following_id',user.id).eq('status','accepted'),
   supabase.from('user_follows').select('*',{count:'exact',head:true}).eq('follower_id',user.id).eq('status','accepted'),
@@ -313,7 +314,7 @@ function bindProfileMenu(){
 function bindProfileTabs(){
  const nav=document.querySelector('.ua-profile-tabs'),panel=document.querySelector('#ua-profile-tab-content');
  if(!nav||!panel)return;
- const postsMarkup=panel.innerHTML;
+ const postsMarkup=postGrid(ownPosts.filter(p=>p.content_kind!=='reel'));
  const reelsMarkup='<div class="ua-section-title"><strong>Reels</strong><a class="ua-outline" href="#/account/compose">＋ Buat Reel</a></div>'+(profileReels.length?postGrid(profileReels):'<div class="ua-empty"><strong>Belum ada Reels</strong><p>Video tunggal berdurasi hingga 60 detik akan muncul di sini.</p><a class="ua-primary ua-inline" href="#/account/compose">Unggah video</a></div>');
  const views={
   posts:postsMarkup,
@@ -412,7 +413,7 @@ async function feedPage(){
   supabase.from('user_blocks').select('blocker_id,blocked_id').or('blocker_id.eq.'+user.id+',blocked_id.eq.'+user.id),
   supabase.from('user_profiles').select('id,display_name,username,avatar_path,public_city,public_province,visibility,created_at').eq('visibility','public').neq('id',user.id).order('created_at',{ascending:false}).limit(60),
   supabase.from('user_follows').select('follower_id,following_id,status').or('follower_id.eq.'+user.id+',following_id.eq.'+user.id),
-  supabase.from('user_posts').select('*').eq('visibility','public').eq('moderation_status','published').order('created_at',{ascending:false}).limit(60),
+  supabase.from('user_posts').select('*').eq('content_kind','post').eq('visibility','public').eq('moderation_status','published').order('created_at',{ascending:false}).limit(60),
   supabase.from('user_stories').select('id,user_id,media_path,media_type,caption,created_at,expires_at').eq('visibility','public').gt('expires_at',new Date().toISOString()).order('created_at',{ascending:false}).limit(60),
   supabase.from('user_profiles').select('id',{count:'exact',head:true})
  ]);
@@ -539,21 +540,51 @@ async function feedPage(){
  const feedMarkup=exploreContentType==='blog'?blogMarkup:exploreContentType==='live'?liveMarkup:sorted.length?sorted.map(post=>postCard(post)).join(''):"<div class='ua-feed-empty'><strong>"+empty+"</strong>"+action+"</div>";
  return "<div class='ua-social-home'>"+trendSection+homeNearbySection()+peopleSection+storiesSection+filterNav+homeHeading+"<div class='ua-home-feed-region'><section class='ua-feed'>"+feedMarkup+"</section></div>"+discoverMore+maybeLike.replace("<h2>Produk Lokal</h2>","<h2>Temukan Produk Lokal</h2>")+collections+serviceFilters+"<div class='pl-public-home ua-circle-bottom-promos'>"+renderPublicJoin()+renderAppDownload()+"</div></div>";
 }
-async function reelsPage(){
- const {data:vm,error:me}=await supabase.from('post_media').select('post_id,duration_ms').eq('media_type','video').lte('duration_ms',60000).order('created_at',{ascending:false}).limit(60);if(me)throw me;
- const ids=[...new Set((vm||[]).map(x=>x.post_id))];let rows=[];
- if(ids.length){const q=await supabase.from('user_posts').select('*').in('id',ids).eq('visibility','public').eq('moderation_status','published').order('created_at',{ascending:false}).limit(40);if(q.error)throw q.error;rows=q.data||[];}
- let followingIds=[],blockedIds=[];
- if(user?.id){const b=await supabase.from('user_blocks').select('blocker_id,blocked_id').or('blocker_id.eq.'+user.id+',blocked_id.eq.'+user.id);if(b.error)throw b.error;blockedIds=(b.data||[]).map(x=>x.blocker_id===user.id?x.blocked_id:x.blocker_id);const hidden=await supabase.from('user_hidden_content').select('target_type,target_id').eq('viewer_id',user.id);if(hidden.error)throw hidden.error;const muted=(hidden.data||[]).filter(x=>x.target_type==='user').map(x=>x.target_id),hiddenPosts=(hidden.data||[]).filter(x=>x.target_type==='post').map(x=>x.target_id);rows=rows.filter(p=>!blockedIds.includes(p.user_id)&&!muted.includes(p.user_id)&&!hiddenPosts.includes(p.id));const f=await supabase.from('user_follows').select('following_id').eq('follower_id',user.id).eq('status','accepted');if(f.error)throw f.error;followingIds=(f.data||[]).map(x=>x.following_id);}
- const posts=await hydratePosts(rows),eligible=posts.filter(p=>p.media?.length===1&&p.media[0].media_type==='video'&&Number(p.media[0].duration_ms||0)>0&&Number(p.media[0].duration_ms)<=60000);
- const now=Date.now(),sorted=eligible.filter(p=>reelsFilter!=='following'||followingIds.includes(p.user_id)).sort((x,y)=>{
-  if(reelsFilter==='latest')return new Date(y.created_at)-new Date(x.created_at);
-  const score=p=>{const age=Math.max(0,(now-new Date(p.created_at).getTime())/3600000),follow=followingIds.includes(p.user_id)?45:0,recency=24*Math.exp(-age/48),engagement=Math.min(30,p.likes*1.5+p.comments*2.5);return follow+recency+engagement;};
-  return score(y)-score(x)||new Date(y.created_at)-new Date(x.created_at);
- });
- return "<div class='ua-page-heading'><div><span class='ua-eyebrow'>VIDEO KOMUNITAS</span><h1>Reels</h1><p>Video tunggal hingga 60 detik. Geser ke atas untuk video berikutnya.</p></div><a class='ua-outline' href='#/account/explore'>Kembali ke Explore</a></div><nav class='ua-reels-filters' aria-label='Urutan Reels'><button data-reels-filter='recommended' class='"+(reelsFilter==='recommended'?'is-active':'')+"'>Untuk Anda</button><button data-reels-filter='following' class='"+(reelsFilter==='following'?'is-active':'')+"'>Mengikuti</button><button data-reels-filter='latest' class='"+(reelsFilter==='latest'?'is-active':'')+"'>Terbaru</button></nav><section class='ua-reels-feed'>"+(sorted.length?sorted.map(postCard).join(''):"<div class='ua-panel ua-empty'><strong>Belum ada Reels.</strong><p>Reels berisi video tunggal maksimal 60 detik. Video yang lebih panjang tetap ada di postingan biasa.</p><a class='ua-primary ua-inline' href='#/account/compose'>＋ Unggah video</a></div>")+"</section>";
+function renderReelCard(post){
+ const owner=post.owner||{},name=esc(owner.display_name||'Pengguna Pluits'),username=esc(owner.username||'pengguna');
+ const media=post.media?.[0];if(!media?.url)return '';
+ const liked=!!post.liked,saved=!!post.saved;
+ return `<article class="ua-post-card ua-reel-card" data-post-id="${esc(post.id)}" data-owner-id="${esc(post.user_id)}" data-reel-post-id="${esc(post.id)}">
+  <div class="ua-reel-stage">
+   <video class="ua-reel-video" data-reel-video src="${esc(media.url)}" muted playsinline loop preload="metadata" aria-label="Reel dari ${name}"></video>
+   <button class="ua-reel-play-toggle" type="button" data-reel-toggle aria-label="Jeda video">Ⅱ</button>
+   <header class="ua-reel-topline"><a class="ua-reel-back" href="#/account/explore" aria-label="Kembali ke Circle">‹</a><span>Reels</span><button type="button" class="ua-reel-sound" data-reel-sound aria-label="Aktifkan suara">♪</button></header>
+   <div class="ua-reel-actions-wrap"><div class="ua-reel-actions">
+    <button type="button" data-action="like" class="${liked?'is-liked':''}" aria-label="Sukai Reel">${socialIcon('heart',{size:27})}<b>${Number(post.likes||0)}</b></button>
+    <button type="button" data-action="comments" aria-label="Komentar Reel">${socialIcon('comment',{size:27})}<b>${Number(post.comments||0)}</b></button>
+    <button type="button" data-action="share" aria-label="Bagikan Reel">${socialIcon('send',{size:26})}<b>Bagikan</b></button>
+    <button type="button" data-action="save" class="${saved?'is-saved':''}" aria-label="Simpan Reel">${socialIcon('bookmark',{size:26})}<b>Simpan</b></button>
+   </div></div>
+   <div class="ua-reel-bottomline"><a class="ua-reel-author" href="#/@${username}">${avatar(post.avatarUrl,owner.display_name||'P')}<span><strong>@${username}</strong><small>${name}</small></span></a><p>${esc(post.caption||'')}</p></div>
+  </div>
+  <section class="ua-comments ua-reel-comments" hidden></section>
+ </article>`;
 }
-
+async function reelsPage(initialPostId=''){
+ const q=await supabase.from('user_posts').select('*').eq('content_kind','reel').eq('visibility','public').eq('moderation_status','published').order('created_at',{ascending:false}).limit(80);
+ if(q.error)throw q.error;
+ let rows=q.data||[],followingIds=[],blockedIds=[];
+ if(user?.id){
+  const [b,hidden,f]=await Promise.all([
+   supabase.from('user_blocks').select('blocker_id,blocked_id').or('blocker_id.eq.'+user.id+',blocked_id.eq.'+user.id),
+   supabase.from('user_hidden_content').select('target_type,target_id').eq('viewer_id',user.id),
+   supabase.from('user_follows').select('following_id').eq('follower_id',user.id).eq('status','accepted')
+  ]);
+  if(b.error||hidden.error||f.error)throw b.error||hidden.error||f.error;
+  blockedIds=(b.data||[]).map(x=>x.blocker_id===user.id?x.blocked_id:x.blocker_id);
+  const muted=(hidden.data||[]).filter(x=>x.target_type==='user').map(x=>x.target_id),hiddenPosts=(hidden.data||[]).filter(x=>x.target_type==='post').map(x=>x.target_id);
+  rows=rows.filter(post=>!blockedIds.includes(post.user_id)&&!muted.includes(post.user_id)&&!hiddenPosts.includes(post.id));
+  followingIds=(f.data||[]).map(x=>x.following_id);
+ }
+ const posts=await hydratePosts(rows),eligible=posts.filter(post=>post.media?.length===1&&post.media[0].media_type==='video'&&Number(post.media[0].duration_ms||0)>0&&Number(post.media[0].duration_ms)<=60000);
+ const now=Date.now(),sorted=eligible.filter(post=>reelsFilter!=='following'||followingIds.includes(post.user_id)).sort((a,b)=>{
+  if(reelsFilter==='latest')return new Date(b.created_at)-new Date(a.created_at);
+  const score=post=>{const age=Math.max(0,(now-new Date(post.created_at).getTime())/3600000),follow=followingIds.includes(post.user_id)?45:0,recency=24*Math.exp(-age/48),engagement=Math.min(30,post.likes*1.5+post.comments*2.5);return follow+recency+engagement;};
+  return score(b)-score(a)||new Date(b.created_at)-new Date(a.created_at);
+ });
+ const cards=sorted.map(renderReelCard).filter(Boolean).join('');
+ return `<section class="ua-reels-viewer" aria-label="Pemutar Reels"><div class="ua-reels-feed">${cards||'<div class="ua-reels-empty"><a class="ua-reel-back" href="#/account/explore" aria-label="Kembali">‹</a><strong>Belum ada Reel publik.</strong><p>Video yang dipublikasikan sebagai Reel akan muncul di sini.</p><a href="#/account/reel">＋ Buat Reel</a></div>'}</div></section>`;
+}
 function postCard(p){return renderPostCard(p,{user,avatar,socialIcon,renderActions:renderPostActions,esc});}
 
 async function composePage(draftId='',kind='post'){
@@ -1090,13 +1121,13 @@ function bindCompose(){
    let taggedUsers=[];
    if(taggedNames.length){const found=await supabase.from('user_profiles').select('id,username').in('username',taggedNames);if(found.error)throw found.error;taggedUsers=found.data||[];const missing=taggedNames.filter(name=>!taggedUsers.some(person=>person.username===name));if(missing.length)throw new Error('Username tidak ditemukan: '+missing.map(name=>'@'+name).join(', ')+'. Periksa kembali penandaan.');}
    const context={profile_context:accountContext.active,professional_profile_id:accountContext.active==='professional'?accountContext.professional?.id||null:null,business_store_id:accountContext.active==='business'?(accountContext.prefs?.active_store_id||accountContext.stores[0]?.id||null):null};
-   const first=uploaded[0],insert=await supabase.from('user_posts').insert({user_id:user.id,...context,caption,tags,media_path:first?.media_path||null,media_type:uploaded.length?(uploaded.length===1?first.media_type:'mixed'):'text',visibility:data.get('visibility')==='private'?'private':'public'}).select('id').single();
+   const first=uploaded[0],contentKind=form.dataset.contentKind==='reel'?'reel':'post',insert=await supabase.from('user_posts').insert({user_id:user.id,...context,content_kind:contentKind,caption,tags,media_path:first?.media_path||null,media_type:uploaded.length?(uploaded.length===1?first.media_type:'mixed'):'text',visibility:data.get('visibility')==='private'?'private':'public'}).select('id').single();
    if(insert.error)throw insert.error;
    if(uploaded.length){const link=await supabase.from('post_media').insert(uploaded.map(media=>({...media,post_id:insert.data.id,user_id:user.id})));if(link.error){await supabase.from('user_posts').delete().eq('id',insert.data.id);throw link.error;}}
    if(taggedUsers.length){const tagged=await supabase.from('post_tags').insert(taggedUsers.filter(person=>person.id!==user.id).map(person=>({post_id:insert.data.id,tagged_user_id:person.id,tagged_by:user.id})));if(tagged.error){await supabase.from('user_posts').delete().eq('id',insert.data.id);throw new Error('Penandaan belum dapat disimpan. Pastikan akun yang ditandai mengizinkan penandaan. '+tagged.error.message);}}
    progress.querySelector('span').style.width='100%';revoke();
    let draftWarning=false;if(currentComposeDraft?.id){try{await deletePrivateDraft(user.id,currentComposeDraft.id);}catch{draftWarning=true;}}
-   currentComposeDraft=null;notify(draftWarning?'Post berhasil diterbitkan, tetapi draf lokal belum terhapus.':'Post berhasil diterbitkan.',draftWarning?'error':'success');await mountAccount('explore');
+   currentComposeDraft=null;notify(draftWarning?(contentKind==='reel'?'Reel berhasil diterbitkan, tetapi draf lokal belum terhapus.':'Post berhasil diterbitkan, tetapi draf lokal belum terhapus.'):(contentKind==='reel'?'Reel berhasil diterbitkan.':'Post berhasil diterbitkan.'),draftWarning?'error':'success');await mountAccount(contentKind==='reel'?'reels':'explore');
   }catch(error){
    if(uploaded.length)await supabase.storage.from(BUCKET).remove(uploaded.map(media=>media.media_path));
    const message=String(error?.message||error||'Upload gagal.');
@@ -1428,7 +1459,31 @@ function bindExploreFilters(){
  document.querySelectorAll('[data-explore-filter]').forEach(button=>button.addEventListener('click',async()=>{const next=button.dataset.exploreFilter;if(!['all','latest','random'].includes(next)||next===exploreFilter)return;exploreFilter=next;await mountAccount('explore');}));
  document.querySelector('[data-explore-category]')?.addEventListener('change',async event=>{exploreCategory=String(event.currentTarget.value||'all');await mountAccount('explore');});
 }
-function bindReelsPlayback(){document.querySelectorAll('[data-reels-filter]').forEach(btn=>btn.addEventListener('click',()=>{reelsFilter=btn.dataset.reelsFilter;mountAccount('reels');}));const feed=document.querySelector('.ua-reels-feed');if(!feed)return;feed.querySelectorAll('[data-reel-toggle]').forEach(b=>b.addEventListener('click',()=>{const v=b.closest('.ua-reel-stage')?.querySelector('[data-reel-video]');if(v){if(v.paused)v.play().catch(()=>{});else v.pause();}}));feed.querySelectorAll('[data-reel-video]').forEach(v=>{v.addEventListener('play',()=>{const b=v.closest('.ua-reel-stage')?.querySelector('[data-reel-toggle]');if(b){b.textContent='Ⅱ';b.setAttribute('aria-label','Jeda video');}});v.addEventListener('pause',()=>{const b=v.closest('.ua-reel-stage')?.querySelector('[data-reel-toggle]');if(b){b.textContent='▶';b.setAttribute('aria-label','Putar video');}});});if(!('IntersectionObserver'in window))return;const videos=[...feed.querySelectorAll('[data-reel-video]')];let active=null;const io=new IntersectionObserver(es=>es.forEach(e=>{const v=e.target;if(e.isIntersecting&&e.intersectionRatio>=.72){if(active&&active!==v)active.pause();active=v;v.muted=true;v.loop=true;v.playsInline=true;v.play().catch(()=>{});}else if(e.intersectionRatio<.25){v.pause();if(active===v)active=null;}}),{threshold:[0,.25,.72,1]});videos.forEach(v=>{v.playsInline=true;v.preload='metadata';io.observe(v);});}
+function bindReelsPlayback(){
+ const feed=document.querySelector('.ua-reels-feed');if(!feed)return;
+ feed.querySelectorAll('[data-reel-toggle]').forEach(button=>button.addEventListener('click',()=>{
+  const video=button.closest('.ua-reel-stage')?.querySelector('[data-reel-video]');if(!video)return;
+  if(video.paused)video.play().catch(()=>{});else video.pause();
+ }));
+ feed.querySelectorAll('[data-reel-sound]').forEach(button=>button.addEventListener('click',()=>{
+  const video=button.closest('.ua-reel-stage')?.querySelector('[data-reel-video]');if(!video)return;
+  video.muted=!video.muted;button.textContent=video.muted?'♪':'♫';button.setAttribute('aria-label',video.muted?'Aktifkan suara':'Matikan suara');
+ }));
+ feed.querySelectorAll('[data-reel-video]').forEach(video=>{
+  video.addEventListener('click',()=>{if(video.paused)video.play().catch(()=>{});else video.pause();});
+  video.addEventListener('play',()=>{const button=video.closest('.ua-reel-stage')?.querySelector('[data-reel-toggle]');if(button){button.textContent='Ⅱ';button.setAttribute('aria-label','Jeda video');}});
+  video.addEventListener('pause',()=>{const button=video.closest('.ua-reel-stage')?.querySelector('[data-reel-toggle]');if(button){button.textContent='▶';button.setAttribute('aria-label','Putar video');}});
+ });
+ if(!('IntersectionObserver'in window))return;
+ const videos=[...feed.querySelectorAll('[data-reel-video]')];let active=null;
+ const io=new IntersectionObserver(entries=>entries.forEach(entry=>{
+  const video=entry.target;
+  if(entry.isIntersecting&&entry.intersectionRatio>=.72){
+   if(active&&active!==video)active.pause();active=video;video.muted=true;video.loop=true;video.playsInline=true;video.play().catch(()=>{});
+  }else if(entry.intersectionRatio<.25){video.pause();if(active===video)active=null;}
+ }),{threshold:[0,.25,.72,1]});
+ videos.forEach(video=>{video.playsInline=true;video.preload='metadata';io.observe(video);});
+}
 function bindPostActions(){
  document.querySelectorAll('.ua-post-card').forEach(card=>{
   const id=card.dataset.postId;
