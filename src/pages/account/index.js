@@ -1403,6 +1403,22 @@ function bindPostActions(){
   const id=card.dataset.postId;
   const menuButton=card.querySelector('[data-post-menu]'),menu=card.querySelector('.ua-post-menu');
   menuButton?.addEventListener('click',()=>{const wasOpen=menu?.hidden===false;document.querySelectorAll('.ua-post-menu').forEach(x=>x.hidden=true);document.querySelectorAll('[data-post-menu]').forEach(x=>x.setAttribute('aria-expanded','false'));if(menu){menu.hidden=wasOpen;menuButton.setAttribute('aria-expanded',String(!wasOpen));}});
+  card.querySelector('[data-action="post-privacy"]')?.addEventListener('click',async()=>{
+   if(menu)menu.hidden=true;menuButton?.setAttribute('aria-expanded','false');
+   const panel=card.querySelector('.ua-post-privacy');if(!panel)return;
+   const select=panel.querySelector('[data-post-visibility]'),save=panel.querySelector('[data-save-privacy]');
+   panel.hidden=false;save.disabled=true;save.textContent='Memuat…';
+   const result=await supabase.from('user_posts').select('visibility').eq('id',id).eq('user_id',user.id).single();
+   if(result.error){notify(result.error.message,'error');panel.hidden=true;return;}
+   select.value=result.data.visibility||'public';save.disabled=false;save.textContent='Simpan privasi';
+   panel.querySelector('[data-close-privacy]').onclick=()=>{panel.hidden=true;};
+   save.onclick=async()=>{
+    save.disabled=true;save.textContent='Menyimpan…';
+    const update=await supabase.from('user_posts').update({visibility:select.value}).eq('id',id).eq('user_id',user.id);
+    if(update.error){notify(update.error.message,'error');save.disabled=false;save.textContent='Coba lagi';return;}
+    notify('Privasi publikasi diperbarui.');panel.hidden=true;
+   };
+  });
   card.querySelector('[data-action="edit"]')?.addEventListener('click',async()=>{
    const box=card.querySelector('.ua-post-editor');if(!box)return;
    if(menu)menu.hidden=true;menuButton?.setAttribute('aria-expanded','false');
@@ -1491,9 +1507,8 @@ function bindPostActions(){
    likeButton.classList.toggle('is-liked',liked);
    likeButton.setAttribute('aria-label',liked?'Batalkan suka':'Sukai');
    const countNode=likeButton.querySelector('b');if(countNode)countNode.textContent=String(count);
-   let captionCount=card.querySelector('.ua-post-caption strong');
-   if(count){if(!captionCount){captionCount=document.createElement('strong');card.querySelector('.ua-post-caption')?.prepend(captionCount);}if(captionCount)captionCount.textContent=count+' suka';}
-   else captionCount?.remove();
+   const captionCount=card.querySelector('.ua-like-count');
+   if(captionCount)captionCount.textContent=count+' suka';
   };
   const animateLikeTransition=(area,liked)=>{
    if(!area)return;
