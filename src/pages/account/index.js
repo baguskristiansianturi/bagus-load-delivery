@@ -1104,14 +1104,11 @@ function bindCompose(){
     progress.hidden=false;progress.querySelector('span').style.width=Math.round(65*uploaded.length/files.length)+'%';
    }
    const tags=[...new Set((caption.match(/#[\p{L}\p{N}_]+/gu)||[]).map(tag=>tag.slice(1).toLowerCase()))].slice(0,30);
-   const taggedNames=[...new Set(String(data.get('tagged_users')||'').split(/[\s,]+/).map(name=>name.trim().replace(/^@/, '').toLowerCase()).filter(Boolean))].slice(0,10);
-   let taggedUsers=[];
-   if(taggedNames.length){const found=await supabase.from('user_profiles').select('id,username').in('username',taggedNames);if(found.error)throw found.error;taggedUsers=found.data||[];const missing=taggedNames.filter(name=>!taggedUsers.some(person=>person.username===name));if(missing.length)throw new Error('Username tidak ditemukan: '+missing.map(name=>'@'+name).join(', ')+'. Periksa kembali penandaan.');}
+
    const context={profile_context:accountContext.active,professional_profile_id:accountContext.active==='professional'?accountContext.professional?.id||null:null,business_store_id:accountContext.active==='business'?(accountContext.prefs?.active_store_id||accountContext.stores[0]?.id||null):null};
    const first=uploaded[0],contentKind=form.dataset.contentKind==='reel'?'reel':'post',insert=await supabase.from('user_posts').insert({user_id:user.id,...context,content_kind:contentKind,caption,tags,media_path:first?.media_path||null,media_type:uploaded.length?(uploaded.length===1?first.media_type:'mixed'):'text',visibility:data.get('visibility')==='private'?'private':'public'}).select('id').single();
    if(insert.error)throw insert.error;
    if(uploaded.length){const link=await supabase.from('post_media').insert(uploaded.map(media=>({...media,post_id:insert.data.id,user_id:user.id})));if(link.error){await supabase.from('user_posts').delete().eq('id',insert.data.id);throw link.error;}}
-   if(taggedUsers.length){const tagged=await supabase.from('post_tags').insert(taggedUsers.filter(person=>person.id!==user.id).map(person=>({post_id:insert.data.id,tagged_user_id:person.id,tagged_by:user.id})));if(tagged.error){await supabase.from('user_posts').delete().eq('id',insert.data.id);throw new Error('Penandaan belum dapat disimpan. Pastikan akun yang ditandai mengizinkan penandaan. '+tagged.error.message);}}
    progress.querySelector('span').style.width='100%';revoke();
    let draftWarning=false;if(currentComposeDraft?.id){try{await deletePrivateDraft(user.id,currentComposeDraft.id);}catch{draftWarning=true;}}
    currentComposeDraft=null;notify(draftWarning?(contentKind==='reel'?'Reel berhasil diterbitkan, tetapi draf lokal belum terhapus.':'Post berhasil diterbitkan, tetapi draf lokal belum terhapus.'):(contentKind==='reel'?'Reel berhasil diterbitkan.':'Post berhasil diterbitkan.'),draftWarning?'error':'success');await mountAccount(contentKind==='reel'?'reels':'explore');
