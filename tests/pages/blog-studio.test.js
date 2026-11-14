@@ -24,3 +24,9 @@ test('free blog profile RLS migration keeps blog ownership enforced', async () =
   assert.match(migration, /drop policy if exists "Premium users create their blog profile"/);
   assert.match(migration, /with check \(\(select auth\.uid\(\)\) = owner_user_id\)/);
 });
+
+test('Blog cover and supporting media paths match the database owner-path constraint', async () => {
+  const source = await readFile(new URL('../../src/pages/blog-studio/index.js', import.meta.url), 'utf8');
+  assert.match(source, /activeUser\.id\s*\+\s*'\/blog\/'/);
+  assert.doesNotMatch(source, /activeUser\.id\s*\+\s*'\/blogs\/'/);
+});
