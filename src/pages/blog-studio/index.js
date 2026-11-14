@@ -143,7 +143,7 @@ async function previewPage(item) {
   return header('Pratinjau tulisan', 'Tampilan lokal sebelum dibagikan.') +
     '<article class="pl-blog-reading-preview">' + (cover ? '<img class="pl-blog-reading-cover" src="' + cover + '" alt="">' : '') +
     '<div class="pl-blog-reading-meta">' + avatarMarkup() + '<div><b>' + esc(activeProfile?.display_name || 'Penulis') + '</b><small>@' + esc(activeProfile?.username || 'akun-pluits') + '</small></div></div>' +
-    '<h1>' + esc(item.title) + '</h1><p class="pl-blog-reading-description">' + esc(item.description) + '</p><div class="pl-blog-reading-body">' + esc(item.body).replace(/\n/g, '<br>') + '</div>' +
+    '<h1>' + esc(item.title) + '</h1>' + (item.description ? '<p class="pl-blog-reading-description">' + esc(item.description) + '</p>' : '') + '<div class="pl-blog-reading-body">' + renderStoredBody(item.body,item.media_urls,item.pending_media_urls) + '</div>' +
     (support ? '<div class="pl-blog-reading-support">' + support + '</div>' : '') +
     '<button type="button" class="pl-blog-secondary" data-action="back-editor">Kembali ke editor</button></article>';
 }
@@ -201,9 +201,9 @@ function bind() {
     if(!title||!coverUrl)return notify('Judul dan gambar utama wajib tersedia untuk pratinjau.','error');if(wordCount(body)>MAX_BODY_WORDS)return notify('Isi tulisan maksimal 1.200 kata.','error');
     if(wordCount(description)>85)return notify('Deskripsi maksimal 85 kata.','error');
     const oldPaths=old?.supporting_paths||[],oldUrls=oldPaths.length?await createSignedUrlMap(supabase.storage,BUCKET,oldPaths,1800):new Map();
-    previewObjectUrls.forEach(url=>URL.revokeObjectURL(url));previewObjectUrls=[];
-    const supporting_media=[...oldPaths.filter(path=>oldUrls.has(path)).map(path=>({path,url:oldUrls.get(path)})),...pendingSupportingFiles.map(file=>{const url=URL.createObjectURL(file);previewObjectUrls.push(url);return {path:file.name,url};})];
-    window.__plBlogPreviewItem={title,description,body,cover_url:coverUrl,supporting_media};
+    const pendingUrls=pendingSupportingFiles.map(file=>{const url=URL.createObjectURL(file);previewObjectUrls.push(url);return url;});
+    const supporting_media=oldPaths.filter(path=>oldUrls.has(path)&&!body.includes('data-blog-media-path="'+path+'"')).map(path=>({path,url:oldUrls.get(path)}));
+    window.__plBlogPreviewItem={title,description,body,cover_url:coverUrl,supporting_media,media_urls:oldUrls,pending_media_urls:pendingUrls};
     setView('preview');
   });
   document.querySelector('#pl-blog-editor-form')?.addEventListener('submit', event => { event.preventDefault(); persistEditor('published').catch(showError); });
