@@ -331,12 +331,14 @@ function postGrid(posts){return `<div class="ua-profile-post-feed">${posts.map(p
 async function hydratePosts(rows){
   if(!rows.length)return [];
   const postIds=rows.map(p=>p.id);
-  const [tagRowsRes,mediaRowsRes]=await Promise.all([
+  const ownerIds=[...new Set(rows.map(p=>p.user_id).filter(Boolean))];
+  const [tagRowsRes,mediaRowsRes,storiesRes]=await Promise.all([
    supabase.from('post_tags').select('post_id,tagged_user_id').in('post_id',postIds),
-   supabase.from('post_media').select('id,post_id,user_id,media_path,media_type,position,duration_ms').in('post_id',postIds).order('position',{ascending:true})
+   supabase.from('post_media').select('id,post_id,user_id,media_path,media_type,position,duration_ms').in('post_id',postIds).order('position',{ascending:true}),
+   ownerIds.length?supabase.from('user_stories').select('id,user_id,media_path,media_type,caption,created_at,expires_at').in('user_id',ownerIds).eq('visibility','public').gt('expires_at',new Date().toISOString()).order('created_at',{ascending:true}).limit(120):Promise.resolve({data:[],error:null})
   ]);
-  if(tagRowsRes.error||mediaRowsRes.error)throw tagRowsRes.error||mediaRowsRes.error;
-  const taggedRows=tagRowsRes.data||[],mediaRows=mediaRowsRes.data||[];
+  if(tagRowsRes.error||mediaRowsRes.error||storiesRes.error)throw tagRowsRes.error||mediaRowsRes.error||storiesRes.error;
+  const taggedRows=tagRowsRes.data||[],mediaRows=mediaRowsRes.data||[],activeStories=storiesRes.data||[];
   const ids=[...new Set([...rows.map(p=>p.user_id),...taggedRows.map(t=>t.tagged_user_id)])];
   const [profilesRes,likesRes,commentsRes,savesRes]=await Promise.all([
    supabase.from('user_profiles').select('id,display_name,username,avatar_path,public_city,public_province,visibility').in('id',ids),
@@ -357,13 +359,15 @@ async function hydratePosts(rows){
   const likeCounts=new Map(),commentCounts=new Map(),likedPosts=new Set();
   for(const row of likesRes.data||[]){likeCounts.set(row.post_id,(likeCounts.get(row.post_id)||0)+1);if(user?.id===row.user_id)likedPosts.add(row.post_id);}
   for(const row of commentsRes.data||[])commentCounts.set(row.post_id,(commentCounts.get(row.post_id)||0)+1);
-  const paths=[...mediaRows.map(m=>m.media_path),...rows.map(p=>p.media_path),...(profilesRes.data||[]).map(p=>p.avatar_path)].filter(Boolean);
+  const paths=[...mediaRows.map(m=>m.media_path),...rows.map(p=>p.media_path),...(profilesRes.data||[]).map(p=>p.avatar_path),...activeStories.map(story=>story.media_path)].filter(Boolean);
   const mediaUrls=await createSignedUrlMap(supabase.storage,BUCKET,paths,3600);
+  const storiesByOwner=new Map();
+  activeStories.forEach(story=>{const list=storiesByOwner.get(story.user_id)||[];const url=mediaUrls.get(story.media_path)||'';if(url)list.push({url,type:story.media_type,caption:story.caption||'',createdAt:story.created_at});storiesByOwner.set(story.user_id,list);});
   return rows.map(p=>{
    const owner=pmap.get(p.user_id)||{display_name:'Pengguna Pluits',username:'pengguna',visibility:'private'};
    const gallery=mediaByPost.get(p.id)||[];
    const media=gallery.length?gallery.map(m=>({...m,url:mediaUrls.get(m.media_path)||''})):(p.media_path?[{media_path:p.media_path,media_type:p.media_type,position:0,duration_ms:null,url:mediaUrls.get(p.media_path)||''}]:[]);
-   return {...p,owner,media,tagged:(tagsByPost.get(p.id)||[]).map(t=>pmap.get(t.tagged_user_id)).filter(Boolean),mediaUrl:media[0]?.url||'',avatarUrl:mediaUrls.get(owner.avatar_path)||'',likes:likeCounts.get(p.id)||0,liked:likedPosts.has(p.id),comments:commentCounts.get(p.id)||0,saved:saved.has(p.id)};
+   return {...p,owner,media,storyItems:storiesByOwner.get(p.user_id)||[],tagged:(tagsByPost.get(p.id)||[]).map(t=>pmap.get(t.tagged_user_id)).filter(Boolean),mediaUrl:media[0]?.url||'',avatarUrl:mediaUrls.get(owner.avatar_path)||'',likes:likeCounts.get(p.id)||0,liked:likedPosts.has(p.id),comments:commentCounts.get(p.id)||0,saved:saved.has(p.id)};
   });
  }
 async function blogFeedMarkup(){
@@ -1066,8 +1070,9 @@ function bindCompose(){
  });
 }
 function bindStories(){
- document.querySelectorAll('.ua-story-group').forEach(button=>{
-  button.addEventListener('click',()=>{
+ document.querySelectorAll('.ua-story-group, .ua-post-avatar-link[data-story-items]').forEach(button=>{
+  button.addEventListener('click',event=>{
+   event.preventDefault();
    let items=[];try{items=JSON.parse(button.dataset.storyItems||'[]');}catch{}
    if(!items.length)return;
    let index=0;
