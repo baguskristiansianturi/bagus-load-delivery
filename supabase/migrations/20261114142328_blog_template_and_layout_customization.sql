@@ -3,7 +3,7 @@
 alter table public.blog_profiles
   add column if not exists template_key text not null default 'aurelia',
   add column if not exists theme_settings jsonb not null default '{}'::jsonb,
-  add column if not exists layout_settings jsonb not null default '{"blocks":["profile_header","featured_story","recent_stories","categories","photo_gallery","about_me","footer"],"hidden":[]}'::jsonb;
+  add column if not exists layout_settings jsonb not null default '{"blocks":["profile_header","featured_story","recent_stories","categories","photo_gallery","about_me","footer"],"navigation":[]}'::jsonb;
 
 alter table public.blog_profiles
   drop constraint if exists blog_profiles_template_key_check,
