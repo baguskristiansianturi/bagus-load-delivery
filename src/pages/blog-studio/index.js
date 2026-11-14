@@ -1,6 +1,7 @@
 import { supabase, SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from '../../lib/supabase/client.js';
 import { createMediaUploader } from '../../features/media/storage-upload.js';
 import { renderSocialHeader, renderSocialMobileNav } from '../../components/social/navigation.js';
+import { renderBrandLogo } from '../../components/common/brand.js';
 import { createSignedUrlMap } from '../../services/storage/signed-urls.js';
 import { getMediaMime, getMediaExtension, validateMediaFile } from '../../features/media/media-types.js';
 import './blog-studio.css';
@@ -390,7 +391,7 @@ export async function mountPublicBlog(username,blogSlug,postSlug=''){
   if(!route||route.default_visibility!=='public')throw Error('Blog tidak ditemukan.');
   const [{data:blog,error:blogError},{data:categories,error:categoryError},{data:author,error:authorError}]=await Promise.all([
    supabase.from('blog_profiles').select('id,owner_user_id,display_title,description,featured_post_id,public_post_order').eq('id',route.blog_id).maybeSingle(),
-   supabase.from('blog_categories').select('id,name,slug,sort_order').eq('blog_id',route.blog_id).order('sort_order',{ascending:true}).order('name',{ascending:true}),
+   supabase.from('blog_categories').select('id,name,sort_order').eq('blog_id',route.blog_id).order('sort_order',{ascending:true}).order('name',{ascending:true}),
    supabase.from('user_profiles').select('id,display_name,username,avatar_path,bio').eq('username',username).maybeSingle()
   ]);
   if(blogError||categoryError||authorError)throw blogError||categoryError||authorError;
@@ -420,7 +421,7 @@ export async function mountPublicBlog(username,blogSlug,postSlug=''){
   }else{
    content='<section class="pl-blog-public-hero">'+(featured&&urls.get(featured.cover_path)?'<img class="pl-blog-public-hero-image" src="'+esc(urls.get(featured.cover_path))+'" alt="">':'<div class="pl-blog-public-hero-placeholder"></div>')+'<div class="pl-blog-public-hero-overlay"><span class="pl-blog-public-kicker">RUANG CERITA · PLUITS</span><h1>'+esc(blog.display_title)+'</h1><p>'+esc(blog.description||'Cerita, pengalaman, dan pemikiran dari '+author.display_name+'.')+'</p><a href="'+(featured?base+'/'+encodeURIComponent(featured.slug):'#blog-articles')+'">'+(featured?'Baca cerita pilihan':'Jelajahi tulisan')+' <span aria-hidden="true">↗</span></a></div></section>'+categoriesBar+'<section class="pl-blog-public-intro"><div><span class="pl-blog-public-kicker">MENGENAL BLOG INI</span><h2>'+esc(blog.display_title)+'</h2><p>'+esc(blog.description||'Ruang berbagi cerita dan pengalaman.')+'</p></div>'+authorBlock+'</section><section class="pl-blog-public-section" id="blog-articles"><div class="pl-blog-public-section-head"><div><span class="pl-blog-public-kicker">DARI PENULIS</span><h2>Jelajahi tulisan</h2></div><span>'+posts.length+' artikel</span></div><div class="pl-blog-public-grid">'+posts.map(card).join('')+'</div>'+(posts.length?'':'<p class="pl-blog-public-empty">Belum ada artikel yang diterbitkan.</p>')+'</section>';
   }
-  const html='<main class="pl-blog-public '+(selected?'is-reading':'')+'"><header class="pl-blog-public-header"><a class="pl-blog-public-brand" href="'+base+'"><span class="pl-blog-public-brand-mark">p</span><span>PLUITS</span></a><a class="pl-blog-public-profile-link" href="'+authorUrl+'">Profil penulis <span aria-hidden="true">↗</span></a></header>'+content+'<footer class="pl-blog-public-footer"><span>'+esc(blog.display_title)+' · '+esc(author.display_name)+'</span><a href="#/">Didukung oleh <strong>PLUITS</strong></a></footer></main>';
+  const html='<main class="pl-blog-public '+(selected?'is-reading':'')+'"><header class="pl-blog-public-header">'+renderBrandLogo({href:base,className:'pl-blog-public-brand',size:32,label:'Halaman utama blog',wordmark:true})+'<a class="pl-blog-public-profile-link" href="'+authorUrl+'">Profil penulis <span aria-hidden="true">↗</span></a></header>'+content+'<footer class="pl-blog-public-footer"><span>'+esc(blog.display_title)+' · '+esc(author.display_name)+'</span><a href="#/">Didukung oleh <strong>PLUITS</strong></a></footer></main>';
   document.querySelector('#app').innerHTML=html;
   document.querySelectorAll('[data-blog-filter]').forEach(button=>button.addEventListener('click',()=>{
    document.querySelectorAll('[data-blog-filter]').forEach(item=>item.classList.toggle('is-active',item===button));
