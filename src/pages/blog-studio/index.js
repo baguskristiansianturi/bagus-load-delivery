@@ -14,7 +14,7 @@ const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&
 const wordCount=value=>String(value||'').trim().split(/\s+/).filter(Boolean).length;
 const uid=()=>crypto.randomUUID();
 const ext=file=>(file?.name?.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'').slice(0,6)||'jpg';
-const isVideoPath=path=>/\\.(mp4|m4v|mov|webm|3gp|3gpp|3g2|3gp2)$/i.test(String(path||''));
+const isVideoPath=path=>/\.(mp4|m4v|mov|webm|3gp|3gpp|3g2|3gp2)$/i.test(String(path||''));
 const LEGACY_DB='pluits-blog-studio-v1',LEGACY_STORE='items';
 function legacyDb(){return new Promise((resolve,reject)=>{const req=indexedDB.open(LEGACY_DB,1);req.onupgradeneeded=()=>{if(!req.result.objectStoreNames.contains(LEGACY_STORE))req.result.createObjectStore(LEGACY_STORE,{keyPath:'id'});};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);});}
 async function migrateLegacyDrafts(){
