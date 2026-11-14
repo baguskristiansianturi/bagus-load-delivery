@@ -1,0 +1,69 @@
+/* Shared responsive comment thread for Feed, Profile and Reels. */
+.ua-social-app .ua-comments{
+ box-sizing:border-box;width:100%;min-width:0;padding:14px clamp(10px,3vw,16px);
+ border-top:1px solid #edf0f2;background:#fff;color:#24313a;
+}
+.ua-social-app .ua-comment-thread{
+ display:grid;gap:10px;width:100%;min-width:0;max-height:min(52dvh,560px);
+ overflow-y:auto;overscroll-behavior:contain;padding:2px 1px 8px;
+}
+.ua-social-app .ua-comment-item{
+ display:grid;grid-template-columns:minmax(0,1fr);min-width:0;gap:6px;
+}
+.ua-social-app .ua-comment-nested{margin-left:clamp(8px,calc(var(--comment-depth)*12px),36px)}
+.ua-social-app .ua-comment-copy{
+ min-width:0;padding:10px 12px;border-radius:12px;background:#f6f8f9;
+ overflow-wrap:anywhere;
+}
+.ua-social-app .ua-comment-author{
+ display:inline-block;max-width:100%;margin:0 0 3px;color:#243b46;
+ font-size:12px;font-weight:700;text-decoration:none;overflow-wrap:anywhere;
+}
+.ua-social-app .ua-comment-copy>p{
+ margin:2px 0 5px;color:#34434b;font-size:13px;line-height:1.5;
+ white-space:pre-wrap;overflow-wrap:anywhere;
+}
+.ua-social-app .ua-comment-copy>small{color:#89949b;font-size:10px}
+.ua-social-app .ua-comment-actions{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:6px}
+.ua-social-app .ua-comment-actions button{
+ display:inline-flex;align-items:center;gap:5px;min-height:30px;padding:3px 2px;
+ border:0;background:transparent;color:#77858c;font:inherit;font-size:11px;
+}
+.ua-social-app .ua-comment-actions button.is-liked{color:#d94d69}
+.ua-social-app .ua-comment-actions button:disabled{opacity:.55}
+.ua-social-app .ua-comment-form,.ua-social-app .ua-reply-form{
+ display:flex;align-items:center;gap:8px;width:100%;min-width:0;margin:10px 0 0;
+}
+.ua-social-app .ua-comment-form input,.ua-social-app .ua-reply-form input{
+ box-sizing:border-box;flex:1 1 auto;width:0;min-width:0;height:42px;padding:0 14px;
+ border:1px solid #e0e7e9;border-radius:999px;background:#fbfcfc;color:#26343a;
+ font:inherit;font-size:13px;outline:none;
+}
+.ua-social-app .ua-comment-form input:focus,.ua-social-app .ua-reply-form input:focus{
+ border-color:#31a99f;box-shadow:0 0 0 3px #31a99f20;
+}
+.ua-social-app .ua-comment-form button,.ua-social-app .ua-reply-form button{
+ flex:0 0 auto;min-width:64px;min-height:40px;padding:0 14px;
+ border:0;border-radius:999px;background:#168f87;color:#fff;
+ font:inherit;font-size:12px;font-weight:700;
+}
+.ua-social-app .ua-comment-form button:disabled,.ua-social-app .ua-reply-form button:disabled{opacity:.55}
+.ua-social-app .ua-reply-form{margin-top:8px}
+.ua-social-app .ua-reply-form input{height:38px;font-size:12px}
+.ua-social-app .ua-reply-form button{min-height:36px;min-width:58px}
+.ua-social-app .ua-comment-item [hidden]{display:none!important}
+@media(max-width:760px){
+ .ua-social-app .ua-comments{padding:12px 10px}
+ .ua-social-app .ua-comment-thread{max-height:min(48svh,480px);gap:8px}
+ .ua-social-app .ua-comment-copy{padding:9px 10px}
+ .ua-social-app .ua-comment-copy>p{font-size:12px}
+ .ua-social-app .ua-comment-form{gap:6px}
+ .ua-social-app .ua-comment-form input{height:40px;padding-inline:12px;font-size:12px}
+ .ua-social-app .ua-comment-form button{min-width:58px;min-height:38px;padding-inline:11px}
+}
+@media(max-width:360px){
+ .ua-social-app .ua-comment-nested{margin-left:9px}
+ .ua-social-app .ua-comment-copy{padding:8px}
+ .ua-social-app .ua-comment-form input{padding-inline:10px}
+ .ua-social-app .ua-comment-form button{min-width:52px;padding-inline:9px}
+}
