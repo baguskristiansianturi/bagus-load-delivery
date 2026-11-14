@@ -116,3 +116,10 @@ test('Trip pages use the shared content container for itinerary and discovery la
   assert.match(pageSource, /pl-trip-content plds-container/);
   assert.equal((pageSource.match(/pl-trip-content plds-container/g)||[]).length, 2);
 });
+
+test('Seller Center adopts the shared wide workspace container', () => {
+  const pageSource = readFileSync(new URL('../../src/pages/seller/index.js', import.meta.url), 'utf8');
+  const pageCss = readFileSync(new URL('../../src/pages/seller/seller.css', import.meta.url), 'utf8');
+  assert.match(pageSource, /pluits-dashboard plds-container plds-container--wide/);
+  assert.match(pageCss, /--pl-layout-workspace-max:1240px/);
+});
