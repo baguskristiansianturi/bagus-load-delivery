@@ -1,9 +1,13 @@
 # Design Tokens
 
-**Status:** Planned extraction; authoritative tokens remain in `src/style.css` and `src/styles/`.
+**Runtime entry point:** `src/design-system/tokens/foundation.css`  
+**Current status:** Structural layout tokens active; legacy brand colors and typography remain under controlled reconciliation.
 
-**Target responsibility:** Semantic colors, spacing, sizing, radii, elevation and responsive tokens.
+## Ownership
+This module owns semantic geometry used across pages: viewport/safe-area behavior, mobile gutters, content widths, spacing scale, control dimensions, icon dimensions, radii and text-role sizes. It does not own feature layouts or introduce a second brand palette.
 
-**Boundary:** Do not duplicate PLUITS teal/neutral brand values; migrate with visual regression.
-
-This README tracks the planned module. It is not a runtime implementation. Extract only with a documented consumer, contract, regression tests and no production-data dependency.
+## Rules
+- New components consume these tokens instead of inventing one-off values.
+- Page-specific variants must be named and justified.
+- Do not mass-replace existing CSS values until all consumers are mapped and visual regressions are checked.
+- Update the mobile foundation SOP and tests when tokens change.
